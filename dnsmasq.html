@@ -1,0 +1,548 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="linux,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="dnsmasq 提供 DNS 缓存和 DHCP 服务功能。作为域名解析服务器（DNS），dnsmasq 可以通过缓存 DNS 请求来提高对访问过的网址的连接速度。作为 DHCP 服务器，dnsmasq 可以用于为局域网电脑分配内网 IP 地址和提供路由。DNS 和 DHCP 两个功能可以同时或分别单独实现。dnsmasq 轻量且易配置，适用于个人用户或少于 50 台主机的网络。此外它还自带了一个">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dnsmasq 笔记">
+<meta property="og:url" content="https://www.zfl9.com/dnsmasq.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="dnsmasq 提供 DNS 缓存和 DHCP 服务功能。作为域名解析服务器（DNS），dnsmasq 可以通过缓存 DNS 请求来提高对访问过的网址的连接速度。作为 DHCP 服务器，dnsmasq 可以用于为局域网电脑分配内网 IP 地址和提供路由。DNS 和 DHCP 两个功能可以同时或分别单独实现。dnsmasq 轻量且易配置，适用于个人用户或少于 50 台主机的网络。此外它还自带了一个">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.165Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dnsmasq 笔记">
+<meta name="twitter:description" content="dnsmasq 提供 DNS 缓存和 DHCP 服务功能。作为域名解析服务器（DNS），dnsmasq 可以通过缓存 DNS 请求来提高对访问过的网址的连接速度。作为 DHCP 服务器，dnsmasq 可以用于为局域网电脑分配内网 IP 地址和提供路由。DNS 和 DHCP 两个功能可以同时或分别单独实现。dnsmasq 轻量且易配置，适用于个人用户或少于 50 台主机的网络。此外它还自带了一个">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/dnsmasq.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>dnsmasq 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/dnsmasq.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                dnsmasq 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-24T08:00:00+08:00">
+                2018-11-24
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/dnsmasq.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="dnsmasq.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/dnsmasq.html" class="leancloud_visitors" data-flag-title="dnsmasq 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>dnsmasq 提供 DNS 缓存和 DHCP 服务功能。作为域名解析服务器（DNS），dnsmasq 可以通过缓存 DNS 请求来提高对访问过的网址的连接速度。作为 DHCP 服务器，dnsmasq 可以用于为局域网电脑分配内网 IP 地址和提供路由。DNS 和 DHCP 两个功能可以同时或分别单独实现。dnsmasq 轻量且易配置，适用于个人用户或少于 50 台主机的网络。此外它还自带了一个 PXE 服务器。</p>
+<a id="more"></a>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>dnsmasq 是一个开源的轻量级 DNS 转发和 DHCP、TFTP 服务器，使用 C 语言编写。Dnsmasq 针对家庭局域网等小型局域网设计，资源占用低，易于配置。支持的平台包括 Linux、BSD、Smoothwall、IP-Cop、floppyfw、Firebox、LEAF、Freesco, fli4l、CoyoteLinux 及 Android 等，并且在 dd-wrt、openwrt 路由器系统中也有使用。</p>
+<p><a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html" rel="external nofollow noopener noreferrer" target="_blank">dnsmasq 在线文档</a></p>
+<p>如果需要为 ChinaDNS 配置国外上游 DNS，请使用 dnsmasq 或 dnsforwarder，不要使用 pdnsd，因为 pdnsd 的缓存功能无法完全禁用，会导致 ChinaDNS 失效。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>dnsmasq 就两个部分：<code>/usr/bin/dnsmasq</code>、<code>/etc/dnsmasq.conf</code>，我们只需关心 /etc/dnsmasq.conf 配置文件。</p>
+<p>dnsmasq.conf 里面的选项都是 <code>dnsmasq --help</code> 中的长选项（没有前面的连字符，这和 aria2 是一样的）。</p>
+<p>dnsmasq.conf 中以 <code>#</code> 开头的为注释行，每个选项与选项值之间使用 <code>=</code> 相连（<code>=</code> 两边可以有任意空格），如 <code>port = 60053</code>，不以分号结尾，一行只能有一个选项。</p>
+<p>典型配置如下：</p>
+<pre><code class="language-dnsmasq line-numbers"><script type="text/plain">
+## 服务器配置
+# 运行用户&组
+# user = dnsmasq
+# group = dnsmasq
+
+# DNS 监听端口，默认为 53，0 表示关闭 DNS
+port = 53
+
+# 格式错误的 DNS 请求不转发
+domain-needed
+# 启用 DNS 调试
+log-queries
+
+## resolv.conf
+# 上游 DNS 服务器，格式同 resolv.conf，默认从 /etc/resolv.conf 读取
+# resolv-file = /etc/resolv.conf
+# 严格遵循 /etc/resolv.conf 的主从顺序，默认会发送给所有的上游 DNS
+# strict-order
+# 取消注释，告诉 dnsmasq 不要在运行时轮询检查 resolv.conf 文件（比如文件被更改了）
+# no-poll
+# 取消注释，告诉 dnsmasq 不要从 /etc/resolv.conf 或其它文件中读取上游 DNS，而是从当前文件中获取
+no-resolv
+
+## DNS 配置
+# server  指定域名使用指定的上游 DNS 解析
+# local   指定域名使用 /etc/hosts 文件解析
+# address 本地静态域名解析（指定固定 IP 地址）
+# ipset   指定域名解析到的 IP 自动添加至 ipset
+
+# server = [/<domain>/[<domain>/...]]<ipaddr>[#<port>][@<source-ip/interface>][#<port>]
+# local = /<domain>/[<domain>/...]
+# address = /<domain>[/<domain>...]/<ipaddr>
+# ipset = /<domain>[/<domain>...]/<ipset>[,<ipset>...]
+
+# server = 10.1.2.3@eth1
+# server = 10.1.2.3#443@eth1
+# server = 10.1.2.3#443@192.168.1.1
+# server = 10.1.2.3#443@192.168.1.1#6666
+# server = /localnet/192.168.0.1
+# server = /3.168.192.in-addr.arpa/10.1.2.3
+# local = /localnet/
+# address = /double-click.net/127.0.0.1
+# address = /www.thekelleys.org.uk/fe80::20d:60ff:fe36:f83
+# ipset = /yahoo.com/google.com/vpn,search
+
+# Custom
+# 所有域名都使用 192.168.0.1:60053/udp 解析，且使用 192.168.255.120:8888 与之通信
+server = 192.168.0.1#60053@192.168.255.120#8888
+# 所有域名都使用 192.168.0.1:65353/udp 解析，且使用 192.168.255.120:9999 与之通信
+server = 192.168.0.1#65353@192.168.255.120#9999
+# Custom
+
+## hosts 配置
+# 不读取 /etc/hosts
+# no-hosts
+# 添加其它 hosts 文件
+# addn-hosts = /etc/hosts_other
+# 添加目录下的所有 hosts 文件
+# hostsdir = /etc/hosts.d
+
+## DNS 缓存
+# 缓存条目数量，0 表示关闭，默认 150
+cache-size = 0
+# 无效响应不缓存，如上游服务器返回的 "no such domain"
+no-negcache
+
+## 文件包含
+# 包含指定文件
+# conf-file = /etc/dnsmasq.more.conf
+# 包含目录下的所有文件
+# conf-dir = /etc/dnsmasq.d
+# 包含目录下的所有以 .conf 结尾的文件
+# conf-dir = /etc/dnsmasq.d/,*.conf
+</script></code></pre>
+<p><strong>关于 ipset 配置项</strong><br>ipset 选项的作用：将指定域名解析到的 IP 添加到指定 ipest 中，也即<br><code>ipset add gfwlist 216.58.221.100</code>，假设 ipset 中的 name 为 gfwlist<br>每次解析指定域名时，dnsmasq 都会将解析到的 ip 添加到指定 ipset 中<br>因为 ipset 内部是使用 hash 这种数据结构存储的，所以不会存在重复条目</p>
+<p>ipset 配置项的典型用途：配合 iptables/ipset，进行 gfwlist 模式的代理分流<br>配置：<code>server = /google.com/127.0.0.1#60053</code>、<code>ipset = /google.com/gfwlist</code><br>当客户端请求 dnsmasq 解析 google.com 时，dnsmasq 会向 127.0.0.1:60053<br>发送域名解析请求（如 ss-tunnel），然后 dnsmasq 将解析到的 IP 放到 gfwlist<br>地址集合中（gfwlist 这个 ipset 必须已存在，否则没有任何效果，也无错误提示）<br>当客户端向 google.com 发送 TCP/UDP 请求时，就可以在 iptables 规则中判断<br>这个 IP 是不是 gfwlist 的 IP，如果是（在 gfwlist 这个 ipset 中）则将它发给代理<br>如果不是，比如百度、腾讯等墙内网站，则不会经过本地的代理，而是走直连网络</p>
+<p>再次强调，dnsmasq 只是执行 <code>ipset add gfwlist 1.2.3.4</code> 命令（fork、exec）<br>它不管这个命令是执行成功，还是执行失败，这不是 dnsmasq 的义务，而是你的</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p><code>dnsmasq</code> 默认以守护进程运行，配置文件为 /etc/dnsmasq.conf<br><code>dnsmasq -C dnsmasq.conf</code> 使用指定配置文件 dnsmasq.conf<br><code>dnsmasq -C dnsmasq.conf -d</code> 使用指定配置文件 dnsmasq.conf 且前台运行</p>
+<p>给 dnsmasq 发送 SIGHUP 信号可以清空 DNS 缓存，<code>kill -HUP $dnsmasq-pid</code></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/linux.html" rel="next" title="Linux 笔记">
+                <i class="fa fa-chevron-left"></i> Linux 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/adb.html" rel="prev" title="ADB 调试">
+                ADB 调试 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行"><span class="nav-number">3.</span> <span class="nav-text">运行</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/dnsmasq.html';
+          this.page.identifier = 'dnsmasq.html';
+          this.page.title = 'dnsmasq 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1841 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C++11 C++ 新特性">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="C++11 新特性，auto/decltype自动类型推导、lambda表达式、移动语义、右值引用、智能指针、delete/default指示符等">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 新特性">
+<meta property="og:url" content="https://www.zfl9.com/cpp-cpp11.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="C++11 新特性，auto/decltype自动类型推导、lambda表达式、移动语义、右值引用、智能指针、delete/default指示符等">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++11 新特性">
+<meta name="twitter:description" content="C++11 新特性，auto/decltype自动类型推导、lambda表达式、移动语义、右值引用、智能指针、delete/default指示符等">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/cpp-cpp11.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>C++11 新特性 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/cpp-cpp11.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                C++11 新特性
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T14:20:00+08:00">
+                2017-08-31
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/cpp-cpp11.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cpp-cpp11.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/cpp-cpp11.html" class="leancloud_visitors" data-flag-title="C++11 新特性">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>C++11 新特性，auto/decltype自动类型推导、lambda表达式、移动语义、右值引用、智能指针、delete/default指示符等</p>
+<a id="more"></a>
+<h2 id="自动类型推导"><a href="#自动类型推导" class="headerlink" title="自动类型推导"></a>自动类型推导</h2><h3 id="auto"><a href="#auto" class="headerlink" title="auto"></a>auto</h3><p>auto 这个关键字 C++ 原先就有，用来指定存储器；但是这明显是多余的，没有必要；<br>因为很少有人去用这个东西，所以在 C++11 中就把原有的 auto 功能给废弃掉了，而变成了现在的类型推导关键字；</p>
+<p>简单说一下 auto 的用法：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <typeinfo>
+
+using namespace std;
+
+const char * func(const char *name) {
+    cout << name << endl;
+    return name;
+}
+
+int main() {
+    auto n = 10;    // int
+    auto f = 3.14f; // float
+
+    cout << typeid(n).name() << ", " << typeid(f).name() << endl;
+
+    const char * (*f1)(const char *) = func;    // 函数指针 f1
+    f1("original style");
+
+    auto f2 = func; // 自动推导
+    f2("c++11 style");
+
+    cout << typeid(f1).name() << ", " << typeid(f2).name() << endl;
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:38:58]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:39:32]
+$ ./a.out
+i, f
+original style
+c++11 style
+PFPKcS0_E, PFPKcS0_E
+</script></code></pre>
+<p>一般的，对于基本类型、结构体、类，并不推荐使用 auto 进行类型推导，因为这样的代码可读性不强；<br>但是对于诸如 函数指针、STL中某些复杂的类型、lambda表达式等，可以使用 auto，让代码更简洁；</p>
+<p>从效率上来说，auto 不会对运行时效率产生影响，它是在编译的时候推导类型的；</p>
+<p>auto和其他变量类型有明显的区别：</p>
+<ol>
+<li>auto 声明的变量必须要初始化，否则编译器不能判断变量的类型；</li>
+<li>auto 不能被声明为返回值，auto 不能作为形参，auto 不能被修饰为模板参数；</li>
+</ol>
+<h3 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h3><p>decltype 和 auto 是相互对应的，它们经常在一些场所配合使用；<br>decltype 可以在编译的时候判断出一个变量或者表达式的类型，例如：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+const char * func(const char *name) {
+    cout << name << endl;
+    return name;
+}
+
+int main() {
+    auto f1 = func;
+    decltype(f1) f2 = func;
+    f1("f1");
+    f2("f2");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:48:17]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:48:29]
+$ ./a.out
+f1
+f2
+</script></code></pre>
+<p>auto 和 decltype 还有一种经典的使用场合，看下面例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+template <typename T1, typename T2>
+auto Add(T1 a, T2 b) -> decltype(a + b) {
+    return a + b;
+}
+
+int main() {
+    cout << Add(100, 200) << endl;
+    cout << Add(1024l, 1.2f) << endl;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:52:48]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:52:58]
+$ ./a.out
+300
+1025.2
+</script></code></pre>
+<p>函数模板 Add 用来计算两个变量之和，如果两个类型 T1 和 T2 不一样的话，我们就无法事先知道返回值的类型，这时候 auto 和 decltype 就派上出场了；</p>
+<p>让<code>a + b</code>的类型由编译器来决定，这样使用 decltype 就可以拿到返回的类型；<br>但是如果把<code>decltype(a + b)</code>放到函数命名的前面作为返回值的话，按照编译器的解析顺序，当解析到返回值<code>decltype(a + b)</code>的时候 a 和 b 还没有被定义，所以要重新声明 a 和 b 的类型，这样就会变的很复杂很难读懂；</p>
+<p>于是 C++11 就改变了语法规则，把<code>decltype(a + b)</code>放到函数的后方，并用 auto 作为返回值来告诉编译器，真正的返回值在函数声明之后；简单的说 auto 可以作为返回值占位符来使返回值后置；</p>
+<h2 id="functional标准库"><a href="#functional标准库" class="headerlink" title="functional标准库"></a>functional标准库</h2><p>C++11 引入了函数对象标准库<code>&lt;functional&gt;</code>，里面包含各种内建的<strong>函数对象</strong>以及相关的操作函数，非常方便；</p>
+<p><strong><code>std::function</code></strong><br><code>std::function</code>类模板是一种<code>通用的函数包装器</code>，它可以容纳所有可以调用的对象（Callable），包括函数、函数指针、Lambda表达式、bind表达式、成员函数及成员变量或者其他函数对象；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <functional>
+
+using namespace std;
+
+// 普通函数
+int func(int a) {
+    return a;
+}
+
+// lambda表达式
+auto lambda = [](int a) -> int {
+    return a;
+};
+
+// 函数对象
+class Functor {
+public:
+    int operator()(int a) {
+        return a;
+    }
+};
+
+class TestClass {
+public:
+    // 成员函数
+    int member_func(int a) {
+        return a;
+    }
+    // 静态成员函数
+    static int static_func(int a) {
+        return a;
+    }
+};
+
+int main() {
+    function<int (int)> f;
+
+    f = func;
+    cout << f(100) << endl;
+
+    f = lambda;
+    cout << f(200) << endl;
+
+    f = Functor();
+    cout << f(300) << endl;
+
+    TestClass testObj;
+    f = bind(&TestClass::member_func, &testObj, placeholders::_1);
+    cout << f(400) << endl;
+
+    f = TestClass::static_func;
+    cout << f(500) << endl;
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:46:54]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [15:47:19]
+$ ./a.out
+100
+200
+300
+400
+500
+</script></code></pre>
+<p><strong><code>std::bind</code></strong><br>顾名思义，<code>std::bind</code>函数用来绑定函数的某些参数并生成一个新的<code>function</code>对象；<br>bind用于实现<code>偏函数（Partial Function）</code>，相当于实现了函数式编程中的<code>Currying（柯里化）</code>；</p>
+<p>所谓偏函数，就是给一个原有的函数固定几个参数，形成一个新的函数，因此可以进行个性化定制；</p>
+<p>看这个例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <functional>
+
+using namespace std;
+
+void func1(int a, int b) {
+    cout << "a = " << a << ", b = " << b << endl;
+}
+
+void func2(int a, int b, int c, int d, int e) {
+    cout << "a = " << a
+        << ", b = " << b
+        << ", c = " << c
+        << ", d = " << d
+        << ", e = " << e << endl;
+}
+
+int main() {
+    auto f1 = bind(func1, placeholders::_2, placeholders::_1);
+    func1(1, 2);
+    f1(1, 2);
+
+    cout << "------------------------" << endl;
+
+    auto f2 = bind(func2, placeholders::_1, 2, 3, 4, 5);
+    func2(1, 2, 3, 4, 5);
+    f2(1);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:00:22]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [16:00:33]
+$ ./a.out
+a = 1, b = 2
+a = 2, b = 1
+------------------------
+a = 1, b = 2, c = 3, d = 4, e = 5
+a = 1, b = 2, c = 3, d = 4, e = 5
+</script></code></pre>
+<h2 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h2><p>Lambda 表达式来源于函数式编程，说白就了就是在使用的地方定义函数，有的语言叫<code>闭包</code>；</p>
+<p>lambda 表达式语法：<code>[capture](parameters) mutable -&gt; return-type { ... };</code></p>
+<ul>
+<li><code>[capture]</code>：捕捉列表；捕捉列表总是出现在Lambda函数的开始处；<br>实际上，[]是Lambda引出符，编译器根据该引出符判断接下来的代码是否是Lambda函数；<br>捕捉列表能够捕捉上下文中的变量以供Lambda函数使用；</li>
+<li><code>(parameters)</code>：参数列表；与普通函数的参数列表一致；如果不需要参数传递，则可以连同括号“()”一起省略；</li>
+<li><code>mutable</code>：mutable修饰符；默认情况下，Lambda函数为一个const成员函数，mutable可以取消其常量性；<br>在使用该修饰符时，参数列表不可省略（即使参数为空）；</li>
+<li><code>-&gt; return-type</code>：返回类型；用追踪返回类型形式声明函数的返回类型；<br>如果没有返回值（例如 void），其返回类型可以完全省略；<br>在返回类型明确的情况下，也可以省略该部分，让编译器对返回类型进行推导；</li>
+<li><code>{ ... }</code>：函数体；内容与普通函数一样，不过除了可以使用参数之外，还可以使用所有捕获的变量；</li>
+</ul>
+<p>与普通函数最大的区别是，除了可以使用参数以外，Lambda函数还可以通过捕获列表访问一些上下文中的数据；<br>捕捉列表描述了上下文中哪些数据可以被Lambda使用，以及使用方式（以值传递的方式或引用传递的方式）；<br>语法上，在“[]”包括起来的是捕捉列表，捕捉列表由多个捕捉项组成，并以逗号分隔；捕捉列表有以下几种形式：</p>
+<ul>
+<li><code>[=]</code>：值传递方式捕捉所有父作用域的变量（包括 this）；</li>
+<li><code>[&amp;]</code>：引用传递方式捕捉所有父作用域的变量（包括 this）；</li>
+<li><code>[var]</code>：值传递方式捕捉变量 var；</li>
+<li><code>[&amp;var]</code>：引用传递方式捕捉变量 var；</li>
+<li><code>[this]</code>：值传递方式捕捉当前的 this 指针；</li>
+<li><code>[&amp;this]</code>：引用传递方式捕捉当前的 this 指针；</li>
+<li>引用方式：因为 const 修饰对引用无效，所以通过引用捕获的变量可以在 lambda 表达式中进行读取、写入操作；</li>
+<li>值传递方式：因为默认添加了 const 进行修饰，所以只能读取捕获到的变量，无法进行写入操作；<br>除非使用 mutable 修饰 lambda 表达式，这样就能够进行写入操作了，但是注意，因为是值传递方式，所以在 lambda 内部修改数据并不会影响外部变量的值；</li>
+</ul>
+<p>上面提到了<strong>父作用域</strong>，也就是包含 Lambda 函数的语句块，说通俗点就是包含 Lambda 的“{}”代码块；</p>
+<p>上面的捕捉列表还可以进行组合，例如：</p>
+<ul>
+<li><code>[=, &amp;a, &amp;b]</code>：以引用传递的方式捕捉变量 a 和 b，以值传递方式捕捉其它所有变量；</li>
+<li><code>[&amp;,a,this]</code>：以值传递的方式捕捉变量 a 和 this，引用传递方式捕捉其它所有变量；</li>
+</ul>
+<p>不过值得注意的是，捕捉列表不允许变量重复传递；下面一些例子就是典型的重复，会导致编译时期的错误；例如：</p>
+<ul>
+<li><code>[=, a]</code>：已经以值传递方式捕捉了所有变量，但是重复捕捉了 a，错误；</li>
+<li><code>[&amp;, &amp;this]</code>：已经以引用传递方式捕捉了所有变量，再捕捉 this 也是一种重复；</li>
+</ul>
+<p>lambda 表达式的例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+void func(void (*f)(int, int), int i, int j) {
+    f(i, j);
+}
+
+int main() {
+    // lambda表达式作为函数参数传递
+    func([](int a, int b){ cout << "a = " << a << ", b = " << b << endl; }, 10, 20);
+
+    // 将lambda表达式保存至一个变量f
+    auto f = [] (int a, int b) {
+        cout << "a = " << a << ", b = " << b << endl;
+    };
+    func(f, 99, 999);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:44:05]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [16:44:15]
+$ ./a.out
+a = 10, b = 20
+a = 99, b = 999
+</script></code></pre>
+<p>按值传递、引用传递的区别：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+int main() {
+    int a = 10, b = 20;
+    [a, b] () mutable -> void { a++; b--; cout << a << ", " << b << endl; } ();
+    cout << a << ", " << b << endl;
+    cout << "-------------------" << endl;
+
+    a = 10; b = 20;
+    [&a, &b] () mutable -> void { a++; b--; cout << a << ", " << b << endl; } ();
+    cout << a << ", " << b << endl;
+    cout << "-------------------" << endl;
+
+    a = 10; b = 20;
+    [&a, &b] () -> void { a++; b--; cout << a << ", " << b << endl; } ();
+    cout << a << ", " << b << endl;
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:51:26]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [16:51:40]
+$ ./a.out
+11, 19
+10, 20
+-------------------
+11, 19
+11, 19
+-------------------
+11, 19
+11, 19
+</script></code></pre>
+<p>如果你搞不懂上面的代码为什么会产生这样的结果，那么请跟随我一起来探究一下 lambda 表达式的实现原理；</p>
+<p><strong>函数对象/仿函数</strong><br>类的对象跟括号<code>()</code>结合，表现出函数一般的行为，这个对象可以称作是函数对象：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+class Functor {
+public:
+    int operator()(int a) {
+        return a;
+    }
+};
+
+int func(int a) {
+    return a;
+}
+
+int main() {
+    cout << func(100) << endl;  // 普通函数的调用，func(100);
+
+    Functor functor;
+    cout << functor(200) << endl;   // 函数对象的调用，实际上是调用 functor.operator()(200);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:01:45]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [17:01:54]
+$ ./a.out
+100
+200
+</script></code></pre>
+<p>这个示例说明函数对象的本质是重载了函数调用运算符；<br>当一个类重载了函数调用运算符<code>()</code>后，它的对象就成了<code>函数对象</code>；这是理解 lambda 表达式内部实现的基础；</p>
+<p><strong>lambda表达式原理</strong><br>原理：编译器会把一个lambda表达式生成一个匿名类的匿名对象，并在类中重载函数调用运算符；</p>
+<p>1) 无捕获列表、无参数列表：<code>[] () -&gt; void { cout &lt;&lt; &quot;www.zfl9.com&quot;; };</code><br>假设生成的匿名类的类名为<code>TMP</code>，编译器会将上面的 lambda 表达式改写为下面的形式：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">class TMP {
+public:
+    void operator()() const {
+        cout << "www.zfl9.com" << endl;
+    }
+};
+
+TMP()();
+</script></code></pre>
+<p>2) 无捕获列表、有参数列表：<code>[] (int a, int b) { return a + b; };</code></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">class TMP {
+public:
+    auto operator()(int a, int b) const -> decltype(a + b) {
+        return a + b;
+    }
+};
+
+auto ret = TMP()(a, b);
+</script></code></pre>
+<p>3) 值捕获：<code>[name, age] () { cout &lt;&lt; name &lt;&lt; &quot;, &quot; &lt;&lt; age &lt;&lt; endl; };</code></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">const char *name = "zhang3";
+int age = 18;
+
+class TMP {
+public:
+    TMP(const char *name, int age) : name(name), age(age) {}
+public:
+    void operator()() const {
+        cout << name << ", " << age << endl;
+    }
+private:
+    const char *name;
+    int age;
+};
+</script></code></pre>
+<p>4) 引用捕获：<code>[&amp;name, &amp;age] () { age++; cout &lt;&lt; name &lt;&lt; &quot;, &quot; &lt;&lt; age &lt;&lt; endl; };</code></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">const char *name = "zhang3";
+int age = 18;
+
+class TMP {
+public:
+    TMP(const char * &name, int &age) : name(name), age(age) {}
+public:
+    void operator()() const {
+        age++;
+        cout << name << ", " << age << endl;
+    }
+private:
+    const char * &name;
+    int &age;
+};
+</script></code></pre>
+<p>5) mutable修饰的值捕获：<code>[name, age] () mutable { age++; cout &lt;&lt; name &lt;&lt; &quot;, &quot; &lt;&lt; age &lt;&lt; endl; };</code></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">const char *name = "zhang3";
+int age = 18;
+
+class TMP {
+public:
+    TMP(const char * name, int age) : name(name), age(age) {}
+public:
+    void operator()() const {
+        age++;
+        cout << name << ", " << age << endl;
+    }
+private:
+    mutable const char * name;
+    mutable int age;
+};
+</script></code></pre>
+<h2 id="泛型lambda"><a href="#泛型lambda" class="headerlink" title="泛型lambda"></a>泛型lambda</h2><p>所谓泛型 lambda，就是在形参声明中使用 auto 类型指示说明符的 lambda；<br>比如：<code>auto glambda = [] (auto a, auto b) { return a + b; };</code></p>
+<p>根据 C++14 标准，这一 lambda 与以下代码作用相同：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">class TMP {
+public:
+    template <typename T1, typename T2>
+    auto operator()(T1 a, T2 b) const {
+        return a + b;
+    }
+};
+
+auto glambda = TMP();
+</script></code></pre>
+<p>C++14 的泛型 lambda 可以被看做 C++11 的（单态）lambda 升级版；<br>单态 lambda 相当于普通函数对象；而泛型 lambda 则相当于带模板参数的函数对象，或者说相当于带状态的函数模板；两者相比，可以推出以下结果：</p>
+<ul>
+<li>单态 lambda 在函数内使用，能够捕获外围变量形成闭包，作用相当于局部函数；泛型 lambda 强化了这一能力，其作用相当于局部函数模板；</li>
+<li>单态 lambda 能够服务于高阶函数（参数为函数的函数），作用相当于回调函数；泛型 lambda 强化了这一能力，使得泛型回调成为可能；</li>
+<li>单态 lambda 能够作为函数返回值，形成柯里化函数（闭包），用于 lambda 演算；泛型 lambda 强化了这一能力，使得泛型闭包成为可能；</li>
+</ul>
+<p>可以说，泛型 lambda 大大加强了 C++ 中因单态 lambda 的引入而有所增强的 FP（函数型编程）能力；</p>
+<h2 id="相关的关键字"><a href="#相关的关键字" class="headerlink" title="相关的关键字"></a>相关的关键字</h2><p><strong>nullptr 空指针常量</strong><br><code>nullptr</code>是 C++11 标准用来表示空指针的常量值；<br>在 C 语言中，空指针的值表示为<code>#define NULL ((void *)0)</code>；<br>在 C++ 中，由于对语法的类型检查更为严格，因而空指针的值就不能表示为<code>(void *)0</code>；<br>所以至少自 C++98 开始<code>#define NULL 0</code>；但这会在函数重载时遇到新的困难，所以加入了 nullptr 来表示空指针；</p>
+<p><strong>override、final</strong><br>在成员函数声明或定义中，<code>override</code>确保该函数为虚并重写来自基类的虚函数；若此非真则程序发生编译错误；<br>标记了<code>final</code>的虚函数不能被派生类重写，因此会将其从类的虚表中删除；而标记为<code>final</code>的类，编译器则根本不会生成虚表；并且不能被继承，为最终类；这样的代码显然更有效率；</p>
+<p><strong>mutable、const</strong><br><code>mutable</code>是可变的意思，mutable 用来修饰类的<code>非静态</code>和<code>非常量</code>数据成员；<br>而被 mutable 修饰的数据成员，可以在 const 成员函数中修改；</p>
+<p>在之前的 lambda 表达式原理解析中，使用了 mutable，不清楚的可以去参考一下；</p>
+<p><strong>delete、default</strong><br>C++ 的编译器在你没有定义某些成员函数的时候会给你的类自动生成这些函数，比如：构造函数，拷贝构造，析构函数，赋值函数；<br>有些时候，我们不想要这些函数，比如，构造函数，因为我们想做实现单例模式；传统的做法是将其声明成 private 类型；</p>
+<p>在 C++11 中引入了两个指示符，<code>delete</code>告诉编译器不自动产生这个函数，<code>default</code>告诉编译器产生一个默认的函数；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+    A() = default;  // 生成默认的构造函数
+    ~A() = default; // 生成默认的析构函数
+public:
+    void * operator new(size_t) = delete; // 无法调用 new 运算符创建类 A 的实例
+    void * operator new[](size_t) = delete;
+    void operator delete(void *) = delete;
+    void operator delete[](void *) = delete;
+};
+
+int main() {
+    A a;    // 正确
+    A *p = new A;   // 报错
+    return 0;
+}
+</script></code></pre>
+<p>为什么我们需要default？我什么都不写不就是default吗？<br>不全然是，比如构造函数，因为只要你定义了一个构造函数，编译器就不会给你生成一个默认的了；所以，为了要让默认的和自定义的共存，才引入这个参数；</p>
+<p>对于 delete 还有一个有用的地方，阻止函数的相关形参类型的调用：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+void func(int) {}
+void func(double) = delete;
+
+int main() {
+    func(1);    // 正确
+    func('A');  // 正确
+    func(1.1);  // 错误
+    return 0;
+}
+</script></code></pre>
+<p><strong>noexcept</strong><br>如果一个函数不能抛出异常，或者一个程序并没有接获某个函数所抛出的异常并进行处理，那么这个函数可以用新的<code>noexcept</code>关键字对其进行修饰，表示这个函数不会抛出异常或者抛出的异常不会被接获并处理；</p>
+<p>例如：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+void func() noexcept {
+    throw "exception data";
+}
+
+int main() {
+    try {
+        func();
+    } catch (...) {
+        cout << "catch exception" << endl;
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [18:18:12] C:1
+$ g++ a.cpp
+a.cpp: In function ‘void func()’:
+a.cpp:6:11: warning: throw will always call terminate() [-Wterminate]
+     throw "exception data";
+           ^~~~~~~~~~~~~~~~
+
+# root @ arch in ~/work on git:master x [18:18:13]
+$ ./a.out
+terminate called after throwing an instance of 'char const*'
+[1]    32267 abort (core dumped)  ./a.out
+</script></code></pre>
+<p>如果一个经过 noexcept 修饰的函数抛出异常，程序会通过调用 terminate() 来结束执行；<br>通过 terminate() 的调用来结束程序的执行会带来很多问题，例如，无法保证对象的析构函数的正常调用，无法保证栈的自动释放，同时也无法在没有遇到任何问题的情况下重新启动程序；所以，它是不可靠的；</p>
+<p>这和 C++11 之前的 throw() 异常规范一样的作用，但是比它却要高效得多；</p>
+<p>同时，我们还可以让一个函数根据不同的条件实现 noexcept 修饰或者是无 noexcept 修饰；<br>声明的通常形式是<code>noexcept(expression)</code>，并且单独的一个“noexcept”关键字实际上就是的一个<code>noexcept(true)</code>的简化；<br><code>expression</code>是一个bool表达式，如果结果为 true，那么表示该函数不抛出异常，反之则可能抛出异常；</p>
+<p><strong>explicit</strong><br>C++ 提供了关键字 <code>explicit</code>，可以阻止不应该允许的经过转换构造函数进行的隐式转换的发生；声明为<code>explicit</code>的构造函数不能在隐式转换中使用：</p>
+<p>没有使用 explicit 关键字的构造函数（一个参数）：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+    A(int) {}
+};
+
+int main() {
+    A a(10);    // 显示调用，正确
+    A b = 10;   // 隐式调用，转换构造函数，也正确
+    return 0;
+}
+</script></code></pre>
+<p>使用 explicit 声明的构造函数：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+    explicit A(int) {}
+};
+
+int main() {
+    A a(10);    // 显示调用，正确
+    A b = 10;   // 隐式调用，错误
+    return 0;
+}
+</script></code></pre>
+<h2 id="委托构造"><a href="#委托构造" class="headerlink" title="委托构造"></a>委托构造</h2><p>所谓委托构造就是：在一个构造函数中调用另外一个构造函数，这就是委托的意味；<br>不同的构造函数自己负责处理自己的不同情况，把最基本的构造工作委托给某个基础构造函数完成，实现分工协作；</p>
+<p>比如：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">class A {
+public:
+    A(int) {}
+    A() : A(0) {}   // 调用构造函数 A(int)
+    A(float) { A(); }   // 调用构造函数 A()
+};
+</script></code></pre>
+<h2 id="初始化语法"><a href="#初始化语法" class="headerlink" title="初始化语法"></a>初始化语法</h2><p>C++ 之前的初始化语法很乱，有四种初始化方式，而且每种之前甚至不能相互转换；让人有种剪不断，理还乱的感觉；<br>1) 小括号初始化方法：<code>int a = int(5);</code><br>2) 赋值初始化方法：<code>int a = 3;</code><br>3) POD 聚合，也就是经常使用的大括号初始化方法：<code>int arr[2] = {0, 1};</code><br>4) 构造函数初始化：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">class test {
+public:
+    test(int var1, int var2) : a(var1), b(var2) {}
+private:
+    int a;
+    int b;
+};
+</script></code></pre>
+<p>以上就是 C++03 之前的四种初始化方法，当然不是每种类型都有四种初始化方式；看到这里，估计你和我的感受差不多了，感觉这么多种初始化方式没必要呀，为毛不去统一一下，降低学习 C++ 的难度呢？</p>
+<p>这不，C++ 的开发者们急我们之所急，在 N 年后的 C++11 中推出了统一初始化方法的新特性：统一使用花括号<code>{}</code>进行初始化</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <string>
+
+using namespace std;
+
+class test {
+public:
+    test(int a, int b) : m_a{a}, m_b{b}, m_arr{1, 2, 3, 4, 5} {}
+private:
+    int m_a;
+    int m_b;
+    int m_arr[5];
+};
+
+int main() {
+    int n0 = 50;
+    int n1 = {100};
+    int n2{200};
+    cout << n0 << ", " << n1 << ", " << n2 << endl;
+
+    string str0("www.zfl9.com");
+    string str1 = {"www.zfl9.com"};
+    string str2{"www.zfl9.com"};
+    cout << str0 << ", " << str1 << ", " << str2 << endl;
+
+    test t0(1, 2);
+    test t1 = {1, 2};
+    test t2{1, 2};
+    return 0;
+}
+</script></code></pre>
+<h2 id="匿名命名空间"><a href="#匿名命名空间" class="headerlink" title="匿名命名空间"></a>匿名命名空间</h2><p>当定义一个命名空间时，可以忽略这个命名空间的名称：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">namespace {
+    char c;
+    int i;
+    double d;
+}
+</script></code></pre>
+<p>编译器在内部会为这个命名空间生成一个唯一的名字，而且还会为这个匿名的命名空间生成一条 using 指令；所以上面的代码在效果上等同于：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">namespace __UNIQUE_NAME_ {
+    char c;
+    int i;
+    double d;
+}
+using namespace __UNIQUE_NAME_;
+</script></code></pre>
+<p>在匿名命名空间中声明的名称也将被编译器转换，与编译器为这个匿名命名空间生成的唯一内部名称(即这里的<code>__UNIQUE_NAME_</code>)绑定在一起；</p>
+<p>还有一点很重要，就是这些名称具有<code>internal链接属性</code>，这和声明为<code>static</code>的全局名称的链接属性是相同的；<br>即<strong>名称的作用域被限制在当前文件中</strong>，无法通过在另外的文件中使用<code>extern</code>声明来进行链接；</p>
+<p>注意：命名空间都是具有 external 链接属性的，只是匿名的命名空间产生的<code>__UNIQUE_NAME_</code>在别的文件中无法得到，这个唯一的名字是不可见的；</p>
+<p>C++ 新的标准中提倡使用匿名命名空间，而不推荐使用 static，因为 static 用在不同的地方，含义不同容易造成混淆；</p>
+<p>比如：带 static 的类成员为类共享，而变量前的 static 又表示内部链接、存储范围；<br>另外，static 不能修饰 class 定义，那样就可以将类定义放在匿名命名空间中达到同样的效果；</p>
+<h2 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h2><p><strong>什么是智能指针</strong>？<br>智能指针是一个<code>RAII（Resource Acquisition is initialization）</code>类模型，用来动态的分配内存；它提供所有普通指针提供的接口，却很少发生异常；<br>在构造中，它分配内存，当离开作用域时，它会自动释放已分配的内存；这样的话，程序员就从手动管理动态内存的繁杂任务中解放出来了；</p>
+<p><strong>设计思想</strong><br>将基本类型指针封装为类对象指针（这个类肯定是个模板，以适应不同基本类型的需求），并在析构函数里编写 delete 语句删除指针指向的内存空间；</p>
+<h3 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h3><p>头文件：<code>memory</code><br>unique_ptr 遵循着<strong>独占语义</strong>：在任何时间点，资源只能唯一地被一个 unique_ptr 占有；<br>当 unique_ptr 离开作用域时，所包含的资源被释放；如果资源被其它资源重写了，之前拥有的资源将被释放；所以它保证了他所关联的资源总是能被释放；</p>
+<p><strong>创建</strong><br><strong><code>new</code></strong>形式：<code>unique_ptr&lt;int&gt; uptr(new int);</code><br><strong><code>new[]</code></strong>形式：<code>unique_ptr&lt;int[]&gt; uptr(new int[5]);</code></p>
+<p><code>unique_ptr</code>是具有以下特性的智能指针：</p>
+<ul>
+<li>通过指针保留了唯一的对象的所有权，并且 unique_ptr 离开作用域时，会析构指向的对象；</li>
+<li>unique_ptr 不能复制或者复制赋值，两个 unique_ptr 实例不能管理同一个对象；</li>
+<li>一个非 const 的 unique_ptr 可以将所管理对象的所有权转移到另一个 unique_ptr；</li>
+<li>一个 const unique_ptr 不能转让，而是将所管理对象的生命周期限制在指针所创建的作用域之中；</li>
+</ul>
+<p><strong>成员函数</strong><br>构造函数：构造新的 unique_ptr<br>析构函数：析构所管理的对象<br><code>operator=</code>：为 unique_ptr 赋值<br><code>release</code>：返回一个指向被管理对象的指针，并释放所有权<br><code>reset</code>：替换所管理的对象<br><code>swap</code>：交换所管理的对象<br><code>get</code>：返回指向被管理对象的指针<br><code>get_deleter</code>：返回删除器，用于被管理对象的析构<br><code>operator bool</code>：检查是否有关联的被管理对象<br><code>operator*</code>、<code>operator-&gt;</code>：解引用操作<br><code>operator[]</code>：提供对所管理数组的按索引访问</p>
+<p><strong>非成员函数</strong><br><code>make_unique</code>：创建管理对象的唯一指针（C++14）<br><code>swap(unique_ptr)</code>：特化 swap 算法<br><code>operator==</code>、<code>operator!=</code>、<code>operator&lt;</code>、<code>operator&lt;=</code>、<code>operator&gt;</code>、<code>operator&gt;=</code>：比较操作</p>
+<p>例1：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Foo {
+public:
+    Foo() { cout << "Foo::Foo()" << endl; }
+    ~Foo() { cout << "Foo::~Foo()" << endl; }
+    void bar() { cout << "Foo::bar()" << endl; }
+};
+
+void func(const Foo &) {
+    cout << "func(const Foo &)" << endl;
+}
+
+int main() {
+    // unique_ptr<Foo> p1(new Foo());    // C++11
+    unique_ptr<Foo> p1 = make_unique<Foo>(); // C++14
+
+    if (p1) {
+        cout << "p1_address: " << p1.get() << endl;
+        p1 -> bar();
+    }
+
+    {
+        unique_ptr<Foo> p2(move(p1));
+
+        if (p1) {
+            cout << "move fail" << endl;
+        } else if (p2) {
+            cout << "move success" << endl;
+            cout << "p2_address: " << p2.get() << endl;
+            p2 -> bar();
+            func(*p2);
+        }
+
+        p1 = move(p2);
+    }
+
+    if (p1) p1 -> bar();
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:03:07]
+$ g++ -v
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/7.1.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++ --enable-shared --enable-threads=posix --enable-libmpx --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --disable-multilib --disable-werror --enable-checking=release --enable-default-pie --enable-default-ssp
+Thread model: posix
+gcc version 7.1.1 20170630 (GCC)
+
+# root @ arch in ~/work on git:master x [11:03:41]
+$ alias g++
+g++='g++ -std=c++14 -Wall -Wextra'
+
+# root @ arch in ~/work on git:master x [11:03:49]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [11:03:54]
+$ ./a.out
+Foo::Foo()
+p1_address: 0x2264f90c20
+Foo::bar()
+move success
+p2_address: 0x2264f90c20
+Foo::bar()
+func(const Foo &)
+Foo::bar()
+Foo::~Foo()
+</script></code></pre>
+<p>例2：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <memory>
+
+using namespace std;
+
+int main() {
+    unique_ptr<int[]> p = make_unique<int[]>(5); // 拥有5个元素的int数组
+
+    for (int i=0; i<5; i++) {
+        p[i] = i + 1;
+    }
+
+    for (int i=0; i<5; i++) {
+        cout << p[i] << ", ";
+    }
+
+    cout << "\b\b " << endl;
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:12:51] C:1
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [11:12:52]
+$ ./a.out
+1, 2, 3, 4, 5
+</script></code></pre>
+<h3 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h3><p>头文件：<code>memory</code><br><code>shared_ptr</code>是通过指针保持某个对象的<strong>共享拥有权</strong>的智能指针；<br>若干个 shared_ptr 对象可以拥有同一个对象；最后一个指向该对象的 shared_ptr 被销毁或重置时，该对象被销毁；<br>销毁该对象时使用的是 delete 表达式或者是在构造 shared_ptr 时传入的自定义删除器（deleter）；</p>
+<p>shared_ptr 也可以不拥有对象，称作空（empty）；<br>shared_ptr 满足 CopyConstructible 和 CopyAssignable 的要求；</p>
+<p><strong>成员函数</strong><br>构造函数：构造新的 shared_ptr<br>析构函数：如果没有更多 shared_ptr 指向持有的对象，则析构对象<br><code>operator=</code>：为 shared_ptr 赋值<br><code>reset</code>：替换所管理的对象<br><code>swap</code>：交换所管理的对象<br><code>get</code>：返回指向被管理对象的指针<br><code>operator*</code>、<code>operator-&gt;</code>：对所存储的指针进行解引用<br><code>use_count</code>：返回 shared_ptr 所指对象的引用计数<br><code>unique</code>：检查所管理对象是否仅由当前 shared_ptr 的实例管理<br><code>operator bool</code>：检查是否有关联的管理对象<br><code>owner_before</code>：提供基于拥有者的共享指针排序</p>
+<p><strong>非成员函数</strong><br><code>make_shared</code>：从参数创建并返回 shared_ptr，便于类型推断<br><code>get_deleter</code>：返回指定类型的删除器，如果拥有的话<br><code>operator==</code>、<code>operator!=</code>、<code>operator&lt;</code>、<code>operator&lt;=</code>、<code>operator&gt;</code>、<code>operator&gt;=</code>：比较操作<br><code>operator&lt;&lt;</code>：将所管理指针的值输出到输出流中<br><code>swap(shared_ptr)</code>：特化 swap 算法</p>
+<p><strong>实现说明</strong><br>在典型的实现中，shared_ptr 只保存两个指针：</p>
+<ul>
+<li>指向被管理对象的指针</li>
+<li>指向<code>控制块（control block）</code>的指针</li>
+</ul>
+<p>控制块是一个动态分配的对象，其中包含：</p>
+<ul>
+<li>指向被管理对象的指针或被管理对象本身</li>
+<li>删除器</li>
+<li>分配器（allocator）</li>
+<li>拥有被管理对象的 shared_ptr 的数量</li>
+<li>引用被管理对象的 weak_ptr 的数量</li>
+</ul>
+<p>通过 make_shared 和 allocate_shared 创建 shared_ptr 时，控制块将被管理对象本身作为其数据成员；而通过构造函数创建 shared_ptr 时则保存指针；</p>
+<p>shared_ptr 持有的指针是通过 get() 返回的；而控制块所持有的指针/对象则是最终引用计数归零时会被删除的那个；两者并不一定相等；</p>
+<p>shared_ptr 的析构函数会将控制块中的 shared_ptr 计数器减一，如果减至零，控制块就会调用被管理对象的析构函数；但控制块本身直到 weak_ptr 计数器同样归零时才会释放；</p>
+<p>例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Foo {
+public:
+    Foo() { cout << "constructor" << endl; }
+    Foo(int) { cout << "Foo::Foo(int)" << endl; }
+    Foo(int, float) { cout << "Foo::Foo(int, float)" << endl; }
+    ~Foo() { cout << "destructor" << endl; }
+};
+
+int main() {
+    shared_ptr<Foo> p(new Foo[5], [](Foo *p){delete[] p;}); // 自定义删除器(数组)
+    p.reset();  // 释放资源
+
+    cout << "-------------------------" << endl;
+
+    p = make_shared<Foo>(/*(完美转发)Foo构造函数参数列表*/);    // 调用 Foo::Foo()
+    p.reset();
+
+    p = make_shared<Foo>(100);  // 调用 Foo::Foo(int)
+    p.reset();
+
+    p = make_shared<Foo>(100, 100.12f);  // 调用 Foo::Foo(int, float)
+    p.reset();
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:55:58]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [13:56:00]
+$ ./a.out
+constructor
+constructor
+constructor
+constructor
+constructor
+destructor
+destructor
+destructor
+destructor
+destructor
+-------------------------
+constructor
+destructor
+Foo::Foo(int)
+destructor
+Foo::Foo(int, float)
+destructor
+</script></code></pre>
+<h3 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h3><p>头文件：<code>memory</code><br><code>weak_ptr</code>是一种智能指针，它对被 shared_ptr 管理的对象存在非拥有性（“弱”）引用；在访问所引用的对象前必须先转换为 shared_ptr；</p>
+<p>weak_ptr 用来表达临时所有权的概念：<br>当某个对象只有存在时才需要被访问，而且随时可能被他人删除时，可以使用 weak_ptr 来跟踪该对象；<br>需要获得临时所有权时，则将其转换为 shared_ptr，此时如果原来的 shared_ptr 被销毁，则该对象的生命期将被延长至这个临时的 shared_ptr 同样被销毁为止；</p>
+<p>此外，weak_ptr 还可以用来避免 shared_ptr 的循环引用；</p>
+<p><strong>成员函数</strong><br>构造函数：构造新的weak_ptr<br>析构函数：析构weak_ptr<br><code>operator=</code>：为weak_ptr赋值<br><code>reset</code>：释放被管理对象的所有权<br><code>swap</code>：交换所管理的对象<br><code>use_count</code>：返回shared_ptr所管理对象的引用计数<br><code>expired</code>：检查被引用的对象是否已删除<br><code>lock</code>：创建管理被引用的对象的shared_ptr<br><code>owner_before</code>：提供基于拥有者的弱指针排序</p>
+<p><strong>非成员函数</strong><br><code>swap(weak_ptr)</code>：特化 swap 算法</p>
+<p>将一个 weak_ptr 赋给另一个 weak_ptr 会增加<code>弱引用计数(weak reference count)</code>；</p>
+<p>从 weak_ptr 调用 lock() 可以得到 shared_ptr；</p>
+<p>当 shared_ptr 离开作用域时，其内的资源释放了，这时候指向该 shared_ptr 的 weak_ptr 将会<code>过期（expired）</code>；</p>
+<p>判断 weak_ptr 是否指向有效资源，有两种方法：</p>
+<ul>
+<li>调用<code>use_count</code>去获取引用计数，该方法只返回<code>强引用计数</code>，并不返回<code>弱引用计数</code>；</li>
+<li>调用<code>expired</code>方法；比调用<code>use_count</code>方法速度更快；</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <memory>
+
+using namespace std;
+
+weak_ptr<int> wp;
+
+int main() {
+    auto func = [] () {
+        if (!wp.expired()) {
+            auto sp = wp.lock();
+            cout << "*sp = " << *sp << endl;
+        } else {
+            cout << "wp is expired" << endl;
+        }
+    };
+
+    {
+        auto sp = make_shared<int>(100);
+        wp = sp;
+        func();
+    }
+    func();
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:35:59]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:36:23]
+$ ./a.out
+*sp = 100
+wp is expired
+</script></code></pre>
+<h2 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h2><p><strong>左值、右值</strong><br>在 C++11 中所有的值必属于<code>左值</code>、<code>右值</code>两者之一，<code>右值</code>又可以细分为<code>纯右值</code>、<code>将亡值</code>；<br>在 C++11 中<strong>可以取地址的、有名字的</strong>就是<code>左值</code>；反之，<strong>不能取地址的、没有名字的</strong>就是<code>右值（将亡值或纯右值）</code>；</p>
+<p><strong>右值、将亡值</strong><br>在理解 C++11 的右值前，先看看 C++98 中右值的概念：<br>C++98 中右值是纯右值，<strong>纯右值</strong>指的是<code>临时变量值</code>、<code>不跟对象关联的字面量值</code>；临时变量指的是<code>非引用返回的函数返回值</code>、<code>表达式</code>等；</p>
+<p>C++11 对 C++98 中的右值进行了扩充；在 C++11 中右值又分为<code>纯右值（prvalue，Pure Rvalue）</code>和<code>将亡值（xvalue，eXpiring Value）</code>：<br>其中<strong>纯右值的概念等同于我们在 C++98 标准中右值的概念</strong>，指的是<code>临时变量</code>和<code>不跟对象关联的字面量值</code>；<br><strong>将亡值</strong>则是 C++11 新增的跟<code>右值引用</code>相关的表达式，这样表达式通常是<strong>将要被移动的对象（移为他用）</strong>；</p>
+<p><strong>左值引用、右值引用</strong><br><code>左值引用</code>就是<code>对一个左值进行引用的类型</code>；<code>右值引用</code>就是<code>对一个右值进行引用的类型</code>；<br>事实上，由于右值通常不具有名字，我们也只能通过引用的方式找到它的存在；</p>
+<p><strong>左值引用和右值引用都是属于引用类型</strong>；无论是声明一个左值引用还是右值引用，都<strong>必须立即进行初始化</strong>；</p>
+<p>左值引用通常也不能绑定到右值，但<code>常量左值引用</code>是个“万能”的引用类型；它可以接受<code>非常量左值</code>、<code>常量左值</code>、<code>右值</code>对其进行初始化；<br>不过<code>常量左值</code>所引用的右值在它的“余生”中只能是只读的；相对地，<strong>非常量左值只能接受非常量左值对其进行初始化</strong>；</p>
+<p>右值引用通常不能绑定到任何的左值，要想绑定一个左值到右值引用，通常需要<code>std::move()</code>将左值强制转换为右值；</p>
+<p>探究一下右值引用：<br>例一：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+int func() {
+    int n = 100;
+    cout << "n = " << n << ", &n = " << &n << endl;
+    return n;
+}
+
+int main() {
+//  int &lr = func();   // 编译错误，左值引用不能绑定到右值
+    const int &clr = func(); // 常量左值引用是所谓的"万能引用类型"
+    cout << "clr = " << clr << ", &clr = " << &clr << endl;
+    const_cast<int &>(clr) = 200;    // 去掉 const 修饰
+    cout << "clr = " << clr << ", &clr = " << &clr << endl;
+    cout << "--------------------------" << endl;
+
+    int &&rr = func();   // 右值引用
+    cout << "rr = " << rr << ", &rr = " << &rr << endl;
+    rr = 200;
+    cout << "rr = " << rr << ", &rr = " << &rr << endl;
+    cout << "--------------------------" << endl;
+
+    const int &&crr = func();   // 常量右值引用
+    cout << "crr = " << crr << ", &crr = " << &crr << endl;
+    const_cast<int &>(crr) = 200;
+    cout << "crr = " << crr << ", &crr = " << &crr << endl;
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:42:40]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [15:42:53]
+$ ./a.out
+n = 100, &n = 0x7ffdebc0b294
+clr = 100, &clr = 0x7ffdebc0b2b4
+clr = 200, &clr = 0x7ffdebc0b2b4
+--------------------------
+n = 100, &n = 0x7ffdebc0b294
+rr = 100, &rr = 0x7ffdebc0b2b8
+rr = 200, &rr = 0x7ffdebc0b2b8
+--------------------------
+n = 100, &n = 0x7ffdebc0b294
+crr = 100, &crr = 0x7ffdebc0b2bc
+crr = 200, &crr = 0x7ffdebc0b2bc
+</script></code></pre>
+<p>例二：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+int g_num = 10;
+
+class Foo {
+public:
+    Foo() : lr(g_num), rr(move(g_num)) {}
+private:
+    int &lr;
+    int &&rr;
+};
+
+int main() {
+    cout << sizeof(Foo) << endl;
+    Foo foo;
+    *(int *)*(long *)&foo = 100;
+    cout << g_num << endl;
+    *(int *)*((long *)&foo + 1) = 200;
+    cout << g_num << endl;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:59:16]
+$ g++ b.cpp
+
+# root @ arch in ~/work on git:master x [15:59:19]
+$ ./a.out
+16
+100
+200
+</script></code></pre>
+<p>不管是左值引用还是右值引用，本质都是由指针实现的，非常量左值引用之所以不能绑定函数返回值、表达式结果、字面量等右值，是因为无法使用<code>&amp;</code>取到它们的地址，因为它们要么存储在寄存器中（函数返回值、表达式结果），要么被硬编码到代码区（字面量）；</p>
+<p>而对于常量左值引用，编译器会创建一个临时变量，并将上述的值拷贝到该临时变量，因为不需要考虑引用与原数据之前的同步问题，所以创建一个临时变量反而增加了引用的灵活度和通用性；</p>
+<blockquote>
+<p>并非所有的常量引用都会创建一个临时变量，编译器只会在必要的情况下创建临时变量，编译器有自己的判断能力；</p>
+</blockquote>
+<p>而右值引用，本质上还是与左值引用一样，如果要绑定的数据不是临时数据（如例二中的move()语句），那么就等同于左值引用，并不会创建一个临时变量；如果要绑定的数据是临时数据，那么采取的机制和常量左值引用一样；常量右值引用也是一样的道理，只不过不能修改引用的值罢了（也仅仅是语义上的不能修改）；</p>
+<h2 id="移动语义"><a href="#移动语义" class="headerlink" title="移动语义"></a>移动语义</h2><p>C++11 新标准重新定义了 lvalue 和 rvalue ，并允许函数依照这两种不同的类型进行重载；<br>通过对于<code>右值（rvalue）</code>的重新定义，语言实现了<code>移动语义（move semantic）</code>和<code>完美转发（perfect forwarding）</code>；<br>通过这种方法，C++ 实现了在保留原有的语法并不改动已存在的代码的基础上提升代码性能的目的；</p>
+<p>C++11 引入右值引用的概念，就是为了实现移动语义和完美转发；</p>
+<p>对于类 Foo 来说：<br><code>CopyConstructible</code>：拷贝构造函数，<code>Foo(const Foo &amp;foo);</code><br><code>CopyAssignable</code>：拷贝赋值运算符，<code>Foo &amp; operator=(const Foo &amp;foo);</code><br><code>MoveConstructible</code>：移动构造函数，<code>Foo(Foo &amp;&amp;foo);</code><br><code>MoveAssignable</code>：移动赋值运算符，<code>Foo &amp; operator=(Foo &amp;&amp;foo);</code></p>
+<p>如果一个类没有显示定义移动构造函数、移动赋值运算符，编译器并不会自动生成；而是使用拷贝构造函数、拷贝赋值运算符；</p>
+<p>移动语义的使用场景：<br>我们先来看一下Copy语义的弊端：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+class Array {
+public:
+    explicit Array(int len = 0); // 普通构造函数
+    Array(const Array &arr);    // 拷贝构造函数
+    ~Array();   //  析构函数
+public:
+    int length() const { return m_len; }
+    Array & operator=(const Array &arr);    // 拷贝赋值运算符
+    int & operator[](int i) const { return m_ptr[i]; }   // 下标运算符
+    friend ostream & operator<<(ostream &out, const Array &arr);    // 流输出符
+private:
+    int *m_ptr;
+    int m_len;
+};
+
+Array::Array(int len) : m_len(len) {
+    if (len == 0) {
+        m_ptr = nullptr;
+    } else {
+        m_ptr = (int *)calloc(m_len, sizeof(int));
+    }
+    cout << "constructor" << endl;
+}
+
+Array::Array(const Array &arr) : m_len(arr.m_len) {
+    m_ptr = (int *)calloc(m_len, sizeof(int));
+    memcpy(m_ptr, arr.m_ptr, m_len * sizeof(int));
+    cout << "copy constructor" << endl;
+}
+
+Array::~Array() {
+    free(m_ptr);
+    cout << "destructor" << endl;
+}
+
+Array & Array::operator=(const Array &arr) {
+    if (this != &arr) {
+        m_len = arr.m_len;
+        m_ptr = (int *)calloc(m_len, sizeof(int));
+        memcpy(m_ptr, arr.m_ptr, m_len * sizeof(int));
+    }
+    cout << "copy assignment" << endl;
+    return *this;
+}
+
+ostream & operator<<(ostream &out, const Array &arr) {
+    if (arr.m_len == 0) {
+        out << "Array is empty" << endl;
+    } else {
+        out << "Array[" << arr.m_len << "] = { ";
+        for (int i=0; i<arr.m_len; i++) {
+            out << arr.m_ptr[i] << ", ";
+        }
+        out << "\b\b }" << endl;
+    }
+    return out;
+}
+
+Array get_array(int len) {
+    return Array(len);
+}
+
+int main() {
+    Array arr = get_array(10000);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:27:26]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [17:27:48]
+$ ./a.out
+constructor
+destructor
+
+# root @ arch in ~/work on git:master x [17:27:49]
+$ g++ a.cpp -fno-elide-constructors
+
+# root @ arch in ~/work on git:master x [17:27:52]
+$ ./a.out
+constructor
+copy constructor
+destructor
+copy constructor
+destructor
+destructor
+</script></code></pre>
+<p>先不管第一次编译出来的 a.out 的运行结果，我们看第二次的运行结果；<br>C/C++ 程序都是从 main 函数开始的，所以，当遇到语句<code>Array arr = get_array(10000);</code>时：<br>先执行赋值符号右边的语句，即调用函数 get_array，因为函数 get_array 直接 return 一个匿名的 Array 实例，为了防止离开函数 get_array 时自动调用 Array 的析构函数，编译器会创建一个临时变量，将 get_array 中的匿名对象拷贝过去（深拷贝）；<br>而在函数 get_array 返回时，函数内的匿名对象将会被析构；然后再次将拷贝出来的临时变量赋值给 main 函数中的 arr，这又是一次深拷贝；拷贝结束后，这个临时变量的使命就完成了，于是调用析构函数，终结了自己的生命；最后 main 函数返回，arr 被析构；</p>
+<p>注意到没有，使用Copy语义的情况下，函数 get_array 将会产生两次深拷贝的操作，这个开销是不容小觑的；</p>
+<p>那为什么第一次编译的结果却只调用了构造函数和析构函数呢，并没有所谓的临时变量的产生过程？<br>那是因为现代编译器都采用了返回值优化技术，尽量避免了这种无意义的拷贝操作；</p>
+<p>那既然有了返回值优化技术，为什么还需要Move语义？<br>因为仅仅依靠返回值优化技术不一定每次都能将该问题处理的很好，我们必须在语言层次上进行优化；</p>
+<p><strong>使用了移动语义的Array</strong></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+class Array {
+public:
+    explicit Array(int len = 0); // 普通构造函数
+    Array(const Array &arr);    // 拷贝构造函数
+    Array(Array &&arr);     // 移动构造函数
+    ~Array();   //  析构函数
+public:
+    int length() const { return m_len; }
+    Array & operator=(const Array &arr);    // 拷贝赋值运算符
+    Array & operator=(Array &&arr);     // 移动赋值运算符
+    int & operator[](int i) const { return m_ptr[i]; }   // 下标运算符
+    friend ostream & operator<<(ostream &out, const Array &arr);    // 流输出符
+private:
+    int *m_ptr;
+    int m_len;
+};
+
+Array::Array(int len) : m_len(len) {
+    if (len == 0) {
+        m_ptr = nullptr;
+    } else {
+        m_ptr = (int *)calloc(m_len, sizeof(int));
+    }
+    cout << "constructor" << endl;
+}
+
+Array::Array(const Array &arr) : m_len(arr.m_len) {
+    m_ptr = (int *)calloc(m_len, sizeof(int));
+    memcpy(m_ptr, arr.m_ptr, m_len * sizeof(int));
+    cout << "copy constructor" << endl;
+}
+
+Array::Array(Array &&arr) : m_ptr(arr.m_ptr), m_len(arr.m_len) {
+    arr.m_ptr = nullptr;
+    cout << "move constructor" << endl;
+}
+
+Array::~Array() {
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
+    cout << "destructor" << endl;
+}
+
+Array & Array::operator=(const Array &arr) {
+    if (this != &arr) {
+        m_len = arr.m_len;
+        m_ptr = (int *)calloc(m_len, sizeof(int));
+        memcpy(m_ptr, arr.m_ptr, m_len * sizeof(int));
+    }
+    cout << "copy assignment" << endl;
+    return *this;
+}
+
+Array & Array::operator=(Array &&arr) {
+    if (this != &arr) {
+        m_ptr = arr.m_ptr;
+        m_len = arr.m_len;
+        arr.m_ptr = nullptr;
+    }
+    cout << "move assignment" << endl;
+    return *this;
+}
+
+ostream & operator<<(ostream &out, const Array &arr) {
+    if (arr.m_len == 0) {
+        out << "Array is empty" << endl;
+    } else {
+        out << "Array[" << arr.m_len << "] = { ";
+        for (int i=0; i<arr.m_len; i++) {
+            out << arr.m_ptr[i] << ", ";
+        }
+        out << "\b\b }" << endl;
+    }
+    return out;
+}
+
+Array get_array(int len) {
+    return Array(len);
+}
+
+int main() {
+    Array arr1 = get_array(10000);
+    cout << "--------------------" << endl;
+    Array arr2;
+    arr2 = get_array(20000);
+    cout << "--------------------" << endl;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:58:43]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [17:59:02]
+$ ./a.out
+constructor
+--------------------
+constructor
+constructor
+move assignment
+destructor
+--------------------
+destructor
+destructor
+
+# root @ arch in ~/work on git:master x [17:59:04]
+$ g++ a.cpp -fno-elide-constructors
+
+# root @ arch in ~/work on git:master x [17:59:07]
+$ ./a.out
+constructor
+move constructor
+destructor
+move constructor
+destructor
+--------------------
+constructor
+constructor
+move constructor
+destructor
+move assignment
+destructor
+--------------------
+destructor
+destructor
+</script></code></pre>
+<p>因为函数 get_array 的返回值是一个右值，所以匹配到的构造函数就是<code>Array::Array(Array &amp;&amp;arr)</code>，也就是所谓的移动构造函数<br>而对于 arr2 也是一样的道理，赋值操作的参数是一个右值（get_array 的返回值），匹配到的赋值函数就是<code>Array &amp; Array::operator=(Array &amp;&amp;arr)</code>，也就是所谓的移动赋值运算符；</p>
+<p>如果你仔细观察这两个Move语义的成员函数，可以发现，这其实就是我们前面讲的”浅拷贝”，而Copy语义的成员函数就是”深拷贝”；</p>
+<p>注意一个细节，arr.m_ptr 需要指向 nullptr，如果不这样做，可能导致拷贝出来的成员变量 m_ptr 变成悬置指针，因为被自动 free 掉了；</p>
+<blockquote>
+<p>事实上左值和右值与类型是没有关系的，区别左值和右值的唯一方法就是其定义，即能否取到地址；也就是说，但凡有名字的“右值”，其实都是左值；使用<code>std::move()</code>可以将左值转换成右值；</p>
+</blockquote>
+<h2 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h2><p><code>完美转发（perfect forwarding）</code>问题是指函数模板在向其他函数传递参数时该如何保留该参数的左右值属性的问题；</p>
+<p>也就是说函数模板在向其他函数传递自身形参时，如果相应实参是左值，它就应该被转发为左值；同样如果相应实参是右值，它就应该被转发为右值；<br>这样做是为了保留在其他函数针对转发而来的参数的左右值属性进行不同处理（比如参数为左值时实施拷贝语义；参数为右值时实施移动语义）的可能性；</p>
+<p>如果将自身参数不分左右值一律转发为左值，其他函数就只能将转发而来的参数视为左值，从而失去针对该参数的左右值属性进行不同处理的可能性；</p>
+<p>使用完美转发的典型场景：<code>make_shared&lt;T&gt;(param...)</code>、<code>make_unique&lt;T&gt;(param...)</code>，就必须使用完美转发；</p>
+<p>例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+template <typename T>
+void func(T &) {
+    cout << "lvalue refer" << endl;
+}
+
+template <typename T>
+void func(T &&) {
+    cout << "rvalue refer" << endl;
+}
+
+template <typename T>
+void func(const T &) {
+    cout << "const lvalue refer" << endl;
+}
+
+template <typename T>
+void func(const T &&) {
+    cout << "const rvalue refer" << endl;
+}
+
+template <typename T>
+void perfect_forward(T &&t) {
+    func(forward<T>(t));
+}
+
+int main() {
+    int n = 10;
+    perfect_forward(n);         // lvalue refer
+    perfect_forward(move(n));   // rvalue refer
+    perfect_forward(10);        // rvalue refer
+
+    const int &clr = n;
+    perfect_forward(clr);       // const lvalue refer
+    perfect_forward(move(clr)); // const rvalue refer
+    const int &&crr = 10;
+    perfect_forward(crr);       // const lvalue refer
+    perfect_forward(move(crr)); // const rvalue refer
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:06:39]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [20:06:51]
+$ ./a.out
+lvalue refer
+rvalue refer
+rvalue refer
+const lvalue refer
+const rvalue refer
+const lvalue refer
+const rvalue refer
+</script></code></pre>
+<h2 id="static-assert断言"><a href="#static-assert断言" class="headerlink" title="static_assert断言"></a>static_assert断言</h2><p>在 C++11 中，有 3 种错误处理机制：<code>#error</code>、<code>assert()</code>、<code>static_assert()</code></p>
+<ul>
+<li><code>#error</code>：<code>#error</code>指令在预处理时有效，它将无条件地发出用户指定的消息并导致编译因错误而失败；该消息可包含由预处理器指令操作的文本，但不会计算任何生成的表达式；<br><code>#error</code>可看做预编译期断言，甚至都算不上断言，仅仅能在预编译时显示一个错误信息，它能做的不多，可以参与预编译的条件检查，由于它无法获得编译信息，当然就做不了更进一步分析了；</li>
+<li><code>assert</code>：<code>assert</code>是运行期断言，它用来发现运行期间的错误，不能提前到编译期发现错误，也不具有强制性，也谈不上改善编译信息的可读性，既然是运行期检查，对性能当然是有影响的，所以经常在发行版本中，assert都会被关掉；</li>
+<li><code>static_assert</code>：进行编译时断言检查，语法格式：<code>static_assert(bool_constexpr, message)</code>；<code>bool_constexpr</code>为常量表达式，<code>message</code>为字符串字面量；<br>若 bool_constexpr 返回 true ，则此声明没有效果；否则发布一个编译时错误，而且若存在 message，则其文本被包含于诊断消息中；<br>由于 static_assert 是编译期间断言，不生成目标代码，因此 static_assert 不会造成任何运行期性能损失；</li>
+</ul>
+<h2 id="强类型枚举"><a href="#强类型枚举" class="headerlink" title="强类型枚举"></a>强类型枚举</h2><p>枚举类（“新的枚举”/“强类型的枚举”）主要用来解决传统的 C/C++ 枚举的三个问题：</p>
+<ul>
+<li>传统 C++ 枚举会被隐式转换为 int，这在那些不应被转换为 int 的情况下可能导致错误</li>
+<li>传统 C++ 枚举的每一枚举值在其作用域范围内都是可见的，容易导致名称冲突(同名冲突)</li>
+<li>不可以指定枚举的底层数据类型，这可能会导致代码不容易理解、兼容性问题以及不可以进行前向声明</li>
+</ul>
+<p><code>枚举类（enum class）</code>（“强类型枚举”）是强类型的，并且具有类域：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+enum class week : char {    // 指明底层数据类型为char
+    Mon,
+    Tues,
+    Wed,
+    Thur,
+    Fri,
+    Sat,
+    Sun
+};
+
+void func(week &day) {
+    switch (day) {
+        case week::Mon : cout << "Monday" << endl; break;
+        case week::Tues : cout << "Tuesday" << endl; break;
+        case week::Wed : cout << "Wednesday" << endl; break;
+        case week::Thur : cout << "Thursday" << endl; break;
+        case week::Fri : cout << "Friday" << endl; break;
+        case week::Sat : cout << "Saturday" << endl; break;
+        case week::Sun : cout << "Sunday" << endl; break;
+    }
+}
+
+int main () {
+    week day = week::Fri;
+    func(day);
+    return 0;
+}
+</script></code></pre>
+<p>枚举类的底层数据类型必须是<code>有符号</code>或<code>无符号</code>的<code>整型</code>，默认情况下是<code>int</code>；</p>
+<p>同时，由于能够指定枚举值的底层数据类型，所以前向声明得以成为可能；<br>所谓前向声明就是在枚举类定义之前就使用这个枚举类的名字声明指针或引用变量；</p>
+<p>比如上面例子中的 week 枚举类，可以这样做前向声明：<code>enum class week : char;</code></p>
+<h2 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h2><p>以往，如果想要遍历一个数组，一般的做法是：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+    for (unsigned i=0; i<sizeof(arr)/sizeof(int); i++) {
+        cout << arr[i] << ", ";
+    }
+    cout << "\b\b " << endl;
+    return 0;
+}
+</script></code></pre>
+<p>其实有些时候我们并不关心下标、迭代器位置或者元素个数，只是想依次输出元素的值而已，在 C++11 中可以这么写：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+    for (int i : arr) {
+        cout << i << ", ";
+    }
+    cout << "\b\b " << endl;
+    return 0;
+}
+</script></code></pre>
+<p>上面的代码中，因为 i 是按值传递的，所以在 for 循环体内部更改 i 的值并不会影响到外部的数组；<br>如果需要能够读写元素的值，那么可以将 i 改为按引用传递的方式，比如：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+    // 引用传递，可读写元素
+    for (int &i : arr) {
+        i += 100;
+    }
+    // 读取元素
+    for (const int &i : arr) {
+        cout << i << ", ";
+    }
+    cout << "\b\b " << endl;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:25:29]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:25:45]
+$ ./a.out
+101, 102, 103, 104, 105
+</script></code></pre>
+<h2 id="原始字符串"><a href="#原始字符串" class="headerlink" title="原始字符串"></a>原始字符串</h2><p>每次用 C 语言写正则模式的时候都非常蛋疼，各种转义，非常繁琐；<br>但是在 python 中写正则模式却是很爽的，因为可以定义一个不转义的原始字符串：<code>r&#39;raw_string&#39;</code>；</p>
+<p>那么在 C++ 中有没有类似的原始字符串的功能呢？<br>C++11 不愧称为 modern c++，当然会提供原始字符串了！</p>
+<p>原始字符串字面量的定义为：<code>R&quot;xxx(raw_string)xxx&quot;</code><br>其中，原始字符串必须用括号<code>()</code>括起来，括号的前后可以加其他字符串，所加的字符串会被忽略，并且加的字符串必须在括号两边同时出现；当然，最好两边什么也不加，看起来更清晰；</p>
+<p>例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+using namespace std;
+
+int main() {
+    const char *pattern = R"(www.zfl9.com\r\n, ''""\\)";
+    cout << pattern << endl;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:38:22]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:38:34]
+$ ./a.out
+www.zfl9.com\r\n, ''""\\
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/cpp-stl.html" rel="next" title="C++ STL入门">
+                <i class="fa fa-chevron-left"></i> C++ STL入门
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/cpp-io.html" rel="prev" title="C++ 输入与输出">
+                C++ 输入与输出 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动类型推导"><span class="nav-number">1.</span> <span class="nav-text">自动类型推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#auto"><span class="nav-number">1.1.</span> <span class="nav-text">auto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#decltype"><span class="nav-number">1.2.</span> <span class="nav-text">decltype</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#functional标准库"><span class="nav-number">2.</span> <span class="nav-text">functional标准库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lambda表达式"><span class="nav-number">3.</span> <span class="nav-text">lambda表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型lambda"><span class="nav-number">4.</span> <span class="nav-text">泛型lambda</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关的关键字"><span class="nav-number">5.</span> <span class="nav-text">相关的关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#委托构造"><span class="nav-number">6.</span> <span class="nav-text">委托构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化语法"><span class="nav-number">7.</span> <span class="nav-text">初始化语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#匿名命名空间"><span class="nav-number">8.</span> <span class="nav-text">匿名命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#智能指针"><span class="nav-number">9.</span> <span class="nav-text">智能指针</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unique-ptr"><span class="nav-number">9.1.</span> <span class="nav-text">unique_ptr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shared-ptr"><span class="nav-number">9.2.</span> <span class="nav-text">shared_ptr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#weak-ptr"><span class="nav-number">9.3.</span> <span class="nav-text">weak_ptr</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#右值引用"><span class="nav-number">10.</span> <span class="nav-text">右值引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移动语义"><span class="nav-number">11.</span> <span class="nav-text">移动语义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完美转发"><span class="nav-number">12.</span> <span class="nav-text">完美转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#static-assert断言"><span class="nav-number">13.</span> <span class="nav-text">static_assert断言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#强类型枚举"><span class="nav-number">14.</span> <span class="nav-text">强类型枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for循环"><span class="nav-number">15.</span> <span class="nav-text">for循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原始字符串"><span class="nav-number">16.</span> <span class="nav-text">原始字符串</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/cpp-cpp11.html';
+          this.page.identifier = 'cpp-cpp11.html';
+          this.page.title = 'C++11 新特性';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

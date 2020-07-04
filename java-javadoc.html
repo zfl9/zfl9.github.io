@@ -1,0 +1,729 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="javadoc API文档">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="javadoc 生成 API 文档">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javadoc 生成 API 文档">
+<meta property="og:url" content="https://www.zfl9.com/java-javadoc.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="javadoc 生成 API 文档">
+<meta property="og:image" content="https://www.zfl9.com/images/java-javadoc-1.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-javadoc-2.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-javadoc-3.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-javadoc-4.png">
+<meta property="og:updated_time" content="2019-02-18T12:48:13.221Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javadoc 生成 API 文档">
+<meta name="twitter:description" content="javadoc 生成 API 文档">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-javadoc-1.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-javadoc.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>javadoc 生成 API 文档 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-javadoc.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                javadoc 生成 API 文档
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T16:28:00+08:00">
+                2017-09-27
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-javadoc.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-javadoc.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-javadoc.html" class="leancloud_visitors" data-flag-title="javadoc 生成 API 文档">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>javadoc 生成 API 文档</p>
+<a id="more"></a>
+<h2 id="javadoc-是什么"><a href="#javadoc-是什么" class="headerlink" title="javadoc 是什么"></a>javadoc 是什么</h2><p><code>javadoc</code>是 JDK 中自带的一个很有用的工具，它从源代码中抽取类、构造器、方法、字段等注释形成一个和源代码配套的 API 帮助文档。也就是说，只要在编写程序时以一套特定的标签作注释，在程序编写完成后，通过 javadoc 工具就可以同时形成程序的开发文档了。</p>
+<p>Java 中有 3 种注释方法：<br>1) <code>// ...</code>：单行注释<br>2) <code>/* ... */</code>：多行注释<br>3) <code>/** ... */</code>：多行注释</p>
+<p>其中第三种是专门为 javadoc 设计的，它可以被 javadoc 解析为相应的 HTML 文档，<a href="http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html" rel="external nofollow noopener noreferrer" target="_blank">javadoc 官方文档</a>。<br>如果你经常查阅<a href="https://docs.oracle.com/javase/8/docs/api/" rel="external nofollow noopener noreferrer" target="_blank">Java API - Oracle 官方文档</a>，你会发现，这个庞大的在线 API 文档其实就是使用 javadoc 工具生成的。</p>
+<h2 id="文档注释格式"><a href="#文档注释格式" class="headerlink" title="文档注释格式"></a>文档注释格式</h2><p><strong>文档注释的位置</strong><br><code>包</code>(<strong><code>package-info.java</code></strong>)、<code>类</code>、<code>接口</code>、<code>构造器</code>、<code>方法</code>、<code>属性</code></p>
+<p><strong>文档注释的三部分</strong><br>1) <strong>简述</strong>：简述位于注释的起始位置，直到出现第一个<code>.</code>句号(包括句号)；<br>2) <strong>详细说明</strong>：详细说明包括简述，对格式没有特别要求，可以有若干个句号；<br>3) <strong>标记部分</strong>：所有的标记都以<code>@</code>开头，包括版本说明、参数说明、返回值说明等。</p>
+<p>在 javadoc 注释中可以使用 HTML 标签，比如：换行不应该直接敲入一个回车，而应使用标签<code>&lt;br&gt;</code>；起一个段落应使用标签<code>&lt;p&gt;</code>放在段落的起始位置。</p>
+<p><strong><code>@</code>块标记</strong><br>常用的块标记有：<br>1) <code>@author 作者</code>：用于包、类、接口，可以有多个；<br>2) <code>@version 版本号</code>：用于包、类、接口；<br>3) <code>@since JDKx.x</code>：支持的 JDK 版本，用于包、类、接口、构造器、方法、属性；<br>4) <code>@param 参数名 描述</code>：形参的说明，用于构造器、方法；<br>5) <code>@return 描述</code>：函数返回值的说明，用于方法；<br>6) <code>@throws 异常类名 描述</code>：可能会抛出的异常说明，用于构造器、方法；<br>7) <code>@exception 异常类名 描述</code>：同<code>@throws</code>标记；<br>8) <code>@deprecated 描述</code>：对已过期 API 的描述，用于包、类、接口、构造器、方法、属性；<br>9) <code>@see 包.类#字段/方法(param...)</code>：如果跳转的 url 就是当前类的其他方法/字段，则<code>#</code>之前的可以省略，用于包、类、接口、构造器、方法、属性；<br>10) <code>{@link 包.类#字段/方法(param...)}</code>：同<code>@see</code>标记；<br>11) <code>{@value 包.类#字段}</code>：引用 final 常量的值，用于 final 属性；<br>12) <code>{@code text}</code>：不进行 HTML 解析，表示一个纯文本的代码；<br>13) <code>{@inheritDoc}</code>：从继承的类、接口中继承注释，可以进行拼接，参数、返回值、异常可以在子类中覆盖父类的相关注释。</p>
+<p>常用 HTML 标签：<br>1) <code>&lt;br&gt;</code>：换行标签<br>2) <code>&lt;p&gt;</code>：段落标签<br>3) <code>&lt;blockquote&gt;&lt;pre&gt; ... &lt;/pre&gt;&lt;/blockquote&gt;</code>：多行代码块<br>4) <code>&lt;strong&gt; ... &lt;/strong&gt;</code>：粗体强调<br>5) <code>&lt;em&gt; ... &lt;/em&gt;</code>：斜体强调<br>6) <code>&lt;b&gt; ... &lt;/b&gt;</code>：显示粗体<br>7) <code>&lt;i&gt; ... &lt;/i&gt;</code>：显示斜体</p>
+<h2 id="javadoc-命令"><a href="#javadoc-命令" class="headerlink" title="javadoc 命令"></a>javadoc 命令</h2><p><strong>javadoc 命令</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">$ javadoc -help
+Usage: javadoc [options] [packagenames] [sourcefiles] [@files]
+  -overview <file>                 Read overview documentation from HTML file
+  -public                          Show only public classes and members
+  -protected                       Show protected/public classes and members (default)
+  -package                         Show package/protected/public classes and members
+  -private                         Show all classes and members
+  -help                            Display command line options and exit
+  -doclet <class>                  Generate output via alternate doclet
+  -docletpath <path>               Specify where to find doclet class files
+  -sourcepath <pathlist>           Specify where to find source files
+  -classpath <pathlist>            Specify where to find user class files
+  -cp <pathlist>                   Specify where to find user class files
+  -exclude <pkglist>               Specify a list of packages to exclude
+  -subpackages <subpkglist>        Specify subpackages to recursively load
+  -breakiterator                   Compute first sentence with BreakIterator
+  -bootclasspath <pathlist>        Override location of class files loaded
+                                   by the bootstrap class loader
+  -source <release>                Provide source compatibility with specified release
+  -extdirs <dirlist>               Override location of installed extensions
+  -verbose                         Output messages about what Javadoc is doing
+  -locale <name>                   Locale to be used, e.g. en_US or en_US_WIN
+  -encoding <name>                 Source file encoding name
+  -quiet                           Do not display status messages
+  -J<flag>                         Pass <flag> directly to the runtime system
+  -X                               Print a synopsis of nonstandard options and exit
+
+Provided by Standard doclet:
+  -d <directory>                   Destination directory for output files
+  -use                             Create class and package usage pages
+  -version                         Include @version paragraphs
+  -author                          Include @author paragraphs
+  -docfilessubdirs                 Recursively copy doc-file subdirectories
+  -splitindex                      Split index into one file per letter
+  -windowtitle <text>              Browser window title for the documentation
+  -doctitle <html-code>            Include title for the overview page
+  -header <html-code>              Include header text for each page
+  -footer <html-code>              Include footer text for each page
+  -top    <html-code>              Include top text for each page
+  -bottom <html-code>              Include bottom text for each page
+  -link <url>                      Create links to javadoc output at <url>
+  -linkoffline <url> <url2>        Link to docs at <url> using package list at <url2>
+  -excludedocfilessubdir <name1>:.. Exclude any doc-files subdirectories with given name.
+  -group <name> <p1>:<p2>..        Group specified packages together in overview page
+  -nocomment                       Suppress description and tags, generate only declarations.
+  -nodeprecated                    Do not include @deprecated information
+  -noqualifier <name1>:<name2>:... Exclude the list of qualifiers from the output.
+  -nosince                         Do not include @since information
+  -notimestamp                     Do not include hidden time stamp
+  -nodeprecatedlist                Do not generate deprecated list
+  -notree                          Do not generate class hierarchy
+  -noindex                         Do not generate index
+  -nohelp                          Do not generate help link
+  -nonavbar                        Do not generate navigation bar
+  -serialwarn                      Generate warning about @serial tag
+  -tag <name>:<locations>:<header> Specify single argument custom tags
+  -taglet                          The fully qualified name of Taglet to register
+  -tagletpath                      The path to Taglets
+  -charset <charset>               Charset for cross-platform viewing of generated documentation.
+  -helpfile <file>                 Include file that help link links to
+  -linksource                      Generate source in HTML
+  -sourcetab <tab length>          Specify the number of spaces each tab takes up in the source
+  -keywords                        Include HTML meta tags with package, class and member info
+  -stylesheetfile <path>           File to change style of the generated documentation
+  -docencoding <name>              Specify the character encoding for the output
+</script></code></pre>
+<p><strong>常用命令选项</strong><br><code>-public</code>：只显示 public 类、成员<br><code>-protected</code>：只显示 protected/public 类、成员（默认）<br><code>-package</code>：只显示 package/protected/public 类、成员<br><code>-private</code>：显示所有类、成员</p>
+<p><code>-sourcepath &lt;pathlist&gt;</code>：指定源代码文件搜索路径<br><code>-classpath &lt;pathlist&gt;</code>：指定用户类文件搜索路径<br><code>-cp &lt;pathlist&gt;</code>：指定用户类文件搜索路径（同 -classpath）<br><code>-exclude &lt;pkglist&gt;</code>：指定要排除的 package 包<br><code>-subpackages &lt;subpkglist&gt;</code>：指定递归加载的子 package 包</p>
+<p><code>-verbose</code>：输出详细信息<br><code>-quiet</code>：输出简略信息</p>
+<p><code>-locale &lt;name&gt;</code>：指定生成的文档的语言环境（必须位于所有选项的前面），如 en_US、zh_CN<br><code>-encoding &lt;name&gt;</code>：指定源代码文件使用的字符编码，如 UTF-8、GBK、GB2312</p>
+<p><strong>标准 doclet 参数</strong><br><code>-d &lt;directory&gt;</code>：输出文件的存放目录</p>
+<p><code>-version</code>：包含<code>@version</code>字段<br><code>-author</code>：包含<code>@author</code>字段<br><code>-serialwarn</code>：生成有关<code>@serial</code>标记的警告<br><code>-use</code>：创建类和 package 的用法页面</p>
+<p><code>-nodeprecated</code>：不包含<code>@deprecated</code>字段<br><code>-nosince</code>：不包含<code>@since</code>字段</p>
+<p><code>-nodeprecatedlist</code>：不生成已过时的 API 列表<br><code>-nocomment</code>：不生成说明和标记，只生成声明<br><code>-notimestamp</code>：不包含隐藏时间戳<br><code>-notree</code>：不生成类分层结构<br><code>-noindex</code>：不生成索引<br><code>-nohelp</code>：不生成帮助链接<br><code>-nonavbar</code>：不生成导航栏</p>
+<p><code>-windowtitle &lt;text&gt;</code>：指定文档的 title 标题<br><code>-docencoding &lt;name&gt;</code>：指定生成的 HTML 文档的字符编码</p>
+<p><strong>典型用法举例</strong></p>
+<pre><code class="language-bash"><script type="text/plain">javadoc -locale zh_CN -d html/ -sourcepath /root/work/src/:/root/work/test/ com.zfl9.test1 com.zfl9.test2 /root/work/src/MyClass.java
+# 语言环境为 zh_CN
+# 生成的文档目录为 html/
+# 源码搜索路径为 /root/work/src/:/root/work/test/
+# 要生成 doc 的包为 com.zfl9.test1、com.zfl9.test2
+# 另加一个单独的源文件 /root/work/src/MyClass.java
+
+javadoc -locale zh_CN -d html/ -sourcepath /root/work/src/:/root/work/test/ @target.txt
+# 使用 target.txt 文件中指定的包、源文件
+# target.txt 文件的内容为：
+com.zfl9.test1
+com.zfl9.test2
+/root/work/src/MyClass.java
+</script></code></pre>
+<p><strong>javadoc 例子</strong><br>1) 创建两个 package 包：com.zfl9.test1、com.zfl9.test2；<br>2) 在每个 package 包中创建一个 package-info.java 包描述文件。</p>
+<blockquote>
+<p>因为两个包的内容很相似，所以这里只做 com.zfl9.test1 包的演示。</p>
+</blockquote>
+<p><strong>package-info.java</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/**
+ * 测试包1，用于测试 javadoc.
+ * 目前为止，这个包只有一个类 - {@code Test}<br>
+ * 该类没有实际意义，仅用于测试.
+ * @author Otokaze
+ * @version v1.0-beta
+ * @since JDK1.8
+ */
+package com.zfl9.test1;
+</script></code></pre>
+<p><strong>Test.java</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.test1;
+import static java.lang.System.out;
+
+/**
+ * 这是一个测试类 - {@code Test}.<br>
+ * 仅仅为了测试 javadoc，(￣▽￣)／
+ * @author Otokaze
+ * @version v1.0-beta
+ * @since JDK1.8
+ */
+public class Test {
+    /**
+     * 字符串常量 - {@value #MESSAGE}.
+     * 该字符串将被 {@code test()} 方法使用
+     * @see com.zfl9.test1.Test#test()
+     */
+    private static final String MESSAGE = "www.zfl9.com";
+
+    /**
+     * 打印 MESSAGE 字符串.
+     * {@code MESSAGE} 字符串是一个 {@code public static final} 变量
+     * @see #MESSAGE
+     */
+    public void test() {
+        out.println(MESSAGE);
+    }
+
+    /**
+     * 打印一个指定的字符串.
+     * @param str 要打印的字符串
+     * @param newline 是否追加换行符{@code '\n'}
+     */
+    public void print(String str, boolean newline) {
+        if (newline) {
+            out.println(str);
+        } else {
+            out.print(str);
+        }
+    }
+}
+</script></code></pre>
+<p><strong>生成文档并部署</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:54:26]
+$ tree
+.
+└── com
+    └── zfl9
+        ├── test1
+        │   ├── package-info.java
+        │   └── Test.java
+        └── test2
+            ├── package-info.java
+            └── Test.java
+
+4 directories, 4 files
+
+# root @ arch in ~/work on git:master x [10:54:28]
+$ javadoc -locale zh_CN -d html -private -version -author -use -docencoding UTF-8 com.zfl9.test1 com.zfl9.test2
+正在加载程序包com.zfl9.test1的源文件...
+正在加载程序包com.zfl9.test2的源文件...
+正在构造 Javadoc 信息...
+正在创建目标目录: "html/"
+标准 Doclet 版本 1.8.0_144
+正在构建所有程序包和类的树...
+正在生成html/com/zfl9/test1/Test.html...
+正在生成html/com/zfl9/test2/Test.html...
+正在生成html/overview-frame.html...
+正在生成html/com/zfl9/test1/package-frame.html...
+正在生成html/com/zfl9/test1/package-summary.html...
+正在生成html/com/zfl9/test1/package-tree.html...
+正在生成html/com/zfl9/test2/package-frame.html...
+正在生成html/com/zfl9/test2/package-summary.html...
+正在生成html/com/zfl9/test2/package-tree.html...
+正在生成html/constant-values.html...
+正在生成html/com/zfl9/test1/class-use/Test.html...
+正在生成html/com/zfl9/test2/class-use/Test.html...
+正在生成html/com/zfl9/test1/package-use.html...
+正在生成html/com/zfl9/test2/package-use.html...
+正在构建所有程序包和类的索引...
+正在生成html/overview-tree.html...
+正在生成html/index-all.html...
+正在生成html/deprecated-list.html...
+正在构建所有类的索引...
+正在生成html/allclasses-frame.html...
+正在生成html/allclasses-noframe.html...
+正在生成html/index.html...
+正在生成html/overview-summary.html...
+正在生成html/help-doc.html...
+
+# root @ arch in ~/work on git:master x [10:54:44]
+$ ls html
+allclasses-frame.html    com                   deprecated-list.html  index-all.html  overview-frame.html    overview-tree.html  script.js
+allclasses-noframe.html  constant-values.html  help-doc.html         index.html      overview-summary.html  package-list        stylesheet.css
+
+# root @ arch in ~/work on git:master x [10:54:52]
+$ scp -P2333 -Cpr html/* root@192.168.0.100:nginx-html/java/
+allclasses-frame.html                                                                                             100%  735   126.8KB/s   00:00
+allclasses-noframe.html                                                                                           100%  695   114.4KB/s   00:00
+package-tree.html                                                                                                 100% 4311   741.3KB/s   00:00
+package-summary.html                                                                                              100% 5250   972.2KB/s   00:00
+Test.html                                                                                                         100% 4112   949.7KB/s   00:00
+package-frame.html                                                                                                100%  759   195.9KB/s   00:00
+package-use.html                                                                                                  100% 3904   959.7KB/s   00:00
+Test.html                                                                                                         100%   11KB 190.1KB/s   00:00
+package-tree.html                                                                                                 100% 4311   890.4KB/s   00:00
+package-summary.html                                                                                              100% 5250   930.9KB/s   00:00
+Test.html                                                                                                         100% 4112     1.0MB/s   00:00
+package-frame.html                                                                                                100%  759   183.9KB/s   00:00
+package-use.html                                                                                                  100% 3904   745.7KB/s   00:00
+Test.html                                                                                                         100%   11KB   2.4MB/s   00:00
+constant-values.html                                                                                              100% 5347     1.1MB/s   00:00
+deprecated-list.html                                                                                              100% 3524   817.8KB/s   00:00
+help-doc.html                                                                                                     100% 8301   152.6KB/s   00:00
+index-all.html                                                                                                    100% 6943   913.2KB/s   00:00
+index.html                                                                                                        100% 2882   521.7KB/s   00:00
+overview-frame.html                                                                                               100%  866   194.6KB/s   00:00
+overview-summary.html                                                                                             100% 4145   910.5KB/s   00:00
+overview-tree.html                                                                                                100% 4155   810.4KB/s   00:00
+package-list                                                                                                      100%   30     7.2KB/s   00:00
+script.js                                                                                                         100%  827   179.4KB/s   00:00
+stylesheet.css                                                                                                    100%   13KB 216.2KB/s   00:00
+
+# root @ home in ~/nginx-html/java [10:53:13]
+$ pwd
+/root/nginx-html/java
+
+# root @ home in ~/nginx-html/java [10:55:14]
+$ chown -R nginx.nginx *
+
+# root @ home in ~/nginx-html/java [10:55:19]
+$ ll
+total 92K
+-rw-r--r-- 1 nginx nginx  735 Sep 28 10:54 allclasses-frame.html
+-rw-r--r-- 1 nginx nginx  695 Sep 28 10:54 allclasses-noframe.html
+drwxr-xr-x 3 nginx nginx 4.0K Sep 28 10:54 com
+-rw-r--r-- 1 nginx nginx 5.3K Sep 28 10:54 constant-values.html
+-rw-r--r-- 1 nginx nginx 3.5K Sep 28 10:54 deprecated-list.html
+-rw-r--r-- 1 nginx nginx 8.2K Sep 28 10:54 help-doc.html
+-rw-r--r-- 1 nginx nginx 6.8K Sep 28 10:54 index-all.html
+-rw-r--r-- 1 nginx nginx 2.9K Sep 28 10:54 index.html
+-rw-r--r-- 1 nginx nginx  866 Sep 28 10:54 overview-frame.html
+-rw-r--r-- 1 nginx nginx 4.1K Sep 28 10:54 overview-summary.html
+-rw-r--r-- 1 nginx nginx 4.1K Sep 28 10:54 overview-tree.html
+-rw-r--r-- 1 nginx nginx   30 Sep 28 10:54 package-list
+-rw-r--r-- 1 nginx nginx  827 Sep 28 10:54 script.js
+-rw-r--r-- 1 nginx nginx  13K Sep 28 10:54 stylesheet.css
+</script></code></pre>
+<p>浏览一下效果：<br><img src="/images/java-javadoc-1.png" alt="javadoc 效果 - 1"><br><img src="/images/java-javadoc-2.png" alt="javadoc 效果 - 2"><br><img src="/images/java-javadoc-3.png" alt="javadoc 效果 - 3"><br><img src="/images/java-javadoc-4.png" alt="javadoc 效果 - 4"></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-jdk7-jdk8.html" rel="next" title="Java7 Java8 新特性">
+                <i class="fa fa-chevron-left"></i> Java7 Java8 新特性
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-reflect.html" rel="prev" title="Java 反射">
+                Java 反射 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#javadoc-是什么"><span class="nav-number">1.</span> <span class="nav-text">javadoc 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文档注释格式"><span class="nav-number">2.</span> <span class="nav-text">文档注释格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#javadoc-命令"><span class="nav-number">3.</span> <span class="nav-text">javadoc 命令</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-javadoc.html';
+          this.page.identifier = 'java-javadoc.html';
+          this.page.title = 'javadoc 生成 API 文档';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

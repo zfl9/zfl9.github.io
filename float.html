@@ -1,0 +1,546 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="编程语言,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="本文将探究小数是如何存储在计算机内存中的，小数和整数的存储又有什么区别，以及浮点数和定点数又是什么东西，等等。">
+<meta name="keywords" content="编程语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小数如何存储">
+<meta property="og:url" content="https://www.zfl9.com/float.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="本文将探究小数是如何存储在计算机内存中的，小数和整数的存储又有什么区别，以及浮点数和定点数又是什么东西，等等。">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.167Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小数如何存储">
+<meta name="twitter:description" content="本文将探究小数是如何存储在计算机内存中的，小数和整数的存储又有什么区别，以及浮点数和定点数又是什么东西，等等。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/float.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>小数如何存储 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/float.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                小数如何存储
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-22T08:00:00+08:00">
+                2018-11-22
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/float.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="float.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/float.html" class="leancloud_visitors" data-flag-title="小数如何存储">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>本文将探究小数是如何存储在计算机内存中的，小数和整数的存储又有什么区别，以及浮点数和定点数又是什么东西，等等。</p>
+<a id="more"></a>
+<h2 id="整数和小数"><a href="#整数和小数" class="headerlink" title="整数和小数"></a>整数和小数</h2><p>在计算机中，整数和小数的存储是不一样的。整数的个数比小数的个数少得多，1 到 2 之间的小数就有无穷个，何况其它的呢。所以小数的精度比整数的精度差的很多，因为容量有限，不可能表示所有的小数。</p>
+<h2 id="科学记数法"><a href="#科学记数法" class="headerlink" title="科学记数法"></a>科学记数法</h2><p>对于任意进制的实数 V 都可以表示为：<code>V = (-1)<sup>S</sup> <em> M </em> 基数<sup>E</sup></code>。其中：</p>
+<ul>
+<li>S：符号位，0 表示正数，1 表示负数</li>
+<li>M：有效数字，取值范围为 <code>[1, 基数)</code></li>
+<li>E：指数部分，可以是正数，也可以是负数</li>
+</ul>
+<p>M 的取值范围：<code>[1, 基数)</code>，比如十进制的为 <code>[1, 10)</code>，二进制的为 <code>[1, 2)</code>。<br>E 表达式的底是对应的基数，比如十进制的为 10，八进制的为 8，二进制的为 2。</p>
+<p>在计算机中，一切都是二进制，所以我们主要讨论 V = (-1)<sup>S</sup> <em> M </em> 2<sup>E</sup>。而又因为 M 总是 1.xxx，为了节省空间，IEEE 规定不存储开头的 1，而是只存储 xxx，读取时再自己加上这个 1。为了与正常的有效数字区分，IEEE 标准将这里的 M 称为尾数，因为没有开头的 <code>1.</code>。还有注意，V 也是二进制数字。</p>
+<p>比如十进制数字 5，对于的二进制数字为 101，使用科学记数法表示为 (-1)<sup>0</sup> <em> 1.01 </em> 2<sup>2</sup>，对于的 S = 0，M = 1.01，E = 2。这里提示一个小技巧，指数的数值其实就是有效数字的移动位数（不足或新增的补 0），如果 E 为正数，则向右移，如果 E 为负数，则向左移。不论是二进制还是十进制都一样。</p>
+<h2 id="IEEE-754"><a href="#IEEE-754" class="headerlink" title="IEEE 754"></a>IEEE 754</h2><p>IEEE 二进制浮点数算术标准（IEEE 754）是 20 世纪 80 年代以来最广泛使用的浮点数运算标准，为许多 CPU 与浮点运算器所采用。这个标准定义了表示浮点数的格式（包括负零 -0）与反常值（denormal number），一些特殊数值（无穷（Inf）与非数值（NaN）），以及这些数值的“浮点数运算符”；它也指明了四种数值舍入规则和五种例外状况（包括例外发生的时机与处理方式）。</p>
+<p>IEEE 754 规定了四种表示浮点数值的方式：<strong>单精确度（32位）</strong>、<strong>双精确度（64位）</strong>、<strong>延伸单精确度（43比特以上，很少使用）</strong>与<strong>延伸双精确度（79比特以上，通常以80位实现）</strong>。只有 32 位模式有强制要求，其他都是选择性的。大部分编程语言都有提供 IEEE 浮点数格式与算术，但有些将其列为非必需的。例如，IEEE 754 问世之前就有的 C 语言，现在有包括 IEEE 算术，但不算作强制要求（C 语言的 float 通常是指 IEEE 单精确度，而 double 是指双精确度）。</p>
+<p>这里仅以使用广泛的 float 和 double 为例，讲解<strong>“精度”</strong>的问题。所谓的精度其实就是能准确存储的小数（十进制）的有效数字的位数，比如精度为 5，则说明能准确的存储 5 个有效数字的十进制小数，比如 1.2345，3.1415。但是 3.1415926 就无法精确保存了，超过精度的部分会被四舍五入处理。因此 3.1415926 在只有精度为 5 的环境中实际存储的只是 3.1416（这就导致了精度的丢失）。</p>
+<p><strong>IEEE 单精度浮点数</strong> 32 bit</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">符号 Sign</th>
+<th style="text-align:center">指数 Exponent</th>
+<th style="text-align:center">尾数 Mantissa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">  1 bit</td>
+<td style="text-align:center">8 bit</td>
+<td style="text-align:center">23 bit</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IEEE 双精度浮点数</strong> 64 bit</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">符号 Sign</th>
+<th style="text-align:center">指数 Exponent</th>
+<th style="text-align:center">尾数 Mantissa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">  1 bit</td>
+<td style="text-align:center">11 bit</td>
+<td style="text-align:center">52 bit</td>
+</tr>
+</tbody>
+</table>
+<p>因为尾数中隐含了 1 bit 的 1，所以单精度浮点数的有效数字长度为 24 bit，双精度的为 53 bit。</p>
+<ul>
+<li><strong>单精度浮点数的精度</strong>：2<sup>24</sup> = 16,777,216，8 个有效数字，能保证的只有 7 个有效数字。</li>
+<li><strong>双精度浮点数的精度</strong>：2<sup>53</sup> = 9,007,199,254,740,992，16 个有效数字，只保证 15 个。</li>
+</ul>
+<blockquote>
+<p>有效数字怎么看：从左边起的第一个非 0 的数字到最后一个数字都属于有效数字。</p>
+</blockquote>
+<p><strong>注意</strong>：即使你存储在 float、double 中的数值的有效位在 7 或 15 内，但是仍有很大的可能导致精度的丢失，其根本原因是因为小数从十进制转换为二进制期间会发生精度的丢失（很多十进制非无限循环小数用二进制表示时都是无限循环的或者小数位非常长的），比如经典的 0.1 + 0.2 = 0.30000000000000004 问题（double双精度浮点数）。因为 0.1 和 0.2 都无法使用有限长度的二进制数表示（它们都是无限循环的二进制小数），计算机不得不进行舍入操作，导致了精度的丢失。</p>
+<h2 id="浮点-定点"><a href="#浮点-定点" class="headerlink" title="浮点/定点"></a>浮点/定点</h2><p><strong>什么是定点数、浮点数？</strong><br>首先我们要认清一个概念，<strong>定点数不一定是整数</strong>，<strong>浮点数不一定是小数</strong>。正如其名，浮点数和定点数的区别就在于浮点和定点上，点就是指小数点。浮点数的小数点是浮动的，定点数的小数点是固定不动的。</p>
+<p>在计算机发展历史中，出现了两种主流的小数表示/存储方法：定点数和浮点数。浮点数我们上面已经详细讲解了，优点是灵活，节省空间，表示的范围比较大，缺点是容易丢失精度，单精度浮点数只能保证 7 个有效数字，双精度浮点数只能保证 15 个有效数字。如果要处理的小数不在这些范围内，那么就必然避免不了精度的丢失。而定点数顾名思义就是小数点在数字序列中的位置是固定的，浮点数只适用于工程计算、科学计算等精度要求不高的场景，而诸如银行账户、货币大小这些必须使用定点数来存储和处理。定点数的优点就是精度高，缺点是需要的空间更多，运算也比浮点数更复杂，更慢。</p>
+<p>MySQL 中的小数数据类型：</p>
+<ul>
+<li>float：单精度浮点型，4 个字节，保证 7 个有效位，存在精度丢失问题</li>
+<li>double：双精度浮点型，8 个字节，保证 15 个有效位，存在精度丢失问题</li>
+<li>decimal：定点数/数字型，数据长度为精度 + 2 个字节，最大允许精度为 65</li>
+</ul>
+<p>MySQL 中的 DECIMAL 和 NUMERIC 是同一个实现，所以它们是完全相同的数据类型。<br>decimal 的声明方式为 decimal(M, D)，其中 M 是精度（总位数），D 为小数位数。</p>
+<p>Java 中的大数/高精度类型：</p>
+<ul>
+<li>java.math.BigInteger：整数，任意精度，任意大小，字符串初始化，不可变的对象。</li>
+<li>java.math.BigDecimal：小数，任意精度，任意大小，字符串初始化，不可变的对象。</li>
+</ul>
+<h2 id="BigInteger"><a href="#BigInteger" class="headerlink" title="BigInteger"></a>BigInteger</h2><p><strong>构造函数</strong><br><code>public BigInteger(String val)</code>：radix = 10。常用构造函数。<br><code>public BigInteger(String val, int radix)</code>：指定进制（不要出现 0b、0、0x 等前缀）。<br>如 <code>new BigInteger(&quot;100000000&quot;)</code> 和 <code>new BigInteger(&quot;5F5E100&quot;, 16)</code> 的大小是一样的。</p>
+<p><strong>静态成员</strong><br><code>public static final BigInteger ZERO</code>：常数 0<br><code>public static final BigInteger ONE</code>：常数 1<br><code>public static final BigInteger TEN</code>：常数 10<br><code>public static BigInteger valueOf(long val)</code>：可缓存常用值，优先使用。</p>
+<p><strong>加减乘除</strong><br><code>public BigInteger add(BigInteger val)</code>：加<br><code>public BigInteger subtract(BigInteger val)</code>：减<br><code>public BigInteger multiply(BigInteger val)</code>：乘<br><code>public BigInteger divide(BigInteger val)</code>：除<br><code>public BigInteger remainder(BigInteger val)</code>：取余</p>
+<p><strong>位运算符</strong><br><code>public BigInteger and(BigInteger val)</code>：按位与<br><code>public BigInteger or(BigInteger val)</code>：按位或<br><code>public BigInteger xor(BigInteger val)</code>：按位异或<br><code>public BigInteger not()</code>：按位非<br><code>public BigInteger shiftLeft(int n)</code>：左移<br><code>public BigInteger shiftRight(int n)</code>：右移</p>
+<p><strong>关系运算符</strong><br><code>public int compareTo(BigInteger val)</code>：比较数值是否相等（建议使用此方法）<br><code>public boolean equals(Object x)</code>：两个对象是否严格相等（可理解为字符串相等）</p>
+<h2 id="BigDecimal"><a href="#BigDecimal" class="headerlink" title="BigDecimal"></a>BigDecimal</h2><p><strong>构造函数</strong><br><code>public BigDecimal(BigInteger val)</code>：将 BigInteger 转换为 BigDecimal<br><code>public BigDecimal(double val)</code>：请确保有效数字长度不大于 15，否则会丢失精度<br><code>public BigDecimal(int val)</code>：将 int 整型转换为 BigDecimal<br><code>public BigDecimal(long val)</code>：将 long 长整型转换为 BigDecimal<br><code>public BigDecimal(String val)</code>：使用字符串构造 BigDecimal（推荐方式）<br><code>public BigDecimal(char[] in)</code>：将字符数组（比 String 高效）转换为 BigDecimal<br><code>public BigDecimal(char[] in, int offset, int len)</code>：同上，指定偏移量、提取的长度</p>
+<p><strong>静态成员</strong><br><code>public static BigDecimal valueOf(long val)</code>：可缓存常用值，优先使用<br><code>public static BigDecimal valueOf(double val)</code>：可缓存常用值，优先使用</p>
+<p><code>public static final BigDecimal ZERO</code>：常量 0<br><code>public static final BigDecimal ONE</code>：常量 1<br><code>public static final BigDecimal TEN</code>：常量 10</p>
+<p><code>public static final int ROUND_UP</code>：向远离 0 的方向舍入<br><code>public static final int ROUND_DOWN</code>：向接近 0 的方向舍入<br><code>public static final int ROUND_CEILING</code>：向右边的方向舍入<br><code>public static final int ROUND_FLOOR</code>：向左边的方向舍入<br><code>public static final int ROUND_HALF_UP</code>：“四舍五入”<br><code>public static final int ROUND_HALF_DOWN</code>：“五舍六入”<br><code>public static final int ROUND_HALF_EVEN</code>：前一位:奇数则入位，偶数则舍去<br><code>public static final int ROUND_UNNECESSARY</code>：断言此操作具有精确的结果，不需要舍入。如果断言失败，则抛出 ArithmeticException 异常</p>
+<blockquote>
+<p>JDK1.5 起，优先使用 java.math.RoundingMode 枚举类，常量名没有 ROUND 前缀。</p>
+</blockquote>
+<p><strong>加减乘除</strong><br><code>public BigDecimal add(BigDecimal augend)</code>：加<br><code>public BigDecimal subtract(BigDecimal subtrahend)</code>：减<br><code>public BigDecimal multiply(BigDecimal multiplicand)</code>：乘<br><code>public BigDecimal divide(BigDecimal divisor, int scale, int roundingMode)</code>：除，其中 scale 是保留多少位小数，roundingMode 则是舍入模式（final常量，过时）<br><code>public BigDecimal divide(BigDecimal divisor, int scale, RoundingMode roundingMode)</code>：除，其中 scale 是保留多少位小数，roundingMode 则是舍入模式（enum 枚举常量）<br><code>public BigDecimal divide(BigDecimal divisor, int roundingMode)</code>：scale = this.scale()，默认是 0。<br><code>public BigDecimal divide(BigDecimal divisor, RoundingMode roundingMode)</code>：scale = this.scale()，默认是 0。<br><code>public BigDecimal divide(BigDecimal divisor)</code>：scale = this.scale() - divisor.scale()<br><code>public BigDecimal divideToIntegralValue(BigDecimal divisor)</code>：向下取整，scale = this.scale() - divisor.scale()<br><code>public BigDecimal remainder(BigDecimal divisor)</code>：取余（注意不是取模）</p>
+<p><strong>关系运算符</strong><br><code>public boolean equals(Object x)</code>：严格相等，它认为 2.0 与 2.00 是不相同的<br><code>public int compareTo(BigDecimal val)</code>：优先考虑，认为 2.0 与 2.00 是相同的</p>
+<p><strong>精度相关属性</strong><br><code>public int scale()</code>：返回要保留的小数位数<br><code>public int precision()</code>：返回当前定点数的有效位数（scale + 1）<br><code>public BigDecimal setScale(int newScale, RoundingMode roundingMode)</code>：设置新的小数位数以及舍入模式，返回新对象<br><code>public BigDecimal setScale(int newScale, int roundingMode)</code>：同上，但这是一个过时的方法</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/编程语言/" rel="tag"># 编程语言</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/adb.html" rel="next" title="ADB 调试">
+                <i class="fa fa-chevron-left"></i> ADB 调试
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/language.html" rel="prev" title="编程语言琐碎">
+                编程语言琐碎 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#整数和小数"><span class="nav-number">1.</span> <span class="nav-text">整数和小数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#科学记数法"><span class="nav-number">2.</span> <span class="nav-text">科学记数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IEEE-754"><span class="nav-number">3.</span> <span class="nav-text">IEEE 754</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浮点-定点"><span class="nav-number">4.</span> <span class="nav-text">浮点/定点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BigInteger"><span class="nav-number">5.</span> <span class="nav-text">BigInteger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BigDecimal"><span class="nav-number">6.</span> <span class="nav-text">BigDecimal</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/float.html';
+          this.page.identifier = 'float.html';
+          this.page.title = '小数如何存储';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

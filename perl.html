@@ -1,0 +1,3639 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="perl,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Perl 是高端、通用、解释型、动态的编程语言家族。最初设计者拉里·沃尔为了让在 UNIX 上进行报表处理的工作变得更方便，决定开发一个通用的脚本语言，而在 1987 年 12 月 18 日发表。目前，Perl 语言家族包含两个分支 Perl 5 以及 Perl 6（开发中）。Perl 借用了 C、sed、awk、shell 脚本以及很多其他编程语言的特性。其中最重要的特性是 Perl 内部集成了">
+<meta name="keywords" content="perl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Perl 笔记">
+<meta property="og:url" content="https://www.zfl9.com/perl.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Perl 是高端、通用、解释型、动态的编程语言家族。最初设计者拉里·沃尔为了让在 UNIX 上进行报表处理的工作变得更方便，决定开发一个通用的脚本语言，而在 1987 年 12 月 18 日发表。目前，Perl 语言家族包含两个分支 Perl 5 以及 Perl 6（开发中）。Perl 借用了 C、sed、awk、shell 脚本以及很多其他编程语言的特性。其中最重要的特性是 Perl 内部集成了">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Perl 笔记">
+<meta name="twitter:description" content="Perl 是高端、通用、解释型、动态的编程语言家族。最初设计者拉里·沃尔为了让在 UNIX 上进行报表处理的工作变得更方便，决定开发一个通用的脚本语言，而在 1987 年 12 月 18 日发表。目前，Perl 语言家族包含两个分支 Perl 5 以及 Perl 6（开发中）。Perl 借用了 C、sed、awk、shell 脚本以及很多其他编程语言的特性。其中最重要的特性是 Perl 内部集成了">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/perl.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Perl 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/perl.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Perl 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-30T08:00:00+08:00">
+                2018-11-30
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/perl/" itemprop="url" rel="index">
+                    <span itemprop="name">perl</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/perl.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="perl.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/perl.html" class="leancloud_visitors" data-flag-title="Perl 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Perl 是高端、通用、解释型、动态的编程语言家族。最初设计者拉里·沃尔为了让在 UNIX 上进行报表处理的工作变得更方便，决定开发一个通用的脚本语言，而在 1987 年 12 月 18 日发表。目前，Perl 语言家族包含两个分支 Perl 5 以及 Perl 6（开发中）。Perl 借用了 C、sed、awk、shell 脚本以及很多其他编程语言的特性。其中最重要的特性是 Perl 内部集成了正则表达式的功能，以及巨大的第三方代码库 CPAN。</p>
+<a id="more"></a>
+<h2 id="标量数据"><a href="#标量数据" class="headerlink" title="标量数据"></a>标量数据</h2><p>标量是 Perl 中最简单的一种数据类型，对于大部分标量来说，他要么是数字，要么是字符串。Perl 在内部会自动的进行数字和字符串之间的转换，标量可以存储在标量变量里。</p>
+<p><strong>数字</strong><br>Perl 中不区分整数、浮点数，它们通通按照 <em>双精度浮点数</em> 来存储。</p>
+<p><strong>浮点数直接量</strong><br>直接量也叫字面量，是指键入到 Perl 源代码中的数据。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+1.25
+255.000
+255.0
+7.25e45   # 7.25 * 10^45
+-6.5e24   # 6.5 * 10^24
+-12e-24   # -12 * 10^-24
+-12E-24   # -12 * 10^-24，同上
+</script></code></pre>
+<p><strong>整数直接量</strong><br>这个比较好懂，如</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+0
+100
+-1000
+100000000000000000000000
+1_000_000_000_000_000_000 # 和 Java7 的下换线一样
+</script></code></pre>
+<p><strong>非十进制整数字面量</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# 0b 表示二进制
+0b1010110
+# 0 表示八进制
+045
+# 0x 表示十六进制
+0xFFFF
+# 非十进制整数字面量也可以使用下划线
+0xFFFF_FFFF_FFFF
+</script></code></pre>
+<p><strong>数字操作符</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# 加
+1 + 2
+# 减
+9 - 5
+# 乘
+5 * 4
+# 除
+10 / 2
+# 取模（mod，非求余）
+11 % 12 # 11
+-1 % 12 # 11
+# 求幂（乘方运算）
+10 ** 2 # 100
+</script></code></pre>
+<p><strong>字符串</strong><br>字符串就是一个字符序列，如 hello。字符串由任意字符组合而成，最短的字符串可以不包含任何字符，也称为空字符串，最长的字符串的长度没有限制，它甚至可以填满整个内存。这符合 Perl 尽可能遵循的“无内置限制”的原则（真爽！）。字符串通常由 ASCII 码组成，但实际上它可以是任意字符，所以你可以用 Perl 的字符串来操纵二进制数据，这是很多编程语言望尘莫及的。比如你可以将一个图片的数据存储在一个字符串中，也可以将一个可执行文件的内容读取到字符串中，修改的它内容然后返回。事实上，Shell 也有这种能力。</p>
+<p>Perl 完全支持 Unicode，因此你可以在 Perl 中随意使用任意合法的 Unicode 字符，但由于历史原因，Perl 不会自动将程序源代码当作 Unicode 编码的文本输入，所以要在 Perl 程序开头加上 <code>use utf8;</code>，不过我在 Linux 中却没有什么问题，但是最好养成习惯加上这句，另外，Perl 的字符串不以 <code>\0</code> NUL 字符表示结尾，它会另记住字符串的长度。除了加上这句声明外，你的源程序文件也必须以 utf-8 编码保存（实际上还是有问题，见下文）。</p>
+<p>当我使用 vim 编辑一个 Perl 源文件时，我没有加入 <code>use utf8;</code>，运行时没有警告信息，如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [9:41:37]
+$ cat test1.pl
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $string = "中华人民共和国";
+print "$string\n";
+
+# root @ arch in ~/workspace [9:41:42]
+$ cat test2.pl
+#!/usr/bin/perl
+use utf8;
+use strict;
+use warnings;
+
+my $string = "中华人民共和国";
+print "$string\n";
+
+# root @ arch in ~/workspace [9:41:45]
+$ ./test1.pl
+中华人民共和国
+
+# root @ arch in ~/workspace [9:41:48]
+$ ./test2.pl
+Wide character in print at ./test2.pl line 7.
+中华人民共和国
+
+# root @ arch in ~/workspace [9:41:50]
+$ perl -CS ./test2.pl
+中华人民共和国
+
+# root @ arch in ~/workspace [9:41:59]
+$ vim test2.pl
+
+# root @ arch in ~/workspace [9:42:20]
+$ cat test2.pl
+#!/usr/bin/perl -CS
+use utf8;
+use strict;
+use warnings;
+
+my $string = "中华人民共和国";
+print "$string\n";
+
+# root @ arch in ~/workspace [9:42:22]
+$ ./test2.pl
+中华人民共和国
+</script></code></pre>
+<p>解决办法是，给 Perl 加上 <code>-CS</code> 参数（来自 StackOverFlow 讨论社区）。更新：仍然是有问题的，最保险的方法是将全部的流都设为 UTF-8 编码，类似：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+
+print "hello, world!\n";
+</script></code></pre>
+<p>它等效于 <code>perl -CSDA -Mutf8 -Mstrict -Mwarnings -e &#39;print &quot;hello, world!\n&quot;&#39;</code>。</p>
+<p>和数字一样，字符串也有直接量记法，有两种形式：单引号、双引号。它们的区别于 Shell 中的单引号和双引号一致，单引号会保留原始输出，不进行变量替换以及字符转义序列，而双引号则会进行变量替换和字符转移序列。单引号中要表示单引号需要加上反斜杠转义，双引号中要表示双引号也需要加上反斜杠转义。</p>
+<p><strong>转移序列</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序列</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>\a</code></td>
+<td style="text-align:center">响铃</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\b</code></td>
+<td style="text-align:center">退格</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\e</code></td>
+<td style="text-align:center">转义</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\r</code></td>
+<td style="text-align:center">回车</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\n</code></td>
+<td style="text-align:center">换行</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\f</code></td>
+<td style="text-align:center">换页</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\t</code></td>
+<td style="text-align:center">水平制表</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\v</code></td>
+<td style="text-align:center">垂直制表</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\cX</code></td>
+<td style="text-align:center">控制字符，即 Ctrl + X</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\nnn</code></td>
+<td style="text-align:center">八进制转义 ASCII</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\xhh</code></td>
+<td style="text-align:center">十六进制转义 ASCII</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\x{hhhh}</code></td>
+<td style="text-align:center">十六进制转义 Unicode 码点</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\l</code></td>
+<td style="text-align:center">将下个字母转为小写</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\L</code></td>
+<td style="text-align:center">将后面的字母转为小写，直到 <code>\E</code> 为止</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\u</code></td>
+<td style="text-align:center">将下个字母转为大写</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\U</code></td>
+<td style="text-align:center">将后面的字母转为大写，直到 <code>\E</code> 为止</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\Q</code></td>
+<td style="text-align:center">将后面的非单词字符加上反斜线转义，直到 <code>\E</code> 为止</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\E</code></td>
+<td style="text-align:center">用来结束 <code>\L</code>、<code>\U</code>、<code>\Q</code> 的作用范围</td>
+</tr>
+</tbody>
+</table>
+<p>双引号内字符串的另一个特性是变量内插，这是指将字符串中的变量引用替换为变量当前的值，和 Shell 中的行为一致。</p>
+<p><strong>字符串操作符</strong><br>字符串之间可以用 <code>.</code> 连接起来，它不会修改两边的字符串，而是产生一个新字符串。<br>一个特殊的操纵符 <code>x</code>，用来重复左侧的字符串，如 <code>&quot;abc&quot; x 3</code> 得到 <code>&quot;abcabcabc&quot;</code>。<br>重复操作符的左操作数必须是字符串类型（如果不是 Perl 会进行转换），而右侧则是非负整数。如果不是整数，如 4.9 则会被取整为 4（注意不是四舍五入），如果小于 1，则返回空字符串。</p>
+<p><strong>数字、字符串转换</strong><br>通常 Perl 会根据需要，指定在数字和字符串之间进行类型转换。而 Perl 的转换需求通常是因为操作符，比如操作符 <code>+</code> 两侧需要的是数字，Perl 就会将两边的操作数视为数字，比如操作符 <code>.</code> 两侧需要的是字符串，Perl 就会将两边的操作数视为字符串。因此在 Perl 中不必在意字符串与数字之间的转换，只要使用正确的操作符就 OK 了。</p>
+<p>对于数字运算符，如果遇到的操作数为字符串，Perl 会自动将字符串转换为等效的十进制浮点数进行运算（二进制、八进制、十六进制的格式在字符串转数字过程中是无效的，Perl 只认十进制）。比如 <code>&quot;12&quot; * &quot;3&quot;</code> 返回 36，字符串中的非数字部分（比如前置空白，后尾空白）会被 Perl 忽略。因此 <code>&quot;12hello34&quot; * &quot;3&quot;</code> 的结果依旧是 36（默认不会产生警告，如果启用 <code>-Mwarnings</code> 则会产生警告，建议始终开启此选项）。同样，如果字符串操作符中存在数字操作数，也会进行自动转换，如 <code>&quot;Z&quot; . 5 * 7</code> 返回 <code>&quot;Z35&quot;</code>。</p>
+<p>如果需要将字符串中的八进制、十进制（甚至是二进制）转换为对应的数值，需要使用 <code>oct()</code>、<code>hex()</code> 等转换函数（详见后文）。</p>
+<p>启用 <code>use warnings;</code> 的警告信息比较简短，如果需要更详细的警告信息，可以使用 <code>use diagnostics;</code> 输出详细信息（但可能导致程序变慢，内存占用变大，因为 Perl 在忙着加载警告和详细信息），因此可以通过 Perl 命令行选项的方式来进行临时的查看详细信息，如 <code>perl -Mdiagnostics my_prog</code>（可以加在 <code>#!/usr/bin/perl</code> 行中）。</p>
+<h2 id="标量变量"><a href="#标量变量" class="headerlink" title="标量变量"></a>标量变量</h2><p>所谓变量，就是存储一个或多个值的容器的名称。而标量变量就是存储单个值的变量，后续会学习到其它类型的变量，比如数组、哈希。它们都可以存储多个值，变量的名称在整个程序中保持不变，但他所持有的值是可以在程序运行中不断修改变化的。</p>
+<p>没错，标量变量存储的是单个标量值，标量变量的名称以美元符号开头，接着是 Perl 标识符：以字母、下划线开头，后可接字母、数字、下划线。标识符是区分大小写的，这和绝大多数编程语言是一样的。如</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$var
+$variable
+$name
+$Name
+$NAME
+$a_very_long_variable_that_ends_in_1
+$a_very_long_variable_that_ends_in_2
+$a_very_long_variable_that_ends_in_3
+</script></code></pre>
+<p>Perl 标识符并不仅限 ASCII 字符，在启用 utf8 编译指令后，可以使用任意合法的 Unicode 字符。Perl 通过变量的前缀字符来区分变量的类型，比如标量变量以 <code>$</code> 开头，数组变量以 <code>@</code> 开头，哈希变量以 <code>%</code> 开头。所以不管你用什么名字都不会与内置的函数、操作符的写法相冲突（这真是极好的）。</p>
+<p>此外，Perl 是通过这个魔符（就是前缀符）来判断该变量的使用意图。<code>$</code> 的确切意思是“取某个东西”或者“取标量”。因为标量变量总是存储一项数据，所以她的意思就总是取得其中的“单个”值。在后面的章节中，你会看到“取单个东西”的魔符应用于其它类型（数组）变量的情况，不要惊讶。</p>
+<p>变量名尽量取得有意义，特别是全局变量，如果有多个单词，建议使用下划线分割，而不是驼峰写法。如果使用全大写变量（如 <code>$ARGV</code>）一般都是表示特殊意义的变量。所以不建议使用全大写的变量名，因为可能会与 Perl 中的预留变量产生冲突。</p>
+<p>你可以使用 <code>perlsytle</code> 查看 Perl 对变量命名的一样，可以使用 <code>perlvar</code> 查看 Perl 中的特殊变量的名称。</p>
+<p><strong>标量的赋值</strong><br>对标量变量最常见的操作就是赋值了，也就是将某个值存进变量中。Perl 中的赋值符是等号，和其他语言差不多。左操作数是变量名，右操作数是标量数据。如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$var1 = 1;
+$var2 = 12;
+</script></code></pre>
+<p>其中 Perl 和 C/C++、Java 一样，支持 <code>$var += 5;</code> 这样的赋值运算符。因此你可以使用 <code>.=</code> 赋值运算符来进行“追加”操作。基本上所有双目运算符都可以这么做。</p>
+<p>一般我们都想程序输出写什么信息来，否则，也须会有人以为程序什么都没做。print 操作符就是用来完成这项任务的。它可以接受标量值作为参数，然后不经修饰的传送到 STDOUT 标准输出。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+print "hello, world!\n";
+print 3;
+print 5 * 7;
+</script></code></pre>
+<p>你也可以使用一行来打印这些东西，只需使用逗号分隔，如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+print "this answer is ", 6 * 7, ".\n";
+</script></code></pre>
+<p>这其实就是一个 list（列表），稍后会进行详细说明。</p>
+<p>一般我们使用双引号圈引字符串的目的，除了是要是有反斜线转义特殊字符外，多半是为了变量内插。说白了，就是把字符串中出现的标量变量替换成该变量的值罢了。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$name = "Otokaze";
+$info = "My name is $name";  # 变量内插
+$info = 'My name is '.$name; # 等效写法
+</script></code></pre>
+<p>正如最后一行所示，不用双引号的变量内插也可以实现一样的效果，但是明显不如第一种方式简便、清晰。如果引用的变量从未赋值过，那么它就是空串，这和 Shell 一样。但是如果启用了额外的警告，那么 Perl 会输出响应的警告信息，告诉我们这个变量没有被赋值（也就是说它不存在）。</p>
+<p>但如果只是想打印某个标量变量的值，必须要使用双引号内插方式，直接写就好了：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$name = "Otokaze";
+print "$name"; # 多余的
+print $name;   # 比较好
+</script></code></pre>
+<p>如果想输出 <code>$</code> 自身，可以在前面加上反斜杠进行转义。进行内插时，Perl 会尽可能使用最长的合法变量名，如果你想在内插的值后紧跟输出字母、数字、下划线，可能不是你预想的那样，此时你可以在变量名两边加上花括号，如 <code>${name}</code>，这个 Shell 采用的策略一致。如果不这样做，你就必须用 <code>.</code> 来连接它们，但是这样显然比较麻烦。</p>
+<p>有些时候你想输出一些键盘上没有的字符，这时与其费力气的寻找字符如何输入，还不如直接使用它们的 Unicode 码点（code point，也就是字符序号，和 ASCII 中的字符序数是一回事），再通过 chr() 函数将它们转换为对应的字符来得方便。反过来，也可以通过 ord() 函数将字符转换为代码点。当然也可以使用 <code>\x{hhhh}</code> 转移序列来完成。</p>
+<p>和其他语言一样，Perl 中的众多运算符之间也是有优先级的，如果你不明确它们的优先级如何，请务必使用圆括号包围，避免错误的同时还增加了可读性。Perl 中的算数运算符的优先级和数学中的优先级基本一致。比如都是先算乘除，再算加减。</p>
+<p><strong>比较操作符</strong><br>对数值的比较运算符，Perl 和 C/C++、Java 类似，有 <code>&lt;</code>、<code>&lt;=</code>、<code>==</code>、<code>!=</code>、<code>&gt;</code>、<code>&gt;=</code> 等运算符，它们的返回值都是布尔值，要么 true，要么 false。</p>
+<p>对字符串的比较运算符也有很多（命名和 shell 有点类似），字符串比较会逐一比较两边字符串的每个字符，判断的依据是他们的 Unicode 代码点。返回布尔值。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">意义</th>
+<th style="text-align:center">数字</th>
+<th style="text-align:center">字符串</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">相等</td>
+<td style="text-align:center"><code>==</code></td>
+<td style="text-align:center"><code>eq</code></td>
+</tr>
+<tr>
+<td style="text-align:center">不等</td>
+<td style="text-align:center"><code>!=</code></td>
+<td style="text-align:center"><code>ne</code></td>
+</tr>
+<tr>
+<td style="text-align:center">小于</td>
+<td style="text-align:center"><code>&lt;</code></td>
+<td style="text-align:center"><code>lt</code></td>
+</tr>
+<tr>
+<td style="text-align:center">小等</td>
+<td style="text-align:center"><code>&lt;=</code></td>
+<td style="text-align:center"><code>le</code></td>
+</tr>
+<tr>
+<td style="text-align:center">大于</td>
+<td style="text-align:center"><code>&gt;</code></td>
+<td style="text-align:center"><code>gt</code></td>
+</tr>
+<tr>
+<td style="text-align:center">大等</td>
+<td style="text-align:center"><code>&gt;=</code></td>
+<td style="text-align:center"><code>ge</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>if 控制结构</strong><br>基本语法结构和 C 语言类似，但是不能省略花括号！切记切记！Perl 中并没有专门的 Boolean 类型，它靠一些简单的规则来判断（和 C、Shell 一致），规则如下：</p>
+<ul>
+<li>如果是数字，<code>0</code> 为 false，其它均为 true；</li>
+<li>如果是字符串，<code>&#39;&#39;</code> 空串为 false，其他均为 true；</li>
+<li>如果既不是数字也不是字符串，则将它们转换为数字或字符串再判断。</li>
+</ul>
+<p>注意，这并不是完整的判断规则，但足以日常判断。另外，<code>undef</code>“未定义”为 false，而所有引用都是 true。</p>
+<p>其实上面还有一个隐含的技巧，字符串 <code>&#39;0&#39;</code> 和数字 <code>0</code> 是同一个标量值，所以 Perl 对它们一视同仁，它们都表示 false。</p>
+<p>要取得任何布尔值的相反值，只需在它们前面加上 <code>!</code>，这和大多数语言是类似。</p>
+<p><strong>获取用户输入</strong><br>那么如何让 Perl 读取 STDIN 的用户输入数据呢？只需使用 <code>&lt;STDIN&gt;</code>（这其实获取一行数据，差点搞错了） 读取，如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$line = <STDIN>;
+if ($line eq "\n") {
+    print "这仅仅是一个换行符\n";
+} else {
+    print "你输入的字符串为: $line";
+}
+</script></code></pre>
+<p>完整的例子如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [13:10:26]
+$ cat stdin.pl
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+
+my $line = <STDIN>;
+
+if ($line eq "\n") {
+    print "That was just a blank line!\n";
+} else {
+    print "That line of input was: $line";
+}
+
+# root @ arch in ~/workspace [13:10:38]
+$ ./stdin.pl
+www.zfl9.com
+That line of input was: www.zfl9.com
+
+# root @ arch in ~/workspace [13:10:42]
+$ echo www.zfl9.com | ./stdin.pl
+That line of input was: www.zfl9.com
+</script></code></pre>
+<p>不过实际编码时，很少需要保留末尾的换行符，所以人们常常会用 chomp() 函数来去掉它。咋看一下，chomp() 操作符的用途好像太过简单专一：只能作用于单个变量，且该变量的内容必须为字符串，如果该字符串尾部是换行符，chomp() 的任务就是去掉它，这差不多就是他的全部工作了。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$text = "a line of text\n"; # 带换行符的字符串
+chomp($text);               # 去掉末尾的换行符
+</script></code></pre>
+<p>其实他非常有用，以后你写的每个程序几乎都少不了他，如上所示，处理字符串变量时，它是去除行末换行符的最佳方式。事实上，chomp() 还有一种取巧的用法，因为 Perl 有一条规则：任何需要变量的地方，都可以用赋值运算表达式代替。这在 Java、C/C++ 中其实也适合，比如可以这样使用 chomp()：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+chomp($text = <STDIN>); # 读入数据，删除尾部换行符
+# or，但明显麻烦
+$text = <STDIN>;        # 读取数据
+chomp($text);           # 删除尾白
+</script></code></pre>
+<p>chomp 函数的返回值是实际移除的字符数，不过这个返回值没有什么用处。强调一点，chomp 只会移除最后一个字符，且它是换行符的情况下。</p>
+<p>如你所见，chomp 可以带括号，也可以不带括号（这和 awk 有几分相似），这又是 Perl 的又一项惯例：除非去掉括号会改变表达式的意义，否则括号都是可以省略的（绝大部分函数都可以，比如 print 其实是函数，但我们一般不带括号，但是我建议带上括号，不要觉得麻烦，可能是我写惯了 Java 吧，哈哈）。</p>
+<p><strong>while 控制结构</strong><br>语法同 Java，但也是不能省略花括号。</p>
+<p><strong>undef 值</strong><br>如果还没赋值就用到了某个标量变量，会产生什么结果呢？答案是，不会发送什么大不了的事，也绝对不会让程序终止运行，在首次赋值前，变量的初始值就是特殊的 undef（意为未定义的变量的值），这又与 JS 中的 undefined 值很相似。它的意思是：这是空无一物。这个空无一物当作数字用，表现的就像零；如果当作字符串用，那就表现的想空字符串。但实际上，undef 既不是数字，也不是字符串，它完全是另一种类型的标量值（我猜是引用类型）。</p>
+<p>既然 undef 作为数字是被视为零，我们可以很容易的构造一个数字累加器，他在开始时是空的（这里计算从 0+1+2+…+9）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [13:48:58]
+$ cat sum.pl
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+
+my $sum;
+for (my $i = 0; $i < 10; ++$i) {
+    $sum += $i;
+}
+print "0 + 1 + 2 + ... + 9 = $sum\n";
+
+# root @ arch in ~/workspace [13:48:59]
+$ ./sum.pl
+0 + 1 + 2 + ... + 9 = 45
+</script></code></pre>
+<p>同样的道理，你可以进行字符串的累加，这里就不进行演示了。同样，在 Perl 中大部分函数如果觉得参数不对，或者是执行遇到异常，都是返回 undef 值，这和 JS 神似。当然，你也可以显式的为某个变量设置 undef 值，就像 Java 中显式设置 null 值一样，比如 <code>$var = undef;</code>，这并没有什么不妥。</p>
+<p><strong>defined 函数</strong><br>行输入操作符 <code>&lt;STDIN&gt;</code> 有时候会返回 undef，在一般情况下，它会返回一行文本，但若没有更多输入，比如读到文件末尾（end-of-file，EOF）时，它就会返回 undef 来表示这种特殊情况。Perl 中可以使用 <code>defined</code> 函数来判断一个值是否为 undef：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [14:15:07]
+$ cat stdin.pl
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+
+my $input = <STDIN>;
+if (defined($input)) {
+    print($input);
+} else {
+    print("EOF\n");
+}
+
+# root @ arch in ~/workspace [14:15:07]
+$ ./stdin.pl
+www.zfl9.com
+www.zfl9.com
+
+# root @ arch in ~/workspace [14:15:16]
+$ ./stdin.pl # Ctrl+D 即 EOF
+EOF
+</script></code></pre>
+<p><strong>联系</strong><br>1、写一个程序，用来计算指定的圆周长（提示用户输入半径），我的如下：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use Math::Trig;
+
+print("please input radius: ");
+chomp(my $radius = <STDIN>);
+
+if ($radius <= 0) {
+    print("circumference($radius) = 0\n");
+} else {
+    my $circum = 2 * pi * $radius;
+    print("circumference($radius) = $circum\n");
+}
+</script></code></pre>
+<p>2、写一个程序，提示用户输入两个数字（分两行输入），然后打印它们的乘积：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+
+print("num1: ");
+chomp(my $num1 = <STDIN>);
+
+print("num2: ");
+chomp(my $num2 = <STDIN>);
+
+my $sum = $num1 + $num2;
+print("$num1 + $num2 = $sum\n");
+</script></code></pre>
+<p>3、写一个程序，提示用户输入一个字符串、一个数字（分两行），然后以给定的数字的次数，重复输出这行字符串，如字符串为 www，数字为 3，则应输出 3 行 www。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+
+print("str: ");
+my $str = <STDIN>;
+
+print("num: ");
+chomp(my $num = <STDIN>);
+
+print($str x $num);
+</script></code></pre>
+<h2 id="列表与数组"><a href="#列表与数组" class="headerlink" title="列表与数组"></a>列表与数组</h2><p>如果说 Perl 标量代表单数，那么代表复数的就是列表和数组。</p>
+<p>列表(list)是指标量的有序集合，而数组(array)则是存储列表的变量。在 Perl 里，这两个术语常常混用，不过更精确的说，列表指的是数据，数组是的是变量。列表不一定放在数组里，但每个数组变量一定包含着一个列表。可以这样理解，列表是字面量，数组则是一个存储列表的变量而已。不过一般不用严格区分它们，了解就好。</p>
+<p>数组或列表的每个元素都是单独的标量变量，拥有独立的标量值。这些值是有序的，每个元素都有自己的索引，它从 0 开始，这和大部分语言是一致的，它们从 0 开始递增。</p>
+<p>和 C/C++、Java 的数组不同的是，Perl 列表的元素的数据类型可以不同，比如可以是纯数字、纯字符串，也可以是它们的混合体，当然也可以是 undef 值。不过更常见的还是同一类型的标量。</p>
+<p>列表可以存放任意个标量值，最少的时候可以是 0，最多的时候可以将内存塞满。</p>
+<p><strong>访问数组元素</strong><br>和 C/C++、Java 一样，使用下标访问，下标也是从 0 开始（其实也可以是负数，表示从后往前的下标，后面会讲到）。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$fred[0] = "aaa";
+$fred[1] = "bbb";
+$fred[2] = "ccc";
+</script></code></pre>
+<p>注意，这里使用 <code>$</code> 标量符，而不是 <code>@</code> 符，为什么呢？其实也好理解，因为 <code>$</code> 后的表达式 <code>freq[ind]</code> 表示一个标量值，因此它使用 <code>$</code>，而不是 <code>@</code>，后面还会遇到类似的。</p>
+<p>注意，如果是依次给数组元素赋值，那么下标其实可以不连续，Perl 会自动的为中间的元素赋予 undef 值。我们来试一下（判断 undef 可以使用 defined 函数）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [18:22:33]
+$ cat array.pl
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+my @array;
+$array[0] = 0;
+$array[1] = 1;
+$array[2] = 2;
+$array[3] = 3;
+$array[9] = 9;
+
+foreach (@array) {
+    if (!defined($_)) {
+        print("undef, ");
+    } else {
+        print("$_, ");
+    }
+}
+print("\b\b \n");
+
+# root @ arch in ~/workspace [18:22:34]
+$ ./array.pl
+0, 1, 2, 3, undef, undef, undef, undef, undef, 9
+</script></code></pre>
+<p>注意，凡是能用 <code>$arr[ind]</code> 的地方，都可以使用 <code>$elem</code> 替代，因为它们实际上数据类型是一样的，前者可以理解为解数组，取数组元素，而后者则是普通的标量数据。</p>
+<p>并且，方括号中的下标可以是任意表达式，只要它的值是数字，如果不是整数，则会舍去小数部分（注意是舍去，不是四舍五入）。如果下标超过数组的最大下标值，则返回 undef，这和一般的未赋值标量是相同的，如果未对一个标量变量赋值，那么它的值就是 undef。</p>
+<p><strong>特殊的数组索引</strong><br>如果你对索引值超过数组尾端索引值的元素进行赋值，数组将会根据需要自动扩大，其中填充的值均为 undef。只要有足够的内存分配给 perl，数组的长度是无上限的（但实际上它被限制于有符号整数的最大值，但这实际上已经够大了）。</p>
+<p>有时候，你会想找出数组的最后一个元素的索引值（通常是数组长度减一），可以使用类似 shell 的求长度语法，即 <code>$#array</code>。比如你可以快速的往数组中追加一个元素：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$array[$#array] = "hello, world!";
+</script></code></pre>
+<p>但实际上，我们还有更简便且优美的方式来完成这件事，那就是使用 <code>-1</code>，即：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$array[-1] = "hello, world!";
+</script></code></pre>
+<p>但是超出数组长度的负值索引是不会扩充数组的（并且产生严重错误，终止运行），尝试获取它的值得到的也是 undef。<code>-1</code> 表示倒数第一个元素，<code>-2</code> 表示倒数第二个元素，以此类推，记得是从 <code>-1</code> 开始。</p>
+<p><strong>列表直接量</strong><br>列表直接量也就是数组字面量，它使用圆括号表示，里面的元素使用逗号分隔。而这些数据就称为列表元素，例如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+(1, 2, 3)     # 1、2、3 这 3 个数字的列表
+(1, 2, 3,)    # 同上，末尾的多余逗号被忽略
+("freq", 4.5) # 两个元素，"freq"、4.5
+()            # 空列表，里面没有元素
+(1..100)      # 1,2,3,..,100 一百个数字
+</script></code></pre>
+<p>最后一个例子使用了范围操作符，这个操作符在 shell 中也有，不过它是使用花括号包围的。它的范围只能是整数，如果是浮点数，会自动丢弃小数部分。该操作符会从左边的数字计数到右边的数字，每次加一，以产生一连串数字。举例来说：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+(1..5)              # 同 (1, 2, 3, 4, 5)
+(1.7..5.7)          # 同 (1, 2, 3, 4, 5)
+(5..1)              # 空列表，因为 .. 只能正向计数
+(0, 2..6, 10, 12)   # 同 (0, 2, 3, 4, 5, 6, 10, 12)
+($m..$n)            # 范围由标量变量 $m 和 $n 的值来决定
+(0..$#arr)          # 结束范围由 @arr 数组的最后一个元素的索引值确定
+</script></code></pre>
+<p>如你所见，你可以使用任何表达式来替代 beg..end 值。<br>当然，列表可以包含任何标量值，比如这个字符串列表：<br><code>(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;)</code></p>
+<p><strong>qw 缩写</strong><br>在 Perl 程序中，经常需要建立简单的单词列表（如上所示），这时大多数人都会比较反感这个逗号的书写，有点麻烦，其实 Perl 也可以像 Shell 那样，使用空格来分隔列表元素，那就是使用 qw 缩写，qw 是 quoted word 的缩写，见词识意即可，它表示加上引号的单词。使用 qw 改写如下，它可以让你打更少的字符：<code>qw(a b c d e f)</code>。</p>
+<p>qw 中不能使用转移序列、变量引用，并且其中的空白符都会被丢弃，它们仅仅用来区分不同的列表元素，因此当列表比较长，且需要经常修改时，我们可以这么写：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+qw (
+    www.zfl9.com
+    www.baidu.com
+    www.google.com
+);
+</script></code></pre>
+<p>当然，Perl 也允许你使用其它字符来替代圆括号，实际上，Perl 允许你使用任意标点符号作为定界符，常见的用法有：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+qw! www.zfl9.com www.baidu.com www.google.com !;
+qw/ www.zfl9.com www.baidu.com www.google.com /;
+qw# www.zfl9.com www.baidu.com www.google.com #;
+</script></code></pre>
+<p>如果使用镜像字符（比如左括号，左花括号），那么其右边界必须使用对应的“右”字符，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+qw( www.zfl9.com www.baidu.com www.google.com );
+qw< www.zfl9.com www.baidu.com www.google.com >;
+qw[ www.zfl9.com www.baidu.com www.google.com ];
+qw{ www.zfl9.com www.baidu.com www.google.com };
+</script></code></pre>
+<p>如果需要在被圈引的字符串中表示定界符，那需要使用反斜杠转义，但最好换过一种定界符，这才是好办法。如果需要表示反斜线本身，那么需要两个反斜线，这和单引号中的规则是一样的。</p>
+<p><strong>五种 Perl 引用语法</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+# 5 种 Perl 引用(quote)，分隔符可以是任意符号（或镜像字符）
+my $str1 = q/www.zfl9.com\twww.zfl9.com/;   # 单引号
+my $str2 = qq/www.zfl9.com\twww.zfl9.com/;  # 双引号
+my $regex = qr/.+/;                         # 正则模式 quote regex
+my $cmd = qx@cat /etc/resolv.conf@;         # 外部命令 quote exec
+my @lists = qw/zfl9 baidu google/;          # 字符串列表 quote word
+
+say $str1;
+say $str2;
+say $regex;
+print $cmd;
+say "@lists";
+</script></code></pre>
+<p><strong>转义正则模式中的元字符</strong><br>如果需要将用户输入的字符串插入到现有正则表达式中，可以使用 <code>quotemeta</code> 操作符来转义字符串中的正则元字符（反斜线转义），注意是返回新字符串，不修改原串。</p>
+<p><strong>列表的赋值</strong><br>就像标量值可以赋给标量变量一样，列表值也可以被赋值给变量：<br><code>($name, $age, $score) = (&quot;Otokaze&quot;, 19, 120);</code><br>语法有点类似 JS 中的批量赋值法（原谅我不记得他叫什么官方名称了）。<br>左侧列表中的变量会被依次赋值对应的右侧列表中的值。相当于 3 次独立赋值操作。<br>是的，没错，在 Perl 中交换两个变量的值非常容易，只需 <code>($a, $b) = ($b, $a);</code>。</p>
+<p>那么问题来了，如果左右两边的列表元素数量不一致会发生什么呢？</p>
+<ul>
+<li>如果右侧列表的元素多于左侧列表的元素，那么它们会被悄悄丢弃；</li>
+<li>如果左侧列表的元素多于右侧列表的元素，那么它们被赋予 undef。</li>
+<li>赋予 undef 是针对标量变量来说的，若为数组变量，则变为空列表。</li>
+</ul>
+<p>明白了列表赋值，你便可以使用如下代码来构建字符串数组：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+($rocks[0], $rocks[1], $rocks[2]) = qw(zfl9 baidu google);
+</script></code></pre>
+<p>不过，当你给整个数组赋值时，还有更简便的方法（实际上就是数组变量赋值）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@rocks = qw/zfl9 baidu google/;     # 三个元素
+@tiny  = ();                        # 空列表
+@giant = 1..1e5;                    # 10000 个元素的列表
+@stuff = (@giant, undef, @giant);   # 20001 个元素的列表
+$dino  = "granite";                 # 字符串标量变量
+@quary = (@rocks, "curshed", @tiny, $dino);
+</script></code></pre>
+<p>最后一项，<code>quary</code> 会变成拥有 5 个元素的列表，因为 tiny 没有元素，数组只能包含标量，因此数组中的数组实际上会被展开。因此不存在 C、Java 中的多维数组。你也可以方便的进行数组拷贝，即 <code>@copy = @rocks;</code>，拷贝的是数组元素，而不是引用。</p>
+<p><strong>push 和 pop 操作符</strong><br>要新增元素到数组中，只需将它存储在更高的索引值的位置就行了，不过，真正的 Perl 程序员是不使用索引的，不像 C/C++、Java，Perl 中使用索引进行操作的性能略慢，因此尽量使用非索引的方式来操作数组。</p>
+<p>我们常把数组当作堆栈（stack）来使用，比如在数组右侧添加新值或者删掉旧值，数组中的最右侧便是数组的最后一个元素，也就是拥有最大索引值的元素，我们常常对这个元素进行操作，Perl 提供了专门的函数。</p>
+<p>pop 就是其中之一，它的作用是取出数组中的最后一个元素，并将其作为返回值返回：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = 5..9;
+$fred  = pop(@array); # $fred 的值为 9，@array 则少了 9 这个元素
+$other = pop(@array); # $other 的值为 8，@array 少了 8 这个元素
+pop @array;           # @array 现在变为了 (5, 6)，7 被删掉了
+</script></code></pre>
+<p>最后一行是在空上下文（void context）中使用 pop 操作符，所谓的空上下文只不过是指返回值无可去处的一种说辞。这其实也是一种常见的用法，删除最后一个元素。</p>
+<p>如果数组本来就是空的（没有元素），那么 pop 什么也不做，它直接返回 undef。</p>
+<p>与此对应的操作符是 push，用于添加一个新元素到数组末尾。例如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+push(@array, 0);     # (5, 6, 0)
+push @array, 8;      # (5, 6, 0, 8)
+push @array, 1..10;  # @array 添加了 10 个新元素
+@others = qw/ 1 2 3 4 /;
+push @array, @other; # @array 又添加了 4 个元素
+</script></code></pre>
+<p>注意，push、pop 的第一个参数必须是一个数组变量，对一个列表进行 push、pop 没有意义（因为这仅仅是数组字面量，你操作后也得不到它的引用）。</p>
+<p><strong>unshift/shift 操作符</strong><br>与 push/pop 相对的是 unshift/shift。它们分别用于插入/删除数组头部元素。</p>
+<p><strong>splice 操作符</strong><br>push/pop、shift/unshift 都是针对数组首尾进行操作的，那么要在数组中间操作一些元素该如何呢？这正是 splice 操作符要做的事情。它最多可接收 4 个参数，最后两个是可选参数。第一个参数当然是要操作的数组，第二个参数是要操作的一组元素的起始位置，如果仅给出这两个参数，Perl 会把从给定位置到数组末尾的元素全部取出，并返回：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = qw( pebbles dino fred barney betty );
+@removed = splice @array 2; # 弹出 @array 的 fred、bareny betty
+                            # @array = qw( pebbles dino );
+                            # @removed = qw( fred barney betty );
+</script></code></pre>
+<p>可以通过第三个参数来指定要弹出的元素长度，通过这个参数我们可以删除数组中间的一个片段，还是上面这个例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = qw( pebbles dino fred barney betty );
+@removed = splice @array, 1, 2; # 删除 dino fred 两个元素
+                                # @array = qw( pebbles barney betty );
+                                # @removed = qw( dino fred );
+</script></code></pre>
+<p>第四个参数是要替换的列表（替换删掉的部分，长度可以不一样，因此可以往里面插入元素），相关的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = qw( pebbles dino fred barney betty );
+@removed = splice @array, 1, 2, qw( wilda );
+# @array = qw( pebbles wilda barney betty );
+# @removed = qw( dino fred );
+</script></code></pre>
+<p>实际上，如果要插入元素，你完全不用删除任何元素，即将它们设为 0，例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = qw( zfl9 baidu google );
+splice @array, 1, 0, qw(souhu);
+# @array = qw(zfl9 souhu baidu google);
+</script></code></pre>
+<p><strong>字符串中的数组内插</strong><br>和标量变量一样，数组变量也可以内插在字符串中，内插时，会在数组的每个元素之间自动添加分隔用的空格（事实上，分隔符是可以手动控制的，通过 <code>$&quot;</code> 变量可修改）。</p>
+<p>注意这么一种情况，为避免混淆，可以大胆的加上花括号（和 Shell 一样）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+my @fred = qw(eating rocks wrong);
+my $fred = "right"; # 我想打印 "this is right[2]"
+print "this is $fred[2]\n";     # "this is wrong"
+print "this is ${fred[2]}\n";   # "this is wrong"
+print "this is $fred\[2]\n";    # "this is right[2]"
+print "this is ${fred}[2]\n";   # "this is right[2]"
+</script></code></pre>
+<p><strong>foreach 控制结构</strong><br>foreach 循环用来逐项遍历列表中的元素，它和 Java 中的 foreach 类似，例如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+foreach $rock (qw/bedrock slate lava/) {
+    print "one rock is $rock\n";
+}
+</script></code></pre>
+<p>注意，<code>$rock</code> 其实是数组元素的引用，因此你可以在循环内部修改它的值，在外部这个修改仍然可见。比如这个例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [9:13:48]
+$ cat array.pl
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+my @array = qw(www.zfl9.com www.baidu.com www.google.com);
+
+foreach my $elem (@array) {
+    $elem = "\t$elem";
+    $elem .= "\n";
+}
+
+print "\@array = (\n@array)\n";
+
+# root @ arch in ~/workspace [9:13:50]
+$ ./array.pl
+@array = (
+    www.zfl9.com
+     www.baidu.com
+     www.google.com
+)
+</script></code></pre>
+<p><strong>Perl 中的默认变量 $_</strong><br>如果在 foreach 中没有定义控制变量（也就是那个 <code>$elem</code>），那么 Perl 会将这个值存储在默认变量 <code>$_</code> 中，比如，它和上面的程序等价：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+my @array = qw(www.zfl9.com www.baidu.com www.google.com);
+
+foreach (@array) {
+    $_ = "\t$_";
+    $_ .= "\n";
+}
+
+print "\@array = (\n@array)\n";
+</script></code></pre>
+<p>虽然 <code>$_</code> 不是 Perl 中的唯一默认变量，却是最常用的一个。以后会看到，在许多情况下，当未告知 Perl 使用那个变量或数值时，Perl 都会自动使用 <code>$_</code>，从而避免程序员免于命名和键入新变量的痛苦。没错，这里的 print 就是一个例子。在没有参数时，她就会打印 <code>$_</code> 的值。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$_ = "hello, world!\n";
+print;
+</script></code></pre>
+<p><strong>reverse 操作符</strong><br>顾名思义，用来反转列表中的元素顺序，并返回一个新数组，注意它不会修改原数组，你需要将它赋值给原数组才能改变它。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@fred = 6..10;
+@barney = reverse @fred;    # 10 9 8 7 6
+@wilma = reverse 6..10;     # 10 9 8 7 6
+@fred = reverse @fred;      # 翻转后放回原数组
+</script></code></pre>
+<p><strong>sort 操作符</strong><br>sort 用来对数组进行排序，默认是使用 Unicode 码点进行排序，小的在前。它也不会修改原数组。最后面的章节中，我们会使用自定义的排序方式，来使用 sort 对数组进行排序，现在先不提这个。</p>
+<p><strong>each 操作符</strong><br>each 用来逐步遍历数组、哈希，在 Perl 5.12 版本之前，each 只能用于哈希，具体细节后面会提到。每次对数组调用 each，都会返回数组下一个元素对（索引值，元素值），请看例子，第一个使用 each，第二个使用 foreach，后者性能可能差一些：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+my @array = qw(zfl9 baidu google);
+while (my($ind, $val) = each @array) {
+    say("\@array[$ind] = $val");
+}
+</script></code></pre>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+my @array = qw(zfl9 baidu google);
+foreach my $ind (0..$#array) {
+    say("\@array[$ind] = ${array[$ind]}");
+}
+</script></code></pre>
+<p><strong>标量上下文、列表上下文</strong><br>这是本章最重要的一节，甚至可以说是本书中最重要的一节，这一点都不夸张。这并不是说这一节有多么难懂，它的概念很简单，同一个表达式出现在不同的地方有不同的意义。</p>
+<p>这你应该不会陌生，因为在自然语言里，这种情况随处可见，比如一个人问你单词 read 是什么意思，你一定很难简单回答，因为用在不同的地方，它有截然不同的意思。除非你知道上下文（context），否则很难确认它的准确意义。</p>
+<p>所谓上下文，可以理解为周围的语言环境，在 Perl 中，指的是你如何使用表达式。事实上，你已经看到过许多针对数字和字符串上下文的操作了。比如按照数字方式进行操作得到的就是数字结果，而按照字符串方式进行操作得到的就是字符串结果，起到这一决定性因素的正是：”操作符”，而不是两边的操作数的数据类型。</p>
+<p>我个人感觉这一点都不难理解，这其实就是 C 语言中的隐式自动类型转换。是的，就拿最简单的赋值语句来说，它分为 2 个部分，左边的操作数是变量（隐含着具体的数据类型），右边的操作数是数据本身。因此，将右操作数赋给左操作数时，必然会进行适当的数据类型转换，只不过这个适当的数据类型转换在 Perl 中显得有点不是那么适当，因为它的转换尺度有点大，比如你可以将一个列表数据赋值给一个标量变量，标量变量的值是该列表的长度。初次看到这种用法你可能会觉得不可思议，但是习惯后你会觉得这太正常不过了，因为 Perl 表现的很像人类语言，很智能，它几乎总是能够知道你要转换为什么数据类型，以及要如何进行转换。这要是放在 C 语言中，假设左操作数是 int 型，那么经过强制类型转换后，你得到的也只是这个数组的内存地址而已，而不是它的元素数目。</p>
+<p>我说一下我的个人见解，发生这种转换操作基本上都是在“赋值表达式”（当然还有运算符的，运算符的比较好理解，一切都取决于运算符）中。那么赋值表达式的经典形式就是：<code>variable = statement</code>，statement 是一个 Perl 表达式，它的值可以是任意数据类型，但是赋值后，整个表达式的数据类型却只由 variable 的数据类型来决定，如果 variable 是标量，那么最终的表达式类型就是标量，如果它是列表，那么最终的表达式类型就是列表，等等，以此类推。</p>
+<p>接着原文，当 Perl 在解析表达式时，你要么希望它返回一个标量，要么希望它返回一个列表（现阶段，后面的先不考虑哈），表达式所在的位置，Perl 期望得到什么，那就是该表达式的上下文（不好理解，至少我不理解）。原文例子（这个我倒理解）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+42 + something; # 这里的 something 必须是标量，如果不是会进行自动转换
+sort something; # 这里的 something 必须是列表，如果不是会进行自动转换
+</script></code></pre>
+<p>又比如（运算符）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@peple = qw( fred barney betty );
+@sorted = sort @people; # 列表上下文，qw( barney betty fred )
+$number = 42 + @people; # 标量上下文，42 + 3 = 45（数组长度）
+</script></code></pre>
+<p>又比如（赋值运算）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@list = @people; # 数组拷贝
+$len  = @people; # 数组长度
+</script></code></pre>
+<p>但请不要立即得出结论，认为在标量上下文中，列表返回的值一定是列表的长度，有很多能产生列表的表达式，所返回的东西可能比你想象中的还要丰富有趣。</p>
+<p>不光如此，从我们积累的经验来看，仅仅通过对列表表达式形式上的判断是无法归纳出一个通用法则来的。每个表达式都可能有它特定的规则。所以实际上，能够概括的规则就是：那种上下文更有意义，就应该是用那种上下文。不过你不用太担心，因为 Perl 做出的选择往往就是你自己期望得到的结果。</p>
+<p><strong>在标量上下文中使用产生列表的表达式</strong><br>有些表达式通常是用来产生列表的，假如在标量上下文中使用，结果会怎样？</p>
+<p>某些表达式不会在标量上下文中返回任何值。比如 sort 在标量上下文中会返回什么呢？undef，注意它不是返回排序后的列表的元素个数。</p>
+<p>另一个例子是 reverse，在列表上下文中，他很自然的返回逆序后的新列表，在标量上下文中，他返回逆序后的字符串（先将列表中的所有字符串连接在一起，然后倒转它们的顺序，返回它）。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@backwards = reverse qw/yabba dabba doo/;
+ # 得到 qw/doo dabba yabba/;
+$backwards = reverse qw/yabba dabba doo/;
+ # 得到 "oodabbadabbay"
+</script></code></pre>
+<p>刚开始学习 Perl 时，你可能很难看出某个表达式究竟是处于哪个上下文中（处于什么上下文，它的值就会被转换为该上下文的类型的值），不过，请相信我，你很快就会找到这种感觉，一眼就看得出来。之所以刚开始时看不出，很可能是其他语言的语法惯性导致的。</p>
+<p>先来看一些常见的上下文：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$fred = something;              # 标量上下文
+@pebbles = something;           # 列表上下文
+($wilda, $betty) = something;   # 列表上下文
+($dino) = something;            # 列表上下文
+</script></code></pre>
+<p>这一组全部都是标量上下文：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$fred = something;
+$fred[3] = something;
+123 + something;
+something + 634;
+if (something) {...}
+while (something) {...}
+$fred[something] = something;
+</script></code></pre>
+<p>这一组全部都是列表上下文：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@fred = something;
+($fred, $barney) = something;
+($fred) = something;
+push @fred, something; # 因为函数参数，多个参数其实就是列表
+foreach $fred (something) {...}
+sort something;
+reverse something;
+print something; # 同样，因为函数参数
+</script></code></pre>
+<p><strong>在列表上下文中使用产生标量的表达式</strong><br>这种情况非常简单，Perl 会将标量包装为具有一个元素的列表。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@fred = 6 * 7; # (42)
+@barrey = "hello" . "world";
+</script></code></pre>
+<p>不过，要注意：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = undef; # 这并不是清空了列表元素，得到的仅是用于一个 undef 元素的列表
+@array = ();    # 这才是清空列表元素的正确姿势
+</script></code></pre>
+<p><strong>强制指定标量上下文</strong><br>偶尔，在 Perl 想要列表上下文的地方你想要强制引入标量上下文，可以使用伪函数 scalar，她并不是真正的函数，只不过是告诉 perl 这里要切换为标量上下文，但实际上，你很少需要使用这个关键字，相信我。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@array = qw(zfl9 baidu google);
+$length = @array;        # 获取数组长度
+$length = scalar @array; # 获取数组长度
+</script></code></pre>
+<p><strong>3 种上下文类型</strong></p>
+<ul>
+<li><code>Scalar Context</code>：标量上下文，列表返回元素个数，哈希返回的值不太明确，可能是键值对数目，也可能是分数，分母是桶的数量，分子是存储了元素的桶的数量。如果要获取哈希的键值对数目，建议使用 <code>my $len = keys %hash</code>。</li>
+<li><code>List Context</code>：列表上下文，标量返回具有一个元素的列表，哈希则被展开为列表（两倍的长度，每两个元素都是一对 key/value）。</li>
+<li><code>Void Context</code>：空上下文，空上下文其实很好理解，比如一条语句 <code>&quot;test-string&quot;;</code> 并没有使用标量变量存储它，所以它会被悄悄丢弃，如果启用了警告功能，则 Perl 会发出警告信息。</li>
+</ul>
+<p>如果是赋值操作那么很好判断上下文，因为只需要看左边的变量的类型就知道了；如果是将表达式当作函数的参数，那么毫无疑问就是列表上下文；如果是 if、while、for 条件判断语句，那么就是标量上下文（将其看作布尔值）；foreach 是列表上下文。</p>
+<p><strong>列表上下文中的 <code>&lt;STDIN&gt;</code></strong><br>这里纠正一个概念，我前面说 <code>&lt;STDIN&gt;</code> 只是获取 STDIN 的一行数据，其实不是这样的，当 <code>&lt;STDIN&gt;</code> 位于标量上下文时，返回的的确是一行数据，但是当他位于列表上下文时，它返回的确实有一行行数据组成的列表（类似 sed、awk 的操作）。</p>
+<p>前面还介绍了 chomp 用来去掉标量字符串的末尾换行符，如果可以用来一次性去掉列表中的字符串的末尾换行符就最好了，是的，chomp 早就想到了这一点，例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@lines = <STDIN>; # 读取所有行，一行一个元素
+chomp(@lines);    # 去掉每个元素的末尾换行符（如果有的话）
+</script></code></pre>
+<p>当然，更常见的是合在一起的写法：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+chomp(@lines = <STDIN>); # 读取所有行，且剔掉末尾换行符
+</script></code></pre>
+<p><strong>章节习题</strong><br>1、编写类似 cat 的 Perl 程序（打印输入的内容）</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+print(<STDIN>);
+</script></code></pre>
+<p>2、编写类似 tac 的 Perl 程序（反向打印输入的内容）</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl -CSDA
+use utf8;
+use strict;
+use warnings;
+use 5.026_002;
+
+print(reverse <STDIN>);
+</script></code></pre>
+<h2 id="子程序"><a href="#子程序" class="headerlink" title="子程序"></a>子程序</h2><p>我们已见过且用过一些内置的系统函数，像 print、chomp、reverse 等。但是就如同其他语言一样，Perl 也可以让你创建子程序（Subroutine），也就是用户自定义的函数（子程序总是由用户定义的，而函数则不一定。所以我们通常不将其称为函数）。</p>
+<p>子程序让我们可以重复利用已有的代码，子程序的名称也是 Perl 的标识符，因此只能以字母、下划线开头。有时候视情况会以“与号”（<code>&amp;</code>）开头。关于何时可以省略以及何时必须加上这个放在标识符起前面的 &amp; 号，本章最后一部分会进行介绍。若无其他声明，我们都将使用这个 <code>&amp;</code>，这通常是比较保险的做法。当然也有不能用与号的情形，后面会提到，先别急。</p>
+<p>子程序名属于独立的命名空间，这样 Perl 就不会将同一段代码中的子程序 <code>&amp;fred</code> 和标量 <code>$fred</code> 搞混，虽然实际编程时没人会为两种不同的东西取一样的名字。</p>
+<p><strong>定义子程序</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub marine {
+    $n += 1; # 全局变量 $n
+    print "hello, sailor number $n\n";
+}
+</script></code></pre>
+<p>子程序可以被定义在程序的任意位置，习惯 C 语言的可能会将子程序定义在文件的开头，也有人喜欢将它们定义在文件的末尾，从而是主体程序出现在开头部分。你可以随意使用任意一种风格，不管怎样，你都不需要对子程序进行事先声明。</p>
+<p>子程序的定义是全局的，除非你使用一些特别的技巧，否则不存在所谓的私有子程序。假如你定义了两个重名的子程序，那么后面的哪个子程序会覆盖掉前面那个（你将子程序看作是普通的变量就容易理解了，这点和 JS 一样，哦，说反了，应该是 JS 借鉴的 Perl）。如果启用了警告信息，Perl 会告诉你的子程序有重复定义，一般来说，重名是不推荐的，这也会让程序员自己产生疑惑。</p>
+<p>正如你在之前的例子中看到，你可以在子程序中使用任何全局变量。事实上，目前你见过的所有变量都是全局的，这意味着你可以在你的程序的任意位置访问这些变量。</p>
+<p><strong>调用子程序</strong><br>你可以在任意表达式中使用子程序名（带上与号）来调用它（通常我们都会带上圆括号，哪怕是没有参数的空括号）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+&marine; # 打印 hello, sailor number 1
+&marine; # 打印 hello, sailor number 2
+&marine; # 打印 hello, sailor number 3
+</script></code></pre>
+<p>通常，我们把对子程序的调用称为呼叫（calling）子程序。除了上面的用法外，你还会看到其他的用法。通常我们会加上圆括号，不然你写的程序可能不会是你预想的那样。</p>
+<p><strong>返回值</strong><br>函数当然是有返回值的了，上面的调用 marine 中，我们对它的返回值丢弃了，没有保存起来。很多时候，我们需要调用子程序，并对它的返回值进一步处理。所以我们需要在意子程序的返回值。</p>
+<p>在 Perl 中，所有的子程序都有一个返回值。子程序并没有“有返回值”、“没返回值”之分。所有的子程序都是由返回值的。但并不是所有的 Perl 子程序都会返回有用的返回值。</p>
+<p>既然任何 Perl 子程序都有返回值，那么规定每次都必须写 return 语句就显得很费事。所以 Perl 将它简化了，在子程序的执行过程中，它被不断进行运算，而最后一次运算的结果（不管是什么）都会被自动的当成子程序的返回值（可以理解为 Shell 中的命令的返回值作为函数的返回值），但我建议加上 return 语句，不要省略。</p>
+<p>比如，我们定义下面这个程序，最后一个加法表达式就是子程序的返回值：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub sum_of_fred_and_barney {
+    print "something\n";
+    $fred + $barney; # 这就是返回值
+}
+</script></code></pre>
+<p><strong>参数</strong><br>这是理所当然的，要传递参数给子程序，只需将参数放在调用的括号里就行了。例如：<code>$n = &amp;max(10, 15);</code>。参数列表将会被传入子程序，让子程序随意使用。当然得先将这个列表存在某处，Perl 自动将参数列表化名为特殊的数组变量 <code>@_</code>（和 JS 真的很相似啊），该变量在子程序执行期间有效，子程序可以访问这个数组，以判断参数的个数以及对应的值。</p>
+<p>第一个参数存储于 <code>$_[0]</code>，第二个参数存储于 <code>$_[1]</code>，以此类推。存储参数的数组变量是 <code>@_</code>（注意他们的前缀字符哦）。一个简单的 max 子程序，返回较大的一个：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub max {
+    if ($_[0] > $_[1]) {
+        return $_[0];
+    } else {
+        return $_[1];
+    }
+}
+</script></code></pre>
+<p>虽然你可以这么写，但是可读性就很差了，特别是代码多起来的时候。这个子程序还存在这么一个问题，<code>&amp;max</code> 这个名字虽然既好听又简洁，但没有说明这个这个参数只能接收两个参数。多余的参数会被 max 子程序忽略，不足的参数也不会报错，只不过获取的是 undef 罢了，稍后我们将会告诉你如何写一个完整的 max 函数。</p>
+<p>实际上 <code>@_</code> 变量是子程序的私有变量（<strong>除非调用子程序的时候前面<code>加了 &amp; 号</code>，且后面<code>没有带上括号</code></strong>，这种情况下，<code>@_</code> 数组会从调用者的上下文中继承下来，一般情况下这并不是好主意，但偶尔也能派上用场，所以建议始终给子程序调用加上圆括号，当然这对于内置函数也是一样的，不过也不是说一定不能这么做，有些时候还是有用的）。</p>
+<p>假如已经有了全局变量 <code>@_</code>，则该变量在子程序调用前会先被存起来，并在子程序返回时恢复原本的值。这也代表子程序可以将参数传给其他程序，而不用担心遗失自己的 <code>@_</code> 变量。这其实很容易理解，函数中的私有变量的优先级比外部变量高，这在绝大多数语言中都是适用的。</p>
+<p><strong>子程序中的私有变量</strong><br>既然每次调用子程序时 Perl 都会给我们新的 <code>@_</code>，难道不能利用它构造私有变量吗？答案是可以。默认情况下，Perl 中的变量都是全局变量，也就是说，你可以在程序的任何位置访问它。但你随时都可以使用 <code>my</code> 操作符来创建私有变量，我们称之为词法变量（这个关键字我实际上已经使用了很久了），例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub max {
+    my($m, $x) = @_;
+    return $m > $n ? $m : $n;
+}
+</script></code></pre>
+<p>这些变量属于封闭语句块（花括号）中的私有变量，语句块之外的任意地方的 <code>$m</code> 和 <code>$n</code> 都完全不受这两个私有变量的影响。反过来也是，外部变量同样无法影响内部的私有变量。所以，我们可以将这个子程序放在任意一个 Perl 程序中，而不用担心与外部变量产生冲突。另外，Perl 允许最后一个语句可以没有分号，但是不建议滥用，最后在保持简短的代码时才会这样做。因此，Perl 中的形参名称都是在子程序中的第一行以这种形式声明。</p>
+<p><strong>变长参数列表</strong><br>在真实的 Perl 代码中，常常把更长的（任意长度的）列表作为参数传给子程序。这延续了 Perl 去除不必要限制的理念。这个其实在 JS 中也有体现，可以传入任意长度的参数，不需要进行所谓的函数重载。</p>
+<p>当然，通过检查 <code>@_</code> 数组的长度其实也很容易确定参数的个数是否正确，比方说，我们可以将 <code>&amp;max</code> 写成下面这样以确定参数的个数：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub max {
+    if (@_ != 2) {
+        print "warning, balabala";
+    }
+    ...
+}
+</script></code></pre>
+<p>上面的 if 判断是在标量上下文中使用列表表达式，来获取列表的元素个数，这个用法你应该在上一章节中看见过，不再复述。但实际上这种做法在 Perl 中并不常见，更多的做法是让子程序自动适应任意数目的参数。</p>
+<p><strong>改进的 <code>&amp;max</code> 子程序</strong><br>现在我们来改写 max 函数，让其能够接受任意数目的参数：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub max {
+    my $max = shift @_;
+    foreach (@_) {
+        if ($_ > $max) {
+            $max = $_;
+        }
+    }
+    return $max;
+}
+
+&max(1, 2, 3, 4);
+</script></code></pre>
+<p><strong>空参数列表</strong><br>即使超过 2 个参数，改进后的 max 子程序仍然可以得出期望的结果，那假如没有参数呢？会发什么事情？我们来分析一下，第一行，shift 可以处理空列表，它返回 undef，而 foreach 对于空列表它不会进入循环，因此直接执行 return 语句，所以最终子程序返回 undef。嗯看起来没有问题。</p>
+<p><strong>关于 my 词法变量</strong><br>事实上，词法变量 my 可以用在任何语句块中内，而不仅限与子程序的语句块。这里说的语句块可以理解为一个花括号，因此，my 将这些变量的作用范围限定在包含它们的花括号内部。</p>
+<p>需要注意的是，my 加括号和不加括号是有区别的，请看：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my($num) = @_; # 列表上下文，同 ($num) = @_;
+my $num  = @_; # 标量上下文，同  $num  = @_;
+</script></code></pre>
+<p>my 在不加括号时，只能用来声明后面的一个变量，必须使用括号才能声明多个变量：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $fred, $bareny;  # 错，没有声明 $bareny
+my($fred, $bareny); # 声明了 $fred、$bareny 
+</script></code></pre>
+<p>除了标量外，还可以声明数组、哈希等变量。所有的新变量的值一开始都是空的，标量是 undef，列表是空列表（注意，数组没有 undef 这种值，只有空数组，非空数组，空数组本身就是 false，非空数组为 true）。</p>
+<p>在日常编程中，你最好时时刻刻带上 my，将变量的作用域限制在最内层的花括号内，以免发生冲突。特别是当你启用了严格模式后，这是必须要做的事情！</p>
+<p><strong>use strict 编译指令</strong><br>Perl 是一门相当宽容的语言，但你也许希望 Perl 能更严格一些，多一点约束力（就像 Java 一样），要达成这一点，不妨试试 use strict 编译指令。</p>
+<p>所谓编译指令，其实不过是给编译器的某些暗示，告诉它该如何处理接下来的代码。这里的 <code>use strict;</code> 编译指令是要告诉 Perl 编译器接下来的代码应该稍加严谨一些，遵循一些优良的编程风格。</p>
+<p>最好的方法是，在 <code>/usr/bin</code> 下创建一个 perl5 可执行文件，然后将下面的内容放进去，以后在 Perl 脚本第一行使用 <code>#!/usr/bin/perl5</code> 就可以了，一劳永逸：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+#!/bin/sh
+exec perl -CSDA -Mutf8 -Mstrict -Mwarnings -M5.026_002 "$@"
+</script></code></pre>
+<p><strong>return 操作符</strong><br>如果想在子程序执行一半时停止，该怎么办呢？这正是 return 做的是，它会使当前子程序立即返回（同时附带可选的返回值）。若为 <code>return;</code>，则表示 <code>return undef;</code>。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my @names = qw/ zfl9 baidu google taobao tencent wikipedia /;
+my $result = &find_element_index("google", @names);
+say $result;
+
+sub find_element_index {
+    my ($elem, @array) = @_;
+    foreach (0..$#array) {
+        if ($elem eq $array[$_]) {
+            return $_;
+        }
+    }
+    return -1;
+}
+</script></code></pre>
+<p><strong>省略 <code>&amp;</code> 号</strong><br>原文有点多，我总结一下：</p>
+<ul>
+<li>不带 <code>&amp;</code>：Perl 会优先调用内置函数，如果发生重名那可能不是你想要的；</li>
+<li>带上 <code>&amp;</code>：明确告诉 Perl，我想调用的是自定义的子程序，而不是内置函数。</li>
+</ul>
+<p>所以，对于内置函数，不要带上 <code>&amp;</code>，对于自定义子程序请带上 <code>&amp;</code>，这是编码规范！并且强烈建议调用子程序时带上圆括号，即使没有参数要传递，否则子程序的 <code>@_</code> 将会从调用者的上下文中继承它的值。</p>
+<p><strong>持久性私有变量</strong><br>在子程序中可以使用 my 创建私有变量，但每次调用这个子程序时，这个私有变量其实都是重新分配的内存（调用栈是全新的）。而如果使用 <code>state</code> 操作符来声明变量，我们便可以在子程序的多次调用之前保持该变量的值，并且将该变量的作用域限制在子程序之内。也即 <strong>持久性私有变量</strong>。可以理解为加了 static 修饰符的 my。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+sub static_increment {
+    state $cnt = 0;
+    ++$cnt;
+    say("\$cnt = $cnt");
+}
+
+&static_increment();
+&static_increment();
+&static_increment();
+</script></code></pre>
+<p>注意，Perl 只会在第一次执行子程序 static_increment 时运行 <code>state $cnt = 0;</code> 这条语句，此后都是直接跳过，不然 <code>$cnt</code> 是不会继续递增的，因为每次调用都被重置为 0 了。这和 C/C++ 中的 static 关键字很像，或者说它就是 static 关键字。</p>
+<p><strong>习题</strong><br>1、写一个计算输入参数之和的子程序，它可以接收任意个参数：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+sub total {
+    my $sum;
+    foreach (@_) {
+        $sum += $_;
+    }
+    return $sum;
+}
+
+my @fred = qw/ 1 3 5 7 9 /;
+my $fred_total = &total(@fred);
+print("The total of \@fred is $fred_total\n");
+print("Enter some numbers on separate lines: ");
+my $user_total = &total(<STDIN>);
+print("The total of these numbers is $user_total\n");
+</script></code></pre>
+<p>2、使用之前的子程序，计算从 1 加到 1000 的总和：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+sub total {
+    my $sum;
+    foreach (@_) {
+        $sum += $_;
+    }
+    return $sum;
+}
+
+my $total = &total(1..1000);
+print("1 + 2 + 3 + ... + 1000 = $total\n");
+</script></code></pre>
+<p>3、写一个名为 <code>above_average</code> 的子程序，当给定一个包含多个数字的列表时，返回其中大于这些数的平均数的数。（提示：另外写一个子程序，用于计算这些数的平均数），然后使用以下程序验证：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+sub average {
+    my $sum;
+    foreach (@_) {
+        $sum += $_;
+    }
+    return $sum / @_;
+}
+
+sub above_average {
+    my $average = &average(@_);
+    my @greater = ();
+    foreach (@_) {
+        if ($_ > $average) {
+            push @greater, $_;
+        }
+    }
+    return @greater;
+}
+
+my @fred = &above_average(1..10);
+print "\@fred is @fred\n";
+print "(Should be 6 7 8 9 10)\n";
+
+my @barney = &above_average(100, 1..10);
+print "\@barney is @barney\n";
+print "(Should be just 100)\n";
+</script></code></pre>
+<p>4、写一个名为 greet 的子程序，当给定一个人名作为参数时，打印出欢迎它的信息，并告诉它上一个人的名字。如果是第一个人，则告诉他你是第一个来宾。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+sub greet {
+    state $last;
+
+    my $name = $_[0];
+    say("hello, $name");
+
+    if (!defined($last)) {
+        say("you are first!");
+    } else {
+        say("last is $last");
+    }
+
+    $last = $name;
+}
+
+&greet("zfl9");
+say("");
+&greet("baidu");
+say("");
+&greet("google");
+</script></code></pre>
+<p>5、修改之前的程序，告诉新来的人之前到来的人都是谁。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+sub greet {
+    state @last;
+
+    my $name = $_[0];
+    say("hello, $name");
+
+    if (!@last) {
+        say("you are first!");
+    } else {
+        say("last is @last");
+    }
+
+    push @last, $name;
+}
+
+&greet("zfl9");
+say("");
+&greet("baidu");
+say("");
+&greet("google");
+</script></code></pre>
+<h2 id="输入与输出"><a href="#输入与输出" class="headerlink" title="输入与输出"></a>输入与输出</h2><p><strong>行输入操作符 <code>&lt;STDIN&gt;</code></strong><br>读取标准输入流非常容易，我们在前面已经用过行输入操作符 <code>&lt;STDIN&gt;</code>，在标量上下文中执行该操作时，将会返回 stdin 的下一行，而在列表上下文中执行该操作时，将一行一行的读取 stdin，每行一个元素，存储在列表中。建议使用标量上下文的读法，因为如果文件很大，效率和内存占用那是一个天一个地。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$line = <STDIN>; # 读取一行
+chomp($line);    # 去掉末尾的换行符
+# or
+chomp($line = <STDIN>); # 简写用法，常用
+</script></code></pre>
+<p>如果读到文件末尾（EOF），行输入操作符则返回 undef，这样的设计是为了配合循环使用，以跳出循环体：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while ($line = <STDIN>) {
+    print "input: $line";
+}
+</script></code></pre>
+<p>当读到 EOF 时，<code>$line</code> 为 undef 值，也就是 false，所以会跳出 while 循环。但是，Perl 允许我们写得更见简便，如下：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    print "input: $_";
+}
+</script></code></pre>
+<p>它完全与前一个程序相同，只不过 perl 将读到的输入行放在了默认变量 <code>$_</code> 中而已。你可能注意到了我们没有加上 chomp，后面你会看到，chomp 一般不加在循环条件中，而是放在循环体的第一行，因为可以使用默认参数 <code>$_</code>。</p>
+<p>如果在列表上下文中调用了行输入操作符，那么它会返回一个列表，其中包含所有的输入内容，每个元素都是其中的一行字符串。比如 foreach 就是典型的列表上下文：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+foreach (<STDIN>) {
+    print "input: $_";
+}
+</script></code></pre>
+<p>foreach 的行为和 while 的一样，不是吗？二者的不同之处在于它们背后的运作方式。在 while 循环中，Perl 会读取一行，然后把它存入默认变量 <code>$_</code>，接下来，它会回头继续读取下一行，重复这些步骤。而 foreach 循环中，行输入操作符会一次性读取所有输入，然后再循环这个列表，所以如果读取一个 400M 的日志文件，那么它们的差异非常明显。所以，始终建议使用 while 来读取标准输入。</p>
+<p><strong>来自钻石操作符 <code>&lt;&gt;</code> 的输入</strong><br>还有一种类似 Unix 工具的读取方式（假设指定了文件，则从文件中读取，否则从标准输入读取，比如 cat 命令就是这样），这个操作符就是钻石操作符：<code>&lt;&gt;</code>。当然，如果指定的文件为 <code>-</code>，则也是从标准输入读取，这和 cat 一样。当然，Perl 当然可以处理多个文件，它们会被当作一个文件处理，依次被钻石操作符读取，最后 EOF 结束。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<>) {
+    chomp;
+    print("input: $_\n");
+}
+</script></code></pre>
+<p>其实可以不用 chomp，这里之所以这么做，是想告诉你，默认参数在其作用。如果没有指定参数，那么内置函数会使用当前上下文中的 <code>$_</code>。自定义子程序通常不这么做（之前的一个结论可能有问题，我现在尝试后，发现必须显示传递参数才能正常工作）</p>
+<p><strong>命令行参数</strong><br>从技术上来讲，钻石操作符其实不会去检查命令行参数，它的参数只不过是来自 <code>@ARGV</code> 数组。这个数组是 Perl 解释器事先建立的特殊数组，其内容就是由命令行参数组成的列表。换句话说，他与普通的数组没有区别，只不过他的名称是大写的而已。</p>
+<p>注意，Perl 中没有所谓的 <code>$ARGC</code> 标量变量，并且 <code>$ARGV[0]</code> 也不是当前的程序名称，它存储在特殊变量 <code>$0</code> 中。这是与 C/C++ 程序不同的地方。</p>
+<p>你可以像使用其他数组一样使用 ARGV 数组，你可以把其中的元素 shift 出去，或者使用 foreach 来遍历命令行参数。你也可以检查参数是否以 <code>-</code> 开头，然后将它视为程序的运行选项。当然，这仅适用于少量参数，如果想更优雅的处理命令行参数，请使用 Perl 的内置模块：<code>Getopt::Long</code>、<code>Getopt:Std</code>。</p>
+<p>钻石操作符会查看 <code>@ARGV</code> 数组，然后决定该用哪个文件名，如果他找到的是空列表，他就会该用标准输入流，否则它就会使用列表中的文件的输入流。也就是说，你可以手动操控 ARGV 数组，来改变钻石操作符的行为。</p>
+<p><strong>输出到标准输出</strong><br>print 操作符会读取列表中的所有元素，并把每一项（当然是一个字符串）依次送到标准输出。它的每一项之前、每一项之后都不会加上其他额外的字符（当然这是默认情况，实际上你可以修改 <code>$&quot;</code> 变量，它的意思是列表元素的分隔符）。</p>
+<p>注意，直接打印数组，和进行字符串内插的效果是不同的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @arr = 1..5;
+say @arr;   # "12345"
+say "@arr"; # "1 2 3 4 5"
+$" = "_";
+say @arr;   # "12345"
+say "@arr"; # "1_2_3_4_5"
+</script></code></pre>
+<p>一般情况下，程序的输出结果会先送往缓冲区，也就是说，不会每当有一点点输出就会直接送出去。而是先积攒起来，知道数量足够多时才会访问外部设备，然后发送出去。</p>
+<p>这个积攒的地方就叫缓冲区，之所以这样做是因为效率，一般，都是等缓冲区满了，或者程序结束了，缓冲区中的数据才会发送给设备。print 就是用了缓冲区，如果需要立即显示，你可以查看 Perl 的文档，进一步了解如何控制缓冲区。</p>
+<p>由于 print 处理的是带打印的字符串列表，因此它的参数是在列表上下文中执行的，而钻石操作符、行输入操作符在列表上下文中会返回有许多行组成的列表，所以他们可以彼此配合工作：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+print <>;      # 相当于 cat 命令
+print sort <>; # 相当于 sort 命令
+</script></code></pre>
+<p>虽然 Unix 上的 cat、sort 还有许多额外的功能上面两行代码无法做到的，但是这绝对物超所值，你基本上可以使用 Perl 来重写绝大部分 Unix 工具程序，充分发挥 Perl 正则表达式的优势。</p>
+<p>有个比较不明显的问题，那就是 print 后面可有可无的括号，这可能会令人糊涂，别忘了 Perl 的一条规则：除非这样做会改变表达式的意义，否则 Perl 的括号都是可以省略的。不过 Perl 还有一条规则：假如 print 的调用看起来像函数调用，它就是一个函数调用。这个规则很简单，但是“看起来像函数调用”是什么意思呢？</p>
+<p>在函数调用中，函数名后面必须紧跟着一对圆括号，里面包含了参数（即使没有参数，也是空的圆括号），如 <code>print(1 + 2)</code>，这看起来像函数调用，所以他的确是一个函数调用。他会输出 3。和其他函数一样返回值，print 的返回值不是真就是假，代表 print 是否成功运行。除非发生 IO 错误，否则 print 一般都是成功调用的。</p>
+<p>如果你使用这种方式来调用 print：<code>print (2+3)*4</code>，Perl 解释器看到这条代码，它实际上是这样理解的：<code>(print(2+3)) * 4</code>，也就是说，拿 print 的返回值与 4 相乘，然后返回给 void context。所以建议始终加上圆括号，除非是简单情况，比如打印一个标量。</p>
+<p>实际上，这条规则：“假如他看起来像函数调用，他就是一个函数调用”，不仅对 print 适用，对其他 Perl 的列表函数也适用。只不过 print  是最常见的也是最引人注意的罢了。</p>
+<p><strong>用 printf 格式化输出</strong><br>你也许习惯了 C 语言中的 printf() 格式化输出函数，别担心，Perl 中也有同名的 printf 函数提供类似的功能。printf 操作符的参数包括“格式化字符串”、“要输出的数据列表”。用法和绝大多数 printf 函数一致。例如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+printf "name: %s, age: %d, score: %.2f\n", "Otokaze", 19, 120.5;
+# 输出："name: Otokaze, age: 19, score: 120.50"
+</script></code></pre>
+<p>每个格式控制符都以 <code>%</code> 开头，然后以某个字母结尾（这两个字符之间可以有额外的有效字符，实现更细致的格式化输出）。而后面的列表的元素数目和 <code>%</code> 符号的数目是一致的（一般，除了转义的之外）。</p>
+<p>printf 的格式控制符有很多，基本上都与 C 语言中的 printf 一致。比如字符串是 <code>%s</code>、十进制整数 <code>%d</code>、浮点数<code>%f</code>、如果要让 printf 自动选择合适的数字格式，可以使用 <code>%g</code>，如果要输出 <code>%</code> 本身，请使用 <code>%%</code> 来进行转义，而不是 <code>\%</code>。</p>
+<p><strong>数组和 printf</strong><br>一般来说，你不会将数组当作 printf 的参数，因为数组可以包含任意多个元素，而 printf 的元素格式都是由格式字符串决定的。不过，没有人规定你不能在程序运行时动态产生格式字符串，它可以是任意表达式，因为 Perl 会根据上下文来将其转换为字符串。不过要做的正确还是需要一点技巧的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @items = qw/zfl9 baidu google/;
+my $format = "The items are:\n" . ("%10s\n" x @items);
+printf $format, @items;
+</script></code></pre>
+<p>在 <code>(&quot;%10s\n&quot; x @items)</code> 中，因为 <code>@items</code> 位于标量上下文，所以它会被转换为数组的长度，然后整个表达式会产生数组长度个 <code>%10s\n</code>，即 <code>%10s\n%10s\n%10s\n</code>，然后和前面的字符串拼接在一起，最后使用 printf 进行格式化输出。当然，还可以将他们合在一起，这样更见简便：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+printf "The items are:\n".("%10s\n" x @items), @items;
+</script></code></pre>
+<p>之所以可以这样做，是因为上下文的关系，前一个 items 位于标量上下文，所以它的值其实是列表的长度，而后一个 items 位于列表上下文，所以 printf 可以一次性获取列表的元素。因此要时刻灵活应用上下文来进行数据类型的转换，写出更精简的代码。</p>
+<p><strong>使用 say 输出数据</strong><br>say 其实是 Perl 6 中的功能，不过 Perl 5.10 从 6 中借来了这个函数，它的功能和 Java 的 println 差不多，就是自动在输入数据中加入换行符。但是，因为这是 Perl 5.10 的新功能，所以必须使用一个编译指令来启用新特性，比如 <code>use v5.26.2;</code>。</p>
+<p><strong>文件句柄</strong><br>文件句柄（filehandle），在 Unix 中我们喜欢称之为文件描述符 FD。其实就是 Perl 程序打开的一个文件的抽象表示，但是并不等于说一个 FD 就等于一个文件，因为一个文件实际上可以打开多次，每次打开获得的都是不同的文件描述符，这个可以和网络连接联系在一起，因为同一时间可以有多个客户端连接到服务器，获取资源。你可以将文件描述符理解为一个网络连接。一个文件可以有多个网络连接，它可以被同一个进程所拥有，也可以分别被不同的进程所拥有。</p>
+<p>在 Perl 5.6 之前，所有的文件句柄名称都是裸字（bareword），而从 Perl 5.6 起，我们可以把文件句柄的引用放在常规的标量变量中。我们先展示裸字写法，因为许多特殊文件句柄向来习惯使用裸字，稍后我们再介绍放在标量变量里的文件句柄的用法。</p>
+<p>给文件句柄起名就好比给 Perl 的其他标识符起名一样，必须以字母、下划线开头，然后接字母、数字、下划线。由于裸字没有任何前置字符，所以当我们阅读它时，有的时候可能会与现在会将来的保留字相混淆，或是第十章中将要介绍的标签（label）相混淆。所以在一次，Larry 建议你使用全大写的字母来命名文件句柄。这样不仅看起来更加明显，也能避免与小写的保留字相混淆，以免程序出错。</p>
+<p>有 6 个文件句柄名是 Perl 保留的，它们是：<code>STDIN</code>、<code>STDOUT</code>、<code>STDERR</code>、<code>DATA</code>、<code>ARGV</code>、<code>ARGVOUT</code>。虽然你可以选择任何喜欢的文件句柄名，但不应使用保留字，除非确实需要以特殊方式适用上述 6 个文件句柄。</p>
+<ul>
+<li><code>STDIN</code>：标准输入流，有缓冲区</li>
+<li><code>STDOUT</code>：标准输出流，有缓冲区</li>
+<li><code>STDERR</code>：标准错误流，无缓冲区</li>
+<li><code>ARGV</code>：命令行参数列表（不包含程序名称）</li>
+</ul>
+<p><strong>打开文件句柄</strong><br>到目前为止，你已经看到过 3 种 Perl 默认打开的文件句柄 STDIN、STDOUT、STDERR。它们都是由 Perl 的父进程（通常是 Shell）自动打开的文件或设备。当你需要其他文件句柄时，请使用 open 操作符，来看你个具体的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open CONFIG, 'dino';
+open CONFIG, '<dino';
+open BEDROCK, '>fred';
+open LOG, '>>logfile';
+</script></code></pre>
+<p>第一个和第二个是一样的，但是推荐使用第二种，一看就明白是以只读方式打开 dino 文件，并将对应的文件句柄命名为 CONFIG。注意到没有，其实 Perl 中的文件打开方式和 Shell 真的很像，比如 <code>&lt;</code> 为只读方式打开，<code>&gt;</code> 只写方式打开、<code>&gt;&gt;</code> 追加方式打开。除此之外还有 <code>+&lt;</code> 读写方式（读为主，写为辅）、<code>+&gt;</code> 读写方式（写为主、读为辅）、<code>+&gt;&gt;</code> 读写方式（追加为主，读为辅）。当然，默认情况下，它是以文本模式打开的，你也可以以二进制文件方式打开，只需在 open 操作符中，加入一个参数 <code>raw</code>（稍后会介绍）。</p>
+<p>之所以第一种和第二种的效果是一样的，是因为 Perl 的文件打开方式默认为只读。之所以这样做有一部分是因为安全原因，因为防止用户手误以只写方式打开一个系统重要文件，而导致系统出问题（特别是以 root 用户运行 Perl 脚本时更是这样）。</p>
+<p>在 Perl 5.6 之后，open 操作符还有一种 3 个参数形式的写法：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open CONFIG, '<', 'filename';
+open CONFIG, '>', 'filename';
+open CONFIG, '>>', 'filename';
+</script></code></pre>
+<p>推荐使用这种方式，因为更清晰，也更安全。除此之外，还可以加上额外的打开细节，比如文件的字符编码，是否以二进制方式打开，等等。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open CONFIG, '<:encoding(UTF-8)', 'filename';
+open CONFIG, '>:encoding(UTF-8)', 'filename';
+open CONFIG, '>>:encoding(UTF-8)', 'filename';
+</script></code></pre>
+<p>当然，我们还有更加简便的方法，不需要键入 <code>:encoding(UTF-8)</code>，只需 <code>:utf8</code>：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open CONFIG, '<:utf8', 'filename';
+open CONFIG, '>:utf8', 'filename';
+open CONFIG, '>>:utf8', 'filename';
+</script></code></pre>
+<p>但这两种方式并不完全相同，前者是建议 Perl 以 UTF-8 编码操作文件，而后者是强制 Perl 以 UTF-8 编码操作文件。所以如果文件的编码不是 UTF-8，那么第一种方式可能不会使用 UTF-8 模式打开，而后者则仍然以 UTF-8 的解码规则来尝试读取。尽管如此，仍然很多人喜欢使用第二种方式，可能大家都比较懒吧，不想多打几个字。</p>
+<p>不过，其实 Perl 一种一劳永逸的方法，那就是通过 Perl 命令行参数指定 Perl 的默认文件打开方式的编码为 UTF-8，具体的参数是 <code>-C</code>，用于指定 Unicode 的相关属性。其中 <code>S</code> 值表示将 STDIN、STDOUT、STDERR 以 UTF-8 方式打开，<code>D</code> 表示将 Perl 的 open 的默认文件编码设为 UTF-8，<code>A</code> 表示将 ARGV 命令行参数的字符编码设为 UTF-8。建议都打开，这样在一定程度上可以避免乱码问题的出现。</p>
+<p><strong>二进制方式打开文件句柄</strong><br>书中介绍的方法是使用 binmode 关键字，不过我更建议使用 open 操作符的内置属性 <code>raw</code> 来打开二进制文件（默认是以文本方式打开的），例子（不过基本上用不到）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open FILE, '<:raw', '/usr/bin/bash';
+open FILE, '>:raw', '/usr/bin/bash';
+open FILE, '>>:raw', '/usr/bin/bash';
+</script></code></pre>
+<p><strong>有问题的文件句柄</strong><br>当然，你不能保证当前系统中一定用于程序中指定的文件，很有可能它不存在，或者是 Perl 进程的权限不足。如果试着对有问题（就是未打开成功的文件句柄）的文件句柄读取数据，那么会立即返回 EOF，EOF 在标量上下文中表现为 undef，在列表上下文中表现为空列表（注意是空列表，说明列表存在，但是里面没有元素）。如果尝试对问题句柄写入数据，那么这些数据会被无声的丢弃。</p>
+<p>幸好，这种可怕的情况能轻易避免，如果你设置了 <code>-w</code> 选项，或者使用了 <code>warnings</code> 编译指令，那么在用到有问题的文件句柄时，Perl 会发出警告。但即使没有启用警告功能，open 的返回值也能告诉我们有没有打开成功。返回 true 表示打开成功，false 表示打开失败。所以，程序可以写作这样：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (! open FILE, '<', '/etc/resolv.conf') {
+    # open 打开失败
+}
+</script></code></pre>
+<p><strong>关闭文件句柄</strong><br>当你不需要某个文件句柄时，请务必使用 close 操作符关闭它，open 的数量与 close 的数量应该是相同的：<code>close FILE;</code>。所谓关闭文件句柄，就是释放了这个文件描述符。当然如果使用 open 打开一个已打开的文件句柄，Perl 会先关闭它，然后再打开。在程序结束时，Perl 也会自动关闭打开的文件句柄（在正常关闭的情况下）。</p>
+<p>尽管如此，还是建议手动关闭文件描述符，特别是长时间运行的脚本，如果未及时关闭，可能导致其他尝试读取指定文件的进程长时间阻塞，这通常不是管理员想要的。</p>
+<p><strong>用 die 处理致命错误</strong><br>先让我们岔开一下话题，当 Perl 遇到致命错误时（如：除零、非法正则表达式、调用未定义的子程序等），你的程序都会立刻停止运行，并打印错误信息已告知原因。这样的功能可以使用 die 实现，它能让我们手动触发一个致命错误，让程序终止运行。</p>
+<p>die 函数会输出你指定的信息到标准错误流，并且让你的程序以非零退出码结束运行。所以，我们上面的程序可以改写成这样：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (! open LOG, '>>', 'logfile') {
+    die "Cannot open logfile: $!";
+}
+</script></code></pre>
+<p>如果 open 失败，那么就会运行 die 语句，然后会触发一个致命错误，导致 Perl 结束运行。你可能注意到了，<code>$!</code> 应该是错误信息，它的值其实就是 C 语言中的 perror 获得的字符串。而这个错误的解释字符串就存放在 <code>$!</code> 变量中。不过，如果你只是想使用 die 来结束运行 Perl 程序，而不想输出 <code>$!</code> 错误信息，那么请不要加上它。</p>
+<p>同时，die 还会为您做一件事，那就是自动在这个错误行中加上 Perl 的程序名和 die 所在的行号。因此你可以轻易判断出程序的那个 die 导致的致命错误。这非常有用，不过有些时候你可能并不想 Perl 这么做，比如判断命令行参数格式时，就不需要告诉用户是那一行出了错误。要禁用 Perl 这个自动行为也很简单，只需在 die 的错误信息行尾部加上换行符（你注意到没，上面的字符串尾部没有换行符）。</p>
+<p><strong>用 warn 发出警告信息</strong><br>正如 die 函数产生一个致命错误一样，warn 函数用于产生一个警告信息，warn 和 die 的语法和用法都差不多，区别是 warn 不会结束运行。warn 默认也是会带上程序名和行号的，使用同样的方法可以关闭这个自动行为。die 和 warn 都将错误/警告信息发完标准错误流。</p>
+<p><strong>使用 autodie 自动检测错误</strong><br>从 Perl 5.10 开始，为人称道的 autodie 编译指令已经成为了标准库的一部分。autodie 的工作很简单，就是自动检测程序运行时的致命错误，然后自动调用 die 来结束运行，释放程序员的双手，写出更加优美的代码，而不用时刻考虑 die 函数。即：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+use autodie;
+open FILE, '<', 'nosuch.file';
+print "something someting something\n";
+</script></code></pre>
+<p>因为 open 尝试打开一个不存在的文件，autodie 会自动检测到这个错误（可能是通过返回值，或者是其他的钩子之类的），然后自动调用 die 结束运行，并告知用户。</p>
+<p>修改 /usr/bin/perl5 包装脚本，来默认启用 autodie 编译指令，如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+#!/bin/sh
+exec perl -CSDA -Mutf8 -Mstrict -Mautodie -Mwarnings -M5.026_002 "$@"
+</script></code></pre>
+<p><strong>使用文件句柄</strong><br>一旦获得文件句柄后，我们就可以通过它来 <em>读取</em>、<em>写入</em> 数据了。常用的读取操作符就是 <em>行输入操作符</em> - <code>&lt;FILEHANDLE&gt;</code>，常用的写入操作符就是 <code>print</code>、<code>printf</code>、<code>say</code>。</p>
+<p>行输入操作符前面已经演示过很多次了，只不过使用的文件句柄都是 STDIN，现在我们可以换为我们打开的文件句柄，比如 FILE。而 print、printf、say 要往文件句柄中写入数据也很简单，只需在他们后面加上 FILE 就可以了，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open FILE, ">", "test.log";
+print FILE "www.zfl9.com\n";
+printf FILE "www.zfl9.com\n";
+say FILE "www.zfl9.com";
+</script></code></pre>
+<p>注意，FILE 和其他参数之间是没有逗号的，不然 print、printf、say 无法分清这是文件句柄还是要输出的变量，所以这两种写法都是没有问题的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+print (FILE "www.zfl9.com\n");
+print FILE ("www.zfl9.com\n");
+</script></code></pre>
+<p><strong>改变默认的文件输出句柄</strong><br>默认情况下，如果你不为 print、printf、say 指定文件句柄，那么它们默认使用 STDOUT 这个文件句柄，也就是将输出打印到标准输出流。不过，你可以使用 select 操作符来改变默认的标准输出流文件句柄，比如改为 FILE：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+select FILE;
+print "www.zfl9.com\n";
+printf "www.zfl9.com\n";
+say "www.zfl9.com";
+</script></code></pre>
+<p>print、printf、say 都是默认写入到 FILE 对应的文件中。不过这么做可能会让程序变得混乱，所以这并不是一个好办法，除非你的程序很简短，用来完成临时的任务，所以，在使用 select 修改后，建议还原为原本的 STDOUT。</p>
+<p>将数据输出到文件句柄时，默认情况下都是使用了缓冲区的，Perl 允许你改变这个默认行为，修改 <code>$|</code> 变量，将它的值设为 1，以禁用缓冲处理，每次调用 print、printf、say 都是直接发往设备的。这在需要实时显示日志的程序中很有用。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+select LOG;
+$| = 1;   # 不要将 LOG 的内容保留在缓冲区
+select STDOUT;
+print LOG "www.zfl9.com\n";
+</script></code></pre>
+<p><strong>重新打开文件句柄</strong><br>前面提到，如果使用 open 打开一个同名的文件句柄（该句柄已打开），那么 Perl 会自动关闭它，然后重新打开新指定的文件，因此，我们可以利用这个特性来重定向 STDIN、STDOUT、STDERR。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (! open STDERR, ">>/var/log/test.log") {
+    die "$!";
+}
+</script></code></pre>
+<p>如果打开成功，则不执行 die 语句，如果打开失败，则执行 die 语句，因为没有打开成功，所以此时 STDERR 没有被重打开，所以这个错误信息还是默认发往屏幕的。</p>
+<p><strong>使用标量变量存储文件句柄</strong><br> 从 Perl 5.6 开始，我们已经可以使用标量变量存储文件句柄了，而不必使用裸字。别看这一小小的差别，带来的好处还是很多的。成为标量变量后，我们可以为文件句柄使用 my 修饰，限制它的作用域。而且不必再使用全大写的名称，这样可能更优美一些。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+open my $file_fd, '<', 'test.log';
+</script></code></pre>
+<p>原来使用裸字的地方，现在全都可以使用标量变量替代（记得加上美元符号哦）。</p>
+<p><strong>习题</strong><br>1、写一个和 tac 功能相似的程序（与 cat 相对，反序输出文件内容），它可以处理命令行参数指定的文件，如果没有，可以处理标准输入流中的数据。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+print reverse <>;
+</script></code></pre>
+<p>2、写一个程序，提示用户输入一些字符串（一行一个），然后分别以 20 个字宽，右对齐方式打印这些字符串，并且在顶部打印一个简单的标尺行，以简单判断是否正确：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+say "1234567890" x 5;
+say "Enter something:";
+foreach (<STDIN>) {
+    chomp;
+    printf "%20s\n", $_;
+}
+</script></code></pre>
+<p>3、修改上一个程序，让用户自动选择字符宽度，另外，标尺行的长度要根据用户指定的宽度自动伸缩在合适的长度：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+use POSIX;
+
+print "Enter character width: ";
+chomp(my $width = <STDIN>);
+chomp(my @inputs = <STDIN>);
+
+say "1234567890" x ceil($width / 10);
+foreach (@inputs) {
+    printf "%${width}s\n", $_;
+    # or C language style
+    # printf "%*s\n", $width, $_;
+}
+</script></code></pre>
+<h2 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h2><p><strong>什么是哈希</strong><br>awk 中也有哈希这种数据结构，Perl 也是从 awk 中借鉴如来的，不过据书中介绍，Perl 的哈希实现更高效，不会因为键值对数目多起来而降低运行速度（难道这不是所有哈希实现必须要有的特点吗？因为访问哈希时，提供的 key 只需进过一次映射操作就能直接找到对应的 value，这其实和数组很相似，数组的 key 其实就是下标，而这个映射操作就是内存地址的计算，因为数组的元素之间是紧密放在一起的，而数据类型又是固定的，所以很容易知道哪个 key 对应的 value 是什么，哈希的基本原理也是如此，只不过哈希的 key 不再是简单的 int 类型了，而是 String 字符串类型，也就是说我们可以给 value 起一个有意义的 key 名称，还有一点，哈希表的 value 可以是任意类型，因为不需要依靠数据类型的长度来确定元素的内存地址）。</p>
+<p>因为哈希使用 key 来存储 value，而 key 又是字符串类型，所以很容易知道，key 的字符串是不能重复的，否则它将会覆盖原有的值。这和数组下标不能重复是一个道理。</p>
+<p><strong>为什么使用哈希</strong><br>1、按主机名找 IP 地址<br>2、按 IP 地址找主机名<br>3、按单词统计出现的次数<br>4、按用户名统计使用的磁盘配额<br>5、按驾驶证号索引处驾驶员姓名<br>可以将哈希理解为一个简单的数据库，每个键都是唯一的。</p>
+<p><strong>访问哈希元素</strong><br>访问哈希变量的语法为：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$hash{$key}
+</script></code></pre>
+<p>这和访问数组非常相似，只不过使用花括号替代了方括号，而其中的索引值也被替换为了字符串 key。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$family_name{'fred'}   = 'zfl9';
+$family_name{'barney'} = 'baidu';
+</script></code></pre>
+<p>这就允许我们写出这样的代码：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+foreach my $person (qw/fred barney/) {
+    say "$person name: $family_name{$person}.";
+}
+</script></code></pre>
+<p>哈希变量的命名和其它变量的命名规则一样，以字母、下划线开头，后可接字母、数字、下划线。给哈希元素赋值时，如果对应的 key 不存在，则创建，然后存储传入的 value，如果已存在，则覆盖原有的值。总之，它和 Java 中的 HashMap 行为一致。</p>
+<p>访问不存在的 key 会得到 undef 值。这和数组很相似，再次强调一点，哈希其实就是数组的高级版，数组使用的 key 是连续的纯数字，而哈希使用的 key 是任意唯一的字符串。</p>
+<p><strong>访问整个哈希</strong><br>哈希的前置字符其实是 <code>%</code>，如果哈希的名称为 table，那么变量名为 <code>%table</code>。</p>
+<p>为了方便起见，列表可以直接转换为哈希，反之亦然。对哈希赋值等同于在列表上下文中赋值，列表中的元素数目应该是偶数个，因为每两个元素都是一个键值对。反之，将哈希转换为列表时，里面的元素数目也是偶数个，每两个元素都是一个键值对。</p>
+<p>从哈希变为列表的过程，我们称之为展开（unwinding）哈希。因为哈希的数据结构特性，哈希展开后的键值对顺序可能被打乱。但是每个键值对的相对顺序是固定的。</p>
+<p><strong>哈希赋值</strong><br>现阶段中，我们接触到的 Perl 赋值表达式其实都是内存的拷贝，因为我们还没接触到引用的概念。因此，我们可以利用赋值操作符来进行任意数据的拷贝（拷贝构造函数）</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my %copy = %hash;
+</script></code></pre>
+<p>这里 Perl 做的工作比看到的复杂得多，不想 C 语言中的复制操作符仅仅是进行简单的内存拷贝，Perl 的数据结构比较复杂（因为太灵活了，要考虑的东西很多），大致上，这行代码先把哈希展开为列表，然后通过列表赋值产生新的哈希元素。</p>
+<p>又比如，创建一个反序（不要立即下定论，非一般反序）的哈希副本：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my %reverse_hash = reverse %hash;
+</script></code></pre>
+<p>这会将 <code>%hash</code> 展开为列表（<code>(key, value, key, value, ...)</code>），然后利用 reverse 操作符，将 key 与 value 的位置兑换，即 <code>(value, key, value, key, ...)</code>，也就是说之前的 value 变成了 key，而之前的 key 变成了 value。敏锐的读者已经猜到了这种技巧只在哈希 value 不重复的情况下有用，否则某些 key 会被消失（被覆盖了）。</p>
+<p><strong>胖箭头</strong><br>将列表赋值给哈希时，常常会发现列表中的键值对不容易区分（容易看花眼），于是作者发明了 <code>=&gt;</code> 符号，胖箭头符号。之所以不使用瘦箭头 <code>-&gt;</code>，是因为在引用中有用（类似 C 语言中的结构体指针取值法）。</p>
+<p>对于 Perl 而言，他只是逗号的另一种写法，因此常称他为胖逗号。因此可以这样写：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my %hash = (
+    'zfl9' => 'www.zfl9.com',
+    'baidu' => 'www.baidu.com',
+    'google' => 'www.google.com',
+);
+</script></code></pre>
+<p>注意，最后一项有一个额外的逗号，它会被 Perl 忽略，这样做的目的是便于维护 hash，以便随时增减条目，防止忘记加上末尾的逗号分隔符。当然，我们还可以省略 key 的引号，因为使用胖箭头后，左边的数据默认就是字符串，无需手动加引号：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my %hash = (
+    zfl9 => 'www.zfl9.com',
+    baidu => 'www.baidu.com',
+    google => 'www.google.com',
+);
+</script></code></pre>
+<p>当然，也不是所有情况都可以这么做，因为 key 可以是任意字符串，而当这个 key 为某个 Perl 运算符时，那 Perl 就无法辨认了。不过一般也不建议使用这种特殊符号来当作哈希的 key（这点和 JS 简直一模一样），如果 key 以字母、下划线开头，后接字母、数字、下划线的话，那么是可以放心使用这种简写方式的。这种没有引号的字称为裸字。因为他们是独立存在的。</p>
+<p>还有一个常见的允许省略引号的地方就是在使用花括号获取对应 key 的 value 时，比如 <code>$hash{&#39;name&#39;}</code> 可以直接简写为 <code>$hash{name}</code>，因此使用合法的 Perl 标识符作为 key 是有很多好处的哟。但是如果花括号中的不是裸字，Perl 就会将其当作表达式进行求值，然后吧计算结果当作 key，比如 <code>$hash{bar.foo}</code>，Perl 会以为这是一个字符串连接表达式，导致误以为 key 为 barfoo。</p>
+<p><strong>哈希函数</strong><br>当然，Perl 肯定提供了很多有用的函数来处理整个哈希变量。</p>
+<p><strong>keys 和 values</strong><br><code>keys</code> 返回哈希的所有键组成的列表，而 <code>values</code> 则返回哈希的所有的值组成的列表。如果哈希没有任何成员，则两个函数都返回空列表。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my %hash = (a => 1, b => 2, c => 3);
+my @keys = keys %hash;
+my @values = values %hash;
+</script></code></pre>
+<p>虽然 <code>@keys</code> 或 <code>@values</code> 中的元素顺序可能与预定义的顺序不同，但是可以肯定的是，它们之间是能一一对应的（只要两个获取操作之间没有修改哈希）。</p>
+<p>在标量上下文中，这两个函数都返回哈希中的 key/value 的个数，整个计算过程不需要对整个哈希进行遍历，所以效率非常高。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $length = keys %hash;
+</script></code></pre>
+<p>偶尔，也能看到有了直接使用哈希变量（数组变量一样的）来判断真假：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (%hash) {
+    # TODO 哈希非空
+} else {
+    # TODO 哈希为空
+}
+</script></code></pre>
+<p><strong>each 函数</strong><br>如果需要迭代整个哈希/数组，常见的用法就是使用 each 函数，每次调用返回两个值，key 和 value。如果没有键值对，each 返回空列表，在循环中，它被视为 false。</p>
+<p>实际使用中，唯一合适使用 each 的地方就是 while，如下：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (my ($key, $value) = each %hash) {
+    say "$key => $value";
+}
+</script></code></pre>
+<p>看似简单的操作，其实隐含了很多技巧。首先 <code>($key, $value) = each(%hash)</code> 是一个普通的函数调用语法，因为 each 每次返回两个值，假如返回的 key 和 value 为 <code>zfl9 =&gt; www.zfl9.com</code>，则它实际上是 <code>($key, $value) = (&#39;zfl9&#39;, &#39;www.zfl9.com&#39;);</code>，这是批量赋值的语法。然后 <code>$key</code> 和 <code>$value</code> 被依次赋值 zfl9、www.zfl9.com。外面的 my 其实是用来限定作用范围的。而 while 的条件判断其实是标量上下文，而列表在标量上下文中放回对应的元素数量，如果还有键值对，那么这个值应该恒为 2，转换为布尔值就是 true，所以会继续循环，当没有元素时，each 返回的是空列表，而 <code>$key</code> 和 <code>$value</code> 都被赋值为 undef，但是此时应该看的是 each 的返回值，而他的元素数目是 0，对应的布尔值就是 false，所以会退出循环。</p>
+<p><strong>exists 函数</strong><br>要检查哈希中是否存在某个键，可以使用 exists 函数，他能返回 true 或 false，表示哈希中是否存在某个键。注意这个判断的依据与 value 无关。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (exists $hash{name}) {
+    # TODO
+}
+</script></code></pre>
+<p><strong>delete 函数</strong><br>delete 函数用于删除哈希中的指定键，如果不存在，则直接返回。</p>
+<p><strong>哈希元素内插</strong><br>你可以将单个哈希元素内插到字符串中，但是整个哈希变量不能，在 printf 格式字符串中还可能被误以为是格式参数，所以还得使用 <code>%%</code> 来转义。</p>
+<p><strong>%ENV 哈希</strong><br><code>%ENV</code> 哈希其实就是父进程传递给 Perl 进程的环境变量。比如 <code>$ENV{PATH}</code>。</p>
+<p><strong>习题</strong><br>1、编一程序，从标准输入中读取多行单词（一放一个，EOF 结束），然后统计每个单词出现的次数，统计时，每个单词要以 ASCII 表排序：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my %hash;
+
+foreach (<STDIN>) {
+    chomp;
+    ++$hash{$_};
+}
+
+foreach (sort keys %hash) {
+    say "$_ => $hash{$_}";
+}
+</script></code></pre>
+<p>2、编程输出 <code>%ENV</code> 哈希中的所有键值对，输出按照 ASCII 码排序，分两列打印，并设法让两列进行对齐，提示，使用 length 函数可以帮助确定第一列的宽度：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my @keys = keys %ENV;
+my $len = 0;
+foreach (@keys) {
+    if ((length $_) > $len) {
+        $len = length $_;
+    }
+    # 或者使用这种写法
+    # $len = length($_) if length($_) > $len;
+}
+
+foreach (sort @keys) {
+    printf "%${len}s = %s\n", $_, $ENV{$_};
+}
+</script></code></pre>
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>Perl 的一大特色是内置的正则表达式支持，并且 Perl 中的正则基本上是其他所有现代语言的模仿对象，因为 Perl 的正则是最强大、最灵活的一个派别。一般我们将 Perl 中的正则派别称为 PCRE（Perl 兼容正则），另外两个则是 BRE（POSIX 基本正则）、ERE（POSIX 扩展正则），BRE 的代表是 sed（当然也可以切换为 ERE），ERE 的代表是 awk。即使是 ERE 也是不如 PCRE 灵活和好用的，所以来赶紧学习 Perl 正则吧！</p>
+<p>如果模式匹配的对象是 <code>$_</code> 的内容，只要把模式写在 <code>//</code> 之前就好了，它的语法和 JS 非常相似（其实说反了，JS 好多都是借鉴的 Perl）。而模式本身就是普通的字符串：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$_ = "input string";
+if (/regex pattern/) {
+    say "matched";
+}
+</script></code></pre>
+<p>表达式 <code>/regex pattern/</code> 会使用给定的模式尝试匹配 <code>$_</code> 变量的内容，如果匹配则返回真，不匹配则返回假。在前面的字符串一节中，介绍了常用的字符转移序列，在正则模式中，同样适用哦。</p>
+<p><strong>Unicode 属性</strong><br>每个 Unicode 字符都属于某个 Unicode Property（属性），一个 Unicode 属性对应一类字符。比如 Number 这个属性，它表示 Unicode 中所有的“数字”字符，如 0123456789、①②③④⑤⑥⑦⑧⑨。Perl 正则允许你使用一个 Unicode Property 名称来匹配一类 Unicode 字符，Perl 所支持的 Unicode 属性名可以通过 <code>perldoc uniprops</code> 文档查看（其中还有一些 Unicode Script、Unicode Block、Unicode Category，但是在这里我笼统的称为 Unicode 属性，见谅）。</p>
+<p>如果要在正则中匹配某个 Unicode 属性，只需将属性名放入 <code>\p{PROPERTY}</code> 里面，使用大写的 P 则用于取反匹配。比如属性 Space，它表示所有空白符，要匹配它们，可以使用 <code>\p{Space}</code>：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "　"; # 一个全角的空格符
+
+if (/\p{Space}/) { # 匹配成功
+    say "\e[32mmatched\e[0m";
+} else {
+    say "\e[35mnomatch\e[0m";
+}
+</script></code></pre>
+<p>如果要匹配数字，可以使用 Digit 属性：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "①"; # 数字序号 1
+
+if (/\p{Number}/) { # 匹配成功
+    say "\e[32mmatched\e[0m";
+} else {
+    say "\e[35mnomatch\e[0m";
+}
+</script></code></pre>
+<p>如果要匹配十六进制数字（<code>[a-fA-F0-9]</code>），可以使用 Hex 属性：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "0xFF";  # 两个连续的十六进制数字
+
+if (/\p{Hex}\p{Hex}/) { # 匹配成功
+    say "\e[32mmatched\e[0m";
+} else {
+    say "\e[35mnomatch\e[0m";
+}
+</script></code></pre>
+<p><strong>关于元字符</strong><br>如果正则模式仅能匹配简单的直接量字符串，那么实际也没有多大用处，所以我们引入了元字符，元字符在正则表达式中有特殊意义，比如 <code>.</code> 匹配除行结束符外的任意字符，如果要匹配 <code>.</code> 本身，只需在元字符前面使用反斜线转义（<code>\.</code>），就会让元字符失去特殊意义，这个规则适用于其他任意元字符，如果要表示反斜线自身，则使用两个反斜线，即 <code>\\</code>。</p>
+<p><strong>模式分组</strong><br>也称为捕获组，每个捕获组其实都是有序号的，从 1 开始（从左往右给每个左括号进行编号）。圆括号使得重新使用某些字符串成为可能，我们可以使用反向引用来引用圆括号中的模式所匹配的文字（利用这个特性可以用来匹配一串连续相同的字符）。反向引用的写法是在反斜线后面接上数字编号，如 <code>\1</code>、<code>\2</code>。比如匹配一串 6 个字符长度的数字，如 <code>111111</code>、<code>666666</code>：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$_ = "111111";
+if (/(\d)\1{5}/) {
+    say "matched";
+} else {
+    say "nomatch";
+}
+</script></code></pre>
+<p>匹配 ABBA 模式的单词，如 <code>foof</code>、<code>cttc</code>：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$_ = "foof";
+if (/(\w)(\w)\2\1/) {
+    say "matched";
+} else {
+    say "nomatch";
+}
+</script></code></pre>
+<p>从 Perl 5.10 开始支持一种新的反向引用写法，不再只是简单的用反斜线和组号，而是用 <code>\g{N}</code> 的形式，其中 N 是想要引用的组号。这种方式能有效的消除反向引用和模式的直接量之间的二义性，比如模式 <code>/(.)\111/</code>，Perl 的逻辑很简单，它会尽可能的创建最多数量的反向引用，因此 Perl 会认为这里应该是引用第 111 号捕获组，显然这里没有这么多捕获组，所以 Perl 运行时会报错。为什么不往小的地方猜呢，比如 <code>\1 11</code>，引用第 1 个捕获组，后面只是两个普通的数字 1？因为如果是这样的话，那么 Perl 中使用反斜线可引用的捕获组的返回就只有 1-9 了，这显然是不合理的。而使用新语法则没有这种问题。当然 Perl 允许我们将 <code>\g{1}</code> 简写为 <code>\g1</code>，但是这样又回到原点了，所以不建议这么做，必须始终加上花括号。</p>
+<p><code>\g{N}</code> 写法的另一个好处是允许使用负数作为组号索引，如果 N 为负数，则表示相对于自己的左边的第 -N 个捕获组，这样做可能会使正则模式的维护更轻松。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "1221";
+
+if (/(\d)(\d)\g{-1}\g{-2}/) {
+    say "\e[32mmatched\e[0m";
+} else {
+    say "\e[35mnomatch\e[0m";
+}
+</script></code></pre>
+<p>另一个好处是可以统一匿名捕获组引用和具名捕获组引用的语法，即 <code>\g{N}</code>、<code>\g{name}</code>，比如上面的例子可以改写为：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "1221";
+
+if (/(?<first>\d)(?<second>\d)\g{second}\g{first}/) {
+    say "\e[32mmatched\e[0m";
+} else {
+    say "\e[35mnomatch\e[0m";
+}
+</script></code></pre>
+<p><strong>预定义字符集</strong><br>某些字符集使用的频率非常高，所以我们给它们定义了简写形式，在 Perl 还是 ASCII 的时代，我们不用担心字符数量，基本上字符集的简写能表示的无非就是那些字符（ASCII 总共 128 个字符），但是引入 Unicode 后，情况就不同了，原来那些简写覆盖的范围骤增，已经不是原来的屈指可数了。说起来有点令人难过，我们当中使用 Perl 多年的人好多都不愿意承认这点，但我们不愿逃避现实，你也不该如此，你看到的其他人写的代码可能是很久以前写的，也可能是昨天写的，仍然在使用 20 世纪 90 年代的简写形式，却不知道其实这些简写的意义已经发生了很大的变化。</p>
+<p>比如，表示任意一个数字的字符集的简写是 <code>\d</code>，在 ASCII 时代，它的确只是 0-9 这 10 个数字，但到了 Unicode 时代，它还会匹配其他很多有数字意义的字符。Perl 中默认是启用了 Unicode 支持的（Java 默认不启用，除非使用 U 标识符），当然，Perl 也是提供了 flags 来禁用 Unicode 支持的，那就是使用 <code>/a</code> 修饰符。</p>
+<p>比如 <code>\w</code>，在 Java 中它默认匹配 ASCII 字符集中的 <code>[0-9a-zA-Z_]</code>，如果想让 <code>\w+</code> 匹配中文：<code>你好</code>，是不能匹配的，除非启用 Unicode 支持。而在 Perl 中，因为默认启用 Unicode 支持，所以模式 <code>\w+</code> 能够成功匹配 <code>世界</code>，当然如果使用 <code>/a</code> 修饰符（ASCII 的意思），那么就会关闭 Unicode 的支持，从而匹配失败。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "你好";
+
+if (/\w+/) { # 默认启用 Unicode 支持
+    say "\e[32mmatched\e[0m"; # 匹配成功
+} else {
+    say "\e[35mnomatch\e[0m";
+}
+
+if (/\w+/a) { # 显式禁用 Unicode 支持
+    say "\e[32mmatched\e[0m";
+} else {
+    say "\e[35mnomatch\e[0m"; # 匹配失败
+}
+</script></code></pre>
+<p><strong>使用 <code>m//</code> 进行匹配</strong><br>前面我们使用的模式语法为 <code>/pattern/</code>，实际上它是 <code>m/pattern/</code> 的缩写，其中 m 是 match 的缩写，表示这是一个用来匹配字符串的正则。就和前面介绍的 <code>qw()</code> 操作符一样，我们可以自由的选择合适的成对的分隔符，但此时不能省略 m，否则 Perl 就认不出了，所以建议不要使用简写形式，始终坚定不移使用 <code>m//</code> 形式。</p>
+<p>比如，模式中包含正斜杠，那么选择默认的正斜杠作为分隔符就不太明智了，因为要进行转义，此时如果选择另外的分隔符就好看多了，比如 <code>@</code>，即 <code>m@http://www.zfl9.com@</code>。同理，如果模式中出现了与分隔符相同的字符，需要进行反斜杠转义，好让 Perl 分辨模式的开始和结束位置。当然，最好的方法还是选过一种没有在模式中出现的分隔符，常见的有：<code>m@pattern@</code>、<code>m#pattern#</code>、<code>m%pattern%</code> 等。</p>
+<p><strong>模式匹配修饰符</strong><br>Perl 有好几个模式修饰符，它们也被称为标志（flag），它的位置在右分隔符后面，比如 <code>m/pattern/flags</code>。每个修饰符都是一个字母（大小写敏感），模式修饰符通常用来改变模式的默认行为。比如前面用到的 <code>/a</code>，表示禁用 Unicode 字符集支持。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">修饰符</th>
+<th style="text-align:center">具体意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>i</code></td>
+<td style="text-align:center">忽略大小写</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>s</code></td>
+<td style="text-align:center">单行模式，改变 <code>.</code> 的意义</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>m</code></td>
+<td style="text-align:center">多行模式，改变 <code>^</code>、<code>$</code> 的意义</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>g</code></td>
+<td style="text-align:center">全局匹配，匹配成功后继续匹配</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>a</code></td>
+<td style="text-align:center">预定义字符集仅匹配 ASCII 字符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>u</code></td>
+<td style="text-align:center">预定义字符集匹配 Unicode 字符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>x</code></td>
+<td style="text-align:center">允许空白和注释，模式中的空白符和注释会被忽略</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>xx</code></td>
+<td style="text-align:center">作用同 <code>x</code>，除此之外，<code>xx</code> 还会忽略括号中的空白符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>n</code></td>
+<td style="text-align:center">不对匿名捕获组进行捕获，相当于在圆括号中手动添加 <code>?:</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>c</code></td>
+<td style="text-align:center">保持当前匹配的最后一次 match 的位置（输入序列的位置）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>e</code></td>
+<td style="text-align:center">将替换字符串作为 Perl 语句，将它的输出与返回值作为替换体</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ee</code></td>
+<td style="text-align:center">将替换字符串作为 eval 的参数，将执行的输出与返回值作为替换体</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>r</code></td>
+<td style="text-align:center">正则替换时返回替换后的新字符串而不修改原字符串，即“无损替换”</td>
+</tr>
+</tbody>
+</table>
+<p>先解释一下 <code>e</code> 和 <code>ee</code> 的区别，直接看例子吧：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my $input = 'www.zfl9.com';
+my $regex = '.+';
+my $replace = '"www.baidu.com"';
+
+say $input;
+# 默认行为（等同于 /e 修饰符），替换后 $input = '"www.baidu.com"';
+# $input =~ s/$regex/$replace/g;
+# 对 $replace 执行一次 eval 调用，替换后 $input = '"www.baidu.com"';
+# $input =~ s/$regex/$replace/ge;
+# 对 $replace 执行两次 eval 调用，替换后 $input = 'www.baidu.com';
+  $input =~ s/$regex/$replace/gee;
+say $input;
+</script></code></pre>
+<p><code>eval</code> 是一个内置函数，它的作用和行为与 Shell 中的 eval 一样，我是这样理解的，eval 其实就是 Shell/Perl 的解释器，每次调用 eval，其实就是调用 Shell/Perl 的解释器，调用后，这个解释器将在当前上下文中执行 eval 的参数。因此，eval 使得我们可以在 Shell/Perl 中动态的插入代码（默认程序员编写的代码称为“静态代码”）。</p>
+<p>当然，上面那个例子中关于默认行为的解释其实是有问题的，默认行为不可能完全与加了 <code>/e</code> 的正则模式的行为相同。我以个人的见解简单的叙述一下它们之前的区别：</p>
+<ul>
+<li>默认行为：只会进行纯粹的变量替换</li>
+<li><code>e</code>修饰符：在“默认行为”的基础上，执行 Perl 表达式</li>
+<li><code>ee</code>修饰符：在“默认行为”的基础上，执行 eval 函数调用</li>
+</ul>
+<p>有必要强调的是，默认行为会对 regex 区域、replace 区域进行变量替换；而 <code>e</code>、<code>ee</code> 修饰符仅作用在 replace 区域。</p>
+<p>现在我们来重新分析上面的例子：</p>
+<ul>
+<li>默认行为：替换后的语句为 <code>$input = s/.+/&quot;www.baidu.com&quot;/g</code>，所以替换后的 input 就是 <code>&quot;www.baidu.com&quot;</code>，注意是带了双引号的。</li>
+<li><code>e</code>修饰符：在默认行为的基础上，执行 Perl 表达式，这个表达式也就是 <code>&quot;www.baidu.com&quot;</code>，不过这好像没什么可执行的，所以执行后，replace 依旧是 <code>&quot;www.baidu.com&quot;</code>，所以替换后的 input 也是 <code>&quot;www.baidu.com&quot;</code>，注意双引号。</li>
+<li><code>ee</code>修饰符：在默认行为的基础上，执行 eval 函数调用，传递给 eval 的参数就是 <code>&quot;www.baidu.com&quot;</code>，eval 语句为 <code>eval &#39;&quot;www.baidu.com&quot;&#39;</code>，其效果就是让解释器在当前上下文中运行 <code>&quot;www.baidu.com&quot;</code>（可以理解为运行 <code>print &quot;www.baidu.com&quot;</code>），运行结果当然是 <code>www.baidu.com</code>，所以替换后的 input 就是 <code>www.baidu.com</code>，注意没有了双引号哦。</li>
+</ul>
+<p>在上面的例子中，没有直接体现出默认行为与 <code>e</code> 修饰符的区别，那么请看例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my $input = "www.zfl9.com";
+say $input;
+#$input =~ s/^www\.(.+?)\.com/"blog.$1.org"/g; # $input = '"blog.zfl9.com"';
+$input =~ s/^www\.(.+?)\.com/"blog.$1.org"/ge; # $input = 'blog.zfl9.com';
+say $input;
+</script></code></pre>
+<p>再看一个例子，关于函数调用的，更能够体现出他们的区别：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my $input = "www.zfl9.com";
+say $input;
+#$input =~ s/.+/print "www.google.com"/g;  # $input = 'print "www.google.com"';
+ $input =~ s/.+/print "www.google.com"/ge; # $input = 'www.google.com1';
+say $input;
+</script></code></pre>
+<p>注意了，第二个替换中多了一个字符 1，是怎么回事？那是因为 Perl 会将执行后的输出与返回值拼接在一次，作为替换字符串，因为 print 的输出是 www.google.com，返回值是 1（表示执行成功），所以最终的替换字符串为 www.google.com1。</p>
+<p>Perl 为什么要这么做呢？因为上面的 print 完全是不必要的，一般使用 <code>e</code> 参数都是为了调用自定义的函数（子程序），而不是上面那样的 print。你看这个例子就明白了：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+say my $input = "www.zfl9.com";
+$input =~ s/.+/&myfunc($@)/ge; # $@ 代表整个匹配到的字符串
+say $input; # www.google.comwww.google.comwww.google.com9999
+
+sub myfunc {
+    print "www.google.com";
+    print "www.google.com";
+    print "www.google.com";
+    return 9999;
+}
+</script></code></pre>
+<p>所以不建议在调用的函数中输出任何东西，不然会破坏替换字符串，你最好只通过返回值来告诉 Perl 你想替换的字符串是什么，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+say my $input = "www.zfl9.com";
+$input =~ s/.+/&myfunc($&)/ge; # $& 代表整个匹配到的字符串
+say $input; # WWW.ZFL9.COM
+
+sub myfunc {
+    return uc $_[0]; # 返回大写的字符串副本
+}
+</script></code></pre>
+<p>最后，解释一下 <code>c</code> 修饰符，它的意思让正则引擎暂存当前匹配到的结束位置：<br><em>没有 c 修饰符</em>：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "abc123def";
+
+while (m/\G[a-z]/g) {
+    print $&;
+}
+print "\n";
+
+while (m/\G\d/g) {
+    print $&;
+}
+print "\n";
+
+while(m/\G[a-z]/g) {
+    print $&;
+}
+print "\n";
+
+# 输出结果
+# abc
+# 
+# abc
+</script></code></pre>
+<p><em>加上 c 修饰符</em></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+$_ = "abc123def";
+
+while (m/\G[a-z]/gc) {
+    print $&;
+}
+print "\n";
+
+while (m/\G\d/gc) {
+    print $&;
+}
+print "\n";
+
+while(m/\G[a-z]/gc) { # 这次的 c 修饰符可有可无，因为后面没有正则匹配了
+    print $&;
+}
+print "\n";
+
+# 输出结果：
+# abc
+# 123
+# def
+</script></code></pre>
+<p>加了 c 修饰符的效果就像是换了个模式继续上次的匹配的效果，具体自己体会。</p>
+<p><strong>捕获组相关</strong><br>如何定义捕获组，语法和 Java 其实是一样的：</p>
+<ul>
+<li>匿名捕获组：<code>(X)</code></li>
+<li>具名捕获组：<code>(?&lt;name&gt;X)</code></li>
+</ul>
+<p>无论命名与否，Perl 都会对捕获组进行编号，这和 Java 是一样的。</p>
+<p>正则模式（regex）中进行反向引用（匿名捕获组），有两种语法：<code>\N</code>、<code>\g{N}</code>，建议使用后者，避免出现二义性。如果要引用具名捕获组，那么也有两种语法：<code>\k&lt;name&gt;</code>、<code>\g{name}</code>。为了统一语法，建议始终使用后者来进行反向引用。</p>
+<p>替换序列（replace）中进行反向引用不使用这种语法，而是通过 Perl 预定义的标量变量，具体涉及到的标量变量有：</p>
+<ul>
+<li><code>$&amp;</code>：引用捕获组 0（匹配到的字符串）</li>
+<li><code>$N</code>：引用捕获组 N（N &gt;= 1）</li>
+<li><code>$+</code>：引用最后一个捕获组</li>
+<li><code>$+{name}</code>：引用具名捕获组（<code>%+</code> 哈希）</li>
+<li><code>$` </code>：返回捕获组 0 之前的字符串</li>
+<li><code>$&#39;</code>：返回捕获组 0 之后的字符串</li>
+</ul>
+<p><strong>嵌入式修饰符</strong><br>为什么需要嵌入式修饰符，如果你的正则模式是固定的，那么可能用不到这个功能，但如果你的正则模式是从用户输入、文件读取、命令行参数指定的，那么嵌入式修饰符就比较有用了。因为修饰符部分是无法进行变量化的，只能静态指定。</p>
+<p><code>(?adlupimnsx-imnsx)</code>：连字符前面的是启用对应修饰符，连字符后面是禁用对应修饰符，语法和 Java 是一样的，比如 <code>(?i)</code> 表示忽略大小写匹配，<code>(?-i)</code> 为大小写敏感。</p>
+<p>嵌入式修饰符可以位于整个模式的开头，表示全局启用；也可以位于某个圆括号内部，表示仅对当前圆括号范围内的模式起作用，如 <code>((?i)blah)\s+\g1</code>；同一个作用范围内，还可以用来覆盖默认的行为（相同的修饰符被覆盖），如 <code>((?im)foo(?-m)bar)</code>。也可以用来覆盖后面静态指定的修饰符，如 <code>/(?-i)foo/gi</code>。</p>
+<p>当然，Perl 也至此 Java 中的局部作用域语法：<br><code>(?adluimnsx-imnsx:pattern)</code>，表示仅对 pattern 生效。</p>
+<p><strong>环视/预查</strong><br><code>(?=X)</code>：正向肯定环视<br><code>(?!X)</code>：正向否定环视<br><code>(?&lt;=X)</code>：逆向肯定环视（固定宽度）<br><code>(?&lt;!X)</code>：逆向否定环视（固定宽度）<br><code>X\K</code>：逆向肯定环视（可变长度，Perl 5.10.0 起可用）</p>
+<p><strong>锚位</strong><br>所谓锚位其实就是位置匹配符，比如 <code>\A</code>、<code>\Z</code>、<code>^</code>、<code>$</code>。具体请参考正则元字符。</p>
+<p><strong>绑定操作符 <code>=~</code></strong><br>默认情况下，模式匹配的输入序列是 <code>$_</code>，绑定操作符 <code>=~</code> 告诉 Perl，拿右边的模式来匹配左边的字符串，而不是默认的 <code>$_</code>，例如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my $input = "www.zfl9.com";
+if ($input =~ /.+/) {
+    say "matched";
+}
+</script></code></pre>
+<p>绑定操作符看起来像其他赋值操作符，但实际上它们完全不同，他只是用来让模式匹配左操作数的字符串而已。这只是一个表达式，该表达式的返回值是一个布尔值，表示模式是否与输入串相匹配，就这么简单（其实你应该能够从 if 语句从判断出该表达式的返回值的具体意义，不然我们是不能这么使用的）。</p>
+<p>不信的话，你可以用一个变量来存储该表达式的返回值，然后使用 say 输出：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $is_match = 'www.zfl9.com' =~ /.+/;
+say $is_match; # 1
+$is_match = 'www.zfl9.com' =~ /.++m/;
+say $is_match; # 空串
+</script></code></pre>
+<p>在下面这个例子里，<code>$likes_perl</code> 会被赋予一个布尔值，其结果取决于用户的输入，这段代码属于快速消费型，因为判断之后就丢弃了用户输入（除非 while 循环的条件表达式中只有整行输入操作符 <code>&lt;FILEHANDLE&gt;</code>，否则输入行不会被 Perl 自动存入 <code>$_</code>）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+print "Do you like Perl? ";
+my $likes_perl = <STDIN> =~ /\byes\b/i;
+if ($likes_perl) {
+    print "Thank you.\n";
+} else {
+    print "Fuck you.\n";
+}
+</script></code></pre>
+<p><strong>正则模式内插</strong><br>正则表达式内部可以进行双引号形式的内插（前面已经演示过很多次），利用这个特性，可以写个简单的 grep 程序，还可以加上颜色高亮显示哦，例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+if (@ARGV < 1) {
+    say STDERR "Usage: $0 <pattern>";
+    exit 1;
+}
+
+my $regex = $ARGV[0];
+
+while (<STDIN>) {
+    if (s/$regex/\e[31;1m$&\e[0m/g) {
+        print;
+    }
+}
+</script></code></pre>
+<p>我们来测试一下（注意是可以高亮显示的，只不过这里看不出来）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [21:06:44]
+$ cat /etc/passwd | grep 'systemd'
+systemd-journal-gateway:x:191:191:systemd-journal-gateway:/:/usr/bin/nologin
+systemd-timesync:x:192:192:systemd-timesync:/:/usr/bin/nologin
+systemd-network:x:193:193:systemd-network:/:/usr/bin/nologin
+systemd-bus-proxy:x:194:194:systemd-bus-proxy:/:/usr/bin/nologin
+systemd-resolve:x:195:195:systemd-resolve:/:/usr/bin/nologin
+systemd-journal-remote:x:998:998:systemd Journal Remote:/:/sbin/nologin
+systemd-journal-upload:x:996:996:systemd Journal Upload:/:/sbin/nologin
+systemd-coredump:x:997:997:systemd Core Dumper:/:/sbin/nologin
+
+# root @ arch in ~/workspace [21:07:01]
+$ cat /etc/passwd | ./grep.pl 'systemd'
+systemd-journal-gateway:x:191:191:systemd-journal-gateway:/:/usr/bin/nologin
+systemd-timesync:x:192:192:systemd-timesync:/:/usr/bin/nologin
+systemd-network:x:193:193:systemd-network:/:/usr/bin/nologin
+systemd-bus-proxy:x:194:194:systemd-bus-proxy:/:/usr/bin/nologin
+systemd-resolve:x:195:195:systemd-resolve:/:/usr/bin/nologin
+systemd-journal-remote:x:998:998:systemd Journal Remote:/:/sbin/nologin
+systemd-journal-upload:x:996:996:systemd Journal Upload:/:/sbin/nologin
+systemd-coredump:x:997:997:systemd Core Dumper:/:/sbin/nologin
+</script></code></pre>
+<p>细心的你可能会提出一个疑问，正则模式中使用的分隔符是 <code>//</code>，那如果 <code>$regex</code> 中包含 <code>/</code> 会不会冲突呢？既然你提出来了，那我们就来实践一下咯：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/workspace [21:10:24]
+$ cat /etc/passwd | grep '/bin/zsh'
+root:x:0:0:root:/root:/bin/zsh
+zfl9:x:1001:1001::/home/zfl9:/bin/zsh
+
+# root @ arch in ~/workspace [21:10:25]
+$ cat /etc/passwd | ./grep.pl '/bin/zsh'
+root:x:0:0:root:/root:/bin/zsh
+zfl9:x:1001:1001::/home/zfl9:/bin/zsh
+</script></code></pre>
+<p>很显然是不会有任何影响的，不然代码可不太好写咯，因为你就算选择其他分隔符，那也不能保证用户给定的模式中不包含它。所以，我们可以得出一个小结论，只要不是静态给出的模式（什么叫静态给出的模式，比如 <code>/.+/</code> 这种就是，写死在代码里的就叫静态给定），那么就不用担心分隔符的冲突问题，因为 Perl 完全有能力自己判断。</p>
+<p><strong>五种 Perl 引用语法</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+# 5 种 Perl 引用(quote)，分隔符可以是任意符号（或镜像字符）
+my $str1 = q/www.zfl9.com\twww.zfl9.com/;   # 单引号
+my $str2 = qq/www.zfl9.com\twww.zfl9.com/;  # 双引号
+my $regex = qr/.+/;                         # 正则模式 quote regex
+my $cmd = qx@cat /etc/resolv.conf@;         # 外部命令 quote exec
+my @lists = qw/zfl9 baidu google/;          # 字符串列表 quote word
+
+say $str1;
+say $str2;
+say $regex;
+print $cmd;
+say "@lists";
+</script></code></pre>
+<p><strong>转义正则模式中的元字符</strong><br>如果需要将用户输入的字符串插入到现有正则表达式中，可以使用 <code>quotemeta</code> 操作符来转义字符串中的正则元字符（反斜线转义），注意是返回新字符串，不修改原串。</p>
+<p><strong>捕获变量的存续期</strong><br>前面已经提过，<code>$&amp;</code>、<code>$N</code> 这些捕获变量可以用来引用正则模式匹配到的子串，这些捕获变量会一直存活，除非被下次正则匹配得到的结果而覆盖它的值，因此再进行多次正则匹配时，务必先判断是否匹配成功，否则获取的子捕获组变量可能是脏数据。因此模式匹配总是出现在 if、while 条件表达式里中，为的就是防止出现脏读。不过最好的做法还是将 <code>$N</code> 这样的捕获变量保存在某个普通变量中，这样的可读性也更好，在后面的章节中，会介绍如何直接将捕获组保存在变量中，而不是从预定义的捕获变量中拷贝。</p>
+<p><strong>使用正则表达式处理文本</strong><br>正则表达式也可以直接修改文本，称为“正则替换”。</p>
+<p><strong>使用 <code>s///</code> 进行替换</strong><br>如果把 <code>m//</code> 看作“文本查找”，那么 <code>s///</code> 就是“文本替换”。<code>m//</code> 的左操作数可以是任何字符串表达式，而 <code>s///</code> 的左操作数必须是变量，因为 <code>s///</code> 会直接修改原字符串，如果直接给定字符串常量作为左操作数，那么程序将无法获取到修改后的字符串，所以 Perl 干脆就禁止了这种无意义的操作。</p>
+<p><code>s///</code> 表达式返回一个布尔值（实际替换的次数，指定 g 修饰符的情况下，返回值可以大于 1），替换成功为 true，替换失败为 false。<code>m//</code> 和 <code>s///</code> 都可以放在 if 条件语句中，用来测试是否“匹配、替换”成功。</p>
+<p>注意，<code>s///</code> 默认情况下会直接修改原字符串，从 Perl 5.14.0 开始，使用 <code>r</code> 修饰符告诉 Perl 不要直接修改原字符串，而是返回替换后的字符串。这种情况下要判断是否进行了替换，就必须比较原串和新串是否相同了（<code>eq</code>、<code>ne</code> 操作符），并且，因为使用了 <code>r</code> 后不直接修改原串，所以左操作数可以是非变量了，它可以是任意字符串表达式。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my $input = 'www.zfl9.com';
+my $result = $input =~ s/zfl9/baidu/r;
+
+if ($input ne $result) {
+    say "matched";
+} else {
+    say "nomatch";
+}
+
+say $input;
+say $result;
+</script></code></pre>
+<p>同样的，如果没有为 <code>s///</code> 指定左操作数，那么默认的操作数就是 <code>$_</code>。</p>
+<p><strong>使用 /g 进行全局替换</strong><br>一个常见的需求是删除字符串中的多余空白（包括开头、中间、结尾），例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+while (<STDIN>) {
+    s/^\s++|\s+(?=\s)|\s++$//g;
+    print;
+}
+</script></code></pre>
+<p>这里直接用一个表达式去掉了开头、中间、结尾的多余空白符（即使稍微慢一些）。</p>
+<p><strong>不同的定界符</strong><br>和 qw//、m// 一样，Perl 也允许我们改变 s/// 的定界符，但由于涉及到三个定界符，所以有点不一样。对于非镜像字符，用法便和 / 一样，比如 <code>s@@@</code>，对于镜像字符，就必须成两对，一对包住模式，一对包住替换字符串。而且在这种情况下，两对字符可以不同，甚至，可以一个使用镜像字符，一个使用非镜像字符。合法例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+s{regex}{replace};
+s[regex](replace);
+s<regex>@replace@;
+</script></code></pre>
+<p><strong>绑定操作符 =~</strong><br>和 m// 一样，我们可以用 =~ 来给 s/// 指定要操作的字符串（作为左操作数）。</p>
+<p><strong><code>/r</code> 无损替换</strong><br>这个其实已经提过了，这里在说几个细节问题。在没有 /r 修饰符之前，通常的做法是拷贝原字符串，然后将拷贝字符串作为替换操作数，一般写法为：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $input = 'www.zfl9.com';
+my $copy = $input;
+$copy =~ s/regex/replace/g;
+</script></code></pre>
+<p>当然可以写的更简便，先进行赋值，然后再替换：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $input = 'www.zfl9.com';
+(my $copy = $input) =~ s/regex/replace/g;
+</script></code></pre>
+<p>my 必须放在括号内，将左边的括号看作一个整体，它就是要被替换的字符串，它的值实际就是 <code>$copy</code>。当然，Perl 5.14 引入了一个新的修饰符，专门用于解决此类问题。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $input = 'www.zfl9.com';
+my $result = $input =~ s/regex/replace/gr;
+# 注：=~ 的优先级比 = 的高，所以 = 号右边是一个整体
+</script></code></pre>
+<p><strong>大小写转换</strong><br>还记得字符串中的转义序列吗？里面有 4 个特殊转移序列，专门用于大小写转换的操作：<code>\l</code>/<code>\L</code> 转换为小写、<code>\u</code>/<code>\U</code> 转换为大写。小写版本表示仅对后面一个字符生效，大写版本表示对后面的所有字符生效（或者作用到 <code>\E</code> 位置）。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+say 'www.zfl9.com' =~ s/.++/\U$&/gr;
+say 'WWW.ZFL9.com' =~ s/.++/\L$&/gr;
+</script></code></pre>
+<p>你也可以同时使用 <code>\l</code> + <code>\U</code>（首字母小写，其余大写） 或 <code>\u</code> + <code>\L</code>（首字母大写，其余小写，较常见），它们的位置随意，效果都是一样的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    s/.++/\u\L$&/g;
+    print;
+}
+</script></code></pre>
+<p>注意，这几个转移序列在双引号字符串中也是一样可以使用的哦。</p>
+<p><strong>split 操作符</strong><br>另一个使用正则的操作符是 <code>split</code>，它的任务就是“正则拆分”。它使用给定的模式拆分字符串，对于使用制表符、冒号、空白或其它任意符号分隔不同的字符数据的字符串来说，split 相当实用。只要你能把分隔符写成模式，就可以使用 split 来拆分。语法如下，如果省略 <code>$string</code>，则使用 <code>$_</code>：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @fields = split /separator/, $string;
+</script></code></pre>
+<p>split 操作符（split 是一个操作符，虽然它看起来和用起来很像一个函数，但实际上它们还是有区别的）用指定的正则模式扫描字符串，然后将模式匹配到的字符串去掉，并作为一个分割点，进行分割。模式匹配到的字符不会出现在结果中，例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    my @fields = split /\s++/;
+    say "@fields";
+}
+</script></code></pre>
+<p>注意，如果字符串中的两个分隔符之间没有数据（比如冒号分隔的字符串 <code>abc:def::xyz</code>），那么 Perl 会将这个空数据保留，导致的结果是，分割数组中会多出一个空串元素。同理，如果有 3 个连续的分隔符（比如冒号），那么就会多出两个空串元素。如果字符串以分隔符开头，那么分割数组的头部会多出一个空串元素，如果是连续连个分隔符，则多出 2 个空串元素，以此类推。注意，如果字符串以分隔符结尾（无论多少个），它们产生的空串都会被 Perl 忽略，除非指定第 3 个参数 Limit 为负数（比如 -1），Perl 就会保留结果数组尾部的空串元素。</p>
+<p>要去除结果数组中空串也很简单，使用 <code>grep</code> 操作符，它的作用和 Unix 中的 grep 类似，但它明显更强大，因为它不局限于正则表达式，grep 的语法为：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @result = grep(EXPR, @array);
+my @result = grep {EXPR} @array;
+# 对每个数组元素进行测试，如果 EXPR 返回真则说明符合要求
+# EXPR 的上下文中，隐含了一个默认参数 $_，它代表当前测试的元素
+# 列表上下文中返回符合条件的元素组成的新列表；
+# 标量上下文中返回符合条件的元素个数。
+</script></code></pre>
+<p>因此，我们写出一个程序，分割以冒号分隔的数据：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    foreach (grep {/\S/} split /:/) {
+        say qq/"$_"/;
+    }
+}
+</script></code></pre>
+<p>但是如果你想要分隔以空白符分隔的数据，那么其实不用提供任何操作数给 split，split 默认就会以空白符分隔数据，并且它不会保留开头的空串，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    foreach (split) {
+        say qq/"$_"/;
+    }
+}
+</script></code></pre>
+<p>如果想让 split 以空白符分隔其他字符串，可以只用一个空格来表达模式，例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    foreach (split ' ', $_) {
+        say qq/"$_"/;
+    }
+}
+</script></code></pre>
+<p><strong>join 函数</strong><br>join 和 split 刚好相反，split 是使用指定的模式分割数据，而 join 是使用指定的分隔符连接各段数据。注意，split 是使用正则来分割，而 join 的分隔符是普通字符串，不是正则模式。join 的语法如下：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $result = join '-', @arr;
+# elem0-elem1-elem2-...-elemN
+</script></code></pre>
+<p>注意，列表中元素至少的有两个，如果只有 1 个，那么返回原串，如果没有元素，则返回空串。利用 split 和 join 可以用来更改数据的分隔符：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<STDIN>) {
+    say join '-', split;
+}
+</script></code></pre>
+<p><strong>列表上下文中的 m//</strong><br>在列表上下文中，m// 如果匹配成功，则返回所有的捕获变量（不包含预定义捕获组，如组 0，组 0 前面的子串，组 0 后面的子串等）的列表，如果匹配失败，则返回空列表。利用这个特性，我们在正则匹配的同时给捕获变量命名：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$_ = 'www.zfl9.com';
+my ($first, $second, $third) = m/(\w+)\.(\w+)\.(\w+)/;
+say "($first) ($second) ($third)";
+</script></code></pre>
+<p>添加 /g 修饰符，并且只有一个子捕获组，那么 m//g 将返回一个列表，里面的元素都是每次匹配到的子捕获组的字符串。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $input = 'abc def 123 mpq rst xyz';
+my @field = $input =~ m/([a-z]++)/g;
+say "@field";
+</script></code></pre>
+<p>如果有两个捕获组，那么 m//g 键返回一个哈希，其中的 key 就是第一个捕获组，value 就是第二个捕获组：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $input = 'abc 123 def 456 xyz 789';
+my %field = $input =~ m/([a-z]++)\s++(\d++)/g;
+foreach (keys %field) {
+    say "$_ => $field{$_}";
+}
+</script></code></pre>
+<p><strong>贪婪、懒惰、占用量词</strong><br>正则表达式中的量词默认都是贪婪的，也就是说，在保证整体匹配的前提下，它们会尽量匹配长字符串，实在不行才会突出一点。</p>
+<p>而给量词添加 <code>?</code> 修饰符后，量词变懒惰了，在保证整体匹配的前提下，它们会尽量匹配短字符串，实在不行才会吞掉一点。</p>
+<p>给量词加了 <code>+</code> 修饰符后，量词变为占有的，它和贪婪量词差不多，但后半部分却不同，也就是说：占有量词会尽可能匹配长字符串，但是当它后面的子模式无法匹配时，占有量词并不会吐出字符来考虑大局。</p>
+<p>在贪婪量词与后一个子模式相距较近时，选择懒惰量词效率更高一些，当他们相距较远时（比如一个开头，一个末尾），选择贪婪量词效率更高一些。当然要实际情况实际分析，不能一概而论。</p>
+<p><strong>正则替换文件内容</strong><br>这其实是 sed 干的事情，不过我们可以使用 Perl 来实现一个简单的 sed：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+$^I = '.bak';
+while (<>) {
+    s/.++/\U$&/g;
+    print;
+}
+</script></code></pre>
+<p>这里设置了一个没见过的变量 <code>$^I</code>，我们暂且跳过她，假设它不存在，钻石操作符会读取命令行参数指定的文件（如果没有指定，则从标准输入读取），因为是在标量上下文中，所以钻石操作符每次只返回一行字符串，并将它存在 <code>$_</code> 变量中。<code>s///g</code> 默认对 <code>$_</code> 进行替换，而 <code>print</code> 也是默认对 <code>$_</code> 进行打印。因此，没有 <code>$^I</code> 变量的情况下，这个程序会对输入数据转换为全大写，然后打印出来。</p>
+<p>但是现在设置了 <code>$^I</code> 变量情况又有所不同了，<code>$^I</code> 的默认值为 undef，这不会产生什么特殊效果。但如果赋予它一个字符串（比如上面的 <code>.bak</code>），则钻石操作符就比平常更具魔力。简单地说，钻石操作符会打开指定的文件，然后将文件重命名为 <code>$filename$^I</code>，比如文件 test.txt 变为 test.txt.bak。然后钻石操作符会打开一个与原文件同名的新文件，接着，钻石操作符将 STDOUT 重定向到这个新文件中。这样 print 不再是向屏幕输出数据，而是直接写入到有源文件同名的新文件中。</p>
+<p>如果 <code>$^I</code> 为空串，那么钻石操作符将不对文件进行备份，而是直接修改源文件，这些行为是不是很像 sed？但是不建议这么做，除非你知道你的模式绝对没问题，不然修改错了可就不好办了，最好是进行备份，检查无误后可以删除备份文件。</p>
+<p>这样做的效率肯定是比在 Shell 中先使用 cp 命令备份，然后再修改源文件快的多的。为什么呢？因为使用 cp 的话，如果文件很大，那么备份的时间将很长，因为要创建两份一模一样的文件数据。而上面这个程序实际上并没进行文件数据拷贝，当钻石操作符打开源文件后，它已经获取了该文件的文件描述符引用，然后进行文件重命名（其实就是修改它所属的目录文件的一个条目而已，快的很），然后会创建一个新的空文件，它的名称与源文件相同，然后使用 print 将修改后的数据一行一行写入到新文件中。</p>
+<p><strong>从命令行直接编辑</strong><br>从上面的程序编辑多个文件已经很简单了，但是 Larry 认为这样还不够，如果能和 Unix 工具那样使用简短的命令行来工作，那就更好了。上面的程序可以这样用：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+perl5 -i.bak -p -e 's/.++/\U$&/g' netctl.ini
+</script></code></pre>
+<p>他几乎完全等同于上面的程序：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+$^I = '.bak';
+while (<>) {
+    s/.++/\U$&/g;
+    print;
+}
+</script></code></pre>
+<ul>
+<li><code>-i.bak</code>：即 <code>$^I = &#39;.bak&#39;</code>，如果不想备份，则直接使用 <code>-i</code>。</li>
+<li><code>-p</code>：即 <code>while (&lt;&gt;) {...; print;}</code>，如果为 <code>-n</code> 则没有 print 语句。</li>
+<li><code>-e &#39;perl expr&#39;</code>：即 while 循环中的语句（print 前面），可以有多个 -e 命令，它们分别被添加到循环体中，-e 指定的语句可以不以分号结尾。</li>
+<li><code>netctl.ini</code>：程序的命令行参数，这里指定的文件为当前目录下的 netctl.ini。</li>
+</ul>
+<h2 id="其他控制结构"><a href="#其他控制结构" class="headerlink" title="其他控制结构"></a>其他控制结构</h2><p><strong>if 和 unless</strong><br>if：如果条件为真则执行对应语句块<br>unless：如果条件为假则执行对应语句块</p>
+<p><strong>while 和 until</strong><br>while：只要条件为真就继续执行对应的语句块<br>until：只要条件为假就继续执行对应的语句块</p>
+<p><strong>表达式修饰符</strong><br>如果条件控制结构只有 1 条语句，那么可以改写为更简便的形式：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+## if
+if (cond) {
+    statement;
+}
+# 可以改写为
+statement if cond;
+
+## unless
+unless (cond) {
+    statement;
+}
+# 可以改写为
+statement unless cond;
+
+## while
+while (cond) {
+    statement;
+}
+# 可以改写为
+statement while cond;
+
+## until
+until (cond) {
+    statement;
+}
+# 可以改写为
+statement until cond;
+
+## foreach
+foreach (@arr) {
+    statement;
+}
+# 可以改写为，只能使用默认变量 $_
+statement foreach @arr;
+</script></code></pre>
+<p>虽然条件语句在后面，但是它们与传统的形式完全相同，都是先执行条件表达式。如果条件表达式比较长，可以进行缩进，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+print "www.zfl9.com www.baidu.com www.google.com\n"
+    if $_ eq 'www.youtube.com';
+</script></code></pre>
+<p><strong>裸块控制结构</strong><br>所谓裸块，就是使用花括号包围起来的代码块，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+{
+    statement;
+    statement;
+    statement;
+    ...;
+}
+</script></code></pre>
+<p>稍后会介绍裸块的应用，这里先看他是如何为裸块中的变量限定作用域的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+{
+    my $var = 'www.zfl9.com';
+    say $var;
+}
+</script></code></pre>
+<p><strong>if..elsif..elsif..else</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if ($ARGV[0] > 0) {
+    # TODO
+} elsif ($ARGV[0] == 0) {
+    # TODO
+} elsif ($ARGV[0] < 0) {
+    # TODO
+} else {
+    # TODO
+}
+</script></code></pre>
+<p><strong>自增、自减</strong><br><code>++var</code>：前自增<br><code>var++</code>：后自增<br><code>--var</code>：前自减<br><code>var--</code>：后自减</p>
+<p>如果是空上下文，建议使用前自增、前自减，性能可能好一些（当然只是理论上）</p>
+<p><strong>for 循环</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+for (init; cond; increment) {
+    statement;
+    ...;
+}
+</script></code></pre>
+<p>如果它们都为空，那么也必须保留分号，此时相当于无限循环。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+for (my $i = 0; $i < 10; ++$i) {
+    print "hello, world!\n";
+}
+</script></code></pre>
+<p>注意，for、foreach 行定义的变量都是属于它们的私有块中的变量，外部无法访问。</p>
+<p>无限循环的两种方式，建议第二种：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+for (;;) {
+    # TODO
+}
+
+while (1) {
+    # TODO
+}
+</script></code></pre>
+<p><strong>for 和 foreach 的关系</strong><br>你也许不知道，Perl 中的 for 和 foreach 两个关键字其实是完全等价的。如果里面有两个分号，那么就是传统意义上的 for，如果没有分号，那就是传统意义上的 foreach。但是我不建议混用，应该明确它们的用途，比如用 foreach 遍历列表，for 专注于传统的循环结构。</p>
+<p><strong>遍历列表、哈希</strong><br><em>列表</em></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# 无需关心 index
+foreach (@arr) {
+    # TODO，默认变量 $_
+}
+# 需要关心 index
+while (my ($index, $elem) = each @arr) {
+    # TODO，下标 $index、元素 $elem
+}
+</script></code></pre>
+<p><em>哈希</em></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# 关心 key
+foreach (keys %hash) {
+    # TODO
+}
+# 关心 value
+foreach (values %hash) {
+    # TODO
+}
+# 关心 key/value
+while (my ($key, $value) = each %hash) {
+    # TODO
+}
+# keys 和 values 占用内存大一些，因为需要先一次性提取出 keys、values
+# 如果希望占用内存不这么多，建议使用第三种方式，即使可能多出一个无用变量
+</script></code></pre>
+<p><strong>last 操作符</strong><br>等价于 C 语言中的 <code>break</code> 关键字，Perl 中有 5 种循环块，它们是：for、foreach、while、until、裸块。last 可以对 5 种循环块产生作用，在裸块中，last 直接跳过后面的语句，开始执行裸块后面的语句。默认情况下，这些跳出循环的操作符都是针对最内层的循环生效，如果需要操作外层循环，可以使用标签（Label，稍后会提到）。</p>
+<p><strong>next 操作符</strong><br>等价于 C 语言中的 <code>continue</code> 关键字，next 也可以用在 5 种循环结构中，在裸块中，它的作用与 last 一样，都是跳出裸块。看一个例子（统计文件中单词出现次数）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my $total = 0;
+my $vaild = 0;
+my %count;
+
+while (<>) {
+    foreach (split) { # split 默认以空白符分隔数据，不保留空白
+        ++$total;   # 总数 + 1
+        next if /\W/; # 如果不是单词
+        ++$vaild;   # 单词 + 1
+        ++$count{$_}; # 递增次数
+    }
+}
+
+say "total things = $total, vaild words = $vaild";
+foreach my $word (sort keys %count) {
+    say "$word was seen $count{$word} times.";
+}
+</script></code></pre>
+<p><strong>redo 操作符</strong><br>redo 其实就是“重做”的意思，在循环中的意思是，重新执行当前的循环体（不经过条件测试）。redo 也可以在 5 种循环中使用。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my @words = qw/fred barney pebbles dino wilma betty/;
+my $errors = 0;
+
+foreach (@words) {
+    print "Type the word '$_': ";
+    chomp(my $try = <STDIN>);
+    if ($try ne $_) {
+        say "Sorry - That's not right.\n";
+        ++$errors;
+        redo;
+    }
+}
+
+say "You've completed the test, with $errors errors!";
+</script></code></pre>
+<p><strong>带标签的块</strong><br>如果需要在内层循环中跳出外层循环，请使用 Label 标签（和 Java 一样），在 Perl 中，标签也是标识符的一种，但是他没有任何前缀字符，为了避免命名冲突，Perl 建议将标签全部大写。</p>
+<p>要给某个循环块打上标签，只需在循环前面加上 <code>LABEL:</code> 即可。然后，last、next、redo 后面接上对应的标签名就能够进行多层循环跳转了。</p>
+<p>通常，循环的标签应该用名词命名，来增强可读性。如果外层循环每次处理一行，那么可以命名为 LINE，如果内层循环每次处理一词，可以命名为 WORD。这样一来，可以写出 <code>next LINE</code>、<code>next WORD</code> 代码，比较优美，一看就懂。</p>
+<p><strong>条件操作符 ?:</strong><br><code>?:</code> 是一个三目操作符，因为她需要 3 个操作数，<code>cond ? expr1 : expr2</code>，如果 cond 为 true，则执行 expr1，如果 cond 为 false，则执行 expr2。</p>
+<p>首先，Perl 执行条件表达式，看他究竟是真是假，如果是真，则执行冒号前面的表达式，如果为假，则执行冒号后面的表达式。每次使用时，只有一个表达式被执行，另一个则被跳过。整个表达式的返回值取决于 expr1 或 expr2。expr1 和 expr2 的返回类型可以不同，这就是动态语言的好处所在。</p>
+<p>任何 ?: 语句都可以改写成 if..else 语句，但往往更加冗长。</p>
+<p><strong>逻辑操作符</strong><br><code>&amp;&amp;</code> 或 <code>and</code>：逻辑与<br><code>||</code> 或 <code>or</code>：逻辑或<br><code>!</code> 或 <code>not</code>：逻辑非</p>
+<p>对于 &amp;&amp;、||（and、or 同理），Perl 会进行短路操作，和 JS 中的概念类似。</p>
+<ul>
+<li>如果 <code>&amp;&amp;</code> 左边的表达式为假，则整个表达式不可能为真，所以 Perl 会跳过右边的表达式的执行；</li>
+<li>如果 <code>||</code> 左边的表达式为真，则整个表达式必定为真，所以 Perl 会跳过右边表达式的执行。</li>
+</ul>
+<p>这样的行为在语言中称为“短路”逻辑操作符，那么整个表达式的值怎么分析呢？换个角度，如果 <code>&amp;&amp;</code> 左操作数为 true，那么整个表达式的值就是右操作数的值，如果 <code>||</code> 左操作数为 false，那么整个表达式的值就是右操作数的值。</p>
+<p>因此，我们可以利用 <code>||</code> 来给变量设置默认值：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $lastname = $lastname{$someone} || "(No last name)";
+</script></code></pre>
+<p>如果 <code>$someone</code> 不存在，那么左表达式的值就是 undef，即 false，那么整个表达式的值就是右表达式的值，也就是我们提供的默认值。但是如果这个键对应的 value 就是布尔值为假的怎么判断呢（比如为 0）？就需要改变一下条件了：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+$lastname = defined $hash{$someone} ? $hash{$someone} : 'not exists';
+</script></code></pre>
+<p>但是这样显然有点麻烦，好在 Perl 提供了简写方式，下一节会展示给你看。</p>
+<p><strong>定义或操作符</strong><br>在使用 %hash 中，如果 key 存在，它的 value 被显示指定为布尔值为 false 的值（比如 0，但是 undef 除外哦），那么即使它存在，也会被后面的“默认值”掩盖。为此 Perl 引入了 <code>//</code> 操作符，它测试左操作数的依据是是否已定义或者非 undef，如果定义了或者非 undef 那就是真，则返回它的值，否则就使用右操作数指定的默认值。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my %hash = (
+    zfl9 => undef,
+    baidu => 0,
+    google => 0,
+);
+
+foreach (keys %hash) {
+    my $value = $hash{$_} // 'not exists';
+    say "$_ => $value";
+}
+
+# Output:
+zfl9 => not exists
+google => 0
+baidu => 0
+</script></code></pre>
+<p><strong>部分求值操作符</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# m 小于 n 时，将 n 的值赋给 m
+($m < $n) && ($m = $n);
+$m = $n if $m < $n;
+
+# 打开一个文件，如果失败则提示
+open my $fh, '<', $filename
+    || die "Can't open '$filename': $!";
+# 但这实际上是错误的，因为 || 的优先级比 , 高
+# 所以 Perl 会误以为你写的表达式是这样的：
+# open my $fh, '<', ($filename || die "something");
+# 所以，你应该使用 and、or、not 操作符，因为它们优先级更低
+open my $fh, '<', $filename or die "$!";
+</script></code></pre>
+<h2 id="Perl-模块"><a href="#Perl-模块" class="headerlink" title="Perl 模块"></a>Perl 模块</h2><p>本章内容不介绍如何编写 Perl 模块，而是教你如何使用模块，第三方模块库 CPAN。</p>
+<p><strong>寻找模块</strong><br>Perl 模块有两种来源，一种是随 Perl 发行版本一同打包的，所以安装了 Perl 就能直接使用这些内置模块；另一种则需要从 CPAN 下载，需要自己安装（第三方模块）。除非特别说明，否则本章节讨论的都是 Perl 内置模块。</p>
+<p>CPAN 是 Perl 综合典藏网，专门收集各类第三方 Perl 模块，在你决定造轮子之前，请先前往 www.cpan.org 查找有没有人已经造好了轮子，如果没有再决定也不迟。</p>
+<p>在寻找模块之前，先检查当前系统是否已安装对应的模块，使用 <code>perldoc CGI</code> 可以检查当前系统是否安装了 CGI 模块，如果提示不存在，说明没有安装。其他模块同理。</p>
+<p>使用 <code>cpan -a</code> 查看已安装的模块，以及对应的版本号（首次运行时直接回车就行）</p>
+<p><strong>安装模块</strong><br>如果没有找到，那么就需要手动安装了，模块安装方式可以查看模块的 README、INSTALL 文件。如果模块使用 MakeMaker 封装，那么安装步骤为：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+perl Makefile.PL
+make install
+</script></code></pre>
+<p>如果没有权限写入到系统级目录，也可以手动指定安装目录：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+perl Makefile.PL INSTALL_BASE=/path/to/install
+make install
+</script></code></pre>
+<p>有些模块的开发者用的是另一个辅助模块 Module::Build 来编译与安装它们的作品。此类模块的安装流程如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+perl Build.PL
+./Build install
+</script></code></pre>
+<p>当然，你可以指定安装目录：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+perl Build.PL --install_base=/path/to/install
+./Build install
+</script></code></pre>
+<p>有些模块可能依赖其他模块，所以必须先把它依赖的模块先安装好，才能安装该模块。但是安装依赖很麻烦，因为依赖模块可能也依赖别的模块，还不如用 Perl 自带的 CPAN.pm，你可以在命令行中启用 CPAN.pm 的 shell，来安装 CPAN 网站的模块：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+# 安装 DateTime 模块
+install DateTime
+</script></code></pre>
+<p>但是，就算这样，也还是比较麻烦，所以本书的作者写了一个小小的脚本程序，叫做 cpan，它通常也是和 Perl 一并安装到系统中的，如果没有使用包管理器一般都能够安装。cpan 的用法很简单，只需将要安装的模块名称传入给 cpan 就可以了：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+cpan Module::CoreList LWP CGI::Prototype
+</script></code></pre>
+<p>另外还有一个类似的小工具，他叫 cpanm，不过他目前还不是 Perl 的自带工具，它被设计为零配置、轻量级的 CPAN 客户端，能够完成绝大多数人的日常工作，用法：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+cpanm DBI WWW:Mechanize # 直接将模块名传给 cpanm
+</script></code></pre>
+<p>注意，一般模块的扩展名为 .pm，表示“Perl Module”，为了与其他概念相区分，一般再讨论流行模块时，都会带上 .pm，表示他是一个模块。这里的 CPAN（Perl 综合典藏网）和模块“CPAN”不是同一个东西。</p>
+<p><strong>使用模块</strong><br>如何在 Perl 中使用 basename、dirname 等函数（类似 Unix 中搞得 basename、dirname 工具），使用内置模块 <code>File::Basename</code> 就可以了，它提供了类似 Unix 的对应工具的实现：basename、dirname。前者用于获取文件名，后者用于获取路径名。</p>
+<p>使用模块前，先使用 perldoc 来查看模块的使用文档，这通常是使用模块的第一步：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+perldoc File::Basename
+</script></code></pre>
+<p>然后，只需在你的程序开头使用 use 命令来加载这个模块（或使用 -M 参数指定）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+use File::Basename;
+</script></code></pre>
+<p>在程序编译阶段，Perl 看到这行代码后，会尝试寻找该模块的源代码，并加载进来，接着就好像 Perl 突然多出了一些新的函数，程序的接下来的部分就能随意使用这些函数了，就像使用 Perl 的内置函数一样。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+use File::Basename;
+say dirname $ARGV[0];
+say basename $ARGV[0];
+</script></code></pre>
+<p><strong>仅选用模块中的部分函数</strong><br>如果你现在已有的程序上使用 File::Basename 模块，但却发现程序中已经定义了一个 <code>&amp;dirname</code> 的子程序（可能他们做的事情不一样，但是它们同名），也就是说，程序里的现有子程序与模块里的某个函数重名。现在麻烦来了，通过使用模块而引入的 dirname 也是一个子程序，该如何与自己写的同名子程序区分开来呢？</p>
+<p>只需要在 File::Basename 的 use 声明后加上“导入列表”来指明要导入的函数清单，这样就不会自动导入所有函数了，在此，我们只需要 basename 函数：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+use File::Basename qw/basename/;
+# or
+use File::Basename ('basename');
+</script></code></pre>
+<p>如果是这么写，那么表示不导入任何函数到当前命名空间（防止命名污染）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+use File::Basename ();
+</script></code></pre>
+<p>那现在我们该如何使用模块中的 basename、dirname 函数呢？其实和 Java 有点类似，那就是使用全限定名称来使用它，即加上模块名，它们之间使用 <code>::</code> 隔开：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+use File::Basename ();
+say File::Basename::dirname $ARGV[0];
+say File::Basename::basename $ARGV[0];
+</script></code></pre>
+<p>其实就算是导入了当前命名空间，我们依旧可以使用这种全名的方式来访问模块中的函数。这和 Java 也是一样的，<code>::</code> 应该是借助了 C++ 中的域解析符的命名。</p>
+<p>如果 Perl 程序没有声明 package，那么它默认属于 main 包，例如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+sub dirname {
+    $1 if $_[0] =~ m@(.+)(?=/[^/]++$)@;
+}
+sub basename {
+    $1 if $_[0] =~ m@(?:.*?/?)([^/]++$)@;
+}
+say &main::dirname($ARGV[0]);
+say &main::basename($ARGV[0]);
+</script></code></pre>
+<p>一般情况下，使用模块的默认导入列表就行了，不过你随时可以用自定义的列表。一来可以略去你不需要的默认导入函数，二来还可以按需要导入那些不会被默认导入的函数，因为大多数模块的默认导入列表里都会省略某些不常用的函数。</p>
+<p><strong>File::Spec 模块</strong><br>有时候，我们需要将 dirname 和 basename 合并在一起，组成新的文件名。可是不同操作系统的路径分隔符是不一样的，比如 Windows 使用反斜线，Unix 是正斜线。好在我们可以使用 File::Spec 模块的 catfile 成员方法（注意这个模块是面向对象的，即 OO，所以需要像 C 语言中获取结构体指针的数据成员一样，使用瘦箭头符号）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+use File::Spec;
+use File::Basename;
+
+my $old_name = $ARGV[0];
+my $dirname = dirname $old_name;
+my $basename = basename $old_name;
+
+$basename =~ s/.++/perl-$&/;
+my $new_name = File::Spec->catfile($dirname, $basename);
+rename($old_name, $new_name);
+</script></code></pre>
+<p>如你所见，调用方法时需要指定全名，然后接一个瘦箭头符号，以及方法名称。不过，既然我们使用全名来调用方法，那么模块会导入哪些符号呢？答案是什么都没有。对于 OO 模块来说，这是正常的做法。这样一来也就不用担心重名的问题了。</p>
+<h2 id="文件测试"><a href="#文件测试" class="headerlink" title="文件测试"></a>文件测试</h2><p><strong>文件测试操作符</strong><br>Perl 提供了一组用于测试文件的操作符，借此返回特定的文件信息。所有这些测试操作符都写作 <code>-X</code> 的形式（与 test 命令类似），其中 X 表示特定的测试操作。绝大多数的测试操作符返回布尔值表示真假。虽然我们称它为操作符，但他们实际上对应的文档却卸载 perlfunc 里面。要查看完整的清单，请使用 <code>perldoc -f -X</code>，你可以理解为 -X 系列的函数。</p>
+<p>在运行那些创建新文件的操作前，应先检查指定文件是否存在，以免覆盖重要文件。要达到此目的，可以使用 <code>-e</code> 测试符来检测文件是否存在：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+die "Oops! A file called '$filename' already exists.\n"
+    if -e $filename;
+</script></code></pre>
+<p>请注意，这里的 die 提示信息并未包含 <code>$!</code>，因为我们不需要系统为何拒绝的原因。</p>
+<p>再比如，我现在想检测某个文件最后的修改时间距离现在有多少天了，可以使用 <code>-M</code> 来获取，返回值是一个浮点数（相对时间）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+warn "Config file is looking pretty old!\n"
+    if -M $filename > 28;
+</script></code></pre>
+<p>再一个例子，找出指定文件中的超过 100 KB 的不常用文件（最近 90 天都未访问），使用 <code>-s</code> 操作符用于获取文件的大小（字节为单位），而 <code>-A</code> 则用于获取文件的最后一次访问时间距现在的天数。因此整个条件表达式可以写作：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if -s $filename > 100_000 and -A $filename > 90;
+</script></code></pre>
+<p>所有这些文件测试符看起来都是同一种形式：连字符加上一个字母，字母表示测试的意义，后面跟上要测试的文件名或者文件句柄。大多数测试符都返回布尔值，部分测试符返回特殊类型的值，比如文件大小，距现在的天数，常用的文件测试符列表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">文件测试操作符</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td>文件或目录，对当前（有效的）用户或组来说是可读的</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-w</code></td>
+<td>文件或目录，对当前（有效的）用户或组来说是可写的</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-x</code></td>
+<td>文件或目录，对当前（有效的）用户或组来说是可执行的</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-o</code></td>
+<td>文件或目录，由当前（有效的）用户所拥有</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-R</code></td>
+<td>文件或目录，对实际的用户或组来说是可读的</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-W</code></td>
+<td>文件或目录，对实际的用户或组来说是可写的</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-X</code></td>
+<td>文件或目录，对实际的用户或组来说是可执行的</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-O</code></td>
+<td>文件或目录，由实际的用户拥有</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-e</code></td>
+<td>是否存在（文件或目录）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-z</code></td>
+<td>是否为空文件（对目录来说永远都为假）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-s</code></td>
+<td>返回文件大小（字节为单位的大小，空文件返回 0）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-f</code></td>
+<td>是否为普通文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-d</code></td>
+<td>是否为目录文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-l</code></td>
+<td>是否为符号链接文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-S</code></td>
+<td>是否为套接字文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td>是否为命名管道文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-b</code></td>
+<td>是否为块设备文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-c</code></td>
+<td>是否为字符设备文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-u</code></td>
+<td>是否设置了 setuid 位</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-g</code></td>
+<td>是否设置了 setgid 位</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-k</code></td>
+<td>是否设置了 sticky 位</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-t</code></td>
+<td>文件句柄，是否为 TTY 设备</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-T</code></td>
+<td>是否为文本文件（看起来）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-B</code></td>
+<td>是否为二进制文件（看起来）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-C</code></td>
+<td>最后一次元数据被修改的时间至今的天数</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-M</code></td>
+<td>最后一次数据被修改的时间至今的天数</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-A</code></td>
+<td>最后一次数据被访问的时间至今的天数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>-r、-w、-x、-o 与 -R、-W、-X、-O 区别</strong><br>查看 perldoc，可以看到 -r 和 -R 的区别（其他的同理）</p>
+<p>-r：File is readable by effective uid/gid.<br>-R：File is readable by real uid/gid.</p>
+<p>主要的区别在于 <code>effective uid/gid</code> 和 <code>real uid/gid</code>，前者的中文翻译为“有效 UID/GID”（又称为“当前 UID/GID”），后者的翻译为“真实 UID/GID”。</p>
+<p>比如，你以 abc 这个用户登录 shell，然后又 su 为 root 用户，那么你的 real uid 就是 abc，你的 effective uid 就是 root。你运行程序或进行其它操作时，判断你是否有权限都是根据 effective uid 的。</p>
+<p>因此，一般我们都使用小写的版本进行文件权限的测试，大写版本没啥意义。</p>
+<p><strong>-C、-M、-A 时间相关</strong><br>它们返回的都是浮点数，这个数字是文件上次的某个时间距离这次 Perl 程序启动之间的时间的长度（相对时间），因此如果一个运行时间很长的 Perl 守护进程在获取一个刚刚更改不久的文件时，获取的天数可能是负数，或者是有人故意将文件的某个时间属性修改为未来的某个时间点。</p>
+<p><strong>-T、-B 文件类型</strong><br>属性 Unix 的应该知道，文件元数据中并未包含表示当前文件是否是文本文件还是二进制文件的比特位。所以 Perl 判断是否为文本文件还是二进制文件全是靠猜的，就像 file 命令一样，是根据文件的特征来猜测的，所以这个测试结果不能说明任何问题。</p>
+<p><strong>-t 的测试</strong><br>如果被测试的文件句柄是一个 TTY 设备，那么返回真值。简单的说，如果来说，如果一个文件可以交互（比如登录的 Shell），那么它就是 TTY 设备。所以普通文件或者管道都可以排除在外。一个常见的用法是，当 <code>-t STDIN</code> 返回真时，表示程序可以以交互方式向用户提出一些问题，如果返回假，那么说明输入来源是某个普通文件或者管道，而不是键盘。</p>
+<p><strong>默认操作数</strong><br>如果文件测试操作符后面没有指定文件名或句柄名称，那么默认的操作数就是 <code>$_</code> 指定的文件名。但 <code>-t</code> 测试符除外，它的默认操作数是 STDIN（因为参数是文件句柄）。</p>
+<p>注意，省略操作数时，如果测试符后存在其它字符，那么他可能会被 Perl 当作操作数，所以务必加上圆括号，或者干脆指明操作数。</p>
+<p><strong>所有文件测试操作符的操作数都可以是文件句柄，也可以是文件名（除了 <code>-t</code>）</strong>。</p>
+<p><strong>测试同一文件的多个属性</strong><br>如果要测试同一个文件的多个属性，可以将测试表达式通过逻辑连接符连接起来，比如我想测试一个文件可读可写，可以这么写：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (-r $file and -w $file) {
+    ...
+}
+</script></code></pre>
+<p>但是这其中包含了两次 stat 系统调用，因为每次对文件测试时，Perl 都得从文件系统中取出所有相关的信息，虽然在做 -r 测试的时候，我们已经拿到了所有相关的信息，可到了做 -w 测试的时候，Perl 又要去取一遍相同的信息，多浪费啊，如果对海量的文件测试各项属性，性能问题肯定非常明显。</p>
+<p>Perl 有个特别的文件句柄（虚拟文件句柄），它就是 <code>_</code>（一个下划线），他会告诉 Perl 使用上次查询过的文件信息（stat 结构体）来进行测试，而不在读取文件中的元信息。因此可以将多次不必要的读取操作变为一次。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (-r $file and -w _) {
+    ...
+}
+</script></code></pre>
+<p><code>_</code> 并非只能在同一条语句中使用，以下就是在两条 if 语句中使用的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (-r $file) {
+    # TODO
+}
+if (-w _) {
+    # TODO
+}
+</script></code></pre>
+<p>这么用的时候，必须要搞清楚代码最后一次查询的是否为同一文件，若在两个文件测试之间又调用了另一个子程序，那么最后一次查询的文件可能发生变化（因为子程序中可能进行其他文件的测试）。这时候 <code>_</code> 就不再是上面的那个文件句柄了，而是子程序中的文件信息。</p>
+<p><strong>栈式文件测试操作符</strong><br>在 Perl 5.10 之前，如果要一次性测试文件的多个属性，只能分开进行独立的测试操作，就算使用 <code>_</code> 虚拟文件句柄也不例外。比如说要测试一个文件是否可读可写，必须这么做：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (-r $file and -w _) {
+    ...
+}
+</script></code></pre>
+<p>如果能一次性完成就好了，从 Perl 5.10 开始，允许我们使用多个文件测试符对同一个文件进行测试，测试时从右往左进行的，但通常测试顺序并没有什么影响：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+if (-w -r $file) {
+    ...
+}
+</script></code></pre>
+<p>这个程序和上面的程序做完全一样的事情，仅仅是语法上的改变而已（一个语法糖）。栈式操作符只适用于返回布尔值的文件测试符，其他值的返回会导致意义不明确。</p>
+<p><strong>stat 和 lstat 函数</strong><br>用前面介绍的文件测试操作符已经可以获取某个文件或者文件句柄的各种常用属性了，但是这只是一部分，还有许多其他属性信息没有对应的测试操作符。比如说，没有任何操作符可以获取一个文件的硬链接个数，或者是文件的 UID、GID。如果想知道文件的全部属性信息，请使用 stat 函数，此函数返回与同名 Unix 系统调用 stat 几乎一样的丰富的文件信息（总之比你知道的要多得多）。</p>
+<p>函数 stat 的参数可以是文件句柄（包括虚拟文件句柄 <code>_</code>）、文件名称，如果没有指定，则使用默认参数 <code>$_</code>。如果 stat 执行失败（通常是因为无效的文件名或者文件不存在），它会返回空列表。要不然就返回具有 13 个元素的数字列表，具体意义见下面的由标量变量构成的列表：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my ($dev, $inode, $mode, $nlink, $uid, $gid, $rdev, $size, $atime, $mtime, $ctime, $blksize, $blocks) = stat $filename;
+</script></code></pre>
+<p>如果想知道具体的含义，请查看 perldoc 文档，这里列举几个常见的属性：</p>
+<ul>
+<li><code>$dev、$inode</code>：文件所在设备的设备号以及文件的 inode 号，这两个编号能够唯一确定一个文件，就像给每个文件颁发的身份证一样。</li>
+<li><code>$mode</code>：文件的权限位集合，还包含其他信息位。如果你使用过 <code>ls -l</code> 查看文件的详细信息，你会看到其中每一行都由类似 <code>-rwxr-xr-x</code> 这样的字符串开始的。其中后 9 位刚好对应到 <code>$mode</code> 最低有效的 9 个权限位。以这个例子而言，他的权限位其实是 0755（八进制数值），如果需要解析这些权限位，可能需要借助位操作符。</li>
+<li><code>nlink</code>：文件或目录的硬链接数。文件的硬链接数最少为 1，目录的硬链接数最少为 2。</li>
+<li><code>$uid、$gid</code>：以数值形式表示文件所属用户和用户组的 uid 和 gid。</li>
+<li><code>$size</code>：以字节为单位的文件大小，和 -s 测试符的返回值相同。</li>
+<li><code>$atime、$mtime、$ctime</code>：三种时间戳，它们都是自 1970-01-01 00:00:00 UTC 起的秒数，是一个 32 位的整数。</li>
+</ul>
+<p>对符号链接文件调用 stat 函数将会返回实际指向的文件的属性信息，而非符号链接本身的信息，如果要获取符号链接文件自身的信息，请使用 lstat，它们的返回值相同。如果 lstat 的参数不是符号链接，那么它和 stat 一样，返回空列表。</p>
+<p>和文件测试操作符一样，stat 和 lstat 的默认操作数是 <code>$_</code> 指定的文件名或文件句柄。</p>
+<p><strong>localtime 函数</strong><br>你能获得的时间戳值（比如 stat 返回的 3 个时间戳），普通人很难看出它们究竟是什么时间，因为它是一个 EPOCH 时间戳，是一个秒数。所以你可能需要将它转换为比较容易阅读的形式，比如 <code>&quot;Thu May 31 09:48:18 2007&quot;</code> 这样的字符串。Perl 可以在标量上下文中使用 locatime 函数来完成这种转换：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $date = locatime 1529413125;
+say $date; # Tue Jun 19 20:58:45 2018
+</script></code></pre>
+<p>在列表上下文中，localtime 返回有数字组成的列表，具体的含义：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my ($sec, $min, $hour, $day, $mon, $year, $wday, $yday, $isdst) = localtime $timestamp;
+# $mon 的范围是 0-11
+# $year 是一个自 1900 年起算的年数
+# $wday 的范围是 0-6，星期天是 0
+# $yday 表示是今年中的第几天，范围 0-364/365
+</script></code></pre>
+<p>还有两个相关的函数可能对你有用，gtime 函数和 localtime 一样，只不过他返回的是 GMT 的时间（即 UTC 时间，非本地时间）。<br>如果需要从系统时钟获取当前的时间戳，可以使用 time 函数，不提供参数的情况下，不论 localtime、gtime 函数，默认情况下都是使用当前 time 返回的时间值。</p>
+<p><strong>按位运算操作符</strong><br><code>a &amp; b</code>：按位与，如果对应比特位都为 1，结果位才为 1<br><code>a | b</code>：按位或，如果对应比特位有一个为 1，结果位就为 1<br><code>a ^ b</code>：按位异或，如果对应比特位不相同，结果位才为 1<br><code>~a</code>：按位非，进行反转，1 变为 0，0 变为 1<br><code>num &lt;&lt; n</code>：按位左移，右边补 0<br><code>num &gt;&gt; n</code>：按位右移，正数补 0（负数有问题）</p>
+<h2 id="目录操作"><a href="#目录操作" class="headerlink" title="目录操作"></a>目录操作</h2><p><strong>chdir 切换工作目录</strong><br>程序运行时，会以自己的工作目录（working directory）作为相对路径的起点，也就是说，当我们提及 fred 文件时，其实是指当前目录下的 fred 文件。你可以使用 chdir 操作符来来改变当前的工作目录，这个 shell 中的 cd 命令差不多。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+chdir '/tmp' or die "Cannot chdir to /tmp: $!";
+</script></code></pre>
+<p>因为这是一个系统调用，所以发生错误时便会把标量变量 <code>$_</code> 的值设为错误原因。</p>
+<p>由 Perl 进程启动的所有进程都会继承当前 Perl 进程的工作目录，如果调用 chdir 时不加参数，那么 chdir 将尝试进入当前运行用户的家目录，这和不带参数的 cd 差不多。这是少数不以 <code>$_</code> 作为默认参数的情形之一。某些 shell 允许使用 <code>cd ~zfl9</code> 来进入指定用户的家目录，但这是 shell 提供的功能，不是操作系统。因为 Perl 的 chdir 是系统调用，所以无法做到这种操作。</p>
+<p><strong>glob 文件名通配</strong><br>一般来说 shell 会将命令行里的文件名模式展开为要匹配的文件名，这就是文件名通配（glob）。比如给 echo 命令传递 <code>*.pl</code> 文件名模式，shell 在调用 echo 前会先将模式展开，因此 echo 就像接收了多个参数一样，它根本不用理会通配符（因为没有）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ echo *.pl
+array.pl cat.pl circumference.pl die_warn.pl eval.pl find_index.pl format.pl func.pl grep.pl hash.pl hello.pl helloworld.pl modulo.pl regex.pl repeat_print.pl replace.pl stdin.pl sum_and_show.pl sum.pl tac.pl test.pl
+</script></code></pre>
+<p>echo 命令其实不知道什么通配符，他接受到的只是通配符展开后的文件列表，这个展开时由 shell 来完成的。这对于 Perl 程序也一样，一个打印所有命令行参数的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+while (my ($ind, $val) = each @ARGV) {
+    say "$ind -> $val";
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ./test.pl *.pl
+0 -> array.pl
+1 -> cat.pl
+2 -> circumference.pl
+3 -> die_warn.pl
+4 -> eval.pl
+5 -> find_index.pl
+6 -> format.pl
+7 -> func.pl
+8 -> grep.pl
+9 -> hash.pl
+10 -> hello.pl
+11 -> helloworld.pl
+12 -> modulo.pl
+13 -> regex.pl
+14 -> repeat_print.pl
+15 -> replace.pl
+16 -> stdin.pl
+17 -> sum_and_show.pl
+18 -> sum.pl
+19 -> tac.pl
+20 -> test.pl
+</script></code></pre>
+<p>虽然程序不需要知道命令参数是如何展开的，但是有时候我们需要在 Perl 程序内部使用 glob 通配符，怎么办呢？我们可以做到 shell 的类似效果吗？将它们展开为对应的文件名。当然，使用 glob 操作符就行了。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+# 当前工作目录下的所有文件（非隐藏文件）
+my @all_files = glob '*';
+# 当前工作目录下的所有 perl 文件（非隐藏）
+my @perl_files = glob '*.pl';
+say foreach @all_files;
+say '';
+say foreach @perl_files;
+</script></code></pre>
+<p>其中 <code>@all_files</code> 会包含当前目录下的所有文件（并按字母顺序排序），但是以 . 开头的隐藏文件除外，要匹配隐藏文件，请使用 <code>.*</code>，这和 shell 中的做法是一样的。任何能在 shell 中使用 glob 模式，都可以在 Perl 的 glob 操作符中使用，使用空格隔开：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my @all_files = glob '.* *';
+say foreach @all_files;
+</script></code></pre>
+<p>glob 操作符的效果之所以与 shell 完全相同，是因为在 Perl 5.6 之前，它只不过是在后台调用 shell 进程来展开文件名。因此文件名通配比较耗时，不过如果用的是新版 Perl，就不用担心这种事情了，因为它是内部实现的，效率更高。在这之前，通常会使用目录句柄来完成这种事情而非 glob 操作符。</p>
+<p><strong>文件名通配的另一种语法</strong><br>在 glob 操作符出现之前，也是可以进行文件名通配的，语法：<code>&lt;*.pl&gt;</code>。Perl 会把尖括号中出现的变量替换成它的值，然后进行文件名通配。尖括号语法也是可以接受多个 glob 模式的。</p>
+<p><code>&lt;&gt;</code> 即表示从文件句柄中读取数据有代表文件名通配操作，那么 Perl 是如何区分的呢？因为合理的文件句柄必须是合法的 Perl 标识符，所以如果尖括号中的字符串符合 Perl 标识符语法，那么他就是文件句柄用来读取数据，否则它就是 glob 文件名通配。</p>
+<p>当然，你也可以使用 readline 来替代 <code>&lt;&gt;</code> 行读取操作符，比如 <code>&lt;STDIN&gt;</code> 可以写成 <code>readline STDIN</code>，它们的作用是一样的。</p>
+<p><strong>目录句柄</strong><br>如果想从目录里取得文件名列表，还可以使用目录句柄，目录句柄看起来像文件句柄，使用起来没有多大区别。因为目录其实也是一个文件，里面的内容就是所包含的文件名列表以及对应的 inode 节点。</p>
+<p>你可以打开它（使用 opendir 替代 open），读取它（使用 readdir 替代 readline），关闭它（使用 closedir 替代 close），目录文件的内容就是两列，一列是文件名，一列是对应的 inode 号。其他信息不存在目录文件中，而是在 inode 节点。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+opendir my $dir, '/etc';
+say foreach readdir $dir;
+closedir $dir;
+</script></code></pre>
+<p>也可以使用裸字作为目录句柄，目录句柄和文件句柄在大部分情况下的行为都是一样的。通过读取目录句柄与老版的 Perl 文件名通配的实现原理是不一样的，旧版的 Perl 实现文件名通配需要开启多个外部进程，而目录句柄则不需要，所以对于压榨更多计算能力的程序来说，前者能够提供更好的性能。不过目录局部毕竟是一个低级操作符，所以我们必须自己多做一些事。</p>
+<p>比如目录句柄返回的名称列表并未按照特定的顺序排列（这其实和 <code>ls -f /etc</code> 返回的顺序是一样的，都是目录文件中原本的顺序），此外，列表里将包含所有的文件名，而不是匹配某些模式的部分。例外列表里也包含了点开头的隐藏文件，而且 . 和 .. 也在其中。所以如果想处理 *.pl 文件，可以在循环中使用 next 跳过不符合条件的文件：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+opendir my $dir, '.';
+foreach (readdir $dir) {
+    next if ! /.+\.pl$/;
+    say;
+}
+closedir $dir;
+</script></code></pre>
+<p>注意，目录文件中的文件名不包含路径信息，因此在测试对应的文件时，务必将目录的路径带上。为了让程序更具移植性，可以使用 File::Spec::Functions 模块，例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+use File::Spec::Functions;
+
+my $dirname = '/etc';
+opendir my($dir), $dirname;
+
+foreach my $basename (readdir $dir) {
+    next unless $basename =~ /.+\.conf$/;
+    my $filename = catfile($dirname, $basename);
+    next unless -f $filename and -r $filename;
+    say $filename;
+}
+
+closedir $dir;
+</script></code></pre>
+<p><strong>递归访问目录</strong><br>Perl 自带了 File::Find 模块，它的功能与 find 命令类似，用来递归查找指定的文件。</p>
+<p><strong>文件和目录的操作</strong><br><strong>删除文件</strong><br>使用 unlink 操作符，可以用来删除文件，如果需要删除多个文件，只需指定文件列表，而 glob 返回的刚好是列表，所以可以一起使用，达到 rm 命令的效果。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+unlink glob '*.pl';
+</script></code></pre>
+<p>unlink 的返回值是成功删除的文件数目，如果需要明确知道哪个文件未删除，请使用循环每次删除一个。因为单从 unlink 的数值中无法得知哪个文件删除失败了。</p>
+<p>unlink 不能用来删除目录，要删除目录必须使用 rmdir 函数。这和 rm 不带参数删除目录文件是一样的。</p>
+<p><strong>重命名文件</strong><br>rename 函数可以用来给文件重命名，这和 mv 命令是一样的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+rename 'old', 'new';
+</script></code></pre>
+<p>当然，你也可以将文件移动到其他目录中，和 mv 命令也是一样的：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+rename '/etc/resolv.conf', '/usr/local/resolv.conf';
+rename '/etc/resolv.conf' => '/usr/local/resolv.conf';
+# 记得前面的内容吗，胖箭头其实就是逗号的另一种等价形式。
+</script></code></pre>
+<p>有一个很常见的问题就是如何批量重命名，将 <code>*.old</code> 全部改为 <code>*.new</code>，这是 Perl 拿手的地方（rename 默认会覆盖掉同名的目标文件）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+foreach my $oldfile (glob '*.old') {
+    my $newfile = $oldfile =~ s/\.old$/.new/r;
+    rename $oldfile => $newfile;
+}
+</script></code></pre>
+<p><strong>链接与文件</strong><br>创建硬连接：<code>link &#39;source.file&#39; =&gt; &#39;target.file&#39;</code><br>删除硬链接：<code>unlink &#39;filename.file&#39;</code>、<code>unlink @filename_lists</code><br>创建软链接：<code>symlink &#39;source.file&#39; =&gt; &#39;target.file&#39;</code><br>读取软链接：<code>readlink &#39;symlink.file&#39;</code>，返回文件名，不是软链接则返回 undef。<br>软链接文件就是普通的文件，删除软连接文件本身，只需使用 unlink 删除。</p>
+<p><strong>创建和删除目录</strong><br>创建目录，默认权限（0777 - umask）：<code>mkdir &quot;dirname&quot;</code><br>创建目录，指定权限（八进制数值）：<code>mkdir &quot;dirname&quot;, 0755</code></p>
+<p>mkdir 不要权限位必须写作八进制，只要能够转化为合法的八进制值就行。但是强烈建议不要这么做。如果漏了个 0，如 755，那么它的八进制值其实是 1363，这是一个非常奇怪的权限组合。另外，字符串转换为数字并不会处理八进制、十六进制这些数字，它只会将它们当作十进制来解析。要解决这个问题，请使用 oct() 函数，将参数当作八进制数字的字符串来解释，就算它没有以 0 开头（从命令行参数读取的时候要注意这个问题）。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my ($name, $perm) = @ARGV;
+mkdir $name, oct($perm);
+</script></code></pre>
+<p>删除空目录：<code>rmdir &#39;dirname&#39;</code>，每次只能删除一个目录，它不能删除非空目录，尝试删除非空目录会调用失败，要删除非空目录必须让目录变为空目录，即使用 unlink 递归删除目录中的文件。例子，递归删除非空目录：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+foreach (@ARGV) {
+    unlink $_ if -f;
+    &rmdir_recursive($_) if -d;
+}
+
+sub rmdir_recursive {
+    foreach (@_) {
+        foreach (glob "$_/.* $_/*") {
+            unlink $_ if -f;
+            next if m@/(?:\.|\.\.)$@;
+            &rmdir_recursive($_) if -d;
+        }
+        rmdir;
+    }
+}
+</script></code></pre>
+<p><strong>修改权限</strong><br><code>chmod 0644 &#39;file&#39;;</code>：返回成功修改的文件个数<br><code>chmod 0644 @files;</code>：返回成功修改的文件个数</p>
+<p><strong>修改所有者</strong><br><code>chown 0, 0, glob &#39;*.txt&#39;;</code>：只接受 uid、gid，返回修改的文件个数<br><code>getpwnam &#39;username&#39;</code>：返回对应的 uid，或者 undef<br><code>getgrnam &#39;groupname&#39;</code>：返回对应的 gid，或者 undef</p>
+<p><strong>修改文件时间戳</strong><br><code>utime $atime, $mtime, @file_lists;</code>：修改文件的访问时间、修改时间。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my $atime = my $mtime = time;
+utime $atime, $mtime, @ARGV;
+</script></code></pre>
+<h2 id="字符串与排序"><a href="#字符串与排序" class="headerlink" title="字符串与排序"></a>字符串与排序</h2><p>在 Perl 擅长处理的问题中，约有 90% 与文本处理相关，其余 10% 则覆盖了其他领域。所以 Perl 的文本处理能力很强，之前使用的正则表达式就足以证明。但是有时候我们只是想要一些简单的字符串处理功，这时候动用正则表达式有点花哨，本章就围绕这个主题谈一谈。</p>
+<p><strong>index 查找子串</strong><br><code>$first_index = index($string, $substr)</code>：返回字符串首次出现的位置（下标从 0 开始计算），如果不存在则返回 -1。index 每次都从字符串开头寻找匹配的字串，如果指定了第 3 个参数，则表示从指定位置开始匹配子串（返回值的意义一样）</p>
+<p><code>$last_index = rindex($string, $substr)</code>：从字符串后面开始搜索，返回值的意义与 index 一样。rindex 也有第三个参数，但它用来限定返回值的上限。</p>
+<p><strong>substr 操作子串</strong></p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+substr EXPR, OFFSET, LENGTH, REPLACEMENT # 替换子串
+substr EXPR, OFFSET, LENGTH              # 提取子串
+substr EXPR, OFFSET                      # 提到末尾
+</script></code></pre>
+<p>OFFSET 值可以是负数，这和数组中的负值索引是一样的意思，从后面数起。因为 substr 返回的不是原串的拷贝，而是原串的引用，所以我们可以直接修改 substr 的返回值，以此达到修改字符串的目的，先来看一个例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $string = 'Hello, world!';
+substr($string, 0, 5) = 'Goodbye'; # $string = 'Goodbye, world!';
+</script></code></pre>
+<p>还可以与绑定操作符 <code>=~</code> 一起使用，即使用正则表达式替换字符串：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+substr($string, -20) =~ s/zfl9/baidu/g;
+</script></code></pre>
+<p>当然，也可以使用传统的 4 个参数的方法来进行子串的替换，注意是直接修改原串。</p>
+<p><strong>sprintf 格式化字符串</strong><br>sprintf 与 printf 有相同的参数（文件句柄除外），但它不直接打印出字符串，而是返回要打印的字符串。因此我们可以用它来进行字符串的格式化操作。利用 sprintf 可以用来进行浮点数的四舍五入操作（<code>sprintf &#39;%.2f&#39;, 3.1415926</code>）。</p>
+<p>数字千分位格式化（每三位添加一个逗号）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my $input = shift @ARGV;
+my $format = $input =~ s/\d\K(?=(?:\d{3})+\b)/,/gr;
+say $input;
+say $format;
+</script></code></pre>
+<p><strong>非十进制数字字符串的解析</strong><br>默认情况下，字符串在数字上下文中只会以十进制的语法来解析字符串中的数字，有时候需要将它们看作二进制、八进制、十六进制数字来解析，怎么办呢？使用 oct() 函数、hex() 函数。oct 函数有一点很好，那就是如果字符串以 0b 或 0x 开头，那么会自动以二进制、十六进制来解析字符串。如果以 0 开头，则看作八进制数字，如果没有前缀，也是当作八进制来解析。</p>
+<p><strong>高级排序</strong><br>默认的 sort 排序操作符是以 Unicode 码点来进行排序的，但如果你希望按照数字的大小来排序，或以不区分大小写的方式排序，该怎么办呢？Perl 可以按照任何需要的顺序来进行排序，接下来一直到本章么，都是围绕这个展开讨论。</p>
+<p>Perl 允许你建立自己的“排序规则子程序”，来实现自定义的排序方式。排序子程序默认接收两个参数，它们的名字是固定的：<code>$a</code>、<code>$b</code>，分别代表左边的值，右边的值。sort 操作符根据排序子程序的返回值来判断他们的大小：返回 -1 表示 <code>$a</code> 小于 <code>$b</code>，返回 0 表示 <code>$a</code> 等于 <code>$b</code>（顺序未定义），返回 1 表示 <code>$a</code> 大于 <code>$b</code>。然后 sort 再根据从小到大的顺序排列这些元素（这和 Java 的排序细节很相似，注意，不是一定要返回 1 或 -1，只要是正数、零值、负数就行）。</p>
+<p>按照数值大小排序（初始版本）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+
+my @number = (32, 15, 67, 7, 10, 22, 43, 28);
+my @sorted = sort by_number @number;
+say "@sorted";
+
+sub by_number {
+    if ($a < $b) {
+        return -1;
+    } elsif ($a > $b) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+</script></code></pre>
+<p>其实子程序写得更加简便一些（return 可以省略）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub by_number {
+    return $a - $b;
+}
+</script></code></pre>
+<p>当然也可以用 <code>&lt;=&gt;</code> 飞船运算符（return 可以省略）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub by_number {
+    return $a <=> $b;
+}
+</script></code></pre>
+<p><code>&lt;=&gt;</code> 的字符串版本是 <code>cmp</code> 操作符，它们的具体判断以及返回值：如果左操作数更大，则返回 1，如果右操作数更大则返回 -1，如果它们一样大，则返回 0。当然，你不需要写一个子程序来使用 cmp 进行字符串排序，因为这是 sort 默认的排序规则！当然，可以利用 cmp 来进行忽略大小写的字符串排序：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+sub case_insensitive {
+    "\L$a" cmp "\L$b"; # 转换为小写再排序就是忽略大小写了
+}
+</script></code></pre>
+<p>Perl 不允许我们在排序子程序中改变 <code>$a</code> 和 <code>$b</code> 的值，如果中途改变他们的值会扰乱排序流程，Perl 禁止我们这么做（<code>$a</code> 和 <code>$b</code> 不是拷贝，应该是引用）。</p>
+<p>当然，最简便的方式还是使用程序块来替代子程序（块可以看作是匿名函数）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my @number = (32, 15, 67, 7, 10, 22, 43, 28);
+my @sorted = sort { $a <=> $b } @number;
+say "@sorted";
+</script></code></pre>
+<p>绝大多数时候我们都不会为了排序而定义一个子程序，都是使用匿名块的方式来实现。</p>
+<p>如果要将数字按从大到小的顺序排列，可以在 sort 前加上 reverse 修饰符，或者改变一下 <code>$a</code> 和 <code>$b</code> 的顺序：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my @number = (32, 15, 67, 7, 10, 22, 43, 28);
+my @sorted = sort { $b <=> $a } @number;
+say "@sorted";
+</script></code></pre>
+<p><strong>按哈希值排序</strong><br>当然，实际上我们是不能对哈希进行排序的，因为哈希不会保存顺序，我们这里的所谓给哈希进行排序，只不过是用一个列表来保存已排序的键，然后输出时按照这个列表中的顺序，依次访问这些键就实现了所谓的哈希值排序。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my %hash = (barney => 195, fred => 205, dino => 30);
+my @keys = sort { $hash{$a} <=> $hash{$b} } keys %hash;
+say "$_ => $hash{$_}" foreach @keys;
+</script></code></pre>
+<p><strong>按多个键排序</strong><br>如果两个 key 的 value 相同，我们会希望 sort 再根据 key 的 ASCII 码进行排序：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my %hash = (barney => 195, fred => 205, dino => 30, apple => 205, weibo => 30);
+my @keys = sort { $hash{$b} <=> $hash{$a} or $a cmp $b } keys %hash;
+say "$_ => $hash{$_}" foreach @keys;
+</script></code></pre>
+<p>当 <code>$a</code> 和 <code>$b</code> 的 value 相同时，表达式返回 0，因此 Perl 会执行后面的 <code>$a cmp $b</code>，即按照 ASCII 码对 key 的名称进行排序，如果 <code>$a</code> 和 <code>$b</code> 的 value 不同，那么这个代码不会被执行，也就是所谓的短路操作。当然你可以利用 or 连接符来进行多级排序。</p>
+<h2 id="智能匹配"><a href="#智能匹配" class="headerlink" title="智能匹配"></a>智能匹配</h2><p>智能匹配是从 Perl 5.10.0 开始出现的，当时还存在一些问题。不过到了 Perl 5.10.1，绝大多数的 bugs 都得到了修正，所以也没有什么大问题了（建议使用最新的Perl）。</p>
+<p><strong>智能匹配操作符 ~~</strong><br>~~ 会根据两边的操作数的数据类型自动判断该用怎样的方式进行比较或匹配。如果两边的操作数看起来都像数字，就按数值来比较大小；如果看起来像字符串，就按字符串的方式比较；如果一端的操作数是正则表达式，就当作模式匹配来执行。它还能完成许多复杂的任务，如果换成功能相同的传统写法，多半会多出一大堆冗杂代码，所以有了他，可以省下不少的力气。</p>
+<p>这个 ~~ 看起来和第八章介绍过的 =~ 绑定操作符非常相近。不过 ~~ 更能干一些，有时候，他甚至能取代绑定操作符，之前你已经学会了绑定操作符关联 <code>$name</code> 与正则表达式来匹配模式：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+say "matched" if $name =~ /regex/;
+</script></code></pre>
+<p>现在，用智能匹配操作符替代绑定操作符也能完成同样的任务：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+say "matched" if $name ~~ /regex/;
+</script></code></pre>
+<p>智能匹配符看到左侧有个标量，右侧有个正则模式，于是他就推断出应该执行模式匹配操作，不算惊天动地，但已经有了长足进步。</p>
+<p>在处理更加复杂的情况时，智能匹配符才会大显身手。比方说，你现在哈希 %names 中找到任何匹配 /Fred/ 的 key，如果找到就打印一条信息出来。传统方式需要 foreach 遍历每个 key，然后用正则模式去匹配，跳过那些不匹配的键，然后打印消息。但是这显然很麻烦，但有了智能匹配操作符，只需把哈希写在左侧，正则写在右侧，就搞定了。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+say "has key /Fred/" if %names ~~ /Fred/;
+</script></code></pre>
+<p>之所以智能匹配操作符知道该怎么做，是因为它看到了一个哈希和一个正则表达式，遇到这两种操作数时，智能匹配符就知道应该遍历哈希的所有键，用给定的模式进行匹配，如果匹配成功则返回真。智能匹配操作符一般都是返回布尔值，表示是否匹配、是否相等的意思。他很聪明，能够因地制宜。知道我们的意图是什么。</p>
+<p>那么，你该如何判断它是怎么工作的呢？在 perlop 文档中（Smartmatch Operator）有一张表，列出了两边出现不同类型的操作数时会采取何种匹配行为。在我们这个例子中，左边还是右边出现正则模式都是无关紧要的，因为那张智能匹配工作表告诉我们，无论两者的顺序如何，它们的匹配操作都是一样的。</p>
+<p>如果想要比较两个数组（只考虑长度相同的两个数组），可以按数组索引依次遍历，取出相同位置的元素进行比较，如果相等，则 count++；循环结束后，如果 count 与某个数组的长度一样，说明它们是相同的。但是，有了智能匹配符后，我们可以一条语句解决它：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+say "array has same elements" if @arr1 ~~ @arr2;
+</script></code></pre>
+<p>再来看一个例子：如果你想知道某个值是否存在于某个列表中，也可以使用智能匹配操作符来实现，而不用去 foreach 遍历数组：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+use experimental 'smartmatch';
+my $elem = 100;
+my @array = qw/10 20 30 40 50 60 70 80 90 100/;
+say "$elem in \@array" if $elem ~~ @array;
+</script></code></pre>
+<p>注意，我们使用了一个模块 experimental（实验性功能），它后面的列表是使用的实验性功能，可以有多个（其实就是导入列表），如果不加这行，那么 Perl 会打印一行警告信息，告诉你使用了 Perl 的实验性功能，加了这行就是明确告诉 Perl，我就是要使用这个实验性功能，别给我警告信息了。</p>
+<p>如果想在命令行中使用它，可以这么写：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# 使用等号，告诉 Perl 要导入的符号
+perl5 -Mexperimental=smartmatch ./test.pl
+# 如果有多个导入符号，使用逗号隔开即可
+perl5 -Mexperimental=smartmatch,regex_sets ./test.pl
+</script></code></pre>
+<p>一般来说，智能匹配符对操作数的顺序没有要求，可以互换。Perl 建议“较小”的操作数放在左边，“较大”的操作数放在右边。智能操作符中实际发生的操作主要取决于第二个操作数的数据类型，因此 PerlDOC 中的排序是以第二个操作数为准的。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Left 操作数</th>
+<th style="text-align:center">Right 操作数</th>
+<th style="text-align:center">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">undef</td>
+<td style="text-align:center">检查 Any 是否未定义</td>
+</tr>
+<tr>
+<td style="text-align:center">ARRAY1</td>
+<td style="text-align:center">ARRAY2</td>
+<td style="text-align:center">Array1 和 Array2 的元素相同</td>
+</tr>
+<tr>
+<td style="text-align:center">HASH</td>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">数组中的元素是否都是哈希中的键</td>
+</tr>
+<tr>
+<td style="text-align:center">Regexp</td>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">数组中是否有元素与指定模式相匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">undef</td>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">数组中是否存在 undef 元素</td>
+</tr>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">检查 Any 是否与数组中的元素相匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">HASH1</td>
+<td style="text-align:center">HASH2</td>
+<td style="text-align:center">两个哈希拥有相同的键（数目不要求一样）</td>
+</tr>
+<tr>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">HASH</td>
+<td style="text-align:center">数组中元素是否都是哈希中的键</td>
+</tr>
+<tr>
+<td style="text-align:center">Regexp</td>
+<td style="text-align:center">HASH</td>
+<td style="text-align:center">哈希中是否有相应键与模式相匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">HASH</td>
+<td style="text-align:center">哈希中是否存在 Any 这个键</td>
+</tr>
+<tr>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">CODE</td>
+<td style="text-align:center">数组中的元素是否都在子程序中返回真 </td>
+</tr>
+<tr>
+<td style="text-align:center">HASH</td>
+<td style="text-align:center">CODE</td>
+<td style="text-align:center">哈希中的键是否都在子程序中返回真</td>
+</tr>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">CODE</td>
+<td style="text-align:center">Any 是否在子程序中返回真</td>
+</tr>
+<tr>
+<td style="text-align:center">ARRAY</td>
+<td style="text-align:center">Regexp</td>
+<td style="text-align:center">是否有元素匹配正则模式</td>
+</tr>
+<tr>
+<td style="text-align:center">HASH</td>
+<td style="text-align:center">Regexp</td>
+<td style="text-align:center">是否有键匹配正则模式</td>
+</tr>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">Regexp</td>
+<td style="text-align:center">Any 是否与正则模式相匹配</td>
+</tr>
+<tr>
+<td style="text-align:center">undef</td>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">检查 Any 是否未定义</td>
+</tr>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">Num</td>
+<td style="text-align:center">将它们看作数字，判断是否相等</td>
+</tr>
+<tr>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">Any</td>
+<td style="text-align:center">将它们看作字符串，判断是否相等</td>
+</tr>
+</tbody>
+</table>
+<p><strong>given 语句</strong><br>given-when 控制结构能够根据 given 后面的参数执行某个条件对应的语句块，也就是 C 语言中的 switch 操作符。只不过它更具 Perl 色彩，更灵活。</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+given ($ARGV[0]) {
+    when ('Fred')   { say "Name is Fred" }
+    when (/fred/i)  { say "Name has fred in it" }
+    when (/\AFred/) { say "Name starts with Fred" }
+    default         { say "I don't see a Fred" }
+}
+</script></code></pre>
+<p>given 会将参数化名为 <code>$_</code>，每个 when 条件都会尝试用智能匹配操作符 ~~ 做测试，从上到下依次测试，如果测试成功，则执行对应的块，然后跳出这个 given 块，执行后面的代码；如果都没有测试成功，则执行可选的 default 块。如果 when 块尾部存在 continue 语句，则不跳出 given 块，而是继续测试剩下来的 when，以此类推。默认情况下，每个 when 块后面都隐式的添加了 break 语句。但是要注意，default 块前面那个 when 块不要写上 continue，否则会顺带执行 default 块！</p>
+<p><strong>笨拙匹配</strong><br>默认情况下，given-when 测试块中使用智能匹配符 ~~，当然也可以使用常规的操作符（笨拙匹配），也可以进行混用。</p>
+<p><strong>多个条目的 when 匹配</strong><br>有时候需要测试多个条目，可是 given 一次只能指定一个参数，当然你可以将 given 放在 foreach 中进行循环测试。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+foreach my $name (@names) {
+    given ($name) {
+        ...
+    }
+}
+</script></code></pre>
+<p>很显然，Perl 允许你简写，上面的例子可以改写为：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+foreach (@names) {
+    when (/fred/i) { ... }
+    when ...       { ... }
+    default        { ... }
+}
+</script></code></pre>
+<p>你甚至还可以在若干 when 语句之间加上其他语句，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+foreach (@names) {
+    when ... {...}
+    say "something";
+    default  {...}
+}
+</script></code></pre>
+<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><p>运行外部程序的方法有很多种，你可以选择任意你喜欢的方式。</p>
+<p><strong>system 函数</strong><br><code>system &#39;command&#39;</code>：Perl 会检测参数中是否包含 shell 元字符，如果包含则交给 /bin/sh 进行处理，如果没有，则直接调用 exec，这样效率更高一些。system 会 fork 一个子进程，这个新进程会继承当前进程的 STDIN、STDOUT、STDERR 流，因此 system 中的进程会从当前进程中读取标准输入，它的标准输出和标准错误都会被写入到当前进程的 STDOUT、STDERR 中。因此 system 的返回值是子程序的退出状态。但是他不同于 shell 脚本中的退出码，要进行位移操作才能解出退出码<code>$result &gt;&gt; 8</code>。因为 shell 中也使用 <code>$</code> 进行变量引用，所以最好将命令放在单引号中，如果命令本身包含单引号，最好包含在 <code>q</code> 转义中。Perl 默认会被 system 函数阻塞，因为她需要等待 system 的进程结束运行，你可以在命令后面加上 <code>&amp;</code> 来让它们后台运行（<del>此时 Perl 的子进程是 shell，实际运行的命令其实是 shell 的子进程</del>，经测试，发现 system 调用 shell 后，会在 shell 中直接调用 exec 来替换 shell 进程，所以不是孙进程）。system 操作符也可以使用一个以上的参数来调用，如此一来，不管命令多复杂，都不会调用 shell 来处理（不过没太必要，Perl 有自己的判断能力）。</p>
+<p><strong>环境变量</strong><br>新创建的子进程会继承当前 Perl 进程的环境变量、工作目录、标准输入、标准输出、标准错误，以及另外一些东西。因此，必要时可以修改 ENV 哈希，改变环境变量。</p>
+<p><strong>exec 函数</strong><br><code>exec</code> 的语法以及对应的细节与 <code>system</code> 相同，除了 exec 不创建新进程，而是直接替换当前进程（这和 shell 内置命令 exec 类似）。所以 exec 不会返回任何值，因为这个进程的内容已经不存在了，已经被新的进程给替换了（但是进程 ID 是不会改变的，相当于替换了进程的内容）。</p>
+<p><strong>反引号执行命令</strong><br>无论是 system 还是 exec，它们的输出和错误都是直接送到当前进程的标准输出和标准错误的，有时候我们却想获取它们的输出，保存起来，再做进一步处理（就像 shell 中的管道连接符一样）。这时候只需使用反引号就可以了，如果命令中包含 <code>$</code> 等 shell 元字符，为了防止 Perl 误解析，请使用 <code>qx&#39;command line&#39;</code>（必须是单引号）。同样的 Perl 能够自己判断是否需要调用外部的 shell 进程来帮助解析命令行。注意，反引号中的命令的标准输出才会被保存到变量中，标准错误会直接打印出来，除非使用 <code>2&gt;&amp;1</code> 这样的 shell 语法，如果要获取命令的退出码，需要通过 <code>$?</code> 内置变量获取，同样的，需要进行右移八位进行解析，即 <code>say $? &gt;&gt; 8</code>，这个内置变量和 shell 中的同名变量是一样的，都是最近的子进程的退出状态，比如 system、pipe 管道的退出状态。</p>
+<p>一般 Unix 命令的输出都会包含一个换行符，因此经常需要对获得的输出结果进行 chomp 操作。反引号中的字符串会被以双引号的形式被解析，因此可以进行变量内插。如果不需要变量内插，比如命令中包含 shell 的变量内插，建议使用 <code>qx&#39;&#39;</code> 来包围命令行。如果不需要捕获输出，不建议使用反引号，而是使用 system 函数。同时，如果进程不需要读取标准输入，或者强制不让他读取，因为会阻塞当前进程，可以使用 <code>&lt;/dev/null</code> 来重定向它的标准输入，这样它会立即返回 EOF。</p>
+<p><strong>列表上下文中使用反引号</strong><br>如果命令会输出很多行，那么在标量上下文中，反引号会获得一个很长的字符串，其中包括换行符。不过，如果是在列表上下文中使用反引号，则会返回按行分隔的字符串列表。这样可以方便的在循环中处理输出数据。</p>
+<h2 id="高级-Perl-技巧"><a href="#高级-Perl-技巧" class="headerlink" title="高级 Perl 技巧"></a>高级 Perl 技巧</h2><p><strong>切片</strong><br>我们往往只需要处理列表中的少量元素，假设文件的每一行都描述了一个读者，用 6 个字段分别描述了读者的姓名、借书证号码、住址、家庭电话、工作电话、当前借阅的数量。每个字段之间使用冒号分隔。</p>
+<p>图书馆的某个应用程序只需要借书证号码和借阅数量，不关心其他数据，所以可以这样来读出需要的两个字段：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+while (<$fh>) {
+    chomp;
+    my @items = split /:/;
+    my ($card_id, $count) = ($items[1], $items[5]);
+    ... # TODO
+}
+</script></code></pre>
+<p>但是 <code>@items</code> 数组不会有其他用处，看起来是一种浪费，也许用一组标量来容纳 split 的结果会更好一些：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my ($name, $card_id, $addr, $home, $work, $count) = split /:/;
+</script></code></pre>
+<p>这样的确避免了引入导致浪费的 <code>@items</code> 数组，但是我们现在又多出了 4 个不需要的标量变量，有人图方便，将这种占位变量命名为 <code>$dummy_1</code>，表示他们并不关心这些从 split 获取的元素，但是 Larry 觉得这么做太麻烦，于是他引入了一种 undef 写法，如果被赋值的列表中有 undef 的话，表示丢弃这些元素：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my (undef, $card_id, undef, undef, undef, $count) = split /:/;
+</script></code></pre>
+<p>这的确是一个好办法，但是如果列表元素很多，那么 undef 有需要仔细数清楚，不然会错位，导致被赋值的元素得到的不是想要的值。</p>
+<p>更好的办法是：Perl 可以将列表当作数组使用（本来就可以，难道不是这样的吗，不过我自己可能思想没放开，所以一开始也没想到），用索引取得里面的值。这就是所谓的列表切片。本例中，因为 mtime 是 stat 返回的第 9 个元素，所以我们可以通过下标来直接获取它：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $mtime = (stat $some_fime)[9];
+</script></code></pre>
+<p>这里的括号是必须的，因为需要用到它产生的列表上下文。那么如果要获取多个元素，怎么办呢？老办法，只能调用多次 stat 来获取了，回到图书馆的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $card_id = (split /:/)[1];
+my $count = (split /:/)[5];
+</script></code></pre>
+<p>如果能够将两次重复的 split 合并为一次就好了，Perl 允许我们在列表上下文中使用列表切片一次性获取多个值，只需将下标放入方括号内部就可以了：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my ($card_id, $count) = (split /:/)[1, 5];
+</script></code></pre>
+<p>上面的索引会从列表中取出元素 1 和元素 5，然后组成新的拥有两个元素的列表，然后我们就可以将它们赋值到指定的标量变量中，这恰好是我们所期望的：一次切片成型，以轻松对两个变量赋值。</p>
+<p>切片常常是从列表中读取少量数据的最简单的方法，下面的例子中，我们分别从列表中获取头一个元素，末一个元素：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my($first, $last) = (sort @names)[0, -1];
+</script></code></pre>
+<p>切片的下标是可以任意顺序的，也可以是重复的，其实下标就是一个列表，因此你可以将一个列表表达式放在方括号中：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+#!/usr/bin/perl5
+my @names = qw/1 2 3 4 5 6 6 7 8 9 10/;
+my @index = qw/0 1 2 3 4/;
+my @somes = @names[@index];
+say "@names";
+say "@somes";
+</script></code></pre>
+<p><strong>数组切片</strong><br>数组其实就是存储列表的变量，因此数组也是可以进行切片的，而且不需要加上圆括号，就像上面那样。这不单是省略了圆括号，其实是访问数组元素的不同写法，数组切片，曾经我们在介绍列表的时候，提到过 <code>@</code> 代表多个元素，<code>$</code> 代表单个元素，<code>%</code> 代表关联数组，<code>&amp;</code> 代表子程序，这些符号其实就是在预示着上下文的类型。切片总是一个列表，所以它前面的符号是 <code>@</code>，当你看到类似 <code>@array[...]</code> 之类的写法时，应该意识到，这是在进行数组切片，而如果是 <code>$array[...]</code> 则表示获取数组的单个元素。</p>
+<p>变量前面的标点符号（<code>$</code> 或者 <code>@</code>），决定了下标表达式的上下文，如果是 <code>$</code> 则表示我想访问数组的某个元素，因此下标表达式位于标量上下文中，返回的是一个索引值；如果是 <code>@</code> 则表示我想进行数组切片，所以下标表达式位于列表上下文中，返回的是索引值的列表，用来进行切片。</p>
+<p>所以这里看到的 <code>@names[2, 5]</code> 和 <code>($names[2], $names[5])</code> 代表相同的列表，因此如果希望得到值列表，就可以用数组切片的方式。同时切片可以被内插到字符串中，而列表却不能，比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+say "@names[1, 2, 3, 4, 5]";
+</script></code></pre>
+<p>如果想内插 <code>@names</code>，那么会得到所有的元素，元素之间使用空格隔开，如果想内插数组切片，那么会得到指定的元素，元素之间也是使用空格隔开。回到图书馆的例子，假设我们现在想要修改读者的地址和电话号码，那么我们可以直接对列表切片进行赋值：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+@items[2, 3] = ('Otokaze', 15579122562);
+</script></code></pre>
+<p><strong>哈希切片</strong><br>和数组切片类似，也可以用哈希切片的方式从哈希中切出一些元素（它们的值）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @three_scores = ($scores{zfl9}, $scores{baidu}, $scores{google});
+my @three_scores = @scores{qw/zfl9 baidu google/};
+</script></code></pre>
+<p>这两个表达式做同一件事情，但是明显第二个简洁一些。切片一定是列表，因此哈希的切片也是使用 <code>@</code> 来表示，哈希切片和数组切片是很相似的，只不过数组切片用的是方括号，哈希切片用的是花括号。利用这点可以判断究竟是数组切片还是哈希切片。如同我们在数组切片中说的，变量前置的符号决定了下标表达式的上下文，如果前置的是美元符号，那么下标表达式位于标量上下文中，如果是艾特符号，那么下标表达式位于列表上下文中。和数组切片一样，我们也可以直接对哈希切片得到的数组进行赋值，以此达到修改 key 的 value 的目的。同理，哈希切片也能够被内插到字符串中。</p>
+<p><strong>使用 eval 捕获错误</strong><br>有时候看上去平常无奇的代码却能导致程序的严重错误，比如除零错误：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $barney = $fred / $dino;      # 除零错误？
+
+my $wilma = 'abc';
+print "match\n" if /\A($wilma)/; # 非法正则？
+
+open my $caveman, '<', $fred     # 非法数据？
+    or die "Can't open file '$fred' for input: $!";
+</script></code></pre>
+<p>好在 Perl 提供了简单的方式来捕获程序运行时可能出现的错误，即将代码包裹在 eval 块里，如果块中的代码在运行时发生错误（默认无法处理警告信息），那么程序不会因此而退出运行，只要 eval 发现在他监管范围内出现致命错误，就会立即停止运行代码块，接着运行代码块后面的代码。注意，eval 块的尾部是有一个分号的，实际上，eval 只是一个表达式，而不是类似于 while 或 foreach 那样的控制结构， 所以需要加上分号。</p>
+<p>eval 的返回值就是语句块中最后一条表达式的执行结果，这一点和子程序相同。所以，我们可以 eval 的执行结果作为值赋给其他变量。比如：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $barney = eval { $fred / $dino };
+</script></code></pre>
+<p>如果 eval 捕获到了错误，那么整个语句块将返回 undef。所以可以使用定义或操作符对最终结果的变量设置默认值。比如 <code>&#39;NaN&#39;</code>（非数字）：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $barney = eval { $fred / $dino } // 'NaN';
+</script></code></pre>
+<p>当运行 eval 块的期间出现致命错误时，停下来的只是这个语句块，整个程序不会崩溃。当 eval 结束时，我们需要判断它是否正常退出，或捕获到运行错误。如果捕获到错误，eval 会返回 undef，并且在特殊变量 <code>$@</code> 中设置错误信息。如果没有发生错误，那么 <code>$@</code> 就是空的字符串。当然，这时候通过检查 <code>$@</code> 取值的增加就能判断是否有错误发生，所以我们常常看到 eval 语句块之后立即跟上这样一段检测代码：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my $barney = eval { $fred / $dino } // 'NaN';
+print $@ if $@;
+</script></code></pre>
+<p><code>$@</code> 会包含发生错误的程序名以及对应的行数，并且默认尾部是有换行符的。在列表上下文中，捕获到错误的 eval 会返回空列表。eval 块和其他语句块一样，所以可以在 eval 块中声明 my 词法变量，和子程序一样。多个 eval 块允许嵌套，每个 eval 都只负责自己的那层代码块。有 4 种错误是无法被 eval 捕获的：语法错误（包括非法正则表达式）、Perl 解释器崩溃的错误、无法捕获 Perl 警告、exit 操作符。</p>
+<p>在其他高级语言中，异常机制一般都是 try…catch…finally，其实在 Perl 中也是可以使用 eval、die、<code>$@</code> 来实现的，一个简单的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+{
+    local $@; # 不干扰外层的错误
+    eval {
+        ...;
+        die 'An unexcepted exception message' if $unexcepted;
+        die 'Bad denomainator' if $dino == 0;
+        $barney = $fred / $dino;
+    } if ($@ =~ /unexcepted/) {
+        ...;
+    } elsif ($@ =~ /denomainator/) {
+        ...;
+    }
+}
+</script></code></pre>
+<p>虽然丑陋了点，但是与 try…catch 块的作用是一样的。当然小问题还是有的，如果想体验 Java 般的异常处理机制，建议使用 Try::Tiny 模块，此模块不是内置的，需要从 CPAN 自行下载安装。</p>
+<p><strong>autodie 模块</strong><br>从 Perl 5.10.1 开始，Perl 自带了 autodie 编译指令，因此我们不再需要手动添加 or die … 语句了，因为这些都会被 autodie 自动完成，建议开启，减少击键次数。</p>
+<p><strong>grep 筛选列表</strong><br>grep 操作符和 Unix 的 grep 工具的作用是一样的，都是用来过滤数据的。例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @odd_numbers = grep { $_ % 2 } 1..1000;
+</script></code></pre>
+<p>上面的代码会让 <code>odd_numbers</code> 数组中存有 500 个奇数的列表，它是如何做到的呢？grep 的第一个参数 BLOCK，其中的默认参数 <code>$_</code> 代表后面的列表中的每一个元素，代码块后面的则是等待筛选的列表。grep 会将经过代码块测试成功（代码块的返回值为真）的元素存放在指定的列表中（比如这里的 odd<em>numbers，测试为真的元素会放在 grep 返回的列表中）。因此不建议在代码块中修改 `$</em>` 默认变量，因为会破坏原始的数据。当然，我们可以利用 grep 来进行正则过滤元素：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @matching_lines = grep { /fred/ } <$file>;
+</script></code></pre>
+<p>注意，语句块和列表之间是没有逗号的哦，如果语句块很简单，也就是只有一条语句，那么也可以省略花括号，不过和列表之间就要加上逗号了，比如上面的例子：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @matching_lines = grep /fred/, <file>;
+</script></code></pre>
+<p>grep 操作符在标量上下文中会返回符合条件的元素个数，如果只需要统计符合条件的个数的话，在标量上下文中使用是一个好办法，这和 grep 的 -c 参数类似。</p>
+<p><strong>map 进行元素加工</strong><br>除了过滤器之外，对列表还有一项经常要做的事情，那就是加工列表的每个元素，已生成新的列表。比如将所有数字全部乘以 2，就可以使用 map，用法和 grep 类似：</p>
+<pre><code class="language-perl line-numbers"><script type="text/plain">
+my @nums = (1, 2, 3, 4, 5);
+say "@nums";
+@nums = map { $_ * 2 } @nums;
+say "@nums";
+</script></code></pre>
+<p>map 和 grep 很相似，只不过，map 会将语句块的返回值来组成新的列表，并返回，另外，map 使用的表达式是在列表上下文中求值的，所以语句块每次可以返回多个元素（也就是返回列表）。当然，map 也允许省略花括号，只要加上逗号就行。</p>
+<h2 id="Perl-单行命令"><a href="#Perl-单行命令" class="headerlink" title="Perl 单行命令"></a>Perl 单行命令</h2><pre><code class="language-bash line-numbers"><script type="text/plain">
+-e program     one line of program (several -e's allowed, omit programfile)
+-n             assume "while (<>) { ... }" loop around program
+-p             assume loop like -n but print line also, like sed
+-a             autosplit mode with -n or -p (splits $_ into @F)
+-F/pattern/    split() pattern for -a switch (//'s are optional)
+-i[extension]  edit <> files in place (makes backup if extension supplied)
+-l[octal]      enable line ending processing, specifies line terminator
+-0[octal]      specify record separator (\0, if no argument)
+</script></code></pre>
+<p><code>-e</code> 用于指定命令，末尾的分号可以省略，可以有多个 -e 选项，代表多条语句。<br><code>-n</code> 就是每个单行程序的模板、外层循环，所有的 -e 语句都是位于循环体内。<br><code>-p</code> 同 <code>-n</code>，但是它会自动在循环体尾部加上 print 语句（使用默认参数 <code>$_</code>）。<br><code>-a</code> 自动使用空白符分隔输入行，然后保存在 <code>@F</code> 数组中，实现类似 awk 的功能。<br><code>-F</code> 用于指定分隔输入行（也称为记录）的正则表达式，双斜线可选，比 awk 灵活。<br><code>-i</code> 修改文件，也就是 sed 的工作模式，如果指定参数则会进行备份，否则直接修改。<br><code>-l</code> 自动对输入行进行 chomp 操作，同时自动对 print 语句尾部添加换行符（<code>\n</code>）。<br><code>-0</code> 指定输入数据中每个记录的分隔符（也就是行分隔符）默认是 Unix 换行符 <code>\n</code>。</p>
+<p>其中，<code>-i</code> 的 extension 是可选的，如果未指定，则直接编辑源文件，不进行备份；如果 extension 不包含 <code>*</code> 字符，那么将其作为后缀追加到原文件名的末尾（比如 <code>-i.bak</code>）；如果 extension 包含 <code>*</code> 字符，那么 <code>*</code> 字符被替换为源文件的名称，展开 extension 得到的字符串就是备份文件的名称/路径（支持备份到其他文件夹，用正常的路径分隔符就行，比如 <code>-i&#39;/root/.backup/*&#39;</code>）。</p>
+<p>注意：多个 <code>-e</code> 指定的表达式需要以分号结尾，Perl 不会自动添加分号！<br>提示：<code>s///</code> 的返回值是替换成功的次数，无论是在标量上下文还是列表上下文。</p>
+<p><strong>perl as grep</strong><br><code>perl -ne &#39;print if /pattern/&#39; &lt;file...&gt;</code>：没有高亮显示<br><code>perl -ne &#39;print if s/pattern/\e[31;1m$&amp;\e[0m/g&#39; &lt;file...&gt;</code>：高亮显示</p>
+<p><strong>perl as sed</strong><br><code>perl -pe &#39;s/pattern/replace/flags&#39; &lt;file...&gt;</code>：不修改文件<br><code>perl -i -pe &#39;s/pattern/replace/flags&#39; &lt;file...&gt;</code>：直接修改，不备份<br><code>perl -i.bak -pe &#39;s/pattern/replace/flags&#39; &lt;file...&gt;</code>：直接修改，进行备份</p>
+<p><strong>perl as awk</strong><br><code>perl -alne &#39;print $F[index]&#39; &lt;file...&gt;</code>：默认以空白符分割<br><code>perl -F&#39;pattern&#39; -alne &#39;print $F[index]&#39; &lt;file...&gt;</code>：使用指定正则分割<br><code>perl -alne &#39;BEGIN{expr...}; expr...; END{expr...}&#39;</code>：awk 的 BEGIN、END 块<br><code>perl -F&#39;pattern&#39; -alne &#39;BEGIN{expr...}; expr...; END{expr...}&#39;</code>：BEGIN/END块</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/perl/" rel="tag"># perl</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/go.html" rel="next" title="Go 笔记">
+                <i class="fa fa-chevron-left"></i> Go 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/php.html" rel="prev" title="PHP 笔记">
+                PHP 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#标量数据"><span class="nav-number">1.</span> <span class="nav-text">标量数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标量变量"><span class="nav-number">2.</span> <span class="nav-text">标量变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表与数组"><span class="nav-number">3.</span> <span class="nav-text">列表与数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子程序"><span class="nav-number">4.</span> <span class="nav-text">子程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入与输出"><span class="nav-number">5.</span> <span class="nav-text">输入与输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哈希"><span class="nav-number">6.</span> <span class="nav-text">哈希</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式"><span class="nav-number">7.</span> <span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他控制结构"><span class="nav-number">8.</span> <span class="nav-text">其他控制结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perl-模块"><span class="nav-number">9.</span> <span class="nav-text">Perl 模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件测试"><span class="nav-number">10.</span> <span class="nav-text">文件测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录操作"><span class="nav-number">11.</span> <span class="nav-text">目录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串与排序"><span class="nav-number">12.</span> <span class="nav-text">字符串与排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#智能匹配"><span class="nav-number">13.</span> <span class="nav-text">智能匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程管理"><span class="nav-number">14.</span> <span class="nav-text">进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高级-Perl-技巧"><span class="nav-number">15.</span> <span class="nav-text">高级 Perl 技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perl-单行命令"><span class="nav-number">16.</span> <span class="nav-text">Perl 单行命令</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/perl.html';
+          this.page.identifier = 'perl.html';
+          this.page.title = 'Perl 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

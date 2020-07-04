@@ -1,0 +1,680 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="vim, vim进阶, vim插件, vim配置">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="在这个蔚蓝色的星球上，流传着两大神器的传说：据说 Emacs 是神的编辑器，而 Vim 是编辑器之神。一些人勇敢地拾起了 Vim 或 Emacs，却发现学习曲线陡峭而漫长，还是有一些人留下来了，坚定地守护着这两大神器。一些说葡萄太酸的人想离开又不甘心，总是问：它们到底神在哪里啊？">
+<meta name="keywords" content="linux,vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vim 插件及配置">
+<meta property="og:url" content="https://www.zfl9.com/vim.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="在这个蔚蓝色的星球上，流传着两大神器的传说：据说 Emacs 是神的编辑器，而 Vim 是编辑器之神。一些人勇敢地拾起了 Vim 或 Emacs，却发现学习曲线陡峭而漫长，还是有一些人留下来了，坚定地守护着这两大神器。一些说葡萄太酸的人想离开又不甘心，总是问：它们到底神在哪里啊？">
+<meta property="og:updated_time" content="2019-07-13T12:36:49.287Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vim 插件及配置">
+<meta name="twitter:description" content="在这个蔚蓝色的星球上，流传着两大神器的传说：据说 Emacs 是神的编辑器，而 Vim 是编辑器之神。一些人勇敢地拾起了 Vim 或 Emacs，却发现学习曲线陡峭而漫长，还是有一些人留下来了，坚定地守护着这两大神器。一些说葡萄太酸的人想离开又不甘心，总是问：它们到底神在哪里啊？">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/vim.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>vim 插件及配置 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/vim.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                vim 插件及配置
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-09T14:35:00+08:00">
+                2017-04-09
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/vim/" itemprop="url" rel="index">
+                    <span itemprop="name">vim</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/vim.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="vim.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/vim.html" class="leancloud_visitors" data-flag-title="vim 插件及配置">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>在这个蔚蓝色的星球上，流传着两大神器的传说：据说 Emacs 是神的编辑器，而 Vim 是编辑器之神。一些人勇敢地拾起了 Vim 或 Emacs，却发现学习曲线陡峭而漫长，还是有一些人留下来了，坚定地守护着这两大神器。一些说葡萄太酸的人想离开又不甘心，总是问：它们到底神在哪里啊？</p>
+<a id="more"></a>
+<h2 id="vim-配置"><a href="#vim-配置" class="headerlink" title="vim 配置"></a>vim 配置</h2><p><strong>修改默认主题</strong><br>首先将默认主题换成 molokai 主题，因为 molokai 是第三方主题，因此需要先获取主题文件：<br><code>curl -4sSkLO https://raw.github.com/tomasr/molokai/master/colors/molokai.vim</code></p>
+<p>为了不与默认的 vim 配置搞混乱，建议在家目录下创建 .vim 配置文件目录，仅对当前用户生效：<br><code>mkdir -p ~/.vim/colors/ &amp;&amp; mv molokai.vim ~/.vim/colors/</code></p>
+<p>然后创建 ~/.vim/vimrc 配置文件，启用 molokai 主题：<br><code>vim ~/.vim/vimrc</code>，添加或修改<code>colo molokai</code>即可生效</p>
+<p><strong>安装 vim 插件</strong><br>为了安装 vim 插件，我们要先安装 vundle 插件管理器：<br><code>git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim</code></p>
+<p>然后编辑 vimrc，启用 vundle，并添加我们想要的插件：</p>
+<pre><code class="language-vim line-numbers"><script type="text/plain">
+" vundle 插件管理器
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim/  " vundle 主目录
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'       " 基本插件，必须
+Plugin 'scrooloose/nerdtree'        " NERDTree 目录树
+Plugin 'jistr/vim-nerdtree-tabs'    " NERDTree 共享插件
+Plugin 'kien/ctrlp.vim'             " ctrlp 快速搜索插件
+Plugin 'taglist.vim'                " ctags + taglist 插件
+call vundle#end()
+filetype plugin indent on
+</script></code></pre>
+<p>最后打开 vim 窗口，在命令模式下执行<code>PluginInstall</code>安装插件即可。<br>如果你的系统中没有安装 ctags，请先安装：<code>yum -y install ctags</code>。</p>
+<p><strong>完整的 vimrc</strong></p>
+<pre><code class="language-vim line-numbers"><script type="text/plain">
+" 主题相关
+set t_Co=256
+colo molokai
+
+" 四格缩进
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+
+" 两格缩进
+au FileType html,xml,css,javascript,jsp,php,asp set shiftwidth=2
+au FileType html,xml,css,javascript,jsp,php,asp set tabstop=2
+au FileType html,xml,css,javascript,jsp,php,asp set softtabstop=2
+
+" 字符编码
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+
+" 功能设置
+syntax enable         " 启用语法高亮
+set mouse=c           " 关闭鼠标功能
+set nu                " 启用行号显示
+set wrap              " 启用自动折行
+set linebreak         " 启用整词折行
+set hidden            " 自动隐藏buff
+set autoread          " 自动更新文件
+set autochdir         " 自动切换目录
+set hlsearch          " 启用高亮查找
+set incsearch         " 启用增量查找
+set autoindent        " 启用自动对齐
+set smartindent       " 启用智能对齐
+set history=1000      " 保留命令历史
+set showtabline=2     " 总是显示标签栏
+set browsedir=buffer  " 文件浏览器的目录
+set scrolloff=0       " 到达边界时自动滚屏
+set pastetoggle=<F12> " 设置粘贴模式的快捷键
+
+" swp/undo
+set nobackup
+set undofile
+set undodir=~/.vim/.undo//
+set directory=~/.vim/.swp//
+
+" 界面相关
+set showcmd                 " 显示当前命令
+set showmatch               " 自动匹配括号
+set cursorline              " 显示光标所在行
+set guicursor+=a:blinkon0   " 设置光标不闪烁
+set laststatus=2            " 总是显示状态栏
+set statusline=[%F]%r%m%h%w%=[row=%l,col=%c,len=%L][%p%%]%y[%{&ff}]%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\"+\":\"\").\"]\"}
+au BufReadPost * if line("'\"") > 0 && line ("'\"") <= line("$") | exe "normal g'\"" | exe "normal zz" | endif
+
+" 键位映射
+nmap <BS> :noh<CR>
+nmap <F11> :%s/\s\+$//e<CR>:noh<CR>
+vmap <F11> : s/\s\+$//e<CR>:noh<CR>
+
+" 插件管理
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim/  " vundle 主目录
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'       " 基本插件，必须
+Plugin 'scrooloose/nerdtree'        " NERDTree 目录树
+Plugin 'jistr/vim-nerdtree-tabs'    " NERDTree 共享插件
+Plugin 'kien/ctrlp.vim'             " ctrlp 快速搜索插件
+Plugin 'taglist.vim'                " ctags + taglist 插件
+call vundle#end()
+filetype plugin indent on
+
+" NERDTree
+map <F2> :NERDTreeToggle<CR>
+let NERDTreeMinimalUI=1                 " 隐藏帮助文字
+let NERDTreeShowBookmarks=1             " 显示书签列表
+let NERDTreeShowLineNumbers=1           " 启用行号显示
+let NERDTreeAutoCenter=1                " 启用自动居中
+let NERDTreeShowHidden=1                " 显示隐藏文件
+let NERDTreeIgnore=['\.swo','\.swp']    " 忽略指定文件
+let NERDTreeWinSize=24                  " 设置窗口宽度
+au bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" taglist
+map <F3> :TlistToggle<CR>
+let Tlist_Ctags_Cmd='ctags'             " ctags 命令名
+let Tlist_Show_One_File=1               " 只显示单文件
+let Tlist_Process_File_Always=1         " 始终解析文件
+let Tlist_Use_Right_Window=1            " 设置窗口位置
+let Tlist_WinWidth=24                   " 设置窗口宽度
+let Tlist_Exit_OnlyWindow=1             " 窗口自动退出
+let Tlist_GainFocus_On_ToggleOpen=1     " 窗口自动聚焦
+</script></code></pre>
+<h2 id="gvim-配置"><a href="#gvim-配置" class="headerlink" title="gvim 配置"></a>gvim 配置</h2><p><strong>安装 gvim</strong><br>链接：<a href="https://ftp.nluug.nl/pub/vim/pc/gvim80-069.exe" rel="external nofollow noopener noreferrer" target="_blank">https://ftp.nluug.nl/pub/vim/pc/gvim80-069.exe</a><br>gvim 安装目录最好不要放在系统盘（C 盘），有些时候可能会出现权限问题；<br>添加环境变量：<code>vim=gvim安装目录</code>；后面所有修改均以该环境变量为基础，不再重复说明。</p>
+<p><strong>安装 msysgit</strong><br>链接：<a href="https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.2/Git-2.12.2.2-64-bit.exe" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.2/Git-2.12.2.2-64-bit.exe</a><br>打开 cmd，输入<code>git --version</code>如果能显示版本号，表示安装成功。</p>
+<p><strong>安装 curl</strong><br>链接：<a href="https://dl.uxnr.de/build/curl/curl_winssl_msys2_mingw64_stc/curl-7.53.1/curl-7.53.1.zip" rel="external nofollow noopener noreferrer" target="_blank">https://dl.uxnr.de/build/curl/curl_winssl_msys2_mingw64_stc/curl-7.53.1/curl-7.53.1.zip</a><br>修改 Path 环境变量：添加<code>;curl目录/bin</code>条目即可；<br>打开 cmd，输入<code>curl --version</code>如果显示版本号，表示安装成功。</p>
+<p><strong>安装 ctags</strong><br>链接：<a href="https://raw.github.com/zfl9/vim/master/ctags.exe" rel="external nofollow noopener noreferrer" target="_blank">https://raw.github.com/zfl9/vim/master/ctags.exe</a><br>因为是绿色可执行文件，因此只需要放到<code>$vim/vim80/</code>目录下。</p>
+<p><strong>修改默认主题</strong><br>获取主题：<a href="https://raw.github.com/tomasr/molokai/master/colors/molokai.vim" rel="external nofollow noopener noreferrer" target="_blank">https://raw.github.com/tomasr/molokai/master/colors/molokai.vim</a><br>将主题放到<code>$vim/vim80/colors/molokai.vim</code>；<br>编辑<code>$vim/_vimrc</code>，启用主题<code>colo molokai</code>。</p>
+<p><strong>安装 vim 插件</strong><br>打开 cmd，<code>git clone https://github.com/VundleVim/Vundle.vim.git</code>；<br>将 Vundle.vim 目录放至<code>$vim/vimfiles/bundle/Vundle.vim</code>路径；</p>
+<p>编辑<code>$vim/_vimrc</code>，启用 vundle，并添加我们想要的插件：</p>
+<pre><code class="language-vim line-numbers"><script type="text/plain">
+" vundle 插件管理器
+set nocompatible
+filetype off
+set rtp+=$vim/vimfiles/bundle/Vundle.vim/   " vundle 主目录
+call vundle#begin('$vim/vimfiles/bundle/')  " 插件安装目录
+Plugin 'VundleVim/Vundle.vim'               " 基本插件，必须
+Plugin 'scrooloose/nerdtree'                " NERDTree 目录树
+Plugin 'kien/ctrlp.vim'                     " ctags 快速搜索插件
+Plugin 'taglist.vim'                        " ctags + taglist 插件
+call vundle#end()
+filetype plugin indent on
+</script></code></pre>
+<p>然后启动 gvim，在命令模式下执行<code>PluginInstall</code>安装插件即可；</p>
+<p><strong>完整的 vimrc</strong></p>
+<blockquote>
+<p>因为某些原因，我没有配置 vim 插件，所以只需要装一个 gvim 就可以了。</p>
+</blockquote>
+<pre><code class="language-vim line-numbers"><script type="text/plain">
+" gvim 相关
+set guioptions-=T               " 隐藏 gvim 工具栏
+set guioptions-=m               " 隐藏 gvim 菜单栏
+set helplang=cn                 " 启用简体中文帮助
+language messages zh_CN.utf-8   " 启用简体中文提示
+source $VIMRUNTIME/delmenu.vim  " gvim 右键菜单脚本
+autocmd GUIEnter * simalt ~x    " gvim 窗口自动全屏
+
+" 主题相关
+colo molokai
+set guifont=Consolas:h11
+
+" 四格缩进
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+
+" 两格缩进
+au FileType html,xml,css,javascript,jsp,php,asp set shiftwidth=2
+au FileType html,xml,css,javascript,jsp,php,asp set tabstop=2
+au FileType html,xml,css,javascript,jsp,php,asp set softtabstop=2
+
+" 字符编码
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+
+" 功能设置
+syntax enable         " 启用语法高亮
+set mouse=a           " 鼠标总是可用
+set nu                " 启用行号显示
+set wrap              " 启用自动折行
+set linebreak         " 启用整词折行
+set hidden            " 自动隐藏buff
+set autoread          " 自动更新文件
+set autochdir         " 自动切换目录
+set hlsearch          " 启用高亮查找
+set incsearch         " 启用增量查找
+set autoindent        " 启用自动对齐
+set smartindent       " 启用智能对齐
+set history=1000      " 保留命令历史
+set showtabline=2     " 总是显示标签栏
+set browsedir=buffer  " 文件浏览器的目录
+set scrolloff=0       " 到达边界时自动滚屏
+
+" swp/undo
+set nobackup
+set undofile
+set undodir=$vim/_undo//
+set directory=$vim/_swp//
+
+" 界面相关
+set showcmd                 " 显示当前命令
+set showmatch               " 自动匹配括号
+set cursorline              " 显示光标所在行
+set guicursor+=a:blinkon0   " 设置光标不闪烁
+set laststatus=2            " 总是显示状态栏
+set statusline=[%F]%r%m%h%w%=[row=%l,col=%c,len=%L][%p%%]%y[%{&ff}]%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\"+\":\"\").\"]\"}
+au BufReadPost * if line("'\"") > 0 && line ("'\"") <= line("$") | exe "normal g'\"" | exe "normal zz" | endif
+
+" 键位映射
+nmap <BS> :noh<CR>
+nmap <F11> :%s/\s\+$//e<CR>:noh<CR>
+vmap <F11> : s/\s\+$//e<CR>:noh<CR>
+map <C-Tab> gt
+map <C-S-Tab> gT
+</script></code></pre>
+<h2 id="vim-速查表"><a href="#vim-速查表" class="headerlink" title="vim 速查表"></a>vim 速查表</h2><p><a href="https://blog.csdn.net/donahue_ldz/article/details/17139361" rel="external nofollow noopener noreferrer" target="_blank">最全的 vim 快捷键</a><br><a href="https://raw.githubusercontent.com/skywind3000/awesome-cheatsheets/master/editors/vim.txt" rel="external nofollow noopener noreferrer" target="_blank">VIM CHEATSHEET（中文速查表）</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/vim/" rel="tag"># vim</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/xshell.html" rel="next" title="xshell5 monokai 主题">
+                <i class="fa fa-chevron-left"></i> xshell5 monokai 主题
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/git.html" rel="prev" title="git 简明笔记">
+                git 简明笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vim-配置"><span class="nav-number">1.</span> <span class="nav-text">vim 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gvim-配置"><span class="nav-number">2.</span> <span class="nav-text">gvim 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim-速查表"><span class="nav-number">3.</span> <span class="nav-text">vim 速查表</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/vim.html';
+          this.page.identifier = 'vim.html';
+          this.page.title = 'vim 插件及配置';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

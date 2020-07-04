@@ -1,0 +1,585 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="前端,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="CSS 就是 Cascading Style Sheets，中文翻译为“层叠样式表”，简称样式表，它是一种渲染网页的技术。网页设计最初是用HTML标记来定义页面文档及格式，例如标题 &amp;lt;h1&amp;gt;、段落 &amp;lt;p&amp;gt;、表格 &amp;lt;table&amp;gt;、链接 &amp;lt;a&amp;gt; 等，但这些标记不能满足更多的文档样式需求，为了解决这个问题，在 1997 年，W3C（The World Wi">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS 笔记">
+<meta property="og:url" content="https://www.zfl9.com/css.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="CSS 就是 Cascading Style Sheets，中文翻译为“层叠样式表”，简称样式表，它是一种渲染网页的技术。网页设计最初是用HTML标记来定义页面文档及格式，例如标题 &amp;lt;h1&amp;gt;、段落 &amp;lt;p&amp;gt;、表格 &amp;lt;table&amp;gt;、链接 &amp;lt;a&amp;gt; 等，但这些标记不能满足更多的文档样式需求，为了解决这个问题，在 1997 年，W3C（The World Wi">
+<meta property="og:image" content="http://www.w3school.com.cn/i/ct_css_selector.gif">
+<meta property="og:image" content="https://guxinyan.github.io/blogImg/%E6%A0%87%E5%87%86%E7%9B%92%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS 笔记">
+<meta name="twitter:description" content="CSS 就是 Cascading Style Sheets，中文翻译为“层叠样式表”，简称样式表，它是一种渲染网页的技术。网页设计最初是用HTML标记来定义页面文档及格式，例如标题 &amp;lt;h1&amp;gt;、段落 &amp;lt;p&amp;gt;、表格 &amp;lt;table&amp;gt;、链接 &amp;lt;a&amp;gt; 等，但这些标记不能满足更多的文档样式需求，为了解决这个问题，在 1997 年，W3C（The World Wi">
+<meta name="twitter:image" content="http://www.w3school.com.cn/i/ct_css_selector.gif">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/css.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>CSS 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/css.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                CSS 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-05T08:00:00+08:00">
+                2018-12-05
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/css.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="css.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/css.html" class="leancloud_visitors" data-flag-title="CSS 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>CSS 就是 Cascading Style Sheets，中文翻译为“层叠样式表”，简称样式表，它是一种渲染网页的技术。网页设计最初是用HTML标记来定义页面文档及格式，例如标题 <code>&lt;h1&gt;</code>、段落 <code>&lt;p&gt;</code>、表格 <code>&lt;table&gt;</code>、链接 <code>&lt;a&gt;</code> 等，但这些标记不能满足更多的文档样式需求，为了解决这个问题，在 1997 年，W3C（The World Wide Web Consortium）颁布 HTML4 标准的同时也公布了有关样式表的第一个标准 CSS1, 自 CSS1 的版本之后，又在 1998 年 5 月发布了 CSS2 版本，样式表得到了更多的充实。W3C 把 DHTML（Dynamic HTML）分为三个部分来实现：脚本语言（包括 JavaScript、Vbscript 等）、支持动态效果的浏览器（包括 Internet Explorer、Netscape Navigator 等）和 CSS 样式表。</p>
+<a id="more"></a>
+<h2 id="CSS-是什么"><a href="#CSS-是什么" class="headerlink" title="CSS 是什么"></a>CSS 是什么</h2><p>层叠样式表 (Cascading Style Sheets，缩写为 CSS），是一种 样式表 语言，用来描述 HTML 或 XML（包括如 SVG、XHTML 之类的 XML 分支语言）文档的呈现。CSS 描述了在屏幕、纸质、音频等其它媒体上的元素应该如何被渲染的问题。</p>
+<p>CSS 是开放网络的核心语言之一，由 W3C规范 进行标准化。CSS 被分为不同等级：CSS1 现已废弃，CSS2.1 是推荐标准，CSS3 分成多个小模块且正在标准化中。</p>
+<ul>
+<li>CSS 指层叠样式表 (Cascading Style Sheets)</li>
+<li>样式定义如何显示 HTML 元素</li>
+<li>样式通常存储在样式表中</li>
+<li>把样式添加到 HTML 4.0 中，是为了解决内容与表现分离的问题</li>
+<li>外部样式表可以极大提高工作效率</li>
+<li>外部样式表通常存储在 CSS 文件中</li>
+<li>多个样式定义可层叠为一</li>
+</ul>
+<p><strong>样式解决了一个普遍的问题</strong><br>HTML 元素原本被设计为用于定义文档内容。通过使用 <code>&lt;h1&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;table&gt;</code> 这样的标签，HTML 的初衷是表达“这是标题”、“这是段落”、“这是表格”之类的信息。同时文档布局由浏览器来完成，而不使用任何的格式化标签。</p>
+<p>由于两种主要的浏览器（Netscape 和 Internet Explorer）不断地将新的 HTML 标签和属性（比如字体标签和颜色属性）添加到 HTML 规范中，创建文档内容清晰地独立于文档表现层的站点变得越来越困难。</p>
+<p>为了解决这个问题，万维网联盟（W3C），这个非营利的标准化联盟，肩负起了 HTML 标准化的使命，并在 HTML 4.0 之外创造出样式（Style）。</p>
+<p>所有的主流浏览器均支持层叠样式表。</p>
+<p><strong>样式表极大地提高了工作效率</strong><br>样式表定义如何显示 HTML 元素，就像 HTML 3.2 的字体标签和颜色属性所起的作用那样。样式通常保存在外部的 .css 文件中。通过仅仅编辑一个简单的 CSS 文档，外部样式表使你有能力同时改变站点中所有页面的布局和外观。</p>
+<p>由于允许同时控制多重页面的样式和布局，CSS 可以称得上 WEB 设计领域的一个突破。作为网站开发者，你能够为每个 HTML 元素定义样式，并将之应用于你希望的任意多的页面中。如需进行全局的更新，只需简单地改变样式，然后网站中的所有元素均会自动地更新。</p>
+<p><strong>多重样式将层叠为一个</strong><br>样式表允许以多种方式规定样式信息。样式可以规定在单个的 HTML 元素中，在 HTML 页的头元素中，或在一个外部的 CSS 文件中。甚至可以在同一个 HTML 文档内部引用多个外部样式表。</p>
+<p><strong>层叠次序</strong><br>当同一个 HTML 元素被不止一个样式定义时，会使用哪个样式呢？</p>
+<p>一般而言，所有的样式会根据下面的规则层叠于一个新的虚拟样式表中，它们的优先级按照出现的顺序依次升高，其中数字 4 拥有最高的优先权。</p>
+<ul>
+<li>浏览器缺省设置</li>
+<li>外部样式表</li>
+<li>内部样式表（位于 <code>&lt;head&gt;</code> 标签内部）</li>
+<li>内联样式（在 HTML 元素内部）</li>
+</ul>
+<p>其实很容易理解，CSS 的样式层叠就像 Java 中的类继承，子类会获得父类的所有属性和方法，并且子类可以重写父类的方法，子类的重写方法优先级更高。在 CSS 中也是这样，从上往下依次继承，如果有冲突 CSS 属性，则以后面（优先级更高，”子类”）的为准，不冲突的则组合起来。</p>
+<p><strong>HTML CSS JS 的职责</strong><br>HTML：专注于文档的内容<br>CSS：专注于文档的样式<br>JS：专注于文档的交互</p>
+<h2 id="CSS-基础语法"><a href="#CSS-基础语法" class="headerlink" title="CSS 基础语法"></a>CSS 基础语法</h2><p>CSS 注释语法：<code>/* 这是 CSS 注释 */</code>。<br>CSS 规则由两个主要的部分构成：<strong>选择器</strong>，以及一条或多条<strong>声明</strong>。</p>
+<pre><code class="language-css line-numbers"><script type="text/plain">
+selector {
+    declaration1;
+    declaration2;
+    ...;
+    declarationN;
+}
+</script></code></pre>
+<p>选择器表示你要将这些 CSS 属性应用到哪些 HTML 元素上，即作用范围；<br>声明由属性和属性值构成，他们之间使用 : 分隔，多条声明之间使用 ; 分隔。<br><img src="http://www.w3school.com.cn/i/ct_css_selector.gif" alt="选择器、声明、属性、值"></p>
+<p>因此，我们学习的重点就分为两个部分：<strong>选择器</strong>、<strong>CSS属性</strong>。<br>CSS 属性没什么好讲的，就是熟练使用以及记忆，<a href="http://code.ciaoca.com/style/css-cheat-sheet/" rel="external nofollow noopener noreferrer" target="_blank">CSS 速查表</a>。</p>
+<h2 id="CSS-选择器"><a href="#CSS-选择器" class="headerlink" title="CSS 选择器"></a>CSS 选择器</h2><h3 id="元素选择器"><a href="#元素选择器" class="headerlink" title="元素选择器"></a>元素选择器</h3><p>直接使用 HTML 元素名，如 strong、span、div，因此也称为标签选择器，不过按照 W3C 标准来说，应该叫做<strong>类型选择器</strong>。除了使用具体的标签名外，还有一个特殊的元素选择器（通配符选择器）<code>*</code>，表示所有 HTML 元素。</p>
+<h3 id="类选择器"><a href="#类选择器" class="headerlink" title="类选择器"></a>类选择器</h3><p>通过设置元素的 class 属性，可以为元素指定类名。类名由开发者自己指定。文档中的多个元素可以拥有同一个类名。在写样式表时，类选择器是以英文句号（<code>.</code>）开头的。</p>
+<h3 id="ID选择器"><a href="#ID选择器" class="headerlink" title="ID选择器"></a>ID选择器</h3><p>通过设置元素的 id 属性为该元素指定 ID。ID 由开发者指定。每个 ID 在文档中必须是唯一的。在写样式表时，ID 选择器是以<code>#</code>开头的。</p>
+<p>如果有多条规则指定了相同的属性在同一个元素上，CSS 规定拥有更高确定度的选择器优先级更高。ID选择器比类选择器更具确定度，而类选择器比标签选择器（tag selector）更具确定度。在确定度相同的情况下，写在后面的优先级更高。</p>
+<p>你也可以将多个选择器组合起来构成更确定的选择器。比如，选择器<code>.key</code>选中所有 class 属性为 key 的元素，选择器 <code>p.key</code> 选中所有 class 属性为 key 的 <code>&lt;p&gt;</code> 元素。</p>
+<p>除了 class 和 id，你还可以用方括号的形式指定其他属性。比如，选择器 <code>[type=&#39;button&#39;]</code> 选中所有 type 属性为 button 的元素。</p>
+<h3 id="属性选择器"><a href="#属性选择器" class="headerlink" title="属性选择器"></a>属性选择器</h3><p>CSS 属性选择器通过已经存在的属性名或属性值匹配元素。常见的几种属性选择器如下：</p>
+<ul>
+<li><code>[attr]</code><br>表示带有<span style="color:green;">以 attr 命名</span>的属性的元素。</li>
+<li><code>[attr=value]</code><br>表示带有以 attr 命名的，且<span style="color:green;">值为”value”</span>的属性的元素。</li>
+<li><code>[attr~=value]</code><br>表示带有以 attr 命名的属性的元素，并且该属性是一个以<span style="color:green;">空格作为分隔的值列表</span>，其中至少一个值为”value”。</li>
+<li><code>[attr|=value]</code><br>表示带有以 attr 命名的属性的元素，属性值为<span style="color:green;">“value”或是以”value-“为前缀</span>（”-“为连字符，Unicode编码为U+002D）开头。典型的应用场景是用来匹配语言简写代码（如zh-CN，zh-TW可以用zh作为value）。</li>
+<li><code>[attr^=value]</code><br>表示带有以 attr 命名的，且值是<span style="color:green;">以”value”开头</span>的属性的元素。</li>
+<li><code>[attr$=value]</code><br>表示带有以 attr 命名的，且值是<span style="color:green;">以”value”结尾</span>的属性的元素。</li>
+<li><code>[attr*=value]</code><br>表示带有以 attr 命名的，且值<span style="color:green;">包含有”value”</span>的属性的元素。</li>
+</ul>
+<h3 id="伪类选择器"><a href="#伪类选择器" class="headerlink" title="伪类选择器"></a>伪类选择器</h3><p>CSS 伪类是添加到选择器的关键字，指定要选择的元素的特殊<strong>状态</strong>。例如，:hover 将在用户悬停在选择器指定的元素上时应用样式。</p>
+<p>伪类连同伪元素一起，他们允许你不仅仅是根据文档 DOM 树中的内容对元素应用样式，而且还允许你根据诸如像导航历史这样的外部因素来应用样式(:visited，为例)，同样的，可以根据内容的状态(例如在一些表单元素上的 :checked)，或者鼠标的位置 (例如 :hover 让你知道是否鼠标在一个元素上悬浮)来应用样式。</p>
+<p>伪类和伪元素都不是实际存在 class 和 element，伪类是元素的一些特殊状态（如鼠标悬停的链接），伪元素则是为元素的部分内容设置特定的样式（如段落的第一行）。</p>
+<ul>
+<li><code>:link</code>，未被访问的链接<br>为了可以正确地渲染链接元素的样式，<code>:link</code>伪类选择器应当放在其他伪类选择器的前面，并且遵循<strong>LVHA</strong>的先后顺序，即<code>:link</code> —&gt; <code>:visited</code> —&gt; <code>:hover</code> —&gt; <code>:active</code>。<code>:focus</code>伪类选择器常伴随在<code>:hover</code>伪类选择器左右，需要根据你想要实现的效果确定它们的顺序。</li>
+<li><code>:visited</code>，已被访问的链接</li>
+<li><code>:active</code>，当前激活的链接（鼠标点击与释放之间发生的事件）</li>
+<li><code>:hover</code>，鼠标悬停的链接</li>
+<li><code>:focus</code>，获得焦点的元素</li>
+<li><code>:first-child</code>，兄弟节点中的第一个元素</li>
+<li><code>:last-child</code>，兄弟节点中的最后一个元素</li>
+<li><code>:only-child</code>，属于其父节点的独生子的元素</li>
+<li><code>:nth-child(an+b)</code>，兄弟节点中的第 an+b 个元素（n 为从 0 开始的整数，a、b 为整数），兄弟节点中的元素下标从 1 开始。示例：<ul>
+<li><code>0n+3</code>或<code>3</code>：匹配第 3 个元素</li>
+<li><code>1n+0</code>或<code>n</code>：匹配所有的元素</li>
+<li><code>2n+0</code>或<code>2n</code>：匹配位置为偶数的元素，可以使用<code>even</code>替代</li>
+<li><code>2n+1</code>：匹配位置为奇数的元素，可以使用<code>odd</code>替代</li>
+<li><code>3n+4</code>：匹配位置为 4、7、10、13… 的元素</li>
+</ul>
+</li>
+<li><code>:nth-last-child(an+b)</code>，兄弟节点中的第 an+b 个元素（从右往左数起，除此之外，与上面的伪类无区别）。示例：<ul>
+<li><code>tr:nth-last-child(-n+4)</code>：匹配表格中的最后四个 tr 元素</li>
+<li><code>span:nth-last-child(even)</code>：匹配所有偶数位置（从后往前）的 span 元素</li>
+</ul>
+</li>
+<li><code>:first-of-type</code>，兄弟节点中的同类型的第一个元素</li>
+<li><code>:last-of-type</code>，兄弟节点中的同类型的最后一个元素</li>
+<li><code>:only-of-type</code>，属于其父节点的同类型的独生子元素</li>
+<li><code>:nth-of-type(an+b)</code>，兄弟节点中的同类型的第 an+b 个元素</li>
+<li><code>:nth-last-of-type(an+b)</code>，兄弟节点中的同类型的第 an+b 个元素（从后往前）</li>
+<li><code>:read-only</code>，设置了 readonly 只读属性的元素</li>
+<li><code>:read-write</code>，未设置 readonly 的可读可写元素</li>
+<li><code>:valid</code>，表单元素中的所有已通过类型验证的元素</li>
+<li><code>:invalid</code>，表单元素中的所有未通过类型验证的元素</li>
+<li><code>:in-range</code>，input 的 value 在其 min 与 max 范围内的元素</li>
+<li><code>:out-of-range</code>，input 的 value 不在其 min 与 max 范围内的元素</li>
+<li><code>:default</code>，被默认选中的表单元素</li>
+<li><code>:checked</code>，被选中的 radio、checkbox、select的option 元素</li>
+<li><code>:required</code>，拥有 required 属性的元素（请求的元素）</li>
+<li><code>:optional</code>，没有 required 属性的元素（可选的元素）</li>
+<li><code>:enabled</code>，被启用的所有元素</li>
+<li><code>:disabled</code>，被禁用的所有元素</li>
+<li><code>:indeterminate</code>，表单中的状态不确定的元素（该属性由JS设置）</li>
+<li><code>:root</code>，根元素，在 HTML 中，<code>&lt;html&gt;</code>元素即为根元素，除了优先级更高外，它和 html 选择器没有区别</li>
+<li><code>:empty</code>，没有子元素的元素（叶结点）</li>
+<li><code>:target</code>，与当前页面 URL 中的 #target 相同 ID 的元素</li>
+<li><code>:lang(zh)</code>，语言为 zh 的所有元素，常见的语言有 zh、en</li>
+<li><code>:not(selector)</code>，所有不被 selector 匹配的元素（否定语义）</li>
+</ul>
+<h3 id="伪元素选择器"><a href="#伪元素选择器" class="headerlink" title="伪元素选择器"></a>伪元素选择器</h3><p>和伪类一样，伪元素也是非实际存在的元素，但它不是描述处于特殊状态的元素，而是为了给元素的某些部分设置样式。如<code>::first-line</code>伪元素将改变段落第一行的文字样式。伪元素也使用<code>:</code>分隔（CSS3以前），在 CSS3 中，为了与伪类区别开，建议使用<code>::</code>双冒号表示。目前已定义的伪元素有：</p>
+<ul>
+<li><code>::first-letter</code>，块级元素的第一个字母（所处行之前没有其他内容）</li>
+<li><code>::first-line</code>，块级元素的第一行文本</li>
+<li><code>::before</code>，当前元素的前面，通常与<code>content</code>CSS属性一起使用，用于添加文本</li>
+<li><code>::after</code>，当前元素的后面，通常与<code>content</code>CSS属性一起使用，用于添加文本</li>
+<li><code>::selection</code>，被用户选中的内容（如鼠标选择的内容）</li>
+</ul>
+<h3 id="关系选择器"><a href="#关系选择器" class="headerlink" title="关系选择器"></a>关系选择器</h3><ul>
+<li><code>A E</code>：A 的所有后代元素 E</li>
+<li><code>A &gt; E</code>：A 的直系后代元素 E</li>
+<li><code>B + E</code>：B 的下一个兄弟元素</li>
+<li><code>B ~ E</code>：B 后所有的兄弟元素</li>
+</ul>
+<h3 id="选择器组合"><a href="#选择器组合" class="headerlink" title="选择器组合"></a>选择器组合</h3><p><code>selector1, selector2, selector3, ..., selectorN { property: value; }</code></p>
+<h2 id="CSS-盒模型"><a href="#CSS-盒模型" class="headerlink" title="CSS 盒模型"></a>CSS 盒模型</h2><p><img src="https://guxinyan.github.io/blogImg/%E6%A0%87%E5%87%86%E7%9B%92%E6%A8%A1%E5%9E%8B.png" alt="CSS 盒模型"></p>
+<h2 id="CSS-布局"><a href="#CSS-布局" class="headerlink" title="CSS 布局"></a>CSS 布局</h2><p><a href="http://zh.learnlayout.com/" rel="external nofollow noopener noreferrer" target="_blank">学习 CSS 布局</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/javascript.html" rel="next" title="JavaScript 笔记">
+                <i class="fa fa-chevron-left"></i> JavaScript 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/html.html" rel="prev" title="HTML 笔记">
+                HTML 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-是什么"><span class="nav-number">1.</span> <span class="nav-text">CSS 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-基础语法"><span class="nav-number">2.</span> <span class="nav-text">CSS 基础语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-选择器"><span class="nav-number">3.</span> <span class="nav-text">CSS 选择器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元素选择器"><span class="nav-number">3.1.</span> <span class="nav-text">元素选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类选择器"><span class="nav-number">3.2.</span> <span class="nav-text">类选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ID选择器"><span class="nav-number">3.3.</span> <span class="nav-text">ID选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性选择器"><span class="nav-number">3.4.</span> <span class="nav-text">属性选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪类选择器"><span class="nav-number">3.5.</span> <span class="nav-text">伪类选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪元素选择器"><span class="nav-number">3.6.</span> <span class="nav-text">伪元素选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关系选择器"><span class="nav-number">3.7.</span> <span class="nav-text">关系选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择器组合"><span class="nav-number">3.8.</span> <span class="nav-text">选择器组合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-盒模型"><span class="nav-number">4.</span> <span class="nav-text">CSS 盒模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-布局"><span class="nav-number">5.</span> <span class="nav-text">CSS 布局</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/css.html';
+          this.page.identifier = 'css.html';
+          this.page.title = 'CSS 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

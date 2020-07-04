@@ -1,0 +1,1560 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Libevent 是一个用 C 语言编写的、轻量级的开源高性能事件通知库，主要有以下几个亮点：事件驱动（event-driven），高性能；轻量级，专注于网络，不如 ACE 那么臃肿庞大；源代码相当精炼、易读；跨平台，支持 Windows、Linux、BSD 和 Mac OS；支持多种 I/O 多路复用技术，epoll、poll、dev/poll、select 和 kqueue 等；支持 I/O，">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="libevent 笔记">
+<meta property="og:url" content="https://www.zfl9.com/libevent.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Libevent 是一个用 C 语言编写的、轻量级的开源高性能事件通知库，主要有以下几个亮点：事件驱动（event-driven），高性能；轻量级，专注于网络，不如 ACE 那么臃肿庞大；源代码相当精炼、易读；跨平台，支持 Windows、Linux、BSD 和 Mac OS；支持多种 I/O 多路复用技术，epoll、poll、dev/poll、select 和 kqueue 等；支持 I/O，">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.236Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="libevent 笔记">
+<meta name="twitter:description" content="Libevent 是一个用 C 语言编写的、轻量级的开源高性能事件通知库，主要有以下几个亮点：事件驱动（event-driven），高性能；轻量级，专注于网络，不如 ACE 那么臃肿庞大；源代码相当精炼、易读；跨平台，支持 Windows、Linux、BSD 和 Mac OS；支持多种 I/O 多路复用技术，epoll、poll、dev/poll、select 和 kqueue 等；支持 I/O，">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/libevent.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>libevent 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/libevent.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                libevent 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T08:00:00+08:00">
+                2018-11-20
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/libevent.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="libevent.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/libevent.html" class="leancloud_visitors" data-flag-title="libevent 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Libevent 是一个用 C 语言编写的、轻量级的开源高性能事件通知库，主要有以下几个亮点：事件驱动（event-driven），高性能；轻量级，专注于网络，不如 ACE 那么臃肿庞大；源代码相当精炼、易读；跨平台，支持 Windows、Linux、BSD 和 Mac OS；支持多种 I/O 多路复用技术，epoll、poll、dev/poll、select 和 kqueue 等；支持 I/O，定时器和信号等事件；注册事件优先级；内置 OpenSSL 支持，编写 TLS/SSL 应用更加容易；内置 HTTP、DNS 异步实现，可以说很强大了。</p>
+<a id="more"></a>
+<h2 id="libevent-安装"><a href="#libevent-安装" class="headerlink" title="libevent 安装"></a>libevent 安装</h2><pre><code class="language-bash line-numbers"><script type="text/plain">
+pacman -S libevent
+</script></code></pre>
+<h2 id="libevent-用法"><a href="#libevent-用法" class="headerlink" title="libevent 用法"></a>libevent 用法</h2><h3 id="event-h"><a href="#event-h" class="headerlink" title="event.h"></a>event.h</h3><p>为什么使用 libevent，可能大家都比较清楚，因为 Linux 的 epoll 不是很好用，很多时候我们只是想简单的实现异步 IO（socket 编程），所以 libevent 出现了。</p>
+<p>在 epoll 中，要使用 epoll IO 多路复用，必须首先创建一个 epoll fd，这个 fd 可以看作是一个 epoll 对象，我们所有的添加、删除、修改 event 操作都是与这个 fd 相关联的。</p>
+<p>而在 libevent 中，同样存在这么一个东西，它的名字叫做 event_base，event_base 是一个结构体，与 libevent 相关的事件都是在它上面进行操作的，作用与 epoll fd 相同。</p>
+<p>注意，event_base 通常只能在一个线程中使用，如果需要 多线程 + libevent，那么你最好为每个线程分配一个 event_base 结构体，防止多线程访问同一个 event base 导致数据错误问题。</p>
+<p><strong>创建 event_base</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <event2/event.h>
+
+/* 自动选择最快的 IO 多路复用方法 */
+struct event_base * event_base_new();
+/* 释放 event base，释放占用的资源 */
+void event_base_free(struct event_base *base);
+
+/* 在 fork() 之后需要重新 init base */
+int event_reinit(struct event_base *base);
+
+/* 获取 libevent 支持的底层方法 */
+const char ** event_get_supported_methods();
+/* 获取 libevent base 当前使用的方法 */
+const char * event_base_get_method(const struct event_base *base);
+</script></code></pre>
+<p><strong>运行 event loop</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <event2/event.h>
+
+/* 开始事件循环，event loop，当前线程会被阻塞，遇到以下情况时，event loop 结束 */
+/* 没有更多事件，或者调用 event_base_loopbreak()、event_base_loopexit() 方法 */
+int event_base_dispatch(struct event_base *base);
+
+/*
+正常退出，其中 tv 为延迟时间，NULL 表示没有延迟，如果当前还有事件，会运行完再退出
+*/
+int event_base_loopexit(struct event_base *base, const struct timeval *tv);
+/*
+立即退出，看官方文档好像是强制结束，但好像说的又不是很清除，总之不建议使用这个方法
+*/
+int event_base_loopbreak(struct event_base *base);
+
+/* 判断是 exit 退出的还是 break 退出的 */
+int event_base_got_exit(struct event_base *base);
+int event_base_got_break(struct event_base *base);
+</script></code></pre>
+<p>但是，上面只讲了如何 event base 的创建、运行、停止、删除，并未说明如何创建 event，毕竟 event 是 event loop 的基本运作单位，这里开始介绍 event 的创建、添加、删除等 API。</p>
+<p>libevent 支持管理的事件有：准备读取/写入的文件描述符、超时到期、收到信号、用户触发的事件。</p>
+<p>event 有相似的生命周期。使用 new 方法创建时，event 处于 <strong>initialized</strong> 状态。当你往 event base 里面添加 event 时，event 处于 <strong>pending</strong> 状态。当 event 被指定事件触发时，event 处于 <strong>active</strong> 状态，同时自动运行用户提供的回调函数（callback function）。如果将 event 配置为 <strong>persistent</strong>，那么这个 event 不会在触发（active）一次之后被自动移除，而是继续保持 <strong>pending</strong> 状态，等待下次 <strong>active</strong>（这通常是我们想要的，否则你需要重新 add event）。</p>
+<p><strong>创建 event</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <event2/event.h>
+
+#define EV_TIMEOUT      0x01 // 超时事件
+#define EV_READ         0x02 // 文件描述符以准备好读取
+#define EV_WRITE        0x04 // 文件描述符已准备好写入
+#define EV_SIGNAL       0x08 // 接收到信号
+#define EV_PERSIST      0x10 // 表示事件是持久的
+#define EV_ET           0x20 // 启用 ET 边缘触发
+
+/*
+ @param evutil_socket_t fd socket_fd，unix 上为 int
+ @param         short what 则是发生的具体 events（事件）
+ @param          void *arg 传递给 callback function 的参数指针
+*/
+typedef void (*event_callback_fn)(evutil_socket_t, short, void *);
+
+// new，如果不需要 fd（比如普通定时任务），可以将 fd 设为 -1
+struct event * event_new(struct event_base *base, evutil_socket_t fd,
+                         short what, event_callback_fn cb, void *arg);
+
+// free
+void event_free(struct event *event);
+</script></code></pre>
+<p>在 event_new() 方法中，我们通常希望传递当前 event 结构体进去（传递给我们设置的回调函数），但是此时 event 结构体还未创建，互相矛盾，为了解决这个问题，libevent 提供 <code>void * event_self_cbarg()</code> 函数，它的返回值就是当前的 event 指针，即 Java 中的 this 指针。如果你还不明白，那么请看下面的例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <event2/event.h>
+
+static int n_calls = 0;
+
+void cb_func(evutil_socket_t fd, short what, void *arg)
+{
+    struct event *me = arg;
+
+    printf("cb_func called %d times so far.\n", ++n_calls);
+
+    if (n_calls > 100)
+       event_del(me);
+}
+
+void run(struct event_base *base)
+{
+    struct timeval one_sec = { 1, 0 };
+    struct event *ev;
+    /* We're going to set up a repeating timer to get called called 100
+       times. */
+    ev = event_new(base, -1, EV_PERSIST, cb_func, event_self_cbarg());
+    event_add(ev, &one_sec);
+    event_base_dispatch(base);
+}
+</script></code></pre>
+<p>例子会每隔一秒执行一次 cb_func 回调函数，当调用 100 次后，cb_func 内会移除这个 event。</p>
+<p>有必要强调一点，libevent 中，new/free 表示创建删除，特指内存/资源的创建删除，而 add/del 这些表示添加/移除事件。不要搞混了。现在介绍 add/del event 的 API：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <event2/event.h>
+
+// 注册事件，如果不是定时任务，tv 可为 NULL
+int event_add(struct event *ev, const struct timeval *tv);
+
+// 取消注册事件
+int event_del(struct event *ev);
+
+// 单独移除 tv 超时设置
+int event_remove_timer(struct event *ev);
+</script></code></pre>
+<p>检查 event 的状态，获取其中的某些信息的 API：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+int event_pending(const struct event *ev, short what, struct timeval *tv_out);
+
+#define event_get_signal(ev) /* ... */
+evutil_socket_t event_get_fd(const struct event *ev);
+int event_get_priority(const struct event *ev);
+
+short event_get_events(const struct event *ev);
+struct event_base *event_get_base(const struct event *ev);
+
+event_callback_fn event_get_callback(const struct event *ev);
+void *event_get_callback_arg(const struct event *ev);
+</script></code></pre>
+<h3 id="util-h"><a href="#util-h" class="headerlink" title="util.h"></a>util.h</h3><p>socket api 跨平台相关</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#ifdef WIN32
+#define evutil_socket_t intptr_t
+#else
+#define evutil_socket_t int
+#endif
+
+int evutil_closesocket(evutil_socket_t s);
+#define EVUTIL_CLOSESOCKET(s) evutil_closesocket(s)
+
+#define EVUTIL_SOCKET_ERROR()
+#define EVUTIL_SET_SOCKET_ERROR(errcode)
+#define evutil_socket_geterror(sock)
+#define evutil_socket_error_to_string(errcode)
+
+int evutil_make_socket_nonblocking(evutil_socket_t sock);
+int evutil_make_listen_socket_reuseable(evutil_socket_t sock);
+int evutil_make_socket_closeonexec(evutil_socket_t sock);
+</script></code></pre>
+<h3 id="bufferevent-h"><a href="#bufferevent-h" class="headerlink" title="bufferevent.h"></a>bufferevent.h</h3><p>大多数情况下，除了响应事件外，人们通常还要操作缓冲区中的数据（不能说通常吧，是一定要操作，不然 socket 编程就没有意义了），当然 libevent 也很清楚，所以它提供了更好用的 recv/send 包装 API，libevent 真香。</p>
+<p>例如，当我们想要写数据时，通常的模式运行如下：</p>
+<ul>
+<li>将数据放入缓冲区</li>
+<li>等待连接变为可写</li>
+<li>尽可能多地写出数据</li>
+<li>记住我们写了多少，如果我们还有更多数据要写，则等待连接再次变为可写。</li>
+</ul>
+<p>这种 buffer 的 IO 模式很常见，libevent 为它提供了一种通用的机制：<code>&quot;bufferevent&quot;</code>，由底层传输（如套接字），读缓冲区和写缓冲区组成。当底层传输准备好被读取或写入时，bufferevent 会调用其用户提供的回调，而不是在读取或写入足够数据时调用其回调的常规事件。</p>
+<p>Bufferevents 目前仅适用于 TCP 等面向流的协议（当然包括 Unix Domain Socket）。将来可能会支持 UDP 等面向数据报的协议。</p>
+<p><strong>bufferevents 和 evbuffers</strong><br>每个 bufferevent 都有一个输入缓冲区和一个输出缓冲区。这些是 <code>struct evbuffer</code> 类型。当您要在 <code>bufferevent</code> 上写入数据时，将其添加到输出缓冲区; 当 <code>bufferevent</code> 有数据供你读取时，你将它从输入缓冲区中取出。</p>
+<blockquote>
+<p>其实简单的说，evbuffer 是缓存区的包装，bufferevent 是一个 event，针对 buffer。</p>
+</blockquote>
+<p>Buffer Event 事件</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+BEV_EVENT_READING
+/* An event occured during a read operation on the bufferevent. See the other flags for which event it was. */
+
+BEV_EVENT_WRITING
+/* An event occured during a write operation on the bufferevent. See the other flags for which event it was. */
+
+BEV_EVENT_ERROR
+/* An error occurred during a bufferevent operation. For more information on what the error was, call EVUTIL_SOCKET_ERROR(). */
+
+BEV_EVENT_TIMEOUT
+/* A timeout expired on the bufferevent. */
+
+BEV_EVENT_EOF
+/* We got an end-of-file indication on the bufferevent. */
+
+BEV_EVENT_CONNECTED
+/* We finished a requested connection on the bufferevent. */
+</script></code></pre>
+<p>Buffer Event 选项</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+BEV_OPT_CLOSE_ON_FREE
+/* When the bufferevent is freed, close the underlying transport. This will close an underlying socket, free an underlying bufferevent, etc. */
+
+BEV_OPT_THREADSAFE
+/* Automatically allocate locks for the bufferevent, so that it’s safe to use from multiple threads. */
+
+BEV_OPT_DEFER_CALLBACKS
+/* When this flag is set, the bufferevent defers all of its callbacks, as described above. */
+
+BEV_OPT_UNLOCK_CALLBACKS
+/* By default, when the bufferevent is set up to be threadsafe, the bufferevent’s locks are held whenever the any user-provided callback is invoked. Setting this option makes Libevent release the bufferevent’s lock when it’s invoking your callbacks. */
+</script></code></pre>
+<p>创建 bufferevent</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+// fd 需要设置为非阻塞模式
+struct bufferevent * bufferevent_socket_new(
+    struct event_base *base,
+    evutil_socket_t fd,
+    enum bufferevent_options options
+)
+</script></code></pre>
+<p>连接 bufferevent</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+int bufferevent_socket_connect(
+    struct bufferevent *bev,
+    struct sockaddr *address, int addrlen
+)
+
+int bufferevent_socket_connect_hostname(
+    struct bufferevent *bev,
+    struct evdns_base *dns_base,
+    int family,
+    const char *hostname,
+    int port
+)
+
+int bufferevent_socket_get_dns_error(struct bufferevent *bev);
+</script></code></pre>
+<p>释放 bufferevent</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+void bufferevent_free(struct bufferevent *bev);
+</script></code></pre>
+<p>设置回调函数（读/写/发送错误）</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+typedef void (*bufferevent_data_cb)(struct bufferevent *bev, void *ctx);
+typedef void (*bufferevent_event_cb)(struct bufferevent *bev, short events, void *ctx);
+
+void bufferevent_setcb(
+    struct bufferevent *bufev,
+    bufferevent_data_cb readcb,
+    bufferevent_data_cb writecb,
+    bufferevent_event_cb eventcb,
+    void *cbarg
+);
+
+void bufferevent_getcb(
+    struct bufferevent *bufev,
+    bufferevent_data_cb *readcb_ptr,
+    bufferevent_data_cb *writecb_ptr,
+    bufferevent_event_cb *eventcb_ptr,
+    void **cbarg_ptr
+);
+</script></code></pre>
+<p>启用 bufferevent 事件（读、写、读写）</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+/*
+启用或禁用事件 EV_READ、EV_WRITE、EV_READ|EV_WRITE。
+如果未启用相关事件，bufferevent 将不会读取或写入数据。
+*/
+void bufferevent_enable(struct bufferevent *bufev, short events);
+void bufferevent_disable(struct bufferevent *bufev, short events);
+
+short bufferevent_get_enabled(struct bufferevent *bufev); // get events
+</script></code></pre>
+<p>获取 bufferevent 上的 input/output buffer（读缓冲区、写缓冲区）</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+struct evbuffer *bufferevent_get_input(struct bufferevent *bufev);
+struct evbuffer *bufferevent_get_output(struct bufferevent *bufev);
+</script></code></pre>
+<p>这两个函数是缓冲区操作的基础：它们分别返回输入和输出缓冲区。操作 evbuffer 类型的缓冲区。</p>
+<p>读取、写入 eevbuffer 中的数据</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+// 从 bufev 读取数据（剪切）到 data 中，返回值实际读取的字节数
+int bufferevent_read(struct bufferevent *bufev, void *data, size_t size);
+// 从 bufev 读取数据（剪切）到 buf 中，成功返回 0，失败返回 -1
+int bufferevent_read_buffer(struct bufferevent *bufev, struct evbuffer *buf);
+
+// 将 data 中的数据写入到 bufev 中，成功返回 0，失败返回 -1
+int bufferevent_write(struct bufferevent *bufev, const void *data, size_t size);
+// 将 buf 中的数据写入到 bufev 中，并删除 buf 中的数据，成功返回 0，失败返回 -1
+int bufferevent_write_buffer(struct bufferevent *bufev, struct evbuffer *buf);
+</script></code></pre>
+<h3 id="buffer-h"><a href="#buffer-h" class="headerlink" title="buffer.h"></a>buffer.h</h3><p><strong>创建、释放 evbuffer</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+struct evbuffer *evbuffer_new(void);
+void evbuffer_free(struct evbuffer *buf);
+</script></code></pre>
+<p><strong>检查 evbuffer 长度</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+size_t evbuffer_get_length(const struct evbuffer *buf); // 常用
+size_t evbuffer_get_contiguous_space(const struct evbuffer *buf);
+</script></code></pre>
+<p><strong>添加数据到 evbuffer</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+int evbuffer_add(struct evbuffer *buf, const void *data, size_t datlen);
+int evbuffer_add_printf(struct evbuffer *buf, const char *fmt, ...)
+int evbuffer_add_vprintf(struct evbuffer *buf, const char *fmt, va_list ap);
+int evbuffer_expand（struct evbuffer * buf，size_t datlen）; // 扩充至 datlen 长度
+</script></code></pre>
+<p><strong>移动一个 buf 中的数据到另一个 buf</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+/* 将 src 的数据移到 dst buf 中 */
+int evbuffer_add_buffer(struct evbuffer *dst, struct evbuffer *src);
+int evbuffer_remove_buffer(struct evbuffer *src, struct evbuffer *dst, size_t datlen);
+</script></code></pre>
+<p><strong>从 evbuffer 中删除数据</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+int evbuffer_drain(struct evbuffer *buf, size_t len);
+int evbuffer_remove(struct evbuffer *buf, void *data, size_t datlen);
+</script></code></pre>
+<p><strong>从 evbuffer 中窥探数据</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+ev_ssize_t evbuffer_copyout(
+    struct evbuffer *buf,
+    void *data,
+    size_t datlen
+);
+
+ev_ssize_t evbuffer_copyout_from(
+    struct evbuffer *buf,
+    const struct evbuffer_ptr *pos,
+    void *data_out, size_t datlen
+);
+</script></code></pre>
+<p><strong>基于行的数据读取，比如 HTTP 协议</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+enum evbuffer_eol_style {
+    EVBUFFER_EOL_ANY,
+    EVBUFFER_EOL_CRLF,
+    EVBUFFER_EOL_CRLF_STRICT,
+    EVBUFFER_EOL_LF,
+    EVBUFFER_EOL_NUL
+};
+
+char *evbuffer_readln(struct evbuffer *buffer, size_t *n_read_out,
+    enum evbuffer_eol_style eol_style);
+</script></code></pre>
+<p><strong>在 evbuffer 中搜索字符串</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+struct evbuffer_ptr {
+        ev_ssize_t pos;
+        struct {
+                /* internal fields */
+        } _internal;
+};
+
+struct evbuffer_ptr evbuffer_search(struct evbuffer *buffer,
+    const char *what, size_t len, const struct evbuffer_ptr *start);
+struct evbuffer_ptr evbuffer_search_range(struct evbuffer *buffer,
+    const char *what, size_t len, const struct evbuffer_ptr *start,
+    const struct evbuffer_ptr *end);
+struct evbuffer_ptr evbuffer_search_eol(struct evbuffer *buffer,
+    struct evbuffer_ptr *start, size_t *eol_len_out,
+    enum evbuffer_eol_style eol_style);
+</script></code></pre>
+<p><strong>peek 检查 evbuffer 里面的数据</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+struct evbuffer_iovec {
+        void *iov_base;
+        size_t iov_len;
+};
+
+int evbuffer_peek(
+    struct evbuffer *buffer, ev_ssize_t len,
+    struct evbuffer_ptr *start_at,
+    struct evbuffer_iovec *vec_out, int n_vec);
+</script></code></pre>
+<p><strong>在 socket IO 上使用 evbuffer</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+int evbuffer_write(struct evbuffer *buffer, evutil_socket_t fd);
+int evbuffer_write_atmost(struct evbuffer *buffer, evutil_socket_t fd,
+        ev_ssize_t howmuch);
+int evbuffer_read(struct evbuffer *buffer, evutil_socket_t fd, int howmuch);
+</script></code></pre>
+<h3 id="listener-h"><a href="#listener-h" class="headerlink" title="listener.h"></a>listener.h</h3><p>evconnlistener 机制为您提供了一种侦听和接受传入 TCP 连接的方法。</p>
+<p><strong>创建、释放 evconnlistener</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+struct evconnlistener *evconnlistener_new(
+    struct event_base *base,
+    evconnlistener_cb cb,
+    void *ptr,
+    unsigned flags,
+    int backlog,
+    evutil_socket_t fd);
+
+struct evconnlistener *evconnlistener_new_bind(
+    struct event_base *base,
+    evconnlistener_cb cb,
+    void *ptr,
+    unsigned flags,
+    int backlog,
+    const struct sockaddr *sa,
+    int socklen);
+
+void evconnlistener_free(struct evconnlistener *lev);
+</script></code></pre>
+<p>支持设置的 flags 标志</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+LEV_OPT_LEAVE_SOCKETS_BLOCKING
+/* By default, when the connection listener accepts a new incoming socket, it sets it up to be nonblocking so that you can use it with the rest of Libevent. Set this flag if you do not want this behavior. */
+
+LEV_OPT_CLOSE_ON_FREE
+/* If this option is set, the connection listener closes its underlying socket when you free it. */
+
+LEV_OPT_CLOSE_ON_EXEC
+/* If this option is set, the connection listener sets the close-on-exec flag on the underlying listener socket. See your platform documentation for fcntl and FD_CLOEXEC for more information. */
+
+LEV_OPT_REUSEABLE
+/* By default on some platforms, once a listener socket is closed, no other socket can bind to the same port until a while has passed. Setting this option makes Libevent mark the socket as reusable, so that once it is closed, another socket can be opened to listen on the same port. */
+
+LEV_OPT_THREADSAFE
+/* Allocate locks for the listener, so that it’s safe to use it from multiple threads. New in Libevent 2.0.8-rc. */
+
+LEV_OPT_DISABLED
+/* Initialize the listener to be disabled, not enabled. You can turn it on manually with evconnlistener_enable(). New in Libevent 2.1.1-alpha. */
+
+LEV_OPT_DEFERRED_ACCEPT
+/* If possible, tell the kernel to not announce sockets as having been accepted until some data has been received on them, and they are ready for reading. Do not use this option if your protocol doesn’t start out with the client transmitting data, since in that case this option will sometimes cause the kernel to never tell you about the connection. Not all operating systems support this option: on ones that don’t, this option has no effect. New in Libevent 2.1.1-alpha. */
+</script></code></pre>
+<p><strong>设置 listener 的回调函数</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+typedef void (*evconnlistener_cb)(
+    struct evconnlistener *listener,
+    evutil_socket_t sock,
+    struct sockaddr *addr,
+    int len,
+    void *ptr
+);
+
+int evconnlistener_enable(struct evconnlistener *lev);
+int evconnlistener_disable(struct evconnlistener *lev);
+
+void evconnlistener_set_cb(
+    struct evconnlistener *lev,
+    evconnlistener_cb cb, void *arg);
+</script></code></pre>
+<p><strong>设置 listener 错误时的回调</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+typedef void (*evconnlistener_errorcb)(struct evconnlistener *lis, void *ptr);
+void evconnlistener_set_error_cb(struct evconnlistener *lev,
+    evconnlistener_errorcb errorcb);
+</script></code></pre>
+<p><strong>获取 listener 管理的信息</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+evutil_socket_t evconnlistener_get_fd(struct evconnlistener *lev);
+struct event_base *evconnlistener_get_base(struct evconnlistener *lev);
+</script></code></pre>
+<h2 id="libevent-例子"><a href="#libevent-例子" class="headerlink" title="libevent 例子"></a>libevent 例子</h2><h3 id="echo-服务器（单线程）"><a href="#echo-服务器（单线程）" class="headerlink" title="echo 服务器（单线程）"></a>echo 服务器（单线程）</h3><p><code>gcc -levent -o echo-single-thread echo-single-thread.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <event2/event.h>
+#include <event2/listener.h>
+#include <event2/bufferevent.h>
+#include <event2/buffer.h>
+#include <event2/util.h>
+
+/* define listen address */
+#define LISTEN_ADDR "0.0.0.0"
+#define LISTEN_PORT 8080
+
+/* define static variable */
+static struct event_base *base = NULL;
+static struct evconnlistener *listener = NULL;
+
+/* signal handler function */
+void signal_handler(int signum) {
+    if (listener != NULL) evconnlistener_free(listener);
+    if (base != NULL) event_base_free(base);
+    exit(0);
+}
+
+/* callback function for accept */
+void accept_conn_cb(struct evconnlistener *listener, evutil_socket_t sock, struct sockaddr *addr, int addrlen, void *arg);
+void accept_error_cb(struct evconnlistener *listener, void *arg);
+
+/* callback function for read/event */
+void read_conn_cb(struct bufferevent *bev, void *arg);
+void event_conn_cb(struct bufferevent *bev, short events, void *arg);
+
+int main() {
+    /* register signal handler */
+    signal(SIGHUP,  signal_handler);
+    signal(SIGINT,  signal_handler);
+    signal(SIGQUIT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    /* setting listen address */
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = inet_addr(LISTEN_ADDR);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    /* create evconnlistener */
+    base = event_base_new();
+    listener = evconnlistener_new_bind(
+            base, accept_conn_cb, NULL,
+            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
+            -1, (struct sockaddr *)&servaddr, sizeof(servaddr)
+    );
+    if (listener == NULL) {
+        perror("listen socket");
+        return errno;
+    }
+    evconnlistener_set_error_cb(listener, accept_error_cb);
+
+    /* start event loop */
+    printf("listening: %s:%d\n", LISTEN_ADDR, LISTEN_PORT);
+    event_base_dispatch(base);
+
+    /* free listener, event_base */
+    evconnlistener_free(listener);
+    event_base_free(base);
+
+    return 0;
+}
+
+/* implement accept_conn_cb function */
+void accept_conn_cb(struct evconnlistener *listener, evutil_socket_t sock, struct sockaddr *addr, int addrlen, void *arg) {
+    /* welcome new connection */
+    struct sockaddr_in *connaddr = (struct sockaddr_in *)addr; // client sockaddr
+    printf("welcome: %s:%d\n", inet_ntoa(connaddr->sin_addr), ntohs(connaddr->sin_port));
+
+    /* setting bufferevent for client socket */
+    struct bufferevent *bev = bufferevent_socket_new(base, sock, BEV_OPT_CLOSE_ON_FREE);
+    bufferevent_setcb(bev, read_conn_cb, NULL, event_conn_cb, NULL);
+    bufferevent_enable(bev, EV_READ | EV_WRITE);
+}
+
+/* implement accept_error_cb function */
+void accept_error_cb(struct evconnlistener *listener, void *arg) {
+    char *error_string = evutil_socket_error_to_string(EVUTIL_SOCKET_ERROR());
+    fprintf(stderr, "accept socket: %s\n", error_string);
+    event_base_loopexit(base, NULL);
+}
+
+/* implement read_conn_cb function */
+void read_conn_cb(struct bufferevent *bev, void *arg) {
+    /* get input/output evbuffers */
+    struct evbuffer *input = bufferevent_get_input(bev);
+    struct evbuffer *output = bufferevent_get_output(bev);
+
+    /* get client socket address */
+    struct sockaddr_in connaddr; socklen_t addrlen = sizeof(connaddr);
+    getpeername(bufferevent_getfd(bev), (struct sockaddr *)&connaddr, &addrlen);
+
+    /* print data and send to client */
+    int len = evbuffer_get_length(input);
+    char *data = (char *)malloc(len + 1);
+    evbuffer_copyout(input, data, len);
+    data[len] = 0;
+    printf("recv(%s:%d): %s", inet_ntoa(connaddr.sin_addr), ntohs(connaddr.sin_port), data);
+    evbuffer_add_buffer(output, input);
+    free(data);
+}
+
+/* implement event_conn_cb function */
+void event_conn_cb(struct bufferevent *bev, short events, void *arg) {
+    if (events & BEV_EVENT_ERROR) // occur socket error
+        perror("recv socket");
+    if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) { // close client socket
+        struct sockaddr_in connaddr; socklen_t addrlen = sizeof(connaddr);
+        getpeername(bufferevent_getfd(bev), (struct sockaddr *)&connaddr, &addrlen);
+        printf("goodbye: %s:%d\n", inet_ntoa(connaddr.sin_addr), ntohs(connaddr.sin_port));
+        bufferevent_free(bev);
+    }
+}
+</script></code></pre>
+<h3 id="echo-服务器（多线程）"><a href="#echo-服务器（多线程）" class="headerlink" title="echo 服务器（多线程）"></a>echo 服务器（多线程）</h3><p>注意：实际上这个程序有问题，event_base 默认不是线程安全的。<br><code>gcc -levent -lpthread -o echo-multi-thread echo-multi-thread.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/syscall.h>
+#include <event2/event.h>
+#include <event2/listener.h>
+#include <event2/bufferevent.h>
+#include <event2/buffer.h>
+#include <event2/util.h>
+
+/* macro for get thread id */
+#define gettid() syscall(__NR_gettid)
+
+/* define listen address */
+#define LISTEN_ADDR "0.0.0.0"
+#define LISTEN_PORT 8080
+
+// number of new connection
+static size_t accept_conn_count = 0;
+// event_base for master thread
+static struct event_base *base_0 = NULL;
+// event_base for worker thread - 1
+static struct event_base *base_1 = NULL;
+// event_base for worker thread - 2
+static struct event_base *base_2 = NULL;
+// event_base for worker thread - 3
+static struct event_base *base_3 = NULL;
+// event_base for worker thread - 4
+static struct event_base *base_4 = NULL;
+// evconnlistener static variable */
+static struct evconnlistener *listener = NULL;
+
+/* define signal handler function */
+void signal_handler(int signum) {
+    if (listener != NULL) evconnlistener_free(listener);
+    if (base_0   != NULL) event_base_free(base_0);
+    if (base_1   != NULL) event_base_free(base_1);
+    if (base_2   != NULL) event_base_free(base_2);
+    if (base_3   != NULL) event_base_free(base_3);
+    if (base_4   != NULL) event_base_free(base_4);
+    exit(0);
+}
+
+/* define worker thread id */
+static pthread_t worker_tid_1;
+static pthread_t worker_tid_2;
+static pthread_t worker_tid_3;
+static pthread_t worker_tid_4;
+
+/* worker thread function */
+void *worker_thread_func(void *arg) {
+    // event_base assigned from the main function
+    struct event_base *base = (struct event_base *)arg;
+    event_base_loop(base, EVLOOP_NO_EXIT_ON_EMPTY);
+    event_base_free(base);
+    return NULL;
+}
+
+/* callback function for accept */
+void accept_conn_cb(struct evconnlistener *listener, evutil_socket_t sock, struct sockaddr *addr, int addrlen, void *arg);
+void accept_error_cb(struct evconnlistener *listener, void *arg);
+
+/* callback function for read/event */
+void read_conn_cb(struct bufferevent *bev, void *arg);
+void event_conn_cb(struct bufferevent *bev, short events, void *arg);
+
+/* master thread function */
+int main() {
+    /* register signal handler */
+    signal(SIGHUP,  signal_handler);
+    signal(SIGINT,  signal_handler);
+    signal(SIGQUIT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    /* create event base struct */
+    base_0 = event_base_new(); // for master thread
+    base_1 = event_base_new(); // for worker thread 1
+    base_2 = event_base_new(); // for worker thread 2
+    base_3 = event_base_new(); // for worker thread 3
+    base_4 = event_base_new(); // for worker thread 4
+
+    /* create and start worker threads */
+    // worker thread 1
+    if (pthread_create(&worker_tid_1, NULL, worker_thread_func, base_1) != 0) {
+        perror("create thread");
+        return errno;
+    }
+    // worker thread 2
+    if (pthread_create(&worker_tid_2, NULL, worker_thread_func, base_2) != 0) {
+        perror("create thread");
+        return errno;
+    }
+    // worker thread 3
+    if (pthread_create(&worker_tid_3, NULL, worker_thread_func, base_3) != 0) {
+        perror("create thread");
+        return errno;
+    }
+    // worker thread 4
+    if (pthread_create(&worker_tid_4, NULL, worker_thread_func, base_4) != 0) {
+        perror("create thread");
+        return errno;
+    }
+
+    /* setting listen sockaddr */
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = inet_addr(LISTEN_ADDR);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    /* create evconnlistener */
+    listener = evconnlistener_new_bind(
+            base_0, accept_conn_cb, NULL,
+            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
+            -1, (struct sockaddr *)&servaddr, sizeof(servaddr)
+    );
+    if (listener == NULL) {
+        perror("listen socket");
+        return errno;
+    }
+    evconnlistener_set_error_cb(listener, accept_error_cb);
+
+    /* start event loop (master) */
+    printf("listening: %s:%d\n", LISTEN_ADDR, LISTEN_PORT);
+    event_base_dispatch(base_0); // blocking here
+
+    /* cancel worker threads when master thread's event loop exited */
+    pthread_cancel(worker_tid_1);
+    pthread_cancel(worker_tid_2);
+    pthread_cancel(worker_tid_3);
+    pthread_cancel(worker_tid_4);
+
+    /* free listener, event_base */
+    evconnlistener_free(listener);
+    event_base_free(base_0);
+    event_base_free(base_1);
+    event_base_free(base_2);
+    event_base_free(base_3);
+    event_base_free(base_4);
+
+    return 0;
+}
+
+/* implement accept_conn_cb function */
+void accept_conn_cb(struct evconnlistener *listener, evutil_socket_t sock, struct sockaddr *addr, int addrlen, void *arg) {
+    /* welcome new connection */
+    struct sockaddr_in *connaddr = (struct sockaddr_in *)addr;
+    printf("welcome: %s:%d\n", inet_ntoa(connaddr->sin_addr), ntohs(connaddr->sin_port));
+
+    /* averagely distribute new connection to each worker thread */
+    accept_conn_count++;
+    struct event_base *base = NULL;
+         if (accept_conn_count % 4 == 1) base = base_1;
+    else if (accept_conn_count % 4 == 2) base = base_2;
+    else if (accept_conn_count % 4 == 3) base = base_3;
+    else if (accept_conn_count % 4 == 0) base = base_4;
+
+    /* setting bufferevent for new connection */
+    struct bufferevent *bev = bufferevent_socket_new(base, sock, BEV_OPT_CLOSE_ON_FREE);
+    bufferevent_setcb(bev, read_conn_cb, NULL, event_conn_cb, NULL);
+    bufferevent_enable(bev, EV_READ | EV_WRITE);
+}
+
+/* implement accept_error_cb function */
+void accept_error_cb(struct evconnlistener *listener, void *arg) {
+    char *error_string = evutil_socket_error_to_string(EVUTIL_SOCKET_ERROR());
+    fprintf(stderr, "accept socket: %s\n", error_string);
+    event_base_loopexit(base_0, NULL);
+}
+
+/* implement read_conn_cb function */
+void read_conn_cb(struct bufferevent *bev, void *arg) {
+    /* get input/output evbuffers */
+    struct evbuffer *input = bufferevent_get_input(bev);
+    struct evbuffer *output = bufferevent_get_output(bev);
+
+    /* get client socket address */
+    struct sockaddr_in connaddr; socklen_t addrlen = sizeof(struct sockaddr_in);
+    getpeername(bufferevent_getfd(bev), (struct sockaddr *)&connaddr, &addrlen);
+
+    /* print data and send to client */
+    int len = evbuffer_get_length(input);
+    char *str = (char *)malloc(len + 1);
+    evbuffer_copyout(input, str, len);
+    str[len] = 0;
+    printf("recv(tid: %ld | addr: %s:%d): %s", gettid(), inet_ntoa(connaddr.sin_addr), ntohs(connaddr.sin_port), str);
+    evbuffer_add_buffer(output, input);
+    free(str);
+}
+
+/* implement event_conn_cb function */
+void event_conn_cb(struct bufferevent *bev, short events, void *arg) {
+    if (events & BEV_EVENT_ERROR)
+        perror("recv socket");
+    if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) {
+        struct sockaddr_in connaddr; socklen_t addrlen = sizeof(struct sockaddr_in);
+        getpeername(bufferevent_getfd(bev), (struct sockaddr *)&connaddr, &addrlen);
+        printf("goodbye: %s:%d\n", inet_ntoa(connaddr.sin_addr), ntohs(connaddr.sin_port));
+        bufferevent_free(bev);
+    }
+}
+</script></code></pre>
+<h3 id="echo-服务器（多线程）-1"><a href="#echo-服务器（多线程）-1" class="headerlink" title="echo 服务器（多线程）"></a>echo 服务器（多线程）</h3><p><code>gcc -lpthread -levent -levent_pthreads -o echo-multi-thread echo-multi-thread.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/syscall.h>
+#include <event2/event.h>
+#include <event2/listener.h>
+#include <event2/bufferevent.h>
+#include <event2/buffer.h>
+#include <event2/util.h>
+#include <event2/thread.h>
+
+/* macro for get thread id */
+#define gettid() syscall(__NR_gettid)
+
+/* define listen address */
+#define LISTEN_ADDR "0.0.0.0"
+#define LISTEN_PORT 8080
+
+// number of new connection
+static size_t accept_conn_count = 0;
+// event_base for master thread
+static struct event_base *base_0 = NULL;
+// event_base for worker thread - 1
+static struct event_base *base_1 = NULL;
+// event_base for worker thread - 2
+static struct event_base *base_2 = NULL;
+// event_base for worker thread - 3
+static struct event_base *base_3 = NULL;
+// event_base for worker thread - 4
+static struct event_base *base_4 = NULL;
+// evconnlistener static variable */
+static struct evconnlistener *listener = NULL;
+
+/* define signal handler function */
+void signal_handler(int signum) {
+    if (listener != NULL) evconnlistener_free(listener);
+    if (base_0   != NULL) event_base_free(base_0);
+    if (base_1   != NULL) event_base_free(base_1);
+    if (base_2   != NULL) event_base_free(base_2);
+    if (base_3   != NULL) event_base_free(base_3);
+    if (base_4   != NULL) event_base_free(base_4);
+    exit(0);
+}
+
+/* define worker thread id */
+static pthread_t worker_tid_1;
+static pthread_t worker_tid_2;
+static pthread_t worker_tid_3;
+static pthread_t worker_tid_4;
+
+/* worker thread function */
+void *worker_thread_func(void *arg) {
+    // event_base assigned from the main function
+    struct event_base *base = (struct event_base *)arg;
+    event_base_loop(base, EVLOOP_NO_EXIT_ON_EMPTY);
+    event_base_free(base);
+    return NULL;
+}
+
+/* callback function for accept */
+void accept_conn_cb(struct evconnlistener *listener, evutil_socket_t sock, struct sockaddr *addr, int addrlen, void *arg);
+void accept_error_cb(struct evconnlistener *listener, void *arg);
+
+/* callback function for read/event */
+void read_conn_cb(struct bufferevent *bev, void *arg);
+void event_conn_cb(struct bufferevent *bev, short events, void *arg);
+
+/* master thread function */
+int main() {
+    /* register signal handler */
+    signal(SIGHUP,  signal_handler);
+    signal(SIGINT,  signal_handler);
+    signal(SIGQUIT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    /* create event base for master */
+    base_0 = event_base_new(); // for master thread
+
+    /* create event base for worker */
+    // evthread_use_pthreads() 作用（此函数需要链接到的库：`-levent_pthreads`）：
+    // 如果在多个线程中访问 event_base，则必须调用此函数加锁，否则不是线程安全的！
+    evthread_use_pthreads();
+    base_1 = event_base_new(); // for worker thread 1
+    base_2 = event_base_new(); // for worker thread 2
+    base_3 = event_base_new(); // for worker thread 3
+    base_4 = event_base_new(); // for worker thread 4
+
+    /* create and start worker threads */
+    // worker thread 1
+    if (pthread_create(&worker_tid_1, NULL, worker_thread_func, base_1) != 0) {
+        perror("create thread");
+        return errno;
+    }
+    // worker thread 2
+    if (pthread_create(&worker_tid_2, NULL, worker_thread_func, base_2) != 0) {
+        perror("create thread");
+        return errno;
+    }
+    // worker thread 3
+    if (pthread_create(&worker_tid_3, NULL, worker_thread_func, base_3) != 0) {
+        perror("create thread");
+        return errno;
+    }
+    // worker thread 4
+    if (pthread_create(&worker_tid_4, NULL, worker_thread_func, base_4) != 0) {
+        perror("create thread");
+        return errno;
+    }
+
+    /* setting listen sockaddr */
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = inet_addr(LISTEN_ADDR);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    /* create evconnlistener */
+    listener = evconnlistener_new_bind(
+            base_0, accept_conn_cb, NULL,
+            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
+            -1, (struct sockaddr *)&servaddr, sizeof(servaddr)
+    );
+    if (listener == NULL) {
+        perror("listen socket");
+        return errno;
+    }
+    evconnlistener_set_error_cb(listener, accept_error_cb);
+
+    /* start event loop (master) */
+    printf("listening: %s:%d\n", LISTEN_ADDR, LISTEN_PORT);
+    event_base_dispatch(base_0); // blocking here
+
+    /* cancel worker threads when master thread's event loop exited */
+    pthread_cancel(worker_tid_1);
+    pthread_cancel(worker_tid_2);
+    pthread_cancel(worker_tid_3);
+    pthread_cancel(worker_tid_4);
+
+    /* free listener, event_base */
+    evconnlistener_free(listener);
+    event_base_free(base_0);
+    event_base_free(base_1);
+    event_base_free(base_2);
+    event_base_free(base_3);
+    event_base_free(base_4);
+
+    return 0;
+}
+
+/* implement accept_conn_cb function */
+void accept_conn_cb(struct evconnlistener *listener, evutil_socket_t sock, struct sockaddr *addr, int addrlen, void *arg) {
+    /* welcome new connection */
+    struct sockaddr_in *connaddr = (struct sockaddr_in *)addr;
+    printf("welcome: %s:%d\n", inet_ntoa(connaddr->sin_addr), ntohs(connaddr->sin_port));
+
+    /* averagely distribute new connection to each worker thread */
+    accept_conn_count++;
+    struct event_base *base = NULL;
+         if (accept_conn_count % 4 == 1) base = base_1;
+    else if (accept_conn_count % 4 == 2) base = base_2;
+    else if (accept_conn_count % 4 == 3) base = base_3;
+    else if (accept_conn_count % 4 == 0) base = base_4;
+
+    /* setting bufferevent for new connection */
+    struct bufferevent *bev = bufferevent_socket_new(base, sock, BEV_OPT_CLOSE_ON_FREE);
+    bufferevent_setcb(bev, read_conn_cb, NULL, event_conn_cb, NULL);
+    bufferevent_enable(bev, EV_READ | EV_WRITE);
+}
+
+/* implement accept_error_cb function */
+void accept_error_cb(struct evconnlistener *listener, void *arg) {
+    char *error_string = evutil_socket_error_to_string(EVUTIL_SOCKET_ERROR());
+    fprintf(stderr, "accept socket: %s\n", error_string);
+    event_base_loopexit(base_0, NULL);
+}
+
+/* implement read_conn_cb function */
+void read_conn_cb(struct bufferevent *bev, void *arg) {
+    /* get input/output evbuffers */
+    struct evbuffer *input = bufferevent_get_input(bev);
+    struct evbuffer *output = bufferevent_get_output(bev);
+
+    /* get client socket address */
+    struct sockaddr_in connaddr; socklen_t addrlen = sizeof(struct sockaddr_in);
+    getpeername(bufferevent_getfd(bev), (struct sockaddr *)&connaddr, &addrlen);
+
+    /* print data and send to client */
+    int len = evbuffer_get_length(input);
+    char *str = (char *)malloc(len + 1);
+    evbuffer_copyout(input, str, len);
+    str[len] = 0;
+    printf("recv(tid: %ld | addr: %s:%d): %s", gettid(), inet_ntoa(connaddr.sin_addr), ntohs(connaddr.sin_port), str);
+    evbuffer_add_buffer(output, input);
+    free(str);
+}
+
+/* implement event_conn_cb function */
+void event_conn_cb(struct bufferevent *bev, short events, void *arg) {
+    if (events & BEV_EVENT_ERROR)
+        perror("recv socket");
+    if (events & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) {
+        struct sockaddr_in connaddr; socklen_t addrlen = sizeof(struct sockaddr_in);
+        getpeername(bufferevent_getfd(bev), (struct sockaddr *)&connaddr, &addrlen);
+        printf("goodbye: %s:%d\n", inet_ntoa(connaddr.sin_addr), ntohs(connaddr.sin_port));
+        bufferevent_free(bev);
+    }
+}
+</script></code></pre>
+<h2 id="libevent-其它说明"><a href="#libevent-其它说明" class="headerlink" title="libevent 其它说明"></a>libevent 其它说明</h2><ol>
+<li><p>在 libevent 运行完成之后（也就是程序退出之前），可以调用 <code>void libevent_global_shutdown()</code> 方法，来释放 libevent 申请的所有全局数据结构。注意，此函数是幂等的，即无论是调用一次还是调用多次，都是一样的结果，不会导致问题。还有，注意此函数必须位于所有 libevent 函数之后调用，否则其他 libevent 函数是无法感知到的，可能导致意想不到的错误。</p>
+</li>
+<li><p>创建 event_base 时不要使用默认的 <code>event_base_new()</code> 函数了，因为默认情况下 event_base 是有锁的，而我现在的应用场景完全不需要锁，所以需要使用 config 来定制 event_base。如下：<br><pre><code class="language-c line-numbers"><script type="text/plain"><br>struct event_config <em>event_config_new();<br>void event_config_free(struct event_config </em>cfg);</p>
+</li>
+</ol>
+<p>enum event_base_config_flag {<br>    EVENT_BASE_FLAG_NOLOCK = 0x01,     // 建议<br>    EVENT_BASE_FLAG_IGNORE_ENV = 0x02, // 建议<br>    EVENT_BASE_FLAG_EPOLL_USE_CHANGELIST = 0x10,<br>};<br>int event_config_set_flag(<br>    struct event_config *cfg,<br>    enum event_base_config_flag flag<br>); // 成功返回 0，失败返回 -1</p>
+<p>struct event_base <em>event_base_new_with_config(struct event_config </em>cfg);<br>void event_base_free(struct event_base * base); // 注意它不会释放相关的 event<br></script></code></pre></p>
+<ol>
+<li><p>关于 event_base_loop。默认情况下，它会阻塞当前线程，直到处理完该 base 上所有注册的 event 为止（也就是说如果此时 base 上没有任何已添加的 event，那么该函数就会返回）。强调一点，所谓注册事件也就是 event_add()。默认情况下，struct event 是临时事件，也就是说，在 add 之后，当事件触发时，它只会运行一次，事件触发后，该 event 会自动被取消注册，即 event_del，但是不要忘记了 event_free() 啊，否则就内存泄漏了！！！当然，libevent 允许你创建持久性事件，所谓持久事件就说除非你显式 event_del 取消注册，否则不会自动 event_del。</p>
+</li>
+<li><p>当然，如果 event_base_loop 前，这个 base 里面没有任何已注册的 event，那么该调用会直接返回，不会阻塞。因为没事做啊，如果想让他不返回，也就是说我稍后会注册事件给你，则可以传递 <code>EVLOOP_NO_EXIT_ON_EMPTY</code> 这个 flag，告诉他即使没有 event 可循环，也不要返回！</p>
+</li>
+<li><p>事件的生命周期：<strong>新建状态</strong>（event_new）、<strong>挂起状态</strong>（event_add）、<strong>活动状态</strong>（事件触发时）</p>
+<ul>
+<li>如果是临时事件：则事件触发后会变成为新建状态，即 <strong>活动状态</strong> -&gt; <strong>新建状态</strong>。默认</li>
+<li>如果是持久事件：则事件触发后继续保持挂起状态，即 <strong>活动状态</strong> -&gt; <strong>挂起状态</strong>。循环</li>
+<li>你可以在 event 的挂起、活动状态下调用 event_del、event_free，它们是安全的</li>
+<li>event_new、event_add、event_del、event_free，记住它们的对应关系，不要搞混了</li>
+<li>常用的 EVENT 事件类型：<code>EV_READ</code>、<code>EV_TIMEOUT</code>、<code>EV_PERSIST</code>，多个类型使用 <code>|</code> 连接</li>
+</ul>
+</li>
+<li><p>在创建 event 时，如果需要将当前 event 指针传给回调函数，可以使用 <code>void *event_self_cbarg()</code> 方法，<del>它返回的指针其实就是待会 event_new() 返回的指针。具体的原理我猜测是这样的：当你调用 event_self_cbarg 时，event 内部会 malloc 一个 event 的指针，然后返回给调用者。紧接着，当调用 event_new 函数时，event 内部检测到我们调用了 event_self_cbarg 函数，于是不再分配新的内存，而是直接将创建的 event 数据结构写入到这个指针当中，然后返回。于是就达到了传递 event 指针的目的。注意中间不要进行其他操作，否则可能出现不可预知的问题。</del>。猜测错误，经过实际测试得知，event_self_cbarg 返回的是一个固定的地址，也就是某个静态指针，具体的原理只能通过查看源码得知了。（暂时留个坑吧，主要是怕这个函数不是线程安全的）。我猜错了，原来它的工作原理是这么简单粗暴，event_self_cbarg 返回的应该是个 flag 指针，它存储的内容没有实际意义，他只不过是用来标识 event_new 时，如果传入的 arg 的值与他相等，则表示它想接受 this 指针，实际上传递给 cbfunc 的不是传入的这个指针，而是内部会重新传入正确的指针给它。也就是说 <code>event_self_cbarg()</code> 函数的用途仅限：<code>struct event *ev = event_new(base, sock, events, cbfunc, event_self_cbarg())</code>，其他方式（比如尝试将这个指针放在结构体中，是不现实的），但是我们可以这样做：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+struct cbarg *arg = malloc(sizeof(struct cbarg));
+struct event *ev = event_new(base, sock, events, cbfunc, cbarg);
+cbarg -> event_ptr = ev;
+event_add(base, NULL);
+event_base_disptch(base);
+</script></code></pre>
+</li>
+</ol>
+<p>因为我还没运行 event，所以此时完全来得及将 ev 指针传递给结构体，待会直接用就行了。</p>
+<ol>
+<li><p><code>evutil_socket_t</code> 在 unix 中其实就是 <code>int</code> 类型。如果发生套接字 IO 错误，直接使用 <code>errno</code> 和 <code>strerror(errno)</code> 即可，不需要使用所谓跨平台宏，没必要。注意，errno 是线程安全的（thread local 存储），但是 strerror() 返回的是静态指针，不是线程安全的，需使用 <code>strerror_r()</code> 线程安全版本（和 time 的那个函数类似，貌似后缀 _r 的都是线程安全的，即自己提供 buffer，为了线程安全，最好的方式就是，这个 buffer 是栈上的变量，如字符数组）。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+int evutil_make_socket_nonblocking(int sock); // 设置为非阻塞套接字
+int evutil_make_listen_socket_reuseable(int sock); // 设置 SO_REUSEADDR
+int evutil_sockaddr_cmp(  // 比较两个 sockaddr 地址，ipv4/ipv6
+ struct sockaddr *sa1, // 地址 A
+ struct sockaddr *sa2, // 地址 B
+ int include_port      // 是否包含端口 1/0 aka true/false
+); // 相等则返回 0，和 strcmp 是一样的返回值
+</script></code></pre>
+</li>
+<li><p>分配内存时建议使用 <code>calloc</code>，而不是 <code>malloc() + memset()</code>，前者更快！除非你不担心垃圾值。</p>
+</li>
+<li><p>每个 bufferevent 都有 4 个水位线，读水位线 2 个，写水位线 2 个，我们主要关心读水位线，因为写的话只要负责 write 就行，libevent 会自动发送出去，通常情况下 write 都不会失败。读水位线有两个，一高一低。先说低水位线，只有当 bufferevent 的 input 缓冲区的数据大小超过（或达到）低水位线时，设置的 read 回调函数才会被调用，读低水位线默认为 0，即只要有数据可读就会调用读回调，一般我们不需要改动这个，默认就行。我们主要关心一下读高水位线，高水位线是说，如果 bufferevent 的 input 缓冲区的数据大小达到此值时，bufferevent 会停止从 socket 中读取数据（TCP 滑动窗口变小），直到 read 回调处理了其中的数据，让数据大小低于高水位线后才会继续从 socket 中读取。这个高水位线默认是无限制的，这可能会导致一些问题，比如代理软件，他要管理两个连接，一个是与 client 的，一个是与 server 的，如果 client 这边的网速很慢，而 server 这边的网速很快，那么 server 这边的 bufferevent 的 input 缓冲区将会很快膨胀，即内存占用很大，直到这些数据都转发给了 client 那边。这时我们必须设置一个高水位线，防止 server 这边的 input 缓冲区无限膨胀，导致内存吃得过多，而被系统 kill 掉。比如最大设置为 3~5M 就行了。（但仔细想想好像没这么简单，稍后再说吧）</p>
+</li>
+<li><p>bufferevent 的回调函数中会接收到 events 参数，我们可以通过 <code>BEV_EVENT_READING</code> 来判断是不是读数据期间发生了事件，同样的，可以通过 <code>BEV_EVENT_WRITING</code> 来判断是不是写数据期间发生了事件。</p>
+</li>
+<li><p>再次重申，libevent 中的所有 socket 套接字都必须设置为 non-blocking 的，以免出现问题。</p>
+</li>
+<li><p>bufferevent 的 add 事件是通过 bufferevent_enable 启用的，对应的是 disable。事件只有两个，EV_READ、EV_WRITE。如果没有启用对应事件，bev 将不会尝试读取或写入数据。默认情况下，新创建的 bev 已经启用了 EV_WRITE 事件，你也可以通过 disable 来取消注册 EV_WRITE 事件。有必要再声明几点：启用 WRITE 事件是指，当 output 缓冲区中有数据时，libevent 会自动调用 send 将数据发送出去（写到 socket 缓冲区）；而 READ 事件是指：当 socket 缓冲区中有数据时，libevent 会自动从 socket 缓冲区将数据剪切到 bufferevent 的 input 缓冲区，供 read 回调读取。</p>
+</li>
+<li><p>设置水位线的函数：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+void bufferevent_setwatermark(
+struct bufferevent *bufev,
+short events,   // EV_READ 或 EV_WRITE 或 EV_READ | EV_WRITE
+size_t lowmark, // 低水位线
+size_t highmark // 高水位线（0 表示无限制）
+);
+</script></code></pre>
+</li>
+</ol>
+<h2 id="网络编程个人总结"><a href="#网络编程个人总结" class="headerlink" title="网络编程个人总结"></a>网络编程个人总结</h2><p><strong>OSI 七层网络模型</strong> 从下到上分别为：</p>
+<ol>
+<li><strong>物理层</strong>：光纤、以太网、同轴电缆 等</li>
+<li><strong>链路层</strong>：以太网、WiFi、PPPoE、GPRS 等</li>
+<li><strong>网络层</strong>：IPv4、IPv6、ICMP、BGP、OSPF 等</li>
+<li><strong>传输层</strong>：TCP、UDP、DCCP、SCTP、PPTP、RSVP 等</li>
+<li><del>会话层</del>：已弃用，应用层可替代</li>
+<li><del>表示层</del>：已弃用，应用层可替代</li>
+<li><strong>应用层</strong>：HTTP、FTP、DNS、NTP、DHCP、SMTP、POP3、SSH 等</li>
+</ol>
+<p>其实我们现在应该将其称为 <strong>OSI 五层网络模型</strong>，因为会话层和表示层没有存在的意义和必要。作为网络开发者，需要了解的是 <strong>网络层</strong>（IP）、<strong>传输层</strong>（TCP、UDP）、<strong>应用层</strong>（HTTP、FTP 等）。但是日常使用中，接触的最多的只是 <strong>应用层</strong>，网络层用不着你操心，传输层有 TCP、UDP 两个就够了。而应用层说到底还是数据格式而已，HTTP、FTP、DNS 还是其他的什么协议，其实都是规定的数据格式而已。我们完全可以自己创建一个应用层协议，格式随便定义。</p>
+<p><strong>TCP 和 UDP 的区别</strong></p>
+<blockquote>
+<p>一句话总结：<span style="color: green"><strong>TCP 就是打电话，UDP 则是发短信</strong></span>。</p>
+</blockquote>
+<p>先说 UDP 吧，发短信我们知道，一条短信有 2 个元信息：<em>发信人</em>、<em>收信人</em>。而数据就是我们所发的短信内容了。发短信是没有所谓的状态的（或者叫做连接吧，更好理解一点），我只管发送出去，而对方是否收到了，是否查看了短信，我们是无从得知的。UDP 也是如此，一个 UDP 包就像一条短信，它也有两个元信息：<em>发送方 IP:Port</em>、<em>接收方 IP:Port</em>，然后就是里面的数据。发送方将一个 UDP 包发送出去后，就不会再管它了，对方接收到了也好，没接收到也好，都不关发送方的事。而接收方在接收到一个 UDP 包之后，可以从中读取到发送者的 IP:Port（也就是 recvfrom 后面的两个参数），然后接下来处理其中的数据即可（相当于短信接收方读取短信内容一样）。有必要强调一点，如果 UDP 包在发送的过程中（网络传输过程中）丢失了（如 IP 层分片，某个分片不见了，导致 UDP 包是坏的），那么接收方是不会收到这个 UDP 包的，所以接收方收到的 UDP 包一定是完整的 UDP 包。而且 UDP 包也没有所谓的粘包问题，因为你收到的只能是一个完整的 UDP 包，其他的丢失的、坏的包你是收不到的（底层网络栈会收到这些坏包，但是它不会交由应用程序处理）。总之，对 UDP 编程有疑问的时候，多联想一下发送短信、接收短信的过程就清楚了。因为这个特点，UDP 只适用于一应一答的场景，如 DNS，客户端发送一个 DNS 请求，服务器收到之后，发送一个 DNS 响应，这个任务就算完成了。总之和发短信一样。</p>
+<p>再说 TCP，TCP 就是打电话，所以每次与对方交流之前，必须先拨通对方的电话，这个拨号的过程叫做 TCP 握手，拨号成功后，双方都进入已连接状态，也就是电话打通了，可以交流了（双向交流，即你可以发送数据，他也可以发送数据），如果聊完了，就需要挂掉电话，这个挂电话也就是 TCP 挥手。所以 TCP 是流式的传输、面向连接的、可靠的传输层协议。UDP 则是用户数据报协议，”数据报”=”短信”。TCP 有所谓的粘包问题，也就是如何分清界线，比如我让对方发送一个文件给我，我该如何知道这个文件是发完了还是没发完，这就是应用层协议自己该考虑的问题了，比如 HTTP 协议使用 Content-Length 头部来解决这个问题，这个头部用来指示携带的数据有多少字节，这样接收方就能判断是否收完了数据。</p>
+<p>最后聊一下 REDIRECT 和 TPROXY 两种不同的透明代理方式，REDIRECT 只适用于 TCP，而 TPROXY 支持 TCP 和 UDP。REDIRECT 其实就是 DNAT 的一种，只不过它的目的地址始终是 127.0.0.1 而已。</p>
+<p>REDIRECT 实现 TCP 透明代理很简单，proxy 在收到新连接之后，调用 getsockopt 就可以获取这个连接的原目的地址和端口信息了，然后 proxy 再与目的地址建立连接，之后无脑转发数据就行，简单。</p>
+<p>而 TPROXY 则稍微麻烦一点，首先 TPROXY 在必要的前提下会改变数据包的 dst_port。proxy 监听一个端口，假设为 60053，并且假设为 UDP 端口。proxy 的监听地址为 0.0.0.0（任意 IP 地址），所以，我们只需要设置好路由（local 类型的路由），将这些需要代理的 UDP 包路由到 proxy 上即可。比如客户端往 8.8.8.8:53/udp 发送 DNS 请求，那么在经过网关时，TPROXY 规则会将这个 UDP 包的目的端口改为 60053（原端口会写入到 socket msg 之中，稍后通过 recvmsg 可读取到），然后进过路由，被那条 local 路由命中，于是发往本机的 proxy 进程，proxy 收到后（调用 recvmsg 而不是 recvfrom，因为需要读取原目的地址和目的端口信息），获取到目的地址和目的端口，然后创建一个新的 UDP socket，发送给目的服务器。当这个 UDP socket 接收到服务器返回的响应之后，proxy 又创建过一个新的 UDP socket 用于响应客户端，这个 UDP socket 绑定的 IP 和 Port 就是之前读取到的 dst_addr、dst_port（需要给 socket 设置特殊套接字选项才能绑定成功），然后使用这个 socket 发送响应回客户端即可。在客户端开来，这的确是我刚才请求的 dst_addr:dst_port 返回的数据，所以没有问题，也即透明代理。对于 TPROXY 如何代理 TCP，我目前不太清楚 proxy 如何写。</p>
+<hr>
+<p><strong>如何正确关闭 TCP Socket</strong></p>
+<p>情景假设：正在编写一个 proxy 程序，每个 TCP 代理都与两个 TCP Socket 关联。<br><code>A &lt;---&gt; P &lt;---&gt; B</code>，P 是我们的 proxy 程序，A、B 则是两侧的 TCP 套接字。</p>
+<p>其实上面的图形完全是下面的两个图的结合：</p>
+<p>A 给 B 发送数据：<code>A ---&gt; P ---&gt; B</code><br>B 给 A 发送数据：<code>A &lt;--- P &lt;--- B</code></p>
+<p>Proxy 做的工作很简单，完全就是单纯的转发对方的数据而已。</p>
+<p><strong>socket 的关闭分为两种</strong></p>
+<ol>
+<li>Proxy 从任意一方收到 ERR（假设从 A 这边收到 ERR）</li>
+<li>Proxy 从任意一方收到 EOF（假设从 A 这边收到 EOF）</li>
+</ol>
+<p><strong>第一种，从 A 收到 ERR（收到错误）</strong><br>因为 A 套接字已经发生了 ERROR，不可能恢复，所以我们可放心的关闭 A 套接字；但是对于 B 套接字，我们不能直接立即关闭，因为 B 套接字上我们可能还有需要发送的数据，如果此时直接关闭，会导致 B 套接字的对端收到不完整的数据，导致 bug。对于 B 套接字，我们其实不需要从中读取数据了，因为即使读取了也不能发给 A，因为 A 已经被 close 了。所以在 bufferevent 上，我们可以立即对 B 套接字调用 disable(EV_READ)，来关闭 B 这边的读取操作。然后检查 B 的发送缓冲区的数据大小，如果为 0，说明没有数据可发送，那么可以直接关闭 B 套接字。如果不是 0，那么需要为 B 套接字设置 write 写回调，水位线设为 0，表示写完了才会调用 write_cb，而在 write_cb 中我们会关闭 B 套接字。同时我们还需要为 B 套接字设置 event 事件回调，当我们从 B 中收到 ERROR 之后，可直接关闭 B 套接字；让我们收到 EOF 之后，应该设置一个 3s 超时时间，如果 3s 之后 write_cb 仍未调用（即仍然没有写完）则直接关闭 B 套接字。如果 3s 之内写完了，则 write_cb 自然会关闭套接字 B，并且删除 3s 超时的 event。</p>
+<p><strong>第二种，从 A 收到 EOF（正常关闭）</strong><br>从 A 收到 EOF 表示 A 不会再发送数据了，也就是 A -&gt; P -&gt; B 方向的通道可以关闭了，但是 A 此时和此后仍然可以调用 recv 来接收数据，因为它并没有关闭读通道。所以，我们的代理软件应该对 A 套接字调用 disable(EV_READ)。然后对于 B 套接字，首先应该检查 B 的写缓冲区的大小，如果为 0，那么我们可直接对 B 套接字调用 socket_shutdown(SEND)，表示我们也不会向 B 发送数据了；如果不是 0，那么我们应该为 B 注册 write_cb，当写完之后，我们再对其调用 socket_shutdown(SEND)，当然 B 套接字的 event 回调也不能少，如果此期间从 B 收到了 EOF/ERR 信息，则直接关闭 B 套接字，然后检查 A 套接字的发送缓冲区，如果为 0，则关闭 A 套接字，如果不为 0，则设置 A 套接字的 write 回调，写完之后就直接关闭 A 套接字，同时为 A 设置一个 EVENT 回调，如果收到 ERROR，则直接关闭 A；同时还要设置一个 3s 超时时间，如果 3s 之内仍然为发送完，则直接关闭 A。</p>
+</li></ol>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/language.html" rel="next" title="编程语言琐碎">
+                <i class="fa fa-chevron-left"></i> 编程语言琐碎
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-framework.html" rel="prev" title="JavaEE 框架预备知识">
+                JavaEE 框架预备知识 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#libevent-安装"><span class="nav-number">1.</span> <span class="nav-text">libevent 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#libevent-用法"><span class="nav-number">2.</span> <span class="nav-text">libevent 用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#event-h"><span class="nav-number">2.1.</span> <span class="nav-text">event.h</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#util-h"><span class="nav-number">2.2.</span> <span class="nav-text">util.h</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bufferevent-h"><span class="nav-number">2.3.</span> <span class="nav-text">bufferevent.h</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#buffer-h"><span class="nav-number">2.4.</span> <span class="nav-text">buffer.h</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listener-h"><span class="nav-number">2.5.</span> <span class="nav-text">listener.h</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#libevent-例子"><span class="nav-number">3.</span> <span class="nav-text">libevent 例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#echo-服务器（单线程）"><span class="nav-number">3.1.</span> <span class="nav-text">echo 服务器（单线程）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#echo-服务器（多线程）"><span class="nav-number">3.2.</span> <span class="nav-text">echo 服务器（多线程）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#echo-服务器（多线程）-1"><span class="nav-number">3.3.</span> <span class="nav-text">echo 服务器（多线程）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#libevent-其它说明"><span class="nav-number">4.</span> <span class="nav-text">libevent 其它说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络编程个人总结"><span class="nav-number">5.</span> <span class="nav-text">网络编程个人总结</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/libevent.html';
+          this.page.identifier = 'libevent.html';
+          this.page.title = 'libevent 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

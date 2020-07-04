@@ -1,0 +1,2653 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="前端,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JavaScript，通常缩写为 JS，是一种高级的，解释执行的编程语言。JavaScript 是一门基于原型、函数先行的语言，是一门多范式的语言，它支持面向对象编程，命令式编程，以及函数式编程。它提供语法来操控文本、数组、日期以及正则表达式等，不支持 I/O，比如网络、存储和图形等，但这些都可以由它的宿主环境提供支持。它已经由 ECMA（欧洲计算机制造商协会）通过 ECMAScript 实现语言">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 笔记">
+<meta property="og:url" content="https://www.zfl9.com/javascript.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JavaScript，通常缩写为 JS，是一种高级的，解释执行的编程语言。JavaScript 是一门基于原型、函数先行的语言，是一门多范式的语言，它支持面向对象编程，命令式编程，以及函数式编程。它提供语法来操控文本、数组、日期以及正则表达式等，不支持 I/O，比如网络、存储和图形等，但这些都可以由它的宿主环境提供支持。它已经由 ECMA（欧洲计算机制造商协会）通过 ECMAScript 实现语言">
+<meta property="og:image" content="https://www.w3schools.com/js/pic_htmltree.gif">
+<meta property="og:image" content="https://www.zfl9.com/images/jquery-add-elem.png">
+<meta property="og:image" content="https://www.zfl9.com/images/jquery-add-elem-2.png">
+<meta property="og:image" content="http://www.runoob.com/images/img_jquerydim.gif">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.218Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 笔记">
+<meta name="twitter:description" content="JavaScript，通常缩写为 JS，是一种高级的，解释执行的编程语言。JavaScript 是一门基于原型、函数先行的语言，是一门多范式的语言，它支持面向对象编程，命令式编程，以及函数式编程。它提供语法来操控文本、数组、日期以及正则表达式等，不支持 I/O，比如网络、存储和图形等，但这些都可以由它的宿主环境提供支持。它已经由 ECMA（欧洲计算机制造商协会）通过 ECMAScript 实现语言">
+<meta name="twitter:image" content="https://www.w3schools.com/js/pic_htmltree.gif">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/javascript.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>JavaScript 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/javascript.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                JavaScript 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-06T08:00:00+08:00">
+                2018-12-06
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/javascript.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="javascript.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/javascript.html" class="leancloud_visitors" data-flag-title="JavaScript 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JavaScript，通常缩写为 JS，是一种高级的，解释执行的编程语言。JavaScript 是一门基于原型、函数先行的语言，是一门多范式的语言，它支持面向对象编程，命令式编程，以及函数式编程。它提供语法来操控文本、数组、日期以及正则表达式等，不支持 I/O，比如网络、存储和图形等，但这些都可以由它的宿主环境提供支持。它已经由 ECMA（欧洲计算机制造商协会）通过 ECMAScript 实现语言的标准化。它被世界上的绝大多数网站所使用，也被世界主流浏览器（Chrome、IE、Firefox、Safari、Opera）支持。</p>
+<a id="more"></a>
+<h2 id="Hello-world"><a href="#Hello-world" class="headerlink" title="Hello world"></a>Hello world</h2><p>在 HTML 文档中使用 javascript 脚本有两种方式，都是通过 <code>&lt;script&gt;</code> 元素实现的。</p>
+<pre><code class="language-html line-numbers">
+&lt;!-- 直接内嵌 --&gt;
+&lt;script&gt;
+console.log(&#x27;hello, world!&#x27;);
+&lt;/script&gt;
+
+&lt;!-- 外部文件 --&gt;
+&lt;script src=&quot;hello.js&quot;&gt;&lt;/script&gt;
+&lt;!-- &#x27;hello,js&#x27;文件内容 --&gt;
+console.log(&#x27;hello, world!&#x27;);
+</code></pre>
+<p>如果是少量的 js，可以使用内嵌方式，这种方式的缺点是不易维护，代码不可重用。<br>如果是大量的 js，建议使用外部文件，这种方式的优点是容易维护，代码可以重用。</p>
+<p>javascript 的严格模式<code>&#39;use strict&#39;;</code>，因为 javascript 有很多设计缺陷，经常导致一些诡异的 bug，很难发现，为了尽早的发现这些错误，强烈建议使用<strong>严格模式</strong>！</p>
+<p>开启严格模式很简单，只需在<strong>脚本的头部</strong>或<strong>函数的头部</strong>添加<code>&#39;use strict&#39;;</code>语句，不支持严格模式的浏览器会直接忽略它，因为这是一个普通的语句，没有任何副作用。本文中的所有代码均以严格模式为标准。不考虑宽松模式（正常模式）。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+// TODO
+</script></code></pre>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+function func() {
+    'use strict';
+    // TODO
+}
+</script></code></pre>
+<p>javascript 允许不在句末写分号，因为它会自动的在句末添加<code>;</code>号。但是强烈建议自己写上分号，不要去省略。我们来看一下自动加分号的隐藏 bug：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function func() {
+    return
+        'hello, world!';
+}
+
+var str = func();
+console.log(str); // undefined
+</script></code></pre>
+<p>因为自动加分号的机制，它实际上等价于：<code>return; &#39;hello, world!&#39;;</code>，而不带返回值的 return 语句实际上就是<code>return undefined;</code>。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p><strong>注释</strong>：<code>// 单行注释</code>、<code>/* 多行注释 */</code>。</p>
+<p><strong>javascript 标识符</strong><br>必须以<code>字母</code>、<code>_</code>、<code>$</code>开头，其后可跟<code>字母</code>、<code>数字</code>、<code>_</code>、<code>$</code>。</p>
+<p><strong>定义变量</strong><br><strong><code>var</code></strong><br>这是 ES6（ES2015）之前的唯一方式，var 不能定义局部作用域的变量，使用 var 定义的变量只有两种作用域：<strong>全局作用域</strong>、<strong>函数作用域</strong>。另外，var 定义的全局变量其实是全局对象（在浏览器中为 window）的一个属性，也即，对于<code>var a;</code>，可以通过<code>a</code>、<code>window.a</code>来访问，没有区别。但是，它又与直接定义的 window 属性不同，使用 var 定义的全局变量不可以使用 delete 删除。对于同一个用 var 定义的变量，可以再次使用 var 进行定义（应该叫做重新声明），不会有影响。除此之外，var 声明语句会被默认提升至当前作用域的开头（脚本的头部、函数的头部），这种行为称为<strong>变量提升（hoisting）</strong>。除了 var 语句会被提升外，函数的定义也会被提升（非函数表达式），具体的表现如下：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log(a); // undefined
+console.log(f()); // 'hello, world!'
+
+var a = 100;
+function f() { return 'hello, world!'; }
+</script></code></pre>
+<p><strong><code>let</code></strong><br>ES6 新增的语法，用来定义一个变量。与 var 不同的是，let 定义的变量有三种作用域：<strong>全局作用域</strong>、<strong>函数作用域</strong>、<strong>块级作用域</strong>。并且，let 定义的全局变量不再是 window 对象的属性，更不能使用 delete 语句删除它。除此之外，不允许使用 let 重复声明同一个变量，let 语句也没有所谓的变量提升。因此，如果可以，请尽量使用 let 定义变量！</p>
+<p><strong><code>const</code></strong><br>ES6 新增的语法，用来定义一个<strong>常量</strong>。因此必须在声明的同时赋初值（即初始化），并且，常量被定义后，不允许被修改（能修改还能叫做常量吗）。除此之外，它和 let 具有一样的特性。</p>
+<p><strong>变量初始值</strong><br>在 C/C++ 中，一个变量如果在定义的同时没有赋初值（即没有初始化），那么它也是有初始值的，对于 static 变量，初始值为 0，对于其他的变量（栈、堆），初始值为垃圾值。</p>
+<p>同样的，在 javascript 中，如果在定义变量的同时没有赋初值（如<code>var a; let b;</code>），那么，该变量的初始值为<code>undefined</code>，<code>undefined</code>是一个值，它的类型是<code>undefined</code>（非对象）。</p>
+<p>除了 undefined 外，还有一个特殊的值：<code>null</code>，也就是<code>空指针/空引用</code>，null 是一个值，它的类型是<code>Object</code>（对象）。</p>
+<p>undefined、null 的相关属性：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log(undefined); // 'undefined'
+console.log(null); // 'null'
+
+console.log(typeof undefined); // 'undefined' 基本类型
+console.log(typeof null); // 'object' 引用类型
+
+console.log(null instanceof Object); // false，因为 null 没有 __proto__ 属性，它只是空指针！
+</script></code></pre>
+<blockquote>
+<p><code>instanceof</code>判断一个对象（哈希表）是否属于某个类型（构造函数）的依据是：<code>obj.__proto__ === Constructor.prototype</code>，因此，<code>null instanceof Object</code>的结果为 false 就不奇怪了。</p>
+</blockquote>
+<p><strong><code>undefined</code>和<code>null</code>的异同</strong></p>
+<ol>
+<li><code>undefined</code>是基本类型，<code>null</code>是引用类型</li>
+<li><code>undefined</code>表示变量未初始化，<code>null</code>表示对象的值为空（指针）</li>
+<li><code>undefined</code>和<code>null</code>在布尔环境中均被转换为 false</li>
+<li><code>undefined</code>在数值环境中被转换为 NaN，null 被转换为 0</li>
+</ol>
+<p><strong>数据类型</strong><br>与 java 一样，javascript 中也分为<strong>基本类型（原始类型）</strong>、<strong>引用类型</strong>，同时基本类型也有对应的包装类型（引用类型）。</p>
+<p><strong>基本类型</strong>（6 种）<br><code>boolean</code>：布尔类型。字面值有<code>true</code>、<code>false</code>。<br><code>number</code>：数值类型。64位双精度，无穷大<code>+/-Infinity</code>、非数值<code>NaN</code>。<br><code>string</code>：字符串类型。使用单/双引号表示字符串，如<code>&#39;hello&#39;</code>、<code>&quot;hello&quot;</code>。<br><code>symbol</code>：ES6 新增类型。不过我暂时不知道它有什么卵用。<br><code>undefined</code>：未定义类型。字面值只有<code>undefined</code>。<br><code>null</code>：空指针类型。字面值只有<code>null</code>（个人认为 null 是值而不是类型）。</p>
+<blockquote>
+<p>基本类型的值是不可变的。</p>
+</blockquote>
+<p><strong>引用类型</strong>（对象）<br><code>Object</code>：对象。本质是 key-value 键值对，与 Java 中的 HashMap 类似。其中，key 为字符串，value 为任意类型。Object 是所有引用类型的基类（包括 Function、Array）。</p>
+<ul>
+<li><code>Object</code>对象：<code>{k1: v1, k2: v2, k3: v3}</code>键值对，key 为字符串。</li>
+<li><code>Array</code>数组：<code>[v1, v2, v3]</code>本质也是键值对，key 为<code>[0, 1, 2, ...]</code>。</li>
+<li><code>Function</code>函数：<code>function func(param ...) { ... }</code>，函数也是对象。</li>
+<li><code>RegExp</code>正则表达式：<code>/pattern/flags</code>或<code>new RegExp(pattern[, flags])</code>。</li>
+<li><code>Date</code>日期时间：Date 时间对象基于 1970-01-01T00:00:00Z 起的毫秒数。</li>
+<li><code>Math</code>数学对象：Math 是内置对象（非函数对象），包含数学常数及相关方法。</li>
+<li><code>Error</code>错误/异常：<code>new Error(message)</code>创建异常对象，message 为异常描述。</li>
+</ul>
+<p><strong>包装类型</strong>（存在自动装箱）<br><code>Boolean</code>，布尔类型 boolean 的包装类；<br><code>Number</code>，数值类型 number 的包装类；<br><code>String</code>，字符串类型 string 的包装类；<br><code>Symbol</code>，符号类型 symbol 的包装类。</p>
+<blockquote>
+<p>包装类型的通用方法：<code>valueOf()</code>，用于获取所包装的基本类型值。<br>包装类型内部的基本类型值是不可变的，但是包装类型自己是可变的。</p>
+</blockquote>
+<p><strong>判断数值</strong><br><code>isNaN(testValue)</code>：检测传入的值是否为 NaN（非数值）<br><code>isFinite(testValue)</code>：检测传入的值是否为有效值（非无穷大）</p>
+<p><strong>小结</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+/* 变量的类型可在运行时改变 */
+let foo; // type: undefined
+console.log(typeof foo);
+
+foo = false; // type: boolean
+console.log(typeof foo);
+
+foo = 10; // type: number
+console.log(typeof foo);
+
+foo = 'hello'; // type: string
+console.log(typeof foo);
+
+/* 基本类型与对应的包装类型 */
+let bool1 = true; // 基本类型
+let bool2 = Boolean(true); // 基本类型(普通函数调用)
+let bool3 = new Boolean(true) // 引用类型(构造函数)
+console.log(bool1);
+console.log(bool2);
+console.log(bool3);
+console.log(bool1 === bool2); // true
+console.log(bool2 === bool3); // false，引用类型比较的是内存地址
+</script></code></pre>
+<blockquote>
+<p>一般情况下，不建议使用包装类型，浪费内存，给自己找麻烦。</p>
+</blockquote>
+<p><strong>数据类型转换</strong></p>
+<ul>
+<li>任意类型 -&gt; boolean：<code>Boolean(value)</code></li>
+<li>任意类型 -&gt; number：<code>Number(value)</code></li>
+<li>任意类型 -&gt; string：<code>String(value)</code></li>
+</ul>
+<p>一般无需手动将其他类型转换为布尔值，if/while/for 等测试语句会自动转换。<br><strong>false 值</strong>：<code>undefined</code>、<code>null</code>、<code>-0</code>、<code>+0</code>、<code>NaN</code>、<code>&#39;&#39;</code>（空串）。<br><strong>true 值</strong>：除了上面给定的值外，其余的值均被自动转换为 true。</p>
+<p>字符串转换为数值类型：</p>
+<ul>
+<li><code>parseInt(string, radix)</code>，从字符串中解析<strong>整数</strong>。<ul>
+<li>string 的前导空白将被忽略；并且会忽略后面的非数字部分。</li>
+<li>radix 为进制（取值范围为<code>[2, 36]</code>），如 2、8、10、16。</li>
+<li>十六进制数值建议以<code>0x/0X</code>开头，八进制数值建议以<code>0</code>开头。</li>
+<li>返回解析到的数值 number；如果无法转换为数值，则返回 NaN。</li>
+</ul>
+</li>
+<li><code>parseFloat(string)</code>，从字符串中解析<strong>浮点数</strong>（十进制）。</li>
+<li><code>+string</code>，单目运算符 +，本质是 Number(string) 的简写形式。</li>
+</ul>
+<p>String() 会调用 toString() 方法；拼接字符串可使用 + 操作符（调用 toString()）</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+console.log(true + '-string'); // 'true-string'
+console.log(100 + '-string'); // '100-string'
+console.log('str' + '-string'); // 'str-string'
+console.log(null + '-string'); // 'null-string'
+console.log(undefined + '-string'); // 'undefined-string'
+console.log(new Boolean(true) + '-string'); // 'true-string'
+console.log(new Number(100) + '-string'); // '100-string'
+console.log(new String('str') + '-string'); // 'str-string'
+</script></code></pre>
+<p><strong>布尔字面量</strong><br>布尔类型有两种字面量：<code>true</code>、<code>false</code>。</p>
+<p><strong>整型字面量</strong><br>二进制：<code>0b</code>或<code>0B</code>开头<br>八进制：<code>0o</code>或<code>0O</code>开头（非严格模式可用<code>0</code>开头）<br>十进制：没有特定前缀<br>十六进制：<code>0x</code>或<code>0X</code>开头</p>
+<p><strong>浮点型字面量</strong><br>语法：<code>[(+|-)][digits][.digits][(E|e)[(+|-)]digits]</code><br>浮点数字面量至少有一位数字，而且必须带小数点或者<code>e/E</code>（10 的 N 次方）</p>
+<p><strong>字符串字面量</strong><br>字符串字面量是由单引号<code>&#39;</code>或双引号<code>&quot;</code>括起来的零个或多个字符。使用单引号和双引号没有区别，但是它们必须成对。单引号中如果需要表示单引号本身，则需要使用反斜杠转义，双引号同理。字符串也有一个 length 属性，它表示 UTF-16 code-unit 码元的数量（这点和 Java 是一样的），因此一个字符串就算只有一个字符，它的 length 也不一定为 1，也有可能为 2（代理对）。</p>
+<p><strong>模板字符串</strong><br>ES6 中的模版字符串提供了一些语法糖来帮助你构造字符串（字符串拼接），模版字符串前后使用反引号<code>` </code>括住，其中可以使用<code>${expression}</code>来插入 js 表达式。同时，使用模版字符串可以很容易的输入一个多行字符串。</p>
+<p><strong>字符转义序列</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">转移序列</th>
+<th style="text-align:center">相关解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>\0</code></td>
+<td style="text-align:center">NULL符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\b</code></td>
+<td style="text-align:center">退格符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\r</code></td>
+<td style="text-align:center">回车符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\n</code></td>
+<td style="text-align:center">换行符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\f</code></td>
+<td style="text-align:center">换页符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\t</code></td>
+<td style="text-align:center">水平制表</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\v</code></td>
+<td style="text-align:center">垂直制表</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\&#39;</code></td>
+<td style="text-align:center">单引号</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\&quot;</code></td>
+<td style="text-align:center">双引号</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\\</code></td>
+<td style="text-align:center">反斜杠</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\nnn</code></td>
+<td style="text-align:center"><code>0~377</code>八进制转义字符（Latin-1）<span style="color:red">严格模式不允许</span></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\xhh</code></td>
+<td style="text-align:center"><code>00~FF</code>十六进制转义字符（Latin-1）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\uhhhh</code></td>
+<td style="text-align:center"><code>0000~FFFF</code>十六进制转义字符（BMP Unicode/surrogate pair）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\u{hhhhhh}</code></td>
+<td style="text-align:center"><code>0000~10FFFF</code>十六进制转义字符（Unicode code point）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>对象字面量</strong><br>对象字面值使用一对花括号表示，其中可以有零个或多个 key-value 键值对，<code>{k1: v1, k2: v2, k3: v3, ...}</code>。注意，不能在一行的开头使用对象字面量，因为此时的花括号会被当作语句块的开始！其中 key 为字符串类型（暂不考虑 Symbol 类型），value 为 js 任意数据类型。如果 key 并非合法的 js 标识符，则必须使用单引号或双引号括住，并且在访问时也不能通过<code>.</code>来访问，只能使用<code>[&#39;key&#39;]</code>来访问！因此，强烈建议使用合法 js 标识符来表示 key，避免不必要的麻烦。</p>
+<p><strong>数组字面量</strong><br>数组字面值使用一对方括号表示，其中可以有零个或多个 value 值，<code>[v1, v2, v3, ...]</code>。key 被隐式的声明为 [0, 1, 2, 3, …] 下标（字符串类型），不过通常使用数字来访问，因此，数组也是特殊的对象。除此之外，数组还有 length 属性，它总是比最大下标大 1，因此它并非表示实际的数组元素个数！</p>
+<p>在后面，我们会经常接触到一个词 - <strong>类数组对象</strong>，类数组其实就是拥有 length 属性，以及存在 [0, 1, 2, 3, …] 非负整数的下标 key 的对象，比如函数内部的 arguments 对象就是典型的类数组对象。</p>
+<p>数组字面量中的多余<code>,</code>逗号：不建议在数组尾部添加多余的逗号，不过在数组中间，是可以存在多个逗号的，这些下标的值都是<code>undefined</code>，不过，还是建议自己写上 undefined，这样的可读性更好，毕竟很多时候代码都是写给人看的。</p>
+<p><strong>正则字面量</strong><br>正则表达式字面量使用一对正斜杠表示，即<code>/pattern/flags</code>，其中 flags 是正则标志，如是否启用全局匹配、是否忽略大小写、是否启用多行模式等，flags 部分是可选的。</p>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><p><strong>语句块</strong>：和 Java 一样，语句块也是使用花括号括住。基本语法为：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+{
+    statement_1;
+    statement_2;
+    statement_3;
+    ...
+    statement_N;
+}
+</script></code></pre>
+<p><strong>条件判断</strong><br><code>if...else if...else</code>：与 Java 一样，如果只有一条语句，可以省略花括号。<br><code>switch...case</code>：语法与 Java 一样，不过可以使用任意类型，使用<code>===</code>判等。</p>
+<p><strong>for 循环</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+for ([initialExpression]; [condition]; [incrementExpression]) {
+    statement_1;
+    statement_2;
+    ...
+    statement_N;
+}
+</script></code></pre>
+<p><strong>while 循环</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+while (condition) {
+    // TODO
+}
+</script></code></pre>
+<p><strong>do-while 循环</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+do {
+    // TODO
+} while (condition);
+</script></code></pre>
+<p><strong>break/continue 跳出循环</strong><br><code>break</code>：跳出当前循环体，执行循环后面的语句；<br><code>continue</code>：结束此轮循环，直接开始下一轮循环。<br>和 Java 一样，break/continue 后面可以接一个 label 标签，表示用于跳出哪个循环，如果省略，默认跳出 break/continue 语句所在的循环体。具体的演示如下：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+outer: for (let i = 0; i < 10; i++) {
+    inner: for (let j = 0; j < 10; j++) {
+        if (i === j)
+            continue outer;
+        console.log('i = ' + i + ', j = ' + j);
+    }
+}
+</script></code></pre>
+<p>console 输出如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+i = 1, j = 0
+i = 2, j = 0
+i = 2, j = 1
+i = 3, j = 0
+i = 3, j = 1
+i = 3, j = 2
+i = 4, j = 0
+i = 4, j = 1
+i = 4, j = 2
+i = 4, j = 3
+i = 5, j = 0
+i = 5, j = 1
+i = 5, j = 2
+i = 5, j = 3
+i = 5, j = 4
+i = 6, j = 0
+i = 6, j = 1
+i = 6, j = 2
+i = 6, j = 3
+i = 6, j = 4
+i = 6, j = 5
+i = 7, j = 0
+i = 7, j = 1
+i = 7, j = 2
+i = 7, j = 3
+i = 7, j = 4
+i = 7, j = 5
+i = 7, j = 6
+i = 8, j = 0
+i = 8, j = 1
+i = 8, j = 2
+i = 8, j = 3
+i = 8, j = 4
+i = 8, j = 5
+i = 8, j = 6
+i = 8, j = 7
+i = 9, j = 0
+i = 9, j = 1
+i = 9, j = 2
+i = 9, j = 3
+i = 9, j = 4
+i = 9, j = 5
+i = 9, j = 6
+i = 9, j = 7
+i = 9, j = 8
+</script></code></pre>
+<p><strong>for…in 遍历对象的key</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+let obj = {
+    k1: 'v1',
+    k2: 'v2',
+    k3: 'v3'
+};
+for (let key in obj)
+    console.log(obj[key]); // 不能使用 obj.key！
+</script></code></pre>
+<p><strong>for…of 遍历可迭代对象</strong><br>(ES6) 内置可迭代对象：<code>Array</code>、<code>String</code>、<code>Map</code>、<code>Set</code>、<code>TypedArray</code>、<code>arguments</code>。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+for (let i of arr)
+    console.log(i);
+</script></code></pre>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>js 的异常处理机制与 java 很相似，使用<code>try</code>、<code>catch</code>、<code>finally</code>、<code>throw</code>四个关键字。js 中的 throw 语句可以抛出任意数据类型，不过强烈建议使用内置的 Error 类型（个人认为使用 Expection 异常更恰当，可惜没有）。还有一点要注意，因为 js 的变量类型是运行时动态确定的，因此 catch 语句最多只有一个。catch 中的 e 变量只能在 catch 块中使用，在其他地方无法使用！</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+try {
+    // 可能发生异常的语句
+} catch (e) {
+    // 用来处理异常的语句
+} finally {
+    // 不管是否发生异常，finally 块总是被执行
+}
+</script></code></pre>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>函数定义(声明)</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+function square(number) {
+    return number * number;
+}
+</script></code></pre>
+<ul>
+<li>JS 与 Java 一样，函数的传参方式都是 <strong>值传递</strong>。这也就意味着，我们不能在函数内部修改实参本身的值，不过实参所引用的值却可以任意修改（比如 Object），这个和 Java 也是一样的。</li>
+<li>在 JS 中，函数也是对象，类型是 Function，上述代码就是函数字面量。要说明的是，函数名其实也是一个变量（当然也有一些特别的地方，比如函数定义总是会被提升，而变量定义却不一定，只有使用 var 定义的才会被提升），你完全可以再次给它赋值，比如 <code>func = 100;</code>，此时 func 的类型已经从 Function 变成了 number，这时如果再调用 func，就会报 TypeError，提示 func 不是一个函数。了解这个后，就不难理解“同名函数可以被多次定义，不过只有最后一个生效”的原因了，因为同名函数的多次定义仅仅就是一个普通变量的多次赋值而已，当然也很容易知道，JS 中没有所谓的函数重载。</li>
+<li>调用函数时，传入的实际参数的数目可以与形式参数的数目不一致，可以更多也可以更少，甚至可以没有。形参的名称只不过为了方便引用，我们可以在函数内部使用 <code>arguments</code> 类数组对象获取传入的所有参数，如果实参比形参少，则未赋值的形参的值默认为 <code>undefined</code>，如果实参比形参多，多出的实参并未被丢弃，它们其实都保存到了 arguments 这个内部对象中，可以使用 arguments[i] 来一一获取传入的实参，i 从 0 开始，实参的数目可以通过 arguments.length 属性获取。</li>
+</ul>
+<p><strong>函数表达式</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+let func = function(number) {
+    return number * number;
+};
+</script></code></pre>
+<p>除了传统的 <code>function func(param...) { ... }</code> 方式来定义函数外，我们还可以直接将函数对象赋给一个变量，因为函数也是对象嘛，是对象就可以赋值给变量。因为这是一个完整的赋值语句，所以函数右花括号后必须加上分号。如果需要在函数内部调用自身（或者引用自身），可以使用函数表达式的变量名 func，除此之外，还可以为函数字面量定义一个私有名称，这个函数变量只能在函数内部使用，在外部是无法使用的，调用会提示标识符未定义。比如下面这个例子，用来计算阶乘的函数：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let factorial = function(n) {
+    return n < 2 ? 1 : n * factorial(n - 1);
+};
+
+console.log(factorial(0));
+console.log(factorial(1));
+console.log(factorial(2));
+console.log(factorial(3));
+console.log(factorial(4));
+console.log(factorial(5));
+console.log(factorial(6));
+console.log(factorial(7));
+console.log(factorial(8));
+console.log(factorial(9));
+console.log(factorial(10));
+</script></code></pre>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let factorial = function f(n) {
+    return n < 2 ? 1 : n * f(n - 1);
+};
+
+console.log(factorial(0));
+console.log(factorial(1));
+console.log(factorial(2));
+console.log(factorial(3));
+console.log(factorial(4));
+console.log(factorial(5));
+console.log(factorial(6));
+console.log(factorial(7));
+console.log(factorial(8));
+console.log(factorial(9));
+console.log(factorial(10));
+console.log(f(20)); // ReferenceError: f is not defined
+</script></code></pre>
+<p><strong>普通函数</strong> 和 <strong>函数表达式</strong> 的区别：普通函数的声明和定义都会被提升（var 变量是声明被提升，但是定义（赋值）不会），函数表达式不存在所谓的提升，如果使用 var 存储函数表达式，则声明被提升，如果使用 let、const 存储函数表达式，则不存在提升。如下：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log(factorial(5)); // 此时 factorial 为 undefined
+
+var factorial = function(n) {
+    return n < 2 ? 1 : n * factorial(n - 1);
+};
+</script></code></pre>
+<p><strong>嵌套函数和闭包</strong><br>JS 的函数与 Java 的函数有一点不同，JS 的函数中可以嵌套定义函数，只要你愿意，你可以嵌套定义任意多层函数。内层函数可以访问外层函数能访问的变量和函数，但是外层函数却不能访问内层函数中的变量和函数。内层函数只能在外层函数中访问，当然，你也可以通过函数返回值的形式将内层函数返回给调用者，这样调用者也可以间接的访问内层函数。定义内层函数通常是为了实现一些非通用的逻辑功能，这个很像 Java 中的私有成员函数，仅限内部使用。</p>
+<p>嵌套函数的例子，利用内部函数实现非通用逻辑：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function addSquares(a, b) {
+    function square(x) {
+        return x * x;
+    }
+    return square(a) + square(b);
+}
+
+console.log(addSquares(2, 3)); // 4 + 9 = 13
+console.log(addSquares(3, 4)); // 9 + 16 = 25
+console.log(addSquares(4, 5)); // 16 + 25 = 41
+</script></code></pre>
+<p>返回内部函数，内部函数中引用了外部函数的变量：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function add(x) {
+    function f(y) {
+        return x + y;
+    }
+    return f;
+}
+
+let fn1 = add(5);
+let fn2 = add(6);
+
+console.log(fn1(5)); // 5 + 5 = 10
+console.log(fn2(5)); // 6 + 5 = 11
+
+console.log(fn1(8)); // 5 + 8 = 13
+console.log(fn2(8)); // 6 + 8 = 14
+</script></code></pre>
+<p>是不是很奇怪，在 C/C++、Java 中，每次调用函数时，函数局部变量的内存被分配，当该函数返回后，函数局部变量的内存被回收。也就是说，函数的每次调用，其局部变量的内存都是不一样的。回到上面的例子中，函数 add() 共被调用了两次：分别是 <code>add(5)</code>、<code>add(6)</code>，前面说了，函数返回后，局部变量会被自动回收，那么当我们调用 fn1/fn2 时应该是访问不到外部函数中的局部变量的呀，可是实际的运行结果却相反，完全正常访问，这是为什么呢？又是什么原理呢？</p>
+<p>本节开头我们就说了，在 js 中，函数也是对象，还记得 C++ 中的仿函数吗？仿函数其实是一个普通的对象，之所以称之为仿函数，是因为我们可以直接在该对象后面加上 <code>(param...)</code> 来调用它，和函数调用很相似。那么它的实现原理是什么呢？非常简单，就是运算符重载，只要一个类重载了 operator() 运算符，当给它的对象加上圆括号调用时，其实就是调用了这个成员函数。好吧，有点扯远了，回到 js 中，来看一下这个例子：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function newObj(value) {
+    return {
+        getValue: function() {
+            return value;
+        },
+        increment: function() {
+            return ++value;
+        }
+    };
+}
+
+let obj = newObj(10);
+console.log(obj.getValue()); // 10
+console.log(obj.increment()); // 11
+console.log(obj.getValue()); // 11
+</script></code></pre>
+<p>不仅内部函数可以访问外部函数中的局部变量，内部对象也可以访问外部函数中的局部变量。每调用一次函数，内存中都会产生一个新的 <strong>调用栈对象</strong>（意淫的东西，只是为了加深理解），调用栈对象中存储着传入的实参，函数局部变量，以及其他一些东西。如果函数返回后，没有引用可以访问该调用栈对象的数据，那么该调用栈对象就会被 GC 回收；相反，如果函数返回后，在外部仍然能够访问调用栈中的数据，那么该调用栈对象就不会被 GC 回收。说到这里，你应该能够理解上面两个例子了吧。因为函数返回后，调用者依旧持有其调用栈对象的引用，导致本该立即被 GC 回收的对象没有被回收，直到这个引用被断开为止（比如显式得给函数返回值赋予 null 值，帮助 GC 回收内存）。因此，如果希望回收这些内存，建议赋予 null 值，否则在某些环境中可能导致内存泄漏（比如旧版 IE 浏览器）。</p>
+<p><strong>Closure 闭包</strong><br>闭包是指在 JavaScript 中，内部函数总是可以访问其所在的外部函数中声明的变量、接收的实参，即使在其外部函数被返回了之后。</p>
+<p>来自 MDN 的描述：</p>
+<blockquote>
+<p>闭包是 JavaScript 中最强大的特性之一。JavaScript 允许函数嵌套，并且内部函数可以访问定义在外部函数中的所有变量和函数，以及外部函数能访问的所有变量和函数。但是，外部函数却不能够访问定义在内部函数中的变量和函数。这给内部函数的变量提供了一定的安全性。此外，由于内部函数可以访问外部函数的作用域，因此当内部函数生存周期大于外部函数时，外部函数中定义的变量和函数的生存周期也和内部函数的存活时间一样长。当内部函数以某一种方式被任何一个外部函数作用域访问时（比如将其作为函数返回值返回给调用者），一个闭包就产生了。</p>
+</blockquote>
+<p><strong>变量命名冲突</strong><br>如果内层函数与外层函数中存在同名变量，那么在内层函数中，内层函数中的同名变量优先级更高，反正只要记住一句话，<strong>谁离得近就用谁</strong>。</p>
+<p><strong>默认参数</strong><br>ES6 中，允许我们为函数参数设置一个默认值。在这之前，函数参数的默认值是 undefined，这时候通常使用下面的方法来设置默认值：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function func(a, b, c) {
+    a = a || 1;
+    b = b || 2;
+    c = c || 3;
+    console.log('a = ' + a);
+    console.log('b = ' + b);
+    console.log('c = ' + c);
+}
+
+func(); // a=1, b=2, c=3
+func(11); // a=11, b=2, c=3
+func(11, 22); // a=11, b=22, c=3
+func(11, 22, 33); // a=11, b=22, c=33
+</script></code></pre>
+<p>这里简单解释一下 <code>a = a || 1</code> 的意思（其它两个类似），在 js 中，逻辑连接符有三个：<code>&amp;&amp;</code>逻辑与、<code>||</code>逻辑或、<code>!</code>逻辑非。其中 <code>&amp;&amp;</code> 和 <code>||</code> 都是 <strong>二元运算符</strong>，与 Java 强类型不同的是，js 中的 <code>&amp;&amp;</code>、<code>||</code> 两边的操作数可以是任意类型，而不是仅限于布尔值。<code>expr1 &amp;&amp; expr2</code> 的意思是，如果操作数 expr1 和expr2 都为 true，则整个表达式的结果为 true；<code>expr1 || expr2</code> 的意思是，只要有一个操作数为 true，则整个表达式的结果为 true。而在 js 中，<code>undefined</code>、<code>null</code>、<code>0</code>、<code>NaN</code>、<code>&#39;&#39;</code>为 false，其它值均为 true。也就是说，当 expr1、expr2 不是布尔值时，对于 <code>expr1 &amp;&amp; expr2</code>，如果 expr1 能转换为 true，则返回 expr2，否则返回 expr1；对于 <code>expr1 || expr2</code>，如果 expr1 能转换为 false，则返回 expr2，否则返回 expr1。很容易想到，<strong><code>&amp;&amp;</code> 常用于测试左操作数是否为空，<code>||</code> 常用于为左操作数设置默认值</strong>。</p>
+<p>不过到了 ES6，我们有了更加优雅的方式为函数参数设置默认值，请看：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function func(a = 1, b = 2, c = 3) {
+    // a = a || 1;
+    // b = b || 2;
+    // c = c || 3;
+    console.log('a = ' + a);
+    console.log('b = ' + b);
+    console.log('c = ' + c);
+}
+
+func();
+func(11);
+func(11, 22);
+func(11, 22, 33);
+func(undefined, undefined, undefined); // 等价于 func()
+</script></code></pre>
+<p>在 C++ 中，默认参数必须位于参数列表的后头，如果为一个参数设置了默认值，那么它后面的所有参数都必须设置默认值！不过，在 js 中没有这样的硬性规定，但是，强烈建议将默认参数放在参数列表的尾部，这样才更能够体现出默认参数原本的意义。</p>
+<p><strong>剩余参数</strong><br>这个类似于 Java 中的可变参数，如 <code>func(String... args)</code>，其中 args 是用于接收可变参数的容器，本质上，它只是一个数组，也就是说，这是一颗语法糖，在调用的时候，我可以传入多个参数，也可以直接传入一个数组。回到 js 中，ES6 也提供了这样一颗语法糖，它的语法很相似，如 <code>func(...args)</code>，其中，args 本质上也是一个数组（Array），不过，你只能传入多个参数，不能直接传入一个数组，因为直接传入一个数组会被当作一个参数处理，不过也有办法传入数组，那就是在数组前面加上三个 <code>.</code> 号。具体的细节如下：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function concat(sep, ...arr) {
+    let result = '';
+    for (let i = 0; i < arr.length - 1; i++)
+        result += arr[i] + sep;
+    result += arr[arr.length - 1];
+    return result;
+}
+
+console.log(concat('; ', 1, 2, 3)); // '1; 2; 3'
+console.log(concat('; ', [1, 2, 3])); // '1,2,3' Array.toString()
+console.log(concat('; ', ...[1, 2, 3])); // '1; 2; 3'
+</script></code></pre>
+<p>在 Java 中，剩余参数必须位于参数列表的尾部，因为这样才好确定有多少参数，在 JS 中这个限制同样适用。</p>
+<p><strong>箭头函数</strong><br>所谓的箭头函数就是 Lambda 表达式，在 Java 中，使用 <code>-&gt;</code> 箭头，在 JS 中，使用 <code>=&gt;</code> 箭头。Lambda 表达式也就是所谓的匿名函数，通常用于编写简短的函数体，比如作为参数传递给被调用函数的函数。除了箭头不一样外，其它的语法和 Java 的 Lambda 表达式颇为相似。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function fillArray(arr, func) {
+    for (let i = 0; i < arr.length; i++)
+        arr[i] = func(i);
+    return arr;
+}
+
+let arr = [];
+arr.length = 10;
+console.log(fillArray(arr, i => i));
+console.log(fillArray(arr, i => i * i));
+
+// Output:
+(10) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+(10) [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+</script></code></pre>
+<p>使用箭头函数的好处除了代码简洁外，还因为箭头函数会自动捕获外层函数的 this 指针！在严格模式下，每个函数的 this 指针默认为 <code>undefined</code>，如果是以 “对象方法” 调用，则 this 指针指向被调用的对象。例如：<code>func()</code>直接调用，那么 func 函数内部的 this 指向 <code>undefined</code>；<code>obj.func()</code> 对象方法，那么 func 函数内部的 this 指向 <code>obj</code>。（注：在全局作用域中，this 指向 window 全局对象）。以面向对象的编程风格，这样着实有些恼人。一个简单的办法是，在外部函数中暂存 this 指针，然后在内部函数中使用这个暂存的指针，而不是 this。不过，ES6 的箭头函数已经帮我们做了，我们直接使用 this 即可正确引用外部函数的 this 指针指向。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let obj = {
+    func: function() {
+        console.log(this); // obj
+        (function() {
+            console.log(this); // undefined
+        })();
+        (() => console.log(this))(); // obj
+    }
+};
+
+obj.func();
+</script></code></pre>
+<p><strong>eval 全局函数</strong><br>eval 和 shell 中的 eval 作用相似，用来执行字符串中的代码。因为 eval 是解释运行的，会调用 js 解释器，因此效率比直接写的代码低。因此，非必要情况下，尽量不要使用 eval，不仅效率低，还可能存在潜在的风险。函数原型：<code>eval(string)</code>，返回执行后的结果。</p>
+<p><strong>Function 构造函数</strong><br><code>new Function([arg1[, arg2[, ...argN]], ]functionBody)</code>：每个函数（函数定义、函数表达式）其实都是 Function 的一个实例，arg 是函数的形参，functionBody 是函数的主体。它们均为字符串类型，因为在运行时才进行编译解析，因此效率很低，不建议使用。</p>
+<p><strong>Function 实例属性</strong><br><code>funcObj.length</code>：函数需要的形参数目，形参的数量<strong>不包括剩余参数个数</strong>，<strong>仅包括第一个具有默认值之前的参数</strong>个数。</p>
+<p><strong>Function 实例方法</strong><br><code>funcObj.call(thisArg, arg1, ..., argN)</code>：手动设置 this 值，并以参数列表的形式传入所需参数，调用当前函数。<br><code>funcObj.apply(thisArg, argsArray)</code>：手动设置 this 值，并以数组形式传入所需参数，调用当前函数。<br><code>funcObj.bind(thisArg[, arg1, ..., argN])</code>：创建一个新函数（偏函数），为其指定 this 值，可选的为原函数设置默认值。<br><code>funcObj.toString()</code>：返回当前函数源代码的字符串（内置函数除外）。</p>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><p>JS 中有 <strong>一元运算符</strong>、<strong>二元运算符</strong>、<strong>三元运算符</strong>，一元运算符需要一个操作数，二元运算符需要两个操作数，三个运算符需要三个操作数。</p>
+<p><strong>赋值运算符</strong><br><code>=</code>、<code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>、<code>%=</code>、<code>**=</code>(乘方)<br><code>&lt;&lt;=</code>、<code>&gt;&gt;=</code>、<code>&gt;&gt;&gt;=</code>（无符号右移）<br><code>&amp;=</code>按位与、<code>|=</code>按位或、<code>^=</code>按位异或<br>例如 <code>a += b</code>，等价于 <code>a = a + b</code>。</p>
+<p><strong>解构赋值</strong>（ES6）<br>解构赋值说得简单点就是：<strong>批量赋值，一一赋值</strong>。比如我有一个数组，该数组有三个元素，我现在要使用三个变量来取出这三个元素，不使用解构的情况下，只能这么做：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+let arr = [1, 2, 3];
+let e0 = arr[0],
+    e1 = arr[1],
+    e2 = arr[2];
+console.log(e0);
+console.log(e1);
+console.log(e2);
+</script></code></pre>
+<p>数量少还好，数量多就比较麻烦了。使用解构就不一样了：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+let arr = [1, 2, 3];
+let [e0, e1, e2] = arr;
+console.log(e0);
+console.log(e1);
+console.log(e2);
+</script></code></pre>
+<p>有了解构，交换两个变量就非常容易了，不再需要显式定义一个临时变量：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+let a = 10,
+    b = 20;
+console.log('a = ' + a + ', b = ' + b);
+[a, b] = [b, a];
+console.log('a = ' + a + ', b = ' + b);
+</script></code></pre>
+<p>解构赋值表达式<strong>需要两个操作数</strong>，操作数的类型必须为<strong>数组或对象</strong>（Array、Object），并且，通常情况下，<strong>两个操作数的类型需要一致</strong>，当然，也允许左操作数是对象（key 必须为非负整数的字符串形式），而右操作数为数组的情况，如：<code>let {&#39;1&#39;: e1, &#39;0&#39;: e0, &#39;2&#39;: e2} = [1, 2, 3];</code>，执行后，<code>e0 = 1, e1 = 2, e2 = 3</code>。不过一般情况下两个操作数的类型都是一样的，不要给自己制造麻烦。</p>
+<p>解构赋值的执行过程也很容易理解，因为数组本质上是对象的简写形式（key 隐式的为数组下标），因此这里只讨论对象之间的解构赋值。</p>
+<p>对于 <code>let {&#39;k1&#39;: v1, &#39;k2&#39;: v2, &#39;k3&#39;: v3} = {&#39;k1&#39;: 1, &#39;k2&#39;: 2, &#39;k3&#39;: 3};</code>：</p>
+<ul>
+<li>执行右操作数，在内存中创建了一个匿名对象；</li>
+<li>执行 let 语句，创建了三个变量 <code>v1</code>、<code>v2</code>、<code>v3</code>；</li>
+<li>根据变量所属 key，在匿名对象中寻找同名 key，然后将对应 value 赋给变量。</li>
+</ul>
+<p>因为 k1、k2、k3 是合法的 javascript 标识符，因此可以省略引号，即 <code>let {k1: v1, k2: v2, k3: v3} = {k1: 1, k2: 2, k3: 3};</code>，和上面的表达式是完全一致的，没有区别，要注意的是，左操作数的 <code>k1</code>、<code>k2</code>、<code>k3</code> 只是字符串（省略了引号），并不是声明的变量，因此不能在后面引用它们！</p>
+<p>当然，如果左操作数的 key 和 value 同名，即 <code>let {k1: k1, k2: k2, k3: k3} = {k1: 1, k2: 2, k3: 3};</code>，显得有些冗余，我们完全可以写作：<code>let {k1, k2, k3} = {k1: 1, k2: 2, k3: 3};</code>。</p>
+<p>如果左操作数中的某些 key 在右操作数中不存在，则对应的 value 为 <code>undefined</code>。有些时候我们希望为那些不存在的 key 设置默认值，只需要像函数默认参数那样直接写就可以了（如果对应 key 本身的值为 undefined，那么也会被设置默认值，这个和函数默认值是一样的）。如 <code>let {k1 = 1, k2 = 2, k3 = 3} = {};</code>。</p>
+<p>除了可以应用函数的默认参数外，还可以使用剩余参数语法。和函数的剩余参数一样，解构赋值中的剩余参数必须位于左操作数的尾部。如 <code>let {k1, ...rest} = {k1: 1, k2: 2, k3: 3};</code>，k1 为 1，rest 是一个对象，有两个 key-value 对，即 <code>rest = {k2: 2, k3: 3}</code>。</p>
+<p>当操作数是数组时，有时候，我们不需要捕获某些值，希望跳过它们，可以使用逗号 <code>,</code> 占位，和数组的空位语法是一样的。如 <code>let [e0, , e2] = [1, 2, 3];</code>。</p>
+<p>考虑这么一种情况，左操作数的 key 名称是一个变量，该怎么获取它对应的 value 呢？比如：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+let key = 'k';
+let {key: value} = {k: 'v'};
+console.log(value); // undefined
+</script></code></pre>
+<p>这时，我们可以给左操作数的 key 加上中括号，表示 key 是一个变量而非字符串：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+let key = 'k';
+let {[key]: value} = {k: 'v'};
+console.log(value); // 'v'
+</script></code></pre>
+<p><strong>比较运算符</strong><br>比较运算符的返回值是一个布尔值，如果为 true 则表示该条件成立，如果为 false 则表示该条件不成立。比较运算符需要两个操作数，它们的类型可以不一致，判等的比较有两个：<code>==</code>忽略数据类型，单纯的比较变量的”值”；<code>===</code>如果数据类型不一致，直接返回 false，如果数据类型一致，才会比较变量的”值”（<code>!=</code>、<code>!==</code>同理）。因此，为了避免某些诡异的情况，强烈建议使用 <code>===</code>、<code>!==</code> 进行变量的比较操作。特别的，如果操作数是字符串，则依次比较对应字符的 Unicode 码点值。例子（注：true 在内存中的值为 1，false 的值为 0）：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+console.log(1 == true); // true
+console.log(1 === true); // false
+console.log(1 != true); // false
+console.log(1 !== true); // true
+</script></code></pre>
+<ul>
+<li><code>==</code>“值”相等、<code>!=</code>“值”不相等</li>
+<li><code>===</code>类型相同且”值”相等、<code>!==</code>类型相同且”值”不相等</li>
+<li><code>&lt;</code>小于、<code>&lt;=</code>小于等于</li>
+<li><code>&gt;</code>大于、<code>&gt;=</code>大于等于</li>
+</ul>
+<p><strong>算术运算符</strong><br>算术运算符通常需要两个操作数，并且通常两个操作数都是 number 类型。特别注意，除零不会导致异常，而是返回 <code>Infinity</code> 无限大，对于单目运算符 <code>+</code>正数、<code>-</code>负数，如果操作数不是 number 而是 string，那么会尝试将 string 解析为 number，如果无法解析，则返回 NaN；或者操作数是只有一个元素的数组，则返回（或者解析它）这个元素（<code>-</code>运算符同理）。</p>
+<ul>
+<li><code>+</code>加、<code>-</code>减、<code>*</code>乘、<code>/</code>除、<code>%</code>求余、<code>**</code>求幂</li>
+<li><code>++number</code>前自增、<code>number++</code>后自增、<code>--number</code>前自减、<code>number--</code>后自减</li>
+<li><code>+number</code>求正值（可能存在解析过程）、<code>-number</code>求负值（可能存在解析过程）</li>
+</ul>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log(+1 / 0); // Infinity
+console.log(-1 / 0); // -Infinity
+
+console.log(+true); // 1
+console.log(+false); // 0
+
+console.log(+10); // 10
+console.log(-10); // -10
+
+console.log(+'10'); // 10
+console.log(-'10'); // -10
+console.log(-'-10'); // 10
+console.log(+'10a'); // NaN
+console.log(+'   10'); // 10
+console.log(+'10   '); // 10
+console.log(+'  10 '); // 10
+console.log(+'\t10\t'); // 10
+
+console.log(+null); // 0
+console.log(+undefined); // NaN
+
+console.log(+{}); // NaN
+console.log(+[]); // 0
+console.log(+[10]) // 10
+console.log(+[10, 20]); // NaN
+</script></code></pre>
+<p><strong>位运算符</strong><br><code>&lt;&lt;</code>左移、<code>&gt;&gt;</code>右移（补符号位）、<code>&gt;&gt;&gt;</code>无符号右移（补 0）。<br>位运算符会将操作数转换为 32-bit 长度的有符号整数（通常位运算符要求操作数为<strong>整数</strong>而非浮点数，如果为浮点数，则小数部分被舍弃，如果整数的长度大于 32，则被截断）。和 Java 一样，如果位移的步长大于等于 32 或小于 0，则会先对步长<strong>取模</strong>，然后再进行位移。</p>
+<ul>
+<li><code>&amp;</code>按位与：如果两个操作数的对应位均为 1，则结果的对应位为 1，否则为 0</li>
+<li><code>|</code>按位或：如果两个操作数的对应位有一个为 1，则结果的对应位为 1，否则为 0</li>
+<li><code>^</code>按位异或：如果两个操作数的对应位不同，则结果的对应位为 1，否则为 0</li>
+<li><code>~</code>按位非：（单目运算符），将操作数的每个位反转，0 变成 1，1 变成 0</li>
+</ul>
+<p><strong>逻辑运算符</strong><br>常规用法（常规理解）：</p>
+<ul>
+<li><code>expr1 &amp;&amp; expr2</code>：逻辑与，只有 expr1 和 expr2 均为 true，才返回 true；</li>
+<li><code>expr1 || expr2</code>：逻辑或，只要 expr1 或 expr2 任一个为 true，就返回 true；</li>
+<li><code>!expr</code>：逻辑非，如果 expr 为 true 则返回 false，如果 expr 为 false 则返回 true。</li>
+</ul>
+<p>变种用法（变种理解）：</p>
+<ul>
+<li><code>expr1 &amp;&amp; expr2</code>：如果 expr1 能转换为 true，则返回 expr2，否则返回 expr1；</li>
+<li><code>expr1 || expr2</code>：如果 expr1 能转换为 false，则返回 expr2，否则返回 expr1；</li>
+</ul>
+<p>因此，<strong><code>&amp;&amp;</code>常用于检测左操作数是否为空，<code>||</code>常用于给左操作数设置默认值</strong>。</p>
+<p><strong>字符串运算符</strong><br><code>+</code>/<code>+=</code>：字符串拼接，如果操作数为对象，则调用其 toString() 方法。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log('array: ' + [1, 2, 3, 4, 5]); // array: 1,2,3,4,5
+
+Array.prototype.toString = function() {
+    let result = '[';
+    for (let i = 0; i < this.length - 1; i++)
+        result += this[i] + ', ';
+    return result += this[this.length - 1] + ']';
+};
+
+console.log('array: ' + [1, 2, 3, 4, 5]); // array: [1, 2, 3, 4, 5]
+</script></code></pre>
+<p><strong>条件运算符</strong><br>条件运算符是 js 中唯一的三元运算符，语法：<code>cond ? expr1 : expr2</code>。如果条件 cond 为真，则整个表达式的值为 expr1，如果条件 cond 为假，则整个表达式的值为 expr2。</p>
+<p><strong>一元运算符</strong><br><code>delete</code>：删除 <strong>对象的键</strong>、<strong>数组元素</strong>（本质都是删除给定的 key），只能删除自身的键，继承链上的不影响。删除数组的元素后，数组的 length 不会改变，但是这个元素确实不存在了（使用 <code>key in obj</code> 可判断），这与直接给这个元素赋 undefined 值是不一样的。在严格模式下，delete 表达式总是返回 true，如果给定 key 是不可配置属性（Non-configurable），会导致语法错误；在非严格模式下则返回 false。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let sup = {key: 'sup::value'};
+let sub = {key: 'sub::value'};
+sub.__proto__ = sup;
+
+console.log(sup.key); // 'sup::value'
+console.log(sub.key); // 'sub::value'
+
+console.log(delete sub.key); // true
+console.log(sup.key); // 'sup::value'
+console.log(sub.key); // 'sup::value'
+
+console.log(delete sub.key); // true
+console.log(sup.key); // 'sup::value'
+console.log(sub.key); // 'sup::value'
+
+console.log(delete sup.key); // true
+console.log(sup.key); // 'undefined'
+console.log(sub.key); // 'undefined'
+</script></code></pre>
+<p><code>delete arr[ind]</code> 与 <code>arr[ind] = undefined</code> 的区别：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let arr = [0, 1, 2];
+console.log(arr); // [0, 1, 2]
+console.log(arr.length); // 3
+
+delete arr[0]; // always return true
+console.log(arr); // [empty, 1, 2]
+console.log(arr.length); // 3
+console.log(0 in arr); // false
+
+arr[2] = undefined;
+console.log(arr); // [empty, 1, undefined]
+console.log(arr.length); // 3
+console.log(2 in arr); // true
+</script></code></pre>
+<p><code>void</code>：对给定的表达式进行求值，然后返回 <code>undefined</code>。目前唯一的用途（不一定，个人觉得这个运算符好多余），就是用来执行”立即执行的函数”，如果不使用 void，则必须在函数两边加上圆括号。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+void function() {
+    'use strict';
+    console.log('hello, world!');
+}();
+</script></code></pre>
+<p><code>typeof</code>：返回给定操作数的数据类型（字符串），可能的值有：</p>
+<ol>
+<li><code>boolean</code>：返回字符串 <code>&#39;boolean&#39;</code></li>
+<li><code>number</code>：返回字符串 <code>&#39;number&#39;</code></li>
+<li><code>string</code>：返回字符串 <code>&#39;string&#39;</code></li>
+<li><code>symbol</code>：返回字符串 <code>&#39;symbol&#39;</code></li>
+<li><code>undefined</code>：返回字符串 <code>&#39;undefined&#39;</code></li>
+<li><code>null</code>：返回字符串 <code>&#39;object&#39;</code></li>
+<li><code>对象</code>：返回字符串 <code>&#39;object&#39;</code></li>
+<li><code>函数</code>：返回字符串 <code>&#39;function&#39;</code></li>
+</ol>
+<p><strong>关系运算符</strong><br><code>key in obj</code>：如果给定 key（字符串或数组下标）在给定 obj 中存在，则返回 true。</p>
+<p><code>obj instanceof constructor</code>：原理很简单，就是检查 <code>obj.__proto__[.__proto__[.__proto__[...]]]</code> 是否与 <code>constructor.prototype</code> 相等，instanceof 会沿着原型链一级一级往上查询，如果在某个节点上匹配，则返回 true，如果到了 null（顶级）还未匹配，则返回 false。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function Pet() {
+    // TODO
+}
+
+let pet = new Pet();
+console.log(pet instanceof Pet); // true
+console.log(pet.__proto__ === Pet.prototype); // true
+</script></code></pre>
+<p><strong>表达式</strong></p>
+<blockquote>
+<p>表达式是一组可以计算出一个数值的有效的代码的集合。</p>
+</blockquote>
+<p>每一个合法的表达式都能计算成某个值，但从概念上讲，有两种类型的表达式：<strong>有副作用的</strong>（比如赋值）和<strong>单纯计算求值的</strong>，前者会对内存中的数据产生影响，后者则不会。</p>
+<ul>
+<li>表达式<code>x = 7</code>是第一种类型的一个例子。该表达式使用<code>=</code>运算符将值 7 赋予变量 x。这个表达式自己的值等于 7。</li>
+<li>代码<code>3 + 4</code>是第二种类型的一个例子。该表达式使用<code>+</code>运算符把 3 和 4 加到一起但并没有把结果（7）赋值给一个变量。</li>
+</ul>
+<p><strong>基本表达式</strong><br><code>this 指针</code>：this 的本意是指代当前正在被调用的对象，具体的（严格模式下）：</p>
+<ul>
+<li>在全局作用域中，this 指代全局对象（浏览器中为 window）；</li>
+<li>在构造函数中，this 指代 new 传入的对象；</li>
+<li>在成员函数中，this 指代当前被调用的对象；</li>
+<li>在普通函数中，this 的值默认为 <code>undefined</code>；</li>
+<li>在箭头函数中，this 的指向与其所在函数的 this 指向相同。</li>
+</ul>
+<p><code>...array</code>定义剩余参数、原地展开数组：举个栗子，现有一个数组，我想在创建一个新数组，将现有的数组作为它的一部分，就可以使用此方法，将该现有数组展开：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let arrOld = [4, 5, 6];
+let arrNew = [1, 2, 3, ...arrOld, 7, 8, 9];
+
+console.log(arrNew); // 1,2,3,4,5,6,7,8,9
+</script></code></pre>
+<h2 id="数字和日期"><a href="#数字和日期" class="headerlink" title="数字和日期"></a>数字和日期</h2><p><strong>数值字面值 number</strong><br>JS 中不区分整数和浮点数，统统使用 64-bit 双精度浮点类型表示，因此一个数字的范围只能在 <code>-(2<sup>53</sup>-1) ~ 2<sup>53</sup>-1</code> 之间。除了具体的数值外，JS 中还有三个特殊的数值：<code>+Infinity</code>正无穷、<code>-Infinity</code>负无穷、<code>NaN</code><em>not-a-number</em> 非数字。</p>
+<p>在 js 中可以使用 4 种数字进制（二、八、十、十六）：</p>
+<ul>
+<li>二进制：使用前缀 <code>0b</code>、<code>0B</code></li>
+<li>八进制：使用前缀 <code>0o</code>、<code>0O</code></li>
+<li>十进制：没有特定前缀</li>
+<li>十六进制：使用前缀 <code>0x</code>、<code>0X</code></li>
+</ul>
+<p>对于大数字，还可以使用科学记数法（指数形式）：<code>a * 10<sup>n</sup></code>，其中 a 必须是单位数字，可以有正负，n 是一个整数，可以有正负，在编程语言中，通常表示为 <code>aEn</code>，e 可以大写也可以小写。比如一百万可以表示为 <code>1E6</code>，千分之一可以表示为 <code>1E-3</code>。</p>
+<p><strong>数值包装类 Number</strong><br>Number 的属性（静态字段）：</p>
+<ul>
+<li><code>MIN_VALUE</code>：最小正值</li>
+<li><code>MAX_VALUE</code>：最大正值</li>
+<li><code>POSITIVE_INFINITY</code>：正无穷</li>
+<li><code>NEGATIVE_INFINITY</code>：负无穷</li>
+<li><code>MIN_SAFE_INTEGER</code>：最小安全整数<code>-(2<sup>53</sup>-1)</code></li>
+<li><code>MAX_SAFE_INTEGER</code>：最大安全整数<code>2<sup>53</sup>-1</code></li>
+<li><code>EPSILON</code>：最小精度，1 与大于 1 的最小值之间的差值</li>
+<li><code>NaN</code>：非数字</li>
+</ul>
+<p>Number 的方法（静态方法）：</p>
+<ul>
+<li><code>parseInt(string, radix)</code>，从字符串中解析<strong>整数</strong>。<ul>
+<li>string 的前导空白将被忽略；并且会忽略后面的非数字部分。</li>
+<li>radix 为进制（取值范围为<code>[2, 36]</code>），如 2、8、10、16。</li>
+<li>十六进制数值建议以<code>0x/0X</code>开头，八进制数值建议以<code>0</code>开头。</li>
+<li>返回解析到的数值 number；如果无法转换为数值，则返回 NaN。</li>
+</ul>
+</li>
+<li><code>parseFloat(string)</code>，从字符串中解析<strong>浮点数</strong>（十进制）。</li>
+<li><code>isInteger(testValue)</code>，判断给定数字是否为整数</li>
+<li><code>isSafeInteger(testValue)</code>，判断给定数字是否为安全整数</li>
+<li><code>isFinite(testValue)</code>，判断给定数字是否为有穷数字（非无穷大）</li>
+<li><code>isNaN(testValue)</code>，判断给定数字是否为 NaN</li>
+</ul>
+<p>Number 原型上的方法（实例方法）：</p>
+<ul>
+<li><code>toExponential([fractionDigits])</code>：以科学计数法表示的数值（字符串），fractionDigits 是可选的，表示小数点后的位数，默认是尽可能多的小数位数。</li>
+<li><code>toFixed([digits])</code>：返回给定小数位数的数值（字符串），其中 digits 默认为 0，建议取值在 <code>[0, 20]</code> 之间。</li>
+<li><code>toPrecision([precision])</code>：以指定的精度返回该数值对象的字符串表示（定点表示法、指数表示法），precision 是可选的，默认不减低精度。</li>
+</ul>
+<p><strong>数学对象 Math</strong><br>Math 对象的属性：</p>
+<ul>
+<li><code>Math.PI</code>：圆周率</li>
+<li><code>Math.E</code>：自然对数的底数</li>
+<li><code>Math.SQRT2</code>：2 的平方根</li>
+<li><code>Math.SQRT1_2</code>：0.5 的平方根</li>
+<li><code>Math.LN2</code>：2 的自然对数</li>
+<li><code>Math.LN10</code>：10 的自然对数</li>
+<li><code>Math.LOG2E</code>：以 2 为底 E 的对数</li>
+<li><code>Math.LOG10E</code>：以 10 为底 E 的对数</li>
+</ul>
+<p>Math 对象的方法：</p>
+<ul>
+<li><code>abs(x)</code>：返回 x 的绝对值</li>
+<li><code>sin()</code>, <code>cos()</code>, <code>tan()</code>：标准三角函数（弧度制）</li>
+<li><code>asin()</code>, <code>acos()</code>, <code>atan()</code>, <code>atan2()</code>：反三角函数（弧度制）</li>
+<li><code>sinh()</code>, <code>cosh()</code>, <code>tanh()</code>：双曲三角函数（弧度制）</li>
+<li><code>asinh()</code>, <code>acosh()</code>, <code>atanh()</code>：反双曲三角函数（弧度制）</li>
+<li><code>pow(base, exponent)</code>：返回 base<sup>exponent</sup></li>
+<li><code>exp(x)</code>：返回 Math.E<sup>x</sup></li>
+<li><code>log10(x)</code>：返回 log<sub>10</sub>x</li>
+<li><code>log2(x)</code>：返回 log<sub>2</sub>x</li>
+<li><code>log(x)</code>：返回 log<sub>e</sub>x</li>
+<li><code>floor()</code>, <code>ceil()</code>：下舍入、上舍入</li>
+<li><code>min()</code>, <code>max()</code>：返回一组数字中的最小值、最大值</li>
+<li><code>random()</code>：返回 <code>[0, 1)</code> 之间的随机浮点数 <em>后面有详细介绍</em></li>
+<li><code>round(x)</code>：四舍五入到最近的整数</li>
+<li><code>trunc(value)</code>：去掉小数部分，只保留整数</li>
+<li><code>sqrt()</code>, <code>cbrt()</code>：返回给定数字的平方根、立方根</li>
+<li><code>sign(x)</code>：返回指定数值的符号，共有 5 种返回值，分别是 <code>1</code>正数、<code>-1</code>负数、<code>0</code>正零、<code>-0</code>负零、<code>NaN</code>非数字</li>
+</ul>
+<p><strong>Math.random() 详解</strong><br><code>random()</code> 返回一个范围在 <code>[0, 1)</code> 的<strong>伪随机浮点数</strong>（左闭右开区间）。</p>
+<p><strong><code>[min, max)</code> 浮点数</strong><br><code>Math.random() * (max - min) + min</code></p>
+<p><strong><code>[min, max)</code> 整数</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+function getRandomInt(min, max) {
+  min = Math.ceil(min); // 向上取整
+  max = Math.floor(max); // 向下取整
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+</script></code></pre>
+<p><strong><code>[min, max]</code> 整数</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min); // 向上取整
+  max = Math.floor(max); // 向下取整
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+</script></code></pre>
+<p><strong>日期对象（构造函数）</strong><br>Date 的静态属性：<br><code>Date.length</code>：Date 构造函数可接受的参数个数（7 个）。</p>
+<p>Date 的静态方法：<br><code>Date.now()</code>：返回自 1970-1-1 00:00:00 UTC 至今所经过的毫秒数。<br><code>Date.parse(dateString)</code>：dateString 是符合 ISO8601 日期格式的字符串，返回自 1970-01-01T00:00:00Z 至 dateString 经过的毫秒数，如果无法解析则返回 NaN。<br><code>Date.UTC(year, month[, date[, hrs[, min[, sec[, ms]]]]])</code>：返回自 1970-01-01T00:00:00Z 至给定日期所经过的毫秒数。</p>
+<p>Date 的构造函数：<br><code>Date()</code>：普通方法调用，返回当前时间的字符串形式<br><code>new Date()</code>：当前时间<br><code>new Date(value)</code>：自 1970-01-01T00:00:00Z 经过的毫秒数<br><code>new Date(dateString)</code>：符合 ISO8601 日期时间格式的字符串<br><code>new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]])</code>年（四位整数）、月（0-11）、日（1-31）、时（0-23）、分（0-59）、秒（0-59）、毫秒（0-999）。</p>
+<p>Date 的实例方法：<br><em>本地时间</em><br><code>Date.prototype.getFullYear()</code>：年<br><code>Date.prototype.getMonth()</code>：月（0-11）<br><code>Date.prototype.getDate()</code>：日（1-31）<br><code>Date.prototype.getDay()</code>：星期（0-6）<br><code>Date.prototype.getHours()</code>：时（0-23）<br><code>Date.prototype.getMinutes()</code>：分（0-59）<br><code>Date.prototype.getSeconds()</code>：秒（0-59）<br><code>Date.prototype.getMilliseconds()</code>：毫秒（0-999）<br><code>Date.prototype.getTimezoneOffset()</code>：时区偏移量（单位：分钟）<br><code>Date.prototype.getTime()</code>：相对于 1970-01-01T00:00:00Z 的偏移量（毫秒）<br><em>UTC 时间</em><br><code>Date.prototype.getUTCFullYear()</code>：年<br><code>Date.prototype.getUTCMonth()</code>：月（0-11）<br><code>Date.prototype.getUTCDate()</code>：日（1-31）<br><code>Date.prototype.getUTCDay()</code>：星期（0-6）<br><code>Date.prototype.getUTCHours()</code>：时（0-23）<br><code>Date.prototype.getUTCMinutes()</code>：分（0-59）<br><code>Date.prototype.getUTCSeconds()</code>：秒（0-59）<br><code>Date.prototype.getUTCMilliseconds()</code>：毫秒（0-999）</p>
+<p><em>本地时间</em><br><code>Date.prototype.setFullYear()</code>：年<br><code>Date.prototype.setMonth()</code>：月<br><code>Date.prototype.setDate()</code>：日<br><code>Date.prototype.setHours()</code>：时<br><code>Date.prototype.setMinutes()</code>：分<br><code>Date.prototype.setSeconds()</code>：秒<br><code>Date.prototype.setMilliseconds()</code>：毫秒<br><code>Date.prototype.setTime()</code>：相对于 1970-01-01T00:00:00Z 的偏移量（毫秒）<br><em>UTC 时间</em><br><code>Date.prototype.setUTCFullYear()</code>：年<br><code>Date.prototype.setUTCMonth()</code>：月<br><code>Date.prototype.setUTCDate()</code>：日<br><code>Date.prototype.setUTCHours()</code>：时<br><code>Date.prototype.setUTCMinutes()</code>：分<br><code>Date.prototype.setUTCSeconds()</code>：秒<br><code>Date.prototype.setUTCMilliseconds()</code>：毫秒</p>
+<p><em>其它方法</em><br><code>Date.prototype.toDateString()</code>：（易读）日期<br><code>Date.prototype.toTimeString()</code>：（易读）时间<br><code>Date.prototype.toString()</code>：（易读）日期时间<br><code>Date.prototype.toLocaleDateString()</code>：（本地化）日期<br><code>Date.prototype.toLocaleTimeString()</code>：（本地化）时间<br><code>Date.prototype.toLocaleString()</code>：（本地化）日期时间<br><code>Date.prototype.toUTCString()</code>：UTC 日期时间<br><code>Date.prototype.toISOString()</code>：ISO 日期时间格式（UTC）<br><code>Date.prototype.toJSON()</code>：JSON 日期时间（同 toISOString）<br><code>Date.prototype.valueOf()</code>：自 1970-01-01T00:00:00Z 起的毫秒数</p>
+<h2 id="文本格式化"><a href="#文本格式化" class="headerlink" title="文本格式化"></a>文本格式化</h2><p><strong>字符串字面值</strong><br>JavaScript 中的 string 类型用于表示文本型的数据，它是由<strong>无符号整数值</strong>（16-bit）作为元素而组成的集合。字符串中的每个元素在字符串中占据一个位置，第一个元素的 index 值是 0，下一个元素的 index 值是 1，以此类推。字符串的长度就是字符串中所含的元素个数。你可以通过 string 字面值或者 String 对象两种方式创建一个字符串。</p>
+<p>JS 中的字符串使用 UTF-16 编码，因此 string 的 length 并不代表该字符串的字符个数，length 的意义仅仅是 UTF-16 码元（code-unit）的数量，除了 BMP 基本多文种平面的字符可以使用一个 code-unit（即 16-bit）表示外，其他的辅助平面均需要使用两个 code-unit（即 32-bit）表示（称之为代理对）。在 Unicode 字符集中，共计有 17 个平面，其中第 0 号平面是基本平面（简称 BMP），其余 16 个平面都是辅助平面，而每个平面都有 2<sup>16</sup>（可表示 65536 个字符）个码点（code-point）。因此，BMP 的码点值范围是 <code>0x0000 ~ 0xFFFF</code>，辅助平面的码点值范围是 <code>0xN0000 ~ 0xNFFFF</code>，其中 N 的范围是 <code>[1, 10]</code>（十六进制）。</p>
+<p>早期 JS 可能采用的是 UCS-2 编码（这和 Java 很相似），UCS-2 编码是 UTF-16 编码的子集，UCS-2 是没有辅助平面之前的主流编码方式，也就是说，UCS-2 只能表示 BMP 字符，辅助平面的字符则无能为力。</p>
+<p>字符串字面值可以使用 <strong>单引号</strong> 或者 <strong>双引号</strong> 表示，使用单、双引号没有区别，在 JS 中建议使用单引号，因为经常需要与 HTML 元素打交道，双引号有些麻烦。</p>
+<p><strong>字符串包装类</strong><br><em>实例方法</em><br><code>string[index]</code>：返回给定索引处的字符(char)，返回值类型为字符串<br><code>charAt(index)</code>：返回给定索引处的字符(char)，返回值类型为字符串<br><code>charCodeAt(index)</code>：返回给定索引处的码元(code-unit)，返回值类型为数值<br><code>codePointAt(index)</code>：返回给定索引处的码点(code-point)，返回值类型为数值</p>
+<p><code>indexOf(searchValue[, fromIndex])</code>：查询给定子串的第一次匹配位置<br><code>lastIndexOf(searchValue[, fromIndex])</code>：查询给定子串的最后一次匹配位置</p>
+<p><code>startsWith(searchString[, position])</code>：测试当前字符串是否以给定子串开头<br><code>endsWith(searchString[, position])</code>：测试当前字符串是否以给定子串结尾<br><code>includes(searchString[, position])</code>：测试当前字符串是否包含给定子串</p>
+<p><code>concat(string2, string3[, ..., stringN])</code>：连接多个字符串，建议使用<code>+</code>、<code>+=</code><br><code>split([separator[, limit]])</code>：sep 为字符串或正则，limit 是结果数组的长度</p>
+<p><code>slice(beginSlice[, endSlice])</code>：提取 <code>[beg, end)</code> 子串并返回<br><code>substring(indexStart[, indexEnd])</code>：提取 <code>[beg, end)</code> 子串并返回<br><code>substr(start[, length])</code>：从给定索引处开始，提取 len 个字符并返回</p>
+<p><code>match(regex)</code>：使用正则匹配当前字符串（不建议使用 g 标志），匹配成功则返回一个数组，第 0 项是 group0，接下来是子捕获组，除此之外，还有两个额外的属性，input 指向原字符串，index 是匹配结果在原串中的起始索引；匹配失败则返回 null。如果使用了 g 标志，则只会返回所有匹配的 group0，不包含子捕获组，并且也不存在 input、index 属性。</p>
+<p><code>replace(regex|substr, replace|function)</code>：返回一个由替换值替换一些或所有匹配的模式后的新字符串。模式可以是一个<strong>字符串</strong>或者一个<strong>正则表达式</strong>，替换值可以是一个<strong>字符串</strong>或者一个每次匹配都要调用的<strong>函数</strong>。</p>
+<ul>
+<li><code>regex</code>：RegExp 对象或字面量，使用 g 标志可启用全局替换；</li>
+<li><code>substr</code>：字符串，该替换模式只会替换与之匹配的第一个子串；</li>
+<li><code>replace</code>：字符串，替换原内容的新串，可以使用以下特殊模式：<ul>
+<li><code>$$</code>：字符 $</li>
+<li><code>$&amp;</code>：捕获组 0</li>
+<li><code>$` </code>：捕获组 0 左边的内容</li>
+<li><code>$&#39;</code>：捕获组 0 右边的内容</li>
+<li><code>$n</code>：捕获组 n（1 &lt;= n &lt;= 99），参数一须为 regex</li>
+</ul>
+</li>
+<li><code>function</code>：函数，其返回值将作为替换串（不能使用特殊模式），参数依次为：<ul>
+<li><code>match</code>：捕获组 0</li>
+<li><code>p1[, p2 [, ...]]</code>：捕获组 n（1 &lt;= n &lt;= 99），参数一须为 regex</li>
+<li><code>offset</code>：捕获组 0 相对原串的偏移量</li>
+<li><code>string</code>：指向原串的引用</li>
+<li>参数的具体个数依具体情况而定，p1…pN 的数目要看圆括号数量</li>
+</ul>
+</li>
+</ul>
+<p><code>search(regex)</code>：尝试将当前字符串与正则表达式相匹配，匹配成功则返回捕获组 0 相对于原字符串的起始索引，匹配失败则返回 -1。</p>
+<p><code>toLowerCase()</code>：将当前字符串转换为小写形式（不改变原串）<br><code>toUpperCase()</code>：将当前字符串转换为大写形式（不改变原串）</p>
+<p><code>repeat(count)</code>：将原串的 count（非负整数）个副本拼接在一起，并返回它<br><code>trim()</code>：删除字符串两端（不改变原串）的空白符（空格，制表，回车，换行等）</p>
+<p><em>静态方法</em><br><code>fromCharCode(num1, ..., numN)</code>：从给定 code-unit 创建字符串 string<br><code>fromCodePoint(num1[, ...[, numN]])</code>：从给定 code-point 创建字符串 string</p>
+<p><strong>模版字符串</strong><br>ES6 模版字符串相比传统的字符串字面量，有以下两个不同之处：</p>
+<ol>
+<li>模版字符串中允许换行，而不需要转义</li>
+<li>模版字符串中可以插入 JS 表达式，<code>${expression}</code><br>模版字符串使用反引号 <code>` </code> 表示，而非单引号、双引号</li>
+</ol>
+<p><strong>正则表达式</strong><br>创建正则表达式有三种方法：</p>
+<ol>
+<li><code>/pattern/flags</code>：字面量，编译期间进行正则表达式编译</li>
+<li><code>new RegExp(pattern[, flags])</code>：构造函数，运行期间编译</li>
+<li><code>RegExp(pattern[, flags])</code>：普通方法调用，运行期间编译</li>
+</ol>
+<p>建议不要使用第三种方式，语义不明确；如果正则表达式是确定的，不变的，则选择字面量形式，如果正则表达式是不定的，未知的，则选择构造函数形式。</p>
+<p>对于 <code>/pattern/flags</code>，flags 是可选的，flags 可以是以下值的任意组合：</p>
+<ul>
+<li><code>g</code>：全局匹配，默认成功匹配一次后就结束匹配了</li>
+<li><code>i</code>：忽略大小写，默认是大小写敏感的</li>
+<li><code>m</code>：多行模式，^、$ 除了匹配输入序列首尾外，还会匹配行结束符的前后位置</li>
+<li><code>u</code>：Unicode 码点支持，<code>\u{code-point}</code>，ES6，注意不是 Unicode Support</li>
+<li><code>y</code>：粘性匹配，与 g 相似，但 y 在尝试从 lastIndex 处匹配失败后不会向前传动</li>
+<li><code>s</code>：单行模式，ES2018，该模式下 <code>.</code> 将匹配任意字符，默认 <code>.</code> 不匹配行结束符</li>
+</ul>
+<blockquote>
+<p><code>u</code>、<code>y</code>、<code>s</code> 三个 flag 都是 ES6、ES2018 新增的，使用时请注意浏览器兼容性。</p>
+</blockquote>
+<p>对于 <code>new RegExp(pattern[, flags])</code>，在 ES6 之前，pattern 和 flags 必须是字符串类型，从 ES6 开始，pattern 可以是正则字面量。要注意的是，在字符串中的正则表达式需要转移反斜杠字符，如 <code>/\w+/</code> 需要表示为 <code>&#39;\\w+&#39;</code>。</p>
+<p><strong>RegExp 实例属性</strong>：<br><code>RegExp.prototype.global</code>：布尔属性，指示是否启用了全局匹配标志<br><code>RegExp.prototype.ignoreCase</code>：布尔属性，指示是否启用了忽略大小写标志<br><code>RegExp.prototype.multiline</code>：布尔属性，指示是否启用了多行模式标志<br><code>RegExp.prototype.unicode</code>：布尔属性，指示是否启用了 Unicode 码点转义<br><code>RegExp.prototype.sticky</code>：布尔属性，指示是否启用了粘性匹配标志<br><code>RegExp.prototype.source</code>：字符串属性，存储正则表达式对象的源模式文本<br><code>RegExp.prototype.lastIndex</code>：数值属性，存储最后一次成功匹配的结束位置 + 1</p>
+<blockquote>
+<p>唯一可更改的属性就是 <code>lastIndex</code>，其它属性都是只读属性。</p>
+</blockquote>
+<p><strong>RegExp 实例方法</strong>：<br><code>RegExp.prototype.exec(input)</code>：执行一次搜索匹配，返回一个结果数组或 null。如果启用了 <code>g</code>、<code>y</code> 标志位，则每次调用 exec() 都会更新 regex 对象的 lastIndex 属性。需要注意的是，exec() 方法只会执行一次匹配，如需进行<strong>全局匹配</strong>或<strong>粘性匹配</strong>，需要采取循环方式，即 <code>while ((result = regex.exec(input)))</code>，当 result 为 null 时循环就会停止。返回的 Array 结果中，第 0 项是捕获组 0，第 1 项是捕获组 1，以此类推，除此之外，还有 input 属性（指向原字符串），index 属性（lastIndex 值）。</p>
+<p><code>RegExp.prototype.test(input)</code>：测试正则表达式是否可以与输入字符串匹配，如果可以则返回 true，如果不可以则返回 false。当你仅仅想测试是否匹配时，使用 test() 比 exec() 快的多。除了返回值类型不同外，test() 基本与 exec() 行为相似。</p>
+<p><code>RegExp.prototype.toString()</code>：返回正则表达式的字符串描述（<code>/pattern/flags</code>）。</p>
+<p><strong>String 与 RegExp 相关的方法</strong>：<br><code>String.prototype.match(regex)</code>：如果没有启用 g 标志，则返回值与 regex.exec(input) 一样；如果启用了 g 标志，则返回所有匹配的结果（捕获组 0）的数组，并且没有子捕获组信息，也没有 input、index 额外属性；如果启用了 y 标志，则会修改 regex 对象的 lastIndex 属性（g 标志下不会修改该属性）。</p>
+<p><code>String.prototype.replace(regex|string, replace|function)</code>：执行正则替换。</p>
+<p><code>String.prototype.search(regex)</code>：和 regex.test() 方法差不多，只不过该方法会返回成功匹配的起始索引值，如果匹配失败则返回 -1。</p>
+<p><code>String.prototype.split(separator[, limit])</code>：使用正则表达式分割字符串，返回分割后的结果数组。</p>
+<p><strong>JS 正则表达式</strong><br>JS 的正则和 Perl、Java 的很相似，可以理解为 <a href="https://www.zfl9.com/java-lang-util.html#%E6%AD%A3%E5%88%99%E8%AF%AD%E6%B3%95">Java 正则</a> 的子集。因此这里只简单的说明 JS 正则与 Java 正则的显著区别：</p>
+<ul>
+<li>JS 只支持 <strong>贪婪量词</strong>、<strong>懒惰量词</strong>，不支持 <strong>占有量词</strong></li>
+<li>JS 只支持 <strong>顺序环视</strong>，不支持 <strong>逆序环视</strong></li>
+<li>JS 不支持 <code>\A</code>、<code>\G</code>、<code>\Z</code>、<code>\z</code>、<code>\Q</code>、<code>\E</code></li>
+<li>JS 不支持 Unicode 字符匹配</li>
+<li>JS 不支持命名捕获组</li>
+<li>JS 不支持原子组</li>
+</ul>
+<h2 id="索引集合类"><a href="#索引集合类" class="headerlink" title="索引集合类"></a>索引集合类</h2><p><strong>数组对象</strong><br>数组是一个有序的数据集合，我们可以通过数组名称和索引进行访问。例如，我们定义了一个数组 emp，数组中的每个元素包含了一个雇员的名字以及其作为索引的员工号。那么 emp[1] 将会代表 1 号员工，emp[2] 将会代表 2 号员工，以此类推。</p>
+<p>JavaScript 中没有明确的数组数据类型。但是，我们可以通过使用内置Array 对象和它的方法对数组进行操作。Array 对象有很多操作数组的方法，比如合并、反转、排序等。数组对象有一个决定数组长度和使用正则表达式操作其他属性的属性。</p>
+<p><strong>创建数组</strong></p>
+<ol>
+<li><code>[elem0, elem1, ..., elemN]</code>：数组字面量（数组初始化器）</li>
+<li><code>new Array(elem0, elem1, ..., elemN)</code>：构造函数（不推荐）</li>
+<li><code>Array(elem0, elem1, ..., elemN)</code>：普通函数调用（更不推荐）<br>对于后两者，如果只有一个参数，该参数将被当作数组长度，因此须为非负整数。</li>
+</ol>
+<p>数组对象有一个特殊属性 <code>length</code>，表示数组的长度，该属性的值取决于数组最大索引值，它总是等于最大索引值 + 1，因此，length 属性并不总是等于数组元素的个数。我们不仅可以读取 length 属性的值，还可以更改它的值，如果新的长度比原来的长度小，则数组会被截断，多余的元素会被清空。该属性会自动递增，如 <code>arr[10] = value</code>（假设当前数组长度为 10），执行后，数组长度会自动变为 11，但是这种自动递增也是有条件的，你的属性名（即 key 名称）必须是 <strong>非负整数</strong>，否则它将被当作一个普通的属性，而不是数组的元素，比如 <code>arr[1.5] = value</code> 不会改变 length 属性，只是增加了一个名叫 <code>&#39;1.5&#39;</code> 的属性而已。</p>
+<p><strong>遍历数组</strong></p>
+<ol>
+<li><code>for (let i = 0; i &lt; arr.length; i++)</code>：原始方法</li>
+<li><code>Array.prototype.forEach(callback[, thisObj])</code>：<code>callback(curVal, curInd, curArr)</code>，ES5.1，使用箭头函数更简洁，在数组定义时省略的元素不会在 forEach 遍历时被列出，但是手动赋值为 undefined 的元素是会被列出。</li>
+</ol>
+<p><strong>Array 静态方法</strong><br><code>Array.isArray(obj)</code>：判断 obj 是否是 Array 的实例，如果是则返回 true，否则返回 false。<br><code>Array.of(element0[, element1[, ...[, elementN]]])</code>：从传入的参数列表中构建数组。<br><code>Array.from(arrayLike[, mapFn[, thisArg]])</code>：从<strong>类数组对象</strong>或<strong>可迭代对象</strong>中创建数组对象，如果使用了 mapFn、thisArg 参数，实际上等价于 <code>Array.from(arrayLike).map(mapFn[, thisArg])</code>。</p>
+<blockquote>
+<p>类数组对象：拥有一个 length 属性和若干索引属性的任意对象。</p>
+</blockquote>
+<p><strong>Array 实例方法</strong><br><span style="color:green; font-weight: bold">修改方法</span></p>
+<ul>
+<li><code>Array.prototype.copyWithin(target[, begin[, end]])</code>：浅复制数组的一部分到同一数组的另一个位置，并返回它，不改变数组大小（<code>[beg, end)</code>，beg 默认为 0，end 默认为 arr.length）。</li>
+<li><code>Array.prototype.fill(value[, begin[, end]])</code>：使用给定元素填充当前数组并返回它，区间 <code>[beg, end)</code>，默认为 <code>[0, this.length)</code>，如果 beg 为负数，则自动计算为 <code>length + beg</code>，如果 end 为负数，则自动计算为 <code>length + end</code>。</li>
+<li><code>Array.prototype.push(element1, ..., elementN)</code>：将传入的元素（按出现的顺序）追加到数组尾部，并返回数组的新长度。</li>
+<li><code>Array.prototype.pop()</code>：弹出当前数组的尾部元素，如果数组为空则返回 undefined。</li>
+<li><code>Array.prototype.unshift(element1, ..., elementN)</code>：将传入的元素（按出现的顺序）插入到数组的头部，并返回数组的新长度。</li>
+<li><code>Array.prototype.shift()</code>：弹出当前数组的头部元素，如果数组为空则返回 undefined。</li>
+<li><code>Array.prototype.splice(ind[, cnt[, item1, ..., itemN]])</code>：从 ind 处删除 cnt 个元素，然后使用 item1 … itemN 元素替换它们，返回被删除元素组成的数组。</li>
+<li><code>Array.prototype.reverse()</code>：颠倒数组中的元素的位置，第一个变成最后一个，最后一个变成第一个，以此类推，返回数组的原引用。</li>
+<li><code>Array.prototype.sort([compareFunction])</code>：用就地（in-place）的算法对数组的元素进行排序，并返回数组。排序不一定是稳定的。默认排序顺序是根据字符串 Unicode 码点（调用 toString() 方法）。除非元素全部是字符串，否则强烈建议传入比较函数！比较函数 compareFunction 接收两个参数（数组的两个待比较元素），sort() 方法根据比较函数的返回值确定这两个元素的相对大小，假设传入的参数为 a、b，即 <code>result = compareFunction(a, b)</code>，如果 result 大于 0，说明 <code>a &gt; b</code>，如果 result 等于 0，说明 <code>a = b</code>，如果 result 小于 0，说明 <code>a &lt; b</code>。通常这三个返回值分别为：<code>1</code>大于、<code>0</code>等于、<code>-1</code>小于。对于数值排序，可以使用 <code>arr.sort((a, b) =&gt; a - b)</code>（升序）、<code>arr.sort((a, b) =&gt; b - a)</code>（降序）。</li>
+</ul>
+<p><span style="color:green; font-weight:bold">访问方法</span></p>
+<ul>
+<li><code>Array.prototype.concat(value1, ..., valueN)</code>：将当前数组与给定元素（如果元素是数组则解开，如果是多维数组，只会解一层）连接在一起，并返回整个新数组。</li>
+<li><code>Array.prototype.includes(searchElement[, fromIndex])</code>：测试当前数组是否包含给定元素，fromIndex 默认为 0。如果包含则返回 true，否则返回 false。</li>
+<li><code>Array.prototype.join([separator])</code>：使用给定 sep 分隔符连接数组的每个元素，返回连接后的字符串。sep 默认为英文逗号 <code>,</code>。</li>
+<li><code>Array.prototype.slice([begin[, end]])</code>：提取区间 <code>[begin, end)</code> 的元素到一个新数组中并返回它。默认为 <code>[0, this.length)</code>。</li>
+<li><code>Array.prototype.toString()</code>：返回当前数组的字符串描述（调用 <code>join()</code> 方法，默认分隔符为逗号）。</li>
+<li><code>Array.prototype.toLocaleString()</code>：返回当前数组的区域敏感字符串描述，每个元素之间使用英文逗号分隔。</li>
+<li><code>Array.prototype.indexOf(searchElement[, fromIndex = 0])</code>：查找数组中与给定元素相等的第一个索引值，如果没有则返回 -1。</li>
+<li><code>Array.prototype.lastIndexOf(searchElement[, fromIndex = arr.length - 1])</code>：查找数组中与给定元素相等的最后一个索引值，如果没有则返回 -1。</li>
+</ul>
+<p><span style="color:green; font-weight: bold">迭代方法</span><br>在下面的众多遍历方法中，有很多方法都需要指定一个回调函数作为参数。在每一个数组元素都分别执行完回调函数之前，数组的 length 属性会被缓存在某个地方，所以，如果你在回调函数中为当前数组添加了新的元素，那么那些新添加的元素是不会被遍历到的。此外，如果在回调函数中对当前数组进行了其它修改，比如改变某个元素的值或者删掉某个元素，那么随后的遍历操作可能会受到未预期的影响。总之，<strong>不要尝试在遍历过程中对原数组进行任何修改</strong>，虽然规范对这样的操作进行了详细的定义，但为了可读性和可维护性，请不要这样做。</p>
+<ul>
+<li><code>Array.prototype.forEach(action[, thisObj])</code>：action 接收三个参数 <code>action(curVal, curInd, curArr)</code>，分别当前元素，当前元素的索引值，当前遍历的数组。thisObj 指回调函数中 this 指向（对箭头函数不起作用），默认为 undefined。</li>
+<li><code>Array.prototype.keys()</code>：返回一个 Array Iterator，其中包含当前数组的所有元素的索引值。</li>
+<li><code>Array.prototype.entries()</code>：返回当前数组的（Array Iterator）迭代器对象，在迭代器中调用 next() 方法可获取下一个元素，next() 返回的是一个包含两个元素的对象 <code>{done: bool, value: elemData}</code>，其中 done 是一个布尔值，指示当前元素是否是最后一个元素（是则为 true，通常作为循环条件），而 value 就是元素的值，value 是一个拥有两个元素的数组 <code>[index, element]</code>。</li>
+<li><code>Array.prototype.every(callback[, thisArg])</code>：只有全部元素都通过了 callback 的测试，才会返回 true。<code>callback(curVal, curInd, curArr)</code>，thisArg 是回调函数中的 this 指向（箭头函数无效）。</li>
+<li><code>Array.prototype.some(callback[, thisArg])</code>：只要有至少一个元素通过了 callback 的测试，就返回 true。参数同上。</li>
+<li><code>Array.prototype.filter(callback[, thisArg])</code>：返回一个包含了所有通过测试的元素的新数组，参数同上。</li>
+<li><code>Array.prototype.find(callback[, thisArg])</code>：返回通过测试的第一个元素，如果没有则返回 undefined。</li>
+<li><code>Array.prototype.findIndex(callback[, thisArg])</code>：返回通过测试的第一个元素的索引值，如果没有则返回 -1。</li>
+<li><code>Array.prototype.map(callback[, thisArg])</code>：<strong>映射（加工）</strong>，返回一个经映射后的元素组成的新数组，参数同上。</li>
+<li><code>Array.prototype.reduce(callback[, initialValue])</code>：<strong>规约（收集）</strong>，<code>callback(lastResult, curVal, curInd, curArr)</code> lastResult 是上轮累加的结果，initialValue 是初始种子，如果省略，则取第一个元素，并且从数组的第二个元素开始累加；如果未省略，则从第一个元素开始累加。其实规约的处理过程很简单：第一种情况（提供了初始种子），将这个初始种子（作为累加结果）放在某个地方，然后依次从数组中取出元素将其与上轮累加结果累加（调用 callback），直到数组元素全部取完；第二种情况（未提供初始种子），将数组的头部元素作为初始种子，将初始种子放在某个地方，然后依次从数组（头个元素除外）中取出元素将其与上轮累加结果累加（调用 callback），直到数组元素全部取完。最后返回累加结果。比如我要求数组元素的和：<code>arr.reduce((a, b) =&gt; a + b)</code>。</li>
+<li><code>Array.prototype.reduceRight(callback[, initialValue])</code>：规约，和 arr.reduce() 一样，除了它按照 <strong>从右往左</strong> 方向遍历。</li>
+</ul>
+<h2 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h2><p>在 JS 中，没有所谓的”类”，一切皆对象。那么只有对象是怎么实现”面向对象”的呢？与 Java、C++ 的面向对象风格不同，JS 的继承是 <strong>原型继承</strong>，每个对象都有一个隐藏属性 <code>[[Prototype]]</code>，在大多数浏览器中可以使用 <code>__proto__</code> 来访问（读写），不过在 ES5 之后，建议使用规范 API：<code>Object.getPrototypeOf(obj)</code>读取、<code>Object.setPrototypeOf(obj, newProto)</code>写入。不过，修改对象的 <code>[[Prototype]]</code> 是一个 <strong>非常慢且影响性能的操作</strong>。无论是什么方式，都不建议在运行时修改对象的原型，要在创建对象的设置原型，建议使用 <code>Object.create(proto)</code> 方法来创建一个新对象，并使用指定的原型。</p>
+<ul>
+<li><strong>读取对象属性</strong>：先检查对象本身有没有指定属性，如果有则直接返回，否则检查 <code>[[Prototype]]</code> 原型对象上有没有，如果有则返回，否则继续递归的检查 <code>[[Prototype]]</code> 原型对象上是否有指定的属性，直到 <code>[[Prototype]]</code> 为 null 为止，最终返回 undefined。</li>
+<li><strong>写入对象属性</strong>：先检查对象本身有没有指定属性，如果有则直接给该属性赋值，如果没有则新建一个属性，并进行赋值，而不会查找原型链。</li>
+</ul>
+<p>那么这个原型对象是谁创建的呢？不可能是自己生成的吧？这里只讨论典型情况：<strong>对象 obj 是调用所属构造函数创建的，即 <code>let obj = new Foo()</code></strong>。语法和 Java、C++ 相似，没什么好讲的，对象 obj 是构造函数 Foo 的一个实例，这时候你查看 <code>obj.__proto__</code> 会发现，它不是 undefined，说明在 new 操作过程中，为其设置了一个原型，那么这个原型是谁呢？<strong>Foo.prototype</strong>，没错，就是构造函数 Foo 的 <code>prototype</code> 属性，每个函数都有一个 prototype 属性，prototype 默认是只有一个属性（不计算隐藏属性）的对象，这个唯一的属性就是 <code>constructor</code> 构造器，它指向当前 prototype 对象所属的构造函数，在这里就是 Foo 了。</p>
+<p><strong>如何分清 <code>prototype</code> 和 <code>[[Prototype]]</code></strong>？</p>
+<ul>
+<li><strong>obj.[[Prototype]]</strong>：<strong>所有对象</strong>都有的隐藏属性，只要是对象就有该属性，大多数浏览器中可使用 <code>__proto__</code> 访问，<strong>指向当前对象的原型对象</strong>，<strong>构成原型链</strong>，查找属性或方法时会沿着原型链一层一层往上搜寻，直到顶层 null。当然我们也可以创建一个没有原型的对象（原型为 null），使用 <code>Object.create(null)</code>。</li>
+<li><strong>func.prototype</strong>：<strong>函数对象</strong>的自带属性，通常我们只关心构造函数，<strong>Constructor（构造函数）和 Prototype（原型对象）是一对的</strong>，当我们 new 一个对象时，JS 会<strong>自动将函数的 prototype 作为该新对象的原型</strong>，即 <code>__proto__</code> 的指向，构造函数和原型对象互访的方法：<code>Constructor.prototype</code>根据构造函数获取原型对象、<code>Prototype.constructor</code>根据原型对象获取构造函数。</li>
+</ul>
+<p>别急，我们来看这个例子：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+let obj = {};
+console.log(obj.__proto__ === Object.prototype); // true
+console.log(obj.__proto__.__proto__ === null); // true
+
+function func() {}
+console.log(func.__proto__ === Function.prototype); // true
+console.log(func.__proto__.__proto__ === Object.prototype); // true
+console.log(func.__proto__.__proto__.__proto__ === null); // true
+</script></code></pre>
+<p>先来解释一下对象 obj：<br>obj 的原型是 Object.prototype 没啥好解释的，Object.prototype 的原型是 null 前面也说了。</p>
+<p>再来解释一下函数 func：<br>函数也是对象，这在本文开头就说了，因此，函数对象的原型是 Function.prototype；而 Function.prototype 是一个普通对象，因此它的原型是 Object.prototype，而 Object.prototype 是 null。</p>
+<p>清楚了没有？再来看这个例子：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log(typeof Object); // function
+console.log(typeof Function); // function
+
+console.log(Object.__proto__ === Function.prototype); // true
+console.log(Object.__proto__.__proto__ === Object.prototype); // true
+console.log(Object.__proto__.__proto__.__proto__ === null); // true
+
+console.log(Function.__proto__ === Function.prototype); // true
+console.log(Function.__proto__.__proto__ === Object.prototype); // true
+console.log(Function.__proto__.__proto__.__proto__ === null); // true
+</script></code></pre>
+<p>Object、Function 都是函数，因此它们的原型是 Function.prototype；Function.prototype 是普通对象，因此它的原型是 Object.prototype，Object.prototype 的原型是 null。</p>
+<p><strong>Object.prototype 是几乎所有对象的原型（尽头），它的原型有点特殊，是 null。</strong><br>为什么说是几乎，因为 JS 运行我们自由的修改对象的原型指向，如使用 <code>let obj = Object.create(null)</code> 创建了一个新对象 obj，该对象没有原型，因此它是一个干净的对象，没有命名污染。当然也可以直接使用 <code>obj.__proto__ = null</code> 来实现。注意，表面上我们将它的原型设为了 null，实际上是将它的 <code>__proto__</code> 属性 delete 了，因此 <code>obj.__proto__ === null</code> 是 false 的，因为 obj 中不存在 <code>__proto__</code> 属性了，尝试获取它的值也是得到 undefined。这时候如果你使用 <code>obj instanceof Object</code> 会发现，结果是 false！难道这个 obj 不是对象？！不是的，obj 是对象，因为 instanceof 的判断方法就是直接判断 <code>obj.__proto__ === Object.prototype</code>！这下知道了 instanceof 的原理了吧，不过我们可以使用 typeof 来获取 obj 的类型，结果是 <code>&#39;object&#39;</code>。</p>
+<p>现在，我们来说一下 JS 的面向对象编程（基本准则）：</p>
+<ul>
+<li>实例属性：放在构造函数的函数体中，如 <code>this.xxx = xxx</code></li>
+<li>实例方法：放在构造函数的 prototype 中，如 <code>F.prototype.xxx = function() {}</code></li>
+<li>静态属性：作为构造函数的自身属性来存储，只能通过 <code>F.xxx</code> 来访问</li>
+<li>静态方法：作为构造函数的自身方法来存储，只能通过 <code>F.xxx()</code> 来访问</li>
+</ul>
+<p>静态成员的放置没有什么疑问，关键是实例方法为什么要放在构造函数的 prototype 中呢？放在构造函数的函数体中不也可以吗，如 <code>this.xxx = function() {}</code>，为什么不这么做呢？因为这样会浪费不必要的内存呀！每创建一个新对象，在内存中就会有一个多余的函数对象生成，这个完全没有必要！因此实例方法说是说”实例”方法，实际上是一个额外接收 this 指针的全局函数，和静态函数没有区别，当然整个 this 参数是隐式传递的。那既然是全局函数，为什么不放在 F 构造函数中呢，作为它的一个方法？这是不行的，因为你访问对象的方法时，是使用 <code>obj.method()</code>，而不是 <code>F.method()</code>！你只能将实例方法放在 prototype 中才会被顺着原型链找到该方法，正确的获取 this 指向。这也是 prototype 的主要作用了。</p>
+<p><strong>面向对象的例子</strong><br>A -&gt; B -&gt; C 三个类，继承关系从左往右（父类 -&gt; 子类）</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function A() {
+    /*
+     * this.prop = value;
+     * ...
+     */
+}
+
+function B() {
+    A.call(this);
+    // TODO
+}
+B.prototype = Object.create(A.prototype);
+B.prototype.constructor = B;
+
+function C() {
+    B.call(this);
+    // TODO
+}
+C.prototype = Object.create(B.prototype);
+C.prototype.constructor = C;
+
+let objA = new A(),
+    objB = new B(),
+    objC = new C();
+
+console.log(objA instanceof Object); // true
+console.log(objA instanceof A); // true
+
+console.log(objB instanceof Object); // true
+console.log(objB instanceof A); // true
+console.log(objB instanceof B); // true
+
+console.log(objC instanceof Object); // true
+console.log(objC instanceof A); // true
+console.log(objC instanceof B); // true
+console.log(objC instanceof C); // true
+</script></code></pre>
+<p><strong>获取对象的所有属性</strong></p>
+<ol>
+<li><code>for...in</code>：依次访问一个<strong>对象及其原型链</strong>中所有<strong>可枚举</strong>的属性；</li>
+<li><code>Object.keys(o)</code>：访问一个<strong>对象</strong>中所有<strong>可枚举</strong>的属性（返回数组）；</li>
+<li><code>Object.getOwnPropertyNames(o)</code>：访问一个<strong>对象</strong>中的<strong>所有属性</strong>（返回数组）。</li>
+</ol>
+<p><strong>Object 构造函数</strong><br><code>new Object([value])</code>：如果没有参数，则返回一个没有属性的空对象；如果存在参数 value（基本类型），则返回参数 value 的包装类对象，如果 value 为 undefined 或 null，则返回一个没有属性的空对象。其中 new 可以省略，即当作普通函数来调用（可以看作是类型转换函数）。</p>
+<p><strong>Object 实例方法</strong></p>
+<ul>
+<li><code>obj.hasOwnProperty(prop)</code>：判断当前对象自身是否拥有给定属性</li>
+<li><code>prototypeObj.isPrototypeOf(obj)</code>：判断当前对象是否位于给定对象的原型链中</li>
+<li><code>obj.propertyIsEnumerable(prop)</code>：判断当前对象的给定（自身）属性是否可枚举</li>
+<li><code>object.valueOf()</code>：返回当前对象的原始值，默认返回对象自身，包装类中有用</li>
+<li><code>object.toString()</code>：返回当前对象的字符串描述，非区域敏感</li>
+<li><code>obj.toLocaleString()</code>：返回当前对象的区域敏感的字符串描述，默认 toString()</li>
+</ul>
+<p><strong>Object 静态方法</strong></p>
+<ul>
+<li><code>Object.assign(target, ...sources)</code>：拷贝 sources 自身的可枚举属性值到 target 对象中（覆盖），并返回 target 对象。</li>
+<li><code>Object.create(proto[, propertiesObject])</code>：创建一个新对象，它的原型为 proto，可选的为其设置自身属性（必须包含元信息，见下），返回新对象。</li>
+<li><code>Object.defineProperty(obj, prop, descriptor)</code>：定义或修改一个对象的属性，并返回给定对象。<code>obj</code> 是要操作的对象，<code>prop</code> 是要操作的属性名，<code>descriptor</code> 是属性的描述（是一个对象，包含元信息）。属性描述符有两种形式：<strong>数据描述符</strong>（<code>value = undefined</code> 值，<code>writable = false</code> 可写）、<strong>存取描述符</strong>（<code>get = undefined</code> getter 方法，<code>set = undefined</code> setter 方法），注意，属性描述符只能是其中的一种，不能混搭！除此之外，它们还有两个共同的键值：<code>configurable = false</code> 当且仅当 configurable 为 true 时，该属性描述符才能够被改变，同时该属性也能从对应的对象上被删除；<code>enumerable = false</code> 当一个属性的 enumerable 为 true 时，该属性才是可枚举的，可以被诸如 for…in，Object.keys() 方法来访问。如果一个描述符不具有 value, writable, get 和 set 任意一个关键字，那么它将被认为是一个<strong>数据描述符</strong>。</li>
+<li><code>Object.defineProperties(obj, props)</code>：定义或修改一个对象的多个属性，并返回给定对象。例子：<code>Object.defineProperties(obj, {prop1: {...}, ..., propN: {...}})</code>。</li>
+<li><code>Object.getOwnPropertyNames(obj)</code>：返回一个由指定对象的所有自身属性的属性名（不包括 Symbol 值作为名称的属性）组成的数组。</li>
+<li><code>Object.getOwnPropertySymbols(obj)</code>：返回一个由指定对象的所有自身属性的属性名（不包括 String 值作为名称的属性）组成的数组。</li>
+<li><code>Object.getOwnPropertyDescriptor(obj, prop)</code>：获取给定对象的自有属性的属性描述符（一个对象），其中 prop 是字符串类型。</li>
+<li><code>Object.getPrototypeOf(object)</code>：返回指定对象的原型（内部<code>[[Prototype]]</code>属性的值），用来替代 <code>__proto__</code>。</li>
+<li><code>Object.setPrototypeOf(obj, prototype)</code>：设置给定对象的原型（内部<code>[[Prototype]]</code>属性的值），用来替代 <code>__proto__</code>，并返回传入的对象。</li>
+<li><code>Object.is(value1, value2)</code>：判等，与 <code>===</code> 相同，但 is() 认为 <code>+0</code> 和 <code>-0</code> 不相等，认为 <code>NaN</code> 与 <code>NaN</code> 相等。</li>
+<li><code>Object.preventExtensions(obj)</code>：将给定对象变成不可扩展对象，即不能添加新的属性。</li>
+<li><code>Object.isExtensible(obj)</code>：判断一个对象是否是可扩展的，即可以添加新的属性。</li>
+<li><code>Object.freeze(obj)</code>：冻结一个对象，冻结后的对象是只读的，不可进行任何修改，否则抛出异常。<strong>浅冻结</strong>，也就是只会冻结一层，如需<strong>深冻结</strong>，需要递归的冻结内部对象/数组。</li>
+<li><code>Object.isFrozen(obj)</code>：判断一个对象是否被冻结。</li>
+<li><code>Object.seal(obj)</code>：密封给定对象，密封对象将会阻止向对象添加新的属性，并且会将所有已有属性的可配置性（configurable）置为不可配置（false），即不可修改属性的描述或删除属性。但是可写性描述（writable）为可写（true）的属性的值仍然可以被修改。</li>
+<li><code>Object.isSealed(obj)</code>：判断一个对象是否被密封。</li>
+<li><code>Object.keys(obj)</code>：返回一个由给定对象自身可枚举属性名组成的数组。</li>
+<li><code>Object.values(obj)</code>：返回一个由给定对象自身可枚举属性值组成的数组。</li>
+<li><code>Object.entries(obj)</code>：返回给定对象的所有可枚举属性（不包括原型链上的）的键值对 key-value 数组（二维数组）。</li>
+</ul>
+<p>除了使用 <code>Object.defineProperty()</code> 方法来定义 getter-setter 方法外，还可以直接使用字面量方法，具体的语法如下（后一种是 ES6 新增的语法，允许在运行时计算属性的名称，其中方括号中的是一个 JS 表达式，其值应为字符串类型，该语法适用于对象的全部属性，而不仅是 getter-setter 伪属性）：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+// getter/setter for 'key'
+let obj = {
+    get key() {
+        // TODO
+        return someValue;
+    },
+    set key(newValue) {
+        // TODO
+    }
+};
+
+// getter/setter for 'key'
+let key = 'keyName';
+let obj = {
+    get [key]() {
+        // TODO
+        return someValue;
+    },
+    set [key](newValue) {
+        // TODO
+    }
+};
+</script></code></pre>
+<h2 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h2><p>JSON（<strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation，JS 对象表示法），是一种由 道格拉斯·克罗克福特 构想设计、<strong>轻量级的数据交换格式</strong>，以文本为基础，且易于让人阅读。尽管 JSON 是 Javascript 的一个子集，但 JSON 是<strong>独立于语言的文本格式</strong>，并且采用了类似于 C 语言家族的一些习惯。</p>
+<p>JSON 数据格式与语言无关，脱胎于 JavaScript，但目前很多编程语言都支持 JSON 格式数据的生成和解析。JSON 的官方 MIME 类型是 <code>application/json</code>，文件扩展名是 <code>.json</code>。</p>
+<p>JSON 建构于两种结构：</p>
+<ul>
+<li><strong>键值对的集合</strong>。不同的语言中，它被理解为对象（object），纪录（record），结构（struct），字典（dictionary），哈希表（hash table），有键列表（keyed list），或者关联数组（associative array）。</li>
+<li><strong>值的有序列表</strong>。在大部分语言中，它被理解为数组（array）。</li>
+</ul>
+<p>这两种结构分别对应 JavaScript 中的 <strong>对象</strong> 和 <strong>数组</strong>。注意，JSON 只是一个字符串！是一个纯文本！</p>
+<ul>
+<li><strong>对象</strong>：<code>{k1: v1, k2: v2, ..., kN: vN}</code>，key 必须显式得加上双引号</li>
+<li><strong>数组</strong>：<code>[e1, e2, e3, ..., eN]</code></li>
+</ul>
+<p>值（即对象中的 value、数组中的 element）可以是以下类型：</p>
+<ul>
+<li><code>null</code>：空指针</li>
+<li><code>true/false</code>：布尔值</li>
+<li><code>number</code>：数值（十进制）</li>
+<li><code>string</code>：字符串（双引号）</li>
+<li><code>array</code>：数组</li>
+<li><code>object</code>：对象</li>
+</ul>
+<p><code>number</code> 只支持十进制的整数、浮点数。其中浮点数支持科学记数法，即 <code>1.3E4</code> 表示 13000（E 大小写不敏感）。</p>
+<p><code>string</code> 必须使用双引号包围，包括 object 中的 key，这是为了适应 C/C++、Java 中的”单引号为字符，双引号为字符串”语法。此外，还支持一些转义序列：</p>
+<ul>
+<li><code>\&quot;</code>：双引号</li>
+<li><code>\\</code>：反斜杠</li>
+<li><code>\/</code>：正斜杠</li>
+<li><code>\b</code>：退格符</li>
+<li><code>\t</code>：制表符</li>
+<li><code>\r</code>：回车符</li>
+<li><code>\n</code>：换行符</li>
+<li><code>\f</code>：换页符</li>
+<li><code>\uhhhh</code>：UTF-16 code-unit</li>
+</ul>
+<p>JS 内置的 JSON 全局对象包含两个方法，用于序列化和反序列化 JSON 数据：</p>
+<ul>
+<li><code>JSON.stringify(value[, replacer[, space]])</code>：<strong>将 JS 对象/数组 转换为 JSON 字符串</strong>。</li>
+<li><code>JSON.parse(text[, reviver])</code>：<strong>将 JSON 字符串转换为 JS 对象/数组</strong>。</li>
+</ul>
+<h2 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h2><p><strong>什么是 DOM</strong>？<br><strong>文档对象模型</strong>（DOM）是 HTML 和 XML 文档的<strong>编程接口</strong>。它提供了对文档的结构化表述，并定义了一种方式使得程序可以对该结构进行访问，从而改变文档的结构，样式和内容。DOM 将文档解析为一个由节点和对象（包含属性和方法的对象）组成的结构集合。简言之，它会将 web 页面和脚本或程序语言连接起来。</p>
+<p>一个 web 页面是一个文档。这个文档可以在浏览器窗口或作为 HTML 源码显示出来。但上述两个情况中都是同一份文档。文档对象模型（DOM）提供了对同一份文档的另一种表现，存储和操作的方式。DOM 是 web 页面的完全的面向对象表述，它能够使用如 JavaScript 等脚本语言进行修改。</p>
+<p>W3C DOM 和 WHATWG DOM 标准在绝大多数现代浏览器中都有对 DOM 的基本实现。许多浏览器提供了对 W3C 标准的扩展，所以在使用时必须注意，文档可能会在多种浏览器上使用不同的 DOM 来访问。</p>
+<p><strong>如何访问 DOM</strong>？<br>在 JS 中，一般通过 <code>document</code> 和 <code>window</code> 两个全局对象提供的 API 来操作 DOM。</p>
+<p>DOM 其实就是文档树（Tree），既然是一棵树，那么肯定就有节点（Node）了。文档树就是由若干个节点组成的，如图所示：<br><img src="https://www.w3schools.com/js/pic_htmltree.gif" alt="DOM 图片示例"></p>
+<p><strong>Node 节点的类型</strong></p>
+<ul>
+<li><code>Node.ELEMENT_NODE</code>：<code>1</code>，HTML元素</li>
+<li><code>Node.ATTRIBUTE_NODE</code>：<code>2</code>，元素属性</li>
+<li><code>Node.TEXT_NODE</code>：<code>3</code>，文本节点</li>
+<li><code>Node.COMMENT_NODE</code>：<code>8</code>，HTML注释</li>
+<li><code>Node.DOCUMENT_NODE</code>：<code>9</code>，根节点</li>
+<li><code>Node.DOCUMENT_TYPE_NODE</code>：<code>10</code>，DOCTYPE</li>
+<li><code>Node.DOCUMENT_FRAGMENT_NODE</code>：<code>11</code>，文档片段</li>
+</ul>
+<p>Node 是一个接口，上述的节点类型都实现了 Node 接口，因此它们具有一些共同的属性和方法。Node 有一个 nodeType 属性，表示 Node 的类型，它是一个整数，其对应的数值如上所示。</p>
+<p>这些 Node 类型中，我们最常用的就是 element，text，attribute，comment，document，document_fragment这几种类型。</p>
+<p><strong>Element 类型</strong><br>Element 提供了对元素标签名，子节点和特性的访问，我们常用 HTML 元素比如 div，span，a 等标签就是 element 中的一种。Element 有下面几条特性：</p>
+<ul>
+<li>nodeType 为 1</li>
+<li>nodeName 为元素标签名，tagName 也是返回标签名</li>
+<li>nodeValue 为 null</li>
+<li>parentNode 可能是 Document 或 Element</li>
+<li>子节点可能是 Element，Text，Comment，Processing_Instruction，CDATASection 或 EntityReference</li>
+</ul>
+<p><strong>Text 类型</strong><br>Text 表示文本节点，它包含的是纯文本内容，不能包含 html 代码，但可以包含转义后的 html 代码。Text 有下面的特性：</p>
+<ul>
+<li>nodeType 为 3</li>
+<li>nodeName 为 #text</li>
+<li>nodeValue 为文本内容</li>
+<li>parentNode 是一个 Element</li>
+<li>没有子节点</li>
+</ul>
+<p><strong>Attr 类型</strong><br>Attr 类型表示元素的属性，相当于元素的 attributes 属性中的节点，它有下面的特性：</p>
+<ul>
+<li>nodeType 值为 2</li>
+<li>nodeName 是属性的名称</li>
+<li>nodeValue 是属性的值</li>
+<li>parentNode 为 null</li>
+</ul>
+<p><strong>Comment 类型</strong><br>Comment 表示 HTML 文档中的注释，它有下面的几种特征：</p>
+<ul>
+<li>nodeType 为 8</li>
+<li>nodeName 为 #comment</li>
+<li>nodeValue 为注释的内容</li>
+<li>parentNode 可能是 Document 或 Element</li>
+<li>没有子节点</li>
+</ul>
+<p><strong>Document 类型</strong><br>Document 表示文档，在浏览器中，document 对象是 HTMLDocument 的一个实例，表示整个页面，它同时也是 window 对象的一个属性。Document 有下面的特性：</p>
+<ul>
+<li>nodeType 为 9</li>
+<li>nodeName 为 #document</li>
+<li>nodeValue 为 null</li>
+<li>parentNode 为 null</li>
+<li>子节点可能是一个 DocumentType 或 Element</li>
+</ul>
+<p><strong>DocumentFragment 类型</strong><br>DocumentFragment 是所有节点中唯一一个没有对应标记的类型，它表示一种轻量级的文档，可能当作一个临时的仓库用来保存可能会添加到文档中的节点。DocumentFragment 有下面的特性：</p>
+<ul>
+<li>nodeType 为 11</li>
+<li>nodeName 为 #document-fragment</li>
+<li>nodeValue 为 null</li>
+<li>parentNode 为 null</li>
+</ul>
+<p><strong>节点创建型 API</strong><br><code>createElement</code><br>createElement 通过传入指定的一个标签名来创建一个元素，如果传入的标签名是一个未知的，则会创建一个自定义的标签，注意：IE8 以下浏览器不支持自定义标签。<br><code>var div = document.createElement(&quot;div&quot;);</code><br>使用 createElement 要注意：通过 createElement 创建的元素并不属于 html 文档，它只是创建出来，并未添加到 html 文档中，要调用 appendChild 或 insertBefore 等方法将其添加到 HTML 文档树中。</p>
+<p><code>createTextNode</code><br>createTextNode 用来创建一个文本节点，用法如下：<br><code>var textNode = document.createTextNode(&quot;一个 textNode&quot;);</code><br>createTextNode 接收一个参数，这个参数就是文本节点中的文本，和 createElement 一样，创建后的文本节点也只是独立的一个节点，同样需要 appendChild 将其添加到 HTML 文档树中。</p>
+<p><code>cloneNode</code><br>cloneNode 会返回当前节点的一个副本，它接收一个 bool 参数，用来表示是否复制子元素，使用如下：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+var parent = document.getElementById("parentElement"); 
+var parent2 = parent.cloneNode(true);// 传入true
+parent2.id = "parent2";
+</script></code></pre>
+<p>这段代码通过 cloneNode 复制了一份 parent 元素，其中 cloneNode 的参数为 true，表示 parent 的子节点也被复制，如果传入 false，则表示只复制了 parent 节点。要注意的几点：<br>1）和 createElement 一样，cloneNode 创建的节点只是游离于 html 文档外的节点，要调用 appendChild 方法才能添加到文档树中；<br>2）如果复制的元素有 id，则其副本同样会包含该 id，由于 id 具有唯一性，所以在复制节点后必须要修改其 id；<br>3）调用接收的 bool 参数最好传入，如果不传入该参数，不同浏览器对其默认值的处理可能不同。<br>4）如果是通过 addEventListener 或如 onclick 进行绑定事件，则副本节点不会绑定该事件；<br>5）如果是内联方式绑定比如<code>&lt;div onclick=&quot;showParent()&quot;&gt;&lt;/div&gt;</code>，这样的话，副本节点同样会触发事件。</p>
+<p><code>createDocumentFragment</code><br>createDocumentFragment 方法用来创建一个 DocumentFragment。在前面我们说到 DocumentFragment 表示一种轻量级的文档，它的作用主要是存储临时的节点用来准备添加到文档中。<br>createDocumentFragment 方法主要是用于添加大量节点到文档中时会使用到。假设要循环一组数据，然后创建多个节点添加到文档中，初始版本如下：</p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;ul id=&quot;list&quot;&gt;&lt;/ul&gt;
+    &lt;button type=&quot;button&quot; id=&quot;btnAdd&quot;&gt;点我添加&lt;/button&gt;
+    &lt;script&gt;
+      document.getElementById(&#x27;btnAdd&#x27;).onclick = function() {
+        let list = document.getElementById(&#x27;list&#x27;);
+        for (let i = 0, item; i &lt; 1000; i++) {
+          item = document.createElement(&#x27;li&#x27;);
+          item.textContent = i;
+          list.appendChild(item);
+        }
+      };
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>可以看出，每循环一次，就要调用一次 list.appendChild(item)，即每次循环都要修改 DOM 树。这个过程会造成浏览器的回流，所谓回流简单说就是指元素大小和位置会被重新计算，如果添加的元素太多，会造成性能问题。这个时候就需要使用 createDocumentFragment 了，无论多少次循环，都只是在内存中添加节点而已，只需在循环结束后一次性添加到 DOM 树即可。改进版本如下：</p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;ul id=&quot;list&quot;&gt;&lt;/ul&gt;
+    &lt;button type=&quot;button&quot; id=&quot;btnAdd&quot;&gt;点我添加&lt;/button&gt;
+    &lt;script&gt;
+      document.getElementById(&#x27;btnAdd&#x27;).onclick = function() {
+        let list = document.getElementById(&#x27;list&#x27;);
+        let frag = document.createDocumentFragment();
+        for (let item, i = 0; i &lt; 1000; i++) {
+          item = document.createElement(&#x27;li&#x27;);
+          item.textContent = i;
+          frag.appendChild(item);
+        }
+        list.appendChild(frag);
+      };
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><strong>创建型 API 总结</strong><br>创建型 API 主要包括 <code>createElement</code>，<code>createTextNode</code>，<code>cloneNode</code> 和 <code>createDocumentFragment</code> 四个方法，需要注意下面几点：<br>1）新创建的节点只是一个孤立的节点，要通过 appendChild 等方法添加到文档中<br>2）cloneNode 要注意被复制的节点是否包含子节点以及事件绑定等问题<br>3）使用 createDocumentFragment 来解决添加大量节点时的性能问题</p>
+<p><strong>页面修改型 API</strong><br>前面我们提到创建型 API，它们只是创建节点（只存在于内存中），并没有真正修改页面内容，必须要调用 appendChild 等方法来将其添加到文档树中。修改页面内容的 API 主要包括：<code>appendChild</code>，<code>insertBefore</code>，<code>removeChild</code>，<code>replaceChild</code>。</p>
+<p><code>appendChild</code><br>appendChild 我们在前面已经用到多次，就是将指定的节点添加到调用节点的子元素的末尾。调用方法如下：<code>parent.appendChild(child);</code><br>child 节点将会作为 parent 节点的最后一个子节点。appendChild 这个方法很简单，但是还有一点需要注意：如果被添加的节点是一个页面中已存在（同一个引用）的节点，则执行后这个节点将会添加到指定位置，其原本所在的位置将移除该节点，也就是说不会同时存在两个相同节点在页面上，相当于把这个节点<strong>移动</strong>到另一个地方。我们来看例子：</p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;ul id=&quot;list&quot;&gt;
+      &lt;li id=&quot;1th-child&quot;&gt;第一个子节点&lt;/li&gt;
+      &lt;li id=&quot;2th-child&quot;&gt;第二个子节点&lt;/li&gt;
+      &lt;li id=&quot;3th-child&quot;&gt;第三个子节点&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;button type=&quot;button&quot; id=&quot;btnAdd&quot;&gt;点击添加&lt;/button&gt;
+    &lt;button type=&quot;button&quot; id=&quot;btnMov&quot;&gt;点击移动&lt;/button&gt;
+    &lt;script&gt;
+      document.getElementById(&#x27;btnAdd&#x27;).onclick = function() {
+        let child3 = document.getElementById(&#x27;3th-child&#x27;);
+        let child4 = child3.cloneNode(true);
+        child4.id = &#x27;4th-child&#x27;;
+        child4.textContent = &#x27;第四个子节点&#x27;;
+        document.getElementById(&#x27;list&#x27;).appendChild(child4);
+      };
+
+      document.getElementById(&#x27;btnMov&#x27;).onclick = function() {
+        let child1 = document.getElementById(&#x27;1th-child&#x27;);
+        document.getElementById(&#x27;list&#x27;).appendChild(child1);
+      };
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><code>insertBefore</code><br>insertBefore 用来在指定节点前面插入一个新节点，用法如下：<br><code>parentNode.insertBefore(newNode, refNode);</code><br>parentNode 表示新节点所属的父节点，newNode 表示要添加的新节点，refNode 表示参照节点，新节点会添加到这个节点之前。</p>
+<p>个人感觉这个 API 设计的不太好，parentNode 完全是多余的，我只需要知道 refNode 即可，即 <code>refNode.insertBefore(newNode)</code>。</p>
+<p>和 appendChild 一样，如果插入的节点是页面上的节点（同一引用），则会移动该节点到指定位置，并且保留其绑定的事件。</p>
+<p>关于第二个参数参照节点还有几个注意的地方：<br>1）refNode 是必传的，如果不传该参数会报错<br>2）如果 refNode 是 undefined 或 null，则 insertBefore 会将节点添加到子元素的末尾</p>
+<p><code>removeChild</code><br>删除调用节点的指定子节点，并返回被删子节点的引用（依然存在于内存之中），用法：<code>parentNode.removeChild(node)</code>。为了确保不会出错，我们可以先通过子节点自身获取它的父节点，然后再删除它自己，即 <code>node.parentNode.removeChild(node)</code>。</p>
+<p><code>replaceChild</code><br>替换调用节点的指定子节点，并返回被替换掉的子节点引用。用法如下：<br><code>parent.replaceChild(newChild, oldChild);</code><br>newChild 是替换的节点，可以是新的节点，也可以是页面上的节点，如果是页面上的节点，它将被移动到新的位置；oldChild 是被替换的节点。</p>
+<p><strong>页面修改型 API 总结</strong><br>页面修改型 API 主要是这四个接口，要注意是：<br>不管是新增还是替换节点，如果新增或替换的节点是原本存在页面上的，则只会移动原有节点；并且节点本身绑定的事件不会消失，会一直保留着。</p>
+<p><strong>节点查询型 API</strong></p>
+<ul>
+<li><code>document.getElementById(id)</code>：返回给定 id 的 Element，不存在则返回 null。</li>
+<li><code>document.getElementsByClassName(class)</code>：返回给定 class 的 Elements（实时的 HTMLCollection），不存在则返回空 HTMLCollection。可同时指定多个 class，多个 className 之间使用空格分隔。</li>
+<li><code>document.getElementsByTagName(tag)</code>：返回给定 tagName 的 Elements（实时的 HTMLCollection），不存在则返回空 HTMLCollection。如果标签名为 <code>*</code> 则表示获取所有标签。</li>
+<li><code>document.querySelector(cssSelector)</code>：返回给定 CSS选择器 匹配的第一个 Element，如果没有则返回 null。</li>
+<li><code>document.querySelectorAll(cssSelector)</code>：返回给定 CSS 选择器匹配的 Elements（非实时 NodeList），不存在则返回空 NodeList。</li>
+</ul>
+<p><strong>节点关系型 API</strong><br><strong><code>父关系型 API</code></strong><br><code>parentNode</code>：返回当前节点的父节点，根节点的父节点为 null。<br><code>parentElement</code>：返回当前节点的父元素，父节点必须是 Element，否则返回 null。</p>
+<p><strong><code>兄弟关系型 API</code></strong><br><code>previousSibling</code>：返回当前节点的前一兄弟节点。<br><code>nextSibling</code>：返回当前节点的后一兄弟节点。<br><code>previousElementSibling</code>：返回当前节点的前一兄弟节点，其类型须为 Element，否则返回 null。<br><code>nextElementSibling</code>：返回当前节点的后一兄弟节点，其类型须为 Element，否则返回 null。</p>
+<p><strong><code>子关系型 API</code></strong><br><code>childNodes</code>：返回当前节点的直接子节点（实时 NodeList）。<br><code>children</code>：返回当前节点的直接子节点（实时 HTMLCollection），类型均为 Element。<br><code>firstNode</code>：返回当前节点的第一个直接子节点。<br><code>lastNode</code>：返回当前节点的最后一个直接子节点。<br><code>hasChildNodes()</code>：判断当前节点是否包含子节点。</p>
+<p><strong>元素属性型 API</strong><br><code>hasAttribute(attrName)</code>：判断当前元素是否存在给定属性，返回布尔值。<br><code>getAttribute(attrName)</code>：获取当前元素的给定属性值（字符串），不存在则返回 null 或空串，建议在 getAttribute 前使用 hasAttribute 来检测是否存在给定属性。<br><code>setAttribute(attrName, attrValue)</code>：设置当前元素的给定属性值（修改或新增）。<br><code>removeAttribute(attrName)</code>：删除当前元素的给定属性。</p>
+<p><strong>HTMLCollection 与 NodeList 的区别</strong>，都是类数组对象。</p>
+<ul>
+<li>HTMLCollection 实例对象的成员只能是 Element 节点，NodeList 实例对象的成员可以包含其他节点。</li>
+<li>HTMLCollection 实例对象都是动态集合，节点的变化会实时反映在集合中。NodeList 实例对象可以是静态集合。</li>
+<li>HTMLCollection 实例对象可以用 id 属性或 name 属性引用节点元素，NodeList 只能使用数字索引引用。</li>
+</ul>
+<p><strong>window/document 对象</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+/* 文档结构，从上到下 */
+console.log(window); // 浏览器窗口
+console.log(document); // 整个 HTML 文档
+console.log(document.doctype); // DOCTYPE 声明
+console.log(document.documentElement); // <html>...</html>
+console.log(document.head); // <head>...</head>
+console.log(document.body); // <body>...</body>
+
+/* window.location */
+$('<button type="button">window.location.reload()</button>').click(function() {
+    window.location.reload(); // 重新加载当前页面
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+$('<button type="button">window.location.assign()</button>').click(function() {
+    window.location.assign('https://www.baidu.com/'); // 跳转至给定 url，相当于点击超链接
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+$('<button type="button">window.location.replace()</button>').click(function() {
+    window.location.replace('https://www.baidu.com/'); // 跳转至给定 url，并删除当前页面的浏览历史
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+console.log(window.location.href);      // http://www.zfl.com/index.html?lang=zh_CN#debug
+console.log(window.location.protocol);  // 协议 http:
+console.log(window.location.hostname);  // 主机 www.zfl.com
+console.log(window.location.port);      // 端口 (空，默认 80)
+console.log(window.location.host);      // 主机+端口 www.zfl.com
+console.log(window.location.pathname);  // 路径 /index.html
+console.log(window.location.search);    // 参数 ?lang=zh_CN
+console.log(window.location.hash);      // 描点 #debug
+
+/* window.history */
+console.log(history.length);    // 历史记录的长度
+
+$('<button type="button">后退一页</button>').click(function() {
+    history.back();
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+$('<button type="button">前进一页</button>').click(function() {
+    history.forward();
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+// history.go(offset|url);
+
+$('<button type="button">后退 2 页</button>').click(function() {
+    history.go(-2);
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+$('<button type="button">前进 2 页</button>').click(function() {
+    history.go(2);
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+/* window 输入输出 */
+// alert() 方法用于显示带有一条指定消息和一个确认按钮的警告框
+$('<button type="button">alert()</button>').click(() => alert('hello, world!')).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+// confirm() 方法用于显示一个带有指定消息和确认及取消按钮的对话框
+// 如果访问者点击"确定"，此方法返回 true，否则返回 false
+$('<button type="button">confirm()</button>').click(
+    () => console.log(confirm('hello, world!'))
+).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+// prompt() 方法用于显示可提示用户进行输入的对话框，并返回输入的字符串
+$('<button type="button">prompt()</button>').click(function() {
+    // prompt(msg, defaultText), 两个参数均为可选的
+    console.log(prompt('请输入任意字符串', '请输入任意字符串'));
+}).appendTo(document.body);
+$('<br>').appendTo(document.body);
+
+/* window.close() 关闭当前窗口 Chrome 无效 */
+$('<button type="button">close()</button>').click(() => window.close()).appendTo(document.body);
+$('<br>').appendTo(document.body);
+</script></code></pre>
+<p><strong>DOM 其他 API</strong><br><code>node.nodeName</code>：节点的名称<br><code>node.nodeType</code>：节点的类型（整数）<br><code>node.nodeValue</code>：节点的文本值（可读写），适用于 Text、Comment、CDATA 节点<br><code>node.textContent</code>：节点的文本内容（当前节点及其后代节点，忽略 HTML 标签，可读写，自动对 HTML 标签转义）</p>
+<p><code>node.contains(testNode)</code>：测试当前节点是否包含给点节点<br><code>node.isEqualNode(other)</code>：测试当前节点是否与给定节点相等，即类型相同、属性相同、子节点相同等</p>
+<p><strong>Element 元素相关 API</strong><br><code>element.attrName</code>：获取给定属性的值<br><code>element.attrName = attrValue</code>：修改给定属性的值</p>
+<p><code>element.style</code>：获取当前元素的 CSS 样式<br><code>element.style = CSS_Style</code>：修改当前元素的 CSS 样式<br><code>element.style.prop</code>：获取当前元素的给定 CSS 样式<br><code>element.sytle.prop = propValue</code>：修改当前元素的给定 CSS 样式</p>
+<p><code>element.innerHTML</code>：获取/修改当前元素的内部 HTML<br><code>element.innerText</code>：获取/修改当前元素的内部 Text<br><code>element.outerHTML</code>：获取/修改当前元素的外部 HTML<br><code>element.outerText</code>：获取/修改当前元素的外部 Text</p>
+<p>读取 <code>innerHTML</code>：返回当前元素的起始标签和结束标签之间的 HTML 内容<br>写入 <code>innerHTML</code>：覆盖当前元素的起始标签和结束标签之间的 HTML 内容</p>
+<p>读取 <code>outerHTML</code>：返回当前元素（包含起始标签和结束标签）的 HTML 内容<br>写入 <code>outerHTML</code>：覆盖当前元素（包括起始标签和结束标签）的 HTML 内容</p>
+<p>读取 <code>innerText</code>：返回当前元素的起始标签和结束标签之间的文本（忽略HTML标签）<br>写入 <code>innerText</code>：覆盖当前元素的起始标签和结束标签之间的内容（覆盖HTML标签）</p>
+<p>读取 <code>outerText</code>：返回当前元素（包含起始标签和结束标签）的文本<br>写入 <code>outerText</code>：覆盖当前元素（包含其实标签和结束标签）的内容</p>
+<p>一般来说：<code>element.innerText === element.outerText</code>，因为都会忽略 HTML 标签。</p>
+<p><strong>DOM 事件机制</strong></p>
+<ul>
+<li><code>&lt;p onclick=&quot;javascript code&quot;&gt;&lt;/p&gt;</code>：属性 onXXX，其中 XXX 是要监听的事件，属性值是要执行的 JS 脚本。不推荐此方式，不容易维护。</li>
+<li><code>element.onXXX = function() { ... }</code>：比前一个方式好一些，实现了 HTML 与 JS 分离，但是仍有缺点，只能同时设置一个监听事件，并且默认是<strong>事件冒泡</strong>。</li>
+<li><code>element.addEventListener(eventName, eventFunc[, useCapture = false])</code>：推荐的方式，可以为同一个事件注册多个监听器，并且通过第三个参数可以设置<strong>事件捕获</strong>还是<strong>事件冒泡</strong>（默认）。</li>
+<li><code>element.removeEventListener(eventName, eventFunc[, useCapture = false])</code>：与 addEventListener() 方法对应，用于移除给定事件监听器。</li>
+</ul>
+<p><strong>事件冒泡</strong>：从内往外传播（默认）<br><strong>事件捕获</strong>：从外往内传播</p>
+<p>DOM 事件列表：<br><a href="https://developer.mozilla.org/zh-CN/docs/Web/Events" rel="external nofollow noopener noreferrer" target="_blank">事件类型一览表 - MDN</a><br><a href="http://www.runoob.com/jsref/dom-obj-event.html" rel="external nofollow noopener noreferrer" target="_blank">HTML DOM 事件类型 - 菜鸟教程</a></p>
+<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><ul>
+<li>AJAX，Asynchronous JavaScript and XML，<strong>异步的 JavaScript 与 XML 技术</strong>。</li>
+<li>AJAX 不是新的编程语言，而是一种使用现有标准的新方法。</li>
+<li>AJAX 最大的优点是在不重新加载整个页面的情况下，可以与服务器交换数据并更新部分网页内容。</li>
+<li>AJAX 不需要任何浏览器插件，但需要用户允许JavaScript在浏览器上执行。</li>
+</ul>
+<p>举个栗子：不使用 AJAX 的情况下，填写完表单然后点击提交时，默认会刷新当前页面，等待服务器响应，这对于用户来说显然是不太友好的。用户可能仅需要表单提交成功的提示，这种情况下，我们完全可以使用 AJAX 在后台异步的提交表单，提交成功后显示成功提示即可，在此期间，用户可以无阻碍的浏览网页的其他内容。</p>
+<p>先来一个简单的 AJAX 例子吧：<br><code>index.html</code></p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;ajax-show&quot;&gt;AJAX 是什么？&lt;/div&gt;
+    &lt;button type=&quot;button&quot; id=&quot;ajax-button&quot;&gt;点击获取&lt;/button&gt;
+    &lt;script src=&quot;index.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><code>index.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+document.getElementById('ajax-button').addEventListener('click', function() {
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+            if (xmlhttp.status === 200)
+                document.getElementById('ajax-show').innerText = xmlhttp.responseText;
+            else
+                document.getElementById('ajax-show').innerText =
+                    'Error (' + xmlhttp.status + ' ' + xmlhttp.statusText + ')';
+        }
+    };
+    xmlhttp.open('GET', '/ajax.txt');
+    xmlhttp.send();
+});
+</script></code></pre>
+<p>用户点击 button 按钮时，div 标签的内容将被替换为 /ajax.txt 文档的内容。</p>
+<p>其实 AJAX 的关键还是 XMLHttpRequest 对象，几个主要步骤：</p>
+<ul>
+<li><code>let xmlhttp = new XMLHttpRequest()</code>：创建 XMLHttpRequest 对象 xmlhttp。</li>
+<li><code>xmlhttp.onreadystatechange = function() {...}</code>：注册回调函数，当 readystate 状态改变时，就会调用设置的回调函数，函数内部可使用 xmlhttp.readyState 判断当前所处的状态，共有 0~4 五个取值，然后可以使用 xmlhttp.status 来获取 http 响应状态码，200 表示 OK，404 表示页面不存在，等等。</li>
+<li><code>xmlhttp.open(&#39;GET&#39;, &#39;/ajax.txt&#39;)</code>：打开一个网络资源，使用 GET 模式，URI 为 /ajax.txt，注意，默认情况下只能使用同源（即协议相同，主机相同，端口相同）下的资源。</li>
+<li><code>xmlhttp.send()</code>：发送 HTTP 请求（此时可以提交 POST 数据）。</li>
+</ul>
+<p>是不是很简单？如果是 GET 请求一般就这 4 个步骤。那如果是 POST 请求呢？例子：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+document.getElementById('ajax-button').addEventListener('click', function() {
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+            if (xmlhttp.status === 200)
+                document.getElementById('ajax-show').innerText = xmlhttp.responseText;
+            else
+                document.getElementById('ajax-show').innerText =
+                    'Error (' + xmlhttp.status + ' ' + xmlhttp.statusText + ')';
+        }
+    };
+    xmlhttp.open('POST', '/ajax.php');
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('userName=' + encodeURIComponent('Otokaze'));
+});
+</script></code></pre>
+<p><strong>XMLHttpRequest 构造函数</strong><br><code>let xmlhttp = new XMLHttpRequest();</code></p>
+<p><strong>XMLHttpRequest 实例属性</strong></p>
+<ul>
+<li><code>xmlhttp.onreadystatechange = func</code>：当 <code>xmlhttp.readyState</code> 改变时被调用。</li>
+<li><code>xmlhttp.readyState</code>：当前的状态，值为整数，共有 5 种取值。对应的状态如下：<ul>
+<li><code>XMLHttpRequest.UNSENT</code>，<code>0</code>：open() 方法还未被调用</li>
+<li><code>XMLHttpRequest.OPENED</code>，<code>1</code>：open() 方法已经被调用</li>
+<li><code>XMLHttpRequest.HEADERS_RECEIVED</code>，<code>2</code>：send() 方法已经被调用</li>
+<li><code>XMLHttpRequest.LOADING</code>，<code>3</code>：正在获取响应数据</li>
+<li><code>XMLHttpRequest.DONE</code>，<code>4</code>：整个请求过程已经完毕</li>
+</ul>
+</li>
+<li><code>xmlhttp.status</code>：响应状态码，数值类型，常见的有 200、404</li>
+<li><code>xmlhttp.statusText</code>：响应状态码，字符串描述，如 200 对应的 OK</li>
+<li><code>xmlhttp.responseType</code>：响应数据的类型，主要影响 <code>xmlhttp.response</code><ul>
+<li><code>&quot;&quot;</code>：字符串（默认值）</li>
+<li><code>&quot;arraybuffer&quot;</code>：ArrayBuffer</li>
+<li><code>&quot;blob&quot;</code>：Blob</li>
+<li><code>&quot;document&quot;</code>：Document</li>
+<li><code>&quot;json&quot;</code>：JSON</li>
+<li><code>&quot;text&quot;</code>：字符串</li>
+</ul>
+</li>
+<li><code>xmlhttp.response</code>：响应数据，具体类型由 <code>xmlhttp.responseType</code> 指定</li>
+<li><code>xmlhttp.responseText</code>：响应数据，特指 Text，字符串对象</li>
+<li><code>xmlhttp.responseXML</code>：响应数据，特指 XML，Document 对象</li>
+</ul>
+<p><strong>XMLHttpRequest 实例方法</strong></p>
+<ul>
+<li><code>xmlhttp.open(method, url[, async[, user, password]])</code>：初始化 http 请求<ul>
+<li><code>method</code>：字符串，请求方法，如 <code>GET</code>、<code>POST</code></li>
+<li><code>url</code>：字符串，URL 地址（同源），如 <code>/ajax.txt</code></li>
+<li><code>async</code>：布尔值，是否异步操作，默认为 true，建议使用 true</li>
+<li><code>user</code>：字符串，用户名，认证使用</li>
+<li><code>password</code>：字符串，密码，认证使用</li>
+</ul>
+</li>
+<li><code>xmlhttp.abort()</code>：终止 http 请求</li>
+<li><code>xmlhttp.setRequestHeader(header, value)</code>：必须在 open() 之后，send() 之前被调用，设置 http 请求头（覆盖，添加）</li>
+<li><code>xmlhttp.overrideMimeType(mimetype)</code>：重写由服务器返回的 MIME 类型，该方法必须在 send() 之前调用</li>
+<li><code>xmlhttp.send()</code>：发送 http 请求，如果是异步模式，该方法会立刻返回；如果是同步模式，该方法会被阻塞直到请求响应被完全接收为止。可以传入要发送的数据给 send() 方法，如下：<ul>
+<li><code>send()</code>：不发送请求数据，如 GET 方法</li>
+<li><code>send(ArrayBuffer data)</code>：ArrayBuffer</li>
+<li><code>send(Blob data)</code>：Blob</li>
+<li><code>send(Document data)</code>：Document</li>
+<li><code>send(String data)</code>：String</li>
+<li><code>send(FormData data)</code>：FormData</li>
+</ul>
+</li>
+<li><code>xmlhttp.getResponseHeader(header)</code>：获取给定响应头</li>
+<li><code>xmlhttp.getAllResponseHeaders()</code>：获取所有响应头</li>
+</ul>
+<p><strong>URI 编码/解码方法</strong></p>
+<ul>
+<li><code>encodeURI(str)</code>：URL 编码，不包括 URI 保留字符</li>
+<li><code>decodeURI(str)</code>：URL 解码，不包括 URI 保留字符</li>
+<li><code>encodeURIComponent(str)</code>：URL 编码，包括 URI 保留字符</li>
+<li><code>decodeURIComponent(str)</code>：URL 解码，包括 URI 保留字符</li>
+</ul>
+<p><code>encodeURI/decodeURI</code>：对含有非 ASCII 字符的正常 URI 进行百分号编码<br><code>encodeURIComponent/decodeURIComponent</code>：对非 ASCII 字符和 URI 保留字符进行百分号编码</p>
+<p>字符串：<code>https://www.zfl9.com/index.php?key1=中文&amp;key2=English</code><br><code>encodeURI</code>：<code>https://www.zfl9.com/index.php?key1=%E4%B8%AD%E6%96%87&amp;key2=English</code><br><code>encodeURIComponent</code>：<code>https%3A%2F%2Fwww.zfl9.com%2Findex.php%3Fkey1%3D%E4%B8%AD%E6%96%87%26key2%3DEnglish</code></p>
+<p>encodeURI 常用于对含有非 ASCII 字符的正常 URI 编码<br>encodeURIComponent 常用于对含有非 ASCII 字符或 URI 保留字符的 URI 查询参数编码</p>
+<p><strong>AJAX 提交表单</strong><br>使用 AJAX 提交表单（XMLHttpRequest）主要有两种方法：手动获取表单数据、使用 FormData 获取表单数据。</p>
+<p><strong>手动解析</strong><br>index.html</p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;form id=&quot;my-form&quot; method=&quot;post&quot; action=&quot;form.php&quot;&gt;
+      username: &lt;input id=&quot;username&quot; type=&quot;text&quot; name=&quot;username&quot;&gt;&lt;br&gt;
+      password: &lt;input id=&quot;password&quot; type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;br&gt;
+      &lt;input id=&quot;form-submit&quot; type=&quot;button&quot; value=&quot;点击登录&quot;&gt;
+    &lt;/form&gt;
+    &lt;script src=&quot;index.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>index.js</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+document.getElementById('form-submit').addEventListener('click', function() {
+    let form = document.getElementById('my-form');
+    let username = document.getElementById('username');
+    let password = document.getElementById('password');
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200)
+                alert('提交成功');
+            else
+                alert('提交失败 (' + xhr.status + ' ' + xhr.statusText + ')');
+        }
+    };
+    xhr.open('POST', form.action);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(encodeURIComponent(username.value) + '=' + encodeURIComponent(password.value));
+});
+</script></code></pre>
+<p><strong>FormData 对象</strong></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+document.getElementById('form-submit').addEventListener('click', function() {
+    let formElem = document.getElementById('my-form');
+    let formData = new FormData(formElem);
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200)
+                alert('提交成功');
+            else
+                alert('提交失败 (' + xhr.status + ' ' + xhr.statusText + ')');
+        }
+    };
+    xhr.open('POST', formElem.action);
+    xhr.send(formData);
+});
+</script></code></pre>
+<p>不需要显式的设置 HTTP 请求头，直接调用 xhr.send() 方法即可。</p>
+<p><strong>FormData 构造函数</strong><br><code>new FormData([formElem])</code>：formElem 是可选的，如果没有则创建一个空的 FormData，然后调用 append() 方法设置 name-value 名值对；如果不为空，则从传入的 formElem 中解析 name-value 名值对，然后被 xmlhttprequest.send() 方法提交到服务器上。</p>
+<p><strong>FormData 实例方法</strong></p>
+<ul>
+<li><code>formData.set(name, value[, filename])</code>：设置 name-value 对，不存在则添加，存在则覆盖</li>
+<li><code>formData.append(name, value[, filename])</code>：添加 name-value 对，即使存在也会添加而非覆盖</li>
+<li><code>formData.has(name)</code>：是否存在 name 对应的数据</li>
+<li><code>formData.get(name)</code>：获取 name 对应的 value（一个）</li>
+<li><code>formData.getAll(name)</code>：获取 name 对应的 value（全部）</li>
+<li><code>formData.delete(name)</code>：删除 name-value 对</li>
+<li><code>formData.keys()</code>：获取 names 迭代器</li>
+<li><code>formData.values()</code>：获取 values 迭代器</li>
+<li><code>formData.entries()</code>：获取 name-value 迭代器</li>
+</ul>
+<p>可以直接通过 XMLHttpRequest 实例的 send() 方法发送 FormData 实例，并且不需要显式的设置 HTTP 请求头部。</p>
+<p><strong>AJAX 跨域请求</strong><br>要了解跨域问题，必须先了解浏览器的<strong>同源策略</strong>。同源是指：两个 URL 的 <strong>协议</strong>、<strong>主机</strong>、<strong>端口</strong> 都相同。<strong>不同源即跨域</strong>。</p>
+<p>而所谓的同源策略是指：JS 脚本中不可以向其它域发起网络请求。典型的就是 XMLHttpRequest 了，一般 AJAX 就是利用 XMLHttpRequest API 发起 HTTP 请求了。同源限制的目的主要是为了安全，但是另一方面也带来了所谓的 <strong>跨域问题</strong>。</p>
+<blockquote>
+<p>目前解决 AJAX 跨域的方案有两种：<code>JSONP</code>（非标）、<code>CORS</code>（标准）。</p>
+</blockquote>
+<p>我们先来介绍 JSONP（JSON with Padding），注意不要与 JSON 混淆了，<strong>JSON 是一个数据交换格式</strong>，<strong>JSONP 是 JSON 的一种 “使用模式”</strong>，简单的说，JSONP 是 JSON 的一种使用方式，主要用来解决跨域问题。JSONP 的主要原理就是：利用 <code>&lt;script&gt;</code> 标签，script 标签可以引用外部 JS 文件，且不受同源策略的限制。JSONP 跨域需要浏览器和服务器的双方协作：服务器上要提供一个可以动态查询的 API 页面（返回的数据为 JSON），约定一个 URL 查询参数（一般为 <code>callback</code>），用于传递 callback 函数名，然后在该页面上做一个小改动，如果接收到了 callback 查询参数，则返回 <code>funcName + &#39;(&#39; + originJSON + &#39;);&#39;</code>，即拼接字符串，使得该 script 标签执行它，从而实现跨域的效果。</p>
+<p>单纯的文字叙述可能不太清楚，没关系，我们一步一步来解释：</p>
+<p>先来一个段简单的代码，暂不涉及 JSONP 跨域：<br><code>index.html</code></p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+    &lt;script src=&quot;local.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;http://home.zfl9.com:88/remote.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><code>local.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function func() {
+    alert('local.js::func()');
+}
+</script></code></pre>
+<p><code>remote.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+func();
+</script></code></pre>
+<p>很明显，打开上述网页将弹出提示窗口：<code>local.js::func()</code>，让它接收一个参数：<br><code>local.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function func(data) {
+    alert(data);
+}
+</script></code></pre>
+<p><code>remote.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+func('hello, world!');
+</script></code></pre>
+<p>刷新页面，弹出提示：<code>hello, world!</code>，给我们的感觉就是我可以通过一个函数，来在不同的域中传递数据，是不是有了一点跨域的感觉？！对的，很近了，我们可以在 remote.js 中传递 JSON 数据给 func() 方法，然后在 local.js 中解析接收到的 JSON 数据。<br><code>local.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+function func(data) {
+    data = JSON.parse(data);
+    alert(data.key1);
+    alert(data.key2);
+    alert(data.key3);
+}
+</script></code></pre>
+<p><code>remote.js</code></p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+func(`{
+    "key1": "百度",
+    "key2": "谷歌",
+    "key3": "微软"
+}`);
+</script></code></pre>
+<p>既然是动态查询页面，肯定不能是静态的啦，因此需要在目标服务器上设置 PHP 动态页面，返回 JSON 数据，同时我们还需要约定一个被调用的函数名，通常的做法是：通过 URL 的 callback 查询参数来传递被调用的函数名。整个 PHP 页面的思路是：如果没有 callback 查询参数，则正常返回 JSON 响应数据；如果存在 callback 查询参数，则返回一个 JavaScript 文件，其内容是 <code>callback 函数名</code> + <code>(</code> + JSON 字符串 + <code>);</code>，其实不难，就是拼接字符串而已。因此 JSONP 的一般形式是：<br><code>index.html</code></p>
+<pre><code class="language-html line-numbers">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+    &lt;script&gt;
+      function func(data) {
+        alert(data.key1);
+        alert(data.key2);
+        alert(data.key3);
+        // TODO
+      }
+      let script = document.createElement(&#x27;script&#x27;);
+      script.src = &#x27;http://home.zfl9.com:88/remote.php?callback=func&#x27;;
+      document.getElementsByTagName(&#x27;head&#x27;)[0].appendChild(script);
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><strong>CORS 跨域方案</strong></p>
+<blockquote>
+<p><strong>跨域资源共享</strong>（Cross-Origin Resource Sharing，简称 <code>CORS</code>）是一份浏览器技术的规范，提供了 Web 服务从不同网域传来沙盒脚本的方法，以避开浏览器的同源策略，是 <strong>JSONP 模式的现代版</strong>。与 JSONP 不同，CORS 除了 GET 请求方法以外也支持其他的 HTTP 请求方法。用 CORS 可以让网页设计师用一般的 XMLHttpRequest，这种方式的错误处理比 JSONP 要来的好。另一方面，JSONP 可以在不支持 CORS 的老旧浏览器上运作。现代的浏览器都支持 CORS（IE8 及以上）。</p>
+</blockquote>
+<p>CORS 是 W3C 的标准跨域资源共享方法，是 JSONP 的替代品，JSONP 并不是官方推荐的方式，但是在 CORS 出现之前是主要的跨域解决方案，并且 JSONP 还有一个优点，兼容性好，支持古董级的 IE 浏览器。而 CORS 只有在 IE8 之后（含）才被支持。仔细观察上面的 JSONP 例子，你会发现，其实它和 AJAX 跨域没多大关系，只不过是利用了 script 标签的 src 属性而已，完全和 XMLHttpRequest 不搭边。但是 CORS 就不一样了，我们依旧使用 XMLHttpRequest 对象，并且一般不需要做什么改动，只需要服务器支持即可（前提是使用现代浏览器，支持 CORS 规范）。</p>
+<p>CORS 需要浏览器和服务器同时支持。目前，所有现代浏览器都支持该功能，IE 浏览器不能低于 IE10（正式支持）。</p>
+<p>整个 CORS 通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS 通信与同源的 AJAX 通信没有差别，代码完全一样。浏览器一旦发现 AJAX 请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。</p>
+<p>因此，<strong>实现 CORS 通信的关键是服务器</strong>。只要服务器实现了 CORS 接口，就可以跨源通信。</p>
+<p><strong>简单请求、非简单请求</strong><br>浏览器将 CORS 请求分成两类：<strong>简单请求（simple request）</strong>和<strong>非简单请求（not-so-simple request）</strong>。</p>
+<p>只要同时满足以下两大条件，就属于简单请求。<br>（1）请求方法是以下三种方法之一：</p>
+<ul>
+<li>HEAD</li>
+<li>GET</li>
+<li>POST</li>
+</ul>
+<p>（2）HTTP的头信息不超出以下几种字段：</p>
+<ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Last-Event-ID</li>
+<li>Content-Type：只限于三个值<ul>
+<li><code>application/x-www-form-urlencoded</code></li>
+<li><code>multipart/form-data</code></li>
+<li><code>text/plain</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>简单请求</strong><br>对于简单请求，浏览器直接发出 CORS 请求。具体来说，就是在头信息之中，增加一个 <code>Origin</code> 字段。</p>
+<p>下面是一个例子，浏览器发现这次跨源 AJAX 请求是简单请求，就自动在头信息之中，添加一个 <code>Origin</code> 字段。</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+GET /cors HTTP/1.1
+Origin: http://api.bob.com
+Host: api.alice.com
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: Mozilla/5.0...
+</script></code></pre>
+<p>上面的头信息中，<code>Origin</code> 字段用来说明，<strong>本次请求来自哪个源（协议 + 域名 + 端口）</strong>。服务器根据这个值，决定是否同意这次请求。</p>
+<p>如果 <code>Origin</code> 指定的源不在许可范围内，服务器会返回一个正常的 HTTP 响应。浏览器发现，这个响应的头信息没有包含 <code>Access-Control-Allow-Origin</code> 字段（详见下文），就知道出错了，从而抛出一个错误，被 XMLHttpRequest 的 onerror 回调函数捕获。注意，这种错误无法通过状态码识别，因为 HTTP 回应的状态码有可能是 200。（比如支持 CORS 的浏览器发送跨域请求到未启用 CORS 的服务器上，服务器会返回一个正常的 HTTP 响应，而不会添加额外的 CORS 响应头部）</p>
+<p>如果 <code>Origin</code> 指定的域名在许可范围内，服务器返回的响应头部，会多出几个头信息字段。</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+Access-Control-Allow-Origin: http://api.bob.com
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: FooBar
+Content-Type: text/html; charset=utf-8
+</script></code></pre>
+<p>上面的头信息之中，有三个与 CORS 请求相关的字段，都以 <code>Access-Control-*</code> 开头。相关的头部如下：</p>
+<p><strong>请求头部</strong></p>
+<ul>
+<li><code>Origin: &lt;origin&gt;</code>：表明<strong>预检请求</strong>或<strong>实际请求</strong>的<strong>源站</strong>，值为源站 URI，不包含任何路径信息；不管是否为跨域请求，ORIGIN 字段总是被发送。</li>
+<li><code>Access-Control-Request-Method: &lt;method&gt;</code>：用于<strong>预检请求</strong>。其作用是，将实际请求所使用的 HTTP 方法告诉服务器。</li>
+<li><code>Access-Control-Request-Headers: &lt;field-name&gt;[, &lt;field-name&gt;]</code>：用于<strong>预检请求</strong>。其作用是，将实际请求所携带的首部字段告诉服务器。</li>
+</ul>
+<p><strong>响应头部</strong></p>
+<ul>
+<li><code>Access-Control-Allow-Origin: &lt;origin&gt; | *</code>：origin 参数的值指定了允许访问该资源的外域 URI。对于不需要携带身份凭证的请求，服务器可以指定该字段的值为通配符，表示允许来自所有域的请求。</li>
+<li><code>Access-Control-Allow-Methods: &lt;method&gt;[, &lt;method&gt;]</code>：用于<strong>预检请求</strong>的响应。其指明了实际请求所允许使用的 HTTP 方法。</li>
+<li><code>Access-Control-Allow-Headers: &lt;field-name&gt;[, &lt;field-name&gt;]</code>：用于<strong>预检请求</strong>的响应。其指明了实际请求中允许携带的首部字段。</li>
+<li><code>Access-Control-Allow-Credentials: true</code>：指定了当浏览器的 <code>credentials</code> 设置为 true 时是否允许浏览器读取 response 的内容。当用在对<strong>预检请求</strong>的响应中时，它指定了实际的请求是否可以使用 credentials。请注意：简单 GET 请求不会被预检；如果对此类请求的响应中不包含该字段，这个响应将被忽略掉，并且浏览器也不会将相应内容返回给网页。</li>
+<li><code>Access-Control-Expose-Headers: X-My-Custom-Header, X-Another-Custom-Header</code>：在跨域访问时，XMLHttpRequest 对象的 getResponseHeader() 方法只能拿到一些最基本的响应头，如 Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma，如果要访问其他头，则需要服务器设置本响应头，让服务器把<strong>允许浏览器访问的头</strong>放入白名单中，如本例，这样浏览器就能够通过 getResponseHeader 访问 X-My-Custom-Header 和 X-Another-Custom-Header 响应头了。</li>
+<li><code>Access-Control-Max-Age: &lt;delta-seconds&gt;</code>：指定了<strong>预检请求</strong>的结果能够被缓存多久，单位是 s 秒。delta-seconds 参数表示 preflight请求 的结果在多少秒内有效。</li>
+</ul>
+<p>其中，请求头 <code>Origin</code>、响应头 <code>Access-Control-Allow-Origin</code> 就足以构成最简的 CORS 请求-响应了。</p>
+<p><strong>预检请求</strong><br>非简单请求是那种对服务器有特殊要求的请求，比如请求方法是 PUT 或 DELETE，或者 Content-Type 字段的类型是 application/json 等。</p>
+<p>非简单请求的 CORS 请求，会在正式通信之前，增加一次 HTTP 查询请求，称为<strong>“预检”请求（preflight）</strong>。</p>
+<p>浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些 HTTP 方法和头信息字段。只有得到肯定答复，浏览器才会发出正式的 XMLHttpRequest 请求，否则就报错。</p>
+<p>下面是一段浏览器的 JavaScript 脚本。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+var url = 'http://api.alice.com/cors';
+var xhr = new XMLHttpRequest();
+xhr.open('PUT', url, true);
+xhr.setRequestHeader('X-Custom-Header', 'value');
+xhr.send();
+</script></code></pre>
+<p>上面代码中，HTTP 请求的方法是 PUT，并且发送一个自定义头信息 X-Custom-Header。</p>
+<p>浏览器发现，这是一个非简单请求，就自动发出一个”预检”请求，要求服务器确认可以这样请求。下面是这个”预检”请求的 HTTP 头信息。</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+OPTIONS /cors HTTP/1.1
+Origin: http://api.bob.com
+Access-Control-Request-Method: PUT
+Access-Control-Request-Headers: X-Custom-Header
+Host: api.alice.com
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: Mozilla/5.0...
+</script></code></pre>
+<p>“预检”请求用的请求方法是 <code>OPTIONS</code>，表示这个请求是用来询问的。头信息里面，关键字段是 Origin，表示请求来自哪个源。除了 Origin 字段，”预检”请求的头信息包括两个特殊字段（见上述）。</p>
+<p>服务器收到”预检”请求以后，检查了 Origin、Access-Control-Request-Method 和 Access-Control-Request-Headers 字段以后，确认允许跨源请求，就可以做出回应。</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+HTTP/1.1 200 OK
+Date: Mon, 01 Dec 2008 01:15:39 GMT
+Server: Apache/2.0.61 (Unix)
+Access-Control-Allow-Origin: http://api.bob.com
+Access-Control-Allow-Methods: GET, POST, PUT
+Access-Control-Allow-Headers: X-Custom-Header
+Content-Type: text/html; charset=utf-8
+Content-Encoding: gzip
+Content-Length: 0
+Keep-Alive: timeout=2, max=100
+Connection: Keep-Alive
+Content-Type: text/plain
+</script></code></pre>
+<p>上面的 HTTP 回应中，关键的是 Access-Control-Allow-Origin 字段，表示 <a href="http://api.bob.com" rel="external nofollow noopener noreferrer" target="_blank">http://api.bob.com</a> 可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。</p>
+<p>如果浏览器<strong>否定了”预检”请求</strong>，会返回一个正常的 HTTP 回应，但是没有任何 CORS 相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被 XMLHttpRequest 对象的 onerror 回调函数捕获。控制台会打印出如下的报错信息。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+XMLHttpRequest cannot load http://api.alice.com.
+Origin http://api.bob.com is not allowed by Access-Control-Allow-Origin.
+</script></code></pre>
+<p>一旦服务器<strong>通过了”预检”请求</strong>，以后每次浏览器正常的 CORS 请求，就都跟简单请求一样，会有一个 Origin 头信息字段。服务器的回应，也都会有一个 Access-Control-Allow-Origin 头信息字段。</p>
+<p>下面是”预检”请求之后，浏览器的正常 CORS 请求。</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+PUT /cors HTTP/1.1
+Origin: http://api.bob.com
+Host: api.alice.com
+X-Custom-Header: value
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: Mozilla/5.0...  
+</script></code></pre>
+<p>下面是服务器正常的回应。</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+Access-Control-Allow-Origin: http://api.bob.com
+Content-Type: text/html; charset=utf-8
+</script></code></pre>
+<p><strong>CORS 与 JSONP 的比较</strong><br>CORS 与 JSONP 的使用目的相同，但是比 JSONP 更强大。<br>JSONP 只支持 GET 请求，CORS 支持所有类型的 HTTP 请求。<br>JSONP 的优势在于支持老式浏览器，以及可以向不支持 CORS 的网站请求数据。</p>
+<p><strong>CORS 跨域方案总结</strong><br>绝大多数现代浏览器都支持 CORS 规范（IE8 初步支持，IE10 正式支持），因此，CORS 跨域的关键在于服务器，服务器上启用 CORS 也很简单，比如 nginx，添加几个 HTTP 响应头部即可应付简单的 CORS 请求。而 JSONP 则需要服务器上的动态页面，并且只支持 GET 方式，限制很多，甚至和 AJAX 跨域没有联系，因此，尽量考虑使用 CORS 跨域。</p>
+<h2 id="jQuery"><a href="#jQuery" class="headerlink" title="jQuery"></a>jQuery</h2><h3 id="jQuery-是什么"><a href="#jQuery-是什么" class="headerlink" title="jQuery 是什么"></a>jQuery 是什么</h3><p>jQuery 是一套跨浏览器的 JavaScript 库，简化 HTML 与 JavaScript 之间的操作。由约翰·雷西格（John Resig）在 2006 年 1 月的 BarCamp NYC 上发布第一个版本。目前是由 Dave Methvin 领导的开发团队进行开发。全球前 10,000 个访问最高的网站中，有 65% 使用了 jQuery，是目前最受欢迎的 JavaScript 库。</p>
+<p>jQuery 是一个 JavaScript 函数库。<br>jQuery 是一个轻量级的”写的少，做的多”的 JavaScript 库。</p>
+<p>jQuery库包含以下功能：</p>
+<ul>
+<li>HTML 元素选取</li>
+<li>HTML 元素操作</li>
+<li>CSS 操作</li>
+<li>HTML 事件函数</li>
+<li>JavaScript 特效和动画</li>
+<li>HTML DOM 遍历和修改</li>
+<li>AJAX</li>
+<li>Utilities</li>
+</ul>
+<p>除此之外，jQuery 还提供了大量的插件，我们也可以开发自己的 jQuery 插件。</p>
+<h3 id="如何安装-jQuery"><a href="#如何安装-jQuery" class="headerlink" title="如何安装 jQuery"></a>如何安装 jQuery</h3><p>安装 jQuery 很简单，只需要在 HTML 文档中引入它即可。jquery.js 可以自己下载到网站中，也可以直接引用 CDN 的在线脚本（推荐此方式）。</p>
+<p>为什么推荐使用 CDN 的 jquery.js 文件呢？因为很有可能其它网站也引用了 CDN 的 jquery.js 文件（很多大网站都使用了 jQuery，并且都提供它的 CDN 服务），这样浏览器发现已经存在已下载的 jquery.js，就不会再次下载它了，而是直接从本地磁盘中读取，这样速度会快一些。当 CDN 用的人很多时，这个效果越明显。</p>
+<p>国内的常用 CDN：<code>http://www.bootcdn.cn/jquery/</code><br>国外的常用 CDN：<code>http://code.jquery.com/</code>（官网）</p>
+<p>当前我使用的版本是 jquery-3.3.1，使用的是 bootcdn。在 head 标签中添加：<br><code>&lt;script src=&quot;https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<h3 id="jQuery-在线文档"><a href="#jQuery-在线文档" class="headerlink" title="jQuery 在线文档"></a>jQuery 在线文档</h3><p>中文：<code>https://www.jquery123.com/</code><br>英文：<code>https://api.jquery.com/</code>（官方）</p>
+<h3 id="jQuery-对象"><a href="#jQuery-对象" class="headerlink" title="jQuery 对象"></a>jQuery 对象</h3><p>所有 jQuery 功能都包含在了函数对象 <code>jQuery</code> 中，jQuery 函数对象也存在一个别名 <code>$</code>，它们指向同一个函数，因为后者只需要写一个字符，因此我们通常都是使用 <code>$</code> 而不是 <code>jQuery</code>。</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+console.log(typeof jQuery); // function
+console.log(typeof $); // function
+console.log(jQuery === $); // true
+</script></code></pre>
+<p>jQuery 函数是构造函数，但是创建 jQuery 对象却并不使用 <code>new $(param...)</code> 语法，而是直接使用 <code>$(param...)</code>，因为 jQuery 构造函数内部已经封装了 <code>new jQuery(param...)</code> 语句了。这也符合 jQuery 一直强调的设计理念：<strong>写的少，做的多</strong>，大家都很忙的，能省一个字符是一个字符。</p>
+<p>常用的一个构造函数是 <code>$(selector)</code>，其中 selector 是 CSS 选择器（字符串）。因为使用 CSS 选择 DOM 元素，因此编写的代码也很简洁，再也不用像原生 DOM API 那样 <code>document.querySelectorAll(selector)</code> 了。</p>
+<p>调用 jQuery 构造函数返回的都是 <strong>jQuery 对象</strong>，因此 <code>$(params) instanceof jQuery</code> 返回 true。<strong>jQuery 对象是类数组对象</strong>，拥有 length 属性，同时可以通过下标（从 0 开始）来获取原生 DOM 对象。因此，可以将 jQuery 对象理解为 DOM 对象（可以有多个）的包装对象。<code>jQueryObj.length</code> 为所包装的 DOM 对象的数量，<code>jQueryObj[0]</code> 为所包装的第 0 个 DOM 对象，或者使用 <code>jQueryObj.get(0)</code>（作用是等价的，推荐使用前者，减少一次函数调用开销）。</p>
+<p><strong>DOM对象、jQuery对象之间的互转</strong>：</p>
+<ul>
+<li>DOM对象 -&gt; jQuery对象：<code>$(domObj)</code></li>
+<li>jQuery对象 -&gt; DOM对象：<code>jQueryObj[index]</code></li>
+</ul>
+<h3 id="jQuery-构造函数"><a href="#jQuery-构造函数" class="headerlink" title="jQuery 构造函数"></a>jQuery 构造函数</h3><ul>
+<li><code>jQuery()</code>：空的 jQuery 对象</li>
+<li><code>jQuery(object)</code>：包含给定对象的 jQuery 对象</li>
+<li><code>jQuery(jQueryObject)</code>：浅拷贝构造，返回给定 jQuery 对象的副本</li>
+<li><code>jQuery(element)</code>：包含给定 DOM 对象的 jQuery 对象</li>
+<li><code>jQuery(elementArray)</code>：包含给定 DOM 对象的 jQuery 对象（解数组）</li>
+<li><code>jQuery(selector[, context])</code>：使用 CSS 选择器语法选择 DOM 元素并包装</li>
+<li><code>jQuery(html[, ownerDocument])</code>：创建 DOM 元素并将其包装为 jQuery 对象</li>
+<li><code>jQuery(html, attributes)</code>：创建 DOM 元素并将其包装为 jQuery 对象</li>
+<li><code>jQuery(callback)</code>：同 <code>$(document).ready(callback)</code>，注册一个当 DOM 完成加载时执行的函数，注意与 window.onload DOM 事件的异同（详细见下）</li>
+</ul>
+<p>这些构造函数均返回 jQuery 对象！接下来我们主要介绍其中几个主要的构造函数。</p>
+<p><strong><code>$(selector[, context])</code></strong><br>参数 selector 是字符串，<a href="https://www.zybuluo.com/Otokaze/note/1029381#css-%E9%80%89%E6%8B%A9%E5%99%A8" rel="external nofollow noopener noreferrer" target="_blank">CSS 选择器</a><br>参数 context 是上下文对象，可选参数</p>
+<p>selector 没什么可讲的，主要看一下 context 上下文参数。那么 context 参数的作用和意义是什么呢？context 参数的类型可以是 <code>Element</code>（被包装为 jQueryObj）、<code>jQueryObj</code>。所谓的上下文对象就是指我该在什么范围内查找 DOM 元素，默认情况下，jQuery 会在 <code>document</code> 对象中查找（相当于全局查找），如果需要在指定 DOM/jQuery 对象中查找，则需要指定 context 参数。</p>
+<p><strong><code>$(callback)</code> vs <code>$(document).ready(callback)</code></strong><br>这两者是完全等价的，前者是后者的简写形式。我们主要解释一下它的作用。ready 是准备好了，准备完毕的意思，放在这里就是说当 DOM 准备完毕时要执行的回调函数。</p>
+<p>那么什么是 <strong>DOM 准备完毕</strong> 呢。DOM 准备完毕也可以理解为浏览器已经生成了完整的 DOM 对象，通俗一点就是说，网页的骨架已经加载完毕了，此时可以进行大部分 DOM 操作，但是，网页的内容不一定全部加载完毕了（比如大图片还未加载完成），如果需要操作图片，那么 ready 事件就不足以应付了，需要使用 <code>window.onload = callback</code>（只允许使用一次，后面的覆盖前面的），或者使用 <code>$(window).on(&#39;load&#39;, callback)</code>（可以使用多次，依次被调用，不会被覆盖）。 </p>
+<blockquote>
+<p><code>$(document).ready()</code>事件是 jQuery 独有的；<br>而 <code>$(window).on(&#39;load&#39;)</code>是标准 DOM 事件。</p>
+</blockquote>
+<p>jQuery 独有事件应使用 jQueryObj.event() 方法；<br>标准 DOM 事件应使用 jQueryObj.on(event) 方法。</p>
+<p><strong><code>$(html[, ownerDocument])</code></strong><br>参数 html 是 HTML 字符串，jQuery 会自动解析并创建对应的 DOM 对象<br>参数 ownerDocument 是新创建 DOM 元素的所属 Document 文档（意义不明确）</p>
+<p>注意，html 参数必须符合 HTML 语法，jQuery 内部会使用正则匹配出具体的 HTML 元素，然后调用原生 DOM 方法创建并设置相应的属性、样式、属性值。其中 html 字符串中可以存在多个 HTML 标签，它们都会被创建。jQuery 解析时，会创建与一级标签对应多个的元素数量，注意是一级，不是嵌套的。</p>
+<p>如 <code>$(&#39;&lt;h1&gt;txt&lt;/h1&gt;&lt;h2&gt;txt&lt;/h2&gt;&lt;h3&gt;&lt;span&gt;txt&lt;/span&gt;&lt;/h3&gt;&#39;)</code> 会创建 3 个 DOM 元素：<code>h1</code>、<code>h2</code>、<code>h3</code>。而 span 元素则包含在 h3 的内部。返回的 jQuery 对象的 length 为 3。</p>
+<p>注意，使用该语法创建 DOM 元素和使用原生 API 创建 DOM 元素一样，创建之后，这些新元素都是游离状态，并未添加到文档中，只是存在于内存之中。</p>
+<p>如何将这些元素添加到当前文档对象中？有 8 种方式（正向 4 种，逆向 4 种）</p>
+<ul>
+<li><code>a.prepend(b)</code>：将 b 作为 a 的<strong>第一个子节点</strong></li>
+<li><code>b.prependTo(a)</code>：将 b 作为 a 的<strong>第一个子节点</strong></li>
+<li><code>a.append(b)</code>：将 b 作为 a 的<strong>最后一个子节点</strong></li>
+<li><code>b.appendTo(a)</code>：将 b 作为 a 的<strong>最后一个子节点</strong></li>
+<li><code>a.before(b)</code>：将 b 作为 a 的<strong>前一个兄弟节点</strong></li>
+<li><code>b.insertBefore(a)</code>：将 b 作为 a 的<strong>前一个兄弟节点</strong></li>
+<li><code>a.after(b)</code>：将 b 作为 a 的<strong>后一个兄弟节点</strong></li>
+<li><code>b.insertAfter(a)</code>：将 b 作为 a 的<strong>后一个兄弟节点</strong></li>
+<li>（正向）参数类型：<ul>
+<li><code>htmlString</code>：html 字符串</li>
+<li><code>Text</code>：text 字符串</li>
+<li><code>Element</code>：DOM 元素</li>
+<li><code>ElementArray</code>：DOM 元素数组</li>
+<li><code>jQueryObject</code>：jQuery 对象</li>
+</ul>
+</li>
+<li>（逆向）参数类型：<ul>
+<li><code>Selector</code>：CSS 选择器字符串</li>
+<li><code>htmlString</code>：html 字符串</li>
+<li><code>Element</code>：DOM 元素</li>
+<li><code>ElementArray</code>：DOM 元素数组</li>
+<li><code>jQueryObject</code>：jQuery 对象</li>
+</ul>
+</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+$('<div id="show">div 元素内容</div>').css({
+    'color': 'red',
+    'border': '1px solid gray',
+    'padding': '15px 15px 15px 15px',
+    'margin': '15px 15px 15px 15px'
+}).appendTo(document.body);
+
+$('#show').before('<strong>before</strong>');
+$('#show').prepend('<strong>prepend</strong><br>');
+$('#show').append('<br><strong>append</strong>');
+$('#show').after('<strong>after</strong>');
+// or
+// $('<strong>before</strong>').insertBefore('#show');
+// $('<strong>prepend</strong><br>').prependTo('#show');
+// $('<br><strong>append</strong>').appendTo('#show');
+// $('<strong>after</strong>').insertAfter('#show');
+</script></code></pre>
+<p>效果：<br><img src="/images/jquery-add-elem.png" alt="jQuery 添加元素的 8 种方式"></p>
+<p><strong><code>$(html, attributes)</code></strong><br>创建新 DOM 元素，新建的元素是游离状态，需要使用上述方法添加到 DOM 树中。</p>
+<p>参数 html：单个 HTML 元素的字符串，如 <code>&lt;div&gt;&lt;/div&gt;</code>、<code>&lt;input&gt;</code><br>参数 attributes：包含元素属性、元素样式、DOM事件、元素内容的对象</p>
+<p>在 attributes 对象中，普通属性是 <code>name-value</code> 名值对，DOM事件是 <code>event: function() {...}</code> 回调函数，元素内容分为纯文本和 HTML 文本，前者使用 <code>text</code> 属性定义，后者使用 <code>html</code> 属性定义。例子：</p>
+<pre><code class="language-javascript line-numbers"><script type="text/plain">
+'use strict';
+
+$(document).ready(ready);
+
+function ready() {
+    $('<span></span>', {
+        'text': '<a href="https://www.baidu.com">百度一下，你就知道</a>',
+        'style': 'color: red; font-weight: bold',
+        'click': function() {
+            alert('你点击了红色文本');
+        }
+    }).appendTo(document.body);
+
+    $('<br>').appendTo(document.body);
+
+    $('<span></span>', {
+        'html': '<a href="https://www.baidu.com">百度一下，你就知道</a>',
+        'style': 'color: green; font-weight: bold',
+        'click': function() {
+            alert('你点击了绿色文本');
+        }
+    }).appendTo(document.body);
+}
+</script></code></pre>
+<p><img src="/images/jquery-add-elem-2.png" alt="jQuery 添加 DOM 元素 - 方法二"></p>
+<h3 id="jQuery-核心-API"><a href="#jQuery-核心-API" class="headerlink" title="jQuery 核心 API"></a>jQuery 核心 API</h3><p><strong><code>jQuery.holdReady(hold)</code></strong><br>参数 hold 是布尔值，指示是否暂停/恢复（true/false） jQuery ready 事件。</p>
+<p>该方法允许调用者延迟 jQuery 的 ready 事件，该方法通常被用来在 ready 事件发生之前动态的加载其它的 javascript 脚本，如 jQuery 插件，即使 DOM 可能已经准备就绪。该方法必须尽早调用，如在 head 标签内加载了 jQuery 库后，立即调用该方法，否则，如果 ready 事件已经开始被执行，则该方法无效。</p>
+<p>在需要延迟/暂停 ready 事件时，调用 <code>$.holdReady(true)</code>，在准备开始执行 ready 事件时，调用 <code>$.holdReady(false)</code>。<code>$.holdReady(true)</code> 可以被多次调用，如果需要 ready 事件被执行，则需要同样次数的 <code>$.holdReady(false)</code> 被调用。</p>
+<p><strong><code>jQuery.noConflict([removeAll])</code></strong><br>参数 removeAll 是布尔值，指示是否交出 <code>jQuery</code> 变量的控制权，默认只交出 <code>$</code> 变量的控制权。为什么会存在这个方法呢？因为 jQuery 的别名 <code>$</code> 可能也被其它 JavaScript 库使用了，或者希望多个版本的 jQuery 共存，而需要交出 <code>jQuery</code> 变量。</p>
+<p>比如 Prototype 库也使用 <code>$</code> 别名，Prototype 库和 jQuery 库一起使用，Prototype 库先加载，jQuery 库后加载，特别注意先后顺序的不同，因为后加载的会覆盖先加载的变量值，而 jQuery 会在给 <code>$</code>、<code>jQuery</code> 变量赋值前，先保存之前的值（如果存在的话），这就是能够交出被覆盖变量的原理了。</p>
+<p>特别声明的是，交出变量的控制权是指：将 <code>$</code>、<code>jQuery</code> 变量恢复先前被覆盖的值，因此，如果存在不只两个相冲突的库，需要多次调用该方法，来依次让出控制权。</p>
+<p>该方法返回当前 <code>jQuery</code> 变量的引用。</p>
+<h3 id="jQuery-元素操作"><a href="#jQuery-元素操作" class="headerlink" title="jQuery 元素操作"></a>jQuery 元素操作</h3><p><strong>元素的内容</strong><br><code>jQueryObj.text()</code>：获取或修改所选元素的内容（纯文本）<br><code>jQueryObj.html()</code>：获取或修改所选元素的内容（HTML码）<br><code>jQueryObj.val()</code>：获取或修改所选表单元素（表单字段）的值<br>它们三个均接收一个回调函数，回调函数的返回值作为要设置的新值，该函数接收两个参数，<code>callback(index, oldValue)</code>，index 是当前 DOM 元素在 jQuery 对象中的索引值，oldValue 是当前的旧值。函数中的 this 指向当前 DOM 元素。</p>
+<p><strong>元素的属性</strong><br><em>自定义元素属性建议使用 attr()</em>，属性值类型为 String<br><code>jQueryObj.attr(attrName)</code>：获取所选元素的给定属性值<br><code>jQueryObj.attr(attrName, attrValue)</code>：修改所选元素的给定属性值<br><code>jQueryObj.attr({name1: value1, ..., nameN: valueN})</code>：修改所选元素的所有属性值<br><code>jQueryObj.attr(attrName, function(index, oldValue))</code>：使用给定函数的返回值来修改给定属性的值，回调函数中的 this 指向当前 DOM 元素。<br><code>jQueryObj.removeAttr(attrName)</code>：删除给定的属性，从 1.7 起，多个属性由空格隔开</p>
+<p><em>原生的元素属性建议使用 prop()</em>，属性值类型为 String、Number、Boolean<br><code>jQueryObj.prop(propName)</code>：获取第一个匹配元素的属性值<br><code>jQueryObj.prop(propName, propValue)</code>：修改所有匹配元素的属性值<br><code>jQueryObj.prop({name1: value1, ..., nameN: valueN})</code>：修改所有匹配元素的属性值<br><code>jQueryObj.prop(propName, function(index, oldValue))</code>：修改所有匹配元素的属性值<br><code>jQueryObj.removeProp(propName)</code>：删除所有匹配元素的一个属性（貌似删除不了）</p>
+<p><strong>元素的样式</strong><br><code>jQueryObj.addClass(className)</code>：为所选元素添加一个或多个样式类名<br><code>jQueryObj.removeClass(className)</code>：从所选元素移除一个或多个样式类名<br><code>jQueryObj.toggleClass(className)</code>：切换样式名，存在则移除，不存在则添加</p>
+<p><code>jQueryObj.css(propName)</code>：获取给定样式属性的值<br><code>jQueryObj.css(propNames)</code>：获取给定（数组）样式属性的值，返回相应的键值对</p>
+<p><code>jQueryObj.css(propName, propValue)</code>：设置给定样式属性的值<br><code>jQueryObj.css(propName, function(index, oldValue))</code>：回调函数的具体细节同上<br><code>jQueryObj.css(properties)</code>：设置多个 CSS 属性值（参数为 <code>属性-属性值</code> 的对象）</p>
+<p><strong>DOM 事件监听器</strong><br><em>绑定事件处理函数</em><br><code>jQueryObj.on(events[, selector][, eventData], handler(eventObj))</code><br><code>jQueryObj.on(eventsWithHandler[, selector][, eventData])</code></p>
+<ul>
+<li><code>events</code>：一个或多个由空格分隔的事件类型（字符串）</li>
+<li><code>eventsWithHandler</code>：<code>events-handler(eventObj)</code>键值对对象</li>
+<li><code>selector</code>：过滤器，过滤出能触发事件的后代元素（注意区别）</li>
+<li><code>eventData</code>：事件被触发时，传递给 eventObj.data 的数据（任意类型）</li>
+<li><code>handler(eventObj)</code>：事件处理函数，this 指向触发了该事件的 DOM 元素</li>
+</ul>
+<p><em>解绑事件处理函数</em><br><code>jQueryObj.off(events[, selector][, handler(eventObj)])</code>：selector 参数同 on，handler 参数如果省略则解绑所有函数（因为可以为同一个事件绑定多个函数）<br><code>jQueryObj.off(eventsWithHandler[, selector])</code>：同 on() 的第二种形式，解绑</p>
+<p><em>自解绑的事件处理函数</em>（执行一次后自动解绑）<br><code>jQueryObj.one(events[, selector][, eventData], handler(eventObj))</code><br><code>jQueryObj.one(eventsWithHandler[, selector][, eventData])</code></p>
+<p><strong>删除元素/内容</strong><br><code>jQueryObj.empty()</code>：删除所选元素的子节点（只删子孙）<br><code>jQueryObj.remove([selector])</code>：删除所有的所选元素（自己也删），参数 selector 是过滤条件，只有符合 selector 的元素才会被删除。</p>
+<p><strong>元素的大小</strong><br><img src="http://www.runoob.com/images/img_jquerydim.gif" alt="jQuery 大小 - 图解"></p>
+<p><code>jQueryObj.width()</code>：获取元素内容的宽度（px）<br><code>jQueryObj.width(value)</code>：设置元素内容的宽度，数值/字符串，前者单位为 px<br><code>jQueryObj.width(function(index, oldValue))</code>：设置元素内容的宽度，细节同上</p>
+<p><code>jQueryObj.height()</code>：获取元素内容的高度（px）<br><code>jQueryObj.height(value)</code>：设置元素内容的高度，数值/字符串，前者单位为 px<br><code>jQueryObj.height(function(index, oldValue))</code>：设置元素内容的高度，细节同上</p>
+<p><code>jQueryObj.innerWidth()</code>：获取元素的内部宽度（px）<br><code>jQueryObj.innerHeight()</code>：获取元素的内部高度（px）</p>
+<p><code>jQueryObj.outerWidth([includeMargin = false])</code>：获取元素的外部宽度（px）<br><code>jQueryObj.outerHeight([includeMargin = false])</code>：获取元素的外部高度（px）</p>
+<h3 id="jQuery-元素遍历"><a href="#jQuery-元素遍历" class="headerlink" title="jQuery 元素遍历"></a>jQuery 元素遍历</h3><p><strong>祖先节点</strong><br><code>jQueryObj.parent([selector])</code>：返回由所选元素的直接父元素组成的 jQuery 对象，selector 参数是可选的，只有被 selector 匹配的父元素才会被返回。<br><code>jQueryObj.parents([selector])</code>：返回由所选元素的所有父元素组成的 jQuery 对象，selector 参数是可选的，只有被 selector 匹配的父元素才会被返回。<br><code>jQueryObj.parentsUntil([until][, filter])</code>：查找所选元素的所有父元素，直到遇到 <code>until</code> 参数匹配的元素为止（不包括所匹配的元素），最后将这些元素用 filter 过滤，返回最终 jQuery 对象。其中 until 可以是 <code>selector</code>、<code>element</code>、<code>jQueryObj</code>，而 filter 就是 selector 选择器。</p>
+<p><strong>后代节点</strong><br><code>jQueryObj.children([selector])</code>：返回由所选元素的直接子元素组成的 jQuery 对象，selector 参数是可选的，只有被 selector 匹配的子元素才会被返回。和大多数 jQuery 方法一样，该方法不返回文本节点，如果需要建议使用 contents() 方法。<br><code>jQueryObj.find(condition)</code>：搜寻所选元素的所有符合 condition 过滤条件的后代元素，然后返回由他们组成的 jQuery 对象。其中 condition 可以是 <code>selector</code>、<code>element</code>、<code>jQueryObj</code>。</p>
+<p><strong>兄弟节点</strong><br><code>jQueryObj.siblings([selector])</code>：返回所有同胞元素，可选参数为过滤条件</p>
+<p><code>jQueryObj.prev([selector])</code>：同 next()，方向相反<br><code>jQueryObj.prevAll([selector])</code>：：同 nextAll()，方向相反<br><code>jQueryObj.prevUntil([until][, filter])</code>：同 nextUntil()，方向相反</p>
+<p><code>jQueryObj.next([selector])</code>：返回下一个相邻的同胞元素，可选参数为过滤条件<br><code>jQueryObj.nextAll([selector])</code>：返回后面的所有同胞元素，可选参数为过滤条件<br><code>jQueryObj.nextUntil([until][, filter])</code>：查找后面的所有同胞元素，直到遇到 <code>until</code> 参数匹配的元素为止（不包括所匹配的元素），最后将这些元素用 filter 过滤，返回最终 jQuery 对象。其中 until 可以是 <code>selector</code>、<code>element</code>、<code>jQueryObj</code>，而 filter 就是 selector 选择器。</p>
+<p><strong>jQuery 遍历方法</strong><br><code>jQueryObj.first()</code>：构造一个新 jQueryObj，其包含当前对象的第一个元素<br><code>jQueryObj.last()</code>：构造一个新 jQueryObj，其包含当前对象的最后一个元素<br><code>jQueryObj.eq(index)</code>：构造一个新 jQueryObj，若为负，则等价于 <code>length + index</code></p>
+<p><code>jQueryObj.filter(condition)</code>：构造一个新的 jQueryObj，其中包含通过测试的元素<br><code>jQueryObj.not(condition)</code>：构造一个新的 jQueryObj，其中包含未通过测试的元素</p>
+<p><code>filter()</code>、<code>not()</code> 接收的 condition 参数可以是：</p>
+<ul>
+<li><code>selector</code>：CSS 选择器</li>
+<li><code>element</code>：DOM 元素</li>
+<li><code>jQueryObj</code>：jQuery 对象</li>
+<li><code>function(index)</code>：index 是当前元素的索引值，this 指代当前 DOM 元素，函数返回 true 则表明通过测试，返回 false 则表明未通过测试</li>
+</ul>
+<p><strong>添加元素</strong>，返回组成的新对象<br><code>jQueryObj.add(selector[, context])</code><br><code>jQueryObj.add(htmlString)</code><br><code>jQueryObj.add(element)</code><br><code>jQueryObj.add(elementArray)</code><br><code>jQueryObj.add(jQueryObj)</code></p>
+<p><code>jQueryObj.each(function(index, element))</code>：遍历 jQueryObj 中的 DOM 元素，index 为当前元素的索引值，element 为当前元素（多余的），this 也指向当前元素，如需中断循环，可以在函数中返回 false。</p>
+<p><code>jQueryObj.slice(start[, end])</code>：提取子 jQueryObj 对象，区间 <code>[start, end)</code></p>
+<h3 id="jQuery-AJAX"><a href="#jQuery-AJAX" class="headerlink" title="jQuery AJAX"></a>jQuery AJAX</h3><p><strong>底层方法</strong>：<code>ajax*()</code> ajax 开头的方法<br><strong>一般方法</strong>：<code>load()</code>、<code>get()</code>、<code>post()</code><br><strong>包装方法</strong>：<code>getJSON()</code>、<code>getScript()</code><br><strong>工具方法</strong>：<code>param()</code>、<code>serialize()</code>、<code>serializeArray()</code></p>
+<p><strong>一般方法</strong><br><code>jQueryObj.load(url[, data][, callback(respData, respStatus, jqXHR)])</code></p>
+<ul>
+<li>使用 GET/POST 方法获取服务器资源，将结果替换到所选元素中（<code>html()</code>）</li>
+<li><code>url</code>：URL 字符串（默认使用 GET 方法）</li>
+<li><code>data</code>：key-value 对象（POST）、String 字符串（GET）</li>
+<li><code>callback(respData, respStatus, jqXHR)</code>：AJAX 请求成功或失败时调用的函数，它将在每个元素上执行一次，this 指向正在处理的 DOM 元素，接收的参数如下：<ul>
+<li><code>responseData</code>：AJAX 请求的响应数据</li>
+<li><code>responseStatus</code>：AJAX 请求的响应状态(success/error/…)</li>
+<li><code>jqXHR</code>：jqXHR 对象（类 XHR 对象，包含绝大部分 XHR 属性和方法）</li>
+</ul>
+</li>
+</ul>
+<p><code>$.get(url[, data][, success(respData, respStatus, jqXHR)][, respDataType])</code></p>
+<ul>
+<li>使用 HTTP GET 方法获取服务器资源，静态方法</li>
+<li><code>url</code>：URL 字符串</li>
+<li><code>data</code>：key-value 对象、String 字符串</li>
+<li><code>success(respData, respStatus, jqXHR)</code>：请求成功后执行的回调函数</li>
+<li><code>respDataType</code>：从服务器返回的预期的数据类型，默认自动检测数据类型</li>
+</ul>
+<p><code>$.post(url[, data][, success(respData, respStatus, jqXHR)][, respDataType])</code><br>使用 HTTP POST 方法获取服务器资源，静态方法，参数同 <code>$.get()</code></p>
+<p><strong>包装方法</strong></p>
+<ul>
+<li><code>$.getScript(url[, success(respScript, respStatus, jqXHR)])</code>：使用 GET 方法从服务器加载并执行一个 JavaScript 文件，其中 respScript 参数是脚本内容（字符串）。</li>
+<li><code>$.getJSON(url[, data][, success(respJSONObj, respStatus, jqXHR)])</code>：使用 GET 方法从服务器获取 JSON 数据，data 是 URL 查询数据，可以是 String、Object（被转换为 String），请求成功后执行传入的回调函数，respJSONObj 是解析后的对象。</li>
+</ul>
+<p><strong>工具方法</strong><br><code>$.param(obj[, traditional])</code>：将<strong>对象</strong>序列化为 URL 查询字符串（百分号编码，UTF-8），默认会使用深层递归的方式序列化对象，假设某个 key 是一个对象，它包含两个属性 name，age，则深层递归的结果为 <code>key[name]=nameValue&amp;key[age]=ageValue</code>，如果还有一层递归，则结果为 <code>key[A][B]=value</code>，以此类推。traditional 默认为 false，也即上述的深层递归方式，如果该参数为 true，则不进行递归，只会序列化第一层，即 <code>key=[object Object]</code>。</p>
+<p><code>jQueryObj.serialize()</code>：将<strong>表单元素/表单</strong>序列化为 URL 查询字符串（URL-encoded，UTF-8 编码）。</p>
+<p><code>jQueryObj.serializeArray()</code>：将<strong>表单元素/表单</strong>序列化为对象数组，数组的每个元素都是一个拥有 <code>name</code>、<code>value</code> 属性的对象，分别对应表单元素的 name、value 属性。</p>
+<h3 id="jQuery-动画"><a href="#jQuery-动画" class="headerlink" title="jQuery 动画"></a>jQuery 动画</h3><p>动画实现原理：我们只需要以固定的时间间隔（例如，0.1 秒），每次把 DOM 元素的 CSS 样式修改一点（例如，高宽各增加 10%），看起来就像动画了。</p>
+<p><strong>隐藏/显示</strong><br><code>jqObj.hide()</code>：直接隐藏，不显示动画效果<br><code>jqObj.hide(duration[, complete])</code>：duration 是动画持续时间，单位毫秒，字符串 <code>&#39;fast&#39;</code>、<code>&#39;slow&#39;</code> 分别代表 200ms、600ms；complete 为动画完成时执行的函数。</p>
+<p><code>jqObj.show()</code>：直接显示，不显示动画效果<br><code>jqObj.show(duration[, complete])</code>：duration 是动画持续时间，单位毫秒，字符串 <code>&#39;fast&#39;</code>、<code>&#39;slow&#39;</code> 分别代表 200ms、600ms；complete 为动画完成时执行的函数。</p>
+<p><code>jqObj.toggle()</code>：显示或隐藏，切换状态，无动画效果<br><code>jqObj.toggle(duration[, complete])</code>：显示或隐藏，切换状态，有动画效果</p>
+<p><strong>淡入淡出</strong><br><code>jqObj.fadeIn([duration = 400][, complete])</code>：以淡入方式显示元素，duration 的取值及意义同上，complete 为动画完成时执行的函数。<br><code>jqObj.fadeOut([duration = 400][, complete])</code>：以淡出方式隐藏元素，duration 的取值及意义同上，complete 为动画完成时执行的函数。<br><code>jqObj.fadeToggle([duration = 400][, complete])</code>：切换淡入淡出状态，参数同上。<br><code>jqObj.fadeTo(duration, opacity[, complete])</code>：调整元素的透明度，参数 opacity 为不透明度，取值 <code>[0, 1]</code> 间的浮点数，其它参数同上。</p>
+<p><strong>滑动</strong><br><code>jqObj.slideUp([duration = 400][, complete])</code>：以滑动方式隐藏元素<br><code>jqObj.slideDown([duration = 400][, complete])</code>：以滑动方式显示元素<br><code>jqObj.slideToggle([duration = 400][, complete])</code>：切换元素的滑动方向</p>
+<h3 id="jQuery-插件"><a href="#jQuery-插件" class="headerlink" title="jQuery 插件"></a>jQuery 插件</h3><p><strong>jQuery 插件库</strong>：<a href="http://www.jq22.com/" rel="external nofollow noopener noreferrer" target="_blank">jQuery插件库-收集最全最新最好的jQuery插件</a></p>
+<p><strong>如何编写 jQuery 插件</strong>？</p>
+<ul>
+<li><code>$.extend({k1: v1, ..., kN: vN})</code>：向 jQuery 添加静态成员</li>
+<li><code>$.fn.pluginName = function(param...) {...}</code>：向 jQuery 添加实例方法</li>
+<li><code>$.widget()</code>：开发 jQuery 插件的高级方式，可以使用很多 jQuery 内部特性</li>
+</ul>
+<p>一般我们都是使用第二种方式开发插件，第一种方式太简单，第二种方式太复杂。<br>如果你仔细观察，会发现，<code>$.fn</code> 就是 <code>$.prototype</code>，也就是 jQuery 对象的原型。<br>因为 jQuery 对象方法可以链式调用，因此自己编写的插件也要在最后返回 this 哦！</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/xml.html" rel="next" title="XML 笔记">
+                <i class="fa fa-chevron-left"></i> XML 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/css.html" rel="prev" title="CSS 笔记">
+                CSS 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-world"><span class="nav-number">1.</span> <span class="nav-text">Hello world</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">2.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程控制"><span class="nav-number">3.</span> <span class="nav-text">流程控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常处理"><span class="nav-number">4.</span> <span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">5.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">6.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字和日期"><span class="nav-number">7.</span> <span class="nav-text">数字和日期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本格式化"><span class="nav-number">8.</span> <span class="nav-text">文本格式化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引集合类"><span class="nav-number">9.</span> <span class="nav-text">索引集合类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面向对象编程"><span class="nav-number">10.</span> <span class="nav-text">面向对象编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON"><span class="nav-number">11.</span> <span class="nav-text">JSON</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM"><span class="nav-number">12.</span> <span class="nav-text">DOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AJAX"><span class="nav-number">13.</span> <span class="nav-text">AJAX</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jQuery"><span class="nav-number">14.</span> <span class="nav-text">jQuery</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-是什么"><span class="nav-number">14.1.</span> <span class="nav-text">jQuery 是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何安装-jQuery"><span class="nav-number">14.2.</span> <span class="nav-text">如何安装 jQuery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-在线文档"><span class="nav-number">14.3.</span> <span class="nav-text">jQuery 在线文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-对象"><span class="nav-number">14.4.</span> <span class="nav-text">jQuery 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-构造函数"><span class="nav-number">14.5.</span> <span class="nav-text">jQuery 构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-核心-API"><span class="nav-number">14.6.</span> <span class="nav-text">jQuery 核心 API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-元素操作"><span class="nav-number">14.7.</span> <span class="nav-text">jQuery 元素操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-元素遍历"><span class="nav-number">14.8.</span> <span class="nav-text">jQuery 元素遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-AJAX"><span class="nav-number">14.9.</span> <span class="nav-text">jQuery AJAX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-动画"><span class="nav-number">14.10.</span> <span class="nav-text">jQuery 动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery-插件"><span class="nav-number">14.11.</span> <span class="nav-text">jQuery 插件</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/javascript.html';
+          this.page.identifier = 'javascript.html';
+          this.page.title = 'JavaScript 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3739 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java7 Java8 新特性">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java7 Java8 新特性">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java7 Java8 新特性">
+<meta property="og:url" content="https://www.zfl9.com/java-jdk7-jdk8.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java7 Java8 新特性">
+<meta property="og:image" content="https://www.zfl9.com/images/java-stream-pipe.png">
+<meta property="og:updated_time" content="2019-02-18T12:48:03.880Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java7 Java8 新特性">
+<meta name="twitter:description" content="Java7 Java8 新特性">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-stream-pipe.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-jdk7-jdk8.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java7 Java8 新特性 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-jdk7-jdk8.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java7 Java8 新特性
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-28T13:00:00+08:00">
+                2017-09-28
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-jdk7-jdk8.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-jdk7-jdk8.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-jdk7-jdk8.html" class="leancloud_visitors" data-flag-title="Java7 Java8 新特性">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java7 Java8 新特性</p>
+<a id="more"></a>
+<h2 id="Java7-新特性"><a href="#Java7-新特性" class="headerlink" title="Java7 新特性"></a>Java7 新特性</h2><h3 id="二进制字面量"><a href="#二进制字面量" class="headerlink" title="二进制字面量"></a>二进制字面量</h3><p>二进制使用前缀<code>0b</code>或<code>0B</code>，如：<code>0b110010</code>；<br>八进制使用前缀<code>0</code>，如：<code>034</code>；<br>十进制没有前缀，就是普通的字面量，如：<code>231</code>；<br>十六进制使用前缀<code>0x</code>或<code>0X</code>，如：<code>0x2A7E</code>。</p>
+<h3 id="数字-分隔符"><a href="#数字-分隔符" class="headerlink" title="数字_分隔符"></a>数字<code>_</code>分隔符</h3><p>如果一个数值比较大，很长，那么可以使用<code>_</code>来分割，比如：<code>1_000_000_000</code>，表示<code>1,000,000,000</code>；<br>只能在数字中间添加<code>_</code>符号，不能在边缘添加及小数点前后添加，在编译过程中，<code>_</code>将被编译器删除。</p>
+<h3 id="switch-支持-String-字符串"><a href="#switch-支持-String-字符串" class="headerlink" title="switch 支持 String 字符串"></a>switch 支持 String 字符串</h3><pre><code class="language-java"><script type="text/plain">switch (gender) {
+    case "男":
+        title = name + " 先生";
+        break;
+    case "女":
+        title = name + " 女士";
+        break;
+    default:
+        title = name;
+}
+</script></code></pre>
+<p>编译器在编译时先做处理：<br>1) 只有一个 case，直接转成 if；<br>2) 只有一个 case 和 default，直接转换为 if…else；<br>3) 有多个 case，先将 String 转换为 hashCode，然后进行相应的处理，JavaCode 在底层兼容 Java7 以前版本。</p>
+<blockquote>
+<p>在 case 中，允许使用的类型有<code>byte</code>、<code>char</code>、<code>short</code>、<code>int</code>、<code>枚举常量</code>（JDK1.5）、<code>String</code>（JDK1.7），并且它们都必须为<strong>字面常量</strong>！</p>
+</blockquote>
+<p>我们来通过反编译看一下 switch 是如何支持 String 字符串的：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        if (args.length < 1)
+            System.exit(1);
+
+        switch (args[0]) {
+            case "baidu":
+                System.out.println("https://www.baidu.com");
+                break;
+            case "google":
+                System.out.println("https://www.google.com");
+                break;
+            case "bing":
+                System.out.println("https://www.bing.com");
+                break;
+            default:
+                System.out.println("(default)");
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [9:14:45]
+$ javac Main.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [9:14:58]
+$ java Main baidu
+https://www.baidu.com
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [9:15:03]
+$ jad -p Main.class
+The class file version is 52.0 (only 45.3, 46.0 and 47.0 are supported)
+// Decompiled by Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.geocities.com/kpdus/jad.html
+// Decompiler options: packimports(3)
+// Source File Name:   Main.java
+
+import java.io.PrintStream;
+
+public class Main
+{
+
+    public Main()
+    {
+    }
+
+    public static void main(String args[])
+    {
+        if(args.length < 1)
+            System.exit(1);
+        String s = args[0];
+        byte byte0 = -1;
+        switch(s.hashCode())
+        {
+        case 93498907:
+            if(s.equals("baidu"))
+                byte0 = 0;
+            break;
+
+        case -1240244679:
+            if(s.equals("google"))
+                byte0 = 1;
+            break;
+
+        case 3023936:
+            if(s.equals("bing"))
+                byte0 = 2;
+            break;
+        }
+        switch(byte0)
+        {
+        case 0: // '\0'
+            System.out.println("https://www.baidu.com");
+            break;
+
+        case 1: // '\001'
+            System.out.println("https://www.google.com");
+            break;
+
+        case 2: // '\002'
+            System.out.println("https://www.bing.com");
+            break;
+
+        default:
+            System.out.println("(default)");
+            break;
+        }
+    }
+}
+</script></code></pre>
+<h3 id="catch-同时捕获多个异常"><a href="#catch-同时捕获多个异常" class="headerlink" title="catch 同时捕获多个异常"></a>catch 同时捕获多个异常</h3><blockquote>
+<p>如果一个<code>catch</code>语句中捕获了多个异常，那么变量<code>e</code>将自动变为<code>final</code>常量。</p>
+</blockquote>
+<p>多个异常之间使用按位或<code>|</code>操作符连接，如：</p>
+<pre><code class="language-java"><script type="text/plain">try {
+    // TODO
+} catch (ExceptionType1 | ExceptionType2 e) {
+    // TODO
+}
+</script></code></pre>
+<h3 id="泛型的类型推断"><a href="#泛型的类型推断" class="headerlink" title="泛型的类型推断"></a>泛型的类型推断</h3><p>在 Java7 之前，我们通常需要这么写：<code>ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();</code><br>在 Java7 之后，我们可以这么写：<code>ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();</code></p>
+<h3 id="SafeVarargs注解"><a href="#SafeVarargs注解" class="headerlink" title="@SafeVarargs注解"></a><code>@SafeVarargs</code>注解</h3><p><code>@SafeVarargs</code>在 JDK7 中引入，主要目的是处理可变长参数中的泛型，此注解告诉编译器：在可变长参数中的泛型是类型安全的。</p>
+<p>可变长参数是使用数组存储的，而数组和泛型不能很好的混合使用；简单的说，数组元素的数据类型在编译和运行时都是确定的，而泛型的数据类型只有在运行时才能确定下来，因此当把一个泛型存储到数组中时，编译器在编译阶段无法检查数据类型是否匹配，因此会给出警告信息：<code>&quot;[unchecked] Possible heap pollution from parameterized vararg type T&quot;</code>；</p>
+<p>意思就是：存在可能的<code>堆污染(heap pollution)</code>，即如果泛型的真实数据类型无法和参数数组的类型匹配，会导致 ClassCastException 异常，因此当在可变长参数中使用泛型时，编译器都会给出警告信息。</p>
+<p>忽略这些异常的方法有：<br>1) 编译器选项：<code>javac -Xlint:unchecked</code><br>2) 使用注解：<code>@SuppressWarnings(&quot;unchecked&quot;)</code><br>3) 使用注解：<code>@SafeVarargs</code>（Java7 新增）</p>
+<h3 id="try-with-resources"><a href="#try-with-resources" class="headerlink" title="try-with-resources"></a><code>try-with-resources</code></h3><p>JDK1.7 之前，读取文件的一般操作为：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">FileInputStream f = null;
+try {
+    // 可能抛出异常 FileNotFoundException
+    f = new FileInputStream(args.length == 0 ? "/etc/sysctl.d/default.conf" : args[0]);
+    int ndata = 0;
+    byte[] data = new byte[4096];
+    while ((ndata = f.read(data)) != -1) { // read() 可能抛出异常 IOException
+        System.out.write(data, 0, ndata);
+    }
+} catch (FileNotFoundException e) {
+    throw new RuntimeException("文件不存在", e); // 抛给调用者
+} catch (IOException e) {
+    throw new RuntimeException("文件读取失败", e); // 抛给调用者
+} finally {
+    if (f != null) {
+        try {
+            f.close(); // 可能抛出异常 IOException
+        } catch (IOException e) {
+            System.err.println(e + "  文件关闭失败!");
+        }
+    }
+}
+</script></code></pre>
+<p>为什么在 finally 块中不将 IOException 异常抛出呢？因为在 finally 块中抛出的异常会淹没之前被 catch 的 FileNotFoundException、IOException。因此，我们只能使用这样的复杂且冗余的代码（JDK1.7 前）。</p>
+<p>在上面的代码中可以看出，如果 try 块中发生异常（文件不存在、文件读取错误），那么该异常将被传递给调用者；如果 try 块和 finally 块中同时发生异常，那么 finally 块中的异常将被抑制，不会向外传播。</p>
+<p>不过，在 Java7 之后，提供了更加简便的方法来简化我们的代码，即使用<code>try-with-resources</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">try (FileInputStream f = new FileInputStream(args.length == 0 ? "/etc/sysctl.d/default.conf" : args[0])) {
+    int ndata = 0;
+    byte[] data = new byte[4096];
+    while ((ndata = f.read(data)) != -1) {
+        System.out.write(data, 0, ndata);
+    }
+} catch (FileNotFoundException e) {
+    throw new RuntimeException("文件不存在", e);
+} catch (IOException e) {
+    throw new RuntimeException("文件读取失败", e);
+}
+</script></code></pre>
+<p>这段代码的运行逻辑和之前的是一样的，在调用 f.close() 过程中如果发生异常，那么该异常将被抑制，只有 try 块中的异常才会往外传播。</p>
+<p>但是有一点不同，之前的代码中，如果 f.close() 发生异常，那么该异常仅仅就是被打印到屏幕而已，并没有记录下来；而在使用了<code>try-with-resources</code>的代码中，如果 f.close() 发生异常，那么它将被隐式的添加至 catch 块中 e 变量的”被抑制异常数组”，可以通过 Throwable.getSuppressed() 方法获得”被抑制异常数组”。</p>
+<p>实际上，try-with-resources 并没有什么神秘的地方，这只不过是一颗<strong>语法糖而已</strong>，try-with-resources 的实现原理还是依赖于 JDK1.7 中 Throwable 添加的两个方法：<br><code>void addSuppressed(Throwable exception)</code>：将给定异常对象添加到当前异常对象的抑制异常数组中<br><code>Throwable[] getSuppressed()</code>：获取当前异常对象的抑制异常对象数组</p>
+<p>因此，我们完全可以使用以下程序实现所谓的 try-with-resources 语句：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        FileInputStream input = null;
+        Exception exception = null;
+        try {
+            input = new FileInputStream("test.txt");
+            int ndata = 0;
+            byte[] data = new byte[4096];
+            while ((ndata = input.read(data)) != -1)
+                System.out.write(data, 0, ndata);
+        } catch (FileNotFoundException e) {
+            exception = e;
+            throw new RuntimeException("文件打开失败", e);
+        } catch (IOException e) {
+            exception = e;
+            throw new RuntimeException("文件读取失败", e);
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    if (exception != null)
+                        exception.addSuppressed(e);
+                    else
+                        throw new RuntimeException("文件关闭失败", e);
+                }
+            }
+        }
+    }
+}
+</script></code></pre>
+<p>获取被抑制异常数组的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        try (Test t = new Test()) {
+            t.work();
+        } catch (RuntimeException e) {
+            System.err.println("--------- t.work() ---------");
+            System.err.println(e);
+            System.err.println("--------- t.close() ---------");
+            System.err.println(e.getSuppressed()[0]);
+        }
+    }
+
+    private static class Test implements AutoCloseable {
+        public Test() {
+            System.out.println("Test::constructor");
+        }
+
+        public void work() {
+            System.out.println("Test running ...");
+            throw new RuntimeException("Test.work() occurred RuntimeException");
+        }
+
+        @Override
+        public void close() {
+            System.out.println("Test::close()");
+            throw new RuntimeException("Test.close() occurred RuntimeException");
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:37:17]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:37:39]
+$ java Main
+Test::constructor
+Test running ...
+Test::close()
+--------- t.work() ---------
+java.lang.RuntimeException: Test.work() occurred RuntimeException
+--------- t.close() ---------
+java.lang.RuntimeException: Test.close() occurred RuntimeException
+</script></code></pre>
+<p><strong>哪些资源可以使用<code>try-with-resources</code>管理</strong>？<br>只要一个类实现了 java.lang.AutoCloseable 接口就可以使用<code>try-with-resources</code>进行资源的自动释放。java.lang.AutoCloseable 接口只有一个方法：<code>void close() throws Exception</code>；同时，java.io.Closeable 接口因继承自 java.lang.AutoCloseable 接口，因此也可以使用<code>try-with-resources</code>释放资源。</p>
+<p>try-with-resources 语句后面可以有 finally 块，该 finally 块<strong>将在 try-with-resources 执行完毕后执行</strong>。很好理解，因为 try-with-resources 中已经隐含了一个 finally 语句块了，因此我们自己添加的 finally 块本质上已经没有 finally 的意义了。</p>
+<p>try 块中可以注册多个资源，在离开 try 块时，它们将被按照相反的顺序调用 close() 方法。比如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        try (Test t1 = new Test(1);
+             Test t2 = new Test(2)) {
+            t1.work();
+            t2.work();
+        }
+    }
+
+    private static class Test implements AutoCloseable {
+        private int id;
+
+        public Test(int id) {
+            this.id = id;
+            System.out.println(id + " -> open()");
+        }
+
+        public void work() {
+            System.out.println(id + " -> running ...");
+        }
+
+        @Override
+        public void close() {
+            System.out.println(id + " -> close()");
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:50:17]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:50:33]
+$ java Main
+1 -> open()
+2 -> open()
+1 -> running ...
+2 -> running ...
+2 -> close()
+1 -> close()
+</script></code></pre>
+<h3 id="Objects-工具类"><a href="#Objects-工具类" class="headerlink" title="Objects 工具类"></a>Objects 工具类</h3><blockquote>
+<p><code>java.util.Objects</code>工具类，提供了一些非常实用的静态方法</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 比较两个对象，不会产生空指针异常
+public static boolean equals(Object a, Object b);
+// 数组专用，用于比较数组的每个元素
+public static boolean deepEquals(Object a, Object b);
+
+// return o!=null ? o.hashCode() : 0;
+public static int hashCode(Object o);
+// return Arrays.hashCode(values);
+public static int hash(Object... values);
+
+// return String.valueOf(o);
+public static String toString(Object o);
+// return o!=null ? String.valueOf(o) : nullDefault;
+public static String toString(Object o, String nullDefault);
+
+// 使用指定比较器比较两个对象
+public static <T> int compare(T a, T b, Comparator<? super T> c);
+
+/* 检查参数是否为null，如果是则抛出空指针异常，否则返回传入的值 */
+public static <T> T requireNonNull(T obj);
+public static <T> T requireNonNull(T obj, String message); // 指定异常message
+public static <T> T requireNonNull(T obj, Supplier<String> messageSupplier); // 指定异常message的提供者
+
+// 测试obj是否为null
+public static boolean isNull(Object obj);
+// 测试obj是否不为null
+public static boolean nonNull(Object obj);
+</script></code></pre>
+<h2 id="Java8-新特性"><a href="#Java8-新特性" class="headerlink" title="Java8 新特性"></a>Java8 新特性</h2><p>Java8 是 Java 语言开发的一个主要版本。Oracle 公司于 2014 年 3 月 18 日发布 Java8 ，主要新特性：<strong>Lambda 表达式</strong>、<strong>函数式编程风格</strong>、<strong>Stream API</strong>、<strong>新的日期时间 API</strong>、<strong>Optional 容器用于解决空指针异常</strong>、<strong>接口默认方法/静态方法</strong>。</p>
+<p>Java8 新增了非常多的特性，主要的几个如下：</p>
+<ul>
+<li><strong>Lambda 表达式</strong>：对匿名内部类的一个改进，基本可以取代内部匿名类，并且性能比匿名类好得多；</li>
+<li><strong>方法引用</strong>：方法引用其实是随 Lambda 产生的语法糖，与 Lambda 联合使用，可以使语言的构造更紧凑简洁，减少冗余代码；</li>
+<li><strong>默认方法</strong>：默认方法就是一个在接口里面有了一个实现的方法，使用 default 关键字；</li>
+<li><strong>Stream API</strong>：不同于 java.io 中的 Stream 流，新添加的 Stream API（java.util.stream）把真正的函数式编程风格引入到 Java 中；</li>
+<li><strong>Date Time API</strong>：加强对日期与时间的处理；</li>
+<li><strong>Optional 类</strong>：Optional 类已经成为 Java8 类库的一部分，用来解决空指针异常。</li>
+</ul>
+<h3 id="Lambda-表达式"><a href="#Lambda-表达式" class="headerlink" title="Lambda 表达式"></a>Lambda 表达式</h3><p>Lambda 表达式实质上是一个内部匿名类的对象；<br>对于匿名类来说，必须继承一个父类或者实现一个接口，在编译之后会生成一个名为<code>外部类$n.class</code>（n 从 1 开始）的独立字节码文件；<br>对于 Lambda，也会实现一个接口，这个接口只有一个抽象方法（称为”函数式接口”），但是在编译之后并不会生成单独的字节码文件。<br>因此，Lambda 不能单独存在，它必定和一个函数式接口<code>@FunctionalInterface</code>相关；函数式接口就是只有一个抽象方法的普通接口，为了明确语义，通常使用<code>@FunctionalInterface</code>注解一个函数式接口。</p>
+<p><strong>内部类和 Lambda 表达式的命名规则</strong><br>1) 成员内部类，包括普通成员内部类、静态成员内部类，<code>外部类名$内部类名</code><br>2) 局部内部类，<code>外部类名$n内部类名</code>，n 从 1 开始，每个函数都有不同的 n 值<br>3) 匿名内部类，<code>外部类名$n</code>，n 从 1 开始<br>4) Lambda 表达式，<code>外部类名$$Lambda$n</code>，n 从 1 开始</p>
+<blockquote>
+<p>不同于 C/C++，在 Java 中，<code>$</code>美元符也是一个合法的标识符，可以位于标识符的任意位置。</p>
+</blockquote>
+<p><strong>Lambda 的语法</strong><br><code>(parameters) -&gt; { statements }</code></p>
+<ul>
+<li><code>parameters</code>：函数的形参，即当前 Lambda 所实现的函数式接口中的函数的形参；<br>可以省略形参的数据类型，只写形参变量也是可以的，编译器可以自行推断；如<code>(int n)</code>与<code>(n)</code>是一样的；<br>当函数只有一个参数，并且没有显式指明形参类型，则可以省略小括号，如<code>n -&gt; { ... }</code>。</li>
+<li><code>statements</code>：函数体，和普通的函数体一样，可以有任意多条语句；<br>如果只有一条语句，那么可以省略花括号<code>{}</code>，且该语句的返回值类型必须和所实现函数的返回值类型相兼容；<br>如果有多条语句，那么就和普通的匿名类一样，需要有花括号<code>{}</code>，返回值类型也必须和所实现函数的返回值类型相兼容。</li>
+</ul>
+<p>对比一下匿名类、Lambda 表达式：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        new Thread(() -> System.out.println("Lambda expression")).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Anonymous Class");
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:28:14]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [11:28:25]
+$ java Main
+Lambda expression
+Anonymous Class
+</script></code></pre>
+<p>Lambda 与匿名类的不同之处：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        new Main() {}; // 正确，new 一个普通的对象
+
+        new Main() { // 正确，new 一个普通的对象并调用其方法
+            public void func() {}
+        }.func();
+
+        Main m = new Main() {}; // 正确，向上转型
+
+        // () -> {}; // 错误
+        // () -> {}.func(); // 错误
+
+        VoidToVoid v = () -> {}; // 正确，向上转型
+        v.func(); // 正确，调用 func() 方法
+    }
+}
+
+@FunctionalInterface
+interface VoidToVoid {
+    void func();
+}
+</script></code></pre>
+<h3 id="FunctionalInterface-接口"><a href="#FunctionalInterface-接口" class="headerlink" title="FunctionalInterface 接口"></a>FunctionalInterface 接口</h3><p>JDK1.8 之前已有的函数式接口：<br><code>java.lang.Runnable</code><br><code>java.util.concurrent.Callable</code><br><code>java.util.Comparator</code></p>
+<p>JDK1.8 新增加的函数式接口：<br>函数式接口所在的包：<code>java.util.function</code></p>
+<p>java.util.function 它包含了很多函数式接口，用来支持 Java 的函数式编程，该包中的函数式接口有：<br><strong>生产者</strong>，即不接收参数<br><code>Supplier&lt;T&gt;</code>：get()，不接受参数，返回 T 类型结果；<br><code>BooleanSupplier</code>：getAsBoolean()，不接受参数，返回 boolean 结果；<br><code>IntSupplier</code>：getAsInt()，不接受参数，返回 int 结果；<br><code>LongSupplier</code>：getAsLong()，不接受参数，返回 long 结果；<br><code>DoubleSupplier</code>：getAsDouble()，不接受参数，返回 double 结果；</p>
+<p><strong>消费者</strong>，即不返回结果<br><code>Consumer&lt;T&gt;</code>：accept()，接受 1 个参数，不返回结果；<br><code>BiConsumer&lt;T, U&gt;</code>：accept()，接受 2 个参数，不返回结果；<br><code>IntConsumer</code>：accept()，接受 1 个 int 参数，不返回结果；<br><code>LongConsumer</code>：accept()，接受 1 个 long 参数，不返回结果；<br><code>DoubleConsumer</code>：accept()，接受 1 个 double 参数，不返回结果；<br><code>ObjIntConsumer&lt;T&gt;</code>：accept()，接受 1 个 T 类型参数和 1 个 int 参数，不返回结果；<br><code>ObjLongConsumer&lt;T&gt;</code>：accept()，接受 1 个 T 类型参数和 1 个 long 参数，不返回结果；<br><code>ObjDoubleConsumer&lt;T&gt;</code>：accept()，接受 1 个 T 类型参数和 1 个 double 参数，不返回结果；</p>
+<p><strong>条件谓词</strong>，即返回布尔值<br><code>Predicate&lt;T&gt;</code>：test()，接受 1 个参数，返回 boolean 结果；<br><code>BiPredicate&lt;T, U&gt;</code>：test()，接受 2 个参数，返回 boolean 结果；<br><code>IntPredicate</code>：test()，接受 1 个 int 参数，返回 boolean 结果；<br><code>LongPredicate</code>：test()，接受 1 个 long 参数，返回 boolean 结果；<br><code>DoublePredicate</code>：test()，接受 1 个 double 参数，返回 boolean 结果；</p>
+<p><strong>一元操作符</strong><br><code>UnaryOperator&lt;T&gt;</code>：apply()，接受 1 个 T 类型参数，返回 T 类型结果；<br><code>IntUnaryOperator</code>：applyAsInt()，接受 1 个 int 参数，返回 int 结果；<br><code>LongUnaryOperator</code>：applyAsLong()，接受 1 个 long 参数，返回 long 结果；<br><code>DoubleUnaryOperator</code>：applyAsDouble()，接受 1 个 double 参数，返回 double 结果；</p>
+<p><strong>二元操作符</strong><br><code>BinaryOperator&lt;T&gt;</code>：apply()，接受 2 个 T 类型参数，返回 T 类型结果；<br><code>IntBinaryOperator</code>：applyAsInt()，接受 2 个 int 参数，返回 int 结果；<br><code>LongBinaryOperator</code>：applyAsLong()，接受 2 个 long 参数，返回 long 结果；<br><code>DoubleBinaryOperator</code>：applyAsDouble()，接受 2 个 double 参数，返回 double 结果；</p>
+<p><strong>普通函数</strong>，接收 T 参数，返回 R 结果<br><code>Function&lt;T, R&gt;</code>：apply()，接受 1 个 T 类型参数，返回 R 类型结果；<br><code>BiFunction&lt;T, U, R&gt;</code>：apply()，接受 2 个参数，返回 1 个结果；<br><code>IntFunction&lt;R&gt;</code>：apply()，接受 1 个 int 参数，返回 R 类型结果；<br><code>IntToLongFunction</code>：applyAsLong()，接受 1 个 int 参数，返回 long 结果；<br><code>IntToDoubleFunction</code>：applyAsDouble()，接受 1 个 int 参数，返回 double 结果；<br><code>LongFunction&lt;R&gt;</code>：apply()，接受 1 个 long 参数，返回 R 类型结果；<br><code>LongToIntFunction</code>：applyAsInt()，接受 1 个 long 参数，返回 int 结果；<br><code>LongToDoubleFunction</code>：applyAsDouble()，接受 1 个 long 参数，返回 double 结果；<br><code>DoubleFunction&lt;R&gt;</code>：apply()，接受 1 个 double 参数，返回指定类型的结果；<br><code>DoubleToIntFunction</code>：applyAsInt()，接受 1 个 double 参数，返回 int 结果；<br><code>DoubleToLongFunction</code>：applyAsLong()，接受 1 个 double 参数，返回 long 结果；<br><code>ToIntFunction&lt;T&gt;</code>：applyAsInt()，接受 1 个 T 类型参数，返回 int 结果；<br><code>ToIntBiFunction&lt;T, U&gt;</code>：applyAsInt()，接受 1 个 T 类型参数和 1 个 U 类型参数，返回 int 结果；<br><code>ToLongFunction&lt;T&gt;</code>：applyAsLong()，接受 1 个 T 类型参数，返回 long 结果；<br><code>ToLongBiFunction&lt;T, U&gt;</code>：applyAsLong()，接受 1 个 T 类型参数和 1 个 U 类型参数，返回 long 结果；<br><code>ToDoubleFunction&lt;T&gt;</code>：applyAsDouble()，接受 1 个 T 类型参数，返回 double 结果；<br><code>ToDoubleBiFunction&lt;T, U&gt;</code>：applyAsDouble()，接受 1 个 T 类型参数和 1 个 U 类型参数，返回 double 结果；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.List;
+import java.util.Arrays;
+import java.util.function.Predicate;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        System.out.println(list);
+
+        System.out.println("-------- 奇数 --------");
+        print(list, n -> n % 2 != 0);
+
+        System.out.println("-------- 偶数 --------");
+        print(list, n -> n % 2 == 0);
+
+        System.out.println("-------- 大于3 --------");
+        print(list, n -> n > 3);
+    }
+
+    private static <T> void print(List<T> list, Predicate<T> p) {
+        for (T elem : list) {
+            if (p.test(elem)) {
+                System.out.print(elem + ", ");
+            }
+        }
+        System.out.println();
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:12:13]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [14:12:31]
+$ java Main
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+-------- 奇数 --------
+1, 3, 5, 7, 9,
+-------- 偶数 --------
+2, 4, 6, 8, 10,
+-------- 大于3 --------
+4, 5, 6, 7, 8, 9, 10,
+</script></code></pre>
+<h3 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h3><p>方法引用其实就是 Lambda 表达式的一种简写方式。</p>
+<p>在 Java8 中，我们会使用 Lambda 表达式创建匿名方法，但是有时候，我们的 Lambda 表达式可能仅仅调用一个已存在的方法，而不做任何其它事，对于这种情况，通过一个方法名字来引用这个已存在的方法会更加清晰，Java8 的方法引用允许我们这样做。</p>
+<p>方法引用是一个更加紧凑，易读的 Lambda 表达式，方法引用的操作符是双冒号<code>::</code>。例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+
+        // 使用匿名类
+        list.forEach(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer elem) {
+                System.out.println(elem);
+            }
+        });
+
+        // 使用 Lambda
+        System.out.println("------------");
+        list.forEach(elem -> System.out.println(elem));
+
+        // 使用方法引用
+        System.out.println("------------");
+        list.forEach(System.out::println);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:33:41]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [14:33:51]
+$ java Main
+1
+2
+3
+4
+5
+------------
+1
+2
+3
+4
+5
+------------
+1
+2
+3
+4
+5
+</script></code></pre>
+<p><strong>四种方法引用类型</strong><br>1) <strong>引用静态方法</strong>：<code>ClassName::staticMethodName</code>；<br>2) <strong>引用实例方法</strong>：<code>objectName::methodName</code>（隐式地传入this指针）；<br>3) <strong>引用构造方法</strong>：<code>ClassName::new</code>；<br>4) <strong>引用任意方法</strong>：<code>ClassName::methodName</code>（对于实例方法，必须显式地传入this指针）；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        // 静态方法引用
+        StaticRefer<String> f1 = Test::staticMethod;
+        f1.func("www.zfl9.com");
+
+        // 实例方法引用
+        // InstanceRefer<String> f2 = new Test()::instanceMethod;
+        Test t = new Test();
+        InstanceRefer<String> f2 = t::instanceMethod;
+        f2.func("www.zfl9.com");
+
+        // 构造方法引用，带参数
+        ConstructorReferWithParam<String, Test> f3 = Test::new;
+        f3.func("www.zfl9.com");
+
+        // 构造方法引用，不带参数
+        ConstructorRefer<Test> f4 = Test::new;
+        f4.func();
+
+        // 使用类名引用实例方法
+        SpecialRefer<Test, String> f5 = Test::instanceMethod;
+        f5.func(new Test(), "www.zfl9.com");
+    }
+
+    private static class Test {
+        public Test() {}
+        public Test(String s) {
+            System.out.println(s);
+        }
+
+        public static void staticMethod(String s) {
+            System.out.println(s);
+        }
+
+        public void instanceMethod(String s) {
+            System.out.println(s);
+        }
+    }
+}
+
+@FunctionalInterface
+interface ConstructorRefer<T> {
+    T func();
+}
+
+@FunctionalInterface
+interface ConstructorReferWithParam<T, R> {
+    R func(T t);
+}
+
+@FunctionalInterface
+interface StaticRefer<T> {
+    void func(T t);
+}
+
+@FunctionalInterface
+interface InstanceRefer<T> {
+    void func(T t);
+}
+
+@FunctionalInterface
+interface SpecialRefer<T, U> {
+    void func(T t, U u);
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:25:54]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:26:08]
+$ java Main
+www.zfl9.com
+www.zfl9.com
+www.zfl9.com
+www.zfl9.com
+</script></code></pre>
+<p>简要说明：<br>1) 实例方法引用：this 指针由编译器隐式传递；<br>2) 静态方法引用：没有 this 指针，静态方法是与实例无关的方法；<br>3) 构造方法引用：需要指定类名、构造函数参数；<br>4) 任意方法引用：引用静态方法没有区别，引用实例方法需要显式传入 this 指针。</p>
+<p><strong>什么时候适合使用方法引用</strong>？<br>Lambda 表达式的目的仅仅为了调用另一个已存在方法时，适合使用方法引用。</p>
+<p><strong>什么时候不适合使用方法引用</strong>？<br>当我们需要向 Lambda 表达式传入其它参数时，不适合使用方法引用。</p>
+<h3 id="接口默认方法、静态方法"><a href="#接口默认方法、静态方法" class="headerlink" title="接口默认方法、静态方法"></a>接口默认方法、静态方法</h3><p>Java8 对接口做了进一步的增强：<br>1、接口中可以定义 default 关键字修饰的非抽象方法，即：默认方法（或扩展方法）；<br>2、接口中可以定义 static 静态方法。</p>
+<p>Java8 允许给接口添加一个非抽象的方法实现，只需要使用 default 关键字即可，这个特征又叫做<strong>扩展方法</strong>（也称为<strong>默认方法</strong>或<strong>虚拟扩展方法</strong>或<strong>防护方法</strong>）</p>
+<p>在实现该接口时，该默认扩展方法在子类上可以直接使用，它的使用方式类似于抽象类中非抽象成员方法。<br>但是请注意，接口中的默认方法不能够重载 Object 中的定义的方法。eg：toString、equals、hashCode。</p>
+<p>为函数式接口添加 default 方法、static 方法并不会对其有任何影响，依旧是合法的函数式接口；<br>因为函数式接口的定义是接口中只有一个抽象方法，只要符合这个条件那么就是函数式接口；<br>同时，在函数式接口中可以定义 Object 类的相关抽象方法，也不会影响它成为一个函数式接口。</p>
+<p>例如，下面这段代码可以正常编译：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">@FunctionalInterface
+interface FuncInter {
+    void func();
+
+    default void f1() {}
+    default void f2() {}
+    default void f3() {}
+
+    static void f4() {}
+    static void f5() {}
+    static void f6() {}
+
+    boolean equals(Object obj);
+    int hashCode();
+    String toString();
+}
+
+class Test implements FuncInter {
+    @Override
+    public void func() {};
+
+    /*
+     * 1. default 方法不需要强制 Override
+     * 2. static 方法不能被 Override
+     * 3. equals、hashCode、toString 方法在 Object 中已有默认实现
+     */
+}
+</script></code></pre>
+<p>默认方法允许我们在接口里添加新的方法，而不会破坏实现这个接口的已有类的兼容性，也就是说不会强迫实现接口的类实现默认方法。默认方法和抽象方法的区别是抽象方法必须要被实现，默认方法不是。作为替代方式，接口可以提供一个默认的方法实现，所有这个接口的实现类都会通过继承得到这个方法（如果有需要也可以重写这个方法）。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        new B().func();
+        new C().func();
+    }
+}
+
+interface A {
+    default void func() {
+        System.out.println("default method");
+    }
+}
+
+class B implements A {} // 不重写默认方法
+
+class C implements A { // 重写默认方法
+    @Override
+    public void func() {
+        System.out.println("override method");
+    }
+}
+</script></code></pre>
+<p>虽然默认方法很强大，但是使用之前一定要仔细考虑是不是真的需要使用默认方法；因为在层级很复杂的情况下很容易导致逻辑模糊不清甚至产生编译错误！</p>
+<p><strong>引入默认方法带来的优缺点</strong><br>优点：默认方法可以在不破坏代码的前提下扩展原有库的功能，避免了代码冗余；<br>缺点：从另一个方面来说，这使得接口作为协议，类作为具体实现的界限开始变得有点模糊。</p>
+<p>引入默认方法之后，感觉接口和抽象类的界限变得有点模糊，接口和抽象类之间有很多相似的地方：<br>1、都是抽象类型；<br>2、都不能被实例化；<br>3、都可以提供具体的方法实现；<br>4、都可以不需要子类去实现所有方法。</p>
+<p>但是接口和抽象类也有一些不同的地方：<br>1、抽象类不可以多继承，接口可以多继承；<br>2、设计理念不同，抽象类表示的是”is-a”关系，接口表示的是”like-a”关系；<br>3、接口中的变量默认被 public static final 修饰，不能在实现类中修改，而抽象类中的变量则没有此限制。</p>
+<p><strong>默认方法带来的多继承命名冲突</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        new C().func();
+        new D().func();
+        new E().func();
+    }
+}
+
+interface A {
+    default void func() {
+        System.out.println("A::func()");
+    }
+}
+
+interface B {
+    default void func() {
+        System.out.println("B::func()");
+    }
+}
+
+class C implements A, B {
+    public void func() { // 优先级最高，不产生命名冲突
+        System.out.println("C::func()");
+    }
+}
+
+class D implements A, B {
+    public void func() {
+        A.super.func(); // 指明调用 A.func()
+    }
+}
+
+class E implements A, B {
+    public void func() {
+        B.super.func(); // 指明调用 B.func()
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:31:50]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:32:04]
+$ java Main
+C::func()
+A::func()
+B::func()
+</script></code></pre>
+<p>接口中的默认方法也可以被子接口重写，如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        new C().func(); // B.func()
+    }
+}
+
+interface A {
+    default void func() {
+        System.out.println("A::func()");
+    }
+}
+
+interface B extends A {
+    @Override
+    default void func() {
+        System.out.println("B::func()");
+    }
+}
+
+class C implements A, B {}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:36:47] C:130
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:36:49]
+$ java Main
+B::func()
+</script></code></pre>
+<p><strong>接口的静态方法</strong><br>在 Java8 中，接口除了可以有默认方法，还可以定义静态方法，和普通类的静态方法一样。接口静态方法需要通过<code>接口名.方法名</code>方式来调用，否则发生编译错误。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        A a = new B();
+        // a.func(); 错误
+        A.func();
+    }
+}
+
+interface A {
+    static void func() {
+        System.out.println("A::func()");
+    }
+}
+
+class B implements A {}
+</script></code></pre>
+<p>接口中的静态方法不能被实现类、子接口所继承，比如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        A.func(); // 正确
+        // B.func(); // 错误
+        // C.func(); // 错误
+        // new C().func(); // 错误
+
+        X.func(); // 正确
+        Y.func(); // 正确
+        new X().func(); // 警告
+        new Y().func(); // 警告
+    }
+}
+
+interface A {
+    static void func() {
+        System.out.println("interface A");
+    }
+}
+
+interface B extends A {} // 不能继承
+
+class C implements A {} // 不能继承
+
+class X {
+    public static void func() {
+        System.out.println("class X");
+    }
+}
+
+class Y extends X {} // 可以继承
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [18:04:31]
+$ javac Main.java
+Main.java:10: warning: [static] static method should be qualified by type name, X, instead of by an expression
+        new X().func(); // 警告
+               ^
+Main.java:11: warning: [static] static method should be qualified by type name, X, instead of by an expression
+        new Y().func(); // 警告
+               ^
+2 warnings
+
+# root @ arch in ~/work on git:master x [18:04:47]
+$ java Main
+interface A
+class X
+class X
+class X
+class X
+</script></code></pre>
+<h3 id="Optional-容器"><a href="#Optional-容器" class="headerlink" title="Optional 容器"></a>Optional 容器</h3><p><code>java.util.Optional</code>为了解决臭名昭著的<strong>空指针异常</strong>而引入的类，本身是一个容器。Optional 是一个泛型类，为了减少boxing、unboxing带来的性能损失，提供了<code>OptionalInt</code>、<code>OptionalLong</code>、<code>OptionalDouble</code>。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 */
+// value不能为null，否则抛出空指针异常
+public static <T> Optional<T> of(T value);
+// 构造一个未存储元素的Optional容器
+public static <T> Optional<T> empty();
+// value可以为null，value!=null->of(value)，value==null->empty()
+public static <T> Optional<T> ofNullable(T value);
+
+/* isPresent()、get() */
+public boolean isPresent(); // 是否存有元素
+public T get(); // 返回存储的元素，如果为empty，则抛出NoSuchElementException
+
+/* 函数式编程风格，避免了空指针异常 */
+
+// 如果容器不为空，则传递给consumer执行
+public void ifPresent(Consumer<? super T> consumer);
+
+// filter过滤
+// 测试成功返回this，测试失败返回empty()空容器；
+// 如果容器为空，则不进行测试，直接返回this；
+public Optional<T> filter(Predicate<? super T> predicate);
+
+// map映射
+// 返回一个nullable容器；
+// 如果容器为空，则直接返回empty()空容器；
+public <U> Optional<U> map(Function<? super T, ? extends U> mapper);
+// flatMap映射，注意返回值类型为Optional
+public <U> Optional<U> flatMap(Function<? super T, Optional<U>> mapper);
+
+// 如果容器不为空则返回储存的元素，否则返回other默认值
+public T orElse(T other);
+// 如果容器不为空则返回储存的元素，否则返回other.get()提供的值
+public T orElseGet(Supplier<? extends T> other);
+// 如果容器不为空则返回储存的元素，否则抛出exceptionSupplier.get()提供的异常
+public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+</script></code></pre>
+<p><strong>OptionalInt</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 */
+public static OptionalInt of(int value);
+public static OptionalInt empty();
+
+/* isPresent()、getAsInt() */
+public boolean isPresent(); // 是否存有元素
+public int getAsInt(); // 如果存在则返回，否则抛出NoSuchElementException
+
+/* 函数式编程风格 */
+
+// 如果容器不为空，则将存储的元素传递给consumer执行
+public void ifPresent(IntConsumer consumer);
+
+// 获取存储的元素
+public int orElse(int other);
+public int orElseGet(IntSupplier other);
+public <X extends Throwable> int orElseThrow(Supplier<X> exceptionSupplier) throws X;
+</script></code></pre>
+<p><strong>OptionalLong</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 */
+public static OptionalLong of(long value);
+public static OptionalLong empty();
+
+/* isPresent()、getAsLong() */
+public boolean isPresent(); // 是否存有元素
+public long getAsLong(); // 返回存储的元素，为empty则返回NoSuchElementException
+
+/* 函数式编程风格 */
+public void ifPresent(LongConsumer consumer);
+
+public long orElse(long other);
+public long orElseGet(LongSupplier other);
+public<X extends Throwable> long orElseThrow(Supplier<X> exceptionSupplier) throws X;
+</script></code></pre>
+<p><strong>OptionalDouble</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 */
+public static OptionalDouble of(double value);
+public static OptionalDouble empty();
+
+/* isPresent()、get() */
+public boolean isPresent(); // 是否存有元素
+public double getAsDouble(); // 返回存储的元素，为empty则抛出NoSuchElementException
+
+/* 函数式编程风格 */
+public void ifPresent(DoubleConsumer consumer);
+
+public double orElse(double other);
+public double orElseGet(DoubleSupplier other);
+public <X extends Throwable> double orElseThrow(Supplier<X> exceptionSupplier) throws X;
+</script></code></pre>
+<h3 id="Stream-API"><a href="#Stream-API" class="headerlink" title="Stream API"></a>Stream API</h3><p>Stream 作为 Java 8 的一大亮点，它与 java.io 包里的 InputStream 和 OutputStream 是完全不同的概念。Java 8 中的 Stream 是对<code>集合（Collection）对象</code>功能的增强，它专注于对集合对象进行各种非常便利、高效的<strong><code>聚合操作（aggregate operation）</code></strong>，或者<strong><code>大批量数据操作 (bulk data operation)</code></strong>。</p>
+<p>Stream API 借助于同样新出现的 Lambda 表达式，极大的提高编程效率和程序可读性。同时它提供<code>串行</code>和<code>并行</code>两种模式进行汇聚操作，并行模式能够充分利用多核处理器的优势，并行模式是利用 ForkJoin 框架来拆分任务和加速处理过程的。</p>
+<p>通常编写并行代码很难而且容易出错, 但使用 Stream API 无需编写一行多线程的代码，就可以很方便地写出高性能的并发程序。所以说，Java 8 中首次出现的 java.util.stream 是一个<code>函数式语言</code>+<code>多核时代</code>综合影响的产物。</p>
+<p><strong>什么是 Stream 流</strong>？<br>Stream 不是集合元素，它不是数据结构并不保存数据，它是有关算法和计算的，它更像一个<strong>高级版本的 Iterator</strong>。</p>
+<p>原始版本的 Iterator，用户只能显式地一个一个遍历元素并对其执行某些操作；<br>高级版本的 Stream，用户只要给出需要对其包含的元素执行什么操作，比如 “过滤掉长度大于 10 的字符串”、“获取每个字符串的首字母”等，Stream 会隐式地在内部进行遍历，做出相应的数据转换。</p>
+<p>Stream 就如同一个<code>迭代器（Iterator）</code>，<strong>单向</strong>，<strong>不可往复</strong>，数据只能遍历一次，遍历过一次后即用尽了，就好比流水从面前流过，一去不复返。而和迭代器又不同的是，Stream 可以<strong>并行化操作</strong>；迭代器只能<strong>命令式地</strong>、<strong>串行化操作</strong>。</p>
+<p>顾名思义，当使用串行方式去遍历时，每个 item 读完后再读下一个 item；<br>而使用并行去遍历时，数据会被分成多个段，其中每一个都在不同的线程中处理，然后将结果一起输出。</p>
+<blockquote>
+<p>Stream 的并行操作依赖于 Java7 中引入的 Fork/Join 框架（JSR166y）来拆分任务和加速处理过程。</p>
+</blockquote>
+<p>Stream 的另外一大特点是，<strong>数据源本身可以是无限的</strong>，通常配合<strong>短路操作</strong>来使用。</p>
+<p><strong>Stream 流的构成</strong><br>当我们使用一个流的时候，通常包括三个基本步骤：<br>1) 获取一个<strong>数据源（source）</strong><br>2) 数据转换，<strong>中间操作</strong><br>3) 执行操作获取想要的结果，<strong>末端操作</strong></p>
+<p>每次转换原有 Stream 对象不改变，而是返回一个新的 Stream 对象（可以有多次转换），这就允许对其操作可以像链条一样排列，变成一个管道，如下图所示。</p>
+<p><code>流管道(Stream Pipeline)</code>的构成<br><img src="/images/java-stream-pipe.png" alt="Stream Pipeline 流管道"></p>
+<p><strong>生成 Stream 的方式</strong>：</p>
+<ul>
+<li><strong>Collection 集合、Array 数组</strong><ul>
+<li><code>Collection.stream()</code>，串行流</li>
+<li><code>Collection.parallelStream()</code>，并行流</li>
+<li><code>Arrays.stream(T[] array)</code>，built-in 数组</li>
+</ul>
+</li>
+<li><strong>Stream 静态工厂方法</strong><ul>
+<li><code>Stream.builder()</code>，手动构建</li>
+<li><code>Stream.empty()</code>，空 Stream 流</li>
+<li><code>Stream.of(T t)</code>，构造单个元素的 Stream 流</li>
+<li><code>Stream.of(T... values)</code>，构造多个元素的 Stream 流(数组)</li>
+<li><code>Stream.iterate(final T seed, final UnaryOperator&lt;T&gt; f)</code>，根据给定种子迭代产生的无限 Stream 流</li>
+<li><code>Stream.generate(Supplier&lt;T&gt; s)</code>，使用给定生成器产生的无限 Stream 流</li>
+</ul>
+</li>
+<li><strong>StreamSupport 工具类</strong><ul>
+<li><code>StreamSupport.stream(Spliterator&lt;T&gt; spliterator, boolean parallel)</code>，只需要提供 Spliterator 迭代器</li>
+</ul>
+</li>
+</ul>
+<p><strong>Stream 流的两种操作类型</strong></p>
+<ul>
+<li><strong><code>Intermediate(中间操作)</code></strong>：<strong>一个流可以后面跟随零个或多个 intermediate 操作</strong>。<br>其主要目的是，对数据进行<code>filter</code>过滤、<code>map</code>映射，然后返回一个新的流，交给下一个操作使用。<br><strong>中间操作都是<code>惰性化的（lazy）</code></strong>，就是说，仅仅调用到这类方法，并没有真正开始流的遍历，可以理解为仅仅注册一个操作。</li>
+<li><strong><code>Terminal(末端操作)</code></strong>：<strong>一个流只能有一个 terminal 操作</strong>，当这个操作执行后，流就被使用“光”了，无法再被操作。所以这必定是<strong>流的最后一个操作</strong>。<br><strong>Terminal 操作的执行，才会真正开始流的遍历，并且会生成一个结果，或者一个<code>side effect(副作用)</code></strong>。</li>
+</ul>
+<p>我们可以这样简单的理解，Stream 里有个操作函数的集合：<br>每次 intermediate 操作就是把 intermediate 函数放入这个集合中；<br>在 terminal 操作的时候循环 Stream 对应的集合，然后对每个元素执行所有的函数。</p>
+<p><strong>short-circuiting 短路操作</strong><br>还有一种操作被称为<code>short-circuiting（短路）</code>，用以指：<br>1) 对于一个 intermediate 操作，如果它接受的是一个无限大（infinite/unbounded）的 Stream，但返回一个有限的新 Stream。<br>2) 对于一个 terminal 操作，如果它接受的是一个无限大的 Stream，但能在有限的时间计算出结果。<br>当操作一个无限大的 Stream，而又希望在有限时间内完成操作，则在管道内拥有一个 short-circuiting 操作是<strong>必要非充分条件</strong>。</p>
+<p>相信大家看完上面这段话还是不太理解什么是短路操作，其实说的直白一点，对于一个无限大的 Stream，如果没有一个 short-circuiting 操作，那么它将一直死循环下去，因为流是无限的。把 Stream 比作一个<code>for(;;)</code>循环的话，就更好理解了，如果没有在适当的时侯出现<code>break</code>语句，那么将无限循环下去。</p>
+<p><strong>基本类型的 Stream 流</strong><br>对于基本数值型，目前有三种对应的包装类型 Stream：<code>IntStream</code>、<code>LongStream</code>、<code>DoubleStream</code>。<br>虽然我们也可以用<code>Stream&lt;Integer&gt;</code>、<code>Stream&lt;Long&gt;</code>、<code>Stream&lt;Double&gt;</code>，但是 boxing 和 unboxing 会很耗时，所以特别为这三种基本数值型提供了对应的 Stream。</p>
+<p><strong>Stream 使用详解</strong><br>简单说，对 Stream 的使用就是实现一个 filter-map-reduce 过程，产生一个最终结果，或者导致一个<code>副作用（side effect）</code>。</p>
+<ul>
+<li><code>filter</code>，过滤，筛选出符合预期的元素，然后返回由它们组成的新 Stream，这是一个 intermediate 操作；</li>
+<li><code>map</code>，映射，对每个元素进行相应的加工，然后返回由它们组成的新 Stream，这是一个 intermediate 操作；</li>
+<li><code>reduce</code>，归约，使用给定初始值，递归的累加每个元素，返回累加的结果，这是一个 terminal 操作。</li>
+</ul>
+<blockquote>
+<p>所有的 intermediate 操作都是返回一个新 Stream 对象，而原来的 Stream 对象则被 close。</p>
+</blockquote>
+<p><strong>Stream 常用方法</strong><br><strong>Intermediate</strong>：<br>map、filter、distinct、sorted、peek、limit、skip、parallel、sequential、unordered 等<br><strong>Terminal</strong>：<br>forEach、forEachOrdered、toArray、reduce、collect、min、max、count、anyMatch、allMatch、noneMatch、findFirst、findAny、iterator 等<br><strong>Short-circuiting</strong>：<br>anyMatch、allMatch、noneMatch、findFirst、findAny、limit 等</p>
+<p>其实很好分辨，如果方法的返回值类型为 Stream，一般来说都是 intermediate 操作；反之，则一般为 terminal 操作。</p>
+<p><strong><code>java.util.stream</code>包概览</strong></p>
+<ul>
+<li><strong>Interface</strong>接口<ul>
+<li>BaseStream</li>
+<li>Stream</li>
+<li>Stream.Builder</li>
+<li>IntStream</li>
+<li>IntStream.Builder</li>
+<li>LongStream</li>
+<li>LongStream.Builder</li>
+<li>DoubleStream</li>
+<li>DoubleStream.Builder</li>
+<li>Collector，收集器，高级版的 reduce</li>
+</ul>
+</li>
+<li><strong>Class</strong>类<ul>
+<li>Collectors，Collector 的工具类</li>
+<li>StreamSupport，Stream 的工具类</li>
+</ul>
+</li>
+<li><strong>Enum</strong>枚举<ul>
+<li>Collector.Characteristics，收集器的相关特性</li>
+</ul>
+</li>
+</ul>
+<h4 id="BaseStream"><a href="#BaseStream" class="headerlink" title="BaseStream"></a>BaseStream</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface BaseStream<T, S extends BaseStream<T, S>>
+    extends AutoCloseable
+{
+    Iterator<T> iterator(); // [terminal] 获取迭代器
+    Spliterator<T> spliterator(); // [terminal] 获取可分割迭代器
+
+    boolean isParallel(); // 是否为并行流
+
+    S sequential(); // [intermediate] 返回串行流
+    S parallel(); // [intermediate] 返回并行流
+    S unordered(); // [intermediate] 返回无序流
+
+    S onClose(Runnable closeHandler); // [intermediate] 注册closeHandler，可以有多个，在流关闭时执行
+    void close(); // 关闭流，执行所有closeHandler
+}
+</script></code></pre>
+<h4 id="Stream"><a href="#Stream" class="headerlink" title="Stream"></a>Stream</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface Stream<T> extends BaseStream<T, Stream<T>> {
+    // 过滤，筛选出符合条件的元素
+    Stream<T> filter(Predicate<? super T> predicate); // [intermediate]
+
+    // 映射，T -> R
+    <R> Stream<R> map(Function<? super T, ? extends R> mapper); // [intermediate]
+    IntStream mapToInt(ToIntFunction<? super T> mapper); // [intermediate]
+    LongStream mapToLong(ToLongFunction<? super T> mapper); // [intermediate]
+    DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper); // [intermediate]
+
+    // 映射，T -> Stream<R>，最后合并多个Stream<R>
+    <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper); // [intermediate]
+    IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper); // [intermediate]
+    LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper); // [intermediate]
+    DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper); // [intermediate]
+
+    // 去重，所有的元素均没有重复
+    Stream<T> distinct(); // [intermediate] 有状态的中间操作
+
+    // 自然排序
+    Stream<T> sorted(); // [intermediate] 有状态的中间操作
+    // 自定义排序
+    Stream<T> sorted(Comparator<? super T> comparator); // [intermediate] 有状态的中间操作
+
+    // 与forEach差不多，但是这是一个中间操作
+    Stream<T> peek(Consumer<? super T> action); // [intermediate]
+
+    // 只提取流的前 maxSize 个元素，通常用于无限大的 Stream
+    Stream<T> limit(long maxSize); // [short-circuiting] 有状态的中间操作
+    // 跳过流的前 n 个元素，使用剩余的元素组成的流
+    Stream<T> skip(long n); // [intermediate] 有状态的中间操作
+
+    // 遍历流中的每个元素，对于并行流，不保证按照输入顺序遍历
+    void forEach(Consumer<? super T> action); // [terminal]
+    // 遍历流中的每个元素[保证按照输入顺序进行遍历]
+    void forEachOrdered(Consumer<? super T> action); // [terminal]
+
+    // 转换为Object[]数组
+    Object[] toArray(); // [terminal]
+    // 转换为指定类型的数组, eg: Integer[] arr = stream.toArray(Integer[]::new)
+    <A> A[] toArray(IntFunction<A[]> generator); // [terminal]
+
+    // identity为初始值，使用accumulator累加器累加所有元素，返回累加的结果
+    T reduce(T identity, BinaryOperator<T> accumulator); // [terminal]
+    // 同上，只是没有初始值，注意返回的是 Optional 对象
+    Optional<T> reduce(BinaryOperator<T> accumulator); // [terminal]
+    // 有时候我们需要传入两个不同类型的参数，就需要使用三个参数的reduce方法
+    // 比如，求字符串长度的总和：
+    // Stream<String> stream = Stream.of("www.zfl9.com", "www.baidu.com", "www.google.com");
+    // int totalLength = stream.reduce(0, (len, str) -> len + str.length(), (len1, len2) -> len1 + len2);
+    // System.out.println(totalLength);
+    <U> U reduce(U identity,
+                 BiFunction<U, ? super T, U> accumulator,
+                 BinaryOperator<U> combiner); // [terminal]
+
+    /**
+     * 收集流中的所有元素，高级版本的 reduce.
+     * @param   supplier    初始构造器，初始化 R
+     * @param   accumulator 累加器，将 R、T 进行累加计算
+     * @param   combiner    组合器，将多个子结果组合成最终结果
+     * @return  R           收集的结果
+     * eg: 收集所有偶数到ArrayList集合中
+     * Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).filter(e -> e % 2 == 0);
+     * ArrayList<Integer> list = stream.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+     */
+    <R> R collect(Supplier<R> supplier,
+                  BiConsumer<R, ? super T> accumulator,
+                  BiConsumer<R, R> combiner); // [terminal]
+    // 使用专属的 Collector 收集器进行收集，灵活度非常高
+    // eg: list = stream.collect(Collectors.toList());
+    <R, A> R collect(Collector<? super T, A, R> collector); // [terminal]
+
+    // 查找最小值，返回 Optional
+    Optional<T> min(Comparator<? super T> comparator); // [terminal]
+    // 查找最大值，返回 Optional
+    Optional<T> max(Comparator<? super T> comparator); // [terminal]
+
+    // 元素计数器，返回元素的个数
+    long count(); // [terminal]
+
+    // 如果流中有任意一个元素符合条件，则返回true
+    // 如果流为empty，则返回false
+    boolean anyMatch(Predicate<? super T> predicate); // [short-circuiting && terminal]
+    // 如果流中全部元素都符合条件，则返回true
+    // 如果流为empty，则返回true
+    boolean allMatch(Predicate<? super T> predicate); // [short-circuiting && terminal]
+    // 如果流中全部元素都不符合条件，则返回true
+    // 如果流为empty，则返回true
+    boolean noneMatch(Predicate<? super T> predicate); // [short-circuiting && terminal]
+
+    // 返回流的第一个元素，注意返回类型为 Optional
+    Optional<T> findFirst(); // [short-circuiting && terminal]
+    // 返回流的任意一个元素，注意返回类型为 Optional
+    Optional<T> findAny(); // [short-circuiting && terminal]
+
+    /* 静态工厂方法，构造一个新的Stream流 */
+    public static<T> Builder<T> builder(); // 获取流的构建器，手动构建一个流
+
+    public static<T> Stream<T> empty(); // 构造一个空的顺序流
+    public static<T> Stream<T> of(T t); // 构造单个元素的串行流
+    public static<T> Stream<T> of(T... values); // 构造输入顺序的串行流
+
+    // 构造由指定seek种子迭代产生的无限大的流
+    // eg: (所有正整数) Stream.iterate(1, e -> e + 1)
+    public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f);
+
+    // 构造由指定构造器提供而产生的无限大的流
+    // eg: (随机两位数) Stream.generate(() -> rand.nextInt(90) + 10)
+    public static<T> Stream<T> generate(Supplier<T> s);
+
+    /*
+     * 创建一个懒惰连接的流，其元素是 a 和 b 的所有元素.
+     * 如果 a、b 都是已排序的，则生成的流也是有序的;
+     * 如果 a、b 任意一个是并行的，则生成的流也是并行的。
+     * 当此流关闭时，将调用 a、b 的关闭处理程序。
+     */
+    public static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b);
+
+    /* Builder 构建器，子接口 */
+    public interface Builder<T> extends Consumer<T> {
+        @Override
+        void accept(T t); // 接收新元素
+        default Builder<T> add(T t); // accept(t); return this;
+
+        Stream<T> build(); // 完成构建
+    }
+}
+</script></code></pre>
+<h4 id="IntStream"><a href="#IntStream" class="headerlink" title="IntStream"></a>IntStream</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface IntStream extends BaseStream<Integer, IntStream> {
+    // 过滤
+    IntStream filter(IntPredicate predicate); // [intermediate]
+
+    // 映射
+    IntStream map(IntUnaryOperator mapper); // [intermediate]
+    <U> Stream<U> mapToObj(IntFunction<? extends U> mapper); // [intermediate]
+    LongStream mapToLong(IntToLongFunction mapper); // [intermediate]
+    DoubleStream mapToDouble(IntToDoubleFunction mapper); // [intermediate]
+
+    // 扁平化映射
+    IntStream flatMap(IntFunction<? extends IntStream> mapper); // [intermediate]
+
+    // 去重
+    IntStream distinct(); // [intermediate] 有状态的
+
+    // 自然排序
+    IntStream sorted(); // [intermediate] 有状态的
+
+    // 和forEach差不多，只不过这是一个intermediate操作
+    IntStream peek(IntConsumer action); // [intermediate]
+
+    // 提取流的前 maxSize 个元素
+    IntStream limit(long maxSize); // [short-circuiting && stateful && intermediate]
+    // 跳过流的前 n 个元素
+    IntStream skip(long n); // [intermediate] 有状态的
+
+    // 遍历当前流，并行流不保证遍历顺序
+    void forEach(IntConsumer action); // [terminal]
+    // 遍历当前流，保证遍历顺序
+    void forEachOrdered(IntConsumer action); // [terminal]
+
+    // 转换为 int[] 整型数组
+    int[] toArray(); // [terminal]
+
+    // 归约
+    int reduce(int identity, IntBinaryOperator op); // [terminal]
+    // 归约，注意返回的是一个 Optional
+    OptionalInt reduce(IntBinaryOperator op); // [terminal]
+
+    // 收集
+    <R> R collect(Supplier<R> supplier,
+                  ObjIntConsumer<R> accumulator,
+                  BiConsumer<R, R> combiner); // [terminal]
+
+    /* 常用计算 */
+    long count(); // [terminal] 元素的数目
+    int sum(); // [terminal] 求和
+    OptionalInt min(); // [terminal] 最小值
+    OptionalInt max(); // [terminal] 最大值
+    OptionalDouble average(); // [terminal] 算术平均数
+    IntSummaryStatistics summaryStatistics(); // [terminal] 描述统计
+
+    // 如果至少有一个元素满足谓词predicate，则返回true
+    // 如果流为空，则返回false
+    boolean anyMatch(IntPredicate predicate); // [short-circuiting && terminal]
+    // 如果所有元素均满足谓词predicate，则返回true
+    // 如果流为空，则返回true
+    boolean allMatch(IntPredicate predicate); // [short-circuiting && terminal]
+    // 如果所有元素均不满足谓词predicate，则返回true
+    // 如果流为空，则返回true
+    boolean noneMatch(IntPredicate predicate); // [short-circuiting && terminal]
+
+    // 返回流中的第一个元素
+    OptionalInt findFirst(); // [short-circuiting && terminal]
+    // 返回流中的任意一个元素
+    OptionalInt findAny(); // [short-circuiting && terminal]
+
+    // 转换为 LongStream
+    LongStream asLongStream(); // [intermediate]
+    // 转换为 DoubleStream
+    DoubleStream asDoubleStream(); // [intermediate]
+
+    // 装箱为 Stream<Integer>
+    Stream<Integer> boxed(); // [intermediate]
+
+    // 返回串行流
+    IntStream sequential(); // [intermediate]
+    // 返回并行流
+    IntStream parallel(); // [intermediate]
+
+    // 返回元素的 Iterator
+    PrimitiveIterator.OfInt iterator(); // [terminal]
+    // 返回元素的 Spliterator
+    Spliterator.OfInt spliterator(); // [terminal]
+
+    /* 静态工厂方法 */
+    public static Builder builder();
+
+    public static IntStream empty();
+    public static IntStream of(int t);
+    public static IntStream of(int... values);
+
+    public static IntStream iterate(final int seed, final IntUnaryOperator f);
+    public static IntStream generate(IntSupplier s);
+
+    public static IntStream range(int startInclusive, int endExclusive); // [start, end)
+    public static IntStream rangeClosed(int startInclusive, int endInclusive); // [start, end]
+
+    public static IntStream concat(IntStream a, IntStream b);
+
+    /* Builder 子接口 */
+    public interface Builder extends IntConsumer {
+        @Override
+        void accept(int t);
+        default Builder add(int t);
+
+        IntStream build();
+    }
+}
+</script></code></pre>
+<h4 id="LongStream"><a href="#LongStream" class="headerlink" title="LongStream"></a>LongStream</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface LongStream extends BaseStream<Long, LongStream> {
+    /* 过滤 */
+    LongStream filter(LongPredicate predicate); // [intermediate]
+
+    /* 映射 */
+    LongStream map(LongUnaryOperator mapper); // [intermediate]
+    <U> Stream<U> mapToObj(LongFunction<? extends U> mapper); // [intermediate]
+    IntStream mapToInt(LongToIntFunction mapper); // [intermediate]
+    DoubleStream mapToDouble(LongToDoubleFunction mapper); // [intermediate]
+
+    /* "扁平化"映射 */
+    LongStream flatMap(LongFunction<? extends LongStream> mapper); // [intermediate]
+
+    /* 去重复元素 */
+    LongStream distinct(); // [stateful && intermediate]
+
+    /* 自然排序 */
+    LongStream sorted(); // [stateful && intermediate]
+
+    /* peek */
+    LongStream peek(LongConsumer action); // [intermediate]
+
+    /* 短路操作 */
+    LongStream limit(long maxSize); // [short-circuiting stateful intermediate]
+    LongStream skip(long n); // [stateful intermediate]
+
+    /* forEach遍历 */
+    void forEach(LongConsumer action); // [terminal]
+    void forEachOrdered(LongConsumer action); // [terminal]
+
+    /* 转换为数组 */
+    long[] toArray(); // [terminal]
+
+    /* reduce */
+    long reduce(long identity, LongBinaryOperator op); // [terminal]
+    OptionalLong reduce(LongBinaryOperator op); // [terminal]
+
+    /* collect */
+    <R> R collect(Supplier<R> supplier,
+                  ObjLongConsumer<R> accumulator,
+                  BiConsumer<R, R> combiner); // [terminal]
+
+    /* 常用计算 */
+    long count(); // [terminal] 求元素个数
+    long sum(); // [terminal] 求和
+    OptionalLong min(); // [terminal] 求最小值
+    OptionalLong max(); // [terminal] 求最大值
+    OptionalDouble average(); // [terminal] 求算术平均数
+    LongSummaryStatistics summaryStatistics(); // [terminal]
+
+    /* Match匹配 */
+    // 任意一个符合条件则返回true
+    boolean anyMatch(LongPredicate predicate); // [short-circuiting terminal]
+    // 所有元素均符合条件则返回true
+    boolean allMatch(LongPredicate predicate); // [short-circuiting terminal]
+    // 所有元素均不符合条件则返回true
+    boolean noneMatch(LongPredicate predicate); // [short-circuiting terminal]
+
+    /* 获取第一个元素、任意一个元素 */
+    OptionalLong findFirst(); // [short-circuiting terminal]
+    OptionalLong findAny(); // [short-circuiting terminal]
+
+    /* asDoubleStream、装箱为 Stream<Long> */
+    DoubleStream asDoubleStream(); // [intermediate]
+    Stream<Long> boxed(); // [intermediate]
+
+    /* 串行、并行 */
+    LongStream sequential(); // [intermediate]
+    LongStream parallel(); // [intermediate]
+
+    /* 迭代器 */
+    PrimitiveIterator.OfLong iterator(); // [terminal]
+    Spliterator.OfLong spliterator(); // [terminal]
+
+    /* 静态工厂方法 */
+    public static Builder builder();
+
+    public static LongStream empty();
+    public static LongStream of(long t);
+    public static LongStream of(long... values);
+
+    public static LongStream iterate(final long seed, final LongUnaryOperator f);
+    public static LongStream generate(LongSupplier s);
+
+    public static LongStream range(long startInclusive, final long endExclusive); // [start, end)
+    public static LongStream rangeClosed(long startInclusive, final long endInclusive); // [start, end]
+
+    public static LongStream concat(LongStream a, LongStream b); // 拼接流
+
+    /* Builder 子接口 */
+    public interface Builder extends LongConsumer {
+        @Override
+        void accept(long t);
+        default Builder add(long t);
+
+        LongStream build();
+    }
+}
+</script></code></pre>
+<h4 id="DoubleStream"><a href="#DoubleStream" class="headerlink" title="DoubleStream"></a>DoubleStream</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface DoubleStream extends BaseStream<Double, DoubleStream> {
+    DoubleStream filter(DoublePredicate predicate); // [intermediate]
+
+    DoubleStream map(DoubleUnaryOperator mapper); // [intermediate]
+    <U> Stream<U> mapToObj(DoubleFunction<? extends U> mapper); // [intermediate]
+    IntStream mapToInt(DoubleToIntFunction mapper); // [intermediate]
+    LongStream mapToLong(DoubleToLongFunction mapper); // [intermediate]
+
+    DoubleStream flatMap(DoubleFunction<? extends DoubleStream> mapper); // [intermediate]
+
+    DoubleStream distinct(); // [stateful intermediate]
+
+    DoubleStream sorted(); // [stateful intermediate]
+
+    DoubleStream peek(DoubleConsumer action); // [intermediate]
+
+    DoubleStream limit(long maxSize); // [short-circuiting stateful intermediate]
+    DoubleStream skip(long n); // [stateful intermediate]
+
+    void forEach(DoubleConsumer action); // [terminal]
+    void forEachOrdered(DoubleConsumer action); // [terminal]
+
+    double[] toArray(); // [terminal]
+
+    double reduce(double identity, DoubleBinaryOperator op); // [terminal]
+    OptionalDouble reduce(DoubleBinaryOperator op); // [terminal]
+
+    <R> R collect(Supplier<R> supplier,
+                  ObjDoubleConsumer<R> accumulator,
+                  BiConsumer<R, R> combiner); // [terminal]
+
+    long count(); // [terminal]
+    double sum(); // [terminal]
+    OptionalDouble min(); // [terminal]
+    OptionalDouble max(); // [terminal]
+    OptionalDouble average(); // [terminal]
+    DoubleSummaryStatistics summaryStatistics(); // [terminal]
+
+    boolean anyMatch(DoublePredicate predicate); // [short-circuiting terminal]
+    boolean allMatch(DoublePredicate predicate); // [short-circuiting terminal]
+    boolean noneMatch(DoublePredicate predicate); // [short-circuiting terminal]
+
+    OptionalDouble findFirst(); // [short-circuiting terminal]
+    OptionalDouble findAny(); // [short-circuiting terminal]
+
+    Stream<Double> boxed(); // [intermediate]
+
+    DoubleStream sequential(); // [intermediate]
+    DoubleStream parallel(); // [intermediate]
+
+    PrimitiveIterator.OfDouble iterator(); // [terminal]
+    Spliterator.OfDouble spliterator(); // [terminal]
+
+    /* 静态工厂方法 */
+    public static Builder builder();
+
+    public static DoubleStream empty();
+    public static DoubleStream of(double t);
+    public static DoubleStream of(double... values);
+
+    public static DoubleStream iterate(final double seed, final DoubleUnaryOperator f);
+    public static DoubleStream generate(DoubleSupplier s);
+
+    public static DoubleStream concat(DoubleStream a, DoubleStream b);
+
+    public interface Builder extends DoubleConsumer {
+        @Override
+        void accept(double t);
+        default Builder add(double t);
+
+        DoubleStream build();
+    }
+}
+</script></code></pre>
+<h4 id="StreamSupport"><a href="#StreamSupport" class="headerlink" title="StreamSupport"></a>StreamSupport</h4><p><code>java.util.stream.StreamSupport</code>工具类，用于构建 Stream 流，仅需要提供 spliterator 迭代器即可。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* Stream */
+public static <T>
+Stream<T> stream(Spliterator<T> spliterator, boolean parallel); // parallel表示并行流
+public static <T>
+Stream<T> stream(Supplier<? extends Spliterator<T>> supplier, // Spliterator构造器
+                 int characteristics, // Spliterator特征
+                 boolean parallel); // 是否并行
+
+/* IntStream */
+public static
+IntStream intStream(Spliterator.OfInt spliterator, boolean parallel);
+public static
+IntStream intStream(Supplier<? extends Spliterator.OfInt> supplier,
+                    int characteristics,
+                    boolean parallel);
+
+/* LongStream */
+public static
+LongStream longStream(Spliterator.OfLong spliterator,
+                      boolean parallel);
+public static
+LongStream longStream(Supplier<? extends Spliterator.OfLong> supplier,
+                      int characteristics,
+                      boolean parallel);
+
+/* DoubleStream */
+public static
+DoubleStream doubleStream(Spliterator.OfDouble spliterator,
+                          boolean parallel);
+public static
+DoubleStream doubleStream(Supplier<? extends Spliterator.OfDouble> supplier,
+                          int characteristics,
+                          boolean parallel);
+</script></code></pre>
+<h4 id="Collector"><a href="#Collector" class="headerlink" title="Collector"></a>Collector</h4><p><code>java.util.stream.Collector</code>收集器，和 reduce 很相似，可以理解为高级点的 reduce。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Collector<T, A, R> { // T: 元素; A: 中间结果; R: 最终结果
+    /* 主要方法 */
+    // 供应器，初始化 A
+    Supplier<A> supplier(); // creates and returns a new mutable result container
+    // 累加器，累加 A、T
+    BiConsumer<A, T> accumulator(); // folds a value into a mutable result container
+    // 合并器，合并多个子结果 A
+    BinaryOperator<A> combiner(); // accepts two partial results and merges them
+    // 完成器，转换 A 为最终结果 R
+    Function<A, R> finisher(); // which transforms the intermediate result to the final result
+
+    /* 获取收集器特征 */
+    Set<Characteristics> characteristics(); // an immutable set of collector characteristics
+
+    /* 静态工厂方法 */
+    // 无中间结果
+    public static<T, R>
+    Collector<T, R, R> of(Supplier<R> supplier, // 供应器
+                          BiConsumer<R, T> accumulator, // 累加器
+                          BinaryOperator<R> combiner, // 合并器
+                          Characteristics... characteristics); // 特征集合
+    // 有中间结果
+    public static<T, A, R>
+    Collector<T, A, R> of(Supplier<A> supplier, // 供应器
+                          BiConsumer<A, T> accumulator, // 累加器
+                          BinaryOperator<A> combiner, // 合并器
+                          Function<A, R> finisher, // 完成器
+                          Characteristics... characteristics); // 特征集合
+
+    /* [static] 收集器-特征 枚举 */
+    enum Characteristics {
+        CONCURRENT, // 表示收集器是并发的
+        UNORDERED, // 表示元素是无序的
+        IDENTITY_FINISH; // 表示中间结果类型 A 和最终结果类型 R 一致，finisher() 将不会执行
+    }
+}
+</script></code></pre>
+<h4 id="Collectors"><a href="#Collectors" class="headerlink" title="Collectors"></a>Collectors</h4><p><code>java.util.stream.Collectors</code>工具类，提供了许多常用的 Collector 收集器。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* toCollection */
+/*
+ * eg:
+ * ArrayList<Integer> list =
+ *     Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+ *           .filter(e -> e % 2 != 0)
+ *           .collect(Collectors.toCollection(ArrayList::new));
+ */
+public static <T, C extends Collection<T>>
+    Collector<T, ?, C> toCollection(Supplier<C> collectionFactory);
+/* toList */
+public static <T>
+    Collector<T, ?, List<T>> toList();
+/* toSet */
+public static <T>
+    Collector<T, ?, Set<T>> toSet();
+
+/* toString */
+public static Collector<CharSequence, ?, String> joining(); // 直接拼接
+public static Collector<CharSequence, ?, String> joining(CharSequence delimiter); // 指定分隔符
+public static Collector<CharSequence, ?, String> joining(CharSequence delimiter, // 分隔符
+                                                         CharSequence prefix, // 前缀
+                                                         CharSequence suffix); // 后缀
+
+/* mapping */
+public static <T, U, A, R>
+    Collector<T, ?, R> mapping(Function<? super T, ? extends U> mapper,
+                               Collector<? super U, A, R> downstream);
+
+/* collect && finisher */
+public static<T, A, R, RR>
+    Collector<T, A, RR> collectingAndThen(Collector<T, A, R> downstream,
+                                          Function<R, RR> finisher);
+
+/* 计数 */
+public static <T> Collector<T, ?, Long> counting();
+
+/* 最小值 */
+public static <T> Collector<T, ?, Optional<T>> minBy(Comparator<? super T> comparator);
+/* 最大值 */
+public static <T> Collector<T, ?, Optional<T>> maxBy(Comparator<? super T> comparator);
+
+/* 求和(Integer) */
+public static <T> Collector<T, ?, Integer> summingInt(ToIntFunction<? super T> mapper);
+/* 求和(Long) */
+public static <T> Collector<T, ?, Long> summingLong(ToLongFunction<? super T> mapper);
+/* 求和(Double) */
+public static <T> Collector<T, ?, Double> summingDouble(ToDoubleFunction<? super T> mapper);
+
+/* 求算术平均值(Integer) */
+public static <T> Collector<T, ?, Double> averagingInt(ToIntFunction<? super T> mapper);
+/* 求算术平均值(Long) */
+public static <T> Collector<T, ?, Double> averagingLong(ToLongFunction<? super T> mapper);
+/* 求算术平均值(Double) */
+public static <T> Collector<T, ?, Double> averagingDouble(ToDoubleFunction<? super T> mapper);
+
+/* reducing */
+public static <T> Collector<T, ?, T> reducing(T identity, BinaryOperator<T> op);
+public static <T> Collector<T, ?, Optional<T>> reducing(BinaryOperator<T> op);
+public static <T, U> Collector<T, ?, U> reducing(U identity,
+                                                 Function<? super T, ? extends U> mapper,
+                                                 BinaryOperator<U> op);
+
+/* groupingBy -> Map */
+public static <T, K>
+Collector<T, ?, Map<K, List<T>>> groupingBy(Function<? super T, ? extends K> classifier);
+public static <T, K, A, D>
+Collector<T, ?, Map<K, D>> groupingBy(Function<? super T, ? extends K> classifier,
+                                      Collector<? super T, A, D> downstream);
+public static <T, K, D, A, M extends Map<K, D>>
+Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,
+                              Supplier<M> mapFactory,
+                              Collector<? super T, A, D> downstream);
+/* groupingBy -> ConcurrentMap */
+public static <T, K>
+Collector<T, ?, ConcurrentMap<K, List<T>>> groupingByConcurrent(Function<? super T, ? extends K> classifier);
+public static <T, K, A, D>
+Collector<T, ?, ConcurrentMap<K, D>> groupingByConcurrent(Function<? super T, ? extends K> classifier,
+                                                          Collector<? super T, A, D> downstream);
+public static <T, K, A, D, M extends ConcurrentMap<K, D>>
+Collector<T, ?, M> groupingByConcurrent(Function<? super T, ? extends K> classifier,
+                                        Supplier<M> mapFactory,
+                                        Collector<? super T, A, D> downstream);
+
+/* partitioningBy -> true: ...; false: ... */
+public static <T>
+Collector<T, ?, Map<Boolean, List<T>>> partitioningBy(Predicate<? super T> predicate);
+public static <T, D, A>
+Collector<T, ?, Map<Boolean, D>> partitioningBy(Predicate<? super T> predicate,
+                                                Collector<? super T, A, D> downstream);
+
+/* toMap */
+public static <T, K, U>
+Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
+                                Function<? super T, ? extends U> valueMapper);
+public static <T, K, U>
+Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
+                                Function<? super T, ? extends U> valueMapper,
+                                BinaryOperator<U> mergeFunction);
+public static <T, K, U, M extends Map<K, U>>
+Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
+                         Function<? super T, ? extends U> valueMapper,
+                         BinaryOperator<U> mergeFunction,
+                         Supplier<M> mapSupplier);
+/* toConcurrentMap */
+public static <T, K, U>
+Collector<T, ?, ConcurrentMap<K,U>> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
+                                                    Function<? super T, ? extends U> valueMapper);
+public static <T, K, U>
+Collector<T, ?, ConcurrentMap<K,U>> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
+                                                    Function<? super T, ? extends U> valueMapper,
+                                                    BinaryOperator<U> mergeFunction);
+public static <T, K, U, M extends ConcurrentMap<K, U>>
+Collector<T, ?, M> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
+                                   Function<? super T, ? extends U> valueMapper,
+                                   BinaryOperator<U> mergeFunction,
+                                   Supplier<M> mapSupplier);
+
+/* 描述统计 */
+public static <T>
+Collector<T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction<? super T> mapper);
+public static <T>
+Collector<T, ?, LongSummaryStatistics> summarizingLong(ToLongFunction<? super T> mapper);
+public static <T>
+Collector<T, ?, DoubleSummaryStatistics> summarizingDouble(ToDoubleFunction<? super T> mapper);
+</script></code></pre>
+<p>例子，将学生按成绩分为不同等级：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.util.Random;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.List;
+
+public class Student {
+    private String name;
+    private int age;
+    private float score;
+
+    public Student(String name, int age, float score) {
+        this.name = name;
+        this.age = age;
+        this.score = score;
+    }
+
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public float getScore() { return score; }
+
+    public Student setName(String name) { this.name = name; return this; }
+    public Student setAge(int age) { this.age = age; return this; }
+    public Student setScore(float score) { this.score = score; return this; }
+
+    @Override
+    public String toString() {
+        return String.format("[name: \"%s\", age: %d, score: %.1f]", name, age, score);
+    }
+
+    public static void main(String[] args) {
+        Student[] students = new Student[30];
+        Random rand = new Random();
+        Arrays.setAll(students,
+                      i -> new Student("" + (char)(65 + rand.nextInt(26)) + rand.nextInt(10),
+                                       rand.nextInt(3) + 14,
+                                       rand.nextInt(41) + 60));
+
+        Stream<Student> stream = Arrays.stream(students);
+        Map<String, List<Student>> map =
+            stream.collect(Collectors.groupingBy(stu -> {
+                if (stu.getScore() >= 90) return "90-100";
+                else if (stu.getScore() >= 80) return "80-90";
+                else if (stu.getScore() >= 70) return "70-80";
+                else if (stu.getScore() >= 60) return "60-70";
+                else return "error";
+            }));
+
+        map.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey() + ":");
+            entry.getValue().forEach(stu -> System.out.println("    " + stu));
+        });
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:01:37]
+$ javac *.java
+
+# root @ arch in ~/work on git:master x [14:13:40]
+$ java Student
+70-80:
+    [name: "L4", age: 14, score: 73.0]
+    [name: "N9", age: 15, score: 70.0]
+    [name: "R4", age: 16, score: 73.0]
+    [name: "T3", age: 14, score: 77.0]
+    [name: "M5", age: 16, score: 72.0]
+    [name: "M7", age: 14, score: 78.0]
+60-70:
+    [name: "B3", age: 15, score: 68.0]
+    [name: "W0", age: 15, score: 66.0]
+    [name: "O4", age: 14, score: 61.0]
+    [name: "V8", age: 14, score: 64.0]
+    [name: "R3", age: 16, score: 63.0]
+    [name: "Z5", age: 16, score: 65.0]
+    [name: "A8", age: 14, score: 64.0]
+90-100:
+    [name: "G2", age: 15, score: 94.0]
+    [name: "I6", age: 16, score: 97.0]
+    [name: "V5", age: 16, score: 94.0]
+    [name: "O2", age: 14, score: 91.0]
+    [name: "N7", age: 16, score: 91.0]
+    [name: "L9", age: 14, score: 94.0]
+80-90:
+    [name: "F7", age: 15, score: 81.0]
+    [name: "W5", age: 16, score: 88.0]
+    [name: "T4", age: 16, score: 84.0]
+    [name: "I7", age: 15, score: 81.0]
+    [name: "I4", age: 14, score: 82.0]
+    [name: "X5", age: 16, score: 88.0]
+    [name: "B0", age: 15, score: 85.0]
+    [name: "M7", age: 15, score: 81.0]
+    [name: "X1", age: 15, score: 84.0]
+    [name: "B9", age: 16, score: 87.0]
+    [name: "M1", age: 15, score: 84.0]
+</script></code></pre>
+<h3 id="Spliterator"><a href="#Spliterator" class="headerlink" title="Spliterator"></a>Spliterator</h3><p><strong>Iterator</strong>：迭代器，主要方法<code>hasNext()</code>、<code>next()</code>，只能逐个进行遍历，不适用于在多个线程之间使用，需要手动同步，并且效率不高。<br><strong>Spliterator</strong>：分割迭代器，<code>tryAdvance()</code>逐个遍历、<code>forEachRemaining()</code>一次性遍历所有剩余的元素，使用函数式编程风格，最大的特点是可以将元素分割成多份，分别交于不同的线程去遍历，提高效率。</p>
+<p>注意，Stream 和 Spliterator 的区别：<br><strong>Stream</strong>：Stream 的出现不是要替代现有迭代器，Stream 注重于弥补 Java 函数式编程的不足，如 filter()、map()、reduce()，很多函数式编程语言基本都将它们内置到语言的标准库中了。<br><strong>Spliterator</strong>：Java8 引入的新迭代器，和 Iterator 不同的是，它可以转换为 Stream 流，使用聚合操作，函数式编程风格，同时内置支持并行迭代。</p>
+<p>说得简单一些，Stream 的出现是建立在 Spliterator 的基础上的，只要有 Spliterator 迭代器，就可以构造一个 Stream 流。</p>
+<p>我们知道，所有的 Java 集合对象（List、Set、Queue）都是继承自 Collection 接口，而 Collection 接口的父接口是<code>java.lang.Iterable</code>。<br>为了无缝的衔接 Java8 中的 Spliterator 迭代器，Java8 对 Iterable 接口进行了修改，添加了<code>spliterator()</code>方法，用于获取 Spliterator 迭代器。</p>
+<p>而有了 Spliterator 迭代器，我们就可以利用 StreamSupport 构造 Stream 流，非常方便；而对于 built-in 数组，我们则可以利用 Arrays 工具类，构造 Stream 流。</p>
+<p><code>java.util.Spliterator</code>接口</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Spliterator<T> {
+    /**
+     * 调用一次就遍历一个元素，指针往后推移一个单位.
+     * @param action 要执行的动作
+     * @return 如果还有元素则返回true，否则返回false
+     */
+    boolean tryAdvance(Consumer<? super T> action);
+
+    /**
+     * 一次性遍历剩余的所有元素.
+     * @param action 要执行的动作
+     */
+    default void forEachRemaining(Consumer<? super T> action);
+
+    /**
+     * 分割元素，并将其作为新的Spliterator返回.
+     * 如果当前剩余的元素数目不足以进行分割，则返回null
+     * eg: 我原来有 100 个元素，我通过 trySplit() 切分出 30 个，作为一个新的 Spliterator 返回，原有的，就还剩下 70 个
+     */
+    Spliterator<T> trySplit();
+
+    /**
+     * 估计可以用于 forEachRemaining() 的元素数量，不一定精确.
+     */
+    long estimateSize();
+
+    // 返回确切的元素数量，或者返回 -1.
+    default long getExactSizeIfKnown();
+
+    // [SORTED] 返回比较器，如果元素按照自然排序则返回null
+    // 如果没有 SORTED 特性，则抛出异常
+    default Comparator<? super T> getComparator();
+
+    // 获取当前 Spliterator 的特性
+    int characteristics();
+
+    // 测试是否包含给定特性
+    default boolean hasCharacteristics(int characteristics);
+
+    /* Spliterator 相关特性 */
+    public static final int ORDERED; // 元素具有定义的顺序，如List
+    public static final int DISTINCT; // 元素不可重复，如Set
+    public static final int SORTED; // 元素遵循预定义的排序
+    public static final int SIZED; // 表示当前Spliterator是从已知大小的源创建的
+    public static final int SUBSIZED; // 表示当前Spliterator及调用其trySplit()产生的Spliterator都是SIZED的
+    public static final int NONNULL; // 元素不可为null
+    public static final int IMMUTABLE; // 元素不可修改
+    public static final int CONCURRENT; // 支持并发操作
+}
+</script></code></pre>
+<h4 id="Spliterator-OfPrimitive"><a href="#Spliterator-OfPrimitive" class="headerlink" title="Spliterator.OfPrimitive"></a>Spliterator.OfPrimitive</h4><p>OfPrimitive 是 Spliterator 的子接口，是一个专门用于 Primitive 基本类型的 Spliterator 迭代器；<br>而 OfPrimitive 有三个主要子接口：Spliterator.OfInt、Spliterator.OfLong、Spliterator.OfDouble。</p>
+<p>之所以专门为 int、long、double 提供专门的 Spliterator，是因为 boxing、unboxing 很费时，有不必要的开销。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface OfPrimitive
+<T, T_CONS, T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>>
+extends Spliterator<T>
+{
+    @Override
+    T_SPLITR trySplit(); // 分割当前 Spliterator
+
+    @SuppressWarnings("overloads")
+    boolean tryAdvance(T_CONS action); // 单步推进
+    @SuppressWarnings("overloads")
+    default void forEachRemaining(T_CONS action); // 一次性遍历
+}
+</script></code></pre>
+<h4 id="Spliterator-OfInt"><a href="#Spliterator-OfInt" class="headerlink" title="Spliterator.OfInt"></a>Spliterator.OfInt</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface OfInt
+    extends OfPrimitive<Integer, IntConsumer, OfInt>
+{
+    @Override
+    OfInt trySplit();
+
+    /* int */
+    @Override
+    boolean tryAdvance(IntConsumer action);
+    @Override
+    default void forEachRemaining(IntConsumer action)
+
+    /* Integer */
+    @Override
+    default boolean tryAdvance(Consumer<? super Integer> action);
+    @Override
+    default void forEachRemaining(Consumer<? super Integer> action);
+}
+</script></code></pre>
+<h4 id="Spliterator-OfLong"><a href="#Spliterator-OfLong" class="headerlink" title="Spliterator.OfLong"></a>Spliterator.OfLong</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface OfLong
+    extends OfPrimitive<Long, LongConsumer, OfLong>
+{
+    @Override
+    OfLong trySplit();
+
+    /* long */
+    @Override
+    boolean tryAdvance(LongConsumer action);
+    @Override
+    default void forEachRemaining(LongConsumer action);
+
+    /* Long */
+    @Override
+    default boolean tryAdvance(Consumer<? super Long> action);
+    @Override
+    default void forEachRemaining(Consumer<? super Long> action);
+}
+</script></code></pre>
+<h4 id="Spliterator-OfDouble"><a href="#Spliterator-OfDouble" class="headerlink" title="Spliterator.OfDouble"></a>Spliterator.OfDouble</h4><pre><code class="language-java line-numbers"><script type="text/plain">public interface OfDouble
+    extends OfPrimitive<Double, DoubleConsumer, OfDouble>
+{
+    @Override
+    OfDouble trySplit();
+
+    /* double */
+    @Override
+    boolean tryAdvance(DoubleConsumer action);
+    @Override
+    default void forEachRemaining(DoubleConsumer action);
+
+    /* Double */
+    @Override
+    default boolean tryAdvance(Consumer<? super Double> action);
+    @Override
+    default void forEachRemaining(Consumer<? super Double> action);
+}
+</script></code></pre>
+<h3 id="Spliterators"><a href="#Spliterators" class="headerlink" title="Spliterators"></a>Spliterators</h3><p><code>java.util.Spliterators</code>工具类，提供了实用的静态方法用以创建 Spliterator 迭代器</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/**
+ * 构造空 Spliterator.
+ * 默认属性: Spliterator.SIZED、Spliterator.SUBSIZED
+ * trySplit(): 总是返回 null
+ */
+public static <T> Spliterator<T> emptySpliterator();
+public static Spliterator.OfInt emptyIntSpliterator(); // Int版本
+public static Spliterator.OfLong emptyLongSpliterator(); // Long版本
+public static Spliterator.OfDouble emptyDoubleSpliterator(); // Double版本
+
+/* 获取数组的 Spliterator */
+/* Object[] */
+public static <T>
+Spliterator<T> spliterator(Object[] array,
+                           int additionalCharacteristics); // 附加属性
+public static <T>
+Spliterator<T> spliterator(Object[] array, int fromIndex, int toIndex,
+                           int additionalCharacteristics);
+/* int[] */
+public static
+Spliterator.OfInt spliterator(int[] array,
+                              int additionalCharacteristics);
+public static
+Spliterator.OfInt spliterator(int[] array, int fromIndex, int toIndex,
+                              int additionalCharacteristics);
+/* long[] */
+public static
+Spliterator.OfLong spliterator(long[] array,
+                               int additionalCharacteristics);
+public static
+Spliterator.OfLong spliterator(long[] array, int fromIndex, int toIndex,
+                               int additionalCharacteristics);
+/* double[] */
+public static
+Spliterator.OfDouble spliterator(double[] array,
+                                 int additionalCharacteristics);
+public static
+Spliterator.OfDouble spliterator(double[] array, int fromIndex, int toIndex,
+                                 int additionalCharacteristics);
+
+/* 使用 Iterator 构造 Spliterator */
+public static <T> // 调用: spliterator(c.iterator(), c.size(), characteristics)
+Spliterator<T> spliterator(Collection<? extends T> c,
+                           int characteristics);
+public static <T>
+Spliterator<T> spliterator(Iterator<? extends T> iterator,
+                           long size,
+                           int characteristics);
+/* 未指定大小 */
+public static <T>
+Spliterator<T> spliteratorUnknownSize(Iterator<? extends T> iterator,
+                                      int characteristics);
+
+/* 使用 PrimitiveIterator 构造 Spliterator.OfPrimitive */
+public static
+Spliterator.OfInt spliterator(PrimitiveIterator.OfInt iterator,
+                              long size,
+                              int characteristics);
+public static
+Spliterator.OfLong spliterator(PrimitiveIterator.OfLong iterator,
+                               long size,
+                               int characteristics);
+public static
+Spliterator.OfDouble spliterator(PrimitiveIterator.OfDouble iterator,
+                                 long size,
+                                 int characteristics);
+/* 未指定大小 */
+public static
+Spliterator.OfInt spliteratorUnknownSize(PrimitiveIterator.OfInt iterator,
+                                         int characteristics);
+public static
+Spliterator.OfLong spliteratorUnknownSize(PrimitiveIterator.OfLong iterator,
+                                          int characteristics);
+public static
+Spliterator.OfDouble spliteratorUnknownSize(PrimitiveIterator.OfDouble iterator,
+                                            int characteristics);
+
+/* 将 Spliterator 转换为 Iterator */
+public static <T>
+    Iterator<T> iterator(Spliterator<? extends T> spliterator);
+public static
+    PrimitiveIterator.OfInt iterator(Spliterator.OfInt spliterator);
+public static
+    PrimitiveIterator.OfLong iterator(Spliterator.OfLong spliterator);
+public static
+    PrimitiveIterator.OfDouble iterator(Spliterator.OfDouble spliterator);
+</script></code></pre>
+<h4 id="Spliterators-AbstractSpliterator"><a href="#Spliterators-AbstractSpliterator" class="headerlink" title="Spliterators.AbstractSpliterator"></a>Spliterators.AbstractSpliterator</h4><p>Spliterators 工具类除了提供静态方法用于创建 Spliterator 迭代器，还提供了几个静态内部类（抽象类）：</p>
+<ul>
+<li><code>Spliterators.AbstractSpliterator</code></li>
+<li><code>Spliterators.AbstractIntSpliterator</code></li>
+<li><code>Spliterators.AbstractLongSpliterator</code></li>
+<li><code>Spliterators.AbstractDoubleSpliterator</code></li>
+</ul>
+<p>如果我们需要实现一个自定义的 Spliterator，那么就可以继承自这几个抽象类。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public static abstract class AbstractSpliterator<T>
+    implements Spliterator<T>
+{
+    public Spliterator<T> trySplit();
+    public long estimateSize();
+    public int characteristics();
+}
+</script></code></pre>
+<h4 id="Spliterators-AbstractIntSpliterator"><a href="#Spliterators-AbstractIntSpliterator" class="headerlink" title="Spliterators.AbstractIntSpliterator"></a>Spliterators.AbstractIntSpliterator</h4><pre><code class="language-java line-numbers"><script type="text/plain">public static abstract class AbstractIntSpliterator
+    implements Spliterator.OfInt
+{
+    public Spliterator.OfInt trySplit();
+    public long estimateSize();
+    public int characteristics();
+}
+</script></code></pre>
+<h4 id="Spliterators-AbstractLongSpliterator"><a href="#Spliterators-AbstractLongSpliterator" class="headerlink" title="Spliterators.AbstractLongSpliterator"></a>Spliterators.AbstractLongSpliterator</h4><pre><code class="language-java line-numbers"><script type="text/plain">public static abstract class AbstractLongSpliterator
+    implements Spliterator.OfLong
+{
+    public Spliterator.OfLong trySplit();
+    public long estimateSize();
+    public int characteristics();
+}
+</script></code></pre>
+<h4 id="Spliterators-AbstractDoubleSpliterator"><a href="#Spliterators-AbstractDoubleSpliterator" class="headerlink" title="Spliterators.AbstractDoubleSpliterator"></a>Spliterators.AbstractDoubleSpliterator</h4><pre><code class="language-java line-numbers"><script type="text/plain">public static abstract class AbstractDoubleSpliterator
+    implements Spliterator.OfDouble
+{
+    public Spliterator.OfDouble trySplit();
+    public long estimateSize();
+    public int characteristics();
+}
+</script></code></pre>
+<h3 id="PrimitiveIterator"><a href="#PrimitiveIterator" class="headerlink" title="PrimitiveIterator"></a>PrimitiveIterator</h3><p><code>java.util.PrimitiveIterator</code>接口，Iterator 的子接口，是<strong>基本类型的专属迭代器</strong>，减少不必要的 boxing、unboxing 开销，Java8 引入。<br>PrimitiveIterator 主要有 3 个子接口，PrimitiveIterator.OfInt、PrimitiveIterator.OfLong、PrimitiveIterator.OfDouble。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface PrimitiveIterator<T, T_CONS>
+    extends Iterator<T>
+{
+    void forEachRemaining(T_CONS action);
+}
+</script></code></pre>
+<h4 id="PrimitiveIterator-OfInt"><a href="#PrimitiveIterator-OfInt" class="headerlink" title="PrimitiveIterator.OfInt"></a>PrimitiveIterator.OfInt</h4><pre><code class="language-java line-numbers"><script type="text/plain">public static interface OfInt
+    extends PrimitiveIterator<Integer, IntConsumer>
+{
+    /* int */
+    int nextInt();
+    default void forEachRemaining(IntConsumer action);
+
+    /* Integer */
+    default Integer next();
+    default void forEachRemaining(Consumer<? super Integer> action);
+}
+</script></code></pre>
+<h4 id="PrimitiveIterator-OfLong"><a href="#PrimitiveIterator-OfLong" class="headerlink" title="PrimitiveIterator.OfLong"></a>PrimitiveIterator.OfLong</h4><pre><code class="language-java line-numbers"><script type="text/plain">public static interface OfLong
+    extends PrimitiveIterator<Long, LongConsumer>
+{
+    /* long */
+    long nextLong();
+    default void forEachRemaining(LongConsumer action);
+
+    /* Long */
+    default Long next();
+    default void forEachRemaining(Consumer<? super Long> action);
+}
+</script></code></pre>
+<h4 id="PrimitiveIterator-OfDouble"><a href="#PrimitiveIterator-OfDouble" class="headerlink" title="PrimitiveIterator.OfDouble"></a>PrimitiveIterator.OfDouble</h4><pre><code class="language-java line-numbers"><script type="text/plain">public static interface OfDouble
+    extends PrimitiveIterator<Double, DoubleConsumer>
+{
+    /* double */
+    double nextDouble();
+    default void forEachRemaining(DoubleConsumer action);
+
+    /* Double */
+    default Double next();
+    default void forEachRemaining(Consumer<? super Double> action);
+}
+</script></code></pre>
+<h3 id="DateTime-API"><a href="#DateTime-API" class="headerlink" title="DateTime API"></a>DateTime API</h3><p><code>java.time</code>包，用于取代之前的<code>java.util.Date</code>、<code>java.util.Calendar</code>类。<br>因为 Java8 之前的 DateTime API 实在太难用了，对象居然是可变的，而且是非线程安全的。</p>
+<p><strong>新 API 的特点</strong><br>所有的时间对象都是<strong>不可变</strong>的，并且它们都是<strong>线程安全</strong>的。</p>
+<p><strong>主要的类</strong></p>
+<ul>
+<li><code>Clock</code>，时钟，提供对某个特定时区的瞬时时间、日期和时间的访问</li>
+<li><code>Instant</code>，瞬时时间，自<code>1970-01-01 00:00:00 UTC</code>起的秒数</li>
+<li><code>ZoneId</code>，时区信息，如<code>&quot;Asia/Shanghai&quot;</code></li>
+<li><code>LocalDate</code>，本地日期，如<code>2016-10-10</code>，不包含时区信息</li>
+<li><code>LocalTime</code>，本地时间，如<code>09:28:55.388</code>，不包含时区信息</li>
+<li><code>LocalDateTime</code>，本地日期时间，不包含时区信息</li>
+<li><code>ZonedDateTime</code>，带时区信息的日期时间</li>
+<li><code>DateTimeFormatter</code>，提供 String 和 时间对象 的互转</li>
+<li><code>Duration</code>，表示两个 time 之间的时间段，使用秒、纳秒衡量</li>
+<li><code>Period</code>，表示两个 date 之间的时间段，使用年、月、日衡量</li>
+<li><code>Year</code>x年、<code>YearMonth</code>x年x月、<code>MonthDay</code>x月x日</li>
+<li><code>ChronoField</code>时间字段(枚举)、<code>ChronoUnit</code>时间单位(枚举)</li>
+<li><code>Month</code>月份(枚举)、<code>DayOfWeek</code>星期(枚举)</li>
+</ul>
+<p><code>java.time.temporal.TemporalAccessor</code>，所有时间对象的父接口，定义对时间对象的<strong>只读访问</strong></p>
+<ul>
+<li><code>boolean isSupported(TemporalField field)</code>，是否支持指定时间字段；</li>
+<li><code>default ValueRange range(TemporalField field)</code>，获取给定时间字段的有效取值范围；</li>
+<li><code>default int get(TemporalField field)</code>，获取给定时间字段的当前取值，返回值类型为 int；</li>
+<li><code>long getLong(TemporalField field)</code>，获取给定时间字段的当前取值，返回值类型为 long；</li>
+<li><code>default &lt;R&gt; R query(TemporalQuery&lt;R&gt; query)</code>，使用给定查询器查询当前对象。</li>
+</ul>
+<p><code>java.time.temporal.Temporal</code>，定义对时间对象的<strong>读写访问</strong>，是 TemporalAccessor 的子接口。</p>
+<ul>
+<li><code>boolean isSupported(TemporalUnit unit)</code>，是否支持给定的时间单位；</li>
+<li><code>default Temporal with(TemporalAdjuster adjuster)</code>，调整当前对象；</li>
+<li><code>Temporal with(TemporalField field, long newValue)</code>，调整给定时间字段；</li>
+<li><code>default Temporal plus(TemporalAmount amount)</code>，加上给定时间量；</li>
+<li><code>Temporal plus(long amountToAdd, TemporalUnit unit)</code>，加上给定时间量；</li>
+<li><code>default Temporal minus(TemporalAmount amount)</code>，减去给定时间量；</li>
+<li><code>default Temporal minus(long amountToSubtract, TemporalUnit unit)</code>，减去给定时间量；</li>
+<li><code>long until(Temporal endExclusive, TemporalUnit unit)</code>，计算两个时间的时间差，以给定单位衡量；</li>
+</ul>
+<p><code>java.time.temporal.TemporalAmount</code>，表示一个时间量，子类：Duration、Period</p>
+<ul>
+<li><code>long get(TemporalUnit unit)</code>，以给定时间单位计算时间量；</li>
+<li><code>List&lt;TemporalUnit&gt; getUnits()</code>，获取当前时间量的底层支持单位；</li>
+<li><code>Temporal addTo(Temporal temporal)</code>，加上当前时间量；</li>
+<li><code>Temporal subtractFrom(Temporal temporal)</code>，减去当前时间量；</li>
+</ul>
+<p><code>java.time.temporal.TemporalField</code>，定义时间字段的接口，子类：ChronoField（标准时间字段）</p>
+<ul>
+<li><code>default String getDisplayName(Locale locale)</code>，获取特定语言环境下的字符串描述；</li>
+<li><code>TemporalUnit getBaseUnit()</code>，获取当前字段的基本单位；</li>
+<li><code>TemporalUnit getRangeUnit()</code>，获取当前字段的范围单位；</li>
+<li><code>ValueRange range()</code>，获取当前字段的有效取值范围；</li>
+<li><code>boolean isDateBased()</code>，检查当前字段是否为 date 组件；</li>
+<li><code>boolean isTimeBased()</code>，检查当前字段是否为 time 组件；</li>
+<li><code>boolean isSupportedBy(TemporalAccessor temporal)</code>，测试给定时间对象是否支持当前字段；</li>
+<li><code>ValueRange rangeRefinedBy(TemporalAccessor temporal)</code>，从指定时间对象获取此字段的有效取值范围以优化结果；</li>
+<li><code>long getFrom(TemporalAccessor temporal)</code>，获取指定时间对象的此字段值；</li>
+<li><code>&lt;R extends Temporal&gt; R adjustInto(R temporal, long newValue)</code>，调整给定时间对象的当前字段值；</li>
+<li><code>String toString()</code>，获取当前字段的字符串描述；</li>
+</ul>
+<p><code>java.time.temporal.TemporalUnit</code>，定义时间单位的接口，子类：ChronoUnit（标准时间单位）</p>
+<ul>
+<li><code>Duration getDuration()</code>，获取当前单位的持续时间，可能为估计值；</li>
+<li><code>boolean isDurationEstimated()</code>，判断当前单位的持续时间是否为估计值；</li>
+<li><code>boolean isDateBased()</code>，判断当前单位是否为 date 组件；</li>
+<li><code>boolean isTimeBased()</code>，判断当前单位是否为 time 组件；</li>
+<li><code>default boolean isSupportedBy(Temporal temporal)</code>，检查给定 Temporal 是否支持当前单位；</li>
+<li><code>&lt;R extends Temporal&gt; R addTo(R temporal, long amount)</code>，添加给定单位长度到指定时间对象；</li>
+<li><code>long between(Temporal temporal1Inclusive, Temporal temporal2Exclusive)</code>，计算两个时间的时间差，以当前单位计算；</li>
+<li><code>String toString()</code>，获取当前单位的字符串描述；</li>
+</ul>
+<p><code>java.time.temporal.TemporalAdjuster</code>，函数式接口，调整器，用于调整 Temporal 对象；</p>
+<ul>
+<li><code>Temporal adjustInto(Temporal temporal)</code>，调整传入的 Temporal 对象；</li>
+</ul>
+<p><code>java.time.temporal.TemporalQuery</code>，函数式接口，定义时间对象的查询策略</p>
+<ul>
+<li><code>R queryFrom(TemporalAccessor temporal)</code>，从给定 TemporalAccessor 对象查询想要的结果 R；</li>
+</ul>
+<h4 id="ChronoField"><a href="#ChronoField" class="headerlink" title="ChronoField"></a>ChronoField</h4><p><code>java.time.temporal.ChronoField</code>，定义标准时间字段的枚举类。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 枚举常量 */
+NANO_OF_SECOND("NanoOfSecond", NANOS, SECONDS, ValueRange.of(0, 999_999_999)),
+NANO_OF_DAY("NanoOfDay", NANOS, DAYS, ValueRange.of(0, 86400L * 1000_000_000L - 1)),
+MICRO_OF_SECOND("MicroOfSecond", MICROS, SECONDS, ValueRange.of(0, 999_999)),
+MICRO_OF_DAY("MicroOfDay", MICROS, DAYS, ValueRange.of(0, 86400L * 1000_000L - 1)),
+MILLI_OF_SECOND("MilliOfSecond", MILLIS, SECONDS, ValueRange.of(0, 999)),
+MILLI_OF_DAY("MilliOfDay", MILLIS, DAYS, ValueRange.of(0, 86400L * 1000L - 1)),
+SECOND_OF_MINUTE("SecondOfMinute", SECONDS, MINUTES, ValueRange.of(0, 59), "second"),
+SECOND_OF_DAY("SecondOfDay", SECONDS, DAYS, ValueRange.of(0, 86400L - 1)),
+
+MINUTE_OF_HOUR("MinuteOfHour", MINUTES, HOURS, ValueRange.of(0, 59), "minute"),
+MINUTE_OF_DAY("MinuteOfDay", MINUTES, DAYS, ValueRange.of(0, (24 * 60) - 1)),
+
+HOUR_OF_AMPM("HourOfAmPm", HOURS, HALF_DAYS, ValueRange.of(0, 11)),
+HOUR_OF_DAY("HourOfDay", HOURS, DAYS, ValueRange.of(0, 23), "hour"),
+CLOCK_HOUR_OF_AMPM("ClockHourOfAmPm", HOURS, HALF_DAYS, ValueRange.of(1, 12)),
+CLOCK_HOUR_OF_DAY("ClockHourOfDay", HOURS, DAYS, ValueRange.of(1, 24)),
+
+AMPM_OF_DAY("AmPmOfDay", HALF_DAYS, DAYS, ValueRange.of(0, 1), "dayperiod"),
+
+DAY_OF_WEEK("DayOfWeek", DAYS, WEEKS, ValueRange.of(1, 7), "weekday"),
+DAY_OF_MONTH("DayOfMonth", DAYS, MONTHS, ValueRange.of(1, 28, 31), "day"),
+DAY_OF_YEAR("DayOfYear", DAYS, YEARS, ValueRange.of(1, 365, 366)),
+EPOCH_DAY("EpochDay", DAYS, FOREVER, ValueRange.of((long)(Year.MIN_VALUE * 365.25), (long)(Year.MAX_VALUE * 365.25))),
+ALIGNED_DAY_OF_WEEK_IN_MONTH("AlignedDayOfWeekInMonth", DAYS, WEEKS, ValueRange.of(1, 7)),
+ALIGNED_DAY_OF_WEEK_IN_YEAR("AlignedDayOfWeekInYear", DAYS, WEEKS, ValueRange.of(1, 7)),
+ALIGNED_WEEK_OF_MONTH("AlignedWeekOfMonth", WEEKS, MONTHS, ValueRange.of(1, 4, 5)),
+ALIGNED_WEEK_OF_YEAR("AlignedWeekOfYear", WEEKS, YEARS, ValueRange.of(1, 53)),
+
+MONTH_OF_YEAR("MonthOfYear", MONTHS, YEARS, ValueRange.of(1, 12), "month"),
+PROLEPTIC_MONTH("ProlepticMonth", MONTHS, FOREVER, ValueRange.of(Year.MIN_VALUE * 12L, Year.MAX_VALUE * 12L + 11)),
+
+YEAR_OF_ERA("YearOfEra", YEARS, FOREVER, ValueRange.of(1, Year.MAX_VALUE, Year.MAX_VALUE + 1)),
+YEAR("Year", YEARS, FOREVER, ValueRange.of(Year.MIN_VALUE, Year.MAX_VALUE), "year"),
+ERA("Era", ERAS, FOREVER, ValueRange.of(0, 1), "era"),
+
+INSTANT_SECONDS("InstantSeconds", SECONDS, FOREVER, ValueRange.of(Long.MIN_VALUE, Long.MAX_VALUE)),
+OFFSET_SECONDS("OffsetSeconds", SECONDS, FOREVER, ValueRange.of(-18 * 3600, 18 * 3600));
+
+/* get */
+public String getDisplayName(Locale locale);
+public TemporalUnit getBaseUnit();
+public TemporalUnit getRangeUnit();
+public long getFrom(TemporalAccessor temporal);
+
+/* adjust */
+public <R extends Temporal> R adjustInto(R temporal, long newValue);
+
+/* is */
+public boolean isDateBased();
+public boolean isTimeBased();
+public boolean isSupportedBy(TemporalAccessor temporal);
+
+/* check */
+public long checkValidValue(long value); // 检查给定值是否有效
+public int checkValidIntValue(long value); // 检查给定值是否有效
+
+/* range */
+public ValueRange range();
+public ValueRange rangeRefinedBy(TemporalAccessor temporal);
+
+/* toString */
+public String toString();
+</script></code></pre>
+<h4 id="ChronoUnit"><a href="#ChronoUnit" class="headerlink" title="ChronoUnit"></a>ChronoUnit</h4><p><code>java.time.temporal.ChronoUnit</code>，定义标准时间单位的枚举类。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 枚举常量 */
+NANOS("Nanos", Duration.ofNanos(1)),
+MICROS("Micros", Duration.ofNanos(1000)),
+MILLIS("Millis", Duration.ofNanos(1000_000)),
+SECONDS("Seconds", Duration.ofSeconds(1)),
+
+MINUTES("Minutes", Duration.ofSeconds(60)),
+HOURS("Hours", Duration.ofSeconds(3600)),
+
+HALF_DAYS("HalfDays", Duration.ofSeconds(43200)), // 半天12小时
+DAYS("Days", Duration.ofSeconds(86400)),
+
+WEEKS("Weeks", Duration.ofSeconds(7 * 86400L)),
+MONTHS("Months", Duration.ofSeconds(31556952L / 12)),
+YEARS("Years", Duration.ofSeconds(31556952L)),
+
+DECADES("Decades", Duration.ofSeconds(31556952L * 10L)), // 10年
+CENTURIES("Centuries", Duration.ofSeconds(31556952L * 100L)), // 100年
+MILLENNIA("Millennia", Duration.ofSeconds(31556952L * 1000L)), // 1000年
+ERAS("Eras", Duration.ofSeconds(31556952L * 1000_000_000L)), // 10亿年
+FOREVER("Forever", Duration.ofSeconds(Long.MAX_VALUE, 999_999_999)); // 永恒
+
+/* 实例方法 */
+public Duration getDuration(); // 获取当前单位的长度，可能为估计值
+public boolean isDurationEstimated(); // 判断当前单位的长度是否为估计值
+
+/* is */
+public boolean isDateBased(); // 判断当前单位是否为 date 组件
+public boolean isTimeBased(); // 判断当前单位是否为 time 组件
+public boolean isSupportedBy(Temporal temporal); // 测试给定 Temporal 是否支持当前单位
+
+/* addTo */
+public <R extends Temporal> R addTo(R temporal, long amount); // 添加指定单位长度至给定 temporal 对象
+
+/* between */
+public long between(Temporal temporal1Inclusive, Temporal temporal2Exclusive); // 计算两个时间对象的差值，以当前单位衡量
+
+/* toString */
+public String toString(); // 获取当前单位的字符串描述
+</script></code></pre>
+<h4 id="Month"><a href="#Month" class="headerlink" title="Month"></a>Month</h4><p><code>java.time.Month</code>，定义 12 个月份的枚举类。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum Month
+    implements TemporalAccessor, TemporalAdjuster
+{
+    /* 枚举常量 */
+    JANUARY, // 1
+    FEBRUARY, // 2
+    MARCH, // 3
+    APRIL, // 4
+    MAY, // 5
+    JUNE, // 6
+    JULY, // 7
+    AUGUST, // 8
+    SEPTEMBER, // 9
+    OCTOBER, // 10
+    NOVEMBER, // 11
+    DECEMBER; // 12
+
+    /* 静态工厂方法 of */
+    public static Month of(int month); // 1-12
+    /* 静态工厂方法 from */
+    public static Month from(TemporalAccessor temporal);
+
+    /* get */
+    public int getValue(); // 1-12
+    public String getDisplayName(TextStyle style, Locale locale);
+
+    /* isSupported */
+    public boolean isSupported(TemporalField field);
+
+    /* range */
+    public ValueRange range(TemporalField field);
+
+    /* get */
+    public int get(TemporalField field);
+    public long getLong(TemporalField field);
+
+    /* plus */
+    public Month plus(long months);
+    /* minus */
+    public Month minus(long months);
+
+    /* length */
+    public int length(boolean leapYear); // leapYear: 闰年
+    public int minLength(); // 获取本月的最小长度, [28, 31]
+    public int maxLength(); // 获取本月的最大长度，[29, 31]
+
+    public int firstDayOfYear(boolean leapYear); // 获取本月一号的天数(基于年)
+    public Month firstMonthOfQuarter(); // 获取本月所在季度的第一个月，1、4、7、10
+
+    /* query */
+    public <R> R query(TemporalQuery<R> query); // 查询指定结果
+
+    /* adjust */
+    public Temporal adjustInto(Temporal temporal); // 调整给定时间对象的月份
+}
+</script></code></pre>
+<h4 id="DayOfWeek"><a href="#DayOfWeek" class="headerlink" title="DayOfWeek"></a>DayOfWeek</h4><p><code>java.time.DayOfWeek</code>，定义星期几的枚举类。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum DayOfWeek
+    implements TemporalAccessor, TemporalAdjuster
+{
+    /* 枚举常量 */
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY;
+
+    /* 静态工厂方法 of */
+    public static DayOfWeek of(int dayOfWeek); // 1-7
+    /* 静态工厂方法 from */
+    public static DayOfWeek from(TemporalAccessor temporal);
+
+    /* get */
+    public int getValue(); // 1-7
+    public String getDisplayName(TextStyle style, Locale locale);
+
+    /* isSupported */
+    public boolean isSupported(TemporalField field);
+
+    /* range */
+    public ValueRange range(TemporalField field);
+
+    /* get */
+    public int get(TemporalField field);
+    public long getLong(TemporalField field);
+
+    /* plus */
+    public DayOfWeek plus(long days);
+    /* minus */
+    public DayOfWeek minus(long days);
+
+    /* query */
+    public <R> R query(TemporalQuery<R> query);
+
+    /* adjust */
+    public Temporal adjustInto(Temporal temporal);
+}
+</script></code></pre>
+<h4 id="Duration"><a href="#Duration" class="headerlink" title="Duration"></a>Duration</h4><p><code>java.time.Duration</code>，时间量，以秒、纳秒衡量</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final Duration ZERO = new Duration(0, 0);
+
+/* 静态工厂方法 of */
+public static Duration ofDays(long days);
+public static Duration ofHours(long hours);
+public static Duration ofMinutes(long minutes);
+public static Duration ofSeconds(long seconds, long nanoAdjustment);
+public static Duration ofSeconds(long seconds);
+public static Duration ofMillis(long millis);
+public static Duration ofNanos(long nanos);
+public static Duration of(long amount, TemporalUnit unit);
+/* 静态工厂方法 from */
+public static Duration from(TemporalAmount amount);
+/* 静态工厂方法 parse */
+public static Duration parse(CharSequence text); // "PTnHnMnS"
+/* 静态工厂方法 between */
+public static Duration between(Temporal startInclusive, Temporal endExclusive);
+
+/* 实例方法 */
+public long get(TemporalUnit unit); // 获取指定单位的时间量
+public List<TemporalUnit> getUnits(); // 支持的单位集: SECONDS and NANOS
+
+/* get */
+public long getSeconds(); // 获取"秒"
+public int getNano(); // 获取"纳秒"
+/* set */
+public Duration withSeconds(long seconds); // 调整"秒"
+public Duration withNanos(int nanoOfSecond); // 调整"纳秒"
+
+/* is */
+public boolean isZero(); // 是否为0
+public boolean isNegative(); // 是否为负数
+
+/* 加 */
+public Duration plus(Duration duration);
+public Duration plus(long amountToAdd, TemporalUnit unit);
+public Duration plusDays(long daysToAdd);
+public Duration plusHours(long hoursToAdd);
+public Duration plusMinutes(long minutesToAdd);
+public Duration plusSeconds(long secondsToAdd);
+public Duration plusMillis(long millisToAdd);
+public Duration plusNanos(long nanosToAdd);
+/* 减 */
+public Duration minus(Duration duration);
+public Duration minus(long amountToSubtract, TemporalUnit unit);
+public Duration minusDays(long daysToSubtract);
+public Duration minusHours(long hoursToSubtract);
+public Duration minusMinutes(long minutesToSubtract);
+public Duration minusSeconds(long secondsToSubtract);
+public Duration minusMillis(long millisToSubtract);
+public Duration minusNanos(long nanosToSubtract);
+/* 乘 */
+public Duration multipliedBy(long multiplicand);
+/* 除 */
+public Duration dividedBy(long divisor);
+
+/* 相反数 */
+public Duration negated();
+/* 绝对值 */
+public Duration abs();
+
+/* 将指定 Temporal 对象加上当前时间段 */
+public Temporal addTo(Temporal temporal);
+/* 从指定 Temporal 对象减去当前时间段 */
+public Temporal subtractFrom(Temporal temporal);
+
+/* 单位换算 */
+public long toDays();
+public long toHours();
+public long toMinutes();
+public long toMillis();
+public long toNanos();
+
+/* compare */
+public int compareTo(Duration otherDuration);
+
+/* Object */
+public boolean equals(Object otherDuration);
+public int hashCode();
+public String toString(); // "PTnHnMnS": "PT8H6M12.345S"
+</script></code></pre>
+<h4 id="Period"><a href="#Period" class="headerlink" title="Period"></a>Period</h4><p><code>java.time.Period</code>，时间量，以年、月、日衡量</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final Period ZERO = new Period(0, 0, 0);
+
+/* 静态工厂方法 of */
+public static Period ofYears(int years);
+public static Period ofMonths(int months);
+public static Period ofWeeks(int weeks);
+public static Period ofDays(int days);
+public static Period of(int years, int months, int days);
+/* 静态工厂方法 from */
+public static Period from(TemporalAmount amount);
+/* 静态工厂方法 parse */
+public static Period parse(CharSequence text); // "PnYnMnD"
+/* 静态工厂方法 between */
+public static Period between(LocalDate startDateInclusive, LocalDate endDateExclusive);
+
+/* 实例方法 */
+public long get(TemporalUnit unit); // 获取给定单位的值
+public List<TemporalUnit> getUnits(); // 获取支持的单位集: YEARS, MONTHS and DAYS
+
+/* is */
+public boolean isZero(); // 是否为0
+public boolean isNegative(); // 是否为负
+
+/* get */
+public int getYears();
+public int getMonths();
+public int getDays();
+/* set */
+public Period withYears(int years);
+public Period withMonths(int months);
+public Period withDays(int days);
+
+public IsoChronology getChronology(); // 获取ISO日历系统
+
+/* 加 */
+public Period plus(TemporalAmount amountToAdd);
+public Period plusYears(long yearsToAdd);
+public Period plusMonths(long monthsToAdd);
+public Period plusDays(long daysToAdd);
+/* 减 */
+public Period minus(TemporalAmount amountToSubtract);
+public Period minusYears(long yearsToSubtract);
+public Period minusMonths(long monthsToSubtract);
+public Period minusDays(long daysToSubtract);
+/* 乘 */
+public Period multipliedBy(int scalar);
+/* 相反数 */
+public Period negated();
+
+/* 规范化 */
+public Period normalized();
+
+/* 单位转换 */
+public long toTotalMonths();
+
+/* 将指定temporal加上当前时间段 */
+public Temporal addTo(Temporal temporal);
+/* 从指定temporal减去当前时间段 */
+public Temporal subtractFrom(Temporal temporal);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // "PnYnMnD"; "P1Y2M3D"; "P0D"
+</script></code></pre>
+<h4 id="Year"><a href="#Year" class="headerlink" title="Year"></a>Year</h4><p><code>java.time.Year</code>，年份</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final int MIN_VALUE = -999_999_999;
+public static final int MAX_VALUE = 999_999_999;
+
+/* 静态工厂方法 now */
+public static Year now();
+public static Year now(ZoneId zone);
+public static Year now(Clock clock);
+/* 静态工厂方法 of */
+public static Year of(int isoYear);
+/* 静态工厂方法 from */
+public static Year from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static Year parse(CharSequence text); // "2017"
+public static Year parse(CharSequence text, DateTimeFormatter formatter);
+
+/* 静态方法，判断闰年 */
+public static boolean isLeap(long year);
+
+/* is */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+public boolean isLeap(); // 判断闰年
+public boolean isValidMonthDay(MonthDay monthDay); // 测试是否有效
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* get */
+public int getValue();
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+public int length(); // 获取当前年份的天数
+
+/* with */
+public Year with(TemporalAdjuster adjuster);
+public Year with(TemporalField field, long newValue);
+
+/* plus */
+public Year plus(TemporalAmount amountToAdd);
+public Year plus(long amountToAdd, TemporalUnit unit);
+public Year plusYears(long yearsToAdd);
+/* minus */
+public Year minus(TemporalAmount amountToSubtract);
+public Year minus(long amountToSubtract, TemporalUnit unit);
+public Year minusYears(long yearsToSubtract);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust */
+public Temporal adjustInto(Temporal temporal);
+
+/* until */
+public long until(Temporal endExclusive, TemporalUnit unit);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* at 合并 */
+public LocalDate atDay(int dayOfYear);
+public YearMonth atMonth(Month month);
+public YearMonth atMonth(int month);
+public LocalDate atMonthDay(MonthDay monthDay);
+
+/* compare */
+public int compareTo(Year other);
+public boolean isAfter(Year other);
+public boolean isBefore(Year other);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString();
+</script></code></pre>
+<h4 id="YearMonth"><a href="#YearMonth" class="headerlink" title="YearMonth"></a>YearMonth</h4><p><code>java.time.YearMonth</code>，某年某月</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 now */
+public static YearMonth now();
+public static YearMonth now(ZoneId zone);
+public static YearMonth now(Clock clock);
+/* 静态工厂方法 of */
+public static YearMonth of(int year, Month month);
+public static YearMonth of(int year, int month);
+/* 静态工厂方法 from */
+public static YearMonth from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static YearMonth parse(CharSequence text); // "2017-10"
+public static YearMonth parse(CharSequence text, DateTimeFormatter formatter);
+
+/* is */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+public boolean isLeapYear();
+public boolean isValidDay(int dayOfMonth); // 是否为有效值
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* get */
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+
+public int getYear();
+public int getMonthValue();
+public Month getMonth();
+
+/* with */
+public YearMonth with(TemporalAdjuster adjuster);
+public YearMonth with(TemporalField field, long newValue);
+
+public YearMonth withYear(int year);
+public YearMonth withMonth(int month);
+
+/* length */
+public int lengthOfMonth(); // 获取当前月份的长度
+public int lengthOfYear(); // 获取当前年份的长度
+
+/* plus */
+public YearMonth plus(TemporalAmount amountToAdd);
+public YearMonth plus(long amountToAdd, TemporalUnit unit);
+public YearMonth plusYears(long yearsToAdd);
+public YearMonth plusMonths(long monthsToAdd);
+/* minus */
+public YearMonth minus(TemporalAmount amountToSubtract);
+public YearMonth minus(long amountToSubtract, TemporalUnit unit);
+public YearMonth minusYears(long yearsToSubtract);
+public YearMonth minusMonths(long monthsToSubtract);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust */
+public Temporal adjustInto(Temporal temporal);
+
+/* until */
+public long until(Temporal endExclusive, TemporalUnit unit);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* at */
+public LocalDate atDay(int dayOfMonth)
+public LocalDate atEndOfMonth();
+
+/* compare */
+public int compareTo(YearMonth other);
+public boolean isAfter(YearMonth other);
+public boolean isBefore(YearMonth other);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // "2017-10"
+</script></code></pre>
+<h4 id="MonthDay"><a href="#MonthDay" class="headerlink" title="MonthDay"></a>MonthDay</h4><p><code>java.time.MonthDay</code>，某月某日</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 now */
+public static MonthDay now();
+public static MonthDay now(ZoneId zone);
+public static MonthDay now(Clock clock);
+/* 静态工厂方法 of */
+public static MonthDay of(Month month, int dayOfMonth);
+public static MonthDay of(int month, int dayOfMonth);
+/* 静态工厂方法 from */
+public static MonthDay from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static MonthDay parse(CharSequence text); // "--12-13"
+public static MonthDay parse(CharSequence text, DateTimeFormatter formatter);
+
+/* 实例方法 */
+public boolean isSupported(TemporalField field);
+public boolean isValidYear(int year);
+
+public ValueRange range(TemporalField field);
+
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+
+/* get */
+public int getMonthValue();
+public Month getMonth();
+public int getDayOfMonth();
+/* set */
+public MonthDay withMonth(int month);
+public MonthDay with(Month month);
+public MonthDay withDayOfMonth(int dayOfMonth);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust */
+public Temporal adjustInto(Temporal temporal);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* at */
+public LocalDate atYear(int year);
+
+/* compare */
+public int compareTo(MonthDay other);
+public boolean isAfter(MonthDay other);
+public boolean isBefore(MonthDay other);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // "--11-11"
+</script></code></pre>
+<h4 id="ZoneId"><a href="#ZoneId" class="headerlink" title="ZoneId"></a>ZoneId</h4><p><code>java.time.ZoneId</code>，时区ID，如<code>&quot;Asia/Shanghai&quot;</code>上海时区（UTC+8）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public static final Map<String, String> SHORT_IDS; // 时区简称
+public static Set<String> getAvailableZoneIds(); // 可用时区
+
+/* 静态工厂方法 system */
+public static ZoneId systemDefault(); // 系统当前时区
+/* 静态工厂方法 of */
+public static ZoneId of(String zoneId); // 常用
+public static ZoneId of(String zoneId, Map<String, String> aliasMap);
+public static ZoneId ofOffset(String prefix, ZoneOffset offset);
+/* 静态工厂方法 from */
+public static ZoneId from(TemporalAccessor temporal);
+
+/* 实例方法 */
+public abstract String getId(); // 获取时区名称
+public String getDisplayName(TextStyle style, Locale locale); // 获取语言环境敏感的名称
+
+public abstract ZoneRules getRules(); // 时区规则
+
+public ZoneId normalized(); // 规范化时区ID
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // call getId()
+</script></code></pre>
+<h4 id="Clock"><a href="#Clock" class="headerlink" title="Clock"></a>Clock</h4><p><code>java.time.Clock</code>，时钟</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 system */
+public static Clock systemUTC(); // UTC时钟
+public static Clock systemDefaultZone(); // 默认时区
+public static Clock system(ZoneId zone); // 给定时区
+/* 静态工厂方法 tick */
+public static Clock tickSeconds(ZoneId zone); // 精确到秒
+public static Clock tickMinutes(ZoneId zone); // 精确到分
+public static Clock tick(Clock baseClock, Duration tickDuration); // 精确到给定时长
+/* 静态工厂方法 fixed(固定时钟) */
+public static Clock fixed(Instant fixedInstant, ZoneId zone); // 所谓fixed，就是不会走的clock
+/* 静态工厂方法 offset(指定偏移) */
+public static Clock offset(Clock baseClock, Duration offsetDuration); // 比baseClock快offset个时长
+
+/* getZone */
+public abstract ZoneId getZone(); // 获取时区ID
+/* setZone */
+public abstract Clock withZone(ZoneId zone); // 更新时区ID
+
+/* instant 瞬时时间 */
+public abstract Instant instant(); // 获取当前时间
+public long millis(); // instant().toEpochMilli()
+
+/* Object */
+public boolean equals(Object obj);
+public  int hashCode();
+</script></code></pre>
+<h4 id="Instant"><a href="#Instant" class="headerlink" title="Instant"></a>Instant</h4><p><code>java.time.Instant</code>瞬时时间，<code>java.util.Date</code>对象表示的就是一个瞬时时间</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final // "1970-01-01 00:00:00 UTC"瞬时时间
+    Instant EPOCH = new Instant(0, 0);
+public static final
+    Instant MIN = Instant.ofEpochSecond(MIN_SECOND, 0);
+public static final
+    Instant MAX = Instant.ofEpochSecond(MAX_SECOND, 999_999_999);
+
+/* 静态工厂方法 now */
+public static Instant now(); // Clock.systemUTC().instant();
+public static Instant now(Clock clock);
+/* 静态工厂方法 of */
+public static Instant ofEpochSecond(long epochSecond, long nanoAdjustment);
+public static Instant ofEpochSecond(long epochSecond);
+public static Instant ofEpochMilli(long epochMilli);
+/* 静态工厂方法 from */
+public static Instant from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static Instant parse(final CharSequence text); // "2007-12-03T10:15:30.00Z"
+
+/* isSupported */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* get */
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+public long getEpochSecond();
+public int getNano(); // 0-999,999,999
+/* with */
+public Instant with(TemporalAdjuster adjuster);
+public Instant with(TemporalField field, long newValue);
+
+/* truncate 精确到给定单位 */
+public Instant truncatedTo(TemporalUnit unit);
+
+/* plus 加运算 */
+public Instant plus(TemporalAmount amountToAdd);
+public Instant plus(long amountToAdd, TemporalUnit unit);
+public Instant plusSeconds(long secondsToAdd);
+public Instant plusMillis(long millisToAdd);
+public Instant plusNanos(long nanosToAdd);
+/* minus 减运算 */
+public Instant minus(TemporalAmount amountToSubtract);
+public Instant minus(long amountToSubtract, TemporalUnit unit);
+public Instant minusSeconds(long secondsToSubtract);
+public Instant minusMillis(long millisToSubtract);
+public Instant minusNanos(long nanosToSubtract);
+
+/* query 查询 */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust 调整 */
+public Temporal adjustInto(Temporal temporal);
+
+/* until 计算时间差 */
+public long until(Temporal endExclusive, TemporalUnit unit);
+
+/* atXxx 合并 */
+public OffsetDateTime atOffset(ZoneOffset offset);
+public ZonedDateTime atZone(ZoneId zone);
+
+/* 毫秒数 */
+public long toEpochMilli();
+
+/* compare */
+public int compareTo(Instant otherInstant);
+public boolean isAfter(Instant otherInstant);
+public boolean isBefore(Instant otherInstant);
+
+/* Object 相关方法 */
+public boolean equals(Object otherInstant);
+public int hashCode();
+public String toString(); // "2017-10-22T10:07:04.338Z"
+</script></code></pre>
+<h4 id="LocalDate"><a href="#LocalDate" class="headerlink" title="LocalDate"></a>LocalDate</h4><p><code>java.time.LocalDate</code>，本地日期，不带时区信息</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final
+    LocalDate MIN = LocalDate.of(Year.MIN_VALUE, 1, 1);
+public static final
+    LocalDate MAX = LocalDate.of(Year.MAX_VALUE, 12, 31);
+
+/* 静态工厂方法 now */
+public static LocalDate now(); // 系统默认时区
+public static LocalDate now(ZoneId zone); // 给定时区
+public static LocalDate now(Clock clock); // 给定时钟
+/* 静态工厂方法 of */
+public static LocalDate of(int year, Month month, int dayOfMonth);
+public static LocalDate of(int year, int month, int dayOfMonth);
+public static LocalDate ofYearDay(int year, int dayOfYear);
+public static LocalDate ofEpochDay(long epochDay); // 自1970-01-01起的相对偏移天数
+/* 静态工厂方法 from */
+public static LocalDate from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static LocalDate parse(CharSequence text); // eg: "1970-01-01"
+public static LocalDate parse(CharSequence text, DateTimeFormatter formatter);
+
+/* is */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+public boolean isLeapYear(); // 是否为闰年
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* get */
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+
+public IsoChronology getChronology();
+public Era getEra();
+
+public int getYear();
+public int getMonthValue();
+public Month getMonth();
+public int getDayOfMonth();
+public int getDayOfYear();
+public DayOfWeek getDayOfWeek();
+
+/* with */
+public LocalDate with(TemporalAdjuster adjuster);
+public LocalDate with(TemporalField field, long newValue);
+public LocalDate withYear(int year);
+public LocalDate withMonth(int month);
+public LocalDate withDayOfMonth(int dayOfMonth);
+public LocalDate withDayOfYear(int dayOfYear);
+
+/* length */
+public int lengthOfMonth();
+public int lengthOfYear();
+
+/* plus */
+public LocalDate plus(TemporalAmount amountToAdd);
+public LocalDate plus(long amountToAdd, TemporalUnit unit);
+public LocalDate plusYears(long yearsToAdd);
+public LocalDate plusMonths(long monthsToAdd);
+public LocalDate plusWeeks(long weeksToAdd);
+public LocalDate plusDays(long daysToAdd);
+/* minus */
+public LocalDate minus(TemporalAmount amountToSubtract);
+public LocalDate minus(long amountToSubtract, TemporalUnit unit);
+public LocalDate minusYears(long yearsToSubtract);
+public LocalDate minusMonths(long monthsToSubtract);
+public LocalDate minusWeeks(long weeksToSubtract);
+public LocalDate minusDays(long daysToSubtract);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust */
+public Temporal adjustInto(Temporal temporal);
+
+/* until */
+public long until(Temporal endExclusive, TemporalUnit unit);
+public Period until(ChronoLocalDate endDateExclusive);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* at */
+public LocalDateTime atTime(LocalTime time);
+public LocalDateTime atTime(int hour, int minute);
+public LocalDateTime atTime(int hour, int minute, int second);
+public LocalDateTime atTime(int hour, int minute, int second, int nanoOfSecond);
+public OffsetDateTime atTime(OffsetTime time);
+public LocalDateTime atStartOfDay();
+public ZonedDateTime atStartOfDay(ZoneId zone);
+
+/* EpochDay */
+public long toEpochDay();
+
+/* compare */
+public int compareTo(ChronoLocalDate other);
+public boolean isAfter(ChronoLocalDate other);
+public boolean isBefore(ChronoLocalDate other);
+public boolean isEqual(ChronoLocalDate other);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // "2017-10-22"
+</script></code></pre>
+<h4 id="LocalTime"><a href="#LocalTime" class="headerlink" title="LocalTime"></a>LocalTime</h4><p><code>java.time.LocalTime</code>，本地时间，不带时区信息</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final LocalTime MIN;
+public static final LocalTime MAX;
+public static final LocalTime MIDNIGHT; // 午夜
+public static final LocalTime NOON; // 中午
+
+/* 静态工厂方法 now */
+public static LocalTime now();
+public static LocalTime now(ZoneId zone);
+public static LocalTime now(Clock clock);
+/* 静态工厂方法 of */
+public static LocalTime of(int hour, int minute);
+public static LocalTime of(int hour, int minute, int second);
+public static LocalTime of(int hour, int minute, int second, int nanoOfSecond);
+public static LocalTime ofSecondOfDay(long secondOfDay);
+public static LocalTime ofNanoOfDay(long nanoOfDay);
+/* 静态工厂方法 from */
+public static LocalTime from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static LocalTime parse(CharSequence text); // eg: "12:00:00"
+public static LocalTime parse(CharSequence text, DateTimeFormatter formatter);
+
+/* isSupported */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* get */
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+public int getHour();
+public int getMinute();
+public int getSecond();
+public int getNano(); // 0-999,999,999
+/* with */
+public LocalTime with(TemporalAdjuster adjuster);
+public LocalTime with(TemporalField field, long newValue);
+public LocalTime withHour(int hour);
+public LocalTime withMinute(int minute);
+public LocalTime withSecond(int second);
+public LocalTime withNano(int nanoOfSecond);
+
+/* 精确到某单位 */
+public LocalTime truncatedTo(TemporalUnit unit);
+
+/* plus */
+public LocalTime plus(TemporalAmount amountToAdd);
+public LocalTime plus(long amountToAdd, TemporalUnit unit);
+public LocalTime plusHours(long hoursToAdd);
+public LocalTime plusMinutes(long minutesToAdd);
+public LocalTime plusSeconds(long secondstoAdd);
+public LocalTime plusNanos(long nanosToAdd);
+/* minus */
+public LocalTime minus(TemporalAmount amountToSubtract);
+public LocalTime minus(long amountToSubtract, TemporalUnit unit);
+public LocalTime minusHours(long hoursToSubtract);
+public LocalTime minusMinutes(long minutesToSubtract);
+public LocalTime minusSeconds(long secondsToSubtract);
+public LocalTime minusNanos(long nanosToSubtract);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust */
+public Temporal adjustInto(Temporal temporal);
+
+/* until */
+public long until(Temporal endExclusive, TemporalUnit unit);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* at */
+public LocalDateTime atDate(LocalDate date);
+public OffsetTime atOffset(ZoneOffset offset);
+
+/* to */
+public int toSecondOfDay();
+public long toNanoOfDay();
+
+/* compare */
+public int compareTo(LocalTime other);
+public boolean isAfter(LocalTime other);
+public boolean isBefore(LocalTime other);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // eg: "11:09:29.696"
+</script></code></pre>
+<h4 id="LocalDateTime"><a href="#LocalDateTime" class="headerlink" title="LocalDateTime"></a>LocalDateTime</h4><p><code>java.time.LocalDateTime</code>，LocalDate、LocalTime 的结合体，不带时区信息</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final
+    LocalDateTime MIN = LocalDateTime.of(LocalDate.MIN, LocalTime.MIN);
+public static final
+    LocalDateTime MAX = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
+
+/* 静态工厂方法 now */
+public static LocalDateTime now();
+public static LocalDateTime now(ZoneId zone);
+public static LocalDateTime now(Clock clock);
+/* 静态工厂方法 of */
+public static LocalDateTime of(int year, Month month, int dayOfMonth, int hour, int minute);
+public static LocalDateTime of(int year, Month month, int dayOfMonth, int hour, int minute, int second);
+public static LocalDateTime of(int year, Month month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond);
+public static LocalDateTime of(int year, int month, int dayOfMonth, int hour, int minute);
+public static LocalDateTime of(int year, int month, int dayOfMonth, int hour, int minute, int second);
+public static LocalDateTime of(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond);
+public static LocalDateTime of(LocalDate date, LocalTime time);
+public static LocalDateTime ofInstant(Instant instant, ZoneId zone);
+public static LocalDateTime ofEpochSecond(long epochSecond, int nanoOfSecond, ZoneOffset offset);
+/* 静态工厂方法 from */
+public static LocalDateTime from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static LocalDateTime parse(CharSequence text); // "1999-10-01T12:01:01"
+public static LocalDateTime parse(CharSequence text, DateTimeFormatter formatter);
+
+/* isSupported */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* get */
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+
+public LocalDate toLocalDate();
+public int getYear();
+public int getMonthValue();
+public Month getMonth();
+public int getDayOfMonth();
+public int getDayOfYear();
+public DayOfWeek getDayOfWeek();
+
+public LocalTime toLocalTime();
+public int getHour();
+public int getMinute();
+public int getSecond();
+public int getNano();
+
+/* with */
+public LocalDateTime with(TemporalAdjuster adjuster);
+public LocalDateTime with(TemporalField field, long newValue);
+
+public LocalDateTime withYear(int year);
+public LocalDateTime withMonth(int month);
+public LocalDateTime withDayOfMonth(int dayOfMonth);
+public LocalDateTime withDayOfYear(int dayOfYear);
+
+public LocalDateTime withHour(int hour);
+public LocalDateTime withMinute(int minute);
+public LocalDateTime withSecond(int second);
+public LocalDateTime withNano(int nanoOfSecond);
+
+/* 精确到给定单位 */
+public LocalDateTime truncatedTo(TemporalUnit unit);
+
+/* plus */
+public LocalDateTime plus(TemporalAmount amountToAdd);
+public LocalDateTime plus(long amountToAdd, TemporalUnit unit);
+public LocalDateTime plusYears(long years);
+public LocalDateTime plusMonths(long months);
+public LocalDateTime plusWeeks(long weeks);
+public LocalDateTime plusDays(long days);
+public LocalDateTime plusHours(long hours);
+public LocalDateTime plusMinutes(long minutes);
+public LocalDateTime plusSeconds(long seconds);
+public LocalDateTime plusNanos(long nanos);
+/* minus */
+public LocalDateTime minus(TemporalAmount amountToSubtract);
+public LocalDateTime minus(long amountToSubtract, TemporalUnit unit);
+public LocalDateTime minusYears(long years);
+public LocalDateTime minusMonths(long months);
+public LocalDateTime minusWeeks(long weeks);
+public LocalDateTime minusDays(long days);
+public LocalDateTime minusHours(long hours);
+public LocalDateTime minusMinutes(long minutes);
+public LocalDateTime minusSeconds(long seconds);
+public LocalDateTime minusNanos(long nanos);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* adjust */
+public Temporal adjustInto(Temporal temporal);
+
+/* until */
+public long until(Temporal endExclusive, TemporalUnit unit);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* at */
+public OffsetDateTime atOffset(ZoneOffset offset);
+public ZonedDateTime atZone(ZoneId zone);
+
+/* compare */
+public int compareTo(ChronoLocalDateTime<?> other);
+public boolean isAfter(ChronoLocalDateTime<?> other);
+public boolean isBefore(ChronoLocalDateTime<?> other);
+public boolean isEqual(ChronoLocalDateTime<?> other);
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // eg: "1999-10-01T12:01:01"
+</script></code></pre>
+<h4 id="ZonedDateTime"><a href="#ZonedDateTime" class="headerlink" title="ZonedDateTime"></a>ZonedDateTime</h4><p><code>java.time.ZonedDateTime</code>，带时区信息的 DateTime</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 now */
+public static ZonedDateTime now();
+public static ZonedDateTime now(ZoneId zone);
+public static ZonedDateTime now(Clock clock);
+/* 静态工厂方法 of */
+public static ZonedDateTime of(LocalDate date, LocalTime time, ZoneId zone);
+public static ZonedDateTime of(LocalDateTime localDateTime, ZoneId zone);
+public static ZonedDateTime of(int year, int month, int dayOfMonth,
+                               int hour, int minute, int second, int nanoOfSecond, ZoneId zone);
+public static ZonedDateTime ofLocal(LocalDateTime localDateTime, ZoneId zone, ZoneOffset preferredOffset);
+public static ZonedDateTime ofInstant(Instant instant, ZoneId zone);
+public static ZonedDateTime ofInstant(LocalDateTime localDateTime, ZoneOffset offset, ZoneId zone);
+public static ZonedDateTime ofStrict(LocalDateTime localDateTime, ZoneOffset offset, ZoneId zone);
+/* 静态工厂方法 from */
+public static ZonedDateTime from(TemporalAccessor temporal);
+/* 静态工厂方法 parse */
+public static ZonedDateTime parse(CharSequence text); // eg: "2007-12-03T10:15:30+01:00[Europe/Paris]"
+public static ZonedDateTime parse(CharSequence text, DateTimeFormatter formatter);
+
+/* isSupported */
+public boolean isSupported(TemporalField field);
+public boolean isSupported(TemporalUnit unit);
+
+/* range */
+public ValueRange range(TemporalField field);
+
+/* getFieldValue */
+public int get(TemporalField field);
+public long getLong(TemporalField field);
+/* getZone */
+public ZoneOffset getOffset();
+public ZoneId getZone();
+/* getDateTime */
+public LocalDateTime toLocalDateTime();
+/* getDate */
+public LocalDate toLocalDate();
+public int getYear();
+public int getMonthValue();
+public Month getMonth();
+public int getDayOfMonth();
+public int getDayOfYear();
+public DayOfWeek getDayOfWeek();
+/* getTime */
+public LocalTime toLocalTime();
+public int getHour();
+public int getMinute();
+public int getSecond();
+public int getNano();
+
+/* with */
+public ZonedDateTime withEarlierOffsetAtOverlap();
+public ZonedDateTime withLaterOffsetAtOverlap();
+
+public ZonedDateTime withFixedOffsetZone();
+
+public ZonedDateTime withZoneSameLocal(ZoneId zone);
+public ZonedDateTime withZoneSameInstant(ZoneId zone);
+
+public ZonedDateTime with(TemporalAdjuster adjuster);
+public ZonedDateTime with(TemporalField field, long newValue);
+
+public ZonedDateTime withYear(int year);
+public ZonedDateTime withMonth(int month);
+public ZonedDateTime withDayOfMonth(int dayOfMonth);
+public ZonedDateTime withDayOfYear(int dayOfYear);
+
+public ZonedDateTime withHour(int hour);
+public ZonedDateTime withMinute(int minute);
+public ZonedDateTime withSecond(int second);
+public ZonedDateTime withNano(int nanoOfSecond);
+
+/* truncate */
+public ZonedDateTime truncatedTo(TemporalUnit unit);
+
+/* plus */
+public ZonedDateTime plus(TemporalAmount amountToAdd);
+public ZonedDateTime plus(long amountToAdd, TemporalUnit unit);
+public ZonedDateTime plusYears(long years);
+public ZonedDateTime plusMonths(long months);
+public ZonedDateTime plusWeeks(long weeks);
+public ZonedDateTime plusDays(long days);
+public ZonedDateTime plusHours(long hours);
+public ZonedDateTime plusMinutes(long minutes);
+public ZonedDateTime plusSeconds(long seconds);
+public ZonedDateTime plusNanos(long nanos);
+/* minus */
+public ZonedDateTime minus(TemporalAmount amountToSubtract);
+public ZonedDateTime minus(long amountToSubtract, TemporalUnit unit);
+public ZonedDateTime minusYears(long years);
+public ZonedDateTime minusMonths(long months);
+public ZonedDateTime minusWeeks(long weeks);
+public ZonedDateTime minusDays(long days);
+public ZonedDateTime minusHours(long hours);
+public ZonedDateTime minusMinutes(long minutes);
+public ZonedDateTime minusSeconds(long seconds);
+public ZonedDateTime minusNanos(long nanos);
+
+/* query */
+public <R> R query(TemporalQuery<R> query);
+
+/* until */
+public long until(Temporal endExclusive, TemporalUnit unit);
+
+/* format */
+public String format(DateTimeFormatter formatter);
+
+/* toOffsetDateTime */
+public OffsetDateTime toOffsetDateTime();
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString(); // "2017-10-22T15:01:53.602+08:00[Asia/Shanghai]"
+</script></code></pre>
+<h4 id="DateTimeFormatter"><a href="#DateTimeFormatter" class="headerlink" title="DateTimeFormatter"></a>DateTimeFormatter</h4><p><code>java.time.format.DateTimeFormatter</code>，时间格式化工具</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态工厂方法 */
+/*
+ * 常用模式字符：
+ * y  年          2017; 17
+ * M  月          7; 07; Jul; July; J
+ * d  日          10
+ * 
+ * H  24小时制    16
+ * h  12小时制    11
+ * a  上午/下午   AM; PM
+ * m  分          30
+ * s  秒          59
+ * S  纳秒的零头  978
+ * n  纳秒        987654321
+ *
+ * O  UTC偏移量   UTC+08:00; GMT+08:00; GMT+8;
+ * V  时区ID      Asia/Shanghai
+ * 
+ * [  可选字段的开始标志
+ * ]  可选字段的结束标志
+ */
+public static DateTimeFormatter ofPattern(String pattern);
+public static DateTimeFormatter ofPattern(String pattern, Locale locale);
+
+public static DateTimeFormatter ofLocalizedDate(FormatStyle dateStyle);
+public static DateTimeFormatter ofLocalizedTime(FormatStyle timeStyle);
+
+public static DateTimeFormatter ofLocalizedDateTime(FormatStyle dateTimeStyle);
+public static DateTimeFormatter ofLocalizedDateTime(FormatStyle dateStyle, FormatStyle timeStyle);
+
+/* 标准日期时间格式 */
+public static final DateTimeFormatter ISO_LOCAL_DATE; // '2011-12-03'
+public static final DateTimeFormatter ISO_OFFSET_DATE; // '2011-12-03+01:00'
+public static final DateTimeFormatter ISO_DATE; // '2011-12-03' or '2011-12-03+01:00'
+public static final DateTimeFormatter BASIC_ISO_DATE; // '20111203'
+
+public static final DateTimeFormatter ISO_LOCAL_TIME; // '10:15' or '10:15:30'
+public static final DateTimeFormatter ISO_OFFSET_TIME; // '10:15+01:00' or '10:15:30+01:00'
+public static final DateTimeFormatter ISO_TIME; // '10:15', '10:15:30' or '10:15:30+01:00'
+
+public static final DateTimeFormatter ISO_LOCAL_DATE_TIME; // '2011-12-03T10:15:30'
+public static final DateTimeFormatter ISO_OFFSET_DATE_TIME; // '2011-12-03T10:15:30+01:00'
+public static final DateTimeFormatter ISO_ZONED_DATE_TIME; // '2011-12-03T10:15:30+01:00[Europe/Paris]'
+public static final DateTimeFormatter ISO_DATE_TIME; // '2011-12-03T10:15:30', '2011-12-03T10:15:30+01:00' or '2011-12-03T10:15:30+01:00[Europe/Paris]'
+public static final DateTimeFormatter RFC_1123_DATE_TIME; // 'Tue, 3 Jun 2008 11:05:30 GMT'
+
+public static final DateTimeFormatter ISO_INSTANT; // '2011-12-03T10:15:30Z'
+
+public static final DateTimeFormatter ISO_ORDINAL_DATE; // '2012-337'
+
+public static final DateTimeFormatter ISO_WEEK_DATE; // '2012-W48-6'
+
+/* 静态方法 */
+public static final TemporalQuery<Period> parsedExcessDays();
+public static final TemporalQuery<Boolean> parsedLeapSecond();
+
+/* locale */
+public Locale getLocale();
+public DateTimeFormatter withLocale(Locale locale);
+
+/* DecimalStyle */
+public DecimalStyle getDecimalStyle();
+public DateTimeFormatter withDecimalStyle(DecimalStyle decimalStyle);
+
+/* chronology */
+public Chronology getChronology();
+public DateTimeFormatter withChronology(Chronology chrono);
+
+/* zone */
+public ZoneId getZone();
+public DateTimeFormatter withZone(ZoneId zone);
+
+/* resolverStyle */
+public ResolverStyle getResolverStyle();
+public DateTimeFormatter withResolverStyle(ResolverStyle resolverStyle);
+
+/* resolverField */
+public Set<TemporalField> getResolverFields();
+public DateTimeFormatter withResolverFields(TemporalField... resolverFields);
+public DateTimeFormatter withResolverFields(Set<TemporalField> resolverFields);
+
+/* format, TemporalAccessor -> String */
+public String format(TemporalAccessor temporal);
+public void formatTo(TemporalAccessor temporal, Appendable appendable); // StringBuffer、StringBuilder
+
+/* parse, String -> TemporalAccessor */
+public TemporalAccessor parse(CharSequence text);
+public TemporalAccessor parse(CharSequence text, ParsePosition position);
+public <T> T parse(CharSequence text, TemporalQuery<T> query);
+public TemporalAccessor parseBest(CharSequence text, TemporalQuery<?>... queries);
+public TemporalAccessor parseUnresolved(CharSequence text, ParsePosition position);
+
+/* toFormat */
+public Format toFormat();
+public Format toFormat(TemporalQuery<?> parseQuery);
+
+/* Object */
+public String toString();
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-collection.html" rel="next" title="Java Collection框架">
+                <i class="fa fa-chevron-left"></i> Java Collection框架
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-javadoc.html" rel="prev" title="javadoc 生成 API 文档">
+                javadoc 生成 API 文档 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java7-新特性"><span class="nav-number">1.</span> <span class="nav-text">Java7 新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制字面量"><span class="nav-number">1.1.</span> <span class="nav-text">二进制字面量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数字-分隔符"><span class="nav-number">1.2.</span> <span class="nav-text">数字_分隔符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#switch-支持-String-字符串"><span class="nav-number">1.3.</span> <span class="nav-text">switch 支持 String 字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#catch-同时捕获多个异常"><span class="nav-number">1.4.</span> <span class="nav-text">catch 同时捕获多个异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#泛型的类型推断"><span class="nav-number">1.5.</span> <span class="nav-text">泛型的类型推断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SafeVarargs注解"><span class="nav-number">1.6.</span> <span class="nav-text">@SafeVarargs注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#try-with-resources"><span class="nav-number">1.7.</span> <span class="nav-text">try-with-resources</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Objects-工具类"><span class="nav-number">1.8.</span> <span class="nav-text">Objects 工具类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java8-新特性"><span class="nav-number">2.</span> <span class="nav-text">Java8 新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lambda-表达式"><span class="nav-number">2.1.</span> <span class="nav-text">Lambda 表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FunctionalInterface-接口"><span class="nav-number">2.2.</span> <span class="nav-text">FunctionalInterface 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法引用"><span class="nav-number">2.3.</span> <span class="nav-text">方法引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口默认方法、静态方法"><span class="nav-number">2.4.</span> <span class="nav-text">接口默认方法、静态方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-容器"><span class="nav-number">2.5.</span> <span class="nav-text">Optional 容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stream-API"><span class="nav-number">2.6.</span> <span class="nav-text">Stream API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BaseStream"><span class="nav-number">2.6.1.</span> <span class="nav-text">BaseStream</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Stream"><span class="nav-number">2.6.2.</span> <span class="nav-text">Stream</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IntStream"><span class="nav-number">2.6.3.</span> <span class="nav-text">IntStream</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LongStream"><span class="nav-number">2.6.4.</span> <span class="nav-text">LongStream</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DoubleStream"><span class="nav-number">2.6.5.</span> <span class="nav-text">DoubleStream</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#StreamSupport"><span class="nav-number">2.6.6.</span> <span class="nav-text">StreamSupport</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Collector"><span class="nav-number">2.6.7.</span> <span class="nav-text">Collector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Collectors"><span class="nav-number">2.6.8.</span> <span class="nav-text">Collectors</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spliterator"><span class="nav-number">2.7.</span> <span class="nav-text">Spliterator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterator-OfPrimitive"><span class="nav-number">2.7.1.</span> <span class="nav-text">Spliterator.OfPrimitive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterator-OfInt"><span class="nav-number">2.7.2.</span> <span class="nav-text">Spliterator.OfInt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterator-OfLong"><span class="nav-number">2.7.3.</span> <span class="nav-text">Spliterator.OfLong</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterator-OfDouble"><span class="nav-number">2.7.4.</span> <span class="nav-text">Spliterator.OfDouble</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spliterators"><span class="nav-number">2.8.</span> <span class="nav-text">Spliterators</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterators-AbstractSpliterator"><span class="nav-number">2.8.1.</span> <span class="nav-text">Spliterators.AbstractSpliterator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterators-AbstractIntSpliterator"><span class="nav-number">2.8.2.</span> <span class="nav-text">Spliterators.AbstractIntSpliterator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterators-AbstractLongSpliterator"><span class="nav-number">2.8.3.</span> <span class="nav-text">Spliterators.AbstractLongSpliterator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spliterators-AbstractDoubleSpliterator"><span class="nav-number">2.8.4.</span> <span class="nav-text">Spliterators.AbstractDoubleSpliterator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PrimitiveIterator"><span class="nav-number">2.9.</span> <span class="nav-text">PrimitiveIterator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PrimitiveIterator-OfInt"><span class="nav-number">2.9.1.</span> <span class="nav-text">PrimitiveIterator.OfInt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PrimitiveIterator-OfLong"><span class="nav-number">2.9.2.</span> <span class="nav-text">PrimitiveIterator.OfLong</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PrimitiveIterator-OfDouble"><span class="nav-number">2.9.3.</span> <span class="nav-text">PrimitiveIterator.OfDouble</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DateTime-API"><span class="nav-number">2.10.</span> <span class="nav-text">DateTime API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ChronoField"><span class="nav-number">2.10.1.</span> <span class="nav-text">ChronoField</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ChronoUnit"><span class="nav-number">2.10.2.</span> <span class="nav-text">ChronoUnit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Month"><span class="nav-number">2.10.3.</span> <span class="nav-text">Month</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DayOfWeek"><span class="nav-number">2.10.4.</span> <span class="nav-text">DayOfWeek</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Duration"><span class="nav-number">2.10.5.</span> <span class="nav-text">Duration</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Period"><span class="nav-number">2.10.6.</span> <span class="nav-text">Period</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Year"><span class="nav-number">2.10.7.</span> <span class="nav-text">Year</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YearMonth"><span class="nav-number">2.10.8.</span> <span class="nav-text">YearMonth</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MonthDay"><span class="nav-number">2.10.9.</span> <span class="nav-text">MonthDay</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ZoneId"><span class="nav-number">2.10.10.</span> <span class="nav-text">ZoneId</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Clock"><span class="nav-number">2.10.11.</span> <span class="nav-text">Clock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Instant"><span class="nav-number">2.10.12.</span> <span class="nav-text">Instant</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LocalDate"><span class="nav-number">2.10.13.</span> <span class="nav-text">LocalDate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LocalTime"><span class="nav-number">2.10.14.</span> <span class="nav-text">LocalTime</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LocalDateTime"><span class="nav-number">2.10.15.</span> <span class="nav-text">LocalDateTime</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ZonedDateTime"><span class="nav-number">2.10.16.</span> <span class="nav-text">ZonedDateTime</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DateTimeFormatter"><span class="nav-number">2.10.17.</span> <span class="nav-text">DateTimeFormatter</span></a></li></ol></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-jdk7-jdk8.html';
+          this.page.identifier = 'java-jdk7-jdk8.html';
+          this.page.title = 'Java7 Java8 新特性';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

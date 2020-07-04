@@ -1,0 +1,736 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 进程间通信 Unix Domain Socket IPC">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 进程间通信 Unix Domain Socket">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 进程间通信 Unix Domain Socket">
+<meta property="og:url" content="https://www.zfl9.com/c-ipc-unix-sock.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 进程间通信 Unix Domain Socket">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 进程间通信 Unix Domain Socket">
+<meta name="twitter:description" content="c语言 - 进程间通信 Unix Domain Socket">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-ipc-unix-sock.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 进程间通信 Unix Domain Socket | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-ipc-unix-sock.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 进程间通信 Unix Domain Socket
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-17T10:40:00+08:00">
+                2017-08-17
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-ipc-unix-sock.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-ipc-unix-sock.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-ipc-unix-sock.html" class="leancloud_visitors" data-flag-title="c语言 - 进程间通信 Unix Domain Socket">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 进程间通信 Unix Domain Socket</p>
+<a id="more"></a>
+<h2 id="Unix-Domain-Socket"><a href="#Unix-Domain-Socket" class="headerlink" title="Unix Domain Socket"></a>Unix Domain Socket</h2><p>socket API原本是为网络通讯设计的，但是后来在socket的框架上发展出一种IPC机制，就是<code>UNIX Domain Socket</code>；</p>
+<p>虽然网络socket也可用于同一台主机的进程间通讯（通过loopback地址127.0.0.1），但是UNIX Domain Socket用于IPC更有效率：</p>
+<ul>
+<li>不需要经过网络协议栈；</li>
+<li>不需要打包拆包；</li>
+<li>不需要计算校验和；</li>
+<li>不需要维护序号和应答；</li>
+</ul>
+<p>这是因为IPC机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的；<br>UNIX Domain Socket也提供<code>面向流</code>和<code>面向数据报</code>两种API接口，类似<code>TCP</code>和<code>UDP</code>，但是<code>面向数据报的UNIX Domain Socket</code>也是可靠的，消息既不会丢失也不会顺序错乱；</p>
+<p>使用UNIX Domain Socket的过程和网络socket十分相似，也要先调用socket()创建一个socket文件描述符，address family指定为<code>AF_UNIX</code>，type可以选择<code>SOCK_STREAM</code>或<code>SOCK_DGRAM</code>，protocol参数仍然指定为<code>0</code>即可；</p>
+<p>UNIX Domain Socket与网络socket编程最明显的不同在于<code>地址格式不同</code>，用结构体<code>sockaddr_un</code>表示；<br>网络编程的socket地址是IP地址加端口号，而UNIX Domain Socket的地址是一个<code>socket类型的文件在文件系统中的路径</code>，这个socket文件由bind()调用创建，如果调用bind()时该文件已经存在，则bind()错误返回；</p>
+<h2 id="Unix-Domain-Socket-示例"><a href="#Unix-Domain-Socket-示例" class="headerlink" title="Unix Domain Socket 示例"></a>Unix Domain Socket 示例</h2><p><code>server.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+#define SOCK_PATH "/run/echo.sock"
+#define BUF_SIZE 1024
+
+int listenfd;
+void handle_signal(int signo);
+
+int main(void){
+    signal(SIGINT, handle_signal);
+    signal(SIGHUP, handle_signal);
+    signal(SIGTERM, handle_signal);
+
+    if((listenfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0){
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_un servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sun_family = AF_UNIX;
+    strcpy(servaddr.sun_path, SOCK_PATH);
+
+    unlink(SOCK_PATH);
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
+    chmod(SOCK_PATH, 00640);
+
+    if(listen(listenfd, SOMAXCONN) < 0){
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    int connfd, nbuf;
+    char buf[BUF_SIZE + 1];
+    for(;;){
+        if((connfd = accept(listenfd, NULL, NULL)) < 0){
+            perror("accept");
+            continue;
+        }
+
+        nbuf = recv(connfd, buf, BUF_SIZE, 0);
+        buf[nbuf] = 0;
+        printf("new msg: \"%s\"\n", buf);
+        send(connfd, buf, nbuf, 0);
+
+        close(connfd);
+    }
+
+    return 0;
+}
+
+void handle_signal(int signo){
+    if(signo == SIGINT){
+        fprintf(stderr, "received signal: SIGINT(%d)\n", signo);
+    }else if(signo == SIGHUP){
+        fprintf(stderr, "received signal: SIGHUP(%d)\n", signo);
+    }else if(signo == SIGTERM){
+        fprintf(stderr, "received signal: SIGTERM(%d)\n", signo);
+    }
+
+    close(listenfd);
+    unlink(SOCK_PATH);
+    exit(EXIT_SUCCESS);
+}
+</script></code></pre>
+<p><code>client.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+#define SOCK_PATH "/run/echo.sock"
+#define BUF_SIZE 1024
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s msg\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0){
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_un servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sun_family = AF_UNIX;
+    strcpy(servaddr.sun_path, SOCK_PATH);
+
+    if(connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("connect");
+        exit(EXIT_FAILURE);
+    }
+
+    char buf[BUF_SIZE + 1];
+    int nbuf;
+
+    nbuf = strlen(argv[1]);
+    send(sockfd, argv[1], nbuf, 0);
+    nbuf = recv(sockfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+    printf("echo msg: \"%s\"\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:50:42]
+$ gcc -o server server.c
+
+# root @ arch in ~/work on git:master x [10:50:46]
+$ gcc -o client client.c
+
+# root @ arch in ~/work on git:master x [10:50:47]
+$ ./server
+
+# root @ arch in ~/work on git:master x [10:36:51]
+$ for ((i=0; i<10; i++)); do ./client 'www.zfl9.com'; done
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+echo msg: "www.zfl9.com"
+
+# root @ arch in ~/work on git:master x [10:50:47]
+$ ./server
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+new msg: "www.zfl9.com"
+^Creceived signal: SIGINT(2)
+</script></code></pre>
+<h2 id="socketpair函数"><a href="#socketpair函数" class="headerlink" title="socketpair函数"></a>socketpair函数</h2><p><code>socketpair()</code>函数用于创建一个<code>全双工的流管道</code>；</p>
+<p><code>int socketpair(int domain, int type, int protocol, int sv[2]);</code></p>
+<ul>
+<li>头文件：<code>sys/types.h</code>、<code>sys/socket.h</code>；</li>
+<li><code>domain</code>：输入参数，协议族（AF_INET、AF_INET6、AF_UNIX），这里我们选择AF_UNIX；</li>
+<li><code>type</code>：输入参数，套接字类型（SOCK_STREAM、SOCK_DGRAM、SOCK_RAW），这里我们选择SOCK_STREAM；</li>
+<li><code>protocol</code>：输入参数，协议类型，一般置为0，让系统选择默认的协议；</li>
+<li><code>sv[2]</code>：输出参数，拥有2个元素的整型数组，返回一个套接字对；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p>实际上<code>socketpair()</code>跟<code>pipe()</code>函数是类似的，也只能在同个主机上具有亲缘关系的进程间通信；<br>但<code>pipe()</code>创建的匿名管道是<code>半双工</code>的，而<code>socketpair()</code>可以认为是创建一个全双工的管道；<br>可以使用<code>socketpair()</code>创建返回的套接字对进行父子进程通信：</p>
+<p><strong>示例</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+#define BUF_SIZE 1024
+
+int main(void){
+    signal(SIGCHLD, SIG_IGN);
+
+    int sockfds[2];
+    if(socketpair(AF_UNIX, SOCK_STREAM, 0, sockfds) < 0){
+        perror("socketpair");
+        exit(EXIT_FAILURE);
+    }
+    int parent_fd = sockfds[0], child_fd = sockfds[1];
+
+    pid_t pid = fork();
+    if(pid < 0){
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }else if(pid > 0){
+        close(child_fd);
+
+        char buf[BUF_SIZE + 1] = "from parent_proc";
+        int nbuf = strlen(buf);
+        send(parent_fd, buf, nbuf, 0);
+
+        nbuf = recv(parent_fd, buf, BUF_SIZE, 0);
+        buf[nbuf] = 0;
+        printf("parent_proc(%d) recv_msg: %s\n", getpid(), buf);
+
+        close(parent_fd);
+    }else if(pid == 0){
+        close(parent_fd);
+
+        char buf[BUF_SIZE + 1] = "from child_proc";
+        int nbuf = strlen(buf);
+        send(child_fd, buf, nbuf, 0);
+
+        nbuf = recv(child_fd, buf, BUF_SIZE, 0);
+        buf[nbuf] = 0;
+        printf("child_proc(%d) recv_msg: %s\n", getpid(), buf);
+
+        close(child_fd);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:02:22]
+$ gcc sockpair.c
+
+# root @ arch in ~/work on git:master x [11:02:24]
+$ ./a.out
+parent_proc(38817) recv_msg: from child_proc
+child_proc(38818) recv_msg: from parent_proc
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-pthread.html" rel="next" title="c语言 - 多线程编程">
+                <i class="fa fa-chevron-left"></i> c语言 - 多线程编程
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-ipc-shm.html" rel="prev" title="c语言 - 进程间通信 共享内存">
+                c语言 - 进程间通信 共享内存 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Unix-Domain-Socket"><span class="nav-number">1.</span> <span class="nav-text">Unix Domain Socket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unix-Domain-Socket-示例"><span class="nav-number">2.</span> <span class="nav-text">Unix Domain Socket 示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socketpair函数"><span class="nav-number">3.</span> <span class="nav-text">socketpair函数</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-ipc-unix-sock.html';
+          this.page.identifier = 'c-ipc-unix-sock.html';
+          this.page.title = 'c语言 - 进程间通信 Unix Domain Socket';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

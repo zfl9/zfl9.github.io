@@ -1,0 +1,929 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java Mail 电子邮件">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JavaEE 提供了 JavaMail 包（javax.mail），方便开发者构建简单易用的 Email 收发客户端软件。注意，JavaMail API 不涉及 Email 服务端的相关知识，可以将 JavaMail 看作是开发 Java 平台的 MUA（电子邮件用户代理）的一套 API。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Mail 电子邮件">
+<meta property="og:url" content="https://www.zfl9.com/java-mail.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JavaEE 提供了 JavaMail 包（javax.mail），方便开发者构建简单易用的 Email 收发客户端软件。注意，JavaMail API 不涉及 Email 服务端的相关知识，可以将 JavaMail 看作是开发 Java 平台的 MUA（电子邮件用户代理）的一套 API。">
+<meta property="og:image" content="https://www.zfl9.com/images/javamail-sendmail.png">
+<meta property="og:image" content="https://www.zfl9.com/images/javamail-sendmail-file.png">
+<meta property="og:image" content="https://www.zfl9.com/images/javamail-sendmail-image.png">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.359Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Mail 电子邮件">
+<meta name="twitter:description" content="JavaEE 提供了 JavaMail 包（javax.mail），方便开发者构建简单易用的 Email 收发客户端软件。注意，JavaMail API 不涉及 Email 服务端的相关知识，可以将 JavaMail 看作是开发 Java 平台的 MUA（电子邮件用户代理）的一套 API。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/javamail-sendmail.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-mail.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java Mail 电子邮件 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-mail.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java Mail 电子邮件
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T16:36:00+08:00">
+                2018-04-11
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-mail.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-mail.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-mail.html" class="leancloud_visitors" data-flag-title="Java Mail 电子邮件">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JavaEE 提供了 JavaMail 包（<code>javax.mail</code>），方便开发者构建简单易用的 Email 收发客户端软件。注意，JavaMail API 不涉及 Email 服务端的相关知识，可以将 JavaMail 看作是开发 Java 平台的 MUA（电子邮件用户代理）的一套 API。</p>
+<a id="more"></a>
+<h2 id="JavaMail-简介"><a href="#JavaMail-简介" class="headerlink" title="JavaMail 简介"></a>JavaMail 简介</h2><p>因为是 JavaEE 规范的包，因此必须自己下载 JavaMail 相关的 JAR 包。JavaMail API 相关的两个 JAR 文件：</p>
+<ul>
+<li><code>javax.mail</code>：JavaMail 核心包，<a href="https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_1/javax.mail.jar" rel="external nofollow noopener noreferrer" target="_blank">点我下载</a></li>
+<li><code>javax.activation</code>：JavaBeans Activation Framework（JAF），处理附件时会用到，<a href="http://download.oracle.com/otn-pub/java/jaf/1.1.1/jaf-1_1_1.zip" rel="external nofollow noopener noreferrer" target="_blank">点我下载</a></li>
+</ul>
+<p>下载后，我们需要将这两个 JAR 包（JAF 解压后才有）添加到 CLASSPATH 搜索路径中，为了方便日后添加其它第三方 API，建议专门创建一个文件夹，存放所有 JAR 依赖包，这里假设存放目录为 <code>/usr/local/java-lib</code>，然后修改 CLASSPATH 环境变量就可以将该目录下的所有 JAR 包添加到搜索路径中：<code>export CLASSPATH=/usr/local/java-lib/*:$CLASSPATH</code>。</p>
+<p>学习 JavaMail 之前，我们先来学习 Email 的相关知识。电子邮件说白了就两个部分：<strong>发送系统</strong>、<strong>接收系统</strong>。其中与发送相关的协议主要是 SMTP（简单邮件传输协议），与接收相关的协议有两个：POP3（邮局协议第三版）、IMAP（互联网邮件访问协议）。在 Linux 系统上，常用的 SMTP 服务器为 Postfix，常用的 IMAP/POP3 服务器为 Dovecot。</p>
+<p>特别注意，SMTP 服务与 IMAP/POP3 服务不是互相依赖的，你可以在不同的服务器上安装它们两个，也可以只安装其中一种（比如只安装 SMTP 服务器，单纯用于发送电子邮件）。不过，大部分情况下它们两个都是安装在同一台服务器上的。</p>
+<p>说完协议，我们再来解释与 Mail 相关的名词：</p>
+<ul>
+<li><strong>MUA</strong>（Mail User Agent，邮件用户代理）：主要有两个用途，发送邮件、接收邮件（包括管理邮件，下同）。常见的 MUA 有 Outlook Express、Foxmail，当然现在也有很多不需要安装软件的 MUA，只需要打开浏览器就能进行邮件的收发，称为 webmail，常见的有 QQ 邮箱、163 邮箱、Gmail 邮箱。</li>
+<li><strong>MTA</strong>（Mail Transfer Agent，邮件传输代理）：即 SMTP 服务器，常用的 MTA 有 Postfix、SendMail。</li>
+<li><strong>MDA</strong>（Mail Delivery Agent，邮件投递代理）：MDA 其实是 MTA 的一个小程序（组件），其实际功能与网络系统中的路由器类似。MTA 收到一封邮件后，首先交给 MDA，MDA 根据该邮件的目的收信域做出判断：如果该邮件是发往本域的，则将其存放至事先指定的文件夹中（俗称信箱）；如果该邮件是发往外域的，则将其交还给 MTA，MTA 接着发送出去。</li>
+<li><strong>MRA</strong>（Mail Retrieval Agent，邮件接收代理）：即 IMAP/POP3 服务器，常用的 MRA 有 Dovecot。注意，MRA 实际上并未参与任何电子邮件的收发工作，收和发都是 MTA + MDA 负责的，MRA 只是负责管理用户邮箱中的电子邮件的，比如查看邮件、删除邮件、标记已读等。</li>
+</ul>
+<p>早期互联网上的 SMTP 服务器都是 open-relay 的，什么是 open-relay？MDA 如果发现邮件不是发往本域的，会将它交还给 MTA，而 MTA 会无条件的将该邮件发送出去（或者称为 relay，转发）。因为是无条件 relay 的，因此，所有人都可以使用此 SMTP 服务器来发送邮件，而不需要任何验证。这在互联网发展初期并没有什么问题，毕竟用户很少。但是如果放到现在，那就非常糟糕了，带来的直接后果就是垃圾邮件满天飞，服务器不堪重负，因为谁都可以使用这台 SMTP 服务器发送邮件，某些人当然不会放过这样的好机会。</p>
+<p>所以，现在的绝大多数 SMTP 服务器都是默认关闭 open-relay 的，你要想使用此 SMTP 服务器来发送邮件，就必须申请必要的邮箱帐户，只有已注册的账户才可以使用它发送邮件，其它发送者的邮件是不会被接收的。比如 Gmail 邮箱，使用它的第一步就是获取一个 Gmail 账户（Google 帐号）。</p>
+<p>POP3 和 IMAP 协议都是与 MRA 相关的，POP 协议先于 IMAP 出现，我们现在使用的 POP 协议通常为第三版，简称 POP3。</p>
+<ul>
+<li>POP3 基本工作原理：MUA 连接到 MRA 后，首先将邮箱中邮件下载到本地，然后删除邮箱中的邮件（现可配置保留邮件副本），之后的所有操作都是在本机上进行的。因为是剪切到本地的（不考虑保留副本），因此在其他地方再使用 POP3 是无法获取这些邮件的。也因此 POP3 可以很好的支持离线操作，这也符合互联网初期环境的需求，毕竟那时候的带宽很小，不过现在，我们可能不会喜欢这种工作方式，比较笨重。</li>
+<li>IMAP 基本工作原理：MUA 连接到 MRA 后，不是直接下载邮箱中的邮件，而是采取了一种更为简单灵活的方式，即发送命令，MRA 根据 MUA 发来的命令，进行不同的操作，同时，获取的邮件也不会在本机存储，所有的操作（读取，删除，归档）都是在服务器上完成的。因此，我们可以按需的读取邮件，而不需要一次性获取所有邮件，不过 IMAP 服务器会比 POP3 服务器消耗更多存储空间，因为所有的邮件都是存储在服务器上的。</li>
+</ul>
+<p>因此，如果你需要离线阅读邮件（比如邮件服务器在公司内网，你回家后想要查看邮件），建议选择 POP3，否则选择 IMAP。</p>
+<p>回到 JavaMail API，文章开头我们说了，此 API 不负责 Mail 服务端的开发，因此，它是用来开发 MUA 的一套 API，而 MUA 的主要功能就两个：发送邮件，接收邮件。本文主要围绕 <strong>普通邮件</strong>、<strong>带附件的邮件</strong>、<strong>带图片的 HTML 邮件</strong> 展开讲解。</p>
+<h2 id="JavaMail-发送"><a href="#JavaMail-发送" class="headerlink" title="JavaMail 发送"></a>JavaMail 发送</h2><p>发送 <strong>简单电子邮件</strong> 用到的类：</p>
+<ul>
+<li><code>java.util.Properties</code>：属性表，用于存储 SMTP 服务器相关的信息。如 SMTP 服务器地址、端口、认证方式。</li>
+<li><code>javax.mail.Authenticator</code>：认证类，用于存储 SMTP 服务器的登录凭证。常见的认证方式为：用户名 + 密码。</li>
+<li><code>javax.mail.Session</code>：邮件会话类，这名字比较抽象，其实就是 Properties + Authenticator 的配置集合而已。</li>
+<li><code>javax.mail.Message</code>：邮件信息类，我们所说的电子邮件就是指它了，如设置收件人、邮件标题、邮件主体内容等。</li>
+<li><code>javax.mail.Transport</code>：邮件发送类，编写完 Message 后，需要使用 Transport 的 send() 方法将邮件发送出去。</li>
+</ul>
+<p>我以 xxx@zfl9.com 的身份，发送一封邮件给 xxx@gmail.com，例子如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.mail;
+
+import java.util.Properties;
+import java.io.UnsupportedEncodingException;
+import javax.mail.Session;
+import javax.mail.Message;
+import javax.mail.Transport;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.InternetAddress;
+
+// 普通邮件，纯文本
+public class SendMail {
+    public static void main(String[] args) throws MessagingException, UnsupportedEncodingException {
+        String username = "Otokaze";          // 发件人名称
+        String fromMail = "xxx@zfl9.com";     // 发件人地址
+        String password = "************";     // 发件人密码
+        String recvMail = "xxx@gmail.com";    // 收件人地址
+        String subject = "JavaMail 发送测试"; // 邮件的标题
+        String content = "JavaMail 发送测试 [MUA: javamail-api]"; // 邮件的内容
+
+        // SMTP 服务器相关信息，其中 key 为 String，更多 key 请参考:
+        // https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html#package.description
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.zfl9.com"); // smtp 服务器地址
+        props.put("mail.smtp.port", 465);             // smtp 服务器端口
+        props.put("mail.smtp.auth", true);            // 服务器需要认证
+        props.put("mail.smtp.ssl.enable", true);      // 使用 SSL 套接层
+
+        // SMTP 服务器凭证信息，一般为 username + password
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromMail, password);
+            }
+        };
+
+        // 从 props 和 auth 对象中构建 session 邮件会话
+        Session session = Session.getInstance(props, auth);
+
+        // email 邮件的相关设置
+        MimeMessage message = new MimeMessage(session); // 从 session 获取 message
+        message.setFrom(new InternetAddress(fromMail, username)); // 设置发件人信息
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recvMail)); // 设置收件人信息
+        message.setSubject(subject, "UTF-8"); // 设置邮件标题，UTF-8 编码
+        message.setText(content, "UTF-8"); // 设置邮件内容，UTF-8 编码
+
+        // 发送 email 邮件
+        Transport.send(message);
+    }
+}
+</script></code></pre>
+<p>编译运行后，登录 xxx@gmail.com 账户，不出意外的话应该会收到一封新邮件，如下：<br><img src="/images/javamail-sendmail.png" alt="SendMail"></p>
+<p>那么，要如何发送一封 <strong>带附件的电子邮件</strong> 呢？基本用法和上面的类似，只是 Content 不再是 String（纯文本），而是 Multipart。Multipart 本质上是一个数组（Part 集合），元素类型为 BodyPart。BodyPart 和 Message 都是 Part 接口的实现类，也可以将 Multipart 看作是多个 Message 的集合。邮件正文是一个 BodyPart，邮件附件也是一个 BodyPart（可以有多个附件，这里以一个附件举例）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.mail;
+
+import java.util.Properties;
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.Session;
+import javax.mail.Message;
+import javax.mail.Transport;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.InternetAddress;
+
+import javax.activation.FileDataSource;
+import javax.activation.DataHandler;
+
+// 带附件的邮件
+public class SendMailWithFile {
+    public static void main(String[] args) throws MessagingException, UnsupportedEncodingException {
+        String username = "Otokaze";
+        String fromMail = "xxx@zfl9.com";
+        String password = "************";
+        String recvMail = "xxx@gmail.com";
+        String subject = "JavaMail 附件测试";
+        String contentBody = "JavaMail 附件测试 [MUA javamail-api]";
+        String contentAttachName = "otokaze.jpg"; // 附件名称
+        String contentAttachFile = "otokaze.jpg"; // 附件路径
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.zfl9.com");
+        props.put("mail.smtp.port", 465);
+        props.put("mail.smtp.auth", true);
+        props.put("mail.smtp.ssl.enable", true);
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromMail, password);
+            }
+        };
+
+        Session session = Session.getInstance(props, auth);
+
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(fromMail, username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recvMail));
+        message.setSubject(subject, "UTF-8");
+
+        // 正文 Part
+        MimeBodyPart bodyPart = new MimeBodyPart();
+        bodyPart.setText(contentBody, "UTF-8");
+
+        // 附件 Part
+        MimeBodyPart attachmentPart = new MimeBodyPart();
+        attachmentPart.setFileName(contentAttachName);
+        attachmentPart.setDataHandler(new DataHandler(new FileDataSource(contentAttachFile)));
+
+        // Multipart，即：正文Part + 附件Part
+        MimeMultipart multipart = new MimeMultipart();
+        multipart.addBodyPart(bodyPart);
+        multipart.addBodyPart(attachmentPart);
+        message.setContent(multipart);
+
+        Transport.send(message);
+    }
+}
+</script></code></pre>
+<p>编译运行，如果没有报错，登录 Gmail，可以看到一份新邮件，如下：<br><img src="/images/javamail-sendmail-file.png" alt="SendMailWithFile"></p>
+<p>但是，我们大多数邮件都是 HTML 格式的，如果我想在 HTML 文档中插入一张图片（使用 <code>&lt;img&gt;</code> 标签），并且让这张图片显示在正文部分，而不是出现在附件部分，该怎么做呢？以上面的带附件的电子邮件为例，邮件 Content 是一个包含两个 BodyPart 的 Multipart。其中一个 BodyPart 是邮件正文，另一个则是邮件附件（刚好也是一张图片）。其它地方基本不用改动，只需将 <code>setFileName()</code> 改为 <code>addHeader(&quot;Content-ID&quot;, &quot;&lt;otokaze.jpg&gt;&quot;)</code>，给这个附件分配一个 Content-ID，然后我们就可以在 img 标签中引用它了。如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.mail;
+
+import java.util.Properties;
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.Session;
+import javax.mail.Message;
+import javax.mail.Transport;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.InternetAddress;
+
+import javax.activation.FileDataSource;
+import javax.activation.DataHandler;
+
+// 带图片的 HTML 邮件
+public class SendMailWithImage {
+    public static void main(String[] args) throws MessagingException, UnsupportedEncodingException {
+        String username = "Otokaze";
+        String fromMail = "xxx@zfl9.com";
+        String password = "************";
+        String recvMail = "xxx@gmail.com";
+        String subject = "JavaMail 图片测试";
+        // 注意 <img src='cid:otokaze.jpg'>，通过它引用附件的图片
+        String body = "JavaMail 图片测试<br><img src='cid:otokaze.jpg' alt='otokaze.jpg'><br>[MUA javamail-api]";
+        String image = "otokaze.jpg";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.zfl9.com");
+        props.put("mail.smtp.port", 465);
+        props.put("mail.smtp.auth", true);
+        props.put("mail.smtp.ssl.enable", true);
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromMail, password);
+            }
+        };
+
+        Session session = Session.getInstance(props, auth);
+
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(fromMail, username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recvMail));
+        message.setSubject(subject, "UTF-8");
+
+        // 正文 Part，content-type: text/html; charset=UTF-8
+        MimeBodyPart bodyPart = new MimeBodyPart();
+        bodyPart.setText(body, "UTF-8", "html");
+
+        // 附件 Part，添加 Content-ID（CID）头部
+        MimeBodyPart imagePart = new MimeBodyPart();
+        imagePart.addHeader("Content-ID", "<otokaze.jpg>");
+        imagePart.setDataHandler(new DataHandler(new FileDataSource(image)));
+
+        MimeMultipart multipart = new MimeMultipart();
+        multipart.addBodyPart(bodyPart);
+        multipart.addBodyPart(imagePart);
+        message.setContent(multipart);
+
+        Transport.send(message);
+    }
+}
+</script></code></pre>
+<p>打开 Gmail 邮箱，可以看到下面这样一封新邮件，注意与带普通附件的区别，这里的图片是显示在正文部分的，附件没有显示：<br><img src="/images/javamail-sendmail-image.png" alt="SendMailWithImage"></p>
+<h2 id="JavaMail-接收"><a href="#JavaMail-接收" class="headerlink" title="JavaMail 接收"></a>JavaMail 接收</h2><p>在学习 JavaMail 接收电子邮件相关 API 之前，我们先来了解一些与电子邮件接收相关的知识。</p>
+<p>我们的邮件都是存储在服务器上的某个文件夹下的，存储邮件的地方也称为 <strong>邮箱</strong>，在 JavaMail 中，使用 Store 对象表示邮箱。在 Store 中，有一个特殊文件夹，也即 Root 根目录，可以通过 store.getDefaultFolder() 方法获取它。而我们常说的 <em>收件箱</em>、<em>草稿箱</em>、<em>垃圾箱</em> 都是根目录下的一个文件夹。在 JavaMail 中，使用 Folder 对象表示一个文件夹，Root 目录也是一个文件夹，其他文件夹都是它的子文件夹。</p>
+<p>我们常用的文件夹就是 <em>收件箱</em> 了，不过一般收件箱的文件夹名称并不是“收件箱”，而是 <code>INBOX</code>（不区分大小写），如果想获取某个账户下的所有文件夹，可以使用下面这个程序：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.mail;
+
+import java.util.Properties;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+
+// 列出所有文件夹
+public class RecvMailListFolders {
+    public static void main(String[] args) throws MessagingException, NoSuchProviderException {
+        String username = "xxx@zfl9.com"; // 帐号
+        String password = "************"; // 密码
+
+        Properties props = new Properties();
+        props.put("mail.store.protocol", "imap");     // 协议
+        props.put("mail.imap.host", "imap.zfl9.com"); // imap 主机
+        props.put("mail.imap.port", 993);             // imap 端口
+        props.put("mail.imap.ssl.enable", true);      // SSL 套接层
+        Session session = Session.getInstance(props);
+
+        Store store = session.getStore();  // 获取 store
+        store.connect(username, password); // 连接 store
+
+        Folder[] folders = store.getDefaultFolder().list("*"); // 特殊通配符 *
+        for (Folder folder : folders) {
+            if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
+                System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
+            }
+        }
+
+        store.close(); // 关闭 store
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9/mail on git:master o [12:07:34]
+$ javac RecvMailListFolders.java
+
+# root @ arch in ~/java8-learn/com/zfl9/mail on git:master o [12:07:48]
+$ java com.zfl9.mail.RecvMailListFolders
+已删除邮件: 0
+草稿: 0
+INBOX: 57
+已发送: 4
+垃圾邮件: 0
+</script></code></pre>
+<p>例子，获取收件箱中的电子邮件（未读邮件）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.mail;
+
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.Properties;
+
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Folder;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Flags;
+import javax.mail.search.FlagTerm;
+import javax.mail.internet.MimeUtility;
+import javax.mail.Multipart;
+import javax.mail.Part;
+
+public class RecvMail {
+    public static void main(String[] args) throws MessagingException, NoSuchProviderException, IOException {
+        String username = "xxx@zfl9.com"; // 帐号
+        String password = "************"; // 密码
+
+        Properties props = new Properties();
+        props.put("mail.store.protocol", "imap");     // 协议类型
+        props.put("mail.imap.host", "imap.zfl9.com"); // imap 主机
+        props.put("mail.imap.port", 993);             // imap 端口
+        props.put("mail.imap.ssl.enable", true);      // SSL 套接层
+
+        // 获取 session 邮件会话
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        Store store = session.getStore(); // 获取 "邮箱"
+        store.connect(); // 连接 "邮箱"
+
+        Folder folder = store.getFolder("INBOX"); // 获取 "收件箱"
+        folder.open(Folder.READ_ONLY); // 打开 "收件箱" (只读)
+
+        // 获取全部邮件
+        // Message[] messages = folder.getMessages();
+        // 获取未读邮件
+        Message[] messages = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+        System.out.println("number of Email: " + messages.length);
+        for (int i = 0; i < messages.length; i++) {
+            Message message = messages[i];
+            Object content = message.getContent();
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            System.out.println("num: " + (i + 1));
+            System.out.println("from: " + MimeUtility.decodeText(message.getFrom()[0].toString()));
+            System.out.println("subject: " + MimeUtility.decodeText(message.getSubject()));
+            if (content instanceof String) { // 如果邮件内容是 String
+                System.out.println("content: " + content);
+            } else if (content instanceof Multipart) { // 如果邮件内容是 Multipart
+                Multipart multipart = (Multipart) content;
+                int count = multipart.getCount();
+                System.out.println("content: [multipart] [number of part: " + count + "]");
+                for (int j = 0; j < count; j++) {
+                    Part part = multipart.getBodyPart(j);
+                    String disp = part.getDisposition();
+                    if (disp == null && part.getHeader("Content-ID") == null) // 如果是正文
+                        System.out.println("====================== inline ======================");
+                    else // 如果是附件
+                        System.out.println("====================== attach ======================");
+                    dumpPart(part);
+                }
+            } else { // 邮件内容是未知类型
+                System.out.println("content: <unknown content type>");
+            }
+            // 将未读邮件设为已读状态
+            message.setFlag(Flags.Flag.SEEN, true);
+        }
+
+        folder.close(); // 关闭 "收件箱"
+        store.close();  // 关闭 "邮箱"
+    }
+
+    public static void dumpPart(Part part) throws MessagingException, IOException {
+        System.out.println("Content-Type: " + part.getContentType().split(";")[0]);
+        if (part.isMimeType("text/*")) {
+            System.out.println(part.getContent());
+        } else if (part.isMimeType("image/*") || part.isMimeType("audio/*") || part.isMimeType("video/*") || part.isMimeType("application/*")) {
+            String fileName = part.getFileName();
+            if (fileName == null) {
+                fileName = part.getHeader("Content-ID")[0];
+                if (fileName.startsWith("<"))
+                    fileName = fileName.substring(1, fileName.length() - 1);
+            }
+            fileName = part.getContentType().split(";")[0].replace("/", "-") + "_" +
+                       UUID.randomUUID().toString().replace("-", "") + "_" + fileName;
+            System.out.println("Saved-FileName: " + fileName);
+            InputStream input = part.getInputStream();
+            FileOutputStream output = new FileOutputStream(fileName);
+            int nbuf = 0;
+            byte[] buf = new byte[4096];
+            while ((nbuf = input.read(buf)) != -1)
+                output.write(buf, 0, nbuf);
+            input.close();
+            output.close();
+        } else {
+            System.out.println("unknown type ...");
+        }
+    }
+}
+</script></code></pre>
+<p>那么，我们该如何删除电子邮件呢？上面的程序是通过 <code>message.setFlag(Flags.Flag.SEEN, true);</code> 方法来将邮件标记为已读的，其实删除邮件也是通过这种方法，只不过 flag 不同而已，例子如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.mail;
+
+import java.util.Scanner;
+import java.util.Properties;
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.Session;
+import javax.mail.Message;
+import javax.mail.Folder;
+import javax.mail.Store;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.internet.MimeUtility;
+import static javax.mail.Flags.Flag;
+
+public class RecvMailDelete {
+    public static void main(String[] args) throws MessagingException, NoSuchProviderException, UnsupportedEncodingException {
+        String username = "xxx@zfl9.com";
+        String password = "************";
+
+        Properties props = new Properties();
+        props.put("mail.store.protocol", "imap");
+        props.put("mail.imap.host", "imap.zfl9.com");
+        props.put("mail.imap.port", 993);
+        props.put("mail.imap.ssl.enable", true);
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        Store store = session.getStore();
+        store.connect();
+
+        Folder folder = store.getFolder("已删除邮件");
+        folder.open(Folder.READ_WRITE);
+
+        Scanner sc = new Scanner(System.in);
+        Message messages[] = folder.getMessages(), message = null;
+        System.out.println("number of Email: " + messages.length);
+        for (int i = 0, len = messages.length; i < len; i++) {
+            message = messages[i];
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            System.out.println("num: " + (i + 1));
+            System.out.println("from: " + MimeUtility.decodeText(message.getFrom()[0].toString()));
+            System.out.println("subject: " + MimeUtility.decodeText(message.getSubject()));
+            System.out.print("Do you want to delete this message [y/n] ? ");
+            String input = sc.nextLine().trim();
+            if (input.startsWith("y") || input.startsWith("Y")) {
+                message.setFlag(Flag.DELETED, true); // 设置 DELETED 标志
+                System.out.println("Marked DELETE for message: " + MimeUtility.decodeText(message.getSubject()));
+            }
+        }
+
+        folder.close(); // equal to folder.close(true)
+        store.close();
+    }
+}
+</script></code></pre>
+<h2 id="JavaMail-参考"><a href="#JavaMail-参考" class="headerlink" title="JavaMail 参考"></a>JavaMail 参考</h2><ul>
+<li><a href="https://javaee.github.io/javamail/docs/api/" rel="external nofollow noopener noreferrer" target="_blank">JavaMail API documentation</a>，官方文档 javadoc</li>
+<li><a href="https://www.tutorialspoint.com/javamail_api/index.htm" rel="external nofollow noopener noreferrer" target="_blank">JavaMail API Tutorial</a>，在线教程，Tutorialspoint</li>
+</ul>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-servlet.html" rel="next" title="Java Servlet 笔记">
+                <i class="fa fa-chevron-left"></i> Java Servlet 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-json.html" rel="prev" title="Java JSON 解析">
+                Java JSON 解析 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaMail-简介"><span class="nav-number">1.</span> <span class="nav-text">JavaMail 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaMail-发送"><span class="nav-number">2.</span> <span class="nav-text">JavaMail 发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaMail-接收"><span class="nav-number">3.</span> <span class="nav-text">JavaMail 接收</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaMail-参考"><span class="nav-number">4.</span> <span class="nav-text">JavaMail 参考</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-mail.html';
+          this.page.identifier = 'java-mail.html';
+          this.page.title = 'Java Mail 电子邮件';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

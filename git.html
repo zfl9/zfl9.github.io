@@ -1,0 +1,747 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="git, 版本控制">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="git 和其他版本控制系统（如 CVS）有不少的差别，git 本身关心文件的整体性是否有改变，但多数的 CVS 或 Subversion 系统则在乎文件内容的差异。因此 git 更像一个文件系统，直接在本机上获取数据，不必连接到主机端获取数据。">
+<meta name="keywords" content="版本控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git 简明笔记">
+<meta property="og:url" content="https://www.zfl9.com/git.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="git 和其他版本控制系统（如 CVS）有不少的差别，git 本身关心文件的整体性是否有改变，但多数的 CVS 或 Subversion 系统则在乎文件内容的差异。因此 git 更像一个文件系统，直接在本机上获取数据，不必连接到主机端获取数据。">
+<meta property="og:image" content="https://www.zfl9.com/images/git.png">
+<meta property="og:updated_time" content="2019-07-13T13:50:49.073Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git 简明笔记">
+<meta name="twitter:description" content="git 和其他版本控制系统（如 CVS）有不少的差别，git 本身关心文件的整体性是否有改变，但多数的 CVS 或 Subversion 系统则在乎文件内容的差异。因此 git 更像一个文件系统，直接在本机上获取数据，不必连接到主机端获取数据。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/git.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/git.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>git 简明笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/git.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                git 简明笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-06T12:21:00+08:00">
+                2017-04-06
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/版本控制/" itemprop="url" rel="index">
+                    <span itemprop="name">版本控制</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/git.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="git.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/git.html" class="leancloud_visitors" data-flag-title="git 简明笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>git 和其他版本控制系统（如 CVS）有不少的差别，git 本身关心文件的整体性是否有改变，但多数的 CVS 或 Subversion 系统则在乎文件内容的差异。因此 git 更像一个文件系统，直接在本机上获取数据，不必连接到主机端获取数据。</p>
+<a id="more"></a>
+<h3 id="git安装及配置"><a href="#git安装及配置" class="headerlink" title="git安装及配置"></a>git安装及配置</h3><pre><code class="language-bash line-numbers">## 安装 git
+yum -y install git
+
+## 基本配置
+git config --global core.editor vim
+git config --global user.name 'USERNAME'
+git config --global user.email 'Email_Address'
+git config --global color.ui true
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.ci commit
+git config --global alias.cl clone
+git config --global alias.br branch
+git config --global alias.di diff
+git config --global alias.unstage 'reset HEAD'
+git config --global alias.last 'log -1'
+git config --global core.autocrlf false # 禁止自动将 LF 转换为 CRLF
+
+## 查看 config
+git config --list
+
+## .gitignore 文件
+# 指定不被 git 追踪的文件(夹)，如临时文件，支持 shell 通配符
+# 同一优先级内，最后一个匹配到的模式优先（取反时顺序很重要）
+# 1. 所有的空行和以 # 开头的注释行将被忽略
+# 2. 模式尾部的空格将被忽略，除非使用 \ 转义
+# 3. 支持 *、**、?、[set]、[^set] shell-globbing 模式
+# 4. 同时，还支持排除语法，只需在模式开头添加 ! 即可（顺序在后）
+# 5. 如果要匹配目录，请在模式后面添加 / 路径符，/ 表示仓库根目录
+
+## 配置https免密码认证
+--- ~/.git-credentials ---
+https://username:password@github.com
+--- ~/.git-credentials ---
+git config --global credential.helper store
+
+### 附: ~/.gitconfig 配置
+--- ~/.gitconfig ---
+[commit]
+    gpgsign = true
+[push]
+    default = matching
+[core]
+    trustctime = false
+    editor = vim
+    filemode = false
+[color]
+    ui = true
+[credential]
+    helper = cache --timeout=3600
+[merge]
+    tool = vimdiff
+[mergetool]
+    keeptemporaries = false
+    keepbackups = false
+    prompt = false
+    trustexitcode = false
+[alias]
+    last = log -1 --stat
+    cp = cherry-pick
+    co = checkout
+    cl = clone
+    ci = commit
+    st = status -sb
+    br = branch
+    unstage = reset HEAD --
+    dc = diff --cached
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
+[user]
+    signingkey = fffffffffffff  # 你的 gpg singkey
+    email = example@gmail.com   # 修改为你的Email
+    name = Bob                  # 修改为你的Name
+</%an></code></pre>
+<h3 id="git基本用法"><a href="#git基本用法" class="headerlink" title="git基本用法"></a>git基本用法</h3><pre><code class="language-bash line-numbers">### 初始化，建立版本库
+git init                    # 在当前目录建立git版本库
+git init test               # 在当前目录下建立名为test的git版本库
+git init --bare             # 在当前目录建立git裸版本库(没有工作区，通常用于远程repo)
+git init --bare test.git    # 在当前目录下建立名为test.git的裸版本库(没有工作区，通常用于远程repo)
+
+### 克隆远程仓库
+git clone remote_addr                                       # 克隆remote版本库
+git clone -o jQuery https://github.com/jquery/jquery.git    # 指定remote_name为jQuery，默认origin
+
+### 添加文件至暂存区
+git add files/dirs      # 添加文件(夹)至暂存区index
+git add -A              # 添加所有文件(夹)至index
+
+### 提交暂存区文件至版本库
+git commit -m 'init'    # 提交暂存区文件至版本库
+git commit -a -m '...'  # commit所有修改了的文件，没有加入暂存区的文件不会被commit
+
+### 查看当前状态
+git status              # 查看状态
+
+### diff 比较文件差异
+git diff
+git diff file                   # 工作区 vs 暂存区，如果还没add到暂存区，则 工作区 vs 最新版本库
+git diff dev
+git diff dev file               # 工作区 vs dev分支
+git diff --cached file          # 暂存区 vs 最新版本库
+git diff --cached HEAD~2 file   # 暂存区 vs 最近的倒数第2次版本库
+git diff --cached commit_id file# 暂存区 vs commit_id版本
+git diff HEAD~2|commit_id file  # 工作区 vs 指定版本库
+git diff commit_id commit_id    # 版本库 vs 版本库
+
+### log 查看日志
+git log                         # 查看log
+git log -3                      # 查看最近3次commit的log
+git log --oneline               # 每个commit放在一行
+git log --pretty=oneline        # 完整显示commit_id 
+git log --graph                 # 查看分支图形
+git log --oneline --graph
+git log -p                      # 同时显示diff信息
+git log dev                     # 查看dev分支log
+git log origin/master           # 查看origin/master分支log
+git log -p master FETCH_HEAD    # 比较master分支与fetch最新分支
+git reflog                      # 查看操作记录，可查看所有commit_id
+
+### 查看暂存区文件
+git ls-files                # 查看暂存区文件
+git ls-files -s             # 查看暂存区文件
+
+### 删除暂存区文件
+git rm file                 # 删除暂存区和工作区文件
+git rm --cached file        # 删除暂存区文件
+git commit -m '...'         # 提交至版本库
+
+### 重命名暂存区文件
+git mv file_old file_new    # 重命名暂存区和工作区文件
+git commit -m '...'         # 提交至版本库
+
+### branch 分支
+git checkout -b dev         # 创建dev分支并切换到dev分支
+# 相当于
+git branch dev              # 创建 dev 分支
+git checkout dev            # 切换至 dev 分支
+
+### 查看分支
+git branch          # 查看当前分支
+git branch -a|-r    # 查看所有|远程分支
+
+### 操作分支
+git checkout master
+git merge dev       # 合并dev分支到当前分支(master)
+git branch -d dev   # 删除dev分支
+
+git merge --no-ff -m '...' dev  # 保留dev分支信息(关闭fast forward模式),其实就是新建一个提交
+
+### 保存暂存区文件
+git stash               # 保存暂存区文件至一个临时位置(常用于修复bug)
+git stash list          # 查看
+git stash apply name    # 恢复现场
+git stash pop name      # 恢复现场(删除stash)
+
+### 删除分支
+git branch -D dev       # 强制删除未合并的分支
+
+### 建立分支追踪关系
+git branch --set-upstream master origin/master  # 手动建立分支追踪关系，clone操作默认会建立分支追踪关系
+
+### 远程仓库操作
+git remote add origin https://github.com/zfl9/test.git  # 添加remote主机
+git remote
+git remote -v
+git remote show origin
+git remote rm origin                    # 删除remote主机
+git remote rename origin github_test    # 重命名remote主机
+
+# 需要同步多个远程仓库时，可以用这种方法，只要push一次，就把所有的远程仓库都同步了
+git remote set-url --add origin git@git.coding.net:zfl9/vim.git  # 添加url
+git remote set-url --del origin git@git.coding.net:zfl9/vim.git  # 删除url
+
+### git fetch/pull
+# git fetch是从remote拉取最新的commit,然后手动merge合并
+# git pull是从remote拉取最新的commit并进行merge合并(不安全)
+
+# fetch & merge
+git fetch origin master         # 从origin拉取master分支
+git fetch origin dev            # 从origin拉取dev分支
+git fetch origin tag v1.0       # 从origin拉取tag
+
+git log -p master origin/master # 查看log及diff
+
+git merge origin/master         # 合并origin/master分支到当前分支
+git merge FETCH_HEAD            # 同上
+# 或者
+git fetch origin master:temp    # 从origin拉取master分支,并在本地将其创建为temp分支
+git log -p master temp
+git merge temp
+git branch -d temp
+
+git branch -dr origin/master    # 删除fetch的远程分支origin/master
+
+# pull
+usage: git pull remote_name remote_branch:local_branch
+git pull origin test:dev        # 拉取origin的test分支,并与本地dev分支合并
+git pull origin master          # 拉取origin的master分支,并与当前分支合并
+git pull origin                 # 如果当前分支存在追踪关系,则可以省略分支名
+git pull                        # 如果当前分支只有一条追踪关系,则还可以省略remote主机名
+
+# push
+usage: git push remote_name local_branch:remote_branch
+## branch
+git push origin test:dev        # 推送test分支到remote的dev分支
+git push origin master          # 推送master分支至与之存在追踪关系的remote分支
+git push -u aliyun master       # 指定master分支默认remote主机为aliyun(当存在多条追踪关系时)
+git push origin                 # 如果当前分支存在追踪关系,则可以省略分支名
+git push                        # 如果当前分支只有一条追踪关系,则还可以省略remote主机名
+git push origin :master         # 删除远程分支
+git push --delete origin master # 同上
+git push --all origin           # 推送本地所有分支到origin主机
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+git v2.0 之前默认是推送全部分支到远程分支，"matching"方式
+git v2.0 之后默认是推送当前分支到远程分支，"simple"方式
+
+# 修改默认push方式
+git config --global push.default matching
+or
+git config --global push.default simple
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+## tag
+git push origin tag_name    # 推送tag
+git push origin --tags      # 推送所有tag
+
+git tag v1.0        # 打在最新的commit上
+git tab v2.0 3f89   # 打在指定的commit上
+git tag -a tag_name -m '...' # 含备注的tag
+
+git tag             # 查看tag
+git tag -l
+git show tag_name
+
+git tag -d v1.0                     # 删除本地tag
+git push --delete origin tag v1.0   # 删除远程tag
+
+git checkout -b dev v1.0    # 检出tag v1.0到新分支dev
+git checkout v1.0           # 检出tag v1.0到工作区,但是不能修改,若要修改请用上面的方式
+</code></pre>
+<h3 id="git恢复操作详解"><a href="#git恢复操作详解" class="headerlink" title="git恢复操作详解"></a>git恢复操作详解</h3><p>在 CSDN 发现的这个图，感觉非常清晰，就拿过来了：<br><img src="/images/git.png" alt="工作区 暂存区 版本库"></p>
+<pre><code class="language-bash line-numbers"># 暂存区 -> 工作区
+# 恢复工作区的文件至暂存区状态(如果工作区文件没有add到暂存区,则恢复最新版本库的文件到工作区)
+git checkout -- .       # 全部file
+git checkout -- file    # 指定file
+
+# 版本库 -> 暂存区
+# 恢复暂存区的文件至版本库状态
+git reset --soft            # 默认参数就是--soft,可以省略
+git reset                   # 全部file
+git reset file              # 指定file
+git reset HEAD~2            # 指定commit
+git reset Commit_ID         # 指定commit
+
+# 版本库 -> 暂存区&工作区
+# 恢复工作区和暂存区的文件至版本库状态
+git checkout HEAD~2
+git checkout HEAD~2 file
+git checkout Commit_ID
+git checkout Commit_ID file
+
+git reset --hard
+git reset --hard HEAD~2
+git reset --hard HEAD~2 file
+git reset --hard Commit_ID
+git reset --hard Commit_ID file
+</code></pre>
+<h3 id="git服务器搭建-ssh"><a href="#git服务器搭建-ssh" class="headerlink" title="git服务器搭建(ssh)"></a>git服务器搭建(ssh)</h3><pre><code class="language-bash line-numbers">### 安装git,添加ssh公钥
+yum -y install git
+useradd git -s /usr/bin/git-shell
+
+mkdir -p /home/git/.ssh/
+vim /home/git/.ssh/authorized_keys    # 添加所有成员的ssh公钥
+chmod 600 /home/git/.ssh/* && chown -R git:git /home/git/.ssh/
+
+### 创建bare_repo裸仓库(bare_repo没有工作区，用于repo共享，方便团队协作)
+mkdir -p /repos/
+cd /repos/
+git init --bare python3.git
+chown -R git:git /repos/
+
+# 接下来就是clone了
+git clone git@127.0.0.1:/repos/python3.git
+</code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/版本控制/" rel="tag"># 版本控制</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/vim.html" rel="next" title="vim 插件及配置">
+                <i class="fa fa-chevron-left"></i> vim 插件及配置
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/keytool2openssl.html" rel="prev" title="keytool、openssl 互转">
+                keytool、openssl 互转 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#git安装及配置"><span class="nav-number">1.</span> <span class="nav-text">git安装及配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git基本用法"><span class="nav-number">2.</span> <span class="nav-text">git基本用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git恢复操作详解"><span class="nav-number">3.</span> <span class="nav-text">git恢复操作详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git服务器搭建-ssh"><span class="nav-number">4.</span> <span class="nav-text">git服务器搭建(ssh)</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/git.html';
+          this.page.identifier = 'git.html';
+          this.page.title = 'git 简明笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

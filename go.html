@@ -1,0 +1,547 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="go,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Go（又称 Golang）是 Google 开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。罗伯特·格瑞史莫，罗勃·派克（Rob Pike）及肯·汤普逊于 2007 年 9 月开始设计 Go，稍后 Ian Lance Taylor、Russ Cox 加入项目。Go 是基于 Inferno 操作系统所开发的。Go 于 2009 年 11 月正式宣布推出，成为开放源代码项目，并在">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 笔记">
+<meta property="og:url" content="https://www.zfl9.com/go.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Go（又称 Golang）是 Google 开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。罗伯特·格瑞史莫，罗勃·派克（Rob Pike）及肯·汤普逊于 2007 年 9 月开始设计 Go，稍后 Ian Lance Taylor、Russ Cox 加入项目。Go 是基于 Inferno 操作系统所开发的。Go 于 2009 年 11 月正式宣布推出，成为开放源代码项目，并在">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go 笔记">
+<meta name="twitter:description" content="Go（又称 Golang）是 Google 开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。罗伯特·格瑞史莫，罗勃·派克（Rob Pike）及肯·汤普逊于 2007 年 9 月开始设计 Go，稍后 Ian Lance Taylor、Russ Cox 加入项目。Go 是基于 Inferno 操作系统所开发的。Go 于 2009 年 11 月正式宣布推出，成为开放源代码项目，并在">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/go.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Go 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/go.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Go 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-01T08:00:00+08:00">
+                2018-12-01
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/go.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="go.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/go.html" class="leancloud_visitors" data-flag-title="Go 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Go（又称 Golang）是 Google 开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。罗伯特·格瑞史莫，罗勃·派克（Rob Pike）及肯·汤普逊于 2007 年 9 月开始设计 Go，稍后 Ian Lance Taylor、Russ Cox 加入项目。Go 是基于 Inferno 操作系统所开发的。Go 于 2009 年 11 月正式宣布推出，成为开放源代码项目，并在 Linux 及 Mac OS X 平台上进行了实现，后来追加了 Windows 系统下的实现。在 2016 年，Go 被软件评价公司 TIOBE 选为“TIOBE 2016 年最佳语言”。目前，Go 每半年发布一个二级版本（即从 a.x 升级到 a.y）。</p>
+<a id="more"></a>
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>Go 和 Java 一样，使用 package 来组织代码。</p>
+<p><strong>Java 的组织方式</strong><br>使用环境变量 CLASSPATH，这个变量存储一个或多个文件夹路径（或者 jar 文件，jar 文件当作文件夹使用，会自动解包），多个文件夹或 jar 之间使用冒号隔开。假设，现有一包，<code>com.zfl9.tool</code>，那么它对应的存储路径就是 <code>$CLASSPATH/com/zfl9/tool/</code>。Java 会在 CLASSPATH 目录列表中搜索，直到找到此文件夹为止，如果遍历完了还没找到就报错，提示找不到包。com.zfl9.tool 包下有一个类 HttpServer，那么这个类实际对应的路径就是：<code>$CLASSPATH/com/zfl9/tool/HttpServer.class</code>。每个 class 文件都是一个 Java 类，如果一个 class 文件能够运行，那么它必须包含 main() 静态方法。它是程序的入口函数。每个 <code>*.java</code> 文件中，必须以 <code>package com.zfl9.tool;</code> 开头（忽略注释），这个包名必须与所处的路径对应（将斜杠换为英文句号），如果不一致，那么无法正常使用这个类。而对于 HttpServer 类来说，他有一个唯一的类名，叫做全限定类名，即 <code>com.zfl9.tool.HttpServer</code>。我们在别处想使用该类时，可以直接使用全限定类名来引用它，如果感觉太长，也可以先 import 这个类。如 <code>import com.zfl9.tool.HttpServer;</code>，然后我们就可以直接使用 HttpServer 这个名称来引用它了，当然 import 后也是可以用全限定类名来引用的。也可以使用通配符，一次性引入某个包下的所有类，<code>import com.zfl9.tool.*;</code> 即可。</p>
+<p><strong>Golang 的组织方式</strong><br>先来了解 Go 的两个环境变量：GOROOT、GOPATH。<br>GOROOT 指定 Go 的安装目录，比如 /usr/local/golang。<br>GOPATH 指定 Go 的工作目录，比如 ~/golang（可以有多个）。</p>
+<p>GOROOT 和 GOPATH 下都有 3 个子文件夹，如下：<br>bin：二进制可执行文件<br>pkg：静态库文件（<code>*.a</code>）<br>src：Go 源码文件（<code>*.go</code>）</p>
+<p>还是以 <code>com/zfl9/tool</code> 包为例（注意是斜杠，与 Java 不同），显然，我们需要进入 <code>$GOPATH/src</code> 目录（<code>$GOROOT/src</code> 也是可以的，不过不建议在标准库中搞事）。然后我们新建文件夹 <code>mkdir -p com/zfl9/tool</code>，目前来看和 Java 是差不多的，然后进入 tool 目录。</p>
+<p>然后，我们新建一个 go 文件，<code>hello.go</code>，如下：</p>
+<pre><code class="language-go line-numbers"><script type="text/plain">
+package tool
+
+func Hello() string {
+    return "hello, world!"
+}
+</script></code></pre>
+<p>然后，编译并安装它 <code>go install</code>（进入 tool 目录）。<br>此时，你可以找到函数库文件 <code>$GOPATH/pkg/linux_amd64/com/zfl9/tool.a</code>。<br>注意观察它们的命名规则，直接将尾目录替换为归档文件，即添加 <code>.a</code> 后缀。<br>pkg 的直接子文件夹，命名规则为 <code>$GOOS_$GOARCH</code>，前面是系统，后面是架构。</p>
+<p>现在，我们来试试 main 包，一个简单的 helloworld。<br>因为一个目录下的源文件必须同属一个包，所以我们去别的文件夹。<br>这里我们使用 <code>$GOPATH/src/com/zfl9/main</code> 文件夹，进入，新建 main.go：</p>
+<pre><code class="language-go line-numbers"><script type="text/plain">
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("hello, world!");
+}
+</script></code></pre>
+<p>然后，编译并安装它 <code>go install</code>（当前目录位于 main 目录）。<br>此时，我们可以看到 <code>$GOPATH/bin/main</code> 可执行文件，运行它试试！<br>这里说明一点，生成的可执行文件名称与包所处的文件夹相同，与 <code>*.go</code> 名称无关。</p>
+<p>这里说明一下两个常用的编译/安装命令：<code>go build</code>、<code>go install</code>。</p>
+<ul>
+<li><code>go build</code>：<strong>编译</strong>，如果当前目录的包不是 main，那么运行此命令不会生成任何文件，go 仅仅检测该目录下的 <code>*.go</code> 文件是否可正常编译；如果当前目录的包是 main，那么运行此命令会在当前文件夹下产生一个可执行文件，可执行文件名为当前文件夹的名称。</li>
+<li><code>go install</code>：<strong>安装</strong>，实际上此命令是 <code>go build</code> 的超集，它会先执行 <code>go build</code>。如果当前目录的包不是 main，那么运行此命令会在 <code>$GOPATH/pkg/$GOOS_$GOARCH</code> 文件夹下生成对应的 <code>*.a</code> 静态链接库文件；如果当前目录的包是 main，那么运行此命令会在 <code>$GOPATH/bin</code> 文件夹下生成与当前文件夹同名的可执行文件。</li>
+</ul>
+<p>当然，我们也可以不进入对应的目录，而是直接在任意目录下，运行 <code>go build/install [import-path]</code>，<code>import-path</code> 就是导入路径，就是 <code>import</code> 后面的参数，也就是一个源码文件夹。导入路径只能是相对路径，可以相对于 <code>$GOROOT/src</code>、<code>$GOPATH/src</code>，也可以相对于当前目录，上级目录（<code>.</code>、<code>..</code>），但不能是绝对路径。</p>
+<p><code>*.go</code> 源文件中的 import 语句只能使用相对于 <code>$GOROOT/src</code>、<code>$GOPATH/src</code> 目录，不能使用其他路径，比如 <code>&quot;fmt&quot;</code>、<code>&quot;helloworld&quot;</code>。</p>
+<p>注意，go 在编译时，如果发现源文件中有 import 导包语句，那么 go 只会去 <code>$GOROOT/src</code>、<code>$GOPATH/src</code> 目录下找到对应文件夹，然后编译成 <code>*.a</code> 文件（但是不会保存到 pkg 目录下），然后链接它们，最后生成可执行文件。这点也比较重要。</p>
+<blockquote>
+<p>Go 编译产生的临时文件均保存到 $GOCACHE 目录，默认为 ~/.cache/go-build</p>
+</blockquote>
+<p>这里说明一点，go 中的 import 后面的参数是文件夹路径，和包名没有半点关系。比如 <code>import aa/bb/cc</code>，仅仅是将 <code>$GOPATH/src/aa/bb/cc</code> 或 <code>$GOROOT/src/aa/bb/cc</code> 目录下的包导入进来，这个包的包名可以是其他任意合法标识符，比如 tool。我们在使用这个包时，只需使用 <code>tool.Xxx()</code> 即可。而不是使用 <code>cc.Xxx()</code>，只不过，一般情况下，我们都使用与末端文件夹同名的包名而已。记住了，这点很重要。</p>
+<p>那么，如果我有两个文件夹，helloworld、hello_world。并且，其中的包名都使用 helloworld，会怎样？那就是命名冲突了，比如，我在某个 main 包中导入它们，编译就会报错，因为 go 不知道使用哪个包：</p>
+<pre><code class="language-go line-numbers"><script type="text/plain">
+package main
+
+import (
+    "fmt"
+    "helloworld"
+    "hello_world"
+)
+
+func main() {
+    fmt.Println("hello, world!")
+    fmt.Println(helloworld.Hello())
+}
+</script></code></pre>
+<p>使用 <code>go install</code> 编译，会提示包名冲突，导致编译失败。此时我们可以分别给它们起个别名，就可以避免这个问题了，如下：</p>
+<pre><code class="language-go line-numbers"><script type="text/plain">
+package main
+
+import (
+    "fmt"
+    a "helloworld"
+    b "hello_world"
+)
+
+func main() {
+    fmt.Println("hello, world!")
+    fmt.Println(a.Hello())
+    fmt.Println(b.Hello())
+}
+</script></code></pre>
+<p>编译后运行，输出如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ main
+hello, world!
+hello, world! [@dir helloworld]
+hello, world! [@dir hello_world]
+</script></code></pre>
+<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><p><strong>Go 可执行文件瘦身</strong><br>Go 编译的可执行文件一般都是静态链接的，而且每个 Go 可执行文件都自带了一个 runtime（Go 运行时，负责内存分配，垃圾回收，反射等工作，和 JVM 概念类似），因为这两个原因，Go 编译生成的可执行文件比 C/C++ 编译的可执行文件大得多（即使是静态编译也比 Go 编译的小得多）。</p>
+<p>那要如何瘦身呢？使用 <code>go build -ldflags &quot;-s -w&quot;</code> 就可以了，<code>-ldflags</code> 是传递给链接器的参数，<code>-s</code> 删除符号信息，<code>-w</code> 删除调试信息（注意：仅适用于可执行文件）。</p>
+<p><strong>强制设置链接方式</strong><br><em>动态链接</em>：<code>-ldflags &quot;-linkmode=external&quot;</code>（不建议，可能出错）<br><em>静态链接</em>：<code>export CGO_ENABLED=0</code>（设置环境变量，禁用 CGO）</p>
+<p><strong>Go 交叉编译</strong><br>不同于 C/C++ 交叉编译，Go 自带了绝大多数平台的交叉编译工具链，交叉编译的步骤也很简单，和 C/C++ 比起来简直是太容易了。那么我们该如何进行交叉编译呢？</p>
+<p>进行交叉编译只需要设置 3 个环境变量，分别是：<br><code>CGO_ENABLED=0</code>：禁用 CGO（CGO 可以用来调用 C/C++ 函数库）<br><code>GOOS=linux</code>：设置目标系统，如 <code>linux</code>、<code>darwin</code>（MAC）、<code>windows</code><br><code>GOARCH=arm</code>：设置目标架构，如 <code>386</code>（x86）、<code>amd64</code>、<code>arm</code>、<code>arm64</code></p>
+<p>在 shell 中，可以这么使用（临时设置环境变量）</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go install main.go
+</script></code></pre>
+<p>完整的 GOOS、GOARCH 参考列表：<a href="https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63" rel="external nofollow noopener noreferrer" target="_blank">GOOS/GOARCH list</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/go/" rel="tag"># go</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/mianliu.html" rel="next" title="免流分析">
+                <i class="fa fa-chevron-left"></i> 免流分析
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/perl.html" rel="prev" title="Perl 笔记">
+                Perl 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#入门"><span class="nav-number">1.</span> <span class="nav-text">入门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进阶"><span class="nav-number">2.</span> <span class="nav-text">进阶</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/go.html';
+          this.page.identifier = 'go.html';
+          this.page.title = 'Go 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

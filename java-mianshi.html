@@ -1,0 +1,1154 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 面试知识点总结。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 面试知识点">
+<meta property="og:url" content="https://www.zfl9.com/java-mianshi.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 面试知识点总结。">
+<meta property="og:image" content="https://www.zfl9.com/images/svn.png">
+<meta property="og:image" content="https://www.zfl9.com/images/git.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.204Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 面试知识点">
+<meta name="twitter:description" content="Java 面试知识点总结。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/svn.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-mianshi.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 面试知识点 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-mianshi.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 面试知识点
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-19T08:00:00+08:00">
+                2019-02-19
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-mianshi.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-mianshi.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-mianshi.html" class="leancloud_visitors" data-flag-title="Java 面试知识点">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 面试知识点总结。</p>
+<a id="more"></a>
+<h2 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h2><h3 id="svn"><a href="#svn" class="headerlink" title="svn"></a><a href="https://www.zfl9.com/svn.html">svn</a></h3><blockquote>
+<p>svn 是 subversion 的缩写，svn 曾是最流行的版本控制工具，但现在已经是 git 的天下了。</p>
+</blockquote>
+<p><strong>中央仓库</strong><br>在 svn 中，存在 repository 中央仓库的概念，通常我们将所有的项目都放到 repository 下进行集中管理。你可以将 repository 看做一个普通的文件夹，该文件夹下有很多子文件夹，每个子文件夹都是一个 svn 项目，即：</p>
+<pre><code class="line-numbers language-none">- repos
+  - project01
+  - project02
+  - project03
+</code></pre>
+<p>repository 是源代码统一存放的地方；在公司中，通常会有一台专门的 svn 服务器，这个服务器中存放的就是 repository。</p>
+<p><strong>基本概念</strong></p>
+<ul>
+<li><strong>repository</strong>（仓库）：源代码统一存放的地方，通常会放到专门的 svn 服务器上</li>
+<li><strong>checkout</strong>（检出）：当你手上没有源代码的时候，需要从 repository 上 checkout 一份</li>
+<li><strong>commit</strong>（提交）：当你已经修改了代码并且希望更新到 repository，就需要 commit 到 repository</li>
+<li><strong>update</strong>（更新）：如果别人提交了新版本到 repository，则需要 update 来同步 repository 上的新版本到本地</li>
+</ul>
+<p>日常开发过程其实就是这样的，假设你已经 checkout 并且已经工作了几天：update（获得最新的代码）-&gt; 作出自己的修改 -&gt; commit（大家就可以看到你的修改了）。如果两个程序员同时修改了同一个文件，SVN 会自动合并这两个程序员的改动，实际上 SVN 管理源代码是以行为单位的，就是说两个程序员只要不是修改了同一行程序，SVN 都会自动合并两种修改。如果是同一行，SVN 会提示文件 Confict（冲突），需要手动确认。</p>
+<p><strong>创建仓库</strong><br>通常，版本库会专门存放到一个目录下，进行统一管理，这是我测试的目录结构：</p>
+<pre><code class="line-numbers language-none">- /root/svn
+  - repo
+  - work
+</code></pre>
+<p>repo 就是我们的版本库目录，我们所有的项目都放在这个目录下；work 就是我们的工作目录，我们 checkout 检出的文件就是放在这里。<br>执行命令 <code>svnadmin create /root/svn/repo/test</code> 来创建我们的项目，执行之后，<code>repo</code> 目录下的 test 目录就是我们项目的版本库了。</p>
+<p><strong>检出项目</strong><br>现在我们需要在各自的电脑中，checkout 检出 repository 上的 test 项目，语法为：</p>
+<pre><code class="line-numbers language-bash">svn checkout &lt;svn_url&gt; [dst_dir] [--username=USERNAME] [--password=PASSWORD]
+</code></pre>
+<p>如果不指定 dst_dir，则会在当前目录下，创建 test 目录，然后将项目文件放到 test 目录中（即与 project 同名的目录）。<br>这里我直接就使用 file:// scheme 来检出 repository 上的 project，即 <code>svn checkout file:///root/svn/repo/test</code>。</p>
+<blockquote>
+<p>为了叙述方便，我们将 repository 上的 project 目录称为 <strong>中央仓库</strong>，将个人电脑上的 project 目录称为 <strong>工作目录</strong>（工作副本）。</p>
+</blockquote>
+<p>checkout 是用来从 repository 中检出一个工作副本，工作副本是开发者的私人空间，可以进行内容的修改，然后提交到 repository 版本库中。</p>
+<p><strong>执行修改</strong><br>检出项目之后，进入 <code>~/svn/work/test</code> 工作目录，因为是新创建的项目，所以该目录下只有一个 <code>.svn</code> 目录，<code>.svn</code> 目录是 subversion 使用的目录，我们不需要关心，这里面都是 subversion 的文件，不要去修改它，类似于 git 的 <code>.git</code> 目录。现在，我们创建一个 hello.txt 文件，内容为 <code>hello</code>：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:25:32] 
+$ echo &#39;hello&#39; &gt;hello.txt
+
+# root @ arch in ~/svn/work/test [15:25:45] 
+$ cat hello.txt 
+hello
+</code></pre>
+<p>然后执行 <code>svn status</code> 命令来查看当前的 <strong>待变更列表</strong>：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:27:19] 
+$ svn status
+?       hello.txt
+</code></pre>
+<p>前面一个 <code>?</code> 表示这个文件还未加入 svn 的版本管理，如果想让 svn 管理我们的文件/目录，那么这些文件/目录必须加入 svn 的版本管理，对于没有加入 svn 版本管理的文件/目录，svn 是不会对其进行操作的。执行 <code>svn add hello.txt</code> 命令可以将指定的文件、目录（可以一次性 add 多个文件、目录）加入 svn 的管理系统：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:31:13] C:1
+$ svn add hello.txt 
+A         hello.txt
+
+# root @ arch in ~/svn/work/test [15:31:18] 
+$ svn status 
+A       hello.txt
+</code></pre>
+<p><code>A</code> 标识对应的文件已经加入了 svn 的管理系统；注意，一个文件只需要 add 一次，后续修改不需要再执行 <code>svn add hello.txt</code>，直接 commit 即可。</p>
+<p><strong>提交变更</strong><br>刚才创建了一个 hello.txt 文件，内容为 <code>hello</code>，现在我们准备将这个变更提交到 repository 上（注意是直接提交到 repository 上，和 git 不同）：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:40:47] 
+$ svn commit -m &quot;create hello.txt by user01&quot;
+Adding         hello.txt
+Transmitting file data .done
+Committing transaction...
+Committed revision 1.
+</code></pre>
+<p>可以看到，当前项目的版本已经变为了 1，<code>svn commit</code> 和 <code>git commit</code> 的用法是一样的，都需要指定一个 <code>-m &quot;message&quot;</code> 来说明变更的内容。</p>
+<blockquote>
+<p>svn 的 commit 是一个原子操作，即：一个 commit 操作要么成功，要么失败，不会出现只更新了部分文件的结果。</p>
+</blockquote>
+<p>现在，我们再来修改 hello.txt 文件，添加一行，<code>user01</code>，然后 commit 到中央版本库中：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:44:50] 
+$ echo &quot;user01&quot; &gt;&gt;hello.txt 
+
+# root @ arch in ~/svn/work/test [15:44:55] 
+$ cat hello.txt 
+hello
+user01
+
+# root @ arch in ~/svn/work/test [15:44:56] 
+$ svn status
+M       hello.txt
+</code></pre>
+<p>状态 <code>M</code> 表示对应的文件已经做了变动，如果当前没有未加入版本控制的文件，或者当前没有文件被修改，则 <code>svn status</code> 不会打印任何内容。提交：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:44:59] 
+$ svn commit -m &quot;modify hello.txt by user01&quot;
+Sending        hello.txt
+Transmitting file data .done
+Committing transaction...
+Committed revision 2.
+
+# root @ arch in ~/svn/work/test [15:48:21]
+$ svn status
+</code></pre>
+<p>OK，我们现在进入 <code>~/svn/work/</code> 目录，再次 checkout 我们的 test 项目，并指定工作目录为 <code>temp</code>，如下：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work [15:51:02] 
+$ svn checkout file:///root/svn/repo/test temp
+A    temp/hello.txt
+Checked out revision 2.
+
+# root @ arch in ~/svn/work [15:51:03] 
+$ cd temp 
+
+# root @ arch in ~/svn/work/temp [15:51:05] 
+$ ll
+total 4.0K
+-rw-r--r-- 1 root root 13 Feb 19 15:51 hello.txt
+
+# root @ arch in ~/svn/work/temp [15:51:09] 
+$ cat hello.txt 
+hello
+user01
+</code></pre>
+<p>可以看到，我们这次 checkout 的 test 项目就有了刚才提交的 hello.txt 文件，且内容一致。现在，我们来在 temp 目录下修改 hello.txt 并提交：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/temp [15:55:01] 
+$ echo &quot;user02&quot; &gt;&gt;hello.txt 
+
+# root @ arch in ~/svn/work/temp [15:55:07] 
+$ cat hello.txt 
+hello
+user01
+user02
+
+# root @ arch in ~/svn/work/temp [15:55:08] 
+$ svn status
+M       hello.txt
+
+# root @ arch in ~/svn/work/temp [15:55:22] 
+$ svn commit -m &quot;modify hello.txt by user02&quot;
+Sending        hello.txt
+Transmitting file data .done
+Committing transaction...
+Committed revision 3.
+</code></pre>
+<p><strong>更新副本</strong><br>现在项目的版本号变为了 3，显然，<code>~/svn/work/test</code> 工作副本已经过期了，因为它的版本还是 2，这时候就需要进入 <code>~/svn/work/test</code> 目录，执行 <code>svn update</code> 命令来从 repository 上更新（拉取）最新的版本到本地工作副本中，更新之后，就可以看到 hello.txt 的最新内容了：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [15:58:33] 
+$ cat hello.txt 
+hello
+user01
+
+# root @ arch in ~/svn/work/test [15:58:35] 
+$ svn update
+Updating &#39;.&#39;:
+U    hello.txt
+Updated to revision 3.
+
+# root @ arch in ~/svn/work/test [15:58:37] 
+$ cat hello.txt 
+hello
+user01
+user02
+</code></pre>
+<p>因此，一个最佳实践是，在你决定修改文件之前，先执行 <code>svn update</code> 来拉取中央仓库上的最新副本，避免因为当前的副本是过期版本而 commit 失败。</p>
+<p><strong>撤销更改</strong><br>这里指的撤销更改是撤销当前工作副本中的更改，还未提交到中央版本库。我们可以使用 <code>svn info</code> 或 <code>svn log</code>  命令来查看项目的信息、日志：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [16:10:09] 
+$ svn info
+Path: .
+Working Copy Root Path: /root/svn/work/test
+URL: file:///root/svn/repo/test
+Relative URL: ^/
+Repository Root: file:///root/svn/repo/test
+Repository UUID: 2c4ce67e-701d-466c-8033-82356d1a6bcf
+Revision: 3
+Node Kind: directory
+Schedule: normal
+Last Changed Author: root
+Last Changed Rev: 3
+Last Changed Date: 2019-02-19 15:55:29 +0800 (Tue, 19 Feb 2019)
+
+# root @ arch in ~/svn/work/temp [16:10:14] 
+$ svn info
+Path: .
+Working Copy Root Path: /root/svn/work/temp
+URL: file:///root/svn/repo/test
+Relative URL: ^/
+Repository Root: file:///root/svn/repo/test
+Repository UUID: 2c4ce67e-701d-466c-8033-82356d1a6bcf
+Revision: 3
+Node Kind: directory
+Schedule: normal
+Last Changed Author: root
+Last Changed Rev: 3
+Last Changed Date: 2019-02-19 15:55:29 +0800 (Tue, 19 Feb 2019)
+</code></pre>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [16:10:13] 
+$ svn log
+------------------------------------------------------------------------
+r3 | root | 2019-02-19 15:55:29 +0800 (Tue, 19 Feb 2019) | 1 line
+
+modify hello.txt by user02
+------------------------------------------------------------------------
+r2 | root | 2019-02-19 15:48:16 +0800 (Tue, 19 Feb 2019) | 1 line
+
+modify hello.txt by user01
+------------------------------------------------------------------------
+r1 | root | 2019-02-19 15:41:25 +0800 (Tue, 19 Feb 2019) | 1 line
+
+create hello.txt by user01
+------------------------------------------------------------------------
+
+# root @ arch in ~/svn/work/temp [16:10:15] 
+$ svn log
+------------------------------------------------------------------------
+r3 | root | 2019-02-19 15:55:29 +0800 (Tue, 19 Feb 2019) | 1 line
+
+modify hello.txt by user02
+------------------------------------------------------------------------
+r2 | root | 2019-02-19 15:48:16 +0800 (Tue, 19 Feb 2019) | 1 line
+
+modify hello.txt by user01
+------------------------------------------------------------------------
+r1 | root | 2019-02-19 15:41:25 +0800 (Tue, 19 Feb 2019) | 1 line
+
+create hello.txt by user01
+------------------------------------------------------------------------
+</code></pre>
+<p>现在两个工作副本都是最新的，版本号为 3，因为都是最新的，所以使用 <code>svn update</code> 没有什么更新：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/test [16:11:48] 
+$ svn update
+Updating &#39;.&#39;:
+At revision 3.
+
+# root @ arch in ~/svn/work/temp [16:11:46] 
+$ svn update
+Updating &#39;.&#39;:
+At revision 3.
+</code></pre>
+<p>现在，我们在 temp 副本中，修改 hello.txt，添加一行内容：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/temp [16:13:44] 
+$ echo &quot;update&quot; &gt;&gt;hello.txt 
+
+# root @ arch in ~/svn/work/temp [16:13:51] 
+$ cat hello.txt 
+hello
+user01
+user02
+update
+
+# root @ arch in ~/svn/work/temp [16:13:52] 
+$ svn status
+M       hello.txt
+
+# root @ arch in ~/svn/work/temp [16:13:54] 
+$ svn diff
+Index: hello.txt
+===================================================================
+--- hello.txt    (revision 3)
++++ hello.txt    (working copy)
+@@ -1,3 +1,4 @@
+ hello
+ user01
+ user02
++update
+</code></pre>
+<p>OK，现在我想撤回这个更改，将 <code>update</code> 行去掉，该怎么办呢？不需要手动改这个文件，直接使用 <code>svn revert hello.txt</code> 即可：</p>
+<pre><code class="line-numbers language-bash"># root @ arch in ~/svn/work/temp [16:15:21] 
+$ svn revert hello.txt 
+Reverted &#39;hello.txt&#39;
+
+# root @ arch in ~/svn/work/temp [16:15:26] 
+$ svn status
+
+# root @ arch in ~/svn/work/temp [16:15:31] 
+$ cat hello.txt 
+hello
+user01
+user02
+
+# root @ arch in ~/svn/work/temp [16:15:33] 
+$ ll
+total 4.0K
+-rw-r--r-- 1 root root 20 Feb 19 16:15 hello.txt
+</code></pre>
+<p>如果要 revert 目录，则需要加上 -R 参数，即 <code>svn revert -R directory_name</code>。</p>
+<p><strong>工作图解</strong><br><img src="/images/svn.png" alt="svn 工作图解"></p>
+<h3 id="git"><a href="#git" class="headerlink" title="git"></a><a href="https://www.zfl9.com/git.html">git</a></h3><blockquote>
+<p>svn 曾经是最流行的版本控制工具，但是现在，最流行的是 git，现在我们来认识一下 git。</p>
+</blockquote>
+<p><img src="/images/git.png" alt="git 工作图解"></p>
+<p><strong>核心概念</strong><br>git 有 4 大核心概念：</p>
+<ul>
+<li><strong>工作目录</strong>：这个和 svn 的工作副本是一样的概念，就是当前的项目文件夹而已。</li>
+<li><strong>暂存区域</strong>：等价于 <code>.svn</code> 目录，用来临时保存当前的更改，是 <code>.git</code> 目录下的一个缓存区域。</li>
+<li><strong>本地仓库</strong>：git 的本地仓库就是指项目目录下的 <code>.git</code> 目录，git 的本地仓库等价于 svn 的 <code>repository</code>。</li>
+<li><strong>远程仓库</strong>：这是 svn 中所没有的概念，远程仓库是本地仓库的特殊形式（称为“裸仓库”，没有工作目录、暂存区域）；注意，git 不一定需要远程仓库，只有工作目录、暂存区域、本地仓库才是基本组成部分，没有远程仓库一样可以工作；远程仓库可以是本地的某个文件夹，也可以是内网服务器上的某个文件夹，也可以是 github 这种 web 类型的远程仓库，功能很丰富，不知道 gitHub 的程序员根本不能称为程序员，因为连门都没入。</li>
+</ul>
+<blockquote>
+<p>正是因为 git 比 svn 多了一个 <strong>远程仓库</strong> 的概念，所以 git 也被称为是 <strong>分布式版本控制工具</strong>，因为有本地仓库，所以不需要联网就可以进行 commit 提交操作，但是 svn 却不行，svn 的 commit 提交到 repository 必须要网络，除非这个 repository 就在本机（比如上面的例子，repository 就是本机的一个文件夹），那么没有网络也可以进行 commit 操作。</p>
+</blockquote>
+<p>因为 svn 的 <code>repository</code> 等价于 git 的 <code>.git</code> 目录，svn 的 <code>.svn</code> 等价于 git 的 <code>.git/index</code> 文件，所以就有了这些区别：</p>
+<ul>
+<li>svn 的 commit 和 git 的 commit 语义是一样的，但是 svn 的 commit 会提交到 <code>repository</code>，而 git 的 commit 会提交到 <code>.git</code>。</li>
+<li>svn 的 checkout 和 git 的 checkout 语义也基本一样，但是 svn 是从 <code>repository</code> 中检出的，而 git 则是从 <code>.git</code> 本地仓库中检出。</li>
+<li>svn 的 add 操作是“一次性的”，即一个文件/目录只需要 add 一次，但是 git 的 add 操作只是将当前工作目录上做的更改提交到 index 缓存区中，git 的 commit 操作只会提交 index 区域中的变更到 local repository 中，所以如果你在工作目录中做了更改，且还想 commit 到本地仓库，必须先执行 <code>git add --all</code> 将 work 区域的变更提交到 index 区域，然后执行 commit 才会将 index 区域的内容提交到 local repository 区域。</li>
+</ul>
+<p>再次强调 git 的 4 个概念：<code>workspace</code>、<code>index</code>、<code>local-repo</code>、<code>remote-repo</code>：</p>
+<ul>
+<li><code>git add</code>：将 <code>workspace</code> 的变更提交到 <code>index</code> 暂存区域（<code>git add -A/--all</code> add 所有）</li>
+<li><code>git commit</code>：将 <code>index</code> 暂存区域的变更提交到 <code>local-repo</code> 本地仓库（<code>git commit -m &#39;msg&#39;</code>）</li>
+<li><code>git commit -a -m &#39;msg&#39;</code>：同时执行 <code>git add</code>、<code>git commit</code>，但注意，它只会 add 被 add 过的文件/目录。</li>
+</ul>
+<p>由于存在 <strong>远程仓库</strong> 概念，所以还存在 <code>push</code>（推送）、<code>pull</code>（拉取并合并）、<code>fetch</code>（仅拉取）来操作 local repository 和 remote repository。</p>
+<ul>
+<li><code>git push</code>：将 local repository 推送到 remote repository（更新到远程仓库，如 github）。</li>
+<li><code>git fetch</code>：仅将 remote repository 拉取到本地的远程分支，不会污染当前 local-repository、workspace。</li>
+<li><code>git merge</code>：在执行 <code>git fetch</code> 后，将获取到的远程分支最新提交合并到当前 local repository，并同步到 workspace。</li>
+<li><code>git pull</code>：<code>git fetch</code> + <code>git merge</code> 操作的结合，即拉取 remote repository 到本地并 merge 到 local repository、workspace。</li>
+</ul>
+<p><strong>git <code>HEAD</code> 概念</strong><br>HEAD 是一个“指针”，指向“当前分支”，比如这个：</p>
+<pre><code class="line-numbers language-bash">$ git branch -av
+* master                b485a03 add hello line
+  remotes/origin/HEAD   -&gt; origin/master
+  remotes/origin/master b485a03 add hello line
+</code></pre>
+<p>可以使用 <code>HEAD~N</code> 来引用“当前分支”的前 N 个提交（N &gt; 0）。如 <code>HEAD~1</code> 表示当前分支的上一次提交（commit）。</p>
+<p><strong><code>~/.gitconfig</code> 配置文件</strong></p>
+<pre><code class="line-numbers language-ini">[push]
+    default = matching
+[core]
+    trustctime = false
+    editor = vim
+    filemode = false
+[color]
+    ui = true
+[credential]
+    helper = cache --timeout=3600
+[merge]
+    tool = vimdiff
+[mergetool]
+    keeptemporaries = false
+    keepbackups = false
+    prompt = false
+    trustexitcode = false
+[alias]
+    last = log -1 --stat
+    cp = cherry-pick
+    co = checkout
+    cl = clone
+    ci = commit
+    st = status -sb
+    br = branch
+    unstage = reset HEAD --
+    dc = diff --cached
+    lg = log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue&lt;%an&gt;%Creset&#39; --abbrev-commit --date=relative --all
+[user]
+    name = Bob                # 修改为你的 Name
+    email = Bob@gmail.com # 修改为你的 Email
+</code></pre>
+<p><strong>创建本地仓库、远程仓库（裸仓库）</strong></p>
+<pre><code class="line-numbers language-bash">git init                # 在当前目录下创建 local repository
+git init project        # 在 ./project 目录下创建 local repository
+git init --bare         # 在当前目录下创建 remote repository
+git init --bare project # 在 ./project 目录下创建 remote repository
+</code></pre>
+<p><strong>克隆远程仓库到本地（创建本地仓库）</strong></p>
+<pre><code class="line-numbers language-bash">git clone remote_repository_url [directory]
+git clone git@github.com:zfl9/ss-tproxy.git
+</code></pre>
+<p><strong>将 workspace 中的更改提交到 index 区</strong></p>
+<pre><code class="line-numbers language-bash">git add files...   # 添加文件(夹)至 index 区
+git add --all      # 添加所有文件(夹)至 index 区
+git add -A         # 添加所有文件(夹)至 index 区
+</code></pre>
+<p><strong>将 index 的更改提交到 local repository</strong></p>
+<pre><code class="line-numbers language-bash">git commit -m &#39;message&#39;    # 将 index 区域的更改提交至 local repository
+git commit -a -m &#39;message&#39; # git add &amp;&amp; git commit 所有已被 add 过的文件
+</code></pre>
+<p><strong>查看当前 workspace/index 区域的状态</strong></p>
+<pre><code class="line-numbers language-bash">git status
+</code></pre>
+<p><strong>git diff 比较文件的差异</strong></p>
+<pre><code class="line-numbers language-bash"># workspace vs index
+git diff [files]
+
+# workspace vs branch
+git diff dev [files]
+
+# workspace vs local-repo
+git diff HEAD~2 [files]
+git diff commitId [files]
+
+# local-repo vs local-repo
+git diff HEAD~1 HEAD~2 [files]
+git diff commitId01 commitId02 [files]
+
+# index vs local-repo
+git diff --cached [files]
+git diff --cached HEAD~2 [files]
+git diff --cached commitId [files]
+</code></pre>
+<p><strong>git log 查看提交历史（日志）</strong></p>
+<pre><code class="line-numbers language-bash">git log                         # 查看所有 log
+git log -3                      # 查看最近 3 次 commit 的 log
+git log --oneline               # 每个 commit 放在一行进行显示
+git log --pretty=oneline        # 完整显示 commit_id 
+git log --graph                 # 查看分支图形
+git log --oneline --graph       # 查看分支图形 (oneline)
+git log -p                      # 同时显示 diff 信息
+git log dev                     # 查看 dev 分支 log
+git log origin/master           # 查看 origin/master 分支 log
+git log -p master FETCH_HEAD    # 比较 master 分支与 fetch 的最新分支
+git reflog                      # 查看所有操作记录，可查看所有 commit_id
+</code></pre>
+<p><strong>index 区域的 ls、rm、mv 操作</strong></p>
+<pre><code class="line-numbers language-bash"># ls
+git ls-files    # 查看 index 中的文件
+git ls-files -s # 查看 index 中的文件（详细信息）
+
+# mv
+git mv file_old file_new # 移动 working &amp; index 中的文件
+
+# rm
+git rm files...          # 删除 working &amp; index 中的文件
+git rm --cached files... # 删除 index 中的文件（不操作 working 区）
+</code></pre>
+<p><strong>branch 分支操作</strong></p>
+<pre><code class="line-numbers language-bash"># 创建分支
+git branch dev
+
+# 切换分支
+git checkout dev
+
+# 创建并切换
+git checkout -b dev
+
+# 查看分支
+git branch          # 查看当前分支
+git branch -a|-r    # 查看所有|远程分支
+
+# 合并分支
+git checkout master # 切换至 master 主线
+git merge dev       # 合并 dev 分支到当前分支
+git branch -d dev   # 删除 dev 分支（不需要了）
+
+# 删除分支
+git branch -D dev   # 强制删除未合并的分支（默认不允许）
+
+# 分支跟踪
+git branch --set-upstream master origin/master # 手动建立分支追踪关系，clone 操作默认会建立分支追踪关系
+</code></pre>
+<p><strong>remote 远程仓库操作</strong></p>
+<pre><code class="line-numbers language-bash"># 添加 remote 主机
+git remote add origin https://github.com/zfl9/test.git # origin 为主机名
+
+# 查看 remote 主机
+git remote
+git remote -v
+git remote show origin
+git remote rm origin                 # 删除 remote 主机
+git remote rename origin github_test # 重命名 remote 主机
+
+# 同一个 remote 主机添加多个 url（push 一次就可以同时推送到多个 remote repository）
+git remote set-url --add origin git@git.coding.net:zfl9/test.git  # 添加 repository url
+git remote set-url --del origin git@git.coding.net:zfl9/test.git  # 删除 repository url
+</code></pre>
+<p><strong>fetch、merge、pull、push 操作</strong></p>
+<pre><code class="line-numbers language-bash"># fetch
+git fetch origin master   # 从 origin 拉取 master 分支
+git fetch origin dev      # 从 origin 拉取 dev 分支
+git fetch origin tag v1.0 # 从 origin 拉取 tag v1.0
+
+# merge
+git merge origin/master # 合并 origin/master 分支到当前分支
+git merge FETCH_HEAD    # 合并 origin/master 分支到当前分支，同上
+
+# pull (usage: git pull remote_name remote_branch[:local_branch])
+git pull origin test:dev # 拉取 origin 的 test 分支，并与本地 dev 分支合并
+git pull origin master   # 拉取 origin 的 master 分支，并与当前分支合并
+git pull origin          # 如果当前分支存在追踪关系，则可以省略分支名
+git pull                 # 如果当前分支只有一条追踪关系，则还可以省略主机名
+
+# push (usage: git push remote_name local_branch:remote_branch)
+git push origin test:dev        # 推送 test 分支到 remote 的 dev 分支
+git push origin master          # 推送 master 分支至与之存在追踪关系的 remote 分支
+git push -u aliyun master       # 设置 master 分支的默认 remote 主机为 aliyun 主机
+git push origin                 # 如果当前分支存在追踪关系，则可以省略分支名
+git push                        # 如果当前分支只有一条追踪关系，则还可以省略主机名
+git push origin :master         # 删除远程分支 master
+git push --delete origin master # 删除远程分支 master，同上
+git push --all origin           # 推送本地所有分支到 origin 主机
+</code></pre>
+<p><strong>tag 标签相关的操作</strong></p>
+<pre><code class="line-numbers language-bash"># 推送 tag
+git push origin tag_name # 推送指定 tag 到远程主机上
+git push origin --tags   # 推送所有 tag 到远程主机上
+
+# 创建 tag
+git tag v1.0                 # 打在最新的 commit 上
+git tab v2.0 3f89            # 打在指定的 commit 上
+git tag -a tag_name -m &#39;msg&#39; # 打标签的同时进行备注
+
+# 查看 tag
+git tag
+git tag -l
+git show tag_name
+
+# 删除 tag
+git tag -d v1.0                   # 删除本地 tag
+git push --delete origin tag v1.0 # 删除远程 tag
+
+# 检出 tag
+git checkout -b dev v1.0 # 检出 tag v1.0 到新分支 dev
+git checkout v1.0        # 检出 tag v1.0 到工作区，但是不能修改，若要修改请用上面的方式
+</code></pre>
+<p><strong>reset、checkout 恢复操作</strong></p>
+<pre><code class="line-numbers language-bash"># 版本库 -&gt; 暂存区&amp;工作区
+git reset --hard
+git reset --hard HEAD~2
+git reset --hard Commit_ID
+
+# 暂存区 -&gt; 工作区
+git checkout -- .     # 全部 file
+git checkout -- files # 指定 file
+
+# 版本库 -&gt; 暂存区
+git reset [--soft]  # 当前 commit
+git reset HEAD~2    # 指定 commit
+git reset Commit_ID # 指定 commit
+</code></pre>
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p><a href="https://www.zfl9.com/regex.html">正则表达式详解</a></p>
+<h2 id="数据结构与算法"><a href="#数据结构与算法" class="headerlink" title="数据结构与算法"></a>数据结构与算法</h2><p><a href="http://localhost:4000/data-structures-algorithms.html" rel="external nofollow noopener noreferrer" target="_blank">数据结构与算法 - 概述</a><br><a href="http://localhost:4000/array-search-sort-algo.html" rel="external nofollow noopener noreferrer" target="_blank">数组排序、数组查找算法</a></p>
+<h2 id="字符集与字符编码"><a href="#字符集与字符编码" class="headerlink" title="字符集与字符编码"></a>字符集与字符编码</h2><p><a href="https://www.zfl9.com/java-lang-util.html#Unicode-%E5%92%8C-UTF-16">ASCII 字符集&amp;字符编码、Unicode 字符集、UTF-8/UTF-16/UTF-32 字符编码</a>。</p>
+<h2 id="Java-基础知识"><a href="#Java-基础知识" class="headerlink" title="Java 基础知识"></a>Java 基础知识</h2><p><strong>java 跨平台的本质及原理</strong><br>我们知道，java 中有两种常见的文件：</p>
+<ul>
+<li><code>*.java</code>：java 源文件，只会被 javac 使用</li>
+<li><code>*.class</code>：字节码文件，只会被 java 使用（jvm）</li>
+</ul>
+<p>javac 是 java 编译器，用来将 <code>*.java</code> 源文件编译为 <code>*.class</code> 类文件，java 命令是一个类似于 bash 的解释器，也就是俗称的 jvm（java 虚拟机），jvm 实际上是一个普通的 C/C++ 程序，你可以将它看做为 bash 程序，它们都是解释器（但 jvm 支持 jit 即时编译），而 bash 我们知道，它解释的是 <code>*.sh</code> shell 脚本文件（纯文本，可阅读），即 <code>bash /path/to/script.sh</code>；java 解释的其实是 <code>*.class</code> 类文件（二进制文件，不可读），即 <code>java com.zfl9.Main</code>。显然 <code>*.class</code> 类文件比 <code>*.sh</code> 脚本文件更加接近底层（因为经过了编译，虽然编译生成的不是机器码，但性能肯定比未编译的好）。</p>
+<p>了解这里面的运行机制后，就可以很好的理解 java 的跨平台原理了，其实非常简单，java 只需要提供不同平台下的 jvm 程序就行了，对于 Linux 平台，就提供一个 Linux 版的 jvm 程序；对于 Windows 平台，就提供一个 Windows 版的 jvm 程序；以此类推。因为 <code>*.class</code> 文件的格式是相同的，不会变的，所以相同的 <code>*.class</code> 类文件可以被不同平台下的 jvm 程序解释运行，这就是所谓的“跨平台”；其实仔细想想，如果 bash 也能提供 Windows 版本（命令的移植性先不管），那么 bash 其实也能称为是跨平台的。</p>
+<p><strong><code>*.java</code> 文件和 <code>*.class</code> 文件</strong><br>通常，一个 .java 源文件中只建议编写一个 java 类，并且建议文件名与类名相同，即假设存在一个 Main.java 源文件，那么其中的类名应该为 Main，这是一个很好的实践，避免给别的开发者带来不必要的困惑（虽然 java 语言规范允许在一个 .java 源文件中编写多个 java 类，但是没有理由支持你这么做，因为这纯属是自己给自己找麻烦，没有任何好处）。</p>
+<p>而通过 javac 编译器编译生成的 .class 类文件，则是不可读的，因为它是二进制文件（抽象版的机器码，只能被 jvm 所解释运行，原生主机不能直接解释运行，这是与原生机器码的区别），每个 .class 类文件都是一个 java 类，是的，每个都是，有多少个 .class 类文件，就有多少个 java 类。如果一个 .class 类文件中定义了 <code>public static void main(String[] args)</code> 程序入口方法，那么这个类就是一个可运行的类（启动类、主类），可以使用 <code>java path.to.package.ClassName</code> 方式来直接运行它，这个 main() 方法和 C/C++ 中的 main() 方法的作用是相似的。</p>
+<p><strong>Java SE、Java EE、<del>Java ME</del></strong></p>
+<blockquote>
+<p>实际上 Java ME 已经死了（Android 用的不是 Java ME，而是 Java SE），所以这里仅讨论 Java SE、Java EE。</p>
+</blockquote>
+<p>Java SE 是 Java 的标准版，JSE 提供了日常开发中需要使用的绝大多数类库，如 <code>java.lang</code>、<code>java.util</code>、<code>java.io</code>、<code>java.net</code>，所谓类库就是 jar 包，jar 包实际上是 zip 压缩包，里面存放的都是 .class 类文件，通常我们会将自己开发的类库打包为一个 jar，然后发布出去，给别的开发者使用；这些 jar 包中的 .class 类就相当于 bash 脚本中会使用到的 command 命令一样，如果 bash 脚本所在的环境没有任何可用的命令，那么 bash 脚本实际上做不了任何事；同样的，对于 Java 来说，如果没有这些 jar 包，那么基本上无法开发任何有用的程序，除非你能重头写这些基础 jar 包，就如同你能重头写 bash 所在的系统上的基础命令一样，这显然是不太现实的事情。所以，JSE 提供的这些 class 都是每一个 java 程序必须要使用到的类，比如 java.lang.String 类，可以说，如果没有这个类，99% 的 java 程序都将无法运行。JSE 要干的事情就是提供这些核心的、基础的 java 类库。</p>
+<p>Java EE 是 Java 的企业版，JEE 不同于 JSE，JEE 只提供一系列 API 规范，所谓 API 规范就是 Java 语言规范中的 interface 接口，JEE 并未提供这些 API 接口对应的实现类，而我们知道，如果要使用这些 API，必须要有对应的实现类才行。当然，JEE 也不是绝对的不提供实现类，看情况而定啦，但是大多数情况下，它真的只是一个 API 规范，比如我们经常接触的 servlet-api 和 jsp-api，这些就是 JEE 提供的规范，而 Tomcat 对这些 API 接口进行了自己的实现（通常被称为“应用服务器”），所以我们可以将 servlet 和 jsp 放到 Tomcat 容器中运行，因为 Tomcat 实现了 Servlet 规范和 JSP 规范。</p>
+<p><strong>bash vs java</strong></p>
+<ul>
+<li>java 程序的丰富功能本质上也是借助丰富的类库实现的，没有了这些实用类库，java 程序同样干不了事。类库是 java 程序的根基。</li>
+<li>bash 脚本的丰富功能本质上都是借助众多命令来实现的，没有了这些实用命令，bash 脚本干不了任何事。命令是 bash 脚本的根基。</li>
+</ul>
+<h2 id="Java-环境配置"><a href="#Java-环境配置" class="headerlink" title="Java 环境配置"></a>Java 环境配置</h2><p>要进行 Java 开发，首先你得在你的电脑上安装 JDK 环境，所谓 JDK 就是 Java 开发工具包的意思，类似于 SDK；除了 JDK 之外，你可能还听过一个 JRE 概念，JRE 实际上是 Java 运行时环境的意思，JDK 包含 JRE（JDK 目录下面的 <code>jre</code> 目录就是自带的那个 JRE）；如果你只是想运行 Java 程序，只需要安装并配置好 JRE 即可（有 java 命令，即 jvm）；如果你想开发 Java 程序，那么就必须安装并配置 JDK，因为我们需要 javac 这些开发工具，这些工具是 JDK 提供的，JRE 不提供。</p>
+<blockquote>
+<p>在 JDK 1.5 之前，必须配置 <code>CLASSPATH</code> 环境变量，但是从 JDK 1.5 开始（含 1.5 版本），不需要配置这个变量了。</p>
+</blockquote>
+<p>这里仅以 JDK 1.5 以后的版本为例，现在主流的 JDK 版本为 JDK 1.8；要正常运行 JDK，实际上只需要配置一个 <code>JAVA_HOME</code> 环境变量，该变量指向的是 JDK 的安装目录，如 <code>/usr/local/java</code>；为了方便运行 java、javac 等程序，我们通常还会在系统的 PATH 环境变量中加上 <code>$JAVA_HOME/bin</code> 目录，这个目录下有 Java 开发需要的各种工具，如 java、javac、javap、jar 等等。</p>
+<p>配置好 JDK 环境后，我们就可以开发 Java 程序了，你可以选择你喜欢的任意文本编辑器来开发 Java 程序，也可以选择你喜欢的任意 Java IDE 来开发 Java 程序（如 IDEA、Eclipse）；对于初学者，强烈建议先使用文本编辑器来学习 Java，不要一开始就用 IDE，因为用 IDE 你很难理解到开发过程中的很多细节（如：如何编译，如何运行，以及 CLASSPATH 的概念和作用）；在你彻底了解了 Java 开发过程的各种细节之后，你就可以尝试使用 IDE 了，因为 Java 开发的一个痛点是，package 很长，且不好记，而且 class 类名也很长也不好记，所以使用 IDE 进行开发能让你的开发效率提升好几个级别。</p>
+<h2 id="Java-类和对象"><a href="#Java-类和对象" class="headerlink" title="Java 类和对象"></a>Java 类和对象</h2><p>还记得学习 C++ 的时候，讲过 <strong>类</strong> 和 <strong>对象</strong> 的底层实现细节；不过在讲这个之前，先来回顾一下 C 语言中的结构体（struct），C 语言中唯一的复合类型就是 struct 结构体了，其它的都是基本数据类型，没什么可讲的；结构体的成员可以是 C 语言中的任意类型，如 int、char、float、数组、结构体，如：</p>
+<pre><code class="line-numbers language-c">struct MyStruct {
+    int    a;
+    char   b;
+    double c;
+};
+</code></pre>
+<p>上面的代码只是定义了一个 <code>struct MyStruct</code> 结构体类型，这个类型是写给 C 编译器看的，如果我们不定义 <code>struct MyStruct</code> 类型的变量，那么这个定义没有什么作用；而 C++ 为了实现 OOP（面向对象编程），它将 struct 结构体类型封装为了 class 类，在 class 类中，不仅可以定义 <strong>变量</strong>，还可以定义 <strong>函数</strong>，也就是说，存在两种类型的成员：<strong>成员变量</strong>、<strong>成员函数</strong>。但是，学过 C++ 的同学应该知道，class 类型实际上就是 struct 类型的封装版，本质上还是 struct 类型；这时候有人就提出疑问了，struct 中只能定义成员变量，不能定义成员函数，那么 C++ 是如何将成员函数放进 struct 中的呢？</p>
+<p>其实，C++ 并未将成员函数放进 struct 中，因为根本放不进去啊，实际上，class 类型中的函数就是一个普通的 C 函数，只不过这个函数会接受一个隐式的 <code>this</code> 指针参数，这个 this 参数是编译器自动传入给成员函数的，this 变量是一个结构体指针，因为当我们实例化一个 class 类的时候，创建的就是一个结构体（放在堆中），因为成员函数就是普通的函数，不是存放在这个结构体中，只有成员变量才是放在这个结构体中，总之，去掉 class 中的函数就差不多是 C 语言中的结构体，假设存在一个成员方法：<code>method(arg)</code>，那么当我们调用 <code>obj.method(arg)</code> 时，调用的实际上就是 <code>method(obj, arg)</code>，这个 obj 就是我们说的 this 指针，它指向的就是当前的对象（结构体）。</p>
+<blockquote>
+<p>在 Java 中，同样有 this 指针，Java 的 class 类型的实现原理和 C++ 的实现原理是一模一样的，没有什么区别，所以说 Java 是纯净版的 C++。</p>
+</blockquote>
+<h2 id="Java-标识符"><a href="#Java-标识符" class="headerlink" title="Java 标识符"></a>Java 标识符</h2><p>Java 标识符可以是 <strong>字母</strong>、<strong>数字</strong>、<strong>下划线</strong>、<strong>美元符</strong> 的任意组合，但是不能以 <strong>数字</strong> 开头。</p>
+<p><strong>类名</strong>：驼峰命名法（首字母大写）<br><strong>方法名</strong>：驼峰命名法（首字母小写）<br><strong>常量</strong>：下划线命名法（全部为大写形式）</p>
+<h2 id="Java-修饰符"><a href="#Java-修饰符" class="headerlink" title="Java 修饰符"></a>Java 修饰符</h2><ul>
+<li><strong>访问控制修饰符</strong>：<code>[package]</code>、<code>public</code>、<code>protected</code>、<code>private</code>；</li>
+<li><strong>非访问控制修饰符</strong>：<code>static</code>、<code>final</code>、<code>abstract</code>、<code>synchronized</code>、<code>transient</code>、<code>volatile</code>；</li>
+</ul>
+<h2 id="Java-数据类型"><a href="#Java-数据类型" class="headerlink" title="Java 数据类型"></a>Java 数据类型</h2><ul>
+<li><strong>基本类型</strong>，八大基本类型：<code>byte</code>、<code>short</code>、<code>int</code>、<code>long</code>、<code>float</code>、<code>double</code>、<code>char</code>、<code>boolean</code></li>
+<li><strong>引用类型</strong>，Object 是所有引用类型的父类，所以说，java.lang.Object 是所有类的祖先类，无一例外</li>
+</ul>
+<p>基本数据类型的长度：</p>
+<ul>
+<li><code>byte</code>：字节类型，长度 1 byte，有符号；</li>
+<li><code>short</code>：短整型，长度 2 byte，有符号；</li>
+<li><code>int</code>：整型，长度 4 byte，有符号；</li>
+<li><code>long</code>：长整型，长度 8 byte，有符号，字面量需要使用 <code>L</code> 后缀，大小写不敏感；</li>
+<li><code>float</code>：单精度浮点数，长度 4 byte，能保证 7 位有效数字，字面量需要使用 <code>F</code> 后缀，大小写不敏感；</li>
+<li><code>double</code>：双精度浮点数，长度 8 byte，能保证 15 位有效数字，字面量需要使用 <code>D</code> 后缀，大小写不敏感；</li>
+<li><code>char</code>：字符类型，长度 2 byte，<code>code unit</code>，本质是 <code>unsigned short</code>，字符用单引号，字符串用双引号；</li>
+<li><code>boolean</code>：布尔类型，长度依赖于 JVM 实现，通常是 1 byte，但可能只用了 1 bit；字面量：<code>true</code>、<code>false</code>；</li>
+</ul>
+<p><strong>二进制、八进制、十六进制、长数字表示方法</strong></p>
+<ul>
+<li>二进制：<code>0b</code> 前缀，如 <code>0b1001</code> 对应十进制的 9（Java 7 起）；</li>
+<li>八进制：<code>0</code> 前缀，如 <code>010</code> 对应十进制的 8；</li>
+<li>十六进制：<code>0x</code> 前缀，如 <code>0xCAFE</code> 对应十进制的 51966；</li>
+<li>长数字表示：从 Java 7 开始，可以使用 <code>_</code> 下划线来分隔数字，如 <code>1_000_000_000</code> 表示 <code>1,000,000,000</code>。</li>
+</ul>
+<p>自动数据类型转换，Java 允许自动从位数低的类型转换为位数高的类型，如 <code>double d = 100L</code>，<code>100L</code> 是 long 类型，可以直接赋值给 double 类型，这是完全没有问题的，不会有任何编译警告；但是反过来，<code>long l = 100.0D</code> 就不行了，因为 <code>100.0D</code> 是 double 类型，不允许赋值给比它精度更低的 long 类型，会丢失精度，Java 编译器为了降低 bug 风险，不允许这种类型的赋值，也就是说，Java 只允许将精度低的数据赋值给精度高的数据类型。</p>
+<p>自动类型转换的规则：<code>byte/short/char</code> -&gt; <code>int</code> -&gt; <code>long</code> -&gt; <code>float</code> -&gt; <code>double</code>；如果要强制类型转换，则 <code>long l = (long) 100.0D</code>。</p>
+<h2 id="Java-变量类型"><a href="#Java-变量类型" class="headerlink" title="Java 变量类型"></a>Java 变量类型</h2><ul>
+<li>局部变量（方法变量）：方法的每次调用，方法变量的内存都是不同的，它们位于方法调用栈中。</li>
+<li>静态变量（static 成员）：所在的类被 ClassLoader 加载到 JVM 后，其中的静态变量就会一直存在于内存中。</li>
+<li>实例变量（非 static 成员）：当一个类被实例化后（new），实例变量就位于“结构体”中，不同对象的实例变量互不相干。</li>
+</ul>
+<h2 id="Java-数组类型"><a href="#Java-数组类型" class="headerlink" title="Java 数组类型"></a>Java 数组类型</h2><p>不同于 C/C++，Java 的数组类型也是 Object 对象，在 Java 中，所有的引用类型变量都是存在于 Heap 堆中的。</p>
+<h2 id="Java-变量初始值"><a href="#Java-变量初始值" class="headerlink" title="Java 变量初始值"></a>Java 变量初始值</h2><ul>
+<li>局部变量：没有初始值，在使用之前，必须进行初始化（也就是赋值）；</li>
+<li>静态变量：初始值为 0，对于数值类型就是 0，对于引用类型就是 null；</li>
+<li>实例变量：初始值为 0，对于数值类型就是 0，对于引用类型就是 null。</li>
+</ul>
+<h2 id="switch…case-结构"><a href="#switch…case-结构" class="headerlink" title="switch…case 结构"></a>switch…case 结构</h2><p>switch 控制结构：</p>
+<pre><code class="line-numbers language-java">int month = 8;
+String monthString;
+switch (month) {
+    case 1:  monthString = &quot;January&quot;; break;
+    case 2:  monthString = &quot;February&quot;; break;
+    case 3:  monthString = &quot;March&quot;; break;
+    case 4:  monthString = &quot;April&quot;; break;
+    case 5:  monthString = &quot;May&quot;; break;
+    case 6:  monthString = &quot;June&quot;; break;
+    case 7:  monthString = &quot;July&quot;; break;
+    case 8:  monthString = &quot;August&quot;; break;
+    case 9:  monthString = &quot;September&quot;; break;
+    case 10: monthString = &quot;October&quot;; break;
+    case 11: monthString = &quot;November&quot;; break;
+    case 12: monthString = &quot;December&quot;; break;
+    default: monthString = &quot;Invalid month&quot;; break;
+}
+System.out.println(monthString);
+</code></pre>
+<p>switch 中的数据类型只能为：<code>char</code>、<code>byte</code>、<code>short</code>、<code>int</code>、<code>enum</code>、<code>String</code>（Java7），<code>case</code> 标签后的值必须为 <strong>常量</strong>（或字面量）。</p>
+<h2 id="Java-只有值传递"><a href="#Java-只有值传递" class="headerlink" title="Java 只有值传递"></a>Java 只有值传递</h2><ul>
+<li>值传递：变量 A 赋值给变量 B 时，将变量 A 所在 <strong>内存的数据</strong> 拷贝到变量 B 所在的内存上，叫做 <strong>值传递</strong>；</li>
+<li>引用传递：变量 A 赋值给变量 B 时，将变量 A 所在 <strong>内存的地址</strong> 拷贝到变量 B 所在的内存上，叫做 <strong>引用传递</strong>。</li>
+</ul>
+<p>无论哪种传递，本质都是 <strong>内存拷贝</strong>；对于值传递，拷贝的是变量的值；对于引用传递，拷贝的是变量所在的内存地址；对于引用传递，因为在赋值的时候，我们获取了原始变量的引用，所以在使用当前变量的时候，必须先进行 <strong>解引用</strong>，才能读取到原始变量的 <strong>值</strong>，否则读取到的是原始变量的 <strong>内存地址</strong>。</p>
+<p><strong>在 Java 中，只有值传递，没有引用传递</strong>；对于基本类型，只有值传递很好理解；对于引用类型，因为 Java 的引用类型实际上相当于 C/C++ 的指针类型，如 <code>Object obj = new Object()</code>，实际上 <code>obj</code> 是一个结构体指针，该指针存储的是 <code>new Object()</code> 这个实例在 Java 堆内存中的地址；当我们将 obj 指针赋值给另一个 obj2 指针时（变量赋值），实际上传递的是 obj 指针的值（也就是 <code>new Object()</code> 实例的地址），赋值之后，obj 和 obj2 两个指针变量都指向同一个 Java 对象，所以我们当然可以通过 obj2 指针来修改这个 Java 对象的成员变量了，这是毫无疑问的。</p>
+<h2 id="Java-访问权限"><a href="#Java-访问权限" class="headerlink" title="Java 访问权限"></a>Java 访问权限</h2><ul>
+<li><strong>类型</strong><ul>
+<li><code>public</code>：对所有包的所有类都可见</li>
+<li><code>[package]</code>：对同一个包中的类可见</li>
+</ul>
+</li>
+<li><strong>成员</strong><ul>
+<li><code>public</code>：对所有包的所有类都可见，公开访问权限</li>
+<li><code>protected</code>：只对同一包中的类以及当前类的子类可见</li>
+<li><code>private</code>：只对当前类中的成员可见，即使是子类也不可见</li>
+<li><code>[package]</code>：对同一个包中的类可见，省略修饰符就是包权限</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java-初始化块"><a href="#Java-初始化块" class="headerlink" title="Java 初始化块"></a>Java 初始化块</h2><pre><code class="line-numbers language-java">class Test {
+    // static 成员
+    private static int cnt = 0;
+
+    // static 语句块
+    static {
+        System.out.printf(&quot;static state_block\n&quot;);
+    }
+
+    // 语句块 (初始化块)
+    {
+        cnt++;
+        System.out.printf(&quot;init state_block &lt;%d&gt;\n&quot;, cnt);
+    }
+
+    // 构造函数
+    public Test() {
+        System.out.printf(&quot;constructor &lt;%d&gt;\n&quot;, cnt);
+    }
+}
+</code></pre>
+<ul>
+<li><strong>静态语句块</strong>：在类装载期间执行一次</li>
+<li><strong>初始化块</strong>：在调用构造方法前执行一次</li>
+<li><strong>构造方法</strong>：在创建类的实例时执行一次</li>
+</ul>
+<blockquote>
+<p>初始化块实际上就是构造函数的一部分，在我们调用某个构造函数时，首先会执行初始化块，然后再执行构造函数本身。</p>
+</blockquote>
+<h2 id="函数重载和重写"><a href="#函数重载和重写" class="headerlink" title="函数重载和重写"></a>函数重载和重写</h2><p><strong>函数重载（overload）</strong></p>
+<ul>
+<li><strong>函数名必须相同</strong>；</li>
+<li><strong>函数参数必须不相同</strong>；</li>
+<li>函数返回值可以相同，可以不相同；</li>
+<li>函数的访问性可以相同、可以不相同；</li>
+<li>函数的检查异常可以相同、可以不相同；</li>
+</ul>
+<p><strong>函数重写（override）</strong></p>
+<ul>
+<li>必须存在继承关系且被重写函数为虚函数；</li>
+<li>参数列表必须完全与被重写方法的相同；</li>
+<li>返回类型与被重写方法相同，或者为其子类；</li>
+<li>重写函数的访问性不能比被重写函数差；</li>
+<li>重写函数和被重写函数的检查异常一致，或者为其子类；</li>
+</ul>
+<p><strong>overload 和 override 的区别</strong></p>
+<ul>
+<li>重载是一个 <code>编译期概念</code>、重写是一个 <code>运行期概念</code>；</li>
+<li>重载是编译期多态，即静态多态；重写是运行期多态，即动态多态；</li>
+<li>重载遵循所谓“编译期绑定”，即在编译时根据参数变量的类型判断应该调用哪个函数；</li>
+<li>重写遵循所谓“运行期绑定”，即在运行的时候，根据引用变量所指向的实际对象的类型来调用函数；</li>
+</ul>
+<h2 id="包装类、装拆箱"><a href="#包装类、装拆箱" class="headerlink" title="包装类、装拆箱"></a>包装类、装拆箱</h2><p><a href="https://www.zfl9.com/java-class.html#%E5%8C%85%E8%A3%85%E7%B1%BB%E3%80%81%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1">包装类、自动装箱、自动拆箱、运行时常量池</a>。</p>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="// TODO"></a>// TODO</h2><p>// TODO</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/spring-cloud.html" rel="prev" title="SpringCloud 入门">
+                SpringCloud 入门 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#版本控制"><span class="nav-number">1.</span> <span class="nav-text">版本控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#svn"><span class="nav-number">1.1.</span> <span class="nav-text">svn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git"><span class="nav-number">1.2.</span> <span class="nav-text">git</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式"><span class="nav-number">2.</span> <span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构与算法"><span class="nav-number">3.</span> <span class="nav-text">数据结构与算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符集与字符编码"><span class="nav-number">4.</span> <span class="nav-text">字符集与字符编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-基础知识"><span class="nav-number">5.</span> <span class="nav-text">Java 基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-环境配置"><span class="nav-number">6.</span> <span class="nav-text">Java 环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-类和对象"><span class="nav-number">7.</span> <span class="nav-text">Java 类和对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-标识符"><span class="nav-number">8.</span> <span class="nav-text">Java 标识符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-修饰符"><span class="nav-number">9.</span> <span class="nav-text">Java 修饰符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-数据类型"><span class="nav-number">10.</span> <span class="nav-text">Java 数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-变量类型"><span class="nav-number">11.</span> <span class="nav-text">Java 变量类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-数组类型"><span class="nav-number">12.</span> <span class="nav-text">Java 数组类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-变量初始值"><span class="nav-number">13.</span> <span class="nav-text">Java 变量初始值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#switch…case-结构"><span class="nav-number">14.</span> <span class="nav-text">switch…case 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-只有值传递"><span class="nav-number">15.</span> <span class="nav-text">Java 只有值传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-访问权限"><span class="nav-number">16.</span> <span class="nav-text">Java 访问权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-初始化块"><span class="nav-number">17.</span> <span class="nav-text">Java 初始化块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数重载和重写"><span class="nav-number">18.</span> <span class="nav-text">函数重载和重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包装类、装拆箱"><span class="nav-number">19.</span> <span class="nav-text">包装类、装拆箱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO"><span class="nav-number">20.</span> <span class="nav-text">// TODO</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-mianshi.html';
+          this.page.identifier = 'java-mianshi.html';
+          this.page.title = 'Java 面试知识点';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

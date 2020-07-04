@@ -1,0 +1,746 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="apache, httpd">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="本文记录了 Apache 一系列常用的配置，包括但不限于：rewrite、cgi、自定义错误页、gzip、静态缓存。">
+<meta name="keywords" content="linux,apache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache 配置总结">
+<meta property="og:url" content="https://www.zfl9.com/apache-conf.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="本文记录了 Apache 一系列常用的配置，包括但不限于：rewrite、cgi、自定义错误页、gzip、静态缓存。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.218Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apache 配置总结">
+<meta name="twitter:description" content="本文记录了 Apache 一系列常用的配置，包括但不限于：rewrite、cgi、自定义错误页、gzip、静态缓存。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/apache-conf.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Apache 配置总结 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/apache-conf.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Apache 配置总结
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-10T20:26:00+08:00">
+                2016-12-10
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/apache/" itemprop="url" rel="index">
+                    <span itemprop="name">apache</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/apache-conf.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="apache-conf.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/apache-conf.html" class="leancloud_visitors" data-flag-title="Apache 配置总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>本文记录了 Apache 一系列常用的配置，包括但不限于：rewrite、cgi、自定义错误页、gzip、静态缓存。</p>
+<a id="more"></a>
+<blockquote>
+<p>若未作特别声明，均在<code>/etc/httpd/conf.d/</code>目录中进行配置！</p>
+</blockquote>
+<h3 id="Apache-虚拟主机"><a href="#Apache-虚拟主机" class="headerlink" title="Apache 虚拟主机"></a>Apache 虚拟主机</h3><pre><code class="language-apacheconf line-numbers">&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+&lt;/VirtualHost&gt;
+
+## 绑定多个域名
+ServerName zfl.com
+ServerAlias www.zfl.com m.zfl.com
+</code></pre>
+<h3 id="Apache-目录浏览"><a href="#Apache-目录浏览" class="headerlink" title="Apache 目录浏览"></a>Apache 目录浏览</h3><pre><code class="language-apacheconf line-numbers">--- /opt/www/httpd/conf/httpd.conf ---
+LoadModule autoindex_module modules/mod_autoindex.so
+LoadModule dir_module modules/mod_dir.so
+Include conf/extra/httpd-autoindex.conf
+Include conf/extra/httpd-vhosts.conf
+--- /opt/www/httpd/conf/httpd.conf ---
+
+--- /opt/www/httpd/conf/extra/httpd-vhosts.conf ---
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /opt/www/httpd/htdocs
+    DirectoryIndex index.html index.php index.htm
+    &lt;Directory /opt/www/httpd/htdocs&gt;
+        Options +Indexes
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+--- /opt/www/httpd/conf/extra/httpd-vhosts.conf ---
+</code></pre>
+<h3 id="隐藏版本信息"><a href="#隐藏版本信息" class="headerlink" title="隐藏版本信息"></a>隐藏版本信息</h3><pre><code class="language-apacheconf line-numbers">--- conf/httpd.conf ---
+Include conf/extra/httpd-default.conf
+--- conf/httpd.conf ---
+
+--- conf/extra/httpd-default.conf ---
+ServerTokens Prod
+ServerSignature Off
+--- conf/extra/httpd-default.conf ---
+</code></pre>
+<h3 id="启用-MPM-模式"><a href="#启用-MPM-模式" class="headerlink" title="启用 MPM 模式"></a>启用 MPM 模式</h3><blockquote>
+<p>Apache 2.4 默认 event</p>
+</blockquote>
+<pre><code class="language-apacheconf line-numbers">--- httpd.conf ---
+LoadModule mpm_event_module modules/mod_mpm_event.so
+Include conf/extra/httpd-mpm.conf
+--- httpd.conf ---
+</code></pre>
+<h3 id="添加模块（编译）"><a href="#添加模块（编译）" class="headerlink" title="添加模块（编译）"></a>添加模块（编译）</h3><pre><code class="language-apacheconf line-numbers">cd /usr/local/src/httpd/modules/metadata/
+/opt/www/httpd/bin/apxs -c -i -a mod_expires.c
+</code></pre>
+<h3 id="AllowOverride、Options"><a href="#AllowOverride、Options" class="headerlink" title="AllowOverride、Options"></a>AllowOverride、Options</h3><pre><code class="language-apacheconf line-numbers">## AllowOverride ##
+AllowOverride参数就是指明Apache服务器是否去找.htacess文件作为配置文件，
+如果设置为None,那么服务器将忽略.htacess文件，
+如果设置为All,那么所有在.htaccess文件里有的指令都将被重写
+
+## Options ##
+允许目录浏览，执行CGI程序，允许跟随符号链接等
+
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    &lt;Directory /var/www/html&gt;
+        AllowOverride None
+        Options None
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+## AllowOverride:
+AuthConfig  允许使用所有的权限指令，他们包括AuthDBMGroupFile AuthDBMUserFile  AuthGroupFile  AuthName AuthTypeAuthUserFile和Require
+FileInfo    允许使用文件控制类型的指令。它们包括AddEncoding AddLanguage  AddType  DEfaultType ErrorDocument LanguagePriority
+Indexes     允许使用目录控制类型的指令。它们包括AddDescription  AddIcon  AddIconByEncoding AddIconByType  DefaultIcon  DirectoryIndex  FancyIndexing  HeaderName  IndexIgnore  IndexOptions ReadmeName
+Limit       允许使用权限控制指令。它们包括Allow Deny和Order
+Options     允许使用控制目录特征的指令.他们包括Options 和XBitHack
+
+## Options:
+All             准许以下除MultiViews以外所有功能
+MultiViews      允许多重内容被浏览，如果你的目录下有一个叫做foo.txt的文件，那么你可以通过/foo来访问到它，这对于一个多语言内容的站点比较有用
+Indexes         若该目录下无index文件，则准许显示该目录下的文件以供选择
+IncludesNOEXEC  准许SSI，但不可使用#exec和#include功能
+Includes        准许SSI
+FollowSymLinks  在该目录中，服务器将跟踪符号链接。注意，即使服务器跟踪符号链接，它也不会改变用来匹配不同区域的路径名，如果在&lt;Local&gt;;标记内设置，该选项会被忽略
+SymLinksIfOwnerMatch  在该目录中仅仅跟踪本站点内的链接
+ExecCGI         在该目录下准许使用CGI
+
+## 注意 ##
+当 Options 参数前面有 +/- 号时(如：+ExecCGI)：
++   所有前面加有&quot;+&quot;号的可选项将强制覆盖当前的可选项设置
+-   所有前面有&quot;-&quot;号的可选项将强制从当前可选项设置中去除
+</code></pre>
+<h3 id="Order-Deny-Allow"><a href="#Order-Deny-Allow" class="headerlink" title="Order Deny Allow"></a>Order Deny Allow</h3><pre><code class="language-apacheconf line-numbers">## 用于访问控制，允许、拒绝 ##
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    &lt;Directory /var/www/html&gt;
+        Deny from 192.168.255.103 # 禁止来自192.168.255.103的访问
+        # Allow from All # 允许任何合法请求
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+## Order 定义优先级 ##
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    &lt;Directory /var/www/html&gt;
+        Order Allow,Deny
+        Allow from All
+        Deny from 192.168.255.103
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+后面的优先级高，如上例：Deny优先级比Allow高
+apache先匹配Allow,然后匹配Deny
+当出现冲突项时，冲突部分以优先级高的为准！
+
+所以：
+apache 先匹配allow -&gt; 发现允许所有
+然后匹配deny -&gt; 发现拒绝来自192.168.255.103的访问
+deny优先级高，所以综合起来就是允许除了192.168.255.103外的所有访问
+
+eg:
+    Order Allow,Deny
+    Deny from All
+    Allow from All       # 拒绝所有访问
+
+    Order Deny,Allow
+    Deny from All
+    Allow from All       # 允许所有访问
+</code></pre>
+<h3 id="Apache-CGI-配置"><a href="#Apache-CGI-配置" class="headerlink" title="Apache CGI 配置"></a>Apache CGI 配置</h3><pre><code class="language-apacheconf line-numbers"># $conf/httpd.conf 中取消注释此行，启用 cgi 模块
+LoadModule cgid_module modules/mod_cgid.so
+
+# 假设 "/var/www/html/cgi-bin/" 目录是存放 cgi 程序的
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    ScriptAlias /cgi-bin/ /var/www/html/cgi-bin/
+    &lt;Directory /var/www/html/cgi-bin&gt;
+        Options ExecCGI
+        AddHandler cgi-script .cgi .py .pl .sh
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+<h3 id="自定义错误页"><a href="#自定义错误页" class="headerlink" title="自定义错误页"></a>自定义错误页</h3><pre><code class="language-apacheconf line-numbers">&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    ErrorDocument 404 /404.html
+    ErrorDocument 403 /403.html
+    ErrorDocument 500 /500.html
+&lt;/VirtualHost&gt;
+</code></pre>
+<h3 id="gzip-页面压缩"><a href="#gzip-页面压缩" class="headerlink" title="gzip 页面压缩"></a>gzip 页面压缩</h3><pre><code class="language-apacheconf line-numbers">&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    ErrorDocument 404 /404.html
+    ErrorDocument 403 /403.html
+    ErrorDocument 500 /500.html
+    &lt;IfModule deflate_module&gt;
+        SetOutputFilter DEFLATE
+        SetEnvIfNoCase Request_URI .(?:gif|jpe?g|png)$ no-gzip dont-vary
+        SetEnvIfNoCase Request_URI .(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
+        SetEnvIfNoCase Request_URI .(?:pdf|doc|avi|mov|mp3|rm)$ no-gzip dont-vary
+        AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+        AddOutputFilterByType DEFLATE application/x-javascript application/x-httpd-php application/x-httpd-fastphp
+    &lt;/IfModule&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+<h3 id="http-静态缓存"><a href="#http-静态缓存" class="headerlink" title="http 静态缓存"></a>http 静态缓存</h3><pre><code class="language-apacheconf line-numbers">&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    ErrorDocument 404 /404.html
+    ErrorDocument 403 /403.html
+    ErrorDocument 500 /500.html
+    &lt;IfModule mod_expires.c&gt;
+        ExpiresActive on
+        ExpiresDefault A864000 # 10天
+        ExpiresBytype text/css &quot;access plus 14 days&quot;
+        ExpiresByType text/javascript &quot;access plus 14 days&quot;
+        ExpiresByType application/x-javascript &quot;access plus 14 days&quot;
+        ExpiresByType application/x-shockwave-flash &quot;access plus 14 days&quot;
+        ExpiresByType image/* &quot;access plus 14 days&quot;
+        ExpiresByType text/html &quot;access plus 14 days&quot;
+        &lt;FilesMatch &quot;.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav|jpg|gif)$&quot;&gt;
+            ExpiresDefault A864000
+        &lt;/FilesMatch&gt;
+    &lt;/IfModule&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+<h3 id="重写模块-rewrite"><a href="#重写模块-rewrite" class="headerlink" title="重写模块 rewrite"></a>重写模块 rewrite</h3><pre><code class="language-apacheconf line-numbers">## 和nginx差不多，都是正则匹配替换 ##
+
+1. 当访问的uri匹配 ^/root/.*$ 时，rewrite至/403.html 页面
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl.com
+    DocumentRoot /var/www/html
+    DirectoryIndex index.html
+    RewriteEngine on
+    RewriteCond %{REQUEST_URI} ^/root/.*$ [NC] # 相当于nginx 的 if
+    RewriteRule ^.*$ /403.html [NC,L]  # 相当于nginx 的 rewrite
+&lt;/VirtualHost&gt;
+
+2. 重定向http至https
+&lt;VirtualHost *:80&gt;
+    ServerName www.zfl9.com
+    RewriteEngine on
+    RewriteRule ^(.*)$ https://www.zfl9.com$1 [R=301,L]
+&lt;/VirtualHost&gt;
+
+## flag
+R[=code](force redirect)            强制外部重定向(默认302)
+F(force URL to be forbidden)        禁用URL,返回403HTTP状态码
+G(force URL to be gone)             强制URL为GONE，返回410HTTP状态码
+P(force proxy)                      强制使用代理转发
+L(last rule)                        表明当前规则是最后一条规则，停止分析以后规则的重写
+N(next round)                       重新从第一条规则开始运行重写过程
+C(chained with next rule)           与下一条规则关联
+T=MIME-type(force MIME type)        强制MIME类型
+NS (used only if no internal sub-request)   只用于不是内部子请求
+NC(no case)                         不区分大小写
+QSA(query string append)            追加请求字符串
+NE(no URI escaping of output)       不在输出转义特殊字符
+PT(pass through to next handler)    传递给下一个处理
+
+## Apache变量
+HTTP头
+    HTTP_USER_AGENT
+    HTTP_REFERER
+    HTTP_COOKIE
+    HTTP_FORWARDED
+    HTTP_HOST
+    HTTP_PROXY_CONNECTION
+    HTTP_ACCEPT
+
+连接与请求
+    REMOTE_ADDR
+    REMOTE_HOST
+    REMOTE_PORT
+    REMOTE_USER
+    REMOTE_IDENT
+    REQUEST_METHOD
+    SCRIPT_FILENAME
+    PATH_INFO
+    QUERY_STRING
+    AUTH_TYPE
+
+服务器本身
+    DOCUMENT_ROOT
+    SERVER_ADMIN
+    SERVER_NAME
+    SERVER_ADDR
+    SERVER_PORT
+    SERVER_PROTOCOL
+    SERVER_SOFTWARE
+
+日期与时间
+    TIME_YEAR
+    TIME_MON
+    TIME_DAY
+    TIME_HOUR
+    TIME_MIN
+    TIME_SEC
+    TIME_WDAY
+    TIME
+
+其他
+    API_VERSION
+    THE_REQUEST
+    REQUEST_URI
+    REQUEST_FILENAME
+    IS_SUBREQ
+    HTTPS
+</code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/apache/" rel="tag"># apache</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/www-service.html" rel="next" title="LAMP、LNMP 编译安装">
+                <i class="fa fa-chevron-left"></i> LAMP、LNMP 编译安装
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/haproxy.html" rel="prev" title="haproxy 负载均衡">
+                haproxy 负载均衡 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Apache-虚拟主机"><span class="nav-number">1.</span> <span class="nav-text">Apache 虚拟主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Apache-目录浏览"><span class="nav-number">2.</span> <span class="nav-text">Apache 目录浏览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐藏版本信息"><span class="nav-number">3.</span> <span class="nav-text">隐藏版本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用-MPM-模式"><span class="nav-number">4.</span> <span class="nav-text">启用 MPM 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加模块（编译）"><span class="nav-number">5.</span> <span class="nav-text">添加模块（编译）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AllowOverride、Options"><span class="nav-number">6.</span> <span class="nav-text">AllowOverride、Options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Order-Deny-Allow"><span class="nav-number">7.</span> <span class="nav-text">Order Deny Allow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Apache-CGI-配置"><span class="nav-number">8.</span> <span class="nav-text">Apache CGI 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义错误页"><span class="nav-number">9.</span> <span class="nav-text">自定义错误页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gzip-页面压缩"><span class="nav-number">10.</span> <span class="nav-text">gzip 页面压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-静态缓存"><span class="nav-number">11.</span> <span class="nav-text">http 静态缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写模块-rewrite"><span class="nav-number">12.</span> <span class="nav-text">重写模块 rewrite</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/apache-conf.html';
+          this.page.identifier = 'apache-conf.html';
+          this.page.title = 'Apache 配置总结';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java 泛型编程 generic paradigm">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 泛型编程">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 泛型编程">
+<meta property="og:url" content="https://www.zfl9.com/java-generic.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 泛型编程">
+<meta property="og:updated_time" content="2019-02-18T12:44:16.342Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 泛型编程">
+<meta name="twitter:description" content="Java 泛型编程">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-generic.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 泛型编程 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-generic.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 泛型编程
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T13:59:00+08:00">
+                2017-09-10
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-generic.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-generic.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-generic.html" class="leancloud_visitors" data-flag-title="Java 泛型编程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 泛型编程</p>
+<a id="more"></a>
+<h2 id="泛型的概念"><a href="#泛型的概念" class="headerlink" title="泛型的概念"></a>泛型的概念</h2><p>Java 泛型（generics）是 JDK 5 中引入的一个新特性，泛型提供了编译时类型安全检测机制，该机制允许程序员在编译时检测到非法的类型；</p>
+<p>泛型的本质是参数化类型，也就是说所操作的数据类型被指定为一个参数；<br>Java 泛型以 C++ 中的模板为参照，有 C++ 模板知识的小伙伴可以很快的熟悉 Java 中的泛型编程；</p>
+<p>类型参数只能是引用类型，不能是基本类型，但是传递基本类型的实参并不会报错，因为会被自动装箱为对应的包装类；</p>
+<p>和 C++ 一样，类型参数使用<code>&lt;&gt;</code>尖括号包围，并且它的位置是放在函数返回值类型之前，Java 中的泛型不需要模板头；</p>
+<h2 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h2><p>我们可以使用泛型来设计一个通用数组打印函数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        print(new Integer[] {1, 2, 3, 4, 5});
+        print(new Character[] {'B', 'A', 'I', 'D', 'U'});
+        print(new String[] {"C", "C++", "Java", "Python", "Perl"});
+        print(new Float[] {});
+        print(new Double[] {1.1, 2.2, 3.3, 4.4, 5.5, null, 6.6, 7.7, 8.8, null, 9.9});
+    }
+
+    public static <T> void print(T[] array) {
+        if (array.length == 0) {
+            out.printf("Array is empty\n");
+            return;
+        }
+
+        out.printf("Array[%d] = { ", array.length);
+        for (T elem : array) {
+            if (elem == null) {
+                out.printf("null, ");
+                continue;
+            }
+            out.printf("%s, ", elem.toString());
+        }
+        out.printf("\b\b }\n");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:33:29]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [14:33:57]
+$ java Main
+Array[5] = { 1, 2, 3, 4, 5 }
+Array[5] = { B, A, I, D, U }
+Array[5] = { C, C++, Java, Python, Perl }
+Array is empty
+Array[11] = { 1.1, 2.2, 3.3, 4.4, 5.5, null, 6.6, 7.7, 8.8, null, 9.9 }
+</script></code></pre>
+<p>在 Java 中，泛型方法不需要指明类型参数 T 的实际类型，编译器可以自己推断，并且我们也没办法显式指明泛型方法中的类型参数 T 的实际类型（C++ 中可以显式指明类型参数的实际类型）；</p>
+<p><strong>extends 限制泛型的类型</strong><br>泛型所代表的类型是宽泛的，没有限制的，可以是除了基本类型之外的所有类型；<br>但是有时候我们不需要这么大的范围，因为有些方法并不是所有引用类型都有的；</p>
+<p>这个时候我们就可以使用<code>extends</code>关键字来限制泛型的类型范围了，比如<code>&lt;T extends Number&gt; T max(T a, T b, T c)</code>；<br>表示类型参数 T 必须属于 Number 类，也就是说 T 必须是 Number 类及其派生类的类型，其他的类型都是不行的；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Integer[] arr1 = {1, 2, 3, 4, 5};
+        print(arr1);
+        out.printf("\tmax_val = %s\n", max(arr1).toString());
+
+        String[] arr2 = {"baidu", "aliyun", "google", "qq", "facebook"};
+        print(arr2);
+        out.printf("\tmax_val = %s\n", max(arr2).toString());
+    }
+
+    public static <T extends Comparable<T>> T max(T[] nums) {
+        T max_val = nums[0];
+        for (int i=1; i<nums.length; i++) {
+            if (nums[i].compareTo(max_val) > 0) {
+                max_val = nums[i];
+            }
+        }
+        return max_val;
+    }
+
+    public static <T> void print(T[] array) {
+        if (array.length == 0) {
+            out.printf("Array is empty\n");
+            return;
+        }
+
+        out.printf("Array[%d] = { ", array.length);
+        for (T elem : array) {
+            if (elem == null) {
+                out.printf("null, ");
+                continue;
+            }
+            out.printf("%s, ", elem.toString());
+        }
+        out.printf("\b\b }");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:10:00]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:10:17]
+$ java Main
+Array[5] = { 1, 2, 3, 4, 5 }    max_val = 5
+Array[5] = { baidu, aliyun, google, qq, facebook }    max_val = qq
+</script></code></pre>
+<h2 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h2><p>泛型类的声明和非泛型类的声明类似，除了在类名后面添加了<code>&lt;T1[, T2, T3, ...]&gt;</code>泛型声明；<br>泛型类和泛型方法一样，泛型类的类型参数声明部分也包含一个或多个类型参数，参数间用逗号隔开；</p>
+<p>但是有一点和泛型方法不同，泛型类在使用的时候需要显式的给类型参数赋值，指明具体的类型；<br><strong>如果不显示的指明类型参数的实际类型，那么就会擦除泛型类型，并向上转型为 Object 类</strong>；</p>
+<p>泛型类例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Point<Integer, Integer> p1 = new Point<Integer, Integer>(1, 2);
+        p1.print();
+
+        Point<Integer, String> p2 = new Point<Integer, String>(119, "火警电话");
+        p2.print();
+    }
+}
+
+class Point<X, Y> {
+    public Point(X x, Y y) {
+        m_x = x;
+        m_y = y;
+    }
+
+    public X getX() { return m_x; }
+    public Y getY() { return m_y; }
+    public void setX(X x) { m_x = x; }
+    public void setY(Y y) { m_y = y; }
+
+    public void print() {
+        out.printf("x=%s, y=%s\n", m_x, m_y);
+    }
+
+    private X m_x;
+    private Y m_y;
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:30:13]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:30:26]
+$ java Main
+x=1, y=2
+x=119, y=火警电话
+</script></code></pre>
+<p><strong>类型通配符 ?</strong><br>我们将上面的 Point 类修改一下，将 print() 成员函数改为 static 函数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Point<Integer, Integer> p1 = new Point<Integer, Integer>(1, 2);
+        print(p1);
+
+        Point<Integer, String> p2 = new Point<Integer, String>(119, "火警电话");
+        print(p2);
+    }
+
+    public static void print(Point<?, ?> p) {
+        out.printf("x=%s, y=%s\n", p.getX(), p.getY());
+    }
+}
+
+class Point<X, Y> {
+    public Point(X x, Y y) {
+        m_x = x;
+        m_y = y;
+    }
+
+    public X getX() { return m_x; }
+    public Y getY() { return m_y; }
+    public void setX(X x) { m_x = x; }
+    public void setY(Y y) { m_y = y; }
+
+    private X m_x;
+    private Y m_y;
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:14:53]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:15:07]
+$ java Main
+x=1, y=2
+x=119, y=火警电话
+</script></code></pre>
+<p>因为 print() 函数的形参为 Point 类的实例，但是 Point 类是一个泛型类，在使用它的时候必须指明具体的类型 X、Y；<br>可是我们并不能在编写函数的时候就准确的推断出 X、Y 的实际类型，因为这有非常多种可能性，这时候通配符<code>?</code>就派上用场了；</p>
+<p><code>?</code>是一个占位符，可以让编译器自动填写类型参数的实际类型；</p>
+<p><strong>限制类型通配符</strong><br>类型通配符<code>?</code>和类型参数<code>T</code>一样，它们的可接收的类型是宽泛的，没有限制的，可以将任何合法的类型传递给它们；</p>
+<p>这种宽泛的类型在有些情况下可能会出现问题，就如同前一节中的 compareTo() 方法一样，只有实现了 Comparable 接口的类才有；</p>
+<p>1) 使用<code>? extends Number</code>，表示匹配到的类型必须为 Number 类及其派生类；<br>2) 使用<code>? super Number</code>，表示匹配到的类型必须为 Number 类及其基类；</p>
+<h2 id="伪泛型"><a href="#伪泛型" class="headerlink" title="伪泛型"></a>伪泛型</h2><p><strong>语法糖</strong><br><code>语法糖（Syntactic Sugar）</code>，也称<code>糖衣语法</code>，是由英国计算机学家 Peter.J.Landin 发明的一个术语，指在计算机语言中添加的某种语法，这种语法对语言的功能并没有影响，但是更方便程序员使用；</p>
+<p>Java 中最常用的语法糖主要有<code>泛型</code>、<code>变长参数</code>、<code>条件编译</code>、<code>自动拆装箱</code>、<code>内部类</code>等；虚拟机并不支持这些语法，它们在编译阶段就被还原回了简单的基础语法结构，这个过程称为<strong>解语法糖</strong>；</p>
+<p>泛型是 JDK1.5 之后引入的一项新特性，Java 语言在还没有出现泛型时，只能通过 Object 是所有类型的父类和类型强制转换这两个特点的配合来实现泛型的功能，这样实现的泛型功能要在程序运行期才能知道 Object 真正的对象类型，在编译期间，编译器无法检查这个 Object 的强制转型是否成功，这便将一些风险转接到了程序运行期中；</p>
+<p>Java 语言在 JDK1.5 之后引入的泛型实际上只在程序源码中存在，在编译后的字节码文件中，就已经被替换为了原来的原生类型，并且在相应的地方插入了强制转型代码；<br>因此对于运行期的 Java 语言来说，<code>ArrayList&lt;String&gt;</code>和<code>ArrayList&lt;Integer&gt;</code>就是同一个类；所以泛型技术实际上是 Java 语言的一颗语法糖，Java 语言中的泛型实现方法称为<code>类型擦除</code>，基于这种方法实现的泛型被称为<code>伪泛型</code>；</p>
+<p>下面是一段简单的 Java 泛型代码：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">Map<Integer, String> map = new HashMap<Integer, String>();
+
+map.put(1,"No.1");
+map.put(2,"No.2");
+
+System.out.println(map.get(1));
+System.out.println(map.get(2));
+</script></code></pre>
+<p>将这段 Java 代码编译成 Class 文件，然后再用字节码反编译工具进行反编译后，将会发现泛型都变回了原生类型，如下面的代码所示：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">Map map = new HashMap();
+
+map.put(1,"No.1");
+map.put(2,"No.2");
+
+System.out.println((String)map.get(1));
+System.out.println((String)map.get(2));
+</script></code></pre>
+<p><strong>反射可获取泛型信息</strong><br>虽然是伪泛型，但是从 Java 5 开始，class 文件的格式有了调整，类/接口、方法、字段的修饰符中的泛型信息都会写到 class 文件中，在运行期间，我们可以通过反射来获取这些泛型信息。</p>
+<p>相关参考：<br><a href="http://rednaxelafx.iteye.com/blog/586212" rel="external nofollow noopener noreferrer" target="_blank">Java 获得泛型类型</a>、<a href="http://developer.51cto.com/art/201103/250028.htm" rel="external nofollow noopener noreferrer" target="_blank">详解 Java 泛型，type 体系整理</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-exception.html" rel="next" title="Java 异常处理">
+                <i class="fa fa-chevron-left"></i> Java 异常处理
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-abstract-interface.html" rel="prev" title="Java 抽象类和接口">
+                Java 抽象类和接口 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型的概念"><span class="nav-number">1.</span> <span class="nav-text">泛型的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型方法"><span class="nav-number">2.</span> <span class="nav-text">泛型方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型类"><span class="nav-number">3.</span> <span class="nav-text">泛型类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伪泛型"><span class="nav-number">4.</span> <span class="nav-text">伪泛型</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-generic.html';
+          this.page.identifier = 'java-generic.html';
+          this.page.title = 'Java 泛型编程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

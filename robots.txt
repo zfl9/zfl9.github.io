@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /404.html$
+Disallow: /404/
+Disallow: /search.xml$
+Disallow: /*.txt$
+Disallow: /baidu_verify*.html$
+Disallow: /BingSiteAuth.xml$
+Disallow: /google*.html$
+Disallow: /sogousiteverification.txt$
+Sitemap: https://www.zfl9.com/sitemap.xml
+Sitemap: https://www.zfl9.com/baidusitemap.xml

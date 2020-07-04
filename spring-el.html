@@ -1,0 +1,845 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="SpEL 是 Spring Expression Language 的简称，虽然目前已经有许多其它的 Java 表达式语言，例如 OGNL、MVEL、Jboss EL，但 SpEL 的诞生是为了给 Spring 社区提供一种能够与 Spring 生态系统所有产品无缝对接、提供一站式支持的表达式语言。它的语言特性由 Spring 生态系统的实际项目需求驱动而来，比如基于 Eclipse 的 Spri">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 表达式语言">
+<meta property="og:url" content="https://www.zfl9.com/spring-el.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="SpEL 是 Spring Expression Language 的简称，虽然目前已经有许多其它的 Java 表达式语言，例如 OGNL、MVEL、Jboss EL，但 SpEL 的诞生是为了给 Spring 社区提供一种能够与 Spring 生态系统所有产品无缝对接、提供一站式支持的表达式语言。它的语言特性由 Spring 生态系统的实际项目需求驱动而来，比如基于 Eclipse 的 Spri">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.347Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring 表达式语言">
+<meta name="twitter:description" content="SpEL 是 Spring Expression Language 的简称，虽然目前已经有许多其它的 Java 表达式语言，例如 OGNL、MVEL、Jboss EL，但 SpEL 的诞生是为了给 Spring 社区提供一种能够与 Spring 生态系统所有产品无缝对接、提供一站式支持的表达式语言。它的语言特性由 Spring 生态系统的实际项目需求驱动而来，比如基于 Eclipse 的 Spri">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/spring-el.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Spring 表达式语言 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/spring-el.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Spring 表达式语言
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-18T08:00:00+08:00">
+                2018-12-18
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/spring-el.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="spring-el.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/spring-el.html" class="leancloud_visitors" data-flag-title="Spring 表达式语言">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>SpEL 是 Spring Expression Language 的简称，虽然目前已经有许多其它的 Java 表达式语言，例如 OGNL、MVEL、Jboss EL，但 SpEL 的诞生是为了给 Spring 社区提供一种能够与 Spring 生态系统所有产品无缝对接、提供一站式支持的表达式语言。它的语言特性由 Spring 生态系统的实际项目需求驱动而来，比如基于 Eclipse 的 Spring Tool Suite（Spring 开发工具集）中的代码补全工具需求。尽管如此、SpEL 本身基于一套与具体实现技术无关的 API，在需要的时候允许其它表达式语言实现集成进来。</p>
+<a id="more"></a>
+<h2 id="SpEL-简介"><a href="#SpEL-简介" class="headerlink" title="SpEL 简介"></a>SpEL 简介</h2><p>SpEL 与 OGNL 很相似，有自己的执行上下文（context），context 中有一个 root-object（根对象），context 其实就是一个 key-value 结构的 map，而这个 root-object 就是其中的特殊 value，我们可以在表达式中直接访问 root-object 的 bean 属性，而不需要指定 key 名。来看一个简单的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+public class SpelMain {
+    public static void main(String[] args) {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        Employee rootObject = new Employee("Otokaze", "root@zfl9.com");
+        EvaluationContext context = new StandardEvaluationContext(rootObject);
+
+        Employee employee01 = new Employee("Google", "google@gmail.com");
+        Employee employee02 = new Employee("Youtube", "youtube@gmail.com");
+        Employee employee03 = new Employee("Facebook", "facebook@gmail.com");
+
+        context.setVariable("employee01", employee01);
+        context.setVariable("employee02", employee02);
+        context.setVariable("employee03", employee03);
+
+        String rootName = parser.parseExpression("name").getValue(context, String.class);
+        String rootEmail = parser.parseExpression("email").getValue(context, String.class);
+
+        String rootName2 = parser.parseExpression("#root.name").getValue(context, String.class);
+        String rootEmail2 = parser.parseExpression("#root.email").getValue(context, String.class);
+
+        String emp01Name = parser.parseExpression("#employee01.name").getValue(context, String.class);
+        String emp01Email = parser.parseExpression("#employee01.email").getValue(context, String.class);
+
+        String emp02Name = parser.parseExpression("#employee02.name").getValue(context, String.class);
+        String emp02Email = parser.parseExpression("#employee02.email").getValue(context, String.class);
+
+        String emp03Name = parser.parseExpression("#employee03.name").getValue(context, String.class);
+        String emp03Email = parser.parseExpression("#employee03.email").getValue(context, String.class);
+
+        System.out.println("rootName: " + rootName);
+        System.out.println("rootEmail: " + rootEmail);
+
+        System.out.println("rootName2: " + rootName2);
+        System.out.println("rootEmail2: " + rootEmail2);
+
+        System.out.println("emp01Name: " + emp01Name);
+        System.out.println("emp01Email: " + emp01Email);
+
+        System.out.println("emp02Name: " + emp02Name);
+        System.out.println("emp02Email: " + emp02Email);
+
+        System.out.println("emp03Name: " + emp03Name);
+        System.out.println("emp03Email: " + emp03Email);
+    }
+}
+
+class Employee {
+    private String name;
+    private String email;
+
+    public Employee(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Employee { name: %s, email: %s }", name, email);
+    }
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+rootName: Otokaze
+rootEmail: root@zfl9.com
+rootName2: Otokaze
+rootEmail2: root@zfl9.com
+emp01Name: Google
+emp01Email: google@gmail.com
+emp02Name: Youtube
+emp02Email: youtube@gmail.com
+emp03Name: Facebook
+emp03Email: facebook@gmail.com
+</script></code></pre>
+<p><strong>SpEL 拥有很多特性</strong></p>
+<ul>
+<li>允许通过 bean 的 id 来引用 bean</li>
+<li>调用对象的方法和访问对象的属性</li>
+<li>对值进行算术、关系和逻辑等运算</li>
+<li>regex 匹配，集合访问、集合投影</li>
+</ul>
+<p>其实 EL 表达式也能进行类似的操作（除了正则表达式和集合投影这些），到后面你会发现，SpEL 的语法和 EL 表达式的语法很相似。</p>
+<h2 id="SpEL-语法"><a href="#SpEL-语法" class="headerlink" title="SpEL 语法"></a>SpEL 语法</h2><p>和 JSP EL 表达式一样，SpEL 表达式内可以使用 <strong>整数</strong>、<strong>浮点数</strong>、<strong>字符串</strong>（单引号或双引号包围）、<strong>true/false</strong> 以及 <strong>null</strong>。此外，SpEL 表达式的语法和 EL 表达式的语法也很相似，EL 表达式使用 <code>${expression}</code> 包围，而 SpEL 表达式使用 <code>#{expression}</code> 包围。不对，你说 SpEL 表达式需要 <code>#{}</code> 包围？那为什么上面的例子中没有使用这种语法呢？别急，听我慢慢道来。</p>
+<p>上面这种用法其实很少见，大多数情况下，我们都是在 Spring 程序中使用 SpEL 表达式，比如我们可以在 spring.xml 配置文件中使用 SpEL，也可以在 Java 程序中使用 <code>@Value</code> 注解来使用 SpEL，这两种方式的语法都是 <code>#{expression}</code>，而不是上面这种语法，并且它们除了这一点不同外，还有很多不同的地方，比如上面这种方式如果要引用 Bean，必须使用 <code>@beanId</code>，而在 <code>#{expression}</code> 中，直接使用 <code>beanId</code> 来引用就可以了。</p>
+<blockquote>
+<p>因为文章开头这种用法很少见，所以本文也不打算讲解，如果你需要使用这种方式的 SpEL，可以参考：<a href="https://jinnianshilongnian.iteye.com/blog/1418309" rel="external nofollow noopener noreferrer" target="_blank">Spring 表达式语言之 SpEL 语法</a>。</p>
+</blockquote>
+<p><strong>算术运算符</strong>：<code>+</code>加、<code>-</code>减、<code>*</code>乘、<code>/</code>除、<code>%</code>求余、<code>^</code>乘方，<code>/</code> 的等价运算符 <code>div</code>，<code>%</code> 的等价运算符 <code>mod</code>（不区分大小写，下同）。</p>
+<p><strong>关系运算符</strong>：<code>==</code>等于、<code>!=</code>不等于、<code>&gt;</code>大于、<code>&gt;=</code>大于等于、<code>&lt;</code>小于、<code>&lt;=</code>小于等于、<code>between</code>区间运算。所谓区间运算就是 <code>1.5 between {1, 2}</code>，等价于 <code>1.5 &gt;= 1 &amp;&amp; 1.5 &lt;= 2</code>，所以返回 true，记住是包含边界的。同样的，对于大于小于等于不等于这些，SpEL 也提供了英文关键字：<code>eq</code>等于、<code>ne</code>不等于、<code>gt</code>大于、<code>ge</code>大于等于、<code>lt</code>小于、<code>le</code>小于等于，不区分大小写。</p>
+<p><strong>逻辑运算符</strong>：<code>&amp;&amp;</code>逻辑与、<code>||</code>逻辑或、<code>!</code>逻辑非，等价关键字为 <code>and</code>、<code>or</code>、<code>not</code>，也是不区分大小写。</p>
+<p><strong>字符串操作</strong>：与 Java 语法一样，字符串可以使用 <code>+</code> 进行连接，此外，SpEL 还可以直接使用 <code>&#39;hello&#39;[0]</code> 语法来取指定 index 上的字符。</p>
+<p><strong>三目操作符</strong>：语法同 Java 中的三目运算符，<code>boolExpr ? valueIfTrue : valueIfFalse</code>，除此之外，SpEL 还引入了 Groovy 中的 null 值运算符，语法为 <code>expr ?: valueIfExprIsNull</code>，当 expr 为 null 时，表达式的值为 <code>valueIfExprIsNull</code>，如果 expr 不为 null，则表达式的值仍然为 expr，可以看作是给 expr 提供一个默认值。</p>
+<p><strong>正则匹配符</strong>：<code>string matches regex</code>，regex 为字符串，表达式的返回类型为 boolean，如 <code>&#39;hello&#39; matches &#39;^\\w++$&#39;</code> 的结果为 true。</p>
+<p><strong>括号优先级</strong>：和 Java 一样，可以使用 <code>()</code> 来改变表达式的优先级（或者提高可读性），比如 <code>(5 + 3) * 5</code> 的结果为 40，而不是 20。</p>
+<p><strong>属性访问符</strong>：<code>#{object.prop}</code>、<code>#{object[&#39;prop&#39;]}</code> 或 <code>#{object[&quot;prop&quot;]}</code>（单双引号没区别），它们的区别和 EL 表达式是一样的，第一种方式的 prop 必须符合 Java 标识符规范（以字母、下划线、美元符开头，后可接字母、数字、下划线、美元符），而第二、三种方式则没有此要求；第一种方式属于静态取值，而第二、三种方式属于动态取值，所谓动态取值就是这个 prop 可以在运行期间动态的计算出来，灵活性更大，但性能不如静态取值，而静态取值中的 prop 是编译期间写死的。</p>
+<p><strong>类型表达式</strong>：<code>T(Type)</code> 表示一个 java.lang.Class 实例，其中 Type 为类的名称，除了 java.lang 包外，其它的类名必须为全限定类名，比如 <code>T(String)</code>、<code>T(java.util.Arrays)</code>。使用类型表达式还可以访问对应类的静态字段和静态方法，语法和 Java 很相似，都是使用 <code>.</code> 操作符，如 <code>T(Integer).MAX_VALUE</code>、<code>T(java.util.Arrays).toString(new int[] {1, 2, 3})</code>。</p>
+<p><strong>类的实例化</strong>：<code>new String(&#39;hello, world&#39;)</code>、<code>new java.util.ArrayList()</code>，同样的，除了 java.lang 包外，其它包下的类需要带上包名。</p>
+<p><strong>instanceof</strong>：<code>&#39;hello&#39; instanceof T(String)</code>，返回 true，语法和语义和 Java 中的 instanceof 是一样的。</p>
+<p><strong>变量的引用</strong>：在第一节中的例子中已经演示过，SpEL 中可以使用 <code>#root</code> 引用 context 中的 rootObject，使用 <code>#emp01</code> 引用 context 中的 <code>&quot;emp01&quot;</code> 对象，此外还有一个特殊的变量，<code>#this</code>，这个一般用在集合投影中，表示当前对象，其实和 Java 中的 this 语义差不多。</p>
+<p><strong>赋值表达式</strong>：如 <code>#root = 1 + 2</code>，执行后，rootObject 的值为 3。又如 <code>#test = 100 + 100</code>，执行后，会创建自定义变量 <code>test</code>，且值为 200。</p>
+<p><strong>安全访问符</strong>：前面已经介绍了 <code>obj.prop</code>、<code>obj[&#39;prop&#39;]</code>、<code>obj[&quot;prop&quot;]</code> 三种方式的 bean/pojo 对象取值，但其实我们还有一种方式，语法为 <code>obj?.prop</code>，当 obj 为 null 时，表达式不会继续执行，而是直接返回 null，避免了空指针异常的发生。如 <code>#test.test</code> 表示访问 test 变量的 test 属性（getTest() 方法），但是我们并没有在 context 中定义 test 变量，所以 SpEL 会返回 null，然后执行到 <code>null.test</code> 时，就会出现空指针异常，我们将其改为 <code>#test?.test</code> 之后，就没有问题了，表达式的结果为 null。此外，<code>?.</code> 安全访问符也可以用来调用对象的方法，比如 <code>obj?.getValue()</code>，作用和调用对象的属性是一样的，防止空指针异常。</p>
+<p><strong>方法调用符</strong>：访问对象的方法和访问类的静态方法的语法是一样的，如 <code>&#39;hello&#39;.getBytes()</code> 返回 hello 字符串的字节数组对象。</p>
+<p><strong>引用bean</strong>：在传统方式中，使用 <code>@beanId</code> 的形式来引用 bean，比如一个 bean 的 id 为 <code>dataSource</code>，则使用 <code>@dataSource</code> 来引用它，但是在 <code>#{expression}</code> 表达式中，直接使用 <code>dataSource</code> 来引用就可以了。在 Spring 环境中，定义了两个 bean，<code>systemEnvironment</code>（环境变量） 和 <code>systemProperties</code>（系统属性），环境变量很好理解，就是当前系统的环境变量，如 PATH 变量，可以使用 <code>systemEnvironment.PATH</code> 来访问，而系统属性就是传递给 jvm 的 <code>-Dkey=value</code> 参数，当然 jvm 也内设了很多 properties，而且我们也可以在 spring.xml 中引入外部的 properties 文件，都可以使用 <code>systemProperties.prop</code> 来访问它们。</p>
+<p><strong>引用prop</strong>：在 <code>#{expression}</code> 表达式中，我们可以使用 <code>${propertyName}</code> 来引用 properties 中的属性（系统内置属性、命令行传递的属性、外部文件中定义的属性等），当然，在 spring.xml 和 @Value 注解中，也可直接使用 <code>${}</code> 来引用 property，如 <code>@Value(&quot;${jdbc.url}&quot;)</code>，如果对应的属性不存在，我们也可以给它分配一个默认值，语法为 <code>${jdbc.database:test}</code>，如果 jdbc.database 这个属性不存在，则使用默认值 test 替代。</p>
+<p><strong>List定义</strong>：<code>{1, 2, 3}</code> 返回一个 ArrayList，<code>{}</code> 返回一个空的 List，对于字面量表达式 List，SpEL 会将它设为不可修改的，比如 <code>{}</code> 和 <code>{1, 2, 3}</code> 就是不可修改的，而 <code>{1 + 2, 2 + 3, 3 + 4}</code> 就是可以修改的。</p>
+<p><strong>数组定义</strong>：<code>new int[] {1, 2, 3}</code> 静态初始化一个大小为 3 的 int 数组；<code>new int[3]</code> 分配一个大小为 3 的 int 数组，但是不进行初始化，如果不设置元素的值，则默认为 0；<code>new Object[3]</code> 分配一个大小为 3 的 object 数组，但不进行初始化，如果不设置元素的值，则默认为 null。</p>
+<p><strong>集合访问</strong>：对于 array、list、map，都可以使用 <code>集合[索引]</code>、<code>map[key]</code> 来访问对应的 value。如 <code>{1, 2, 3}[0]</code> 返回 list 的第 0 个元素，也即 1。此外，对于可修改的集合对象，也可以修改元素的值，如 <code>map[&#39;key&#39;] = &#39;value&#39;</code>，将 map 中的 <code>&#39;key&#39;</code> 对应的 value 改为 <code>&#39;value&#39;</code>。</p>
+<h2 id="SpEL-使用"><a href="#SpEL-使用" class="headerlink" title="SpEL 使用"></a>SpEL 使用</h2><p>这里讨论的是在 Spring 环境中使用 SpEL 表达式，有两个地方可以使用 SpEL 表达式，一个是 spring.xml（Spring 配置文件），一个是在 Bean 的成员变量上使用 <code>@Value</code> 注解来注入 SpEL 表达式的值（注意不能在静态字段上使用 @Value 注解，因为 SpEL 表达式不会被执行，字段的值为 null）。先来看第一种，在 spring.xml 中使用 SpEL 表达式。配置 pom.xml，引入 spring-context 依赖，spring-context 内部会依赖 spring-expression：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.zfl9</groupId>
+  <artifactId>JavaSE_HelloWorld</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <spring.version>4.3.20.RELEASE</spring.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<p><strong>spring.xml</strong>，注意 <code>&lt;context:property-placeholder/&gt;</code> 元素，不加这个，<code>${}</code> 属性表达式不会被执行，会直接显示 <code>${os.name}</code> 这样的值。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:property-placeholder/>
+
+  <bean class="com.zfl9.XmlTest">
+    <property name="map">
+      <map>
+        <entry key="os.name" value="${os.name}"/>
+        <entry key="file.encoding" value="${file.encoding}"/>
+        <entry key="spel.execute.value" value="#{10 ^ 2 + 50}"/>
+        <entry key="system.temp.environment" value="#{systemEnvironment.TEMP}"/>
+        <entry key="spel.execute.defaultValue" value="#{'Hello, ' + '${world:World}'}"/>
+      </map>
+    </property>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p><strong>XmlTest.java</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.util.Map;
+
+public class XmlTest {
+    private Map<String, Object> map;
+
+    public Map<String, Object> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
+    }
+
+    @Override
+    public String toString() {
+        return map.toString();
+    }
+}
+</script></code></pre>
+<p><strong>Main.java</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        System.out.println(context.getBean(XmlTest.class));
+    }
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+{os.name=Windows 10, file.encoding=UTF-8, spel.execute.value=150, system.temp.environment=C:\Users\Otokaze\AppData\Local\Temp, spel.execute.defaultValue=Hello, World}
+</script></code></pre>
+<p><strong>引入外部 properties 文件</strong><br>除了访问系统定义的属性外，如 os.name、file.encoding 这些 jvm 自带的属性，我们也可以将外部的 properties 文件中的属性引入到 spring.xml，然后就可以在 spring.xml 中引用了，当然在 @Value 注解中也能访问这些属性，都是一样的。首先我们在 classpath 中放入我们的属性文件，因为我使用 maven 进行项目管理，所以直接在 src/main/resources 目录下创建一个 test.properties 属性文件，内容如下：</p>
+<pre><code class="language-ini line-numbers"><script type="text/plain">
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.driver = com.mysql.jdbc.cj.Driver
+jdbc.username = root
+jdbc.password = 123456
+</script></code></pre>
+<p><strong>spring.xml</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:property-placeholder ignore-unresolvable="true" file-encoding="UTF-8" location="classpath:test.properties"/>
+
+  <bean class="com.zfl9.XmlTest">
+    <property name="map">
+      <map>
+        <entry key="jdbc.url" value="${jdbc.url}"/>
+        <entry key="jdbc.driver" value="${jdbc.driver}"/>
+        <entry key="jdbc.username" value="${jdbc.username}"/>
+        <entry key="jdbc.password" value="${jdbc.password}"/>
+        <entry key="jdbc.noSuchProp" value="${jdbc.noSuchProp:defaultPropValue}"/>
+      </map>
+    </property>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+{jdbc.url=jdbc:mysql://localhost/test, jdbc.driver=com.mysql.jdbc.cj.Driver, jdbc.username=root, jdbc.password=123456, jdbc.noSuchProp=defaultPropValue}
+</script></code></pre>
+<p><strong>引入多个外部 properties 文件</strong>，只需要使用英文逗号隔开就行：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:property-placeholder
+      ignore-unresolvable="true"
+      file-encoding="UTF-8"
+      location="classpath:test01.properties, classpath:test02.properties"/>
+
+  <bean class="com.zfl9.XmlTest">
+    <property name="map">
+      <map>
+        <entry key="jdbc.url" value="${jdbc.url}"/>
+        <entry key="jdbc.driver" value="${jdbc.driver}"/>
+        <entry key="jdbc.username" value="${jdbc.username}"/>
+        <entry key="jdbc.password" value="${jdbc.password}"/>
+        <entry key="jdbc.noSuchProp" value="${jdbc.noSuchProp:defaultPropValue}"/>
+        <entry key="hello.zfl9" value="${hello.zfl9}"/>
+        <entry key="hello.baidu" value="${hello.baidu}"/>
+        <entry key="hello.google" value="${hello.google}"/>
+      </map>
+    </property>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p><strong>test01.properties</strong></p>
+<pre><code class="language-ini line-numbers"><script type="text/plain">
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.driver = com.mysql.jdbc.cj.Driver
+jdbc.username = root
+jdbc.password = 123456
+</script></code></pre>
+<p><strong>test02.properties</strong></p>
+<pre><code class="language-ini line-numbers"><script type="text/plain">
+hello.zfl9 = www.zfl9.com
+hello.baidu = www.baidu.com
+hello.google = www.google.com
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+{jdbc.url=jdbc:mysql://localhost/test, jdbc.driver=com.mysql.jdbc.cj.Driver, jdbc.username=root, jdbc.password=123456, jdbc.noSuchProp=defaultPropValue, hello.zfl9=www.zfl9.com, hello.baidu=www.baidu.com, hello.google=www.google.com}
+</script></code></pre>
+<p><strong><code>&lt;context:property-placeholder/&gt;</code> 与 <code>PropertyPlaceholderConfigurer</code> 是等价的</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<context:property-placeholder
+    location="classpath:dao.properties,
+              classpath:user.properties,
+              classpath:services.properties,
+              /WEB-INF/config/config.properties"
+    ignore-unresolvable="true"/>
+</script></code></pre>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean
+    id="propertyConfigurer"
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+    <property name="locations">
+        <list>
+            <value>classpath:dao.properties</value>
+            <value>classpath:user.properties</value>
+            <value>classpath:services.properties</value>
+            <value>/WEB-INF/config/config.properties</value>
+        </list>
+    </property>
+
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+</bean>
+</script></code></pre>
+<p><strong>@Value 注解</strong><br>除了直接在 spring.xml 配置文件中引用 properties 和使用 SpEL 表达式外，也可以直接在类的成员变量、成员方法、方法参数上使用 <code>@Value</code> 注解，语法和 spring.xml 里面的 properties 引用、SpEL 表达式是一样的，来看一个简单的例子（@Value 注解所在的类必须注册为 bean，否则不会被解析）：</p>
+<p><strong>spring.xml</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:component-scan base-package="com.zfl9"/>
+
+</beans>
+</script></code></pre>
+<p><strong>Main.java</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Main {
+    @Value("${os.name}")
+    private String osName;
+
+    @Value("${file.encoding}")
+    private String encoding;
+
+    @Value("#{10 ^ 4}")
+    private int exprValue;
+
+    @Value("#{'hello, ' + '${noSuch:world}'}")
+    private String helloWorld;
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        Main main = context.getBean(Main.class);
+        System.out.println(main.osName);
+        System.out.println(main.encoding);
+        System.out.println(main.exprValue);
+        System.out.println(main.helloWorld);
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+Windows 10
+UTF-8
+10000
+hello, world
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/mybatis.html" rel="next" title="MyBatis 笔记">
+                <i class="fa fa-chevron-left"></i> MyBatis 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/spring-mvc.html" rel="prev" title="Spring MVC 笔记">
+                Spring MVC 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpEL-简介"><span class="nav-number">1.</span> <span class="nav-text">SpEL 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpEL-语法"><span class="nav-number">2.</span> <span class="nav-text">SpEL 语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpEL-使用"><span class="nav-number">3.</span> <span class="nav-text">SpEL 使用</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/spring-el.html';
+          this.page.identifier = 'spring-el.html';
+          this.page.title = 'Spring 表达式语言';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

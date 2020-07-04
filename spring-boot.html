@@ -1,0 +1,2563 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Spring Boot 不是一门新技术，所以不用紧张。从本质上来说，Spring Boot 就是 Spring，它做了那些没有它你也会去做的 Spring 配置。它使用“约定优于配置”（内置了一个习惯性的配置，让你无需手动进行配置）的理念让你的项目快速运行起来。使用 Spring Boot 很容易创建一个独立运行（运行 jar，内嵌 Servlet 容器）、准生产级别的基于 Spring 框架的项">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot">
+<meta property="og:url" content="https://www.zfl9.com/spring-boot.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Spring Boot 不是一门新技术，所以不用紧张。从本质上来说，Spring Boot 就是 Spring，它做了那些没有它你也会去做的 Spring 配置。它使用“约定优于配置”（内置了一个习惯性的配置，让你无需手动进行配置）的理念让你的项目快速运行起来。使用 Spring Boot 很容易创建一个独立运行（运行 jar，内嵌 Servlet 容器）、准生产级别的基于 Spring 框架的项">
+<meta property="og:updated_time" content="2020-07-04T13:11:23.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Boot">
+<meta name="twitter:description" content="Spring Boot 不是一门新技术，所以不用紧张。从本质上来说，Spring Boot 就是 Spring，它做了那些没有它你也会去做的 Spring 配置。它使用“约定优于配置”（内置了一个习惯性的配置，让你无需手动进行配置）的理念让你的项目快速运行起来。使用 Spring Boot 很容易创建一个独立运行（运行 jar，内嵌 Servlet 容器）、准生产级别的基于 Spring 框架的项">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/spring-boot.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Spring Boot | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/spring-boot.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Spring Boot
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-29T08:00:00+08:00">
+                2019-01-29
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/spring-boot.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="spring-boot.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/spring-boot.html" class="leancloud_visitors" data-flag-title="Spring Boot">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Spring Boot 不是一门新技术，所以不用紧张。从本质上来说，Spring Boot 就是 Spring，它做了那些没有它你也会去做的 Spring 配置。它使用“约定优于配置”（内置了一个习惯性的配置，让你无需手动进行配置）的理念让你的项目快速运行起来。使用 Spring Boot 很容易创建一个独立运行（运行 jar，内嵌 Servlet 容器）、准生产级别的基于 Spring 框架的项目，使用 Spring Boot 你可以不用或者只需要很少的 Spring 配置。</p>
+<a id="more"></a>
+<h2 id="SpringBoot-浅析"><a href="#SpringBoot-浅析" class="headerlink" title="SpringBoot 浅析"></a>SpringBoot 浅析</h2><p>SpringBoot 之所以会诞生，是因为 Spring 框架的配置越来越复杂了，不适合“快速开发”，就拿 spring mvc 项目来说，至少需要两个 xml 配置文件：</p>
+<ul>
+<li><code>web.xml</code>：servlet 容器的配置文件（拦截所有请求到 spring mvc servlet，以及配置一个 UTF-8 字符编码过滤器）</li>
+<li><code>mvc.xml</code>：springmvc 的配置文件（负责将请求交给 Controller 处理，处理之后再交给 ViewResolver 去渲染页面）</li>
+</ul>
+<p>当然，从 spring 3 开始，也提供了完全基于 javaconfig 的配置方式，即：</p>
+<ul>
+<li><code>web.xml</code> -&gt; <code>WebConfig.java</code>：从 xml 形式变为了 javaconfig 形式</li>
+<li><code>mvc.xml</code> -&gt; <code>MvcConfig.java</code>：从 xml 形式变为了 javaconfig 形式</li>
+</ul>
+<p>但是配置的复杂度依旧没有降低，只是 javaconfig 可以避免 xmlconfig 的“非类型安全”缺点而已啦（IDEA 无所畏惧，xmlconfig 也能很好的提示）。</p>
+<p>而现在又流行什么“微服务、云计算”，虽然我对这些也不是太懂，但是也大概了解了一下，我们先来说说“微服务”，微服务其实就是将一个复杂的大项目拆分为多个小的项目（每个小项目称为一个“服务”），不同组件之间使用 restful-api 或 rpc 进行交互，这样每个组件都可以使用不同的技术栈来开发，比如组件 A 可以使用 java 来开发，组件 B 可以使用 python 来开发，组件 C 可以使用 golang 来开发，因为这些都没有任何影响，各个模块之间的交互都是通过 restful-api 来进行的，它屏蔽了底层的开发语言以及开发框架的差异。</p>
+<p><strong>微服务的概念</strong><br>微服务是一种软件架构风格，一个大型复杂的软件系统应该由一个或多个微服务组成。系统中的各个微服务可被独立部署，各个微服务之间是松耦合的。每个微服务仅关注于完成一件任务并很好地完成该任务，不同微服务之间通常使用语言无关、平台无关的 API 进行通信，如 HTTP API（RESTful API）。在所有情况下，每个任务代表着一个小的业务能力。微服务的概念源于 2014 年 3 月 Martin Fowler 所写的一篇文章 <a href="http://martinfowler.com/articles/microservices.html" rel="external nofollow noopener noreferrer" target="_blank">Microservices</a>。尽管“微服务”这种架构风格没有精确的定义，但其具有一些共同的特性，如围绕业务能力组织服务、自动化部署、智能端点、对语言及数据的“去集中化”控制等等。</p>
+<p><strong>微服务的由来</strong><br>微服务最早由 Martin Fowler 与 James Lewis 于 2014 年共同提出，微服务架构风格是一种使用一套小服务来开发单个应用的方式途径，每个服务运行在自己的进程中，并使用轻量级机制通信，通常是 HTTP API，这些服务基于业务能力构建，并能够通过自动化部署机制来独立部署，这些服务使用不同的编程语言实现，以及不同数据存储技术，并保持最低限度的集中式管理。</p>
+<p><strong>为什么需要微服务</strong><br>在传统的 IT 行业，软件大多都是各种独立系统的堆砌，这些系统的问题总结来说就是扩展性差，可靠性不高，维护成本高。到后面引入了 SOA 服务化，但是，由于 SOA 早期均使用了总线模式，这种总线模式是与某种技术栈强绑定的，比如：J2EE。这导致很多企业的遗留系统很难对接，切换时间太长，成本太高，新系统稳定性的收敛也需要一些时间。最终 SOA 看起来很美，但却成为了企业级奢侈品，中小公司都望而生畏。</p>
+<p>而微服务又有点“快速开发”的意思，说到快速开发，传统的 spring mvc 程序的痛点就出来了，一大堆繁琐的 xmlconfig/javaconfig 配置，光是搭建一个基本的开发环境就得半天，因为有很多模板式的配置文件，总是复制粘贴，然后修改，效率太低了，不能让我们开发人员专注于写业务代码（必须先专注于写配置文件这些东西）。</p>
+<p>于是，spring boot 诞生了，spring boot 不同于 spring framework 的其它模块，实际上 spring boot 并没有引入什么新的功能，springboot 的使命是为了实现“spring应用程序的快速开发”，所以不用害怕，spring boot 只是一颗大的语法糖，帮助你快速搭建一个 spring 应用程序开发环境，而业务代码什么的还是你自己写，没有什么变化，变化的仅仅是 spring 框架的一系列配置（简化了许多）。</p>
+<p>那么 springboot 是如何简化 spring 框架的繁琐复杂的配置的呢？核心就是“自动配置”，自动配置本质上还是 spring 4 引入的 <strong>条件化创建 bean</strong> 功能，所以 spring boot 其实也没有提供什么“自动配置魔法”，只不过将 spring 4 的条件化创建 bean 运用的炉火纯青罢了，所以其实也没什么神奇的。</p>
+<p>当然，spring boot 除了简化 spring 框架的初始化配置之外，还有另一个贡献，那就是 starter，所谓 starter 就是一组依赖，springboot 将日常开发的各种框架进行了分类汇总，比如 web starter 就表示 web 开发需要的依赖项目，我们只需要引入这个 web starter 依赖，就可以一键获取到与 web 开发相关的那些依赖项目，如 spring-webmvc、validator、slf4j、logback 等，这样我们就不需要一个一个的配置需要的依赖了，非常方便。使用 starter 依赖组还有另一个好处，那就是我们不需要在关心不同依赖之间的版本冲突问题了，因为一组依赖里面的依赖项的版本都是经过 spring boot 实际测试出来的，是最佳组合，因此也不建议手动更改依赖组里面的依赖项版本号，否则可能引发传递依赖的版本冲突问题，这纯属是自找麻烦。</p>
+<p>另外，springboot 还提供了一个令人欣喜的功能：直接将传统的 webapp 项目打包为一个可执行的 jar 包，这样使用 maven 打包之后，就可以直接使用 <code>java -jar my-web-project.jar</code> 来运行我们的应用，而不需要单独的 servlet 容器，简直不要太爽了。当然 springboot 也允许将我们的项目打包为 war 包，然后将这个 war 包放到传统的 servlet 容器中使用，一般在开发环境中，打包为 jar 包比较合适，因为方便嘛；而在生产环境中，打包为 war 可能比较合适，当然这些都不重要，看个人的喜好。默认情况下，springboot 使用 tomcat 作为嵌入式 servlet 容器，你也可以将其替换为 jetty。其实仔细想想，将 webapp 打包为一个可执行 jar 也没什么稀奇的，因为 tomcat 实际上也就是一个普通的 java 项目，而 tomcat 也有对应的嵌入式版本，所谓嵌入式版本就是直接在 java 程序中启动的 tomcat，而不是作为一个单独的服务运行的 tomcat 进程。</p>
+<p><strong>自动配置、条件化创建 bean</strong><br>springboot 的核心是“自动配置”，而自动配置的本质是“条件化创建bean”。在 spring 4 之前，xmlconfig/javaconfig 中的 <code>&lt;bean&gt;</code>、<code>@Bean</code> 都是无条件创建的，只要你配置了 bean 元素、@Bean 方法，那么对应的 bean 就会被创建。这显然有点原始了，很多时候，为了完成稍微复杂一些的配置任务，都需要使用条件化创建 bean 功能，好在 spring 4 之后，提供了相关的注解以及接口：</p>
+<ul>
+<li><code>@Conditional</code>：条件化创建注解，可以标注 @Configuration 配置类以及 @Configuration 配置类中的 @Bean 方法，该注解有一个 value 属性，用于指定进行条件判断的实现类（Condition 接口的实现类，可以指定多个），只有所有的 Condition 对象的 matches() 方法都返回 true 才表示条件成立，才会去执行当前 @Configuration 或 @Configuration 中的 @Bean 方法。</li>
+<li><code>Condition</code>：条件判断的接口，只有一个方法，即 matches()，它是一个函数式接口，如果 matches() 方法返回 true，则表示当前条件成立，如果 matches() 方法返回 false，则表示当前条件不成立。</li>
+</ul>
+<p>Spring 4 提供了很多 Condition 接口实现，方便我们开发“条件化创建bean”的配置类（条件化配置），如：</p>
+<ul>
+<li>@ConditionalOnBean：如果 context 中存在指定 bean，则条件成立</li>
+<li>@ConditionalOnMissingBean：如果 context 中不存在指定 bean，则条件成立</li>
+<li>@ConditionalOnClass：如果 classpath 中存在指定 Class，则条件成立</li>
+<li>@ConditionalOnMissingClass：如果 classpath 中不存在指定 Class，则条件成立</li>
+<li>@ConditionalOnExpression：如果给出的 SpEL 表达式结果值为 true，则条件成立</li>
+</ul>
+<p>借助这些内置 Condition 条件判断类 + 自定义实现的条件判断类，就可以非常方便的实现：Spring 框架的条件化、自动化配置了。这其实就是 Spring Boot 自动配置的原理所在。</p>
+<p><strong>传统的 SSM 项目结构</strong></p>
+<ul>
+<li><strong>pom.xml</strong>（每个依赖都要自己导入）</li>
+<li><strong>web.xml/WebConfig.java</strong></li>
+<li><strong>mvc.xml/MvcConfig.java</strong></li>
+<li>Employee.java</li>
+<li>EmployeeMapper.java</li>
+<li>EmployeeMapper.xml</li>
+<li>EmployeeService.java</li>
+<li>EmployeeServiceImpl.java</li>
+<li>EmployeeController.java</li>
+<li>employee-list.jsp</li>
+<li>employee-edit.jsp</li>
+</ul>
+<p><strong>SpringBoot 版本的 SSM</strong></p>
+<ul>
+<li><strong>pom.xml</strong>（直接导入 starter 依赖组）</li>
+<li><strong>Application.java</strong>（配置类&amp;启动类）</li>
+<li>Employee.java</li>
+<li>EmployeeMapper.java</li>
+<li>EmployeeMapper.xml</li>
+<li>EmployeeService.java</li>
+<li>EmployeeServiceImpl.java</li>
+<li>EmployeeController.java</li>
+<li>employee-list.ftl</li>
+<li>employee-edit.ftl</li>
+</ul>
+<p>可以发现，变化的就是“配置部分”，换为 springboot 后，pom.xml 简化了，WebConfig.java 和 MvcConfig.java 不需要了，取而代之的是 Application.java 配置类&amp;启动类。另外，SpringBoot 不建议使用 JSP 视图解析器，因为打包为 jar 包时，运行是有问题的，即使打包为 war 包也可能会出现不可预知的问题，而且 JSP 不支持 SpringBoot 的很多特性，所以建议使用 FreeMarker、Thymeleaf 这些专业的 Java 模板引擎。这里我就选用 FreeMarker，FreeMarker 的模板文件后缀名通常为 <code>.ftl</code>，但是这个变化其实是无关紧要的，因为使用什么模板引擎其实没什么关系，很多公司的项目也是使用的 FreeMarker 这些模板引擎，而不是 JSP。</p>
+<p>pom.xml 的变化这里就先不说了，后面会详细讲解；我们来看看变化最明显的 WebConfig&amp;MvcConfig =&gt; Application。</p>
+<p><strong>WebConfig</strong>（web.xml 的 javaconfig 版本）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return null;
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{MvcConfig.class};
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[]{characterEncodingFilter};
+    }
+}
+</script></code></pre>
+<p><strong>MvcConfig</strong>（mvc.xml 的 javaconfig 版本）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Configuration
+@ComponentScan
+@EnableWebMvc
+public class MvcConfig extends WebMvcConfigurerAdapter {
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.jsp("/WEB-INF/views/", ".jsp");
+    }
+}
+</script></code></pre>
+<p><strong>Application</strong>（MvcConfig 的简化版本）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</script></code></pre>
+<p>因为 WebConfig 的任务非常简单，简单的说，就是两个东西：</p>
+<ul>
+<li>注册 springmvc dispatcher servlet，拦截所有请求到 springmvc 处理；</li>
+<li>注册 charset filter，将 request 和 response 的字符编码规范为 UTF-8。</li>
+</ul>
+<p>基本上每个 SpringMVC 程序都是这样配置的，不怎么变化，也不需要怎么自定义配置，所以 SpringBoot 干脆将这些配置“内置化“，即默认就配置了这些东西，我们无需关心。所以，Application 和 MvcConfig 是相同的作用，都是 Spring 的配置文件。</p>
+<p>可以发现，Application 中我们什么都没有配置，只是在上面加了一个 <code>@SpringBootApplication</code> 注解，就完成了 MvcConfig 里面的全部配置（甚至是更多配置，因为 SpringBoot 的核心功能 - “自动配置”）。那么这里面究竟是什么黑魔法呢？为什么只需要一个 SpringBootApplication 注解，然后一个普通的 main 启动方法就可以直接运行传统的 spring mvc 应用程序呢？</p>
+<p>先冷静一下，我们知道，注解和 XML 都是提供元数据的一种方式，如果你没有相应的代码去处理这些 注解/XML 元数据，那么这些 注解/XML 实际上不会有任何作用，就相当于没有使用这个注解一样。OK，理解到这一点之后，我们再来分析一下 SpringBoot 程序启动的原理和流程。</p>
+<p>首先映入眼帘的就是 Application 启动类中的 main() 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+}
+</script></code></pre>
+<p>当我们运行这个 main() 方法的时候，执行的就是 <code>SpringApplication</code> 的 <code>run()</code> 静态方法，run() 方法的第一个参数是当前启动类的 Class 对象，第二个参数是 main() 方法接收到的命令行参数（字符串数组，args）。</p>
+<p>那么我们先来看看这个 run() 方法内部做了什么操作（仅列举核心操作）：</p>
+<ol>
+<li>如果我们调用的是静态 run() 方法，则该方法内部会首先创建 SpringApplication 实例，再调用该实例的 run() 方法。</li>
+<li>根据当前 classpath 是否存在 servlet 相关的类，决定创建 Web 类型的 ApplicationContext 还是普通的 ApplicationContext。</li>
+<li>最核心的一步，将之前通过 @EnableAutoConfiguration 获取的所有 @Configuration 配置加载到已经准备完毕的 ApplicationContext。</li>
+</ol>
+<p>这其中最重要的还是第三步，不过这个 <code>@EnableAutoConfiguration</code> 是什么注解？哪来的？别急，我们来看看另一个重要的东西：<code>@SpringBootApplication</code>，这个注解其实是一个组合注解，声明如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan(excludeFilters = {
+        @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+        @Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
+public @interface SpringBootApplication {
+    ...
+}
+</script></code></pre>
+<p>前面的 4 个 jdk 内置的元注解就不说明了，以下省略；所以核心的注解是这 3 个：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan
+</script></code></pre>
+<p>先来看第一个注解，<code>@SpringBootConfiguration</code>，其实就是 <code>@Configuration</code> 而已：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Configuration
+public @interface SpringBootConfiguration {}
+</script></code></pre>
+<p>所以又可以简化为：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Configuration
+@ComponentScan
+@EnableAutoConfiguration
+</script></code></pre>
+<p>OK，现在我们来解析一下这些注解，<code>@Configuration</code> 注解大家都比较熟悉，这是 Spring 3 引入的注解，等价于一个 spring.xml 配置文件，也就是说，被 @Configuration 标注的类都是一个 Spring 配置类（等价于一个 spring xml 配置文件），而 <code>@ComponentScan</code> 注解也是 Spring 3 引入的注解，等价于 spring 配置文件中的 <code>&lt;context:component-scan/&gt;</code> 元素，作用就是扫描指定 package（含子包）中的 <code>@Component</code>、<code>@Controller</code>、<code>@Service</code>、<code>@Repository</code> 注解的 Bean 类，然后将它们注册到 bean 容器中，并处理这些 Bean 类上面的 Spring 注解，如 <code>@Autowired</code>。注意，对于 <code>@ComponentScan</code> 注解，如果不指定 basePackage，那么默认就是当前所在的 package（含子包），所以一个很好的实践是，将 Application 启动类&amp;配置类放到我们的顶级 package 下面，比如 com.zfl9 包下面，这样就可以不需要指定 basePackage 属性，“约定优于配置”。</p>
+<p>那么最核心的注解其实就是 <code>@EnableAutoConfiguration</code>，前面两个注解都是 Spring 3 中的注解，没什么可讲的。不知道大家有没有发现，Spring 的 <code>@EnableXxx</code> 注解都是 <code>@Import(PartConfigurationClass.class)</code> 注解来实现的，所以看到 <code>@Enable*</code> 就要将其看作为 <code>@Import(Xxx.class)</code> 注解，那么 <code>@Import</code> 注解的作用又是什么呢？还记得我们的 xml-based 配置文件么？如果 spring 配置文件很大，配置的内容很多，通常我们都会采取“分模块”的方法来拆分一个大的 spring 配置文件，然后在主配置文件上使用 <code>&lt;import resource=&quot;classpath:part-config.xml&quot;/&gt;</code> 来引入子配置文件到当前配置文件中（合并为一个配置文件），而 <code>@Import</code> 的作用和 <code>&lt;import/&gt;</code> 标签的作用是一样的，都是用来导入其它的子配置文件上的配置内容，只不过 <code>&lt;import/&gt;</code> 导入的是 xml-based configuration，而 <code>@Import</code> 导入的是 java-based configuration。</p>
+<p>那么我们来看看 <code>@EnableAutoConfiguration</code> 注解的声明是什么：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@AutoConfigurationPackage
+@Import(AutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration {
+    ...
+}
+</script></code></pre>
+<p>看吧，就是 <code>@Import(AutoConfigurationImportSelector.class)</code> 的封装注解而已，不过它上面还有一个 <code>@AutoConfigurationPackage</code> 注解，我们来看看这个 <code>@AutoConfigurationPackage</code> 注解是什么东西：</p>
+<pre><code class="line-numbers language-java">@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@Import(AutoConfigurationPackages.Registrar.class)
+public @interface AutoConfigurationPackage {}
+</code></pre>
+<p>所以这还是一个 <code>@Import</code> 封装注解，那么组合起来，<code>@EnableAutoConfiguration</code> 其实就是这两个 <code>@Import</code> 的组合注解：</p>
+<pre><code class="line-numbers language-java">@Import(AutoConfigurationPackages.Registrar.class)
+@Import(AutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration {
+    ...
+}
+</code></pre>
+<p>所以，下面两个用法是完全一样的，没有区别（只是 AutoConfigurationPackages.Registrar 不是 public 访问权限的，所以会报错）：</p>
+<pre><code class="line-numbers language-java">@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<pre><code class="line-numbers language-java">@Configuration
+@ComponentScan
+@Import(AutoConfigurationImportSelector.class)
+@Import(AutoConfigurationPackages.Registrar.class)
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<p><code>AutoConfigurationPackages.Registrar</code> 的 javadoc 说明是（作用暂时不清楚，尝试去除它启动会报错）：</p>
+<pre><code class="line-numbers language-java">// 告诉 SpringBoot，被 `@AutoConfigurationPackage` 标注的类所在的包应该使用 AutoConfigurationPackages 注册。
+Indicates that the package containing the annotated class should be registered with AutoConfigurationPackages.
+</code></pre>
+<p>先不管这个，我们来看看进一步精简版的 <code>@SpringBootApplication</code> 注解：</p>
+<pre><code class="line-numbers language-java">@Configuration
+@ComponentScan
+@Import(AutoConfigurationImportSelector.class)
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<p>OK，代码已经很清楚了，Spring Boot 自动配置的关键所在就是 <code>AutoConfigurationImportSelector</code> 这个 sub-configuration 配置类。</p>
+<p>而这个类内部就会自动查找 <code>classpath:/META-INF/spring.factories</code> 资源文件（会查找所有的同名资源文件，然后将它们合并为一个），spring.factories 有点类似于 JDK1.6 的 SPI 机制，spring.factories 文件其实就是普通的 java properties 属性文件，这个文件中，有一个 key 为 <code>org.springframework.boot.autoconfigure.EnableutoConfiguration</code> 的配置项，它指定的其实就是所有的 <code>@Configuration</code> Spring 配置类（也就是所谓的自动配置类，因为它们上面有很多 <code>@Conditional</code> 条件配置注解），Spring Boot 内部会使用 SpringFactoriesLoader 工具类读取所有的 spring.factories 文件中的 <code>org.springframework.boot.autoconfigure.EnableutoConfiguration</code> 指定的所有 @Configuration 配置类，然后通过反射 API，实例化它们，将它们合并到当前 <code>@SpringBootApplication</code> 标注的 @Configuration 配置类中（汇总为一个，就相当于一个根 xmlconfig 配置文件中使用 <code>&lt;import&gt;</code> 标签引入所有的外部的 sub xmlconfig 配置文件一样），收集完毕之后，就像往常一样，初始化 Spring Context 容器，运行即可。所以这样看来，Spring Boot 真的没什么神秘的。</p>
+<h2 id="SpringBoot-Hello"><a href="#SpringBoot-Hello" class="headerlink" title="SpringBoot Hello"></a>SpringBoot Hello</h2><p>SpringBoot 建议我们使用 maven 或 gradle 项目构建和管理工具，因为我自己对 maven 比较熟悉，所以这里就以 maven 作为例子讲解。为了方便开发人员迅速搭建 SpringBoot 开发环境，SpringBoot 提供了一个非常实用的工具网站，<a href="https://start.spring.io/" rel="external nofollow noopener noreferrer" target="_blank">Spring Initializr</a>，在这上面我们可以选择使用 maven 还是 gradle、java 版本、springboot 版本、以及需要使用的 springboot starter 模块，选好之后，我们就可以直接点击 <strong>Generate Project</strong> 按钮，下载 maven/gradle 项目压缩包，然后使用喜欢的 IDE 打开，编写我们的业务类即可，简直不要太爽。</p>
+<p>流行的 Java IDE：<strong>IntelliJ IDEA</strong> 也提供了对 SpringBoot 应用程序的创建支持，所以我们更多的是直接在 IDE 中创建 SpringBoot 项目，本质上，IDEA 还是调用的 <a href="https://start.spring.io" rel="external nofollow noopener noreferrer" target="_blank">https://start.spring.io</a> 的 API 来完成的，所以它们本质上没有区别，只是直接在 IDEA 中创建显然更方便一些，不需要打开浏览器一个一个选，然后再下载到本地，最后还要使用 IDE 导入 maven/gradle 项目。</p>
+<p>因为本人使用的也是 IDEA，所以直接就在 IDEA 中创建 springboot 项目（创建方法很简单，和创建普通的 maven 项目差不多，自己一看就会，这里就不详细说明了）。</p>
+<p><strong>项目结构</strong></p>
+<pre><code class="line-numbers language-none">$ tree
+.
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── com
+    │   │       └── zfl9
+    │   │           └── HelloWorld.java
+    │   └── resources
+    │       ├── application.properties
+    │       ├── static
+    │       └── templates
+    └── test
+        └── java
+</code></pre>
+<p><code>src/main/java</code> 目录是我们的源码目录，然后 <code>src/main/resources</code> 目录是我们的资源目录，这个目录下默认有 3 个文件：</p>
+<ul>
+<li><code>application.properties</code>：springboot 的配置文件，当然也可以在里面存放我们的自定义属性，除了 properties 格式外，springboot 还支持使用 yaml（<code>*.yml</code>）格式，但是这里依旧使用大家比较熟悉的 properties 配置文件格式，如果要使用 yaml 文件格式，可以自己去了解一下，貌似可读性确实好一些，但是我个人不太喜欢这种“缩进”风格的语言、格式，比如 Python，感觉有点恶心。</li>
+<li><code>static</code>：静态文件的存放目录，如 index.html、css 和 js 等静态文件也都是放到这个目录下。</li>
+<li><code>templates</code>：模板文件的存放目录，如 employee.ftl（freemarker 模板文件）。</li>
+</ul>
+<p>因为我们编写的是一个简单的 RESTful 应用，所以就没有编写静态网页文件或模板文件，直接返回一个 <code>&quot;Hello, World!&quot;</code> 字符串。<code>application.properties</code> 也是空的，保持默认。所以我们只需要关心两个文件：pom.xml 和 HelloWorld.java。</p>
+<p><strong>pom.xml</strong></p>
+<pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.zfl9.springboot&lt;/groupId&gt;
+  &lt;artifactId&gt;springboot-helloworld&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+  &lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<p><strong>HelloWorld.java</strong></p>
+<pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@SpringBootApplication
+public class HelloWorld {
+    public static void main(String[] args) {
+        SpringApplication.run(HelloWorld.class, args);
+    }
+
+    @GetMapping(&quot;/&quot;)
+    public String helloWorld() {
+        return &quot;Hello, World!&quot;;
+    }
+}
+</code></pre>
+<p>先来分析 pom.xml，第一个地方就是 <code>&lt;parent&gt;</code> 标签，这里我们引入了一个父级 pom：<code>spring-boot-starter-parent</code>，每个 springboot 项目通常都会引入这个父 pom，这个父 pom 中定义了与 springboot 相关的各种 starter 依赖组，以及相关的 maven 插件，以及各种 properties（依赖版本），基本上，这些 dependency 和 plugin 都是放在 dependencyManagement、pluginManagement 标签中的，这样就不会带来各种不必要的依赖，我们想要使用哪些依赖、插件就自己在项目的 pom.xml 中引入即可（只需提供 groupId、artifactId，不需要给出 version 等信息），而对于依赖项目的版本，也可以在我们的 pom.xml 中通过定义同名的 properties 属性来覆盖父级 pom 中的版本属性，但是不推荐这么做，可能会带来版本冲突风险。</p>
+<p>当然，如果当前项目已经有了一个父级 pom，那就不能直接定义 springboot 的 parent pom 了，因为 maven 和 java 一样，都是单继承模型的，不允许多继承。这时候也是有相应的解决办法的，不去动当前项目的已有的父级 pom，而是在我们的项目中，定义 dependencyManagement 标签，在里面定义 type=pom、scope=import 类型的 dependency，这个 dependency 就是 springboot 提供的 <code>spring-boot-dependencies</code>，这个项目里面定义的全是 springboot 的 starter 依赖组，然后我们仍然像上面那样在 dependencies 标签中定义 dependency 依赖项（不需要提供 version 等信息），具体如下（不需要改动我们自己的父级 pom.xml）：</p>
+<pre><code class="line-numbers language-xml">&lt;dependencyManagement&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt;
+      &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;
+      &lt;type&gt;pom&lt;/type&gt;
+      &lt;scope&gt;import&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<p>第二个就是：<code>&lt;java.version&gt;</code>，注意这个属性会被 springboot 使用，而不是被 maven 使用，指定 maven 使用的 jdk 版本不是用的这个属性，而是</p>
+<pre><code class="line-numbers language-xml">&lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
+&lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
+</code></pre>
+<p>第三个就是：<code>spring-boot-starter-web</code> starter 依赖组（web），这里面就包含了 spring-webmvc 等基础模块，不需要自己去手动引入众多依赖项。</p>
+<p><strong>spring boot starter 命名规范</strong></p>
+<ul>
+<li><code>spring-boot-starter</code>：核心 starter，包含自动配置支持、日志框架支持、yaml 配置文件解析库等。</li>
+<li><code>spring-boot-starter-web</code>：Web 相关的 starter（使用 Tomcat 作为默认嵌入式 servlet 容器）。</li>
+<li><code>spring-boot-starter-aop</code>：AOP 相关的 starter（面向切面编程，Spring AOP and AspectJ）。</li>
+<li><code>spring-boot-starter-test</code>：测试相关的库，比如：JUnit、Hamcrest、Mockito</li>
+<li><code>spring-boot-starter-jdbc</code>：spring-jdbc 支持、HikariCP 连接池。</li>
+<li><code>spring-boot-starter-mail</code>：java mail 支持、spring framework email 支持。</li>
+<li><code>spring-boot-starter-validation</code>：Validation with Hibernate Validator。</li>
+<li><code>spring-boot-starter-thymeleaf</code>：Thymeleaf 模板引擎支持。</li>
+<li><code>spring-boot-starter-freemarker</code>：FreeMarker 模板引擎支持。</li>
+</ul>
+<blockquote>
+<p>官方 starter 的命名为：<code>spring-boot-starter-{name}</code>，第三方 starter 的命名为：<code>{name}-spring-boot-starter</code>。</p>
+</blockquote>
+<p>第四个就是：<code>spring-boot-maven-plugin</code> plugin 插件，该插件的作用是让 springboot 支持将 webapp 打包为可执行的 jar 包，所以通常建议加上。</p>
+<p>接下来就是我们的 SpringBoot 启动类&amp;配置类，相关的注解就不一一解释了，上面说的很明白，而 <code>@RestController</code> 则是之前学习 SpringMVC 时候使用的 RESTful 相关的注解，也不详细解释，整个 HelloWorld 项目结构很简单，清晰易懂；OK，现在我们直接右键 main() 方法，执行即可，然后你就会看到 SpringBoot 的启动信息（并且还会打印一个 ASCII 徽标，以及相关的彩色日志，非常炫酷）：</p>
+<pre><code class="line-numbers language-none">  .   ____          _            __ _ _
+ /\\ / ___&#39;_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | &#39;_ | &#39;_| | &#39;_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  &#39;  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.1.2.RELEASE)
+
+2019-02-15 20:30:16.039  INFO 4872 --- [           main] com.zfl9.HelloWorld                      : Starting HelloWorld on Otokaze-Win10 with PID 4872 (C:\Users\Otokaze\IdeaProjects\springboot\01-springboot-helloworld\target\classes started by Otokaze in C:\Users\Otokaze\IdeaProjects\springboot)
+2019-02-15 20:30:16.039  INFO 4872 --- [           main] com.zfl9.HelloWorld                      : No active profile set, falling back to default profiles: default
+2019-02-15 20:30:16.930  INFO 4872 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-02-15 20:30:16.945  INFO 4872 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-02-15 20:30:16.945  INFO 4872 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
+2019-02-15 20:30:16.945  INFO 4872 --- [           main] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.18] of the APR based Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [1.2.19]
+2019-02-15 20:30:16.945  INFO 4872 --- [           main] o.a.catalina.core.AprLifecycleListener   : Loaded APR based Apache Tomcat Native library [1.2.18] using APR version [1.6.5].
+2019-02-15 20:30:16.961  INFO 4872 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2019-02-15 20:30:16.961  INFO 4872 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2019-02-15 20:30:16.961  INFO 4872 --- [           main] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.1.1  11 Sep 2018]
+2019-02-15 20:30:17.023  INFO 4872 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-02-15 20:30:17.023  INFO 4872 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 922 ms
+2019-02-15 20:30:17.164  INFO 4872 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &#39;applicationTaskExecutor&#39;
+2019-02-15 20:30:17.305  INFO 4872 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path &#39;&#39;
+2019-02-15 20:30:17.305  INFO 4872 --- [           main] com.zfl9.HelloWorld                      : Started HelloWorld in 1.516 seconds (JVM running for 1.963)
+2019-02-15 20:30:32.069  INFO 4872 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet &#39;dispatcherServlet&#39;
+2019-02-15 20:30:32.070  INFO 4872 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet &#39;dispatcherServlet&#39;
+2019-02-15 20:30:32.078  INFO 4872 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+</code></pre>
+<p>其中几个比较重要的信息：</p>
+<ul>
+<li>SpringBoot 的版本</li>
+<li>当前的 JVM 进程 ID</li>
+<li>当前激活的 profile</li>
+<li>Tomcat 监听的端口号</li>
+<li>SpringBoot 启动时间</li>
+</ul>
+<p>现在，打开浏览器或其它客户端，访问 <a href="http://localhost:8080" rel="external nofollow noopener noreferrer" target="_blank">http://localhost:8080</a> 就可以看到 “Hello, World!” 信息了。</p>
+<p><strong>启动类&amp;配置类</strong><br>这个类是我们的启动类，也是我们的配置类，不要把它看得有多么神秘，其实就是一个普通的 <code>@Configuration</code> 配置类而已，我们可以在里面配置自己的 <code>@Bean</code> 方法，注册相应的 bean 到 spring 容器中。来看一个简单的例子：</p>
+<pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@SpringBootApplication
+public class HelloWorld {
+    public static void main(String[] args) {
+        SpringApplication.run(HelloWorld.class, args);
+    }
+
+    @Bean
+    public Object object() {
+        System.out.println(&quot;HelloWorld#object() -- return new Object()&quot;);
+        return new Object();
+    }
+
+    @GetMapping(&quot;/&quot;)
+    public String helloWorld() {
+        return &quot;Hello, World!&quot;;
+    }
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code class="line-numbers language-none">2019-02-16 08:28:46.236  INFO 5260 --- [           main] com.zfl9.HelloWorld                      : Starting HelloWorld on Otokaze-Win10 with PID 5260 (C:\Users\Otokaze\IdeaProjects\springboot\01-springboot-helloworld\target\classes started by Otokaze in C:\Users\Otokaze\IdeaProjects\springboot)
+2019-02-16 08:28:46.236  INFO 5260 --- [           main] com.zfl9.HelloWorld                      : No active profile set, falling back to default profiles: default
+2019-02-16 08:28:47.122  INFO 5260 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-02-16 08:28:47.137  INFO 5260 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-02-16 08:28:47.137  INFO 5260 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
+2019-02-16 08:28:47.137  INFO 5260 --- [           main] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.18] of the APR based Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [1.2.19]
+2019-02-16 08:28:47.137  INFO 5260 --- [           main] o.a.catalina.core.AprLifecycleListener   : Loaded APR based Apache Tomcat Native library [1.2.18] using APR version [1.6.5].
+2019-02-16 08:28:47.137  INFO 5260 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2019-02-16 08:28:47.137  INFO 5260 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2019-02-16 08:28:47.153  INFO 5260 --- [           main] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.1.1  11 Sep 2018]
+2019-02-16 08:28:47.200  INFO 5260 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-02-16 08:28:47.200  INFO 5260 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 901 ms
+HelloWorld#object() -- return new Object()
+2019-02-16 08:28:47.356  INFO 5260 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &#39;applicationTaskExecutor&#39;
+2019-02-16 08:28:47.481  INFO 5260 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path &#39;&#39;
+2019-02-16 08:28:47.481  INFO 5260 --- [           main] com.zfl9.HelloWorld                      : Started HelloWorld in 1.542 seconds (JVM running for 2.258)
+</code></pre>
+<p><strong>SpringApplication.run() 是非阻塞的</strong><br>注意哦，对于 web 应用，我们运行 main() 方法之后，是不会立即退出的，而是一直占用着前台（一直运行），这时候你可能就会理所当然的认为，肯定是 <code>SpringApplication.run()</code> 方法阻塞了，但其实不是这样的，该方法内部实际上会创建一个新的线程去执行（嵌入式 tomcat 服务器），所以它并不是一个阻塞调用，在 Spring 容器初始化完毕之后，它就会创建一个新的线程在后台运行 Tomcat 嵌入式服务器，然后就返回了，不信的话可以看下面这个例子，在运行 main() 方法之后，你可以看到 SpringApplication.run() 方法后的代码很快就被执行了：</p>
+<pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@SpringBootApplication
+public class HelloWorld {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(HelloWorld.class, args);
+        Object bean = context.getBean(&quot;object&quot;, Object.class);
+        System.out.println(bean);
+    }
+
+    @Bean
+    public Object object() {
+        return new Object();
+    }
+
+    @GetMapping(&quot;/&quot;)
+    public String helloWorld() {
+        return &quot;Hello, World!&quot;;
+    }
+}
+</code></pre>
+<p><strong>如果是普通应用（非 web），则没有后台进程</strong><br>首先，我们将 pom.xml 中的 <code>spring-boot-starter-web</code>（web 模块）改为 <code>spring-boot-starter</code>（核心模块），然后去除启动类中的 Web 相关注解和方法，运行 main() 方法，就可以发现，执行完之后就会很快退出，不会一直运行，因为没有 Tomcat 嵌入式服务器在运行。</p>
+<h2 id="SpringBoot-Runner"><a href="#SpringBoot-Runner" class="headerlink" title="SpringBoot Runner"></a>SpringBoot Runner</h2><p>这里指的 Runner 是 SpringBoot 的 <code>CommandLineRunner</code>、<code>ApplicationRunner</code>，这两个都是“函数式接口”，声明如下：</p>
+<pre><code class="line-numbers language-java">@FunctionalInterface
+public interface CommandLineRunner {
+    void run(String... args) throws Exception;
+}
+</code></pre>
+<pre><code class="line-numbers language-java">@FunctionalInterface
+public interface ApplicationRunner {
+    void run(ApplicationArguments args) throws Exception;
+}
+</code></pre>
+<p>Spring 容器启动后，会搜寻 context 中，所有实现了 CommandLineRunner、ApplicationRunner 的 bean 对象，然后将它们排序（<code>@Order</code> 注解，该注解有一个 value 属性，类型为 int，表示“优先级”，值越小优先级越高，所以 Integer.MIN_VALUE 的优先级最高，Integer.MAX_VALUE 的优先级最低），最后依次调用这些对象的 run() 方法，其中传递的参数就是 main() 启动方法接收到的命令行参数，对于 CommandLineRunner，就是直接传递 main() 方法的 String[] args 字符串数组过去，对于 ApplicationRunner，会先将这个字符串数组包装一下，再传递给它们的 run() 方法。</p>
+<p>ApplicationArguments 是 <code>String[] args</code> 原始命令行参数的包装对象，提供了对命令行参数的解析方法，如果你的 Runner 需要解析命令行参数，建议实现 ApplicationRunner。这些 Runner 会在容器启动后立即执行，所以我们可以借助这些 Runner 接口来做一些应用初始化操作，具体就不演示了。</p>
+<h2 id="SpringBoot-日志配置"><a href="#SpringBoot-日志配置" class="headerlink" title="SpringBoot 日志配置"></a>SpringBoot 日志配置</h2><p>SpringBoot 默认使用 slf4j + logback 日志记录框架，而且通过上面的 helloworld 程序大家也有了一个基本的印象，springboot 的日志格式非常整齐和漂亮，也非常易读。默认情况下，springboot 启用的日志级别为 INFO，所以低于 INFO 级别的日志消息不会显示在控制台，即 TRACE、DEBUG 级别的日志消息不会显示出来，而 INFO、WARN、ERROR 级别则会打印到控制台；我们来通过一个简单的例子验证一下：</p>
+<pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@SpringBootApplication
+public class HelloWorld {
+    private static final Logger logger = LoggerFactory.getLogger(HelloWorld.class);
+
+    public static void main(String[] args) {
+        SpringApplication.run(HelloWorld.class, args);
+        logger.trace(&quot;trace message&quot;);
+        logger.debug(&quot;debug message&quot;);
+        logger.info(&quot;info message&quot;);
+        logger.warn(&quot;warn message&quot;);
+        logger.error(&quot;error message&quot;);
+    }
+
+    @GetMapping(&quot;/&quot;)
+    public String helloWorld() {
+        return &quot;Hello, World!&quot;;
+    }
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code class="line-numbers language-none">2019-02-16 13:57:32.042  INFO 5656 --- [           main] com.zfl9.HelloWorld                      : Starting HelloWorld on Otokaze-Win10 with PID 5656 (C:\Users\Otokaze\IdeaProjects\springboot\01-springboot-helloworld\target\classes started by Otokaze in C:\Users\Otokaze\IdeaProjects\springboot)
+2019-02-16 13:57:32.042  INFO 5656 --- [           main] com.zfl9.HelloWorld                      : No active profile set, falling back to default profiles: default
+2019-02-16 13:57:32.924  INFO 5656 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.18] of the APR based Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [1.2.19]
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] o.a.catalina.core.AprLifecycleListener   : Loaded APR based Apache Tomcat Native library [1.2.18] using APR version [1.6.5].
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2019-02-16 13:57:32.939  INFO 5656 --- [           main] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.1.1  11 Sep 2018]
+2019-02-16 13:57:33.002  INFO 5656 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-02-16 13:57:33.002  INFO 5656 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 898 ms
+2019-02-16 13:57:33.158  INFO 5656 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &#39;applicationTaskExecutor&#39;
+2019-02-16 13:57:33.283  INFO 5656 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path &#39;&#39;
+2019-02-16 13:57:33.283  INFO 5656 --- [           main] com.zfl9.HelloWorld                      : Started HelloWorld in 1.475 seconds (JVM running for 1.908)
+2019-02-16 13:57:33.283  INFO 5656 --- [           main] com.zfl9.HelloWorld                      : info message
+2019-02-16 13:57:33.283  WARN 5656 --- [           main] com.zfl9.HelloWorld                      : warn message
+2019-02-16 13:57:33.283 ERROR 5656 --- [           main] com.zfl9.HelloWorld                      : error message
+</code></pre>
+<p>那么如何更改这个默认的日志级别呢？或者是如何更改指定 package 的 logging level？很简单，在 application.properties 配置文件中配置一行：</p>
+<pre><code class="line-numbers language-properties">logging.level.com.zfl9 = trace
+</code></pre>
+<p>语法 <code>logging.level.[logger-name] = &lt;level&gt;</code>，如果是为根 logger 设置日志级别，则直接写 <code>logging.level.root = debug</code>。运行结果：</p>
+<pre><code class="line-numbers language-none">2019-02-16 14:04:56.201  INFO 4244 --- [           main] com.zfl9.HelloWorld                      : Starting HelloWorld on Otokaze-Win10 with PID 4244 (C:\Users\Otokaze\IdeaProjects\springboot\01-springboot-helloworld\target\classes started by Otokaze in C:\Users\Otokaze\IdeaProjects\springboot)
+2019-02-16 14:04:56.201 DEBUG 4244 --- [           main] com.zfl9.HelloWorld                      : Running with Spring Boot v2.1.2.RELEASE, Spring v5.1.4.RELEASE
+2019-02-16 14:04:56.201  INFO 4244 --- [           main] com.zfl9.HelloWorld                      : No active profile set, falling back to default profiles: default
+2019-02-16 14:04:57.033  INFO 4244 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-02-16 14:04:57.049  INFO 4244 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-02-16 14:04:57.049  INFO 4244 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
+2019-02-16 14:04:57.049  INFO 4244 --- [           main] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.18] of the APR based Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [1.2.19]
+2019-02-16 14:04:57.049  INFO 4244 --- [           main] o.a.catalina.core.AprLifecycleListener   : Loaded APR based Apache Tomcat Native library [1.2.18] using APR version [1.6.5].
+2019-02-16 14:04:57.049  INFO 4244 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2019-02-16 14:04:57.049  INFO 4244 --- [           main] o.a.catalina.core.AprLifecycleListener   : APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2019-02-16 14:04:57.065  INFO 4244 --- [           main] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.1.1  11 Sep 2018]
+2019-02-16 14:04:57.111  INFO 4244 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-02-16 14:04:57.111  INFO 4244 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 847 ms
+2019-02-16 14:04:57.268  INFO 4244 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &#39;applicationTaskExecutor&#39;
+2019-02-16 14:04:57.377  INFO 4244 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path &#39;&#39;
+2019-02-16 14:04:57.377  INFO 4244 --- [           main] com.zfl9.HelloWorld                      : Started HelloWorld in 1.442 seconds (JVM running for 1.9)
+2019-02-16 14:04:57.377 TRACE 4244 --- [           main] com.zfl9.HelloWorld                      : trace message
+2019-02-16 14:04:57.377 DEBUG 4244 --- [           main] com.zfl9.HelloWorld                      : debug message
+2019-02-16 14:04:57.377  INFO 4244 --- [           main] com.zfl9.HelloWorld                      : info message
+2019-02-16 14:04:57.377  WARN 4244 --- [           main] com.zfl9.HelloWorld                      : warn message
+2019-02-16 14:04:57.377 ERROR 4244 --- [           main] com.zfl9.HelloWorld                      : error message
+</code></pre>
+<p><strong>自定义外部的 logback.xml 配置文件</strong><br>如果是一些比较简单的 logging 配置，如更改日志级别，建议直接在 application.properties 文件中设置，简单方便；如果 application.properties 提供的配置项无法满足你的要求，springboot 也允许你提供一个外部的 logback 配置文件。注意，你经常会看到两种名称的 logback 配置文件，<code>logback.xml</code> 和 <code>logback-spring.xml</code>，了解 logback 的同学应该知道，只有前者才是 logback 框架的标准配置文件名，后者不是；logback-spring.xml 其实是 springboot 规定的一个文件名，springboot 建议使用 logback-spring.xml 而不是 logback.xml，因为日志服务通常在 ApplicationContext 创建之前就已经初始化完毕了，所以 springboot 不能很好的控制 logback.xml，但是 logback-spring.xml 能够比较好的控制，如 springboot 会在我们的 logback-spring.xml 配置的基础上添加一些 springboot 特有的配置项；所以建议使用带 <code>-spring</code> 后缀的日志配置文件。</p>
+<h2 id="SpringBoot-单元测试"><a href="#SpringBoot-单元测试" class="headerlink" title="SpringBoot 单元测试"></a>SpringBoot 单元测试</h2><p><strong>Spring 单元测试 - 简单例子</strong></p>
+<pre><code class="line-numbers language-java">package com.zfl9.spring;
+
+import javax.annotation.Resource;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@ContextConfiguration(locations = &quot;classpath:spring.xml&quot;)
+public class IocByXmlConfigTestBySpring {
+    @Resource(name = &quot;钟时兰&quot;)
+    private Teacher teacher;
+
+    @Resource(name = &quot;钟学华&quot;)
+    private Student student01;
+
+    @Resource(name = &quot;尹帧瑶&quot;)
+    private Student student02;
+
+    @Resource(name = &quot;廖小兵&quot;)
+    private Student student03;
+
+    @Test
+    public void test01() {
+        System.out.println(teacher);
+        System.out.println(student01);
+        System.out.println(student02);
+        System.out.println(student03);
+    }
+
+    @Test
+    public void test02() {
+        for (Student student : teacher.getStudents()) {
+            System.out.println(student);
+        }
+    }
+}
+</code></pre>
+<p><strong>SpringBoot 单元测试 - 简单例子</strong></p>
+<pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class ApplicationTest {
+    @Autowired
+    private Application application;
+
+    @Test
+    public void test() {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        logger.info(&quot;application: {}&quot;, application);
+    }
+}
+</code></pre>
+<p>其实没多大区别，最关键的地方在于测试类的注解声明：</p>
+<pre><code class="line-numbers language-java">// Spring 单元测试
+@RunWith(SpringRunner.class)
+@ContextConfiguration(locations = &quot;classpath:spring.xml&quot;)
+
+// SpringBoot 单元测试
+@RunWith(SpringRunner.class)
+@SpringBootTest
+</code></pre>
+<p><code>@RunWith(SpringRunner.class)</code> 是 JUnit 4 的注解，用于指定使用哪个 Runner 运行当前测试类，无论是 Spring 还是 SpringBoot 都需要使用这个注解，具体含义和作用大家应该都比较清楚，这里不详细解释。在 Spring 单元测试类中，我们用的是 <code>@ContextConfiguration</code> 注解来指定 spring 的配置文件（xml 或 class）；但是在 SpringBoot 单元测试类中，我们只需要使用 <code>@SpringBootTest</code> 注解标注就可以了，<code>@SpringBootTest</code> 注解会自动搜索当前包（含子包）中被 <code>@SpringBootApplication</code> 标注的启动类&amp;配置类（本质就是 java-based 形式的配置），不用指定使用哪个“启动类”。</p>
+<p>除了这个区别外，其它的行为都没有什么区别；比如：如果测试类、测试方法上使用了 <code>@Transactional</code> 声明式事务注解，那么 spring-test 会自动回滚当前方法的事务，无论是 Spring 还是 SpringBoot 的单元测试，都是一样的，默认都是会自动回滚事务；来回顾一下 Spring 单元测试中的事务管理：</p>
+<ul>
+<li>@BeforeTransaction：在事务开启之前执行，从输出结果也看得出来，此时没有开启事务。</li>
+<li>@Before：在事务开启之后且在测试方法之前执行，即在 @Test 前执行，此时已经有一个事务。</li>
+<li>@Test：在 @Before 方法之后执行，此时也有一个事务，@Before、@Test、@After 都是同一个事务。</li>
+<li>@After：在 @Test 方法之后执行，此时也有一个事务，@Before、@Test、@After 也都是同一个事务。</li>
+<li>@AfterTransaction：在事务完成后执行，此时事务已经提交或回滚，可以在方法中测试事务提交是否成功。</li>
+</ul>
+<h2 id="SpringBoot-FreeMarker"><a href="#SpringBoot-FreeMarker" class="headerlink" title="SpringBoot FreeMarker"></a>SpringBoot FreeMarker</h2><h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="line-numbers language-none">$ tree src
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           └── springboot
+│   │               ├── Application.java
+│   │               └── HelloController.java
+│   └── resources
+│       ├── application.properties
+│       ├── static
+│       │   └── index.html
+│       └── templates
+│           └── hello.ftl
+└── test
+    └── java
+</code></pre>
+<h3 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.zfl9.springboot&lt;/groupId&gt;
+  &lt;artifactId&gt;springboot-simple-webapp&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+  &lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+      &lt;optional&gt;true&lt;/optional&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<p>集成 FreeMarker 非常简单，只需要引入 <code>spring-boot-starter-freemarker</code> 即可；然后你就能立即使用 FreeMarker 模板了，不需要任何必须的 application.properties 配置（开箱即用）。不过为了更愉快的使用 FreeMarker，我们通常也会在 application.properties 中配置一些 FreeMarker 的属性，如开启 cache，设置日期、时间、数字的显示格式等。</p>
+<p>另外解释一下 <code>spring-boot-devtools</code> 模块的作用，看名字大概也猜得出来，这是 springboot 提供的一个开发工具，在开发 web 程序的时候，一个共同的需求就是：<strong>热重载</strong>，即修改了 java 文件或 resource 文件（总之就是 classpath 下的文件变动了）后，能够通过某种手段，更新这些 class、resource 文件，而不需要重启 servlet 服务器，这就叫做热重载，也有人叫做热更新。而 devtools 模块的作用就是提供 springboot 应用的热更新功能，只要我们引入了 devtools 模块，当我们运行 Application.main() 方法之后，如果更改了源代码或者是其它资源文件（如 index.html），不需要重新运行 Application.main() 方法了，而是只需要重新编译当前 project/module 即可，在 IDEA 中，编译当前项目的快捷键为 Ctrl + F9，编译之后，devtools 就会自动感知到 classpath 下的文件内容变动了，于是就会丢弃原来的旧文件内容，重新加载新的文件内容，以此完成热更新。</p>
+<p><strong>devtools 热重载原理浅析</strong><br>spring-boot-devtools 使用了两个类加载器来实现热重载：base 类加载器、restart 类加载器。</p>
+<ul>
+<li>base ClassLoader：用于加载不会改变的 jar（eg：第三方依赖的 jar 包）。</li>
+<li>restart ClassLoader：用于加载我们正在开发的 jar（eg：我们当前的项目文件）。应用重载后，devtools 会将原先的 restart ClassLoader 丢掉、然后重新 new 一个 restart ClassLoader 来加载这些修改过的东西，而 base ClassLoader 却不需要动一下。这就是 devtools 重载速度快的原因。</li>
+</ul>
+<blockquote>
+<p>devtools 会自动禁用 FreeMarker、Thymeleaf 等模板引擎的缓存，即使手动指定设置 freemarker/thymeleaf 的 cache 选项为 true 也是如此。</p>
+</blockquote>
+<h3 id="application-properties"><a href="#application-properties" class="headerlink" title="application.properties"></a>application.properties</h3><pre><code class="line-numbers language-properties">spring.freemarker.cache = true
+spring.freemarker.charset = UTF-8
+spring.freemarker.content-type = text/html; charset=UTF-8
+spring.freemarker.expose-request-attributes = true
+spring.freemarker.expose-session-attributes = true
+spring.freemarker.expose-spring-macro-helpers = true
+spring.freemarker.settings.locale = zh_CN
+spring.freemarker.settings.time_zone = Asia/Shanghai
+spring.freemarker.settings.output_encoding = UTF-8
+spring.freemarker.settings.url_escaping_charset = UTF-8
+spring.freemarker.settings.number_format = 0.###
+spring.freemarker.settings.boolean_format = true,false
+spring.freemarker.settings.date_format = yyyy-MM-dd
+spring.freemarker.settings.time_format = HH:mm:ss
+spring.freemarker.settings.datetime_format = yyyy-MM-dd HH:mm:ss
+</code></pre>
+<h3 id="Application-java"><a href="#Application-java" class="headerlink" title="Application.java"></a>Application.java</h3><pre><code class="line-numbers language-java">package com.zfl9.springboot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<h3 id="HelloController-java"><a href="#HelloController-java" class="headerlink" title="HelloController.java"></a>HelloController.java</h3><pre><code class="line-numbers language-java">package com.zfl9.springboot;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HelloController {
+    @GetMapping(&quot;/hello&quot;)
+    public String hello(Model model) {
+        model.addAttribute(&quot;addr&quot;, &quot;www.zfl9.com&quot;);
+        model.addAttribute(&quot;port&quot;, 443);
+        model.addAttribute(&quot;method&quot;, &quot;aes-128-gcm&quot;);
+        model.addAttribute(&quot;passwd&quot;, &quot;123456@zfl9.com&quot;);
+        return &quot;hello&quot;;
+    }
+}
+</code></pre>
+<h3 id="index-html"><a href="#index-html" class="headerlink" title="index.html"></a>index.html</h3><pre><code class="line-numbers language-html">&lt;h1&gt;hello, world! [freemarker]&lt;/h1&gt;
+</code></pre>
+<h3 id="hello-ftl"><a href="#hello-ftl" class="headerlink" title="hello.ftl"></a>hello.ftl</h3><pre><code class="line-numbers language-html">&lt;h2&gt;addr = ${addr}&lt;/h2&gt;
+&lt;h2&gt;port = ${port}&lt;/h2&gt;
+&lt;h2&gt;method = ${method}&lt;/h2&gt;
+&lt;h2&gt;passwd = ${passwd}&lt;/h2&gt;
+</code></pre>
+<h2 id="SpringBoot-HikariCP"><a href="#SpringBoot-HikariCP" class="headerlink" title="SpringBoot HikariCP"></a>SpringBoot HikariCP</h2><p>SpringBoot 1.x 的默认数据库连接池为 <strong>Tomcat Jdbc Pool</strong>，SpringBoot 2.x 的默认数据库连接池为 <strong>HikariCP</strong>。HikariCP 虽然是后起之秀，但是它凭借着“速度快”，“轻量级”，“高性能”这些优势，赢得了许多用户的好口碑；SpringBoot 当然也不例外，在 2.x 的时候，直接就将 HikariCP 作为默认的数据库连接池实现，而不是 Tomcat Jdbc Pool。由于本文始终使用 SpringBoot 2.x，所以这里直接介绍 HikariCP 数据库连接池。</p>
+<h3 id="项目结构-1"><a href="#项目结构-1" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="line-numbers language-none">$ tree src
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           └── springboot
+│   │               ├── Application.java
+│   │               ├── Employee.java
+│   │               ├── EmployeeRunner.java
+│   │               └── HelloController.java
+│   └── resources
+│       ├── application.properties
+│       ├── data.sql
+│       ├── schema.sql
+│       ├── static
+│       │   └── index.html
+│       └── templates
+│           └── hello.ftl
+└── test
+    └── java
+</code></pre>
+<p>HelloController、index.html、hello.ftl 这些不用管，这是上一节 FreeMarker 的测试类以及文件。Application 还是照常，一个简单的 main() 方法。</p>
+<h3 id="pom-xml-1"><a href="#pom-xml-1" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.zfl9.springboot&lt;/groupId&gt;
+  &lt;artifactId&gt;springboot-simple-webapp&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+  &lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+      &lt;optional&gt;true&lt;/optional&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;version&gt;8.0.15&lt;/version&gt;
+      &lt;scope&gt;runtime&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<p>新增的依赖为 <code>spring-boot-starter-jdbc</code>（spring-jdbc 模块、HikariCP 连接池）、<code>mysql-connector-java</code>（MySQL JDBC 驱动）。</p>
+<h3 id="application-properties-1"><a href="#application-properties-1" class="headerlink" title="application.properties"></a>application.properties</h3><pre><code class="line-numbers language-properties"># FreeMarker
+spring.freemarker.cache = true
+spring.freemarker.charset = UTF-8
+spring.freemarker.content-type = text/html; charset=UTF-8
+spring.freemarker.expose-request-attributes = true
+spring.freemarker.expose-session-attributes = true
+spring.freemarker.expose-spring-macro-helpers = true
+spring.freemarker.settings.locale = zh_CN
+spring.freemarker.settings.time_zone = Asia/Shanghai
+spring.freemarker.settings.output_encoding = UTF-8
+spring.freemarker.settings.url_escaping_charset = UTF-8
+spring.freemarker.settings.number_format = 0.###
+spring.freemarker.settings.boolean_format = true,false
+spring.freemarker.settings.date_format = yyyy-MM-dd
+spring.freemarker.settings.time_format = HH:mm:ss
+spring.freemarker.settings.datetime_format = yyyy-MM-dd HH:mm:ss
+
+# HikariCP
+spring.datasource.initialization-mode = always
+spring.datasource.type = com.zaxxer.hikari.HikariDataSource
+spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+spring.datasource.url = jdbc:mysql://localhost/test
+spring.datasource.username = root
+spring.datasource.password = 123456
+spring.datasource.hikari.connection-timeout = 10000
+spring.datasource.hikari.max-lifetime = 7200000
+spring.datasource.hikari.maximum-pool-size = 30
+</code></pre>
+<p>这里简单解释一下 <code>spring.datasource.initialization-mode</code> 选项，它有 3 个取值：</p>
+<ul>
+<li><code>always</code>：不管什么数据源都会初始化；</li>
+<li><code>never</code>：不管什么数据源都不进行初始化；</li>
+<li><code>embedded</code>：只初始化<strong>嵌入式数据源</strong>（默认）。</li>
+</ul>
+<p>这里的 DataSource 初始化的意思是（仅讲解 JDBC 数据源的初始化）：在应用启动时，会自动执行 classpath 下的 <code>schema.sql</code> 和 <code>data.sql</code> 文件：</p>
+<ul>
+<li><code>schema.sql</code>：DDL 语句，如 create、alter、drop，通常在该脚本中写 table 的 create、drop 命令；</li>
+<li><code>data.sql</code>：DML 语句，如 select、insert、update、delete，通常在该脚本中写 table 的 insert 命令。</li>
+</ul>
+<h3 id="schema-sql"><a href="#schema-sql" class="headerlink" title="schema.sql"></a>schema.sql</h3><pre><code class="line-numbers language-sql">drop table if exists `springboot`;
+create table `springboot` (
+  `id` int(11) not null auto_increment,
+  `name` varchar(30) not null,
+  `email` varchar(50) not null,
+  primary key (`id`)
+) charset=utf8mb4
+</code></pre>
+<h3 id="data-sql"><a href="#data-sql" class="headerlink" title="data.sql"></a>data.sql</h3><pre><code class="line-numbers language-sql">insert into springboot(name, email) values(&quot;zfl9&quot;, &quot;root@zfl9.com&quot;);
+insert into springboot(name, email) values(&quot;baidu&quot;, &quot;root@baidu.com&quot;);
+insert into springboot(name, email) values(&quot;google&quot;, &quot;root@google.com&quot;);
+insert into springboot(name, email) values(&quot;youtube&quot;, &quot;root@youtube.com&quot;);
+insert into springboot(name, email) values(&quot;facebook&quot;, &quot;root@facebook.com&quot;);
+</code></pre>
+<blockquote>
+<p>springboot 应用启动后，就会自动执行 schema.sql（创建 springboot 测试表）、data.sql（插入 5 条测试数据）。</p>
+</blockquote>
+<h3 id="Employee-java"><a href="#Employee-java" class="headerlink" title="Employee.java"></a>Employee.java</h3><pre><code class="line-numbers language-java">package com.zfl9.springboot;
+
+public class Employee implements java.io.Serializable {
+    private static final long serialVersionUID = 9189662856423316374L;
+
+    private Integer id;
+    private String name;
+    private String email;
+
+    public Employee() {
+    }
+
+    public Employee(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public Employee(Integer id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;Employee{id=%d, name=&#39;%s&#39;, email=&#39;%s&#39;}&quot;, id, name, email);
+    }
+}
+</code></pre>
+<h3 id="EmployeeRunner-java"><a href="#EmployeeRunner-java" class="headerlink" title="EmployeeRunner.java"></a>EmployeeRunner.java</h3><pre><code class="line-numbers language-java">package com.zfl9.springboot;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Repository
+public class EmployeeRunner implements CommandLineRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeRunner.class);
+
+    private JdbcTemplate jdbcTemplate;
+
+    private RowMapper&lt;Employee&gt; rowMapper = (resultSet, rowNum) -&gt; {
+        Employee employee = new Employee();
+        employee.setId(resultSet.getInt(&quot;id&quot;));
+        employee.setName(resultSet.getString(&quot;name&quot;));
+        employee.setEmail(resultSet.getString(&quot;email&quot;));
+        return employee;
+    };
+
+    @Autowired
+    public EmployeeRunner(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private List&lt;Employee&gt; getEmployees() {
+        List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
+        employees.add(new Employee(&quot;小明&quot;, &quot;xiaoming@gmail.com&quot;));
+        employees.add(new Employee(&quot;小刚&quot;, &quot;xiaogang@gmail.com&quot;));
+        employees.add(new Employee(&quot;小红&quot;, &quot;xiaohong@gmail.com&quot;));
+        return employees;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void run(String... args) {
+        String sql = &quot;insert into springboot(name, email) values(?, ?)&quot;;
+        for (Employee employee : getEmployees()) {
+            LOGGER.info(&quot;insert employee: {}&quot;, employee);
+            jdbcTemplate.update(sql, employee.getName(), employee.getEmail());
+        }
+        throw new RuntimeException(&quot;runtime exception&quot;);
+    }
+}
+</code></pre>
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><pre><code class="line-numbers language-none">2019-02-16 21:43:32.146  INFO 8988 --- [  restartedMain] com.zfl9.springboot.Application          : Starting Application on Otokaze-Win10 with PID 8988 (C:\Users\Otokaze\IdeaProjects\springboot\02-springboot-simple-webapp\target\classes started by Otokaze in C:\Users\Otokaze\IdeaProjects\springboot)
+2019-02-16 21:43:32.158  INFO 8988 --- [  restartedMain] com.zfl9.springboot.Application          : No active profile set, falling back to default profiles: default
+2019-02-16 21:43:32.224  INFO 8988 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set &#39;spring.devtools.add-properties&#39; to &#39;false&#39; to disable
+2019-02-16 21:43:32.224  INFO 8988 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the &#39;logging.level.web&#39; property to &#39;DEBUG&#39;
+2019-02-16 21:43:33.409  INFO 8988 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-02-16 21:43:33.426  INFO 8988 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-02-16 21:43:33.426  INFO 8988 --- [  restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
+2019-02-16 21:43:33.429  INFO 8988 --- [  restartedMain] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.18] of the APR based Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [1.2.19]
+2019-02-16 21:43:33.429  INFO 8988 --- [  restartedMain] o.a.catalina.core.AprLifecycleListener   : Loaded APR based Apache Tomcat Native library [1.2.18] using APR version [1.6.5].
+2019-02-16 21:43:33.431  INFO 8988 --- [  restartedMain] o.a.catalina.core.AprLifecycleListener   : APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2019-02-16 21:43:33.431  INFO 8988 --- [  restartedMain] o.a.catalina.core.AprLifecycleListener   : APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2019-02-16 21:43:33.433  INFO 8988 --- [  restartedMain] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.1.1  11 Sep 2018]
+2019-02-16 21:43:33.518  INFO 8988 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-02-16 21:43:33.518  INFO 8988 --- [  restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1293 ms
+2019-02-16 21:43:33.587  INFO 8988 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2019-02-16 21:43:33.666  INFO 8988 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2019-02-16 21:43:33.726  INFO 8988 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2019-02-16 21:43:33.982  INFO 8988 --- [  restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService &#39;applicationTaskExecutor&#39;
+2019-02-16 21:43:34.061  INFO 8988 --- [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2019-02-16 21:43:34.182  INFO 8988 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path &#39;&#39;
+2019-02-16 21:43:34.185  INFO 8988 --- [  restartedMain] com.zfl9.springboot.Application          : Started Application in 2.295 seconds (JVM running for 2.812)
+2019-02-16 21:43:34.193  INFO 8988 --- [  restartedMain] com.zfl9.springboot.EmployeeRunner       : insert employee: Employee{id=null, name=&#39;小明&#39;, email=&#39;xiaoming@gmail.com&#39;}
+2019-02-16 21:43:34.204  INFO 8988 --- [  restartedMain] com.zfl9.springboot.EmployeeRunner       : insert employee: Employee{id=null, name=&#39;小刚&#39;, email=&#39;xiaogang@gmail.com&#39;}
+2019-02-16 21:43:34.205  INFO 8988 --- [  restartedMain] com.zfl9.springboot.EmployeeRunner       : insert employee: Employee{id=null, name=&#39;小红&#39;, email=&#39;xiaohong@gmail.com&#39;}
+2019-02-16 21:43:34.230  INFO 8988 --- [  restartedMain] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with &#39;debug&#39; enabled.
+2019-02-16 21:43:34.238 ERROR 8988 --- [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+java.lang.IllegalStateException: Failed to execute CommandLineRunner
+    at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:816) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+    at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:797) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+    at org.springframework.boot.SpringApplication.run(SpringApplication.java:324) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+    at org.springframework.boot.SpringApplication.run(SpringApplication.java:1260) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+    at org.springframework.boot.SpringApplication.run(SpringApplication.java:1248) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+    at com.zfl9.springboot.Application.main(Application.java:9) [classes/:na]
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_172]
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_172]
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_172]
+    at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_172]
+    at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49) [spring-boot-devtools-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+Caused by: java.lang.RuntimeException: runtime exception
+    at com.zfl9.springboot.EmployeeRunner.run(EmployeeRunner.java:50) ~[classes/:na]
+    at com.zfl9.springboot.EmployeeRunner$$FastClassBySpringCGLIB$$359c64c5.invoke(&lt;generated&gt;) ~[classes/:na]
+    at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:749) ~[spring-aop-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294) ~[spring-tx-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98) ~[spring-tx-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688) ~[spring-aop-5.1.4.RELEASE.jar:5.1.4.RELEASE]
+    at com.zfl9.springboot.EmployeeRunner$$EnhancerBySpringCGLIB$$8cae41f3.run(&lt;generated&gt;) ~[classes/:na]
+    at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:813) [spring-boot-2.1.2.RELEASE.jar:2.1.2.RELEASE]
+    ... 10 common frames omitted
+
+2019-02-16 21:43:34.241  INFO 8988 --- [  restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService &#39;applicationTaskExecutor&#39;
+2019-02-16 21:43:34.241  INFO 8988 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2019-02-16 21:43:34.246  INFO 8988 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+</code></pre>
+<p>得益于 springboot 的自动配置功能，我们在配置好 DataSource 之后，springboot 就帮我们开启了声明式事务支持，所以我们可以直接在 run() 方法上使用 <code>@Transactional</code> 注解，需要注意的是，我故意在方法最后跑出一个 RuntimeException 运行时异常，以此测试声明式事务是否正常生效：</p>
+<ul>
+<li>如果未生效：那么查看 springboot 测试表可以看到多了 3 条记录（小明、小刚、小红）；</li>
+<li>如果已生效：那么查看 springboot 测试表就看不到这 3 条新纪录（还是原来的 5 条记录）；</li>
+</ul>
+<blockquote>
+<p>我测试的结果是第二个，所以证明声明式事务已经正常生效了。</p>
+</blockquote>
+<h2 id="SpringBoot-MyBatis"><a href="#SpringBoot-MyBatis" class="headerlink" title="SpringBoot MyBatis"></a>SpringBoot MyBatis</h2><p>SpringBoot 集成 MyBatis 也很简单，MyBatis 提供了一个 <code>mybatis-spring-boot-starter</code>，添加到 pom.xml 即可。</p>
+<h3 id="项目结构-2"><a href="#项目结构-2" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="line-numbers language-none">$ tree src
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           ├── Application.java
+│   │           ├── mapper
+│   │           │   └── EmployeeMapper.java
+│   │           └── model
+│   │               └── Employee.java
+│   └── resources
+│       ├── application.properties
+│       └── mapper
+│           └── EmployeeMapper.xml
+└── test
+    └── java
+        └── com
+            └── zfl9
+                └── ApplicationTest.java
+</code></pre>
+<h3 id="pom-xml-2"><a href="#pom-xml-2" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.zfl9.springboot&lt;/groupId&gt;
+  &lt;artifactId&gt;springboot-mybatis&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+  &lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.1.3.RELEASE&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;scope&gt;runtime&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="application-properties-2"><a href="#application-properties-2" class="headerlink" title="application.properties"></a>application.properties</h3><pre><code class="line-numbers language-properties"># HikariCP
+spring.datasource.initialization-mode = always
+spring.datasource.type = com.zaxxer.hikari.HikariDataSource
+spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+spring.datasource.url = jdbc:mysql://localhost/test
+spring.datasource.username = root
+spring.datasource.password = 123456
+spring.datasource.hikari.connection-timeout = 10000
+spring.datasource.hikari.max-lifetime = 7200000
+spring.datasource.hikari.maximum-pool-size = 30
+
+# MyBatis
+mybatis.mapper-locations = classpath:mapper/*.xml
+mybatis.type-aliases-package = com.zfl9.model
+mybatis.configuration.map-underscore-to-camel-case = true
+
+# Logging
+logging.level.com.zfl9 = trace
+logging.level.org.mybatis.spring = trace
+</code></pre>
+<h3 id="Application-java-1"><a href="#Application-java-1" class="headerlink" title="Application.java"></a>Application.java</h3><pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@MapperScan(&quot;com.zfl9.mapper&quot;)
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<p><code>@MapperScan(&quot;com.zfl9.mapper&quot;)</code> 作用和之间的 SSM 项目是一样的，扫描指定 package 下面的 mapper 接口，自动注入到 spring 容器中。</p>
+<h3 id="Employee-java-1"><a href="#Employee-java-1" class="headerlink" title="Employee.java"></a>Employee.java</h3><pre><code class="line-numbers language-java">package com.zfl9.model;
+
+public class Employee implements java.io.Serializable {
+    private static final long serialVersionUID = -8898382136809677158L;
+
+    private Integer id;
+    private String name;
+    private String email;
+    private String address;
+    private String telephone;
+
+    public Employee() {
+    }
+
+    public Employee(String name, String email, String address, String telephone) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Employee(Integer id, String name, String email, String address, String telephone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;Employee{id=%d, name=&#39;%s&#39;, email=&#39;%s&#39;, address=&#39;%s&#39;, telephone=&#39;%s&#39;}&quot;, id, name, email, address, telephone);
+    }
+}
+</code></pre>
+<h3 id="EmployeeMapper-java"><a href="#EmployeeMapper-java" class="headerlink" title="EmployeeMapper.java"></a>EmployeeMapper.java</h3><pre><code class="line-numbers language-java">package com.zfl9.mapper;
+
+import com.zfl9.model.Employee;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface EmployeeMapper {
+    Employee getEmployeeById(int id);
+
+    List&lt;Employee&gt; getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</code></pre>
+<h3 id="EmployeeMapper-xml"><a href="#EmployeeMapper-xml" class="headerlink" title="EmployeeMapper.xml"></a>EmployeeMapper.xml</h3><pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;com.zfl9.mapper.EmployeeMapper&quot;&gt;
+  &lt;select id=&quot;getEmployeeById&quot; resultType=&quot;Employee&quot;&gt;
+    select id,name,email,address,telephone from employee where id=#{id}
+  &lt;/select&gt;
+
+  &lt;select id=&quot;getAllEmployees&quot; resultType=&quot;Employee&quot;&gt;
+    select id,name,email,address,telephone from employee
+  &lt;/select&gt;
+
+  &lt;insert id=&quot;addEmployee&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&gt;
+    insert into employee(name, email, address, telephone) values(#{name}, #{email}, #{address}, #{telephone})
+  &lt;/insert&gt;
+
+  &lt;update id=&quot;updateEmployee&quot;&gt;
+    update employee set name=#{name}, email=#{email}, address=#{address}, telephone=#{telephone} where id=#{id}
+  &lt;/update&gt;
+
+  &lt;delete id=&quot;deleteEmployeeById&quot;&gt;
+    delete from employee where id=#{id}
+  &lt;/delete&gt;
+
+  &lt;delete id=&quot;deleteAllEmployees&quot;&gt;
+    delete from employee
+  &lt;/delete&gt;
+
+  &lt;delete id=&quot;truncateEmployeeTable&quot;&gt;
+    truncate table employee
+  &lt;/delete&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="ApplicationTest-java"><a href="#ApplicationTest-java" class="headerlink" title="ApplicationTest.java"></a>ApplicationTest.java</h3><pre><code class="line-numbers language-java">package com.zfl9;
+
+import com.zfl9.mapper.EmployeeMapper;
+import com.zfl9.model.Employee;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.transaction.AfterTransaction;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class ApplicationTest {
+    @Autowired
+    private EmployeeMapper mapper;
+
+    private void queryAllEmployees() {
+        List&lt;Employee&gt; employees = mapper.getAllEmployees();
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }
+    }
+
+    @Before
+    public void before() {
+        System.out.println(&quot;===&gt; before insert &lt;===&quot;);
+        queryAllEmployees();
+    }
+
+    @Test
+    @Transactional(rollbackFor = Exception.class)
+    public void test() {
+        mapper.addEmployee(new Employee(&quot;小金&quot;, &quot;xiaojing@gmail.com&quot;, &quot;广州市天河区&quot;, &quot;999999&quot;));
+        mapper.addEmployee(new Employee(&quot;小青&quot;, &quot;xiaoqing@gmail.com&quot;, &quot;南昌市红谷滩&quot;, &quot;111111&quot;));
+    }
+
+    @After
+    public void after() {
+        System.out.println(&quot;===&gt; after insert &lt;===&quot;);
+        queryAllEmployees();
+    }
+
+    @AfterTransaction
+    public void verify() {
+        System.out.println(&quot;===&gt; after transaction &lt;===&quot;);
+        queryAllEmployees();
+    }
+}
+</code></pre>
+<h3 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h3><pre><code class="line-numbers language-none">2019-02-17 14:52:45.625  INFO 2520 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2019-02-17 14:52:45.770  INFO 2520 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2019-02-17 14:52:45.775  INFO 2520 --- [           main] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@27ce24aa testClass = ApplicationTest, testInstance = com.zfl9.ApplicationTest@5119fb47, testMethod = test@ApplicationTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@481a996b testClass = ApplicationTest, locations = &#39;{}&#39;, classes = &#39;{class com.zfl9.Application}&#39;, contextInitializerClasses = &#39;[]&#39;, activeProfiles = &#39;{}&#39;, propertySourceLocations = &#39;{}&#39;, propertySourceProperties = &#39;{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}&#39;, contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@7791a895, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1d16f93d, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@49fc609f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@4f063c0a], contextLoader = &#39;org.springframework.boot.test.context.SpringBootContextLoader&#39;, parent = [null]], attributes = map[[empty]]]; transaction manager [org.springframework.jdbc.datasource.DataSourceTransactionManager@3ae66c85]; rollback [true]
+===&gt; before insert &lt;===
+2019-02-17 14:52:45.983 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Creating a new SqlSession
+2019-02-17 14:52:45.990 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+2019-02-17 14:52:46.006 DEBUG 2520 --- [           main] o.m.s.t.SpringManagedTransaction         : JDBC Connection [HikariProxyConnection@1145391264 wrapping com.mysql.cj.jdbc.ConnectionImpl@3766c667] will be managed by Spring
+2019-02-17 14:52:46.011 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : ==&gt;  Preparing: select id,name,email,address,telephone from employee 
+2019-02-17 14:52:46.043 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : ==&gt; Parameters: 
+2019-02-17 14:52:46.068 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==    Columns: id, name, email, address, telephone
+2019-02-17 14:52:46.068 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+2019-02-17 14:52:46.077 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+2019-02-17 14:52:46.077 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+2019-02-17 14:52:46.077 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==      Total: 3
+2019-02-17 14:52:46.078 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+Employee{id=1, name=&#39;小明&#39;, email=&#39;xiaoming@gmail.com&#39;, address=&#39;北京市海淀区&#39;, telephone=&#39;123456&#39;}
+Employee{id=2, name=&#39;小红&#39;, email=&#39;xiaohong@gmail.com&#39;, address=&#39;上海市浦东区&#39;, telephone=&#39;654321&#39;}
+Employee{id=3, name=&#39;小刚&#39;, email=&#39;xiaogang@gmail.com&#39;, address=&#39;深圳市龙岗区&#39;, telephone=&#39;987654&#39;}
+2019-02-17 14:52:46.080 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22] from current transaction
+2019-02-17 14:52:46.081 DEBUG 2520 --- [           main] c.z.mapper.EmployeeMapper.addEmployee    : ==&gt;  Preparing: insert into employee(name, email, address, telephone) values(?, ?, ?, ?) 
+2019-02-17 14:52:46.082 DEBUG 2520 --- [           main] c.z.mapper.EmployeeMapper.addEmployee    : ==&gt; Parameters: 小金(String), xiaojing@gmail.com(String), 广州市天河区(String), 999999(String)
+2019-02-17 14:52:46.083 DEBUG 2520 --- [           main] c.z.mapper.EmployeeMapper.addEmployee    : &lt;==    Updates: 1
+2019-02-17 14:52:46.084 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+2019-02-17 14:52:46.085 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22] from current transaction
+2019-02-17 14:52:46.085 DEBUG 2520 --- [           main] c.z.mapper.EmployeeMapper.addEmployee    : ==&gt;  Preparing: insert into employee(name, email, address, telephone) values(?, ?, ?, ?) 
+2019-02-17 14:52:46.085 DEBUG 2520 --- [           main] c.z.mapper.EmployeeMapper.addEmployee    : ==&gt; Parameters: 小青(String), xiaoqing@gmail.com(String), 南昌市红谷滩(String), 111111(String)
+2019-02-17 14:52:46.086 DEBUG 2520 --- [           main] c.z.mapper.EmployeeMapper.addEmployee    : &lt;==    Updates: 1
+2019-02-17 14:52:46.086 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+===&gt; after insert &lt;===
+2019-02-17 14:52:46.087 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22] from current transaction
+2019-02-17 14:52:46.087 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : ==&gt;  Preparing: select id,name,email,address,telephone from employee 
+2019-02-17 14:52:46.088 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : ==&gt; Parameters: 
+2019-02-17 14:52:46.088 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==    Columns: id, name, email, address, telephone
+2019-02-17 14:52:46.088 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+2019-02-17 14:52:46.089 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+2019-02-17 14:52:46.089 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+2019-02-17 14:52:46.090 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 8, 小金, xiaojing@gmail.com, 广州市天河区, 999999
+2019-02-17 14:52:46.090 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 9, 小青, xiaoqing@gmail.com, 南昌市红谷滩, 111111
+2019-02-17 14:52:46.090 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==      Total: 5
+2019-02-17 14:52:46.090 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+Employee{id=1, name=&#39;小明&#39;, email=&#39;xiaoming@gmail.com&#39;, address=&#39;北京市海淀区&#39;, telephone=&#39;123456&#39;}
+Employee{id=2, name=&#39;小红&#39;, email=&#39;xiaohong@gmail.com&#39;, address=&#39;上海市浦东区&#39;, telephone=&#39;654321&#39;}
+Employee{id=3, name=&#39;小刚&#39;, email=&#39;xiaogang@gmail.com&#39;, address=&#39;深圳市龙岗区&#39;, telephone=&#39;987654&#39;}
+Employee{id=8, name=&#39;小金&#39;, email=&#39;xiaojing@gmail.com&#39;, address=&#39;广州市天河区&#39;, telephone=&#39;999999&#39;}
+Employee{id=9, name=&#39;小青&#39;, email=&#39;xiaoqing@gmail.com&#39;, address=&#39;南昌市红谷滩&#39;, telephone=&#39;111111&#39;}
+2019-02-17 14:52:46.093 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+2019-02-17 14:52:46.094 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@40ee0a22]
+2019-02-17 14:52:46.134  INFO 2520 --- [           main] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@27ce24aa testClass = ApplicationTest, testInstance = com.zfl9.ApplicationTest@5119fb47, testMethod = test@ApplicationTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@481a996b testClass = ApplicationTest, locations = &#39;{}&#39;, classes = &#39;{class com.zfl9.Application}&#39;, contextInitializerClasses = &#39;[]&#39;, activeProfiles = &#39;{}&#39;, propertySourceLocations = &#39;{}&#39;, propertySourceProperties = &#39;{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}&#39;, contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@7791a895, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1d16f93d, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@49fc609f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@4f063c0a], contextLoader = &#39;org.springframework.boot.test.context.SpringBootContextLoader&#39;, parent = [null]], attributes = map[[empty]]]
+===&gt; after transaction &lt;===
+2019-02-17 14:52:46.134 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Creating a new SqlSession
+2019-02-17 14:52:46.134 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@25a73de1] was not registered for synchronization because synchronization is not active
+2019-02-17 14:52:46.135 DEBUG 2520 --- [           main] o.m.s.t.SpringManagedTransaction         : JDBC Connection [HikariProxyConnection@696591495 wrapping com.mysql.cj.jdbc.ConnectionImpl@3766c667] will not be managed by Spring
+2019-02-17 14:52:46.135 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : ==&gt;  Preparing: select id,name,email,address,telephone from employee 
+2019-02-17 14:52:46.135 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : ==&gt; Parameters: 
+2019-02-17 14:52:46.135 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==    Columns: id, name, email, address, telephone
+2019-02-17 14:52:46.135 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+2019-02-17 14:52:46.136 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+2019-02-17 14:52:46.136 TRACE 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+2019-02-17 14:52:46.136 DEBUG 2520 --- [           main] c.z.m.EmployeeMapper.getAllEmployees     : &lt;==      Total: 3
+2019-02-17 14:52:46.136 DEBUG 2520 --- [           main] org.mybatis.spring.SqlSessionUtils       : Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@25a73de1]
+Employee{id=1, name=&#39;小明&#39;, email=&#39;xiaoming@gmail.com&#39;, address=&#39;北京市海淀区&#39;, telephone=&#39;123456&#39;}
+Employee{id=2, name=&#39;小红&#39;, email=&#39;xiaohong@gmail.com&#39;, address=&#39;上海市浦东区&#39;, telephone=&#39;654321&#39;}
+Employee{id=3, name=&#39;小刚&#39;, email=&#39;xiaogang@gmail.com&#39;, address=&#39;深圳市龙岗区&#39;, telephone=&#39;987654&#39;}
+</code></pre>
+<h2 id="SpringBoot-SSM-示例"><a href="#SpringBoot-SSM-示例" class="headerlink" title="SpringBoot SSM 示例"></a>SpringBoot SSM 示例</h2><h3 id="项目结构-3"><a href="#项目结构-3" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="line-numbers language-none">$ tree src
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           ├── Application.java
+│   │           ├── controller
+│   │           │   └── EmployeeController.java
+│   │           ├── mapper
+│   │           │   └── EmployeeMapper.java
+│   │           ├── model
+│   │           │   └── Employee.java
+│   │           └── service
+│   │               ├── EmployeeService.java
+│   │               └── EmployeeServiceImpl.java
+│   └── resources
+│       ├── application.properties
+│       ├── mapper
+│       │   └── EmployeeMapper.xml
+│       ├── static
+│       │   └── index.html
+│       └── templates
+│           ├── employee-edit.ftl
+│           └── employee-list.ftl
+└── test
+    └── java
+
+14 directories, 11 files
+</code></pre>
+<h3 id="pom-xml-3"><a href="#pom-xml-3" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.zfl9.springboot&lt;/groupId&gt;
+  &lt;artifactId&gt;springboot-ssm&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+  &lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.1.3.RELEASE&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+      &lt;optional&gt;true&lt;/optional&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;scope&gt;runtime&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="application-properties-3"><a href="#application-properties-3" class="headerlink" title="application.properties"></a>application.properties</h3><pre><code class="line-numbers language-properties"># FreeMarker
+spring.freemarker.cache = true
+spring.freemarker.charset = UTF-8
+spring.freemarker.content-type = text/html; charset=UTF-8
+spring.freemarker.expose-request-attributes = true
+spring.freemarker.expose-session-attributes = true
+spring.freemarker.expose-spring-macro-helpers = true
+spring.freemarker.settings.locale = zh_CN
+spring.freemarker.settings.time_zone = Asia/Shanghai
+spring.freemarker.settings.output_encoding = UTF-8
+spring.freemarker.settings.url_escaping_charset = UTF-8
+spring.freemarker.settings.number_format = 0.###
+spring.freemarker.settings.boolean_format = true,false
+spring.freemarker.settings.date_format = yyyy-MM-dd
+spring.freemarker.settings.time_format = HH:mm:ss
+spring.freemarker.settings.datetime_format = yyyy-MM-dd HH:mm:ss
+
+# HikariCP
+spring.datasource.initialization-mode = never
+spring.datasource.type = com.zaxxer.hikari.HikariDataSource
+spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+spring.datasource.url = jdbc:mysql://localhost/test
+spring.datasource.username = root
+spring.datasource.password = 123456
+spring.datasource.hikari.connection-timeout = 10000
+spring.datasource.hikari.max-lifetime = 7200000
+spring.datasource.hikari.maximum-pool-size = 30
+
+# MyBatis
+mybatis.mapper-locations = classpath:mapper/*.xml
+mybatis.configuration.map-underscore-to-camel-case = true
+
+# Logging
+logging.level.com.zfl9 = trace
+logging.level.org.mybatis.spring = trace
+</code></pre>
+<h3 id="Application-java-2"><a href="#Application-java-2" class="headerlink" title="Application.java"></a>Application.java</h3><pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@MapperScan(&quot;com.zfl9.mapper&quot;)
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+</code></pre>
+<h3 id="Employee-java-2"><a href="#Employee-java-2" class="headerlink" title="Employee.java"></a>Employee.java</h3><pre><code class="line-numbers language-java">package com.zfl9.model;
+
+import java.io.Serializable;
+
+public class Employee implements Serializable {
+    private static final long serialVersionUID = -8369197914775006439L;
+
+    private Integer id;
+    private String name;
+    private String email;
+    private String address;
+    private String telephone;
+
+    public Employee() {
+    }
+
+    public Employee(String name, String email, String address, String telephone) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Employee(Integer id, String name, String email, String address, String telephone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;Employee{id=%d, name=&#39;%s&#39;, email=&#39;%s&#39;, address=&#39;%s&#39;, telephone=&#39;%s&#39;}&quot;, id, name, email, address, telephone);
+    }
+}
+</code></pre>
+<h3 id="EmployeeMapper-java-1"><a href="#EmployeeMapper-java-1" class="headerlink" title="EmployeeMapper.java"></a>EmployeeMapper.java</h3><pre><code class="line-numbers language-java">package com.zfl9.mapper;
+
+import java.util.List;
+import org.springframework.stereotype.Repository;
+import com.zfl9.model.Employee;
+
+@Repository
+public interface EmployeeMapper {
+    Employee getEmployeeById(int id);
+
+    List&lt;Employee&gt; getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</code></pre>
+<h3 id="EmployeeMapper-xml-1"><a href="#EmployeeMapper-xml-1" class="headerlink" title="EmployeeMapper.xml"></a>EmployeeMapper.xml</h3><pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;com.zfl9.mapper.EmployeeMapper&quot;&gt;
+  &lt;select id=&quot;getEmployeeById&quot; resultType=&quot;com.zfl9.model.Employee&quot;&gt;
+    select id,name,email,address,telephone from employee where id=#{id}
+  &lt;/select&gt;
+
+  &lt;select id=&quot;getAllEmployees&quot; resultType=&quot;com.zfl9.model.Employee&quot;&gt;
+    select id,name,email,address,telephone from employee
+  &lt;/select&gt;
+
+  &lt;insert id=&quot;addEmployee&quot; useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&gt;
+    insert into employee(name, email, address, telephone) values(#{name}, #{email}, #{address}, #{telephone})
+  &lt;/insert&gt;
+
+  &lt;update id=&quot;updateEmployee&quot;&gt;
+    update employee set name=#{name}, email=#{email}, address=#{address}, telephone=#{telephone} where id=#{id}
+  &lt;/update&gt;
+
+  &lt;delete id=&quot;deleteEmployeeById&quot;&gt;
+    delete from employee where id=#{id}
+  &lt;/delete&gt;
+
+  &lt;delete id=&quot;deleteAllEmployees&quot;&gt;
+    delete from employee
+  &lt;/delete&gt;
+
+  &lt;delete id=&quot;truncateEmployeeTable&quot;&gt;
+    truncate table employee
+  &lt;/delete&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="EmployeeService-java"><a href="#EmployeeService-java" class="headerlink" title="EmployeeService.java"></a>EmployeeService.java</h3><pre><code class="line-numbers language-java">package com.zfl9.service;
+
+import java.util.List;
+import com.zfl9.model.Employee;
+
+public interface EmployeeService {
+    Employee getEmployeeById(int id);
+
+    List&lt;Employee&gt; getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</code></pre>
+<h3 id="EmployeeServiceImpl-java"><a href="#EmployeeServiceImpl-java" class="headerlink" title="EmployeeServiceImpl.java"></a>EmployeeServiceImpl.java</h3><pre><code class="line-numbers language-java">package com.zfl9.service;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.zfl9.mapper.EmployeeMapper;
+import com.zfl9.model.Employee;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+    private final EmployeeMapper employeeMapper;
+
+    @Autowired
+    public EmployeeServiceImpl(EmployeeMapper employeeMapper) {
+        this.employeeMapper = employeeMapper;
+    }
+
+    @Override
+    public Employee getEmployeeById(int id) {
+        return employeeMapper.getEmployeeById(id);
+    }
+
+    @Override
+    public List&lt;Employee&gt; getAllEmployees() {
+        return employeeMapper.getAllEmployees();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int addEmployee(Employee employee) {
+        return employeeMapper.addEmployee(employee);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateEmployee(Employee employee) {
+        return employeeMapper.updateEmployee(employee);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteEmployeeById(int id) {
+        return employeeMapper.deleteEmployeeById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteAllEmployees() {
+        return employeeMapper.deleteAllEmployees();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void truncateEmployeeTable() {
+        employeeMapper.truncateEmployeeTable();
+    }
+}
+</code></pre>
+<h3 id="EmployeeController-java"><a href="#EmployeeController-java" class="headerlink" title="EmployeeController.java"></a>EmployeeController.java</h3><pre><code class="line-numbers language-java">package com.zfl9.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import com.zfl9.model.Employee;
+import com.zfl9.service.EmployeeService;
+
+@Controller
+@RequestMapping(&quot;/employees&quot;)
+public class EmployeeController {
+    private final EmployeeService employeeService;
+
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    @GetMapping
+    public String listEmployee(Model model) {
+        model.addAttribute(&quot;employees&quot;, employeeService.getAllEmployees());
+        return &quot;employee-list&quot;;
+    }
+
+    @GetMapping(&quot;/new&quot;)
+    public String newEmployee(Model model) {
+        model.addAttribute(&quot;title&quot;, &quot;Create Employee&quot;);
+        model.addAttribute(&quot;employee&quot;, new Employee());
+        return &quot;employee-edit&quot;;
+    }
+
+    @GetMapping(&quot;/edit/{id}&quot;)
+    public String editEmployee(Model model, @PathVariable int id) {
+        model.addAttribute(&quot;title&quot;, &quot;Update Employee&quot;);
+        model.addAttribute(&quot;employee&quot;, employeeService.getEmployeeById(id));
+        return &quot;employee-edit&quot;;
+    }
+
+    @PostMapping(&quot;/save&quot;)
+    public String saveEmployee(@ModelAttribute Employee employee) {
+        if (employee.getId() == null) {
+            employeeService.addEmployee(employee);
+        } else {
+            employeeService.updateEmployee(employee);
+        }
+        return &quot;redirect:/employees&quot;;
+    }
+
+    @GetMapping(&quot;/delete/{id}&quot;)
+    public String deleteEmployee(@PathVariable String id) {
+        if (&quot;all&quot;.equals(id)) {
+            employeeService.deleteAllEmployees();
+        } else {
+            employeeService.deleteEmployeeById(Integer.valueOf(id));
+        }
+        return &quot;redirect:/employees&quot;;
+    }
+}
+</code></pre>
+<h3 id="index-html-1"><a href="#index-html-1" class="headerlink" title="index.html"></a>index.html</h3><pre><code class="line-numbers language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;index&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div align=&quot;center&quot;&gt;
+      &lt;h2&gt;&lt;a href=&quot;employees&quot;&gt;Employee Management System&lt;/a&gt;&lt;/h2&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="employee-list-ftl"><a href="#employee-list-ftl" class="headerlink" title="employee-list.ftl"></a>employee-list.ftl</h3><pre><code class="line-numbers language-html">&lt;#assign ctx = springMacroRequestContext.contextPath&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;List Employee&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div align=&quot;center&quot;&gt;
+      &lt;h1&gt;List Employee&lt;/h1&gt;
+      &lt;table border=&quot;1&quot;&gt;
+        &lt;tr&gt;
+          &lt;th&gt;Id&lt;/th&gt;
+          &lt;th&gt;Name&lt;/th&gt;
+          &lt;th&gt;Email&lt;/th&gt;
+          &lt;th&gt;Address&lt;/th&gt;
+          &lt;th&gt;Telephone&lt;/th&gt;
+          &lt;th&gt;Action&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;#list employees as employee&gt;
+          &lt;tr&gt;
+            &lt;td&gt;${employee.id}&lt;/td&gt;
+            &lt;td&gt;${employee.name!}&lt;/td&gt;
+            &lt;td&gt;${employee.email!}&lt;/td&gt;
+            &lt;td&gt;${employee.address!}&lt;/td&gt;
+            &lt;td&gt;${employee.telephone!}&lt;/td&gt;
+            &lt;td&gt;
+              &lt;a href=&quot;${ctx}/employees/edit/${employee.id}&quot;&gt;Edit&lt;/a&gt;
+              &lt;a href=&quot;${ctx}/employees/delete/${employee.id}&quot;&gt;Delete&lt;/a&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/#list&gt;
+      &lt;/table&gt;
+      &lt;h3&gt;&lt;a href=&quot;${ctx}/employees/new&quot;&gt;Create Employee&lt;/a&gt;&lt;/h3&gt;
+      &lt;h3&gt;&lt;a href=&quot;${ctx}/employees/delete/all&quot;&gt;Delete All Employee&lt;/a&gt;&lt;/h3&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="employee-edit-ftl"><a href="#employee-edit-ftl" class="headerlink" title="employee-edit.ftl"></a>employee-edit.ftl</h3><pre><code class="line-numbers language-html">&lt;#assign ctx = springMacroRequestContext.contextPath&gt;
+&lt;#import &quot;spring.ftl&quot; as spring&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Edit Employee&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div align=&quot;center&quot;&gt;
+      &lt;h1&gt;${title}&lt;/h1&gt;
+      &lt;form action=&quot;${ctx}/employees/save&quot; method=&quot;post&quot;&gt;
+        &lt;@spring.formHiddenInput &quot;employee.id&quot;/&gt;
+        &lt;table&gt;
+          &lt;tr&gt;
+            &lt;td&gt;Name:&lt;/td&gt;
+            &lt;td&gt;
+              &lt;@spring.formInput &quot;employee.name&quot;/&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;Email:&lt;/td&gt;
+            &lt;td&gt;
+              &lt;@spring.formInput &quot;employee.email&quot;/&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;Address:&lt;/td&gt;
+            &lt;td&gt;
+              &lt;@spring.formInput &quot;employee.address&quot;/&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;Telephone:&lt;/td&gt;
+            &lt;td&gt;
+              &lt;@spring.formInput &quot;employee.telephone&quot;/&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;Save&quot;&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="命令行参数与-Profile"><a href="#命令行参数与-Profile" class="headerlink" title="命令行参数与 Profile"></a>命令行参数与 Profile</h2><p><strong>命令行参数传递 properties 属性</strong><br>springboot 的配置文件为 <code>application.properties</code>，properties 就是所谓的“属性”文件，即 <code>java.util.Properties</code>；我们通过 JVM 的启动参数 <code>-Dname=value</code> 可以传递 property 进去，JVM 会将这些 name/value 对保存到 <code>System.getProperties()</code> 这个 properties 属性类中，假设运行方式为 <code>java -Dname=value com.zfl9.MainApp</code>，那么我们就可以在 MainApp 中通过 <code>System.getProperty(&quot;name&quot;)</code> 来读取该属性对应的值（<code>&quot;value&quot;</code>），可以传递多个 <code>-D</code> 参数；java 的 properties 类似于操作系统的环境变量，key 和 value 都是字符串类型。</p>
+<p>SpringBoot 允许我们通过命令行参数提供 application.properties 中的属性值（jar 运行方式），如改变 tomcat 的监听端口：<br><code>java -jar springboot-helloworld-webapp.jar --server.port=80</code><br>语法非常简单，就是在 property 的 key 前面加上 <code>--</code> 就行了，命令行提供的属性值优先于 application.properties 中的属性值。</p>
+<p>当然，也可以直接通过 jvm 的 <code>-D</code> 选项传递 properties 属性，如：<br><code>java -Dserver.port=80 -jar springboot-helloworld-webapp.jar</code><br>如果同时指定了 <code>-Dserver.port=80</code> jvm 启动参数、<code>--server.port=80</code> 命令行参数，则后者的优先级高。</p>
+<p><strong>springboot 的多环境支持（profile）</strong><br>我们在开发 Spring Boot 应用时，通常同一套程序会被应用和安装到几个不同的环境，比如：<strong>开发环境</strong>（dev）、<strong>测试环境*</strong>（test）、<strong>生产环境</strong>（prod）。其中每个环境的数据源配置、服务器端口等配置都会不同，如果在为不同环境打包时都要频繁修改配置文件的话，那必将是个非常繁琐且容易发生错误的事。</p>
+<p>对于多环境的配置，各种项目构建工具或是框架的基本思路是一致的，即通过配置多份不同环境的配置文件，再通过打包命令指定需要打包的内容之后进行区分打包，Spring Boot 也不例外，或者说更加简单。在 Spring Boot 中，多环境配置文件名需要满足 <code>application-{profile}.properties</code> 的格式，其中 <code>{profile}</code> 对应你的环境标识，比如：</p>
+<ul>
+<li><code>application-dev.properties</code>：开发环境</li>
+<li><code>application-test.properties</code>：测试环境</li>
+<li><code>application-prod.properties</code>：生产环境</li>
+</ul>
+<p>至于使用哪个运行环境，需要在 application.properties 文件中通过 <code>spring.profiles.active</code> 属性来设置，其值对应 <code>{profile}</code> 值。如：<code>spring.profiles.active=test</code> 就会加载 <code>application-test.properties</code> 配置文件内容（无论什么运行环境，<code>application.properties</code> 配置文件总是会被加载，然后才是加载对应环境下的配置文件，如果存在同名属性，则对应环境下的配置文件的属性值优先级更高）；前面提到了，我们可以通过命令行参数的形式提供 springboot 的属性值，且命令行方式指定的属性值的优先级是最高的。</p>
+<p>通常，<code>application.properties</code> 中配置通用的属性以及默认的属性，而在 <code>application-{profile}.properties</code> 中配置与环境相关的属性（可覆盖 application.properties 中的同名属性），然后在 <code>application.properties</code> 中设置 <code>spring.profiles.active=dev</code> 来指定默认的运行环境为开发环境，然后通过命令行参数形式，提供 <code>--spring.profiles.active=prod</code> 参数来切换为生产环境。</p>
+<p>例子：在 src/main/resources 目录下，创建 3 个不同环境下的配置文件，且设置一个不同的 server.port 监听端口：</p>
+<ul>
+<li><code>application-dev.properties</code>：监听端口为 111</li>
+<li><code>application-test.properties</code>：监听端口为 222</li>
+<li><code>application-prod.properties</code>：监听端口为 333</li>
+</ul>
+<p>在 application.properties 文件中设置默认的运行环境为 dev，也就是说，如果更改 <code>spring.profiles.active</code> 属性，那么默认就是监听 111 端口。</p>
+<p>然后分别以下面三种形式运行我们的 springboot 应用：</p>
+<ul>
+<li><code>java -jar test.jar</code>：监听 111 端口</li>
+<li><code>java -jar test.jar --spring.profiles.active=dev</code>：监听 111 端口</li>
+<li><code>java -jar test.jar --spring.profiles.active=test</code>：监听 222 端口</li>
+<li><code>java -jar test.jar --spring.profiles.active=prod</code>：监听 333 端口</li>
+</ul>
+<h2 id="SpringBoot-打包为-War"><a href="#SpringBoot-打包为-War" class="headerlink" title="SpringBoot 打包为 War"></a>SpringBoot 打包为 War</h2><p>第一步：修改 pom.xml，将 packaging 打包方式改为 war（默认为 jar）：</p>
+<pre><code class="line-numbers language-xml">&lt;packaging&gt;war&lt;/packaging&gt;
+</code></pre>
+<p>第二步：修改 pom.xml，添加 <code>spring-boot-starter-tomcat</code> 依赖，将 scope 改为 provided：</p>
+<pre><code class="line-numbers language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+  &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><strong>完整 pom.xml 参考如下</strong></p>
+<pre><code class="line-numbers language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.zfl9.springboot&lt;/groupId&gt;
+  &lt;artifactId&gt;springboot-ssm&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;war&lt;/packaging&gt;
+
+  &lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.1.3.RELEASE&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+      &lt;optional&gt;true&lt;/optional&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-freemarker&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;scope&gt;runtime&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<p>第三步：修改 Application 启动类，继承 <code>SpringBootServletInitializer</code> 初始化类，并重写 configure() 方法：</p>
+<pre><code class="line-numbers language-java">package com.zfl9;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+@SpringBootApplication
+@MapperScan(&quot;com.zfl9.mapper&quot;)
+public class Application extends SpringBootServletInitializer {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(Application.class);
+    }
+}
+</code></pre>
+<p>最后，执行 <code>mvn clean package</code>，将 target 目录下的 war 包拷贝到 Tomcat 的 webapps 目录下，打开浏览器测试吧。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/spring-test.html" rel="next" title="Spring 单元测试 (JUnit4)">
+                <i class="fa fa-chevron-left"></i> Spring 单元测试 (JUnit4)
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/spring-mybatis.html" rel="prev" title="Spring + SpringMVC + MyBatis">
+                Spring + SpringMVC + MyBatis <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-浅析"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot 浅析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-Hello"><span class="nav-number">2.</span> <span class="nav-text">SpringBoot Hello</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-Runner"><span class="nav-number">3.</span> <span class="nav-text">SpringBoot Runner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-日志配置"><span class="nav-number">4.</span> <span class="nav-text">SpringBoot 日志配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-单元测试"><span class="nav-number">5.</span> <span class="nav-text">SpringBoot 单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-FreeMarker"><span class="nav-number">6.</span> <span class="nav-text">SpringBoot FreeMarker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构"><span class="nav-number">6.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml"><span class="nav-number">6.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-properties"><span class="nav-number">6.3.</span> <span class="nav-text">application.properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Application-java"><span class="nav-number">6.4.</span> <span class="nav-text">Application.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HelloController-java"><span class="nav-number">6.5.</span> <span class="nav-text">HelloController.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-html"><span class="nav-number">6.6.</span> <span class="nav-text">index.html</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hello-ftl"><span class="nav-number">6.7.</span> <span class="nav-text">hello.ftl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-HikariCP"><span class="nav-number">7.</span> <span class="nav-text">SpringBoot HikariCP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构-1"><span class="nav-number">7.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml-1"><span class="nav-number">7.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-properties-1"><span class="nav-number">7.3.</span> <span class="nav-text">application.properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#schema-sql"><span class="nav-number">7.4.</span> <span class="nav-text">schema.sql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-sql"><span class="nav-number">7.5.</span> <span class="nav-text">data.sql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Employee-java"><span class="nav-number">7.6.</span> <span class="nav-text">Employee.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeRunner-java"><span class="nav-number">7.7.</span> <span class="nav-text">EmployeeRunner.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行结果"><span class="nav-number">7.8.</span> <span class="nav-text">运行结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-MyBatis"><span class="nav-number">8.</span> <span class="nav-text">SpringBoot MyBatis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构-2"><span class="nav-number">8.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml-2"><span class="nav-number">8.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-properties-2"><span class="nav-number">8.3.</span> <span class="nav-text">application.properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Application-java-1"><span class="nav-number">8.4.</span> <span class="nav-text">Application.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Employee-java-1"><span class="nav-number">8.5.</span> <span class="nav-text">Employee.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-java"><span class="nav-number">8.6.</span> <span class="nav-text">EmployeeMapper.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-xml"><span class="nav-number">8.7.</span> <span class="nav-text">EmployeeMapper.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationTest-java"><span class="nav-number">8.8.</span> <span class="nav-text">ApplicationTest.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行结果-1"><span class="nav-number">8.9.</span> <span class="nav-text">运行结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-SSM-示例"><span class="nav-number">9.</span> <span class="nav-text">SpringBoot SSM 示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构-3"><span class="nav-number">9.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml-3"><span class="nav-number">9.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-properties-3"><span class="nav-number">9.3.</span> <span class="nav-text">application.properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Application-java-2"><span class="nav-number">9.4.</span> <span class="nav-text">Application.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Employee-java-2"><span class="nav-number">9.5.</span> <span class="nav-text">Employee.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-java-1"><span class="nav-number">9.6.</span> <span class="nav-text">EmployeeMapper.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-xml-1"><span class="nav-number">9.7.</span> <span class="nav-text">EmployeeMapper.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeService-java"><span class="nav-number">9.8.</span> <span class="nav-text">EmployeeService.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeServiceImpl-java"><span class="nav-number">9.9.</span> <span class="nav-text">EmployeeServiceImpl.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeController-java"><span class="nav-number">9.10.</span> <span class="nav-text">EmployeeController.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-html-1"><span class="nav-number">9.11.</span> <span class="nav-text">index.html</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#employee-list-ftl"><span class="nav-number">9.12.</span> <span class="nav-text">employee-list.ftl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#employee-edit-ftl"><span class="nav-number">9.13.</span> <span class="nav-text">employee-edit.ftl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行参数与-Profile"><span class="nav-number">10.</span> <span class="nav-text">命令行参数与 Profile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-打包为-War"><span class="nav-number">11.</span> <span class="nav-text">SpringBoot 打包为 War</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/spring-boot.html';
+          this.page.identifier = 'spring-boot.html';
+          this.page.title = 'Spring Boot';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

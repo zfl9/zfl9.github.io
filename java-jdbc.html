@@ -1,0 +1,2541 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java JDBC 入门">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JDBC 全称 Java Database Connectivity，中文：Java 数据库连接。JDBC 是 Java 标准库提供的一套专门用于访问关系型数据库的 API，使用 JDBC API 访问数据库需要数据库厂商提供对应的 JDBC 驱动（大部分数据库厂商都会提供，比如 MySQL、MariaDB、Oracle、DB2、SQL Server），如果厂商未提供 JDBC 驱动，JDBC 也">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JDBC 入门">
+<meta property="og:url" content="https://www.zfl9.com/java-jdbc.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JDBC 全称 Java Database Connectivity，中文：Java 数据库连接。JDBC 是 Java 标准库提供的一套专门用于访问关系型数据库的 API，使用 JDBC API 访问数据库需要数据库厂商提供对应的 JDBC 驱动（大部分数据库厂商都会提供，比如 MySQL、MariaDB、Oracle、DB2、SQL Server），如果厂商未提供 JDBC 驱动，JDBC 也">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.343Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JDBC 入门">
+<meta name="twitter:description" content="JDBC 全称 Java Database Connectivity，中文：Java 数据库连接。JDBC 是 Java 标准库提供的一套专门用于访问关系型数据库的 API，使用 JDBC API 访问数据库需要数据库厂商提供对应的 JDBC 驱动（大部分数据库厂商都会提供，比如 MySQL、MariaDB、Oracle、DB2、SQL Server），如果厂商未提供 JDBC 驱动，JDBC 也">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-jdbc.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java JDBC 入门 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-jdbc.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java JDBC 入门
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-28T09:24:00+08:00">
+                2018-08-28
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-jdbc.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-jdbc.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-jdbc.html" class="leancloud_visitors" data-flag-title="Java JDBC 入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JDBC 全称 Java Database Connectivity，中文：Java 数据库连接。JDBC 是 Java 标准库提供的一套专门用于访问关系型数据库的 API，使用 JDBC API 访问数据库需要数据库厂商提供对应的 JDBC 驱动（大部分数据库厂商都会提供，比如 MySQL、MariaDB、Oracle、DB2、SQL Server），如果厂商未提供 JDBC 驱动，JDBC 也提供了相应的解决方案：JDBC-ODBC Bridge；也就是说只要数据库厂商提供了 ODBC（Open Database Connectivity，开放数据库互连）驱动我们也可以使用 JDBC API 来访问。</p>
+<a id="more"></a>
+<h2 id="JDBC-API-简介"><a href="#JDBC-API-简介" class="headerlink" title="JDBC API 简介"></a>JDBC API 简介</h2><p>自从数据需要被持久化存储，程序与数据库之间的交互就是不可避免的操作。而早期程序与不同的数据库的交互方式不同，意味着程序开发不得不面对数据库的具体实现，一旦切换数据库，又是新的学习过程，这样开发人员的效率始终被和数据库的交互所限制。</p>
+<p>根据软件设计中的依赖倒置原则，<strong>要针对接口编程，不要针对实现编程</strong>，因而由于数据库的变化而引起实现的变化是违背软件设计的基本原则的。优化的方式是在数据库上提供一层抽象接口，不同数据库根据接口完成自己的实现，而用户使用时，只需面向接口编程，而不用关心内部的实现细节。如果需要更换数据库，只需要指定不同的数据库标识即可。</p>
+<p>Java 的 JDBC（Java DataBase Connectivity）就是一组这样的抽象 API，通过执行 SQL 语句，为多种关系型数据库提供统一访问。下面以 MySQL 的一个简单查询为例，介绍 JDBC 的接口和基本构成。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.jdbc;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class SimpleDemo {
+    public static void main(String[] args) {
+        // 注册驱动
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("MySQL JDBC Driver Not Found!");
+            e.printStackTrace();
+            return;
+        }
+
+        // 获取连接
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            System.err.println("Failed to Connect to MySQL Server!");
+            e.printStackTrace();
+            return;
+        }
+
+        // 访问数据
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select * from test0");
+            // 遍历结果表中的每一行
+            System.out.println("id\tname\tsite");
+            System.out.println("--\t----\t----");
+            while (resultSet.next()) {
+                System.out.printf("%d\t%s\t%s\n",
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("site"));
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while accessing the database!");
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null)
+                try { resultSet.close(); } catch (SQLException e) {}
+            if (statement != null)
+                try { statement.close(); } catch (SQLException e) {}
+            if (connection != null)
+                try { connection.close(); } catch (SQLException e) {}
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:37:41] 
+$ mysql -e 'select * from test0' test
++----+--------+------------------+
+| id | name   | site             |
++----+--------+------------------+
+|  1 | 百度   | www.baidu.com    |
+|  2 | 腾讯   | www.tencent.com  |
+|  3 | 网易   | www.netease.com  |
+|  4 | 淘宝   | www.taobao.com   |
+|  5 | 新浪   | www.sina.com.cn  |
+|  6 | 金山   | www.kingsoft.com |
+|  7 | 搜狐   | www.sohu.com.cn  |
+|  8 | 优酷   | www.youku.com    |
+|  9 | 美团   | www.meituan.com  |
++----+--------+------------------+
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:37:48] 
+$ javac SimpleDemo.java && java com.zfl9.jdbc.SimpleDemo
+id    name    site
+--    ----    ----
+1    百度    www.baidu.com
+2    腾讯    www.tencent.com
+3    网易    www.netease.com
+4    淘宝    www.taobao.com
+5    新浪    www.sina.com.cn
+6    金山    www.kingsoft.com
+7    搜狐    www.sohu.com.cn
+8    优酷    www.youku.com
+9    美团    www.meituan.com
+</script></code></pre>
+<p>在运行 SimpleDemo 之前，你需要先从 MySQL 官网下载对应的 JDBC 驱动（jar 文件），然后将这个 jar 文件放到 CLASSPATH 路径中。</p>
+<ul>
+<li>MySQL JDBC 驱动：<a href="https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.12.tar.gz" rel="external nofollow noopener noreferrer" target="_blank">https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.12.tar.gz</a></li>
+<li>MariaDB JDBC 驱动：<a href="https://downloads.mariadb.com/Connectors/java/connector-java-2.2.6/mariadb-java-client-2.2.6.jar" rel="external nofollow noopener noreferrer" target="_blank">https://downloads.mariadb.com/Connectors/java/connector-java-2.2.6/mariadb-java-client-2.2.6.jar</a></li>
+<li>注意，MySQL JDBC 驱动在下载的 tar.gz 包中，后缀名为 .jar，只需要将这个 jar 文件放到 CLASSPATH 中就可以了。</li>
+</ul>
+<p>JDBC API 位于 <code>java.sql</code> 包，扩展 API 位于 <code>javax.sql</code> 包。</p>
+<ul>
+<li><code>java.sql.Driver</code>：代表一个 JDBC 驱动，由驱动提供商实现。</li>
+<li><code>java.sql.DriverManager</code>：驱动管理器，主要用于获取数据库连接。</li>
+<li><code>java.sql.Connection</code>：代表一个数据库连接（一般为 Socket 套接字连接）。</li>
+<li><code>java.sql.Statement</code>：语句对象，用于执行 SQL 语句（如 SELECT、INSERT、UPDATE、DELETE）。</li>
+<li><code>java.sql.ResultSet</code>：结果对象，代表 SQL 执行结果（二维表，一行称为一条记录，一列称为一个字段）。</li>
+<li><code>java.sql.SQLException</code>：使用 JDBC 操作数据库期间，如果发生错误，SQLException 将被抛出（或者是它的子类）。</li>
+</ul>
+<p>上面的程序可以分为 3 个部分：注册驱动、连接数据库、访问数据库。其中访问数据库基本相似，顶多就是 SQL 方言不同。</p>
+<p><strong>注册驱动</strong><br><code>Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;)</code>：从 CLASSPATH 中查找对应的类，然后载入方法区，执行该类的静态初始化块。<br>其中注册驱动的关键在于<strong>静态初始化块</strong>，我们来看看 mysql jdbc 驱动中的 static 初始化块的代码（<code>com.mysql.cj.jdbc.Driver</code>）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public class Driver extends NonRegisteringDriver implements java.sql.Driver {
+    //
+    // Register ourselves with the DriverManager
+    //
+    static {
+        try {
+            java.sql.DriverManager.registerDriver(new Driver());
+        } catch (SQLException E) {
+            throw new RuntimeException("Can't register driver!");
+        }
+    }
+
+    /**
+     * Construct a new driver and register it with DriverManager
+     * 
+     * @throws SQLException
+     *             if a database error occurs.
+     */
+    public Driver() throws SQLException {
+        // Required for Class.forName().newInstance()
+    }
+}
+</script></code></pre>
+<p>可以看到，<code>java.sql.Driver</code> 接口是由 JDBC 驱动提供者实现的，static 块的语句很简单，就是调用 <code>DriverManager.registerDriver(new Driver())</code> 方法。那是不是意味着我们可以直接调用 java.sql.DriverManager 类的 registerDriver() 静态方法来注册驱动程序呢？如果是从可行性上看，那是可以的；但是从效率上看，不建议直接调用 DriverManager.registerDriver() 方法，因为这会创建两个 Driver 实例（静态初始化块中创建一次，registerDriver() 方法中 new 一次），导致资源的浪费（同时也会注册两次 JDBC 驱动，没必要），即使 JVM 都会对它们进行回收。</p>
+<p>但是从 JDBC 4.0 开始，我们不再需要使用 <code>Class.forName()</code> 来显式注册驱动了（当然对应的 JDBC 驱动也必须符合 JDBC 4.0 规范），直接使用 <code>DriverManager.getConnection()</code> 获取数据库连接即可。JDBC 会自动查找 CLASSPATH 中 <code>META-INF/services/java.sql.Driver</code> 文件，这个文件一般只有一行，它的内容为 <code>com.mysql.cj.jdbc.Driver</code>，即对应的 JDBC Driver 类的全限定类名。JDBC 会尝试让这些 driver 解析给定的 url，如果能够解析则选定此驱动，进行注册，否则继续下一个尝试，如果都没有则抛出异常。一般情况下这没有什么问题，但是如果 CLASSPATH 中有多个 driver 都能解析此 url，JDBC 会选择哪个呢？我觉得应该是最前面的那个 driver（CLASSPATH 中先出现的那个）。比如 mysql driver 和 mariadb driver 都可以解析 <code>jdbc:mysql://localhost/test</code>，实际上使用哪个是无法确定的（虽然 mariadb 与 mysql 基本兼容，但难免会有细微的差异）。所以我觉得还是显式的使用 <code>Class.forName()</code> 来注册对应的驱动比较稳妥，即便是 JDBC 4.0 驱动。</p>
+<p><strong>连接数据库</strong><br>JDBC 使用 database url 来定位一个数据库实例，这个 database url 始终以 <code>jdbc:</code> 开头，后面的一般由驱动提供者自己定义，比如 mysql 的 url 格式为：<code>jdbc:mysql://host[:port]/dbname</code>，mariadb 的 url 格式为 <code>jdbc:mariadb://host[:port]/dbname</code>，oracle 12c 的 url 格式为 <code>jdbc:oracle:driver_type:[username/password]@database_specifier</code>。一般来说 username、password 认证信息不包含在 database url 中，而是作为单独的参数提供给 DriverManager 的 getConnection() 方法，即 <code>DriverManager.getConnection(url, user, pass)</code>。</p>
+<blockquote>
+<p>对于 mysql、mariadb，url 实际上可以省略 dbname，如 <code>jdbc:mysql://localhost</code>，获取连接后可以使用 <code>use dbname</code> 切换数据库。</p>
+</blockquote>
+<h2 id="JDBC-数据类型"><a href="#JDBC-数据类型" class="headerlink" title="JDBC 数据类型"></a>JDBC 数据类型</h2><p>java.sql 包中有两个类定义了 JDBC 数据类型：<code>java.sql.Types</code>、<code>java.sql.JDBCType</code>（枚举类，JDK1.8 新增）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">SQL 类型</th>
+<th style="text-align:center">Java 类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">BIT</td>
+<td style="text-align:center">boolean</td>
+</tr>
+<tr>
+<td style="text-align:center">TINYINT</td>
+<td style="text-align:center">byte</td>
+</tr>
+<tr>
+<td style="text-align:center">SMALLINT</td>
+<td style="text-align:center">short</td>
+</tr>
+<tr>
+<td style="text-align:center">INTEGER</td>
+<td style="text-align:center">int</td>
+</tr>
+<tr>
+<td style="text-align:center">BIGINT</td>
+<td style="text-align:center">long</td>
+</tr>
+<tr>
+<td style="text-align:center">REAL</td>
+<td style="text-align:center">float</td>
+</tr>
+<tr>
+<td style="text-align:center">FLOAT</td>
+<td style="text-align:center">double</td>
+</tr>
+<tr>
+<td style="text-align:center">DOUBLE</td>
+<td style="text-align:center">double</td>
+</tr>
+<tr>
+<td style="text-align:center">BINARY</td>
+<td style="text-align:center">byte[]</td>
+</tr>
+<tr>
+<td style="text-align:center">VARBINARY</td>
+<td style="text-align:center">byte[]</td>
+</tr>
+<tr>
+<td style="text-align:center">LONGVARBINARY</td>
+<td style="text-align:center">byte[]</td>
+</tr>
+<tr>
+<td style="text-align:center">NUMERIC</td>
+<td style="text-align:center">java.math.BigDecimal</td>
+</tr>
+<tr>
+<td style="text-align:center">DECIMAL</td>
+<td style="text-align:center">java.math.BigDecimal</td>
+</tr>
+<tr>
+<td style="text-align:center">CHAR</td>
+<td style="text-align:center">java.lang.String</td>
+</tr>
+<tr>
+<td style="text-align:center">VARCHAR</td>
+<td style="text-align:center">java.lang.String</td>
+</tr>
+<tr>
+<td style="text-align:center">LONGVARCHAR</td>
+<td style="text-align:center">java.lang.String</td>
+</tr>
+<tr>
+<td style="text-align:center">DATE</td>
+<td style="text-align:center">java.sql.Date</td>
+</tr>
+<tr>
+<td style="text-align:center">TIME</td>
+<td style="text-align:center">java.sql.Time</td>
+</tr>
+<tr>
+<td style="text-align:center">TIMESTAMP</td>
+<td style="text-align:center">java.sql.Timestamp</td>
+</tr>
+<tr>
+<td style="text-align:center">BLOB</td>
+<td style="text-align:center">java.sql.Blob</td>
+</tr>
+<tr>
+<td style="text-align:center">CLOB</td>
+<td style="text-align:center">java.sql.Clob</td>
+</tr>
+<tr>
+<td style="text-align:center">Array</td>
+<td style="text-align:center">java.sql.Array</td>
+</tr>
+<tr>
+<td style="text-align:center">REF</td>
+<td style="text-align:center">java.sql.Ref</td>
+</tr>
+<tr>
+<td style="text-align:center">Struct</td>
+<td style="text-align:center">java.sql.Struct</td>
+</tr>
+</tbody>
+</table>
+<p><code>java.sql.Types</code> 类的静态常量，定义 JDBC 中的数据类型：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public class Types extends Object {
+    public static final int BIT;
+    public static final int BOOLEAN;
+    public static final int TINYINT;
+    public static final int SMALLINT;
+    public static final int INTEGER;
+    public static final int BIGINT;
+    public static final int FLOAT;
+    public static final int DOUBLE;
+    public static final int REAL;
+    public static final int NUMERIC;
+    public static final int DECIMAL;
+
+    public static final int CHAR;
+    public static final int VARCHAR;
+    public static final int LONGVARCHAR;
+
+    public static final int NCHAR;
+    public static final int NVARCHAR;
+    public static final int LONGNVARCHAR;
+
+    public static final int BINARY;
+    public static final int VARBINARY;
+    public static final int LONGVARBINARY;
+
+    public static final int BLOB;
+    public static final int CLOB;
+    public static final int NCLOB;
+
+    public static final int DATE;
+    public static final int TIME;
+    public static final int TIMESTAMP;
+    public static final int TIME_WITH_TIMEZONE;
+    public static final int TIMESTAMP_WITH_TIMEZONE;
+
+    public static final int NULL;
+    public static final int OTHER;
+    public static final int JAVA_OBJECT;
+    public static final int DISTINCT;
+    public static final int STRUCT;
+    public static final int ARRAY;
+    public static final int REF;
+    public static final int DATALINK;
+    public static final int ROWID;
+    public static final int SQLXML;
+    public static final int REF_CURSOR;
+}
+</script></code></pre>
+<h2 id="JDBC-主要接口"><a href="#JDBC-主要接口" class="headerlink" title="JDBC 主要接口"></a>JDBC 主要接口</h2><h3 id="DriverManager-类"><a href="#DriverManager-类" class="headerlink" title="DriverManager 类"></a>DriverManager 类</h3><p>管理 JDBC Driver 的静态工具类，例如：注册 Driver、取消注册 Driver、与指定数据库建立连接。<br>JDBC 2.0 新增的 <a href="https://javadoc.zfl9.com/api/javax/sql/DataSource.html" rel="external nofollow noopener noreferrer" target="_blank">DataSource</a> 接口提供了另一种连接数据库的方法，是 DriverManager 的替代品。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 指定要连接的数据库的 url (jdbc:subprotocol:subname)
+public static Connection getConnection(String url) throws SQLException
+// info 中通常应至少包含 user、password 属性 (java.util.Properties)
+public static Connection getConnection(String url, Properties info) throws SQLException
+// user 为认证用的用户名，password 为认证用的密码
+public static Connection getConnection(String url, String user, String password) throws SQLException
+
+// 返回可以解析指定 url 的 Driver
+public static Driver getDriver(String url) throws SQLException
+// 返回当前已注册的所有 JDBC Driver
+public static Enumeration<Driver> getDrivers();
+
+// 注册指定的 JDBC Driver 驱动
+public static void registerDriver(Driver driver) throws SQLException
+// 取消注册指定的 JDBC Driver 驱动
+public static void deregisterDriver(Driver driver) throws SQLException
+</script></code></pre>
+<h3 id="Connection-接口"><a href="#Connection-接口" class="headerlink" title="Connection 接口"></a>Connection 接口</h3><p>代表一个数据库连接（会话，Session）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* 静态字段 [事务隔离级别] */
+static final int TRANSACTION_NONE // 不支持事务
+static final int TRANSACTION_READ_UNCOMMITTED // 读未提交
+static final int TRANSACTION_READ_COMMITTED // 读已提交
+static final int TRANSACTION_REPEATABLE_READ // 可重复读
+static final int TRANSACTION_SERIALIZABLE // 可串行化
+
+/* 创建语句对象 */
+// 普通/静态 SQL 语句
+Statement createStatement() throws SQLException // type=TYPE_FORWARD_ONLY, concur=CONCUR_READ_ONLY
+Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException
+Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException
+
+// 可变参 SQL 语句，使用 ? 作为参数占位符
+PreparedStatement prepareStatement(String sql) throws SQLException // 同上
+PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException
+PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException
+
+// 函数、存储过程的调用语句，使用 ? 作为参数占位符
+CallableStatement prepareCall(String sql) throws SQLException // 同上
+CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException
+CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException
+
+/* 创建各种数据类型 */
+Clob createClob() throws SQLException
+Blob createBlob() throws SQLException
+NClob createNClob() throws SQLException
+SQLXML createSQLXML() throws SQLException
+Array createArrayOf(String typeName, Object[] elements) throws SQLException
+Struct createStruct(String typeName, Object[] attributes) throws SQLException
+
+/* 设置连接只读 */
+void setReadOnly(boolean readOnly) throws SQLException
+boolean isReadOnly() throws SQLException
+
+/* 事务自动提交 */
+// 设置是否自动提交事务，默认为 true
+void setAutoCommit(boolean autoCommit) throws SQLException
+// 查看当前设置的 autoCommit 布尔值
+boolean getAutoCommit() throws SQLException
+
+/* 事务隔离级别 */
+void setTransactionIsolation(int level) throws SQLException
+int getTransactionIsolation() throws SQLException
+
+/* 事务提交回滚 */
+void commit() throws SQLException // 提交事务
+void rollback() throws SQLException // 回滚事务
+void rollback(Savepoint savepoint) throws SQLException // 回滚到指定 savepoint
+
+/* 事务 savepoint */
+Savepoint setSavepoint() throws SQLException // 创建未命名 savepoint
+Savepoint setSavepoint(String name) throws SQLException // 创建命名 savepoint
+void releaseSavepoint(Savepoint savepoint) throws SQLException // 删除指定 savepoint
+
+// 获取数据库元数据对象
+DatabaseMetaData getMetaData() throws SQLException
+
+/* SQL 警告信息 */
+// 返回 SQL 警告对象，或者 null，如果有多个警告，可使用 SQLWarning.getNextWarning() 获取
+SQLWarning getWarnings() throws SQLException
+// 清空 SQL 警告对象
+void clearWarnings() throws SQLException
+
+/* 关闭数据库连接 */
+void close() throws SQLException // 关闭连接
+boolean isClosed() throws SQLException // 是否已关闭
+</script></code></pre>
+<h3 id="Savepoint-接口"><a href="#Savepoint-接口" class="headerlink" title="Savepoint 接口"></a>Savepoint 接口</h3><p>数据库事务中的保存点（savepoint），由 <code>connection.setSavepoint()</code> 方法创建，可用于 <code>rollback()</code> 等方法。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+int    getSavepointId()   throws SQLException // 获取 savepoint 的 ID
+String getSavepointName() throws SQLException // 获取 savepoint 的 Name
+</script></code></pre>
+<h3 id="Statement-接口"><a href="#Statement-接口" class="headerlink" title="Statement 接口"></a>Statement 接口</h3><p>静态 SQL 语句对象，默认情况下，每个 Statement 对象只能同时打开一个 ResultSet 对象。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 获取语句对象相关联的 Connection 对象
+Connection getConnection() throws SQLException
+
+// 执行查询操作 SELECT，返回结果对象，一次只能执行一条语句，下同，不再复述
+ResultSet executeQuery(String sql) throws SQLException
+// 执行更新操作 INSERT、UPDATE、DELETE、CREATE、ALTER、DROP 等，返回受影响的记录数
+int executeUpdate(String sql) throws SQLException
+// 执行 SQL 语句（适用于动态执行 SQL 语句、单个 SQL 语句返回多个 ResultSet 的情况）
+// 如果返回 true，则表示该 sql 语句会返回查询结果，如果返回 false 则表示这是个更新操作
+// 如果有返回结果，使用 getResultSet() 获取，对于更新操作，使用 getUpdataCount() 获取
+boolean execute(String sql) throws SQLException
+
+// 获取查询结果对象 for execute()
+ResultSet getResultSet() throws SQLException
+// 获取更新的记录数 for execute()
+int getUpdateCount() throws SQLException
+// 尝试获取下一个结果对象，存在则返回 true
+boolean getMoreResults() throws SQLException
+
+// 添加批量执行的 SQL 语句
+void addBatch(String sql) throws SQLException
+// 清空批量执行的 SQL 语句
+void clearBatch() throws SQLException
+// 执行批量添加的 SQL 语句
+int[] executeBatch() throws SQLException
+
+// 设置返回的 resultset 对象的 clob/blob 字段的最大长度(字节)，0 表示无限制
+int getMaxFieldSize() throws SQLException
+void setMaxFieldSize(int max) throws SQLException
+
+// 设置返回的 resultSet 对象的最大行数（记录数），超出后会默默的丢弃多余的行
+int getMaxRows() throws SQLException
+void setMaxRows(int max) throws SQLException
+
+// 查询时间超时设置，默认为 0，表示没有限制
+int getQueryTimeout() throws SQLException
+void setQueryTimeout(int seconds) throws SQLException
+
+// 获取/清空 SQL 警告信息
+SQLWarning getWarnings() throws SQLException
+void clearWarnings() throws SQLException
+
+// 如果驱动支持，则取消语句的执行
+void cancel() throws SQLException
+// 关闭 Statement 对象
+void close() throws SQLException
+// 查询此对象是否已关闭
+boolean isClosed() throws SQLException
+</script></code></pre>
+<h3 id="PreparedStatement-接口"><a href="#PreparedStatement-接口" class="headerlink" title="PreparedStatement 接口"></a>PreparedStatement 接口</h3><p>PreparedStatement 是 Statement 的子接口，预编译 SQL 语句对象，支持设置参数（使用 <code>?</code> 进行占位）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 执行查询语句
+ResultSet executeQuery() throws SQLException
+// 执行更新语句
+int executeUpdate() throws SQLException
+// 执行任意语句
+boolean execute() throws SQLException
+// 添加批量语句
+void addBatch() throws SQLException
+
+// 清空当前设置的所有参数值
+void clearParameters() throws SQLException
+
+// 设置参数值，序号从 1 开始
+void setNull(int parameterIndex, int sqlType) throws SQLException // sqlType in java.sql.Types
+void setBoolean(int parameterIndex, boolean x) throws SQLException
+void setByte(int parameterIndex, byte x) throws SQLException
+void setShort(int parameterIndex, short x) throws SQLException
+void setInt(int parameterIndex, int x) throws SQLException
+void setLong(int parameterIndex, long x) throws SQLException
+void setFloat(int parameterIndex, float x) throws SQLException
+void setDouble(int parameterIndex, double x) throws SQLException
+void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException
+void setBytes(int parameterIndex, byte[] x) throws SQLException
+void setString(int parameterIndex, String x) throws SQLException
+void setNString(int parameterIndex, String value) throws SQLException
+
+// java.sql.Date、java.sql.Time、java.sql.Timestamp
+void setDate(int parameterIndex, Date x) throws SQLException
+void setTime(int parameterIndex, Time x) throws SQLException
+void setTimestamp(int parameterIndex, Timestamp x) throws SQLException
+
+// java.util.Calendar
+void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException
+void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException
+void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException
+
+void setURL(int parameterIndex, URL x) throws SQLException // java.net.URL
+void setRef(int parameterIndex, Ref x) throws SQLException
+void setArray(int parameterIndex, Array x) throws SQLException
+void setRowId(int parameterIndex, RowId x) throws SQLException
+void setSQLXML(int parameterIndex, SQLXML xmlObject) throws SQLException
+
+void setClob(int parameterIndex, Clob x) throws SQLException
+void setClob(int parameterIndex, Reader reader) throws SQLException
+void setClob(int parameterIndex, Reader reader, long length) throws SQLException
+
+void setBlob(int parameterIndex, Blob x) throws SQLException
+void setBlob(int parameterIndex, InputStream inputStream) throws SQLException
+void setBlob(int parameterIndex, InputStream inputStream, long length) throws SQLException
+
+void setNClob(int parameterIndex, NClob value) throws SQLException
+void setNClob(int parameterIndex, Reader reader) throws SQLException
+void setNClob(int parameterIndex, Reader reader, long length) throws SQLException
+
+void setObject(int parameterIndex, Object x) throws SQLException
+void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException // type in java.sql.Types
+
+void setAsciiStream(int parameterIndex, InputStream x) throws SQLException
+void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException
+void setAsciiStream(int parameterIndex, InputStream x, long length) throws SQLException
+void setBinaryStream(int parameterIndex, InputStream x) throws SQLException
+void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException
+void setBinaryStream(int parameterIndex, InputStream x, long length) throws SQLException
+void setCharacterStream(int parameterIndex, Reader reader) throws SQLException
+void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException
+void setCharacterStream(int parameterIndex, Reader reader, long length) throws SQLException
+void setNCharacterStream(int parameterIndex, Reader value) throws SQLException
+void setNCharacterStream(int parameterIndex, Reader value, long length) throws SQLException
+</script></code></pre>
+<h3 id="CallableStatement-接口"><a href="#CallableStatement-接口" class="headerlink" title="CallableStatement 接口"></a>CallableStatement 接口</h3><p>CallableStatement 是 PreparedStatement 的子接口，调用函数/存储过程的语句对象，也使用 <code>?</code> 占位。有两种语法：</p>
+<ul>
+<li><code>{? = call function_name[(arg1, arg2, ...)]}</code>：调用函数，其中 argN 可以使用 <code>?</code> 占位。</li>
+<li><code>{call procedure_name[(arg1, arg2, ...)]}</code>：调用存储过程，其中 argN 可以使用 <code>?</code> 占位。</li>
+<li>值得说明的是，<code>[]</code> 表示里面的内容是可选的，不要将 <code>[]</code> 输入到实际的 SQL 语句中，否则会报错。</li>
+</ul>
+<p>函数的参数只能是 IN 类型的，而存储过程的参数可以是 IN、OUT、INOUT 三种类型，OUT、INOUT 参数必须在 <code>execute*()</code> 前使用 <code>registerOutParameter()</code> 注册，然后在 <code>execute*()</code> 之后使用 <code>getXxx()</code> 来获取对应的值；当然，函数的返回值其实也算是 OUT 参数（等号前面的那个），因此也要使用 <code>registerOutParameter()</code> 注册，在 execute 之后使用 <code>getXxx()</code> 获取。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 注册 OUT（包括函数返回值）、INOUT 参数 [使用索引值]
+void registerOutParameter(int parameterIndex,       int sqlType) throws SQLException
+void registerOutParameter(int parameterIndex,   SQLType sqlType) throws SQLException
+// 注册 OUT（包括函数返回值）、INOUT 参数 [使用参数名]
+void registerOutParameter(String parameterName,     int sqlType) throws SQLException
+void registerOutParameter(String parameterName, SQLType sqlType) throws SQLException
+
+// 读取 OUT（包括函数返回值）、INOUT 参数 [使用索引值]
+String getString(int parameterIndex) throws SQLException
+boolean getBoolean(int parameterIndex) throws SQLException
+byte getByte(int parameterIndex) throws SQLException
+short getShort(int parameterIndex) throws SQLException
+int getInt(int parameterIndex) throws SQLException
+long getLong(int parameterIndex) throws SQLException
+float getFloat(int parameterIndex) throws SQLException
+double getDouble(int parameterIndex) throws SQLException
+BigDecimal getBigDecimal(int parameterIndex) throws SQLException
+byte[] getBytes(int parameterIndex) throws SQLException
+Date getDate(int parameterIndex) throws SQLException
+Time getTime(int parameterIndex) throws SQLException
+Timestamp getTimestamp(int parameterIndex) throws SQLException
+Object getObject(int parameterIndex) throws SQLException
+Ref getRef(int parameterIndex) throws SQLException
+Blob getBlob(int parameterIndex) throws SQLException
+Clob getClob(int parameterIndex) throws SQLException
+Array getArray(int parameterIndex) throws SQLException
+URL getURL(int parameterIndex) throws SQLException
+Reader getCharacterStream(int parameterIndex) throws SQLException
+Reader getNCharacterStream(int parameterIndex) throws SQLException
+
+// 读取 OUT（包括函数返回值）、INOUT 参数 [使用参数名]
+String getString(String parameterName) throws SQLException
+boolean getBoolean(String parameterName) throws SQLException
+byte getByte(String parameterName) throws SQLException
+short getShort(String parameterName) throws SQLException
+int getInt(String parameterName) throws SQLException
+long getLong(String parameterName) throws SQLException
+float getFloat(String parameterName) throws SQLException
+double getDouble(String parameterName) throws SQLException
+BigDecimal getBigDecimal(String parameterName) throws SQLException
+byte[] getBytes(String parameterName) throws SQLException
+Date getDate(String parameterName) throws SQLException
+Time getTime(String parameterName) throws SQLException
+Timestamp getTimestamp(String parameterName) throws SQLException
+Object getObject(String parameterName) throws SQLException
+Ref getRef(String parameterName) throws SQLException
+Blob getBlob(String parameterName) throws SQLException
+Clob getClob(String parameterName) throws SQLException
+Array getArray(String parameterName) throws SQLException
+URL getURL(String parameterName) throws SQLException
+Reader getCharacterStream(String parameterName) throws SQLException
+Reader getNCharacterStream(String parameterName) throws SQLException
+
+boolean wasNull() throws SQLException // 判断最后一次 getter 读取的值是否为 NULL
+
+// 设置 IN、INOUT 参数的值 [使用索引值]
+"这些方法继承自 PreparedStatement 类，这里就不列出来了"
+
+// 设置 IN、INOUT 参数的值 [使用参数名]
+void setString(String parameterName, String x) throws SQLException
+void setBoolean(String parameterName, boolean x) throws SQLException
+void setByte(String parameterName, byte x) throws SQLException
+void setShort(String parameterName, short x) throws SQLException
+void setInt(String parameterName, int x) throws SQLException
+void setLong(String parameterName, long x) throws SQLException
+void setFloat(String parameterName, float x) throws SQLException
+void setDouble(String parameterName, double x) throws SQLException
+void setBigDecimal(String parameterName, BigDecimal x) throws SQLException
+void setBytes(String parameterName, byte[] x) throws SQLException
+void setDate(String parameterName, Date x) throws SQLException
+void setTime(String parameterName, Time x) throws SQLException
+void setTimestamp(String parameterName, Timestamp x) throws SQLException
+void setAsciiStream(String parameterName, InputStream x, int length) throws SQLException
+void setBinaryStream(String parameterName, InputStream x, int length) throws SQLException
+void setCharacterStream(String parameterName, Reader reader, int length) throws SQLException
+void setObject(String parameterName, Object x) throws SQLException
+void setNull(String parameterName, int sqlType) throws SQLException
+void setURL(String parameterName, URL val) throws SQLException
+</script></code></pre>
+<p>注意，不是所有 JDBC 驱动都支持通过 parameterName 设置/读取 参数的，通过 <code>DatabaseMetaData.supportsNamedParameters()</code> 方法可以判断当前 JDBC 驱动以及 RDBMS 是否支持命名参数（不过感觉这个方法不是很准，因为我使用它得到的是 false，但是实际上 mysql/mariadb jdbc 驱动支持命名参数，实际运行也没有报错），DatabaseMetaData 可以通过 Connection 对象的 <code>getMetaData()</code> 方法获取。</p>
+<h3 id="ResultSet-接口"><a href="#ResultSet-接口" class="headerlink" title="ResultSet 接口"></a>ResultSet 接口</h3><p>ResultSet 是由 SQL 语句执行产生的结果表对象，默认是 <code>TYPE_FORWARD_ONLY</code>（只能向前移动）、<code>CONCUR_READ_ONLY</code>（只读）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* 静态常量 - 属性相关 */
+// 游标相关
+static final int TYPE_FORWARD_ONLY // 游标只能向前移动 [默认]
+static final int TYPE_SCROLL_INSENSITIVE // 游标可以任意移动，结果表对数据的更新不敏感
+static final int TYPE_SCROLL_SENSITIVE // 游标可以任意移动，结果表对数据的更新是敏感的
+// 并发相关
+static final int CONCUR_READ_ONLY // 结果表是只读的 [默认]
+static final int CONCUR_UPDATABLE // 结果表是可写的、可更新的
+// 事务相关
+static final int HOLD_CURSORS_OVER_COMMIT // 事务提交后保持 ResultSet 对象
+static final int CLOSE_CURSORS_AT_COMMIT // 事务提交后关闭 ResultSet 对象
+
+/* 获取相关属性 */
+int getType() throws SQLException // 获取 TYPE_* 属性
+int getConcurrency() throws SQLException // 获取 CONCUR_* 属性
+int getHoldability() throws SQLException // 获取 *_COMMIT 属性
+
+/* 获取相关状态 */
+boolean rowUpdated()  throws SQLException // 检测当前行是否已更新
+boolean rowInserted() throws SQLException // 检测当前行是否已插入
+boolean rowDeleted()  throws SQLException // 检测当前行是否已删除
+
+// 获取生成该 resultSet 对象的 Statement 对象
+Statement getStatement() throws SQLException
+
+// 将游标往下移动一行，第一次调用后，游标位于第一行，第二次调用后，游标位于第二行，依此类推。
+// 通常将 resultSet.next() 放在 while 中，当 next() 返回 false 时游标位于最后一行的后面。
+boolean next() throws SQLException
+boolean previous() throws SQLException // 将游标往上移动一行 [和 next 相对]
+
+void beforeFirst() throws SQLException // 将游标移至第一行之前
+void afterLast() throws SQLException // 将游标移至最后一行之后
+boolean isBeforeFirst() throws SQLException // 游标是否位于第一行之前
+boolean isAfterLast() throws SQLException // 游标是否位于最后一行之后
+
+boolean first() throws SQLException // 将游标移至第一行
+boolean last() throws SQLException // 将游标移至最后一行
+boolean isFirst() throws SQLException // 游标是否位于第一行
+boolean isLast() throws SQLException // 游标是否位于最后一行
+
+// 将游标移动至指定行 [绝对定位]，其中参数 row 可以为：
+// - 零值: 将游标移至第一行之前，等同于 beforeFirst() 调用
+// - 正数: 相对于开头，+1 表示正数第 1 行，+2 表示正数第 2 行
+// - 负数: 相对于结尾，-1 表示倒数第 1 行，-2 表示倒数第 2 行
+// - 如果 |row| 超过行数，则游标位于"最后一行之后"/"第一行之前"
+// 如果移动后的位置不是第一行之前或最后一行之后则返回 true，否则返回 false
+boolean absolute(int row) throws SQLException
+boolean relative(int rows) throws SQLException // 将游标移动至指定行 [相对定位]
+
+// 获取当前行号（从 1 开始）
+int getRow() throws SQLException
+// 查找指定 columnLabel/columnName 的 index 值
+int findColumn(String columnLabel) throws SQLException
+
+// 判断最近一次 getXxx() 的字段的值是否为 NULL
+boolean wasNull() throws SQLException
+
+// 获取字段的值，注意 index 从 1 开始
+String getString(int columnIndex) throws SQLException
+boolean getBoolean(int columnIndex) throws SQLException
+byte getByte(int columnIndex) throws SQLException
+short getShort(int columnIndex) throws SQLException
+int getInt(int columnIndex) throws SQLException
+long getLong(int columnIndex) throws SQLException
+float getFloat(int columnIndex) throws SQLException
+double getDouble(int columnIndex) throws SQLException
+BigDecimal getBigDecimal(int columnIndex) throws SQLException
+byte[] getBytes(int columnIndex) throws SQLException
+Date getDate(int columnIndex) throws SQLException
+Time getTime(int columnIndex) throws SQLException
+Timestamp getTimestamp(int columnIndex) throws SQLException
+Object getObject(int columnIndex) throws SQLException
+InputStream getAsciiStream(int columnIndex) throws SQLException
+InputStream getBinaryStream(int columnIndex) throws SQLException
+Reader getCharacterStream(int columnIndex) throws SQLException
+Ref getRef(int columnIndex) throws SQLException
+Blob getBlob(int columnIndex) throws SQLException
+Clob getClob(int columnIndex) throws SQLException
+Array getArray(int columnIndex) throws SQLException
+URL getURL(int columnIndex) throws SQLException
+RowId getRowId(int columnIndex) throws SQLException
+NClob getNClob(int columnIndex) throws SQLException
+SQLXML getSQLXML(int columnIndex) throws SQLException
+String getNString(int columnIndex) throws SQLException
+Reader getNCharacterStream(int columnIndex) throws SQLException
+
+// 获取字段的值，使用 columnName，可读性高，但效率不如 index
+String getString(String columnLabel) throws SQLException
+boolean getBoolean(String columnLabel) throws SQLException
+byte getByte(String columnLabel) throws SQLException
+short getShort(String columnLabel) throws SQLException
+int getInt(String columnLabel) throws SQLException
+long getLong(String columnLabel) throws SQLException
+float getFloat(String columnLabel) throws SQLException
+double getDouble(String columnLabel) throws SQLException
+BigDecimal getBigDecimal(String columnLabel) throws SQLException
+byte[] getBytes(String columnLabel) throws SQLException
+Date getDate(String columnLabel) throws SQLException
+Time getTime(String columnLabel) throws SQLException
+Timestamp getTimestamp(String columnLabel) throws SQLException
+Object getObject(String columnLabel) throws SQLException
+InputStream getAsciiStream(String columnLabel) throws SQLException
+InputStream getBinaryStream(String columnLabel) throws SQLException
+Reader getCharacterStream(String columnLabel) throws SQLException
+Ref getRef(String columnLabel) throws SQLException
+Blob getBlob(String columnLabel) throws SQLException
+Clob getClob(String columnLabel) throws SQLException
+Array getArray(String columnLabel) throws SQLException
+URL getURL(String columnLabel) throws SQLException
+RowId getRowId(String columnLabel) throws SQLException
+NClob getNClob(String columnLabel) throws SQLException
+SQLXML getSQLXML(String columnLabel) throws SQLException
+String getNString(String columnLabel) throws SQLException
+Reader getNCharacterStream(String columnLabel) throws SQLException
+
+/* 更新 ResultSet 结果集 [索引值] */
+// 注意，updater 方法只是更新 ResultSet 对象，并未更新到数据库
+void updateBoolean(int columnIndex, boolean x) throws SQLException
+void updateByte(int columnIndex, byte x) throws SQLException
+void updateShort(int columnIndex, short x) throws SQLException
+void updateInt(int columnIndex, int x) throws SQLException
+void updateLong(int columnIndex, long x) throws SQLException
+void updateFloat(int columnIndex, float x) throws SQLException
+void updateDouble(int columnIndex, double x) throws SQLException
+void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException
+void updateString(int columnIndex, String x) throws SQLException
+void updateBytes(int columnIndex, byte[] x) throws SQLException
+void updateDate(int columnIndex, Date x) throws SQLException
+void updateTime(int columnIndex, Time x) throws SQLException
+void updateTimestamp(int columnIndex, Timestamp x) throws SQLException
+void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException
+void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException
+void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException
+void updateObject(int columnIndex, Object x) throws SQLException
+void updateNull(int columnIndex) throws SQLException // 将指定字段设为 NULL 值
+void updateRef(int columnIndex, Ref x) throws SQLException
+void updateBlob(int columnIndex, Blob x) throws SQLException
+void updateClob(int columnIndex, Clob x) throws SQLException
+void updateArray(int columnIndex, Array x) throws SQLException
+void updateRowId(int columnIndex, RowId x) throws SQLException
+void updateNClob(int columnIndex, NClob nClob) throws SQLException
+void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException
+void updateNString(int columnIndex, String nString) throws SQLException
+void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException
+void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException
+void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException
+void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException
+void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException
+void updateBlob(int columnIndex, InputStream inputStream, long length) throws SQLException
+void updateClob(int columnIndex, Reader reader, long length) throws SQLException
+void updateNClob(int columnIndex, Reader reader, long length) throws SQLException
+void updateNCharacterStream(int columnIndex, Reader x) throws SQLException
+void updateAsciiStream(int columnIndex, InputStream x) throws SQLException
+void updateBinaryStream(int columnIndex, InputStream x) throws SQLException
+void updateCharacterStream(int columnIndex, Reader x) throws SQLException
+void updateBlob(int columnIndex, InputStream inputStream) throws SQLException
+void updateClob(int columnIndex, Reader reader) throws SQLException
+void updateNClob(int columnIndex, Reader reader) throws SQLException
+
+/* 更新 ResultSet 结果集 [字段名] */
+// 注意，updater 方法只是更新 ResultSet 对象，并未更新到数据库
+void updateBoolean(String columnLabel, boolean x) throws SQLException
+void updateByte(String columnLabel, byte x) throws SQLException
+void updateShort(String columnLabel, short x) throws SQLException
+void updateInt(String columnLabel, int x) throws SQLException
+void updateLong(String columnLabel, long x) throws SQLException
+void updateFloat(String columnLabel, float x) throws SQLException
+void updateDouble(String columnLabel, double x) throws SQLException
+void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException
+void updateString(String columnLabel, String x) throws SQLException
+void updateBytes(String columnLabel, byte[] x) throws SQLException
+void updateDate(String columnLabel, Date x) throws SQLException
+void updateTime(String columnLabel, Time x) throws SQLException
+void updateTimestamp(String columnLabel, Timestamp x) throws SQLException
+void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException
+void updateBinaryStream(String columnLabel, InputStream x, int length) throws SQLException
+void updateCharacterStream(String columnLabel, Reader reader, int length) throws SQLException
+void updateObject(String columnLabel, Object x) throws SQLException
+void updateNull(String columnLabel) throws SQLException
+void updateRef(String columnLabel, Ref x) throws SQLException
+void updateBlob(int columnIndex, Blob x) throws SQLException
+void updateClob(String columnLabel, Clob x) throws SQLException
+void updateArray(String columnLabel, Array x) throws SQLException
+void updateRowId(String columnLabel, RowId x) throws SQLException
+void updateNClob(String columnLabel, NClob nClob) throws SQLException
+void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException
+void updateNString(String columnLabel, String nString) throws SQLException
+void updateNCharacterStream(String columnLabel, Reader reader, long length) throws SQLException
+void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException
+void updateCharacterStream(String columnLabel, Reader reader, long length) throws SQLException
+void updateBlob(String columnLabel, InputStream inputStream, long length) throws SQLException
+void updateClob(String columnLabel, Reader reader, long length) throws SQLException
+void updateNClob(String columnLabel, Reader reader, long length) throws SQLException
+void updateNCharacterStream(String columnLabel, Reader reader) throws SQLException
+void updateAsciiStream(String columnLabel, InputStream x) throws SQLException
+void updateBinaryStream(String columnLabel, InputStream x) throws SQLException
+void updateCharacterStream(String columnLabel, Reader reader) throws SQLException
+void updateBlob(String columnLabel, InputStream inputStream) throws SQLException
+void updateClob(String columnLabel, Reader reader) throws SQLException
+void updateNClob(String columnLabel, Reader reader) throws SQLException
+
+/* 与数据源相关 */
+void deleteRow() throws SQLException // 将游标所在的行从底层数据库中删除
+void updateRow() throws SQLException // 在调用上述 updater 方法后，调用此方法会将所做的更新写入数据库
+void insertRow() throws SQLException // 将"插入行"的数据插入至底层数据库，此时游标必须位于"插入行"位置
+
+void refreshRow() throws SQLException // 从底层数据库中重新获取当前行的最新数据
+void cancelRowUpdates() throws SQLException // 撤销当前行上 updater 方法所做的更新
+
+void moveToInsertRow()  throws SQLException // 将游标移至 insert 区域
+void moveToCurrentRow() throws SQLException // 将游标移回之前所在的行
+
+/*
+ * deleteRow() 方法演示
+ * rs.absolute(5); // 将游标移至第 5 行
+ * rs.deleteRow(); // 删除游标所在的行
+ */
+
+/*
+ * updateRow() 方法演示
+ * rs.absolute(5); // moves the cursor to the fifth row of rs
+ * rs.updateString("NAME", "AINSWORTH"); // updates the NAME column of row 5 to be AINSWORTH
+ * rs.updateRow(); // updates the row in the data source
+ */
+
+/*
+ * insertRow() 方法演示
+ * rs.moveToInsertRow(); // moves cursor to the insert row. 每个 ResultSet 都有一个 insert 区域
+ * rs.updateString(1, "AINSWORTH"); // updates the first column of the insert row to be AINSWORTH
+ * rs.updateInt(2,35); // updates the second column to be 35
+ * rs.updateBoolean(3, true); // updates the third column to true
+ * rs.insertRow(); // 将这个 insert row 更新到底层数据库中
+ * rs.moveToCurrentRow(); // 将游标移回之前所在的行
+ */
+
+// 获取执行过程中的 SQL Warning 警告
+SQLWarning getWarnings() throws SQLException
+// 清空执行过程中的 SQL Warning 警告
+void clearWarnings() throws SQLException
+
+// 关闭 resultSet 结果集
+void close() throws SQLException
+boolean isClosed() throws SQLException
+</script></code></pre>
+<h3 id="BigDecimal-类"><a href="#BigDecimal-类" class="headerlink" title="BigDecimal 类"></a>BigDecimal 类</h3><p>在 JDBC API 中，经常会用到 <code>java.math.BigDecimal</code>，BigDecimal 是专门用于表示和处理高精度小数的类。Java 中的 float、double 由于存在精度丢失（扩展阅读：<a href="https://www.zybuluo.com/Otokaze/note/1223158" rel="external nofollow noopener noreferrer" target="_blank">整数与小数的二进制处理</a>）只能用在工程计算、科学计算等精度要求不高的场景（float、double 也称为 <strong>浮点数</strong>），而 BigDecimal <strong>定点数</strong> 因为使用字符串存储小数，只要内存空间允许，可以实现任意精度数值的表示与运算，诸如银行账户、货币大小这些精度要求高的场景必须使用定点数来存储和处理，但也因为使用字符串进行存储和运算，所以需要的内存比浮点数更多，而且因为定点数的运算也比较复杂，所以效率也不如浮点数。</p>
+<p>java.math.BigDecimal 的 API 简介：<a href="https://www.zybuluo.com/Otokaze/note/1223158#bigdecimal" rel="external nofollow noopener noreferrer" target="_blank">https://www.zybuluo.com/Otokaze/note/1223158#bigdecimal</a></p>
+<h3 id="Clob-接口"><a href="#Clob-接口" class="headerlink" title="Clob 接口"></a>Clob 接口</h3><p>Clob 是 <code>Character Large Object</code> 的简称，即 <strong>字符大对象</strong>，在 MySQL 中就是 TEXT 数据类型。在 ResultSet、PreparedStatement、CallableStatement 接口中，可以使用 <code>getClob()</code>、<code>setClob()</code> 方法对 Clob 数据进行操作，而 java.sql.Clob 接口本身可以对 Clob 数据进行更新。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 获取 Clob 数据的长度 [字符为单位]
+long length() throws SQLException
+
+// 查找 searchstr 首次出现的 pos [pos >= 1]
+long position(String searchstr, long start) throws SQLException
+long position(Clob searchstr,   long start) throws SQLException
+
+// 读取 Clob 字符流，java.lang.String
+String getSubString(long pos, int length) throws SQLException
+// 读取 Clob 字节流，java.io.InputStream
+InputStream getAsciiStream() throws SQLException
+// 读取 Clob 字符流，java.io.Reader
+Reader getCharacterStream() throws SQLException
+// 从指定 pos 处开始读取指定 length 长度的字符流
+Reader getCharacterStream(long pos, long length) throws SQLException
+
+// 在指定 pos 处写入指定 String 的内容，返回实际写入的字符数
+int setString(long pos, String str) throws SQLException // offset = 0, len = str.length()
+int setString(long pos, String str, int offset, int len) throws SQLException
+
+// 获取从 pos 处开始的可写入字节流
+OutputStream setAsciiStream(long pos) throws SQLException
+// 获取从 pos 处开始的可写入字符流
+Writer setCharacterStream(long pos) throws SQLException
+
+// 将 Clob 数据截断至 len 长度
+void truncate(long len) throws SQLException
+
+// 释放 Clob 对象以及占用的资源
+void free() throws SQLException
+</script></code></pre>
+<h3 id="Blob-接口"><a href="#Blob-接口" class="headerlink" title="Blob 接口"></a>Blob 接口</h3><p><code>java.sql.Blob</code> 和 <code>java.sql.Clob</code> 很相似，只不过 Blob(Binary Large Object) 是用来存储二进制数据的，不关心字符编码。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 获取长度，字节为单位
+long length() throws SQLException
+
+// 搜索指定 pattern 字节数组的位置
+long position(byte[] pattern, long start) throws SQLException
+// 搜索指定 pattern Blob对象的位置
+long position(Blob pattern,   long start) throws SQLException
+
+// 从 Blob 数据中提取字节数组，注意 pos 从 1 开始，下同
+byte[] getBytes(long pos, int length) throws SQLException
+// 获取可读取的字节流，java.io.InputStream
+InputStream getBinaryStream() throws SQLException
+InputStream getBinaryStream(long pos, long length) throws SQLException
+
+// 往指定位置写入数据
+int setBytes(long pos, byte[] bytes) throws SQLException
+int setBytes(long pos, byte[] bytes, int offset, int len) throws SQLException
+OutputStream setBinaryStream(long pos) throws SQLException
+
+// 截断数据至指定长度
+void truncate(long len) throws SQLException
+
+// 释放 Blob 对象及其占用的资源
+void free() throws SQLException
+</script></code></pre>
+<h3 id="Date-类"><a href="#Date-类" class="headerlink" title="Date 类"></a>Date 类</h3><p>JDBC 中的 Date、Time、Timestamp 均为 <code>java.util.Date</code> 的子类，这三个类都位于 <code>java.sql</code> 包，分别代表：<strong>日期</strong>、<strong>时间</strong>、<strong>时间戳</strong>。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/**
+ * java.sql.Date 构造函数.
+ * @param date  自 1970-01-01 00:00:00 UTC 起的毫秒数
+ */
+public Date(long date);
+
+/**
+ * 静态构造函数，格式: "yyyy-[m]m-[d]d".
+ * @param s JDBC 日期格式，如上.
+ * @return  返回解析的 Date 对象.
+ */
+public static Date valueOf(String s);
+
+// 修改 Date 对象内部的时间
+public void setTime(long date);
+
+// 字符串，"yyyy-mm-dd"
+public String toString();
+</script></code></pre>
+<h3 id="Time-类"><a href="#Time-类" class="headerlink" title="Time 类"></a>Time 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+// 基本和 Date 相似
+public Time(long time)
+public static Time valueOf(String s) // format "hh:mm:ss"
+public void setTime(long time)
+public String toString()
+</script></code></pre>
+<h3 id="Timestamp-类"><a href="#Timestamp-类" class="headerlink" title="Timestamp 类"></a>Timestamp 类</h3><p>Timestamp 是 java.util.Date + 内部的小数秒（以纳秒为单位）的组合实现，整数秒存储在 Date 对象，小数秒存储在 Timestamp 对象，也就是说这两个部分是分开存储的。此外，hashCode() 方法使用底层的 java.util.Date 实现，因此在其计算中不包含 nanos 部分。由于 Timestamp 类和上面提到的 java.util.Date 类之间存在差异，因此建议代码不要将 Timestamp 视为 java.util.Date 的实例。Timestamp 和 java.util.Date 之间的继承关系实际上表示<strong>实现继承</strong>，而不是<strong>类型继承</strong>。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 构造函数，毫秒值
+public Timestamp(long time)
+// format "yyyy-[m]m-[d]d hh:mm:ss[.f...]"
+public static Timestamp valueOf(String s)
+
+// 字符串表示 "yyyy-mm-dd hh:mm:ss.fffffffff"
+public String toString() // 注意 .fffffffff 是纳秒为单位的小数秒
+
+// 修改内部的 time
+public void setTime(long time)
+public long getTime()
+
+// 获取内部的纳秒值
+public int getNanos() // 也就是后面的 .fffffffff
+public void setNanos(int n)
+
+// 判断两个 Object 对象是否相等
+public boolean equals(Object ts)
+// 判断两个 Timestamp 对象是否相等
+public boolean equals(Timestamp ts)
+
+// 计算哈希值
+public int hashCode()
+
+// 当前对象是否 before 于 ts 对象
+public boolean before(Timestamp ts)
+// 当前对象是否 after  于 ts 对象
+public boolean  after(Timestamp ts)
+
+// 比较两个 Timestamp 对象
+public int compareTo(Timestamp ts)
+// 比较两个 java.util.Date 对象
+public int compareTo(Date o)
+</script></code></pre>
+<h3 id="SQLException-类"><a href="#SQLException-类" class="headerlink" title="SQLException 类"></a>SQLException 类</h3><p>使用 JDBC 操作数据库期间，发生任何有关 SQL 的异常都会导致 SQLException 对象被抛出。SQLException 实现了 Iterable 接口，可迭代。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* 构造函数 */
+// reason: 原因; SQLState: SQL 状态, vendorCode: 错误代码
+public SQLException(String reason, String SQLState, int vendorCode)
+public SQLException(String reason, String SQLState)
+public SQLException(String reason)
+public SQLException()
+// cause 为异常原因，可为 null
+public SQLException(String reason, String sqlState, int vendorCode, Throwable cause)
+public SQLException(String reason, String sqlState, Throwable cause)
+public SQLException(String reason, Throwable cause)
+public SQLException(Throwable cause)
+
+// 获取 SQLState
+public String getSQLState()
+// 获取 ErrorCode
+public int getErrorCode()
+
+// 获取异常链的下一个异常
+public SQLException getNextException()
+// 设置异常链的下一个异常
+public void setNextException(SQLException ex)
+
+// 获取异常链的迭代器
+public Iterator<Throwable> iterator()
+</script></code></pre>
+<h2 id="JDBC-简单示例"><a href="#JDBC-简单示例" class="headerlink" title="JDBC 简单示例"></a>JDBC 简单示例</h2><p><strong>创建数据库</strong><br>创建 <code>mydb</code> 数据库，用于测试。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.jdbc;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class CreateDatabase {
+    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String    url = "jdbc:mysql://localhost";
+    private static final String   user = "root";
+    private static final String   pass = "123456";
+
+    public static void main(String[] args) {
+        // 注册驱动
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            System.err.println("驱动注册失败");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 获取连接
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            System.err.println("无法连接数据库");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 操作数据
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.executeUpdate("create database mydb");
+            System.out.println("数据库创建成功");
+        } catch (SQLException e) {
+            System.err.println("数据库创建失败");
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); } catch (SQLException e) { /* ignore */ }
+            if (conn != null)
+                try { conn.close(); } catch (SQLException e) { /* ignore */ }
+        }
+    }
+}
+</script></code></pre>
+<p>编译、执行、验证结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:09:48] 
+$ javac CreateDatabase.java 
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:09:50] 
+$ java com.zfl9.jdbc.CreateDatabase 
+数据库创建成功
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:09:55] 
+$ mysql -e 'show databases'
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mydb               |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+</script></code></pre>
+<p><strong>创建数据表</strong><br>创建 <code>website</code> 表，用于测试。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.jdbc;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class CreateTable {
+    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String    url = "jdbc:mysql://localhost/mydb";
+    private static final String   user = "root";
+    private static final String   pass = "123456";
+
+    public static void main(String[] args) {
+        // 注册驱动
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            System.err.println("驱动注册失败");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 获取连接
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            System.err.println("无法连接数据库");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 操作数据
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.executeUpdate("create table website (" +
+                               "id   int unsigned not null auto_increment," +
+                               "name varchar(30)  not null," +
+                               "site varchar(50)  not null," +
+                               "primary key (id)" +
+                               ") engine = innodb charset = utf8mb4");
+            System.out.println("数据表创建成功");
+        } catch (SQLException e) {
+            System.err.println("数据表创建失败");
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); } catch (SQLException e) { /* ignore */ }
+            if (conn != null)
+                try { conn.close(); } catch (SQLException e) { /* ignore */ }
+        }
+    }
+}
+</script></code></pre>
+<p>编译、执行、验证结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:36:50] 
+$ javac CreateTable.java  
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:36:54] C:130
+$ java com.zfl9.jdbc.CreateTable 
+数据表创建成功
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:37:01] 
+$ mysql -e 'show create table mydb.website\G'
+*************************** 1. row ***************************
+       Table: website
+Create Table: CREATE TABLE `website` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `site` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+</script></code></pre>
+<p><strong>插入数据</strong><br>因为插入语句只是参数不同，所以可以使用 PreparedStatement。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.jdbc;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class InsertRecord {
+    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String    url = "jdbc:mysql://localhost/mydb";
+    private static final String   user = "root";
+    private static final String   pass = "123456";
+
+    public static void main(String[] args) {
+        // 注册驱动
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            System.err.println("驱动注册失败");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 获取连接
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            System.err.println("无法连接数据库");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 操作数据
+        PreparedStatement stmt = null;
+        try {
+            conn.setAutoCommit(false); // 关闭自动提交
+            stmt = conn.prepareStatement("insert into website(name, site) values(?, ?)");
+
+            stmt.setString(1, "百度");
+            stmt.setString(2, "www.baidu.com");
+            stmt.addBatch();
+
+            stmt.setString(1, "谷歌");
+            stmt.setString(2, "www.google.com");
+            stmt.addBatch();
+
+            stmt.setString(1, "推特");
+            stmt.setString(2, "www.twitter.com");
+            stmt.addBatch();
+
+            stmt.executeBatch();
+            conn.commit(); // 手动提交事务
+
+            System.out.println("数据插入成功");
+        } catch (SQLException e) {
+            try { conn.rollback(); } catch (SQLException ex) { /* ignore */ }
+            System.err.println("数据插入失败");
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); } catch (SQLException e) { /* ignore */ }
+            if (conn != null)
+                try { conn.close(); } catch (SQLException e) { /* ignore */ }
+        }
+    }
+}
+</script></code></pre>
+<p>编译、执行、验证结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:57:20] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:57:22] 
+$ java com.zfl9.jdbc.InsertRecord 
+数据插入成功
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [9:57:30] 
+$ mysql -e 'select * from mydb.website'
++----+--------+-----------------+
+| id | name   | site            |
++----+--------+-----------------+
+|  1 | 百度   | www.baidu.com   |
+|  2 | 谷歌   | www.google.com  |
+|  3 | 推特   | www.twitter.com |
++----+--------+-----------------+
+</script></code></pre>
+<p><strong>查询数据</strong><br>这里用到了 ResultSetMetaData，具体用法请参考 JDBC API。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.jdbc;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class SelectRecord {
+    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String    url = "jdbc:mysql://localhost/mydb";
+    private static final String   user = "root";
+    private static final String   pass = "123456";
+
+    public static void main(String[] args) {
+        // 注册驱动
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            System.err.println("驱动注册失败");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 获取连接
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            System.err.println("无法连接数据库");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 操作数据
+        Statement stmt = null;
+        ResultSet rset = null;
+        try {
+            stmt = conn.createStatement();
+            rset = stmt.executeQuery("select * from website");
+            int colCnt = rset.getMetaData().getColumnCount();
+
+            // 打印表头
+            for (int i = 1; i <= colCnt; ++i)
+                System.out.print(rset.getMetaData().getColumnLabel(i) + "\t");
+            System.out.println();
+
+            // 打印数据
+            while (rset.next()) {
+                for (int i  = 1; i <= colCnt; ++i)
+                    System.out.print(rset.getObject(i) + "\t");
+                System.out.println();
+            }
+        } catch (SQLException e) {
+            System.err.println("查询数据失败");
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            if (rset != null)
+                try { rset.close(); } catch (SQLException e) { /* ignore */ }
+            if (stmt != null)
+                try { stmt.close(); } catch (SQLException e) { /* ignore */ }
+            if (conn != null)
+                try { conn.close(); } catch (SQLException e) { /* ignore */ }
+        }
+    }
+}
+</script></code></pre>
+<p>编译、执行、验证结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:11:00] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:11:04] 
+$ java com.zfl9.jdbc.SelectRecord 
+id    name    site    
+1    百度    www.baidu.com    
+2    谷歌    www.google.com    
+3    推特    www.twitter.com    
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:11:11] 
+$ mysql -e 'select * from mydb.website'
++----+--------+-----------------+
+| id | name   | site            |
++----+--------+-----------------+
+|  1 | 百度   | www.baidu.com   |
+|  2 | 谷歌   | www.google.com  |
+|  3 | 推特   | www.twitter.com |
++----+--------+-----------------+
+</script></code></pre>
+<p><strong>过滤数据</strong><br>假设存在表 <code>mydb.webdata</code>，表的内容为：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:46:27] 
+$ mysql -e 'select * from mydb.webdata'
++----+-------+-------------------+
+| id | title | content           |
++----+-------+-------------------+
+|  1 | C++   | pre_data_post     |
+|  2 | Java  | pre_%_data_%_post |
+|  3 | Shell | pre_%_data_%_post |
++----+-------+-------------------+
+</script></code></pre>
+<p>现在我想查找出 <code>content</code> 包含 <code>%_data_%</code> 的记录：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:46:42] 
+$ mysql -e "select id, title from mydb.webdata where content like '%%_data_%%'"
++----+-------+
+| id | title |
++----+-------+
+|  1 | C++   |
+|  2 | Java  |
+|  3 | Shell |
++----+-------+
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:48:00] 
+$ mysql -e "select id, title from mydb.webdata where content like '%\%\_data\_\%%'"
++----+-------+
+| id | title |
++----+-------+
+|  2 | Java  |
+|  3 | Shell |
++----+-------+
+</script></code></pre>
+<p>第一个很明显不行，因为 <code>%</code>、<code>_</code> 在 like 子句中表示 <code>任意字符</code>、<code>单个字符</code>，必须使用反斜线对其转义，以取消它们的特殊含义。但如果要在 JDBC 中执行这条查询语句，还需要注意 <code>\</code> 本身在 Java 字符串中也表示一个转义序列的开始，所以我们需要使用 <code>\\</code> 来表示真正的 <code>\</code> 字符（否则编译失败，因为 <code>\%</code>、<code>\_</code> 并不是有效的 Java 字符串转义序列，这和 regex 正则模式是一个道理）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.jdbc;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class SearchRecord {
+    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String    url = "jdbc:mysql://localhost/mydb";
+    private static final String   user = "root";
+    private static final String   pass = "123456";
+
+    public static void main(String[] args) {
+        // 注册驱动
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            System.err.println("驱动注册失败");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 获取连接
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            System.err.println("无法连接数据库");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // 操作数据
+        Statement stmt = null;
+        ResultSet rset = null;
+        try {
+            stmt = conn.createStatement();
+            rset = stmt.executeQuery("select id, title from webdata where content like '%\\%\\_data\\_\\%%'");
+            int colCnt = rset.getMetaData().getColumnCount();
+
+            // 打印表头
+            for (int i = 1; i <= colCnt; ++i)
+                System.out.print(rset.getMetaData().getColumnLabel(i) + "\t");
+            System.out.println();
+
+            // 打印数据
+            while (rset.next()) {
+                for (int i  = 1; i <= colCnt; ++i)
+                    System.out.print(rset.getObject(i) + "\t");
+                System.out.println();
+            }
+        } catch (SQLException e) {
+            System.err.println("查询数据失败");
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            if (rset != null)
+                try { rset.close(); } catch (SQLException e) { /* ignore */ }
+            if (stmt != null)
+                try { stmt.close(); } catch (SQLException e) { /* ignore */ }
+            if (conn != null)
+                try { conn.close(); } catch (SQLException e) { /* ignore */ }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:56:32] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/jdbc on git:master x [10:56:36] 
+$ java com.zfl9.jdbc.SearchRecord 
+id    title    
+2    Java    
+3    Shell    
+</script></code></pre>
+<p>如果你不想使用这种丑陋的方法（但我自己已经习惯了），也可以使用 JDBC 提供的 SQL 转义语法，即 <code>{escape &#39;转义字符&#39;}</code>，它的作用是定义 SQL 中的转义序列的开始字符，默认的 <code>\</code> 与 Java 字符串转移序列有冲突，你可以将其改为一个普通字符，比如 <code>/</code>，所以上面的那条 executeQuery() 语句可以这样写：<code>select id, title from webdata where content like &#39;%/%/_data/_/%%&#39; {escape &#39;/&#39;}</code>，JDBC 规定，escape 语法必须位于 SQL 语句的尾部，如果有多条语句，那么每条语句的尾部都要放置 escape 语法声明。</p>
+<p><strong>SQL 转义序列</strong><br>其实除了 <code>{escape &#39;转义字符&#39;}</code> 外，还有几个类似的转义语法，我们将它们统称为 <strong>JDBC SQL 转义序列</strong>。<br>JDBC SQL 转义序列必须位于一对花括号（<code>{}</code>）内，具体的语法为：<code>{keyword parameters}</code>，常见的有：</p>
+<ul>
+<li><code>{escape &#39;escape character&#39;}</code>：定义 SQL 转移序列的开始字符</li>
+<li><code>{fn func([arg1[, arg2...]])}</code>：调用数据库中的标量函数</li>
+<li><code>{d &#39;yyyy-mm-dd&#39;}</code>：将当前表达式作为 Date 数据类型</li>
+<li><code>{t &#39;hh:mm:ss[.f...]&#39;}</code>：将当前表达式作为 Time 数据类型</li>
+<li><code>{ts &#39;yyyy-mm-dd hh:mm:ss[.f...]&#39;}</code>：将当前表达式作为 Timestamp 数据类型</li>
+<li><code>{call proc_name(?, ...)}</code>：调用存储过程（procedure）</li>
+<li><code>{? = call func_name(?, ...)}</code>：调用函数（function）</li>
+<li><code>{oj outer-join-statement}</code>：outer join（外部连接）表达式</li>
+</ul>
+<h2 id="JDBC-实用类库"><a href="#JDBC-实用类库" class="headerlink" title="JDBC 实用类库"></a>JDBC 实用类库</h2><p><a href="https://commons.apache.org/proper/commons-dbutils/" rel="external nofollow noopener noreferrer" target="_blank">Commons DbUtils</a> 是 Apache 提供的一个开源 JDBC 轻量包装库，整个库的类很少，核心的两个类/接口是 <code>QueryRunner</code>、<code>ResultSetHandler</code>，DbUtils 旨在简化 JDBC API 的使用，因为在 JDBC 中清理资源是很乏味且容易出错的工作（稍不注意就可能导致资源泄漏），所以 DbUtils 从代码中抽象出所有清理任务，让你了解你真正想用 JDBC 做的事情：<strong>查询</strong>和<strong>更新</strong>数据。</p>
+<p><strong>DbUtils 优点</strong>：</p>
+<ul>
+<li>没有资源泄漏的可能性。正确的 JDBC 编码并不困难，但它既费时又乏味。这通常会导致可能难以追踪的资源泄漏。</li>
+<li>更清晰的持久性代码。将数据保存在数据库中所需的代码量大大减少。剩余的代码清楚地表达了您的意图，而不会混淆资源清理。</li>
+<li>从 ResultSet 自动填充 JavaBean 属性。您无需通过手动调用 setter 方法将列值复制到 bean 实例中。ResultSet 的每一行都可以由一个完全填充的 bean 实例表示。</li>
+</ul>
+<p>获取 DbUtils：<a href="http://www-eu.apache.org/dist/commons/dbutils/binaries/commons-dbutils-1.7-bin.tar.gz" rel="external nofollow noopener noreferrer" target="_blank">http://www-eu.apache.org/dist/commons/dbutils/binaries/commons-dbutils-1.7-bin.tar.gz</a></p>
+<p><strong>DbUtils 简介</strong><br>DbUtils 是一个很小的包装库，前面说了，DbUtils 中只有两个核心的类/接口：<code>QueryRunner</code>、<code>ResultSetHandler</code>。</p>
+<ul>
+<li><code>QueryRunner</code>：用来执行各种查询、更新操作，并获取结果。</li>
+<li><code>ResultSetHandler</code>：将 ResultSet 对象转换为想要的数据。</li>
+</ul>
+<p><strong>DbUtils 例子</strong><br>查询操作：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.DbUtils;
+
+public class QueryDemo {
+    public static void main(String[] args) {
+        /* 注册驱动 */
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        /* 获取连接 */
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        /* 查询数据 */
+        // SQL 执行对象
+        QueryRunner runner = new QueryRunner();
+        // 结果处理对象 [获取所有记录，每个记录都是一个对象数组，存储每个字段的值]
+        ResultSetHandler<List<Object[]>> handler = new ResultSetHandler<List<Object[]>>() {
+            @Override
+            public List<Object[]> handle(ResultSet rset) throws SQLException {
+                List<Object[]> records = new ArrayList<Object[]>();
+                int columnCount = rset.getMetaData().getColumnCount();
+                Object[] record = null;
+                while (rset.next()) {
+                    record = new Object[columnCount];
+                    for (int i = 0; i < columnCount; ++i)
+                        record[i] = rset.getObject(i + 1);
+                    records.add(record);
+                }
+                return records;
+            }
+        };
+        try {
+            List<Object[]> records = runner.query(conn, "select * from test0", handler);
+            for (Object[] record : records)
+                System.out.println(Arrays.toString(record));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            // 关闭连接
+            DbUtils.closeQuietly(conn);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [10:50:17] 
+$ javac QueryDemo.java 
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [10:50:19] 
+$ java com.zfl9.dbutils.QueryDemo
+[1, 百度, www.baidu.com]
+[2, 腾讯, www.tencent.com]
+[3, 网易, www.netease.com]
+[4, 淘宝, www.taobao.com]
+[5, 新浪, www.sina.com.cn]
+[6, 金山, www.kingsoft.com]
+[7, 搜狐, www.sohu.com.cn]
+[8, 优酷, www.youku.com]
+[9, 美团, www.meituan.com]
+[10, 天猫, www.tmall.com]
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [10:50:22] 
+$ mysql -e 'select * from test.test0'
++----+--------+------------------+
+| id | name   | site             |
++----+--------+------------------+
+|  1 | 百度   | www.baidu.com    |
+|  2 | 腾讯   | www.tencent.com  |
+|  3 | 网易   | www.netease.com  |
+|  4 | 淘宝   | www.taobao.com   |
+|  5 | 新浪   | www.sina.com.cn  |
+|  6 | 金山   | www.kingsoft.com |
+|  7 | 搜狐   | www.sohu.com.cn  |
+|  8 | 优酷   | www.youku.com    |
+|  9 | 美团   | www.meituan.com  |
+| 10 | 天猫   | www.tmall.com    |
++----+--------+------------------+
+</script></code></pre>
+<p>更新操作：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+
+public class UpdateDemo {
+    public static void main(String[] args) {
+        /* 注册驱动 */
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        /* 获取连接 */
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        /* 更新数据 */
+        try {
+            QueryRunner runner = new QueryRunner();
+            String sql = "insert into test0(name, site) values(?, ?)";
+            runner.update(conn, sql, "华为", "www.huawei.com");
+            runner.update(conn, sql, "小米", "www.xiaomi.com");
+            runner.update(conn, sql, "魅族", "www.meizu.com");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            DbUtils.closeQuietly(conn);
+        }
+
+        /* 查询数据 */
+        QueryDemo.main(new String[0]);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [11:14:01] 
+$ javac UpdateDemo.java 
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [11:14:04] 
+$ java com.zfl9.dbutils.UpdateDemo 
+[1, 百度, www.baidu.com]
+[2, 腾讯, www.tencent.com]
+[3, 网易, www.netease.com]
+[4, 淘宝, www.taobao.com]
+[5, 新浪, www.sina.com.cn]
+[6, 金山, www.kingsoft.com]
+[7, 搜狐, www.sohu.com.cn]
+[8, 优酷, www.youku.com]
+[9, 美团, www.meituan.com]
+[10, 天猫, www.tmall.com]
+[11, 华为, www.huawei.com]
+[12, 小米, www.xiaomi.com]
+[13, 魅族, www.meizu.com]
+</script></code></pre>
+<p>【查询操作】例子中，创建了 <code>ResultSetHandler&lt;List&lt;Object[]&gt;&gt;</code> 匿名内部类，但因为这种转换操作很普遍（获取结果表的所有行），如果每次 query 都要自己手动创建一个匿名类，那估计比 JDBC API 还繁琐。DbUtils 也意识到了这一点，为我们实现了大部分常用的 ResultSetHandler 类，它们都位于 <code>org.apache.commons.dbutils.handlers</code> 包。现在我们可以利用 handlers 包的 <code>ArrayListHandler</code> 来替换【查询操作】中的匿名内部类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.util.List;
+import java.util.Arrays;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
+
+public class QueryDemo2 {
+    public static void main(String[] args) {
+        /* 注册驱动 */
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        /* 获取连接 */
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        /* 查询数据 */
+        QueryRunner runner = new QueryRunner();
+        ResultSetHandler<List<Object[]>> handler = new ArrayListHandler();
+        try {
+            List<Object[]> result = runner.query(conn, "select * from test0", handler);
+            for (Object[] elem : result)
+                System.out.println(Arrays.toString(elem));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            DbUtils.closeQuietly(conn);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [15:47:46] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [15:47:49] 
+$ java com.zfl9.dbutils.QueryDemo
+[1, 百度, www.baidu.com]
+[2, 腾讯, www.tencent.com]
+[3, 网易, www.netease.com]
+[4, 淘宝, www.taobao.com]
+[5, 新浪, www.sina.com.cn]
+[6, 金山, www.kingsoft.com]
+[7, 搜狐, www.sohu.com.cn]
+[8, 优酷, www.youku.com]
+[9, 美团, www.meituan.com]
+[10, 天猫, www.tmall.com]
+[11, 华为, www.huawei.com]
+[12, 小米, www.xiaomi.com]
+[13, 魅族, www.meizu.com]
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [15:47:52] 
+$ java com.zfl9.dbutils.QueryDemo2
+[1, 百度, www.baidu.com]
+[2, 腾讯, www.tencent.com]
+[3, 网易, www.netease.com]
+[4, 淘宝, www.taobao.com]
+[5, 新浪, www.sina.com.cn]
+[6, 金山, www.kingsoft.com]
+[7, 搜狐, www.sohu.com.cn]
+[8, 优酷, www.youku.com]
+[9, 美团, www.meituan.com]
+[10, 天猫, www.tmall.com]
+[11, 华为, www.huawei.com]
+[12, 小米, www.xiaomi.com]
+[13, 魅族, www.meizu.com]
+</script></code></pre>
+<p>【更新操作】例子中，除了可以多次调用 <code>update()</code> 方法来进行多次更新外，还可以使用 <code>batch()</code> 方法进行批量更新：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+
+public class UpdateDemo2 {
+    public static void main(String[] args) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        try {
+            QueryRunner runner = new QueryRunner();
+            Object[][] params = new Object[3][];
+            params[0] = new Object[] {"华为", "www.huawei.com"};
+            params[1] = new Object[] {"小米", "www.xiaomi.com"};
+            params[2] = new Object[] {"魅族", "www.meizu.com"};
+            runner.batch(conn, "insert into test0(name, site) values(?, ?)", params);
+            QueryDemo2.main(new String[0]); // 查看数据
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            DbUtils.closeQuietly(conn);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [16:13:30] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [16:13:32] 
+$ java com.zfl9.dbutils.UpdateDemo2
+[1, 百度, www.baidu.com]
+[2, 腾讯, www.tencent.com]
+[3, 网易, www.netease.com]
+[4, 淘宝, www.taobao.com]
+[5, 新浪, www.sina.com.cn]
+[6, 金山, www.kingsoft.com]
+[7, 搜狐, www.sohu.com.cn]
+[8, 优酷, www.youku.com]
+[9, 美团, www.meituan.com]
+[10, 天猫, www.tmall.com]
+[11, 华为, www.huawei.com]
+[12, 小米, www.xiaomi.com]
+[13, 魅族, www.meizu.com]
+</script></code></pre>
+<p><strong>DbUtils API</strong><br><code>org.apache.commons.dbutils.QueryRunner</code> 类，执行 SQL 的对象。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* 构造函数 */
+public QueryRunner() // java.sql.Connection
+public QueryRunner(DataSource ds)
+
+// 获取内部的 DataSource 对象
+public DataSource getDataSource()
+
+/* 查询方法 [SELECT] */
+// for DataSource
+public <T> T query(String sql, ResultSetHandler<T> rsh) throws SQLException
+public <T> T query(String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException
+// for Connection
+public <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh) throws SQLException
+public <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException
+
+/* 更新方法 [INSERT, UPDATE, DELETE] */
+// for DataSource
+public int update(String sql) throws SQLException
+public int update(String sql, Object param) throws SQLException
+public int update(String sql, Object... params) throws SQLException
+// for Connection
+public int update(Connection conn, String sql) throws SQLException
+public int update(Connection conn, String sql, Object param) throws SQLException
+public int update(Connection conn, String sql, Object... params) throws SQLException
+
+/* 通用执行 [Any SQL Statement(include stored procedure)] */
+// 对于存储过程的 OUT、INOUT 参数，必须传入对应的 org.apache.commons.dbutils.OutParameter 实例
+// for DataSource
+public         int execute(String sql, Object... params) throws SQLException // like update()
+public <T> List<T> execute(String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException // like query()
+// for Connection
+public         int execute(Connection conn, String sql, Object... params) throws SQLException // like update()
+public <T> List<T> execute(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException // like query()
+
+/* 批量更新 [INSERT, UPDATE, DELETE] */
+// for DataSource
+public int[] batch(String sql, Object[][] params) throws SQLException
+// for Connection
+public int[] batch(Connection conn, String sql, Object[][] params) throws SQLException
+</script></code></pre>
+<p><code>org.apache.commons.dbutils.OutParameter&lt;T&gt;</code> 类，用来表示对应索引处的 OUT、INOUT 参数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* 构造函数 */
+public OutParameter(int sqlType, Class<T> javaType) // OUT 参数
+public OutParameter(int sqlType, Class<T> javaType, T value) // INOUT 参数
+
+public int getSqlType() // 获取对应的 SQL 类型
+public Class<T> getJavaType() // 获取对应的 Java 类型
+
+public T getValue() // 获取 OUT/INOUT 参数的输出值
+public void setValue(T value) // 如果 value 非 null，则作为 INOUT 参数
+</script></code></pre>
+<p>存储过程的例子（貌似 DbUtils 不能用来创建函数/存储过程）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Types;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.OutParameter;
+
+public class ProcedureDemo {
+    public static void main(String[] args) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        try {
+            QueryRunner runner = new QueryRunner();
+            OutParameter<Integer> outParam = new OutParameter<>(Types.INTEGER, Integer.class);
+            runner.execute(conn, "call proc_add(?, ?, ?)", 10, 20, outParam);
+            System.out.println("10 + 20 = " + outParam.getValue());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            DbUtils.closeQuietly(conn);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [19:07:19] C:130
+$ javac *.java && java com.zfl9.dbutils.ProcedureDemo 
+10 + 20 = 30
+</script></code></pre>
+<p><code>org.apache.commons.dbutils.ResultSetHandler&lt;T&gt;</code> 接口，定义如何将 ResultSet 转换为你需要的数据（对象）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+T handle(ResultSet rs) throws SQLException
+</script></code></pre>
+<p><code>org.apache.commons.dbutils.DbUtils</code> 工具类，提供一些常用的 JDBC 实用方法。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* close 方法，如果传入参数为 null 则不处理 */
+// 抛出 close 期间发生的异常
+public static void close(Connection conn) throws SQLException
+public static void close(ResultSet rs) throws SQLException
+public static void close(Statement stmt) throws SQLException
+public static void commitAndClose(Connection conn) throws SQLException
+// 隐藏 close 期间发生的异常
+public static void closeQuietly(Connection conn)
+public static void closeQuietly(ResultSet rs)
+public static void closeQuietly(Statement stmt)
+public static void closeQuietly(Connection conn, Statement stmt, ResultSet rs)
+public static void commitAndCloseQuietly(Connection conn)
+
+/* 加载 jdbc driver，成功返回 true，失败返回 false */
+public static boolean loadDriver(String driverClassName)
+public static boolean loadDriver(ClassLoader classLoader, String driverClassName)
+
+/* 打印 SQL 异常、警告 */
+public static void printWarnings(Connection conn) // stderr
+public static void printWarnings(Connection conn, PrintWriter pw)
+public static void printStackTrace(SQLException e) // stderr
+public static void printStackTrace(SQLException e, PrintWriter pw)
+
+/* 事务操作 - rollback */
+public static void rollback(Connection conn) throws SQLException
+public static void rollbackAndClose(Connection conn) throws SQLException
+public static void rollbackAndCloseQuietly(Connection conn)
+</script></code></pre>
+<p><code>org.apache.commons.dbutils.handlers</code> 包中的一些实用 ResultSetHandler 类：</p>
+<ul>
+<li><code>ArrayHandler</code>：返回结果表的第 1 行（<code>Object[]</code>）</li>
+<li><code>ArrayListHandler</code>：返回结果表的所有行（<code>List&lt;Object[]&gt;</code>）</li>
+<li><code>BeanHandler&lt;T&gt;</code>：返回由结果表的第 1 行填充的 JavaBean 对象（<code>T</code>）</li>
+<li><code>BeanListHandler&lt;T&gt;</code>：返回由结果表填充的 JavaBean 对象（<code>List&lt;T&gt;</code>）</li>
+<li><code>ScalarHandler&lt;T&gt;</code>：返回结果表的第 1 行的第 X 列（<code>T</code>）</li>
+<li><code>ColumnListHandler&lt;T&gt;</code>：返回由结果表的第 X 列的值组成的列表（<code>List&lt;T&gt;</code>）</li>
+<li><code>MapHandler</code>：返回第 1 行的 columnName -&gt; columnValue 组成的 Map 对象（<code>Map&lt;String, Object&gt;</code>）</li>
+<li><code>MapListHandler</code>：返回所有行的 columnName -&gt; columnValue 组成的 List 对象（<code>List&lt;Map&lt;String, Object&gt;&gt;</code>）</li>
+</ul>
+<p><strong>ScalarHandler、ColumnListHandler 例子</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.util.List;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
+import org.apache.commons.dbutils.handlers.ColumnListHandler;
+
+public class ColumnDemo {
+    public static void main(String[] args) {
+        if (!DbUtils.loadDriver("org.mariadb.jdbc.Driver")) {
+            System.err.println("JDBC driver could not be loaded.");
+            System.exit(1);
+        }
+
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        try {
+            QueryRunner runner = new QueryRunner();
+            // 第一行的第二列
+            ResultSetHandler<String> handler1 = new ScalarHandler<String>(2);
+            String columnValue = runner.query(conn, "select * from test0", handler1);
+            System.out.println(columnValue);
+            // 所有行的第二列
+            ResultSetHandler<List<String>> handler2 = new ColumnListHandler<String>(2);
+            List<String> columnValues = runner.query(conn, "select * from test0", handler2);
+            System.out.println(columnValues);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            DbUtils.closeQuietly(conn);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [20:16:36] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [20:16:40] 
+$ java com.zfl9.dbutils.ColumnDemo 
+百度
+[百度, 腾讯, 网易, 淘宝, 新浪, 金山, 搜狐, 优酷, 美团, 天猫, 华为, 小米, 魅族]
+</script></code></pre>
+<p><strong>MapHandler、MapListHandler 例子</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.dbutils;
+
+import java.util.List;
+import java.util.Map;
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.MapHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
+
+public class MapDemo {
+    public static void main(String[] args) {
+        if (!DbUtils.loadDriver("org.mariadb.jdbc.Driver")) {
+            System.err.println("JDBC driver could not be loaded.");
+            System.exit(1);
+        }
+
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost/test", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+
+        try {
+            QueryRunner runner = new QueryRunner();
+            // 第一行
+            ResultSetHandler<Map<String, Object>> handler1 = new MapHandler();
+            Map<String, Object> result1 = runner.query(conn, "select * from test0", handler1);
+            System.out.println(result1);
+            // 所有行
+            ResultSetHandler<List<Map<String, Object>>> handler2 = new MapListHandler();
+            List<Map<String, Object>> result2 = runner.query(conn, "select * from test0", handler2);
+            System.out.println();
+            for (Map<String, Object> r : result2)
+                System.out.println(r);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(3);
+        } finally {
+            DbUtils.closeQuietly(conn);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [20:28:11] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/dbutils on git:master x [20:28:13] 
+$ java com.zfl9.dbutils.MapDemo 
+{id=1, name=百度, site=www.baidu.com}
+
+{id=1, name=百度, site=www.baidu.com}
+{id=2, name=腾讯, site=www.tencent.com}
+{id=3, name=网易, site=www.netease.com}
+{id=4, name=淘宝, site=www.taobao.com}
+{id=5, name=新浪, site=www.sina.com.cn}
+{id=6, name=金山, site=www.kingsoft.com}
+{id=7, name=搜狐, site=www.sohu.com.cn}
+{id=8, name=优酷, site=www.youku.com}
+{id=9, name=美团, site=www.meituan.com}
+{id=10, name=天猫, site=www.tmall.com}
+{id=11, name=华为, site=www.huawei.com}
+{id=12, name=小米, site=www.xiaomi.com}
+{id=13, name=魅族, site=www.meizu.com}
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-framework.html" rel="next" title="JavaEE 框架预备知识">
+                <i class="fa fa-chevron-left"></i> JavaEE 框架预备知识
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/multi-wan-router.html" rel="prev" title="Linux 软路由单线多拨">
+                Linux 软路由单线多拨 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-API-简介"><span class="nav-number">1.</span> <span class="nav-text">JDBC API 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-数据类型"><span class="nav-number">2.</span> <span class="nav-text">JDBC 数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-主要接口"><span class="nav-number">3.</span> <span class="nav-text">JDBC 主要接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DriverManager-类"><span class="nav-number">3.1.</span> <span class="nav-text">DriverManager 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connection-接口"><span class="nav-number">3.2.</span> <span class="nav-text">Connection 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Savepoint-接口"><span class="nav-number">3.3.</span> <span class="nav-text">Savepoint 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statement-接口"><span class="nav-number">3.4.</span> <span class="nav-text">Statement 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PreparedStatement-接口"><span class="nav-number">3.5.</span> <span class="nav-text">PreparedStatement 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CallableStatement-接口"><span class="nav-number">3.6.</span> <span class="nav-text">CallableStatement 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ResultSet-接口"><span class="nav-number">3.7.</span> <span class="nav-text">ResultSet 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal-类"><span class="nav-number">3.8.</span> <span class="nav-text">BigDecimal 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clob-接口"><span class="nav-number">3.9.</span> <span class="nav-text">Clob 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Blob-接口"><span class="nav-number">3.10.</span> <span class="nav-text">Blob 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Date-类"><span class="nav-number">3.11.</span> <span class="nav-text">Date 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-类"><span class="nav-number">3.12.</span> <span class="nav-text">Time 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Timestamp-类"><span class="nav-number">3.13.</span> <span class="nav-text">Timestamp 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLException-类"><span class="nav-number">3.14.</span> <span class="nav-text">SQLException 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-简单示例"><span class="nav-number">4.</span> <span class="nav-text">JDBC 简单示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-实用类库"><span class="nav-number">5.</span> <span class="nav-text">JDBC 实用类库</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-jdbc.html';
+          this.page.identifier = 'java-jdbc.html';
+          this.page.title = 'Java JDBC 入门';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

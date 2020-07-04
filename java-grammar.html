@@ -1,0 +1,1127 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java 语法基础">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 语法基础，基本数据类型、引用数据类型、数据类型转换、运算符、流程控制、数组、String、StringBuffer、StringBuilder 等">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 语法基础">
+<meta property="og:url" content="https://www.zfl9.com/java-grammar.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 语法基础，基本数据类型、引用数据类型、数据类型转换、运算符、流程控制、数组、String、StringBuffer、StringBuilder 等">
+<meta property="og:updated_time" content="2019-02-20T05:34:06.169Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 语法基础">
+<meta name="twitter:description" content="Java 语法基础，基本数据类型、引用数据类型、数据类型转换、运算符、流程控制、数组、String、StringBuffer、StringBuilder 等">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-grammar.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 语法基础 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-grammar.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 语法基础
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-07T13:03:00+08:00">
+                2017-09-07
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-grammar.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-grammar.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-grammar.html" class="leancloud_visitors" data-flag-title="Java 语法基础">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 语法基础，基本数据类型、引用数据类型、数据类型转换、运算符、流程控制、数组、String、StringBuffer、StringBuilder 等</p>
+<a id="more"></a>
+<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><p>编写 Java 程序时，应注意以下几点：</p>
+<ul>
+<li>类名：对于所有的类来说，类名的首字母应该大写；如果类名由若干单词组成，那么每个单词的首字母应该大写，例如 MyFirstJavaClass；</li>
+<li>方法名：所有的方法名都应该以小写字母开头；如果方法名含有若干单词，则后面的每个单词首字母大写；</li>
+<li>源文件名：源文件名必须和类名相同；当保存文件的时候，你应该使用类名作为文件名保存（切记 Java 是大小写敏感的），文件名的后缀为 .java（如果文件名和类名不相同则会导致编译错误）；</li>
+<li>主方法入口：所有的 Java 程序由<code>public static void main(String[] args)</code>方法开始执行；</li>
+</ul>
+<p><strong>Java 标识符</strong><br>Java 所有的组成部分都需要名字；类名、变量名以及方法名都被称为标识符；</p>
+<ul>
+<li>所有的标识符都应该以字母（<code>A-Z</code>或者<code>a-z</code>）、美元符（<code>$</code>）、或者下划线（<code>_</code>）开始；</li>
+<li>首字符之后可以是字母（<code>A-Z</code>或者<code>a-z</code>）、美元符（<code>$</code>）、下划线（<code>_</code>）或<code>数字</code>的任何字符组合；</li>
+<li>关键字不能用作标识符；</li>
+<li>标识符是大小写敏感的；</li>
+<li>合法标识符举例：<code>age</code>、<code>$salary</code>、<code>_value</code>、<code>__1_value</code>；</li>
+<li>非法标识符举例：<code>123abc</code>、<code>-salary</code>；</li>
+</ul>
+<p><strong>Java 修饰符</strong><br>像其他语言一样，Java 可以使用修饰符来修饰类中方法和属性；主要有两类修饰符：</p>
+<ul>
+<li><code>访问控制修饰符</code>：[default]、public、protected、private；</li>
+<li><code>非访问控制修饰符</code>：static、final、abstract、synchronized、transient、volatile；</li>
+</ul>
+<p><strong>Java 变量</strong><br>Java 中主要有如下几种类型的变量：</p>
+<ul>
+<li>局部变量</li>
+<li>类变量（静态变量）</li>
+<li>成员变量（非静态变量）</li>
+</ul>
+<p><strong>Java 数组</strong><br>数组是储存在<code>堆</code>上的<code>对象</code>，可以保存多个同类型变量；</p>
+<p><strong>源文件声明规则</strong><br>当在一个源文件中定义多个类，并且还有 import 语句和 package 语句时，要特别注意这些规则：</p>
+<ul>
+<li>一个源文件中只能有一个 public 类；</li>
+<li>一个源文件可以有多个非 public 类；</li>
+<li>源文件的名称应该和 public 类的类名保持一致；</li>
+<li>如果一个类定义在某个包中，那么 package 语句应该在源文件的首行；</li>
+<li>如果源文件包含 import 语句，那么应该放在 package 语句和类定义之间；如果没有 package 语句，那么 import 语句应该在源文件中最前面；</li>
+<li>import 语句和 package 语句对源文件中定义的所有类都有效；在同一源文件中，不能给不同的类不同的包声明；</li>
+</ul>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Java 的两大数据类型：</p>
+<ul>
+<li>内置数据类型</li>
+<li>引用数据类型</li>
+</ul>
+<p><strong>引用类型</strong><br>在 Java 中，引用类型的变量非常类似于 C/C++ 的指针；</p>
+<ul>
+<li>引用类型指向一个对象，指向对象的变量是引用变量；这些变量在声明时被指定为一个特定的类型；</li>
+<li>变量一旦声明后，类型就不能被改变了；</li>
+<li>对象、数组都是引用数据类型；</li>
+<li>所有引用类型的默认值都是<code>null</code>；</li>
+<li>一个引用变量可以用来引用与任何与之兼容的类型；</li>
+</ul>
+<p><strong>基本类型</strong><br>Java 中共有 8 种基本数据类型，包括 4 种整型、2 种浮点型、1 种字符型、1 种布尔型：</p>
+<ul>
+<li><code>byte</code>：字节型，长度 1 byte；</li>
+<li><code>short</code>：短整型，长度 2 bytes；</li>
+<li><code>int</code>：整型，长度 4 bytes；</li>
+<li><code>long</code>：长整型，长度 8 bytes；数值最后需要加上后缀<code>l</code>（大小写无所谓）；</li>
+<li><code>float</code>：单精度浮点型，长度 4 bytes；数值最后需要加上后缀<code>f</code>（大小写无所谓）；</li>
+<li><code>double</code>：双精度浮点型，长度 8 bytes；数值最后可以加上后缀<code>d</code>（大小写无所谓）；</li>
+<li><code>char</code>：字符型，长度 2 bytes，16 位 Unicode 字符；字符用单引号包围，字符串用双引号包围；</li>
+<li><code>boolean</code>：布尔型，长度 1 bit，取值：<code>true</code>、<code>false</code>；</li>
+</ul>
+<blockquote>
+<p>Java 不支持<code>无符号类型(unsigned)</code>；C/C++ 有无符号类型；<br>在 Java 中，整型数据的长度与平台无关，这就解决了软件从一个平台移植到另一个平台时给程序员带来的诸多问题；</p>
+</blockquote>
+<p>二进制有一个前缀<code>0b</code>，例如<code>0b1001</code>对应十进制中的<code>9</code>；（Java 7 起）<br>八进制有一个前缀<code>0</code>，例如<code>010</code>对应十进制中的<code>8</code>；<br>十六进制有一个前缀<code>0x</code>，例如<code>0xCAFE</code>对应十进制中的<code>51966</code>；</p>
+<p>从 Java 7 开始，可以使用下划线来分隔数字，例如<code>1_000_000</code>表示<code>1,000,000</code>，也就是一百万；下划线只是为了让代码更加易读，编译器会删除这些下划线；</p>
+<p><strong>Java 常量</strong><br>常量是在程序运行时，不会被修改的量；</p>
+<p>在 Java 中使用 final 关键字来修饰常量，声明方式和变量类似：<code>final double PI = 3.1415927;</code><br>虽然常量名也可以用小写，但为了便于识别，通常使用大写字母表示常量；</p>
+<h2 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h2><p>数据类型的转换，分为<code>自动转换</code>和<code>强制转换</code>：</p>
+<ul>
+<li>自动转换是程序在执行过程中“悄然”进行的转换，不需要用户提前声明，一般是<strong>从位数低的类型向位数高的类型转换</strong>，自动转换不会丢失精度；</li>
+<li>强制类型转换则必须在代码中声明，使用<code>(dst_type)src_data</code>语法进行强制转换，可能会丢失精度；</li>
+</ul>
+<p><strong>自动转换按从低到高的顺序转换</strong>，优先级从低到高依次为：<code>byte/short/char</code> -&gt; <code>int</code> -&gt; <code>long</code> -&gt; <code>float</code> -&gt; <code>double</code>；</p>
+<h2 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h2><p><strong>Java 局部变量</strong></p>
+<ul>
+<li>局部变量声明在方法、构造方法或者语句块中；</li>
+<li>局部变量在方法、构造方法、或者语句块被执行的时候创建，当它们执行完成后，变量将会被销毁；</li>
+<li>访问修饰符不能用于局部变量；</li>
+<li>局部变量只在声明它的方法、构造方法或者语句块中可见；</li>
+<li>局部变量是在栈上分配的；</li>
+<li>局部变量没有默认值，所以局部变量被声明后，必须经过初始化，才可以使用；</li>
+</ul>
+<p><strong>Java 实例变量</strong></p>
+<ul>
+<li>实例变量声明在一个类中，但在方法、构造方法和语句块之外；</li>
+<li>当一个对象被实例化之后，每个实例变量的值就跟着确定；</li>
+<li>实例变量在对象创建的时候创建，在对象被销毁的时候销毁；</li>
+<li>实例变量的值应该至少被一个方法、构造方法或者语句块引用，使得外部能够通过这些方式获取实例变量信息；</li>
+<li>实例变量可以声明在使用前或者使用后；</li>
+<li>访问修饰符可以修饰实例变量；</li>
+<li>实例变量对于类中的方法、构造方法或者语句块是可见的；</li>
+<li>一般情况下应该把实例变量设为私有；通过使用访问修饰符可以使实例变量对子类可见；</li>
+<li>实例变量具有默认值；数值型变量的默认值是 0，布尔型变量的默认值是 false，引用类型变量的默认值是 null；变量的值可以在声明时指定，也可以在构造方法中指定；</li>
+</ul>
+<p><strong>Java 类变量（静态变量）</strong></p>
+<ul>
+<li>类变量也称为静态变量，在类中以 static 关键字声明，但必须在方法构造方法和语句块之外；</li>
+<li>无论一个类创建了多少个对象，类只拥有类变量的一份拷贝；</li>
+<li>静态变量除了被声明为常量外很少使用；</li>
+<li>静态变量储存在静态存储区；</li>
+<li>静态变量在程序开始时创建，在程序结束时销毁；</li>
+<li>与实例变量具有相似的可见性；但为了对类的使用者可见，大多数静态变量声明为 public 类型；</li>
+<li>默认值和实例变量相似；数值型变量默认值是 0，布尔型默认值是 false，引用类型默认值是 null；变量的值可以在声明的时候指定，也可以在构造方法中指定；此外，静态变量还可以在静态语句块中初始化；</li>
+<li>类变量被声明为<code>public static final</code>类型时，类变量名称一般建议使用大写字母；</li>
+</ul>
+<p>顺便说一下，在 Java 中的变量查找顺序：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        String name = "main() 函数中的变量 name";
+
+        class Test {
+            private String data = "Test 类的实例变量 data";
+
+            public void func(String data) {
+                System.out.println(data);       // 函数参数 data
+                System.out.println(this.data);  // 实例变量 data
+                System.out.println(name);       // 外部变量 name (final)
+            }
+        }
+
+        new Test().func("Test.func() 的实参变量 data");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:39:58]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:40:13]
+$ java Main
+Test.func() 的实参变量 data
+Test 类的实例变量 data
+main() 函数中的变量 name
+</script></code></pre>
+<p>在 Java 中，是根据从内到外的顺序查找变量的，只要找到了同名变量就不会往外搜寻了，否则会一层一层的往外搜寻，如果到了最顶层还没找到就会抛出一个编译错误。</p>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><p>Java 中的运算符和 C/C++ 相差无几；</p>
+<p>1) 数学运算符：<code>+</code>、<code>-</code>、<code>*</code>、<code>/</code>、<code>%</code>、<code>++</code>、<code>--</code>，结果为一个数值；<br>2) 关系运算符：<code>&gt;</code>、<code>&gt;=</code>、<code>&lt;</code>、<code>&lt;=</code>、<code>==</code>、<code>!=</code>，结果为一个 bool 值；<br>3) 逻辑运算符：<code>&amp;&amp;</code>、<code>||</code>、<code>!</code>，逻辑与、逻辑或、逻辑非，通常和关系运算符一起使用；<br>4) 位运算符：<code>&amp;</code>、<code>|</code>、<code>^</code>、<code>~</code>、<code>&lt;&lt;</code>、<code>&gt;&gt;</code>、<code>&gt;&gt;&gt;</code>，结果为一个数值；<br>5) 条件运算符：<code>condition ? x1 : x2</code>，condition 为一个 bool 值；根据 condition，取 x1 或 x2 的值；<br>6) instanceof 运算符：判断一个对象是否是指定的类类型，语法<code>obj instanceof ClassName</code>，结果为一个 bool 值；<br>7) 赋值运算符：<code>=</code>、<code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>、<code>%=</code>、<code>&lt;&lt;=</code>、<code>&gt;&gt;=</code>、<code>&gt;&gt;&gt;=</code>、<code>&amp;=</code>、<code>|=</code>、<code>^=</code></p>
+<p><strong>位运算详解</strong><br><strong><code>机器数</code></strong>：一个数在计算机中的二进制表示形式，机器数带符号，最高位存放符号位，0表示正数，1表示负数；<br><strong><code>真值</code></strong>：机器数表示的数值(解析符号位)，如机器数 0000,0001 表示 +1，机器数 1000,0001 表示 -1；</p>
+<p><strong><code>原码</code></strong>：原码就是机器数，如 +1 的原码为 0000,0001，-1 的原码为 1000,0001；<br><strong><code>反码</code></strong>：正数的反码与原码相同，负数的反码是在原码的基础上保持符号位不变，其余各位取反；如 -1 的反码为 1111,1110；<br><strong><code>补码</code></strong>：正数的补码与原码相同，负数的反码是在原码的基础上保持符号位不变，其余各位取反，最后+1；如 -1 的补码为 1111,1111；</p>
+<p><strong>在计算机中，所有的数值都是以<code>补码</code>的形式来表示和存储</strong></p>
+<p>对于正数，无论是原码、反码、补码都是一样的；对于负数，原码、反码、补码都各不相同。</p>
+<p>为什么存在反码？因为计算机中只有<strong>加法器</strong>。<br>对于表达式 10 - 5，可以看作 10 加 -5，即 10 + (-5)；因此，所有的减法都可以用加法代替。</p>
+<p><strong>位移运算</strong><br>位移运算符有三个：<code>&lt;&lt;</code>左移、<code>&gt;&gt;</code>带符号右移、<code>&gt;&gt;&gt;</code>无符号右移。</p>
+<p>在 Java 中，能够进行位移运算的基本类型有两个：int、long，分别为 32bit、64bit；<br>对于 byte、short、char 类型，会先自动转换为 int 类型再进行位移操作。</p>
+<p>对于 int，如果移动的位数不在区间<code>[0, 31]</code>，那么会对移动的位数取模(mod)；<br>如：移动 33 位实际上移动了 33 mod 32 = 1 位；移动 -33 位实际上移动了 -33 mod 32 = 31 位；</p>
+<p>对于 long，如果移动的位数不在区间<code>[0, 63]</code>，那么会对移动的位数取模(mod)；<br>如：移动 65 位实际上移动了 65 mod 64 = 1 位；移动 -65 位实际上移动了 -65 mod 64 = 63 位；</p>
+<p>语法：<code>value 位移符号 n</code>，其中 value 为被操作的数值，n 为移动的位数。<br><strong><code>左移</code></strong>：将内存中的二进制数整体往左移动，高位被丢弃，后面的空位补 0；<br><strong><code>带符号右移</code></strong>：将内存中的二进制数整体往右移动，低位被丢弃，前面的空位补符号位，正数补 0，负数补 1；<br><strong><code>无符号右移</code></strong>：将内存中的二进制数整体往右移动，低位被丢弃，前面的空位补 0；</p>
+<p>对于左移，<code>value &lt;&lt; n</code>，其结果为<code>value * 2^n</code>，即移动 n 位就相当于乘以 n 个 2；<br>对于右移，<code>value &gt;&gt; n</code>，如果 value 是 2 的倍数，那么结果为<code>value / 2^n</code>，即移动 n 位就相当于除以 n 个 2；</p>
+<p><strong>按位与、按位或、按位非、按位异或</strong></p>
+<blockquote>
+<p>和位移运算一样，只针对 int、long 类型，对于 byte、short、char 会自动转换为 int 再进行位运算。</p>
+</blockquote>
+<p><code>&amp;</code>：按位与(AND)，二元运算符，如果相同位值均为 1，则结果为 1，否则为 0；<br><code>|</code>：按位或(OR)，二元运算符，如果相同位值有一个为 1，则结果为 1，否则为 0；<br><code>^</code>：按位异或(XOR)，二元运算符，如果相同位值之间不同，则结果为 1，否则为 0；<br><code>~</code>：按位非(NOT)，一元运算符，翻转操作数的每一位，即 0 变为 1，1 变为 0；</p>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><p>Java 流程控制的语法与 C/C++ 类似，也有 if…else、while、do…while、for、switch…case 等；</p>
+<p>这里说一下 switch…case 的注意事项：</p>
+<ul>
+<li>switch 语句中的变量类型可以是：byte、short、int、char，还有枚举；从 Java SE 7 开始，switch 支持字符串 String 类型了，同时 case 标签必须为字符串常量或字面量；</li>
+<li>switch 语句可以拥有多个 case 语句；每个 case 后面跟一个要比较的值和冒号；</li>
+<li>case 语句中的值的数据类型必须与变量的数据类型相同，而且只能是常量或者字面常量；</li>
+<li>当变量的值与 case 语句的值相等时，那么 case 语句之后的语句开始执行，直到 break 语句出现才会跳出 switch 语句；</li>
+<li>当遇到 break 语句时，switch 语句终止；程序跳转到 switch 语句后面的语句执行；case 语句不必须要包含 break 语句；如果没有 break 语句出现，程序会继续执行下一条 case 语句，直到出现 break 语句；</li>
+<li>switch 语句可以包含一个 default 分支，该分支必须是 switch 语句的最后一个分支；default 在没有 case 语句的值和变量值相等的时候执行；default 分支不需要 break 语句；</li>
+</ul>
+<p>Java 从 JDK 1.5.0 开始引入 foreach 循环，和 C++11 中的基于范围的 for 循环相似：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] arr1 = {1, 2, 3, 4, 5};
+
+        out.printf("arr1_before: %s\n", Arrays.toString(arr1));
+        for (int i : arr1) {
+            i += 100;
+        }
+        out.printf("arr1_after: %s\n", Arrays.toString(arr1));
+
+        out.printf("-------------------------------------\n");
+
+        StringBuffer[] arr2 = {new StringBuffer("a"), new StringBuffer("b"), new StringBuffer("c"), new StringBuffer("d"), new StringBuffer("e")};
+
+        out.printf("arr2_before: %s\n", Arrays.toString(arr2));
+        for (StringBuffer i : arr2) {
+            i.append("$");
+        }
+        out.printf("arr2_after: %s\n", Arrays.toString(arr2));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:39:11]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [14:39:13]
+$ java Main
+arr1_before: [1, 2, 3, 4, 5]
+arr1_after: [1, 2, 3, 4, 5]
+-------------------------------------
+arr2_before: [a, b, c, d, e]
+arr2_after: [a$, b$, c$, d$, e$]
+</script></code></pre>
+<p>为什么同样是数组，arr1 就不变，arr2 就变了呢？<br>要搞清楚这个问题其实很简单：<strong>Java 中只有<code>按值传递</code>，没有<code>引用/指针传递</code></strong><br>在 C 语言中，有<code>按值传递</code>、<code>指针传递</code>两种方式；<br>在 C++ 中，有<code>按值传递</code>、<code>指针传递</code>、<code>左值引用</code>、<code>右值引用</code>四种方式；<br>在 Java 中，只有<code>按值传递</code>一种方式；</p>
+<p>对于 arr1，它是一个整型数组，for 循环中的变量 i 和数组中的元素毫无关联，因为这是两份不同的内存；<br>对于 arr2，它是一个对象数组，for 循环中的变量 i 和数组中的元素毫无关联，因为这是两份不同的内存；</p>
+<p>那为啥 arr2 就改变了了？<br>因为 arr2 中的变量 i 保存的值有点特殊，它保存的是一个<code>对象指针</code>，也就是内存地址，有了内存地址，就可以进行修改了；</p>
+<p>虽然大家都说 Java 中没有指针、引用，但是其实 Java 中除了 8 种基本类型之外，都是指针/引用！<br>比如上面的<code>StringBuffer</code>，创建对象的语句：<code>StringBuffer str = new StringBuffer(&quot;a&quot;);</code>；<br>和 C++ 中在堆上创建对象的语句（以 Student 类为例）：<code>Student *stu = new Student(&quot;name&quot;, 18, 111.5f);</code>；<br>不知道聪明的你看出来什么没有，没错，java 创建的对象都是在堆上的，而表面上的数据类型<code>StringBuffer</code>实质上是一个指针类型<code>StringBuffer *</code>，只不过不需要显示指明罢了；</p>
+<p>那么这下就更好理解了，对于 arr2，这不就是一个<code>指针数组</code>嘛，数组的每个元素都是<code>StringBuffer *</code>指针类型，当然可以在循环体内部调用成员函数进行修改了；</p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>和 C/C++ 一样，Java 也支持数组这种非常常用的数据结构；Java 提供的数组是用来存储<code>固定大小</code>的<code>同类型</code>元素；</p>
+<blockquote>
+<p>Java 中的数组和 C/C++ 中的数组有着本质的不同；<br>Java 中的数组其实是一个对象，它包装了 C/C++ 类型的数组，提供了一些有用的方法和属性；<br>比如我们可以直接从一个数组对象中获取数组的长度信息（通过<code>length</code>属性），但是在 C/C++ 中就必须利用<code>sizeof</code>进行长度的计算；</p>
+</blockquote>
+<p>Java 中<strong>定义数组</strong>的语法有两种：</p>
+<ul>
+<li><code>type[] arrayName;</code>：Java 风格；</li>
+<li><code>type arrayName[];</code>：C/C++ 风格；</li>
+</ul>
+<p>type 为 Java 中的任意数据类型，包括基本类型和组合类型，arrayName 为数组名，必须是一个合法的标识符，[]指明该变量是一个数组类型变量；<br>注意，<code>[]</code>符号的作用是声明该变量是一个数组对象，不能在里面填写数组的长度；</p>
+<p>但是现在我们只是声明了一个数组对象，还没有进行初始化；也就是还没有分配数组元素的内存（数组对象的内存已经分配了，即8个字节，<em>64位环境</em>）</p>
+<p><strong>静态初始化、动态初始化</strong><br>在定义的同时进行赋值就叫做<code>静态初始化</code>，在定义之后进行赋值就叫做<code>动态初始化</code>；</p>
+<ul>
+<li><code>静态初始化</code>：比如初始化一个拥有 5 个元素的 int 数组：<code>int[] arr = {1, 2, 3, 4, 5};</code></li>
+<li><code>动态初始化</code>：定义：<code>int[] arr = new int[5];</code>，然后进行一一赋值：<code>arr[0] = 1; arr[1] = 2; arr[2] = 3; arr[3] = 4; arr[4] = 5;</code></li>
+</ul>
+<p>例子，计算输入的 5 个数的和：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        int arr[] = new int[5], sum = 0;
+
+        Scanner sc = new Scanner(in);
+        out.printf("请输入 5 个整数: ");
+
+        for (int i=0; i<arr.length; i++) {
+            arr[i] = sc.nextInt();
+            sum += arr[i];
+        }
+
+        out.printf("输入的数字为: %s，它们的和为: %d\n", Arrays.toString(arr), sum);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:38:58]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:39:01]
+$ java Main
+请输入 5 个整数: 1 2 3 4 5 6
+输入的数字为: [1, 2, 3, 4, 5]，它们的和为: 15
+</script></code></pre>
+<p>注意这条语句：<code>int arr[] = new int[5], sum = 0;</code><br>如果定义数组使用的是后置形式，即<code>int arr[], sum;</code>，那么表示<code>arr</code>是一个数组，而<code>sum</code>是一个 int 类型的变量；<br>如果定义数组使用的是前置形式，即<code>int[] arr, sum;</code>，那么表示<code>arr</code>是一个数组，而<code>sum</code>也是一个数组；<br>所以，相比之下，我还是习惯使用 C/C++ 风格的数组定义方式，免得出错；</p>
+<p><strong>二维数组</strong><br>二维数组，就是数组的数组，和 C/C++ 不一样的地方是，二维数组的第二维度的长度可以不一样，因为 Java 中的二维数组实际上是一个指针数组，第一维度的数组保存的是一组指针（数组对象的指针），第二维度的数组才是数组对象；</p>
+<p>多说无益，看例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        int arr1[][] = {{1, 2}, {3, 4}, {5, 6}}; // 静态初始化
+
+        out.printf("arr1 = { ");
+        for (int[] i : arr1) {
+            out.printf("%s, ", Arrays.toString(i));
+        }
+        out.printf("\b\b }\n");
+
+        int arr2[][] = new int[3][];  // 分配第一维度数组的内存
+        arr2[0] = new int[1]; arr2[0][0] = 1;
+        arr2[1] = new int[2]; arr2[1][0] = 11; arr2[1][1] = 22;
+        arr2[2] = new int[3]; arr2[2][0] = 111; arr2[2][1] = 222; arr2[2][2] = 333;
+
+        out.printf("arr2 = { ");
+        for (int[] i : arr2) {
+            out.printf("%s, ", Arrays.toString(i));
+        }
+        out.printf("\b\b }\n");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:17:22]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:17:37]
+$ java Main
+arr1 = { [1, 2], [3, 4], [5, 6] }
+arr2 = { [1], [11, 22], [111, 222, 333] }
+</script></code></pre>
+<p>关于数组的几点说明：</p>
+<ul>
+<li>上面讲的是<code>静态数组</code>；静态数组一旦被声明，它的容量就固定了，不能改变；所以在声明数组时，一定要考虑数组的最大容量，防止容量不够的现象；</li>
+<li>如果想在运行程序时改变容量，就需要用到<code>数组列表</code>(<code>ArrayList</code>，也称<code>动态数组</code>)或<code>向量(Vector)</code>；</li>
+</ul>
+<h2 id="字符串类"><a href="#字符串类" class="headerlink" title="字符串类"></a>字符串类</h2><p>线程安全：</p>
+<ul>
+<li><code>StringBuffer</code>：线程安全；</li>
+<li><code>StringBuilder</code>：线程不安全；</li>
+</ul>
+<p>速度从快到慢为<code>StringBuilder</code> &gt; <code>StringBuffer</code> &gt; <code>String</code>，当然这是相对的，不是绝对的；</p>
+<p>使用环境：</p>
+<ul>
+<li>操作少量的数据使用 String；</li>
+<li>单线程操作大量数据使用 StringBuilder；</li>
+<li>多线程操作大量数据使用 StringBuffer；</li>
+</ul>
+<p><strong>String 类</strong><br>字符串就是双引号之间的数据，如<code>&quot;www.zfl9.com&quot;</code>；<br>像这样定义的字符串称为<code>字符串常量</code>，被硬编码到代码区，如果定义了多个相同的字符串常量，那么 Java 并不会创建多个副本，而是将其他的字符串常量都指向已存在的字符串；</p>
+<p>我们来验证一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        String s1 = "www.zfl9.com";
+        String s2 = "www.zfl9.com";
+        String s3 = "www.zfl9.com";
+
+        boolean ret = s1 == s2 && s1 == s3;   // == 比较的是内存地址
+        out.printf("s1 == s2 == s3 ? %b\n", ret);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:45:49] C:1
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:45:52]
+$ java Main
+s1 == s2 == s3 ? true
+</script></code></pre>
+<p>大家可能会感到疑惑，为什么可以直接把一个字符串常量赋值给一个 String 类型的变量呢？<br>我们以 C++ 的角度看待这个问题，这其实就是<code>转换构造函数</code>的作用：<br>这个构造函数的原型类似：<code>String(const char *str);</code>，而调用<code>String s = &quot;www.zfl9.com&quot;;</code>时，实质是调用函数<code>String s(&quot;www.zfl9.com&quot;);</code>；<br>这样就让我们产生了一个错觉，可以直接将一个<code>const char *</code>类型的字符串常量赋值给一个类<code>String</code>的变量；</p>
+<p>不过在 Java 中我们并不能显示的定义转换构造函数，所以这个转换操作是由编译器隐式完成的；</p>
+<p>字符串也可以通过“+”连接，基本数据类型与字符串进行“+”操作一般也会自动转换为字符串（本质：转换构造函数和运算符重载<code>+</code>）</p>
+<p>不过有一个问题要注意，因为字符串常量是”硬编码”到代码区的，所以在运行过程中不能修改字符串的值！<br>对于 String 的修改，其实编译器会创建一个临时字符串，然后将 String 重新指向到这个临时字符串；<br>所以大量频繁的 String 修改操作，会产生大量的<code>malloc + free</code>操作，这个开销是巨大的！</p>
+<p>String 是 java.lang 包下的一个类，按照标准的面向对象的语法，其格式应该为：<code>String s = new String(&quot;www.zfl9.com&quot;);</code></p>
+<p>但是由于 String 特别常用，所以 Java 提供了一种简化的语法；<br>使用简化语法的另外一个原因是，按照标准的面向对象的语法，在内存使用上存在比较大的浪费；<br>例如<code>String s = new String(&quot;www.zfl9.com&quot;);</code>实际上创建了两个 String 对象，一个是<code>&quot;www.zfl9.com&quot;</code>对象，存储在<code>常量空间</code>中，一个是使用 new 关键字为对象 s 申请的空间；</p>
+<p><strong>String 主要方法</strong><br>String 对象有很多方法，可以方便的操作字符串；</p>
+<p>1) <code>length()</code>方法，返回字符串的长度；<br>2) <code>charAt(i)</code>方法，返回索引 i 的字符；<br>3) <code>contains(&quot;sub_str&quot;)</code>方法，用来检测字符串是否包含某个子串；<br>4) <code>replace(&quot;sub_str&quot;, &quot;rep_str&quot;)</code>方法，字符串替换；<br>5) <code>split(&quot;sep&quot;)</code>方法，字符串分割，返回分割后的字符串数组；</p>
+<p><strong>StringBuffer 类</strong><br>String 的值是不可变的，每次对 String 的操作都会生成新的 String 对象，不仅效率低，而且耗费大量内存空间；</p>
+<p>StringBuffer 类和 String 类一样，也用来表示字符串，但是 StringBuffer 的内部实现方式和 String 不同，在进行字符串处理时，不生成新的对象，在内存使用上要优于 String；<br>StringBuffer 默认分配 16 个字符长度的缓冲区，当字符串超过该大小时，会自动增加缓冲区长度，而不是生成新的对象；</p>
+<p>StringBuffer 不像 String，只能通过 new 来创建对象，不支持简写方式，例如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">StringBuffer str1 = new StringBuffer();     // 分配 16 个字符长度的缓冲区
+StringBuffer str2 = new StringBuffer(512); // 分配 512 个字符长度的缓冲区
+StringBuffer str3 = new StringBuffer("www.zfl9.com"); // 在缓冲区中存放字符串，并在后面预留了 16 个字符长度的空缓冲区
+</script></code></pre>
+<p><strong>StringBuffer 主要方法</strong><br>StringBuffer 类中的方法主要偏重于对于字符串的操作，例如追加、插入和删除等，这个也是 StringBuffer 类和 String 类的主要区别；实际开发中，如果需要对一个字符串进行频繁的修改，建议使用 StringBuffer；</p>
+<p>1) <code>append(&quot;new_str&quot;)</code>方法，用于向当前字符串的末尾追加内容，类似于字符串的连接；实参可以为其他的类型，都会自动的转换为字符串再进行拼接；<br>2) <code>insert(i, &quot;str&quot;)</code>方法，在指定位置 i 插入字符串 str；<br>3) <code>setCharAt(i, &#39;C&#39;)</code>方法，修改指定位置 i 的字符为 C；<br>4) <code>deleteCharAt(i)</code>方法，删除指定位置 i 的字符；<br>5) <code>delete(beg, end)</code>方法，删除区间<code>[beg, end)</code>的字符串；</p>
+<p>String 和 StringBuffer 速度对比：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String args[]) {
+        String base = "www.zfl9.com";
+        int cnt = 10000;
+
+        // String + 操作
+        long start1 = currentTimeMillis();
+        String s1 = "";
+        for (int i=0; i<cnt; i++) {
+            s1 += base;
+        }
+        long end1 = currentTimeMillis();
+        out.printf("String: %d ms\n", end1 - start1);
+
+        // StringBuffer append() 方法
+        long start2 = currentTimeMillis();
+        StringBuffer s2 = new StringBuffer();
+        for (int i=0; i<cnt; i++) {
+            s2.append(base);
+        }
+        long end2 = currentTimeMillis();
+        out.printf("StringBuffer: %d ms\n", end2 - start2);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:46:47]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:46:49]
+$ java Main
+String: 2004 ms
+StringBuffer: 1 ms
+</script></code></pre>
+<p><strong>StringBuilder 类</strong><br>StringBuilder 类和 StringBuffer 类功能基本相似，方法也差不多，主要区别在于 StringBuffer 类的方法是<code>多线程安全</code>的，而 StringBuilder 不是线程安全的，相比而言，StringBuilder 类会略微快一点；</p>
+<blockquote>
+<p>StringBuffer、StringBuilder、String 中都实现了 CharSequence 接口；<br>CharSequence 是一个定义字符串操作的接口，它只包括 length()、charAt(int index)、subSequence(int start, int end) 这几个 API；</p>
+</blockquote>
+<h2 id="输入与输出"><a href="#输入与输出" class="headerlink" title="输入与输出"></a>输入与输出</h2><p><strong>Scanner 类</strong><br>在 C/C++ 中，我们可以使用 scanf() 函数获取用户的输入，但是在 Java 中并没有 scanf() 这样的函数；<br><code>java.util.Scanner</code>是 Java5 的新特征，我们可以通过 Scanner 类来获取用户的输入；</p>
+<p>首先需要创建一个 Scanner 对象用于获取输入：<code>Scanner sc = new Scanner(System.in);</code></p>
+<p>然后通过 Scanner 类的 next() 与 nextLine() 方法获取输入的字符串，在读取前我们一般需要使用 hasNext() 与 hasNextLine() 判断是否还有输入的数据；<br>next() 获取的是一个不含有空白符的字符串，nextLine() 则是获取一行字符串；</p>
+<p>同时我们也可以获取其他基本类型的数据，比如获取 int 类型的输入使用函数 nextInt()，并且，一般会先判断下一个数据是否为 int 类型，可以使用函数 hasNextInt() 来判断；</p>
+<p>对于其他的基本类型，都是这种通用的格式，获取 xxx 类型的输入：nextXxx()，判断下一个数据是否为 xxx 类型：hasNextXxx()</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(in);
+
+        // String
+        out.printf("String: ");
+        out.printf("get_String: %s\n", sc.next());
+        sc.nextLine();
+
+        // Line
+        out.printf("Line: ");
+        out.printf("get_Line: %s\n", sc.nextLine());
+
+        // boolean
+        while (true) {
+            out.printf("boolean: ");
+            if (sc.hasNextBoolean()) {
+                out.printf("get_boolean: %b\n", sc.nextBoolean());
+                break;
+            } else {
+                sc.next();
+            }
+        }
+
+        // char
+        out.printf("char: ");
+        out.printf("get_char: %c\n", sc.next().charAt(0));
+
+        // short
+        while (true) {
+            out.printf("short: ");
+            if (sc.hasNextShort()) {
+                out.printf("get_short: %d\n", sc.nextShort());
+                break;
+            } else {
+                sc.next();
+            }
+        }
+
+        // int
+        while (true) {
+            out.printf("int: ");
+            if (sc.hasNextInt()) {
+                out.printf("get_int: %d\n", sc.nextInt());
+                break;
+            } else {
+                sc.next();
+            }
+        }
+
+        // long
+        while (true) {
+            out.printf("long: ");
+            if (sc.hasNextLong()) {
+                out.printf("get_long: %d\n", sc.nextLong());
+                break;
+            } else {
+                sc.next();
+            }
+        }
+
+        // float
+        while (true) {
+            out.printf("float: ");
+            if (sc.hasNextFloat()) {
+                out.printf("get_float: %g\n", sc.nextFloat());
+                break;
+            } else {
+                sc.next();
+            }
+        }
+
+        // double
+        while (true) {
+            out.printf("double: ");
+            if (sc.hasNextDouble()) {
+                out.printf("get_double: %g\n", sc.nextDouble());
+                break;
+            } else {
+                sc.next();
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:04:57]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [19:05:00]
+$ java Main
+String: www.zfl9.com www.google.com www.baidu.com
+get_String: www.zfl9.com
+Line: www.zfl9.com www.google.com www.baidu.com
+get_Line: www.zfl9.com www.google.com www.baidu.com
+boolean: 1
+boolean: true
+get_boolean: true
+char: false
+get_char: f
+short: test
+short: 100
+get_short: 100
+int: 200
+get_int: 200
+long: 300
+get_long: 300
+float: 400
+get_float: 400.000
+double: 500.23
+get_double: 500.230
+</script></code></pre>
+<p><strong>printf 格式化输出</strong><br>常用格式控制符：</p>
+<ul>
+<li><code>&#39;b&#39;</code>、<code>&#39;B&#39;</code>：boolean 值，<code>&#39;b&#39;</code>是小写形式的，<code>&#39;B&#39;</code>是大写形式的，下同；</li>
+<li><code>&#39;h&#39;</code>、<code>&#39;H&#39;</code>：hashCode 值；</li>
+<li><code>&#39;s&#39;</code>、<code>&#39;S&#39;</code>：String 字符串；</li>
+<li><code>&#39;c&#39;</code>、<code>&#39;C&#39;</code>：Unicode 字符；</li>
+<li><code>&#39;d&#39;</code>：十进制数字；</li>
+<li><code>&#39;o&#39;</code>：八进制数字；</li>
+<li><code>&#39;#o&#39;</code>：八进制数字，带前缀；</li>
+<li><code>&#39;x&#39;</code>、<code>&#39;X&#39;</code>：十六进制数字；</li>
+<li><code>&#39;#x&#39;</code>、<code>&#39;#X&#39;</code>：十六进制数字，带前缀；</li>
+<li><code>&#39;e&#39;</code>、<code>&#39;E&#39;</code>：浮点数，科学记数法；</li>
+<li><code>&#39;f&#39;</code>：浮点数，小数形式；</li>
+<li><code>&#39;g&#39;</code>、<code>&#39;G&#39;</code>：浮点数，自动选择小数形式、科学记数法；</li>
+<li><code>&#39;n&#39;</code>：同<code>\n</code>，换行符；</li>
+<li><code>&#39;%&#39;</code>：输出<code>%</code>符号；</li>
+</ul>
+<p>Date/Time 格式及其综合例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String args[]) {
+        // 支持编号，%n$X 形式，n 从 1 开始
+        out.printf("name = %1$s, age = %3$d, score = %2$.1f\n", "Otokaze", 111.5f, 12);
+
+        // o|#o x/X|#x/#X 区别
+        out.printf("oct: %1$o, oct: %1$#o, hex: %2$x, hex: %2$X, hex: %2$#x, hex: %2$#X\n", 012, 0x1af3);
+
+        // %t|%T 日期格式，后面跟特定的字母以输出不同的格式
+        // %ty: 年份，比如 1998 显示后两位 98
+        // %tY: 年份，比如 1998 显示四位 1998
+        // %tm: 月份，%td: 日号
+        // %tb: 月份，简称
+        // %tB: 月份，全称
+        // %tD: "%tm/%td/%ty"格式化日期
+        // %tF: "%tY-%tm-%td"格式化日期
+
+        // %t|%T 时间格式，后面跟特定的字母以输出不同的格式
+        // %tH: 时，24小时制
+        // %tI: 时，12小时制
+        // %tM: 分
+        // %tS: 秒
+        // %tL: 毫秒
+        // %tp: 上下午信息
+        // %tR: "%tH:%tM"格式化时间
+        // %tT: "%tH:%tM:%tS"格式化时间
+        // %tr: "%tI:%tM:%tS %Tp"格式化时间
+
+        // %t|%T 星期格式，后面跟特定的字母以输出不同的格式
+        // %ta: 星期，简称
+        // %tA: 星期，全称
+
+        // %t|%T 时区格式，后面跟特定的字母以输出不同的格式
+        // %tz: 时区偏移，如 +0800
+        // %tZ: 时区简称，如 CST
+
+        // %t|%T Unix时间戳，后面跟特定的字母以输出不同的格式
+        // %ts: 自 1970-01-01T00:00:00 UTC 起经过的秒数
+        // %tQ: 自 1970-01-01T00:00:00 UTC 起经过的毫秒数
+
+        // %tc: 输出日期时间星期的完整信息
+
+        Date date = new Date();
+        long secs = date.getTime(); // 自 1970-01-01 00:00:00 GMT 起的毫秒数
+
+        // 日期信息
+        out.printf("date: %1$tY-%1$tm-%1$td\n", date);
+        out.printf("date: %1$tY-%1$tm-%1$td\n", secs);
+        out.printf("date: %tF\n", date);
+
+        // 时间信息
+        out.printf("time: %1$tH:%1$tM:%1$tS.%1$tL\n", date);
+        out.printf("time: %1$tI:%1$tM:%1$tS.%1$tL %Tp\n", date);
+        out.printf("time: %tT\n", date);
+        out.printf("time: %tr\n", date);
+
+        // 日期时间星期
+        out.printf("datetime: %1$tF %1$tT %1$ta\n", date);
+        out.printf("datetime: %1$tF %1$tT %1$tA\n", date);
+
+        // 日期时间星期(简写)
+        out.printf("datetime: %tc\n", date);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:46:50]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:47:07]
+$ java Main
+name = Otokaze, age = 12, score = 111.5
+oct: 12, oct: 012, hex: 1af3, hex: 1AF3, hex: 0x1af3, hex: 0X1AF3
+date: 2017-09-07
+date: 2017-09-07
+date: 2017-09-07
+time: 20:47:08.563
+time: 08:47:08.563 PM
+time: 20:47:08
+time: 08:47:08 PM
+datetime: 2017-09-07 20:47:08 Thu
+datetime: 2017-09-07 20:47:08 Thursday
+datetime: Thu Sep 07 20:47:08 CST 2017
+</script></code></pre>
+<p>其他的格式控制符请查阅官方 API 文档：<a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax" rel="external nofollow noopener noreferrer" target="_blank">Formatter - Java SE 7</a></p>
+<h2 id="命令行参数"><a href="#命令行参数" class="headerlink" title="命令行参数"></a>命令行参数</h2><p>在运行 Java 程序的时候，可以向 main() 函数传递命令行参数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String args[]) {
+        for (int i = 0; i < args.length; i++) {
+            out.printf("arg[%d] = %s\n", i, args[i]);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:21:23]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [19:21:26]
+$ java Main
+
+# root @ arch in ~/work on git:master x [19:21:27]
+$ java Main 1 2 3 4
+arg[0] = 1
+arg[1] = 2
+arg[2] = 3
+arg[3] = 4
+</script></code></pre>
+<blockquote>
+<p>和 C/C++ 不同，Java 中的命令行参数列表不包含当前的可执行文件名；</p>
+</blockquote>
+<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h2><p>从 JDK1.5 开始，Java 支持传递同类型的可变参数给一个函数；</p>
+<p>函数的可变参数的声明语法：<code>typeName... parameterName</code>；<br>一个方法中只能指定一个可变参数，它必须是方法的最后一个参数；</p>
+<p>Java 中的可变参数实际上是一个数组对象，看例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String args[]) {
+        out.printf("sum() = %g\n", sum());
+        out.printf("sum(1, 2, 3, 4, 5) = %g\n", sum(1, 2, 3, 4, 5));
+        out.printf("sum(new double[]{1, 2, 3, 4, 5}) = %g\n", sum(new double[]{1, 2, 3, 4, 5}));
+    }
+
+    public static double sum(double... args) {
+        double sum = 0.0d;
+        for (int i=0; i<args.length; i++) {
+            sum += args[i];
+        }
+        return sum;
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:33:33] C:130
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [19:33:36]
+$ java Main
+sum() = 0.00000
+sum(1, 2, 3, 4, 5) = 15.0000
+sum(new double[]{1, 2, 3, 4, 5}) = 15.0000
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-class.html" rel="next" title="Java 类与对象">
+                <i class="fa fa-chevron-left"></i> Java 类与对象
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-summary.html" rel="prev" title="Java 概述">
+                Java 概述 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本语法"><span class="nav-number">1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">2.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型转换"><span class="nav-number">3.</span> <span class="nav-text">数据类型转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量类型"><span class="nav-number">4.</span> <span class="nav-text">变量类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">5.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程控制"><span class="nav-number">6.</span> <span class="nav-text">流程控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">7.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串类"><span class="nav-number">8.</span> <span class="nav-text">字符串类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入与输出"><span class="nav-number">9.</span> <span class="nav-text">输入与输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行参数"><span class="nav-number">10.</span> <span class="nav-text">命令行参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可变参数"><span class="nav-number">11.</span> <span class="nav-text">可变参数</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-grammar.html';
+          this.page.identifier = 'java-grammar.html';
+          this.page.title = 'Java 语法基础';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

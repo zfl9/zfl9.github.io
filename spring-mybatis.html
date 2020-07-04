@@ -1,0 +1,2275 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="mybatis 基本已经学完了，现在我们来学习最后一个章节，即将 mybatis 与 spring 进行整合，也就是所谓的 SSM 三大框架。来重新回顾一下 SSM 三大框架，所谓 SSM 其实就是 Spring + SpringMVC + MyBatis，但其实我们也知道，SpringMVC 其实是 Spring 框架中一个 web 模块，所以本质上，应该称为 Spring + MyBatis">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring + SpringMVC + MyBatis">
+<meta property="og:url" content="https://www.zfl9.com/spring-mybatis.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="mybatis 基本已经学完了，现在我们来学习最后一个章节，即将 mybatis 与 spring 进行整合，也就是所谓的 SSM 三大框架。来重新回顾一下 SSM 三大框架，所谓 SSM 其实就是 Spring + SpringMVC + MyBatis，但其实我们也知道，SpringMVC 其实是 Spring 框架中一个 web 模块，所以本质上，应该称为 Spring + MyBatis">
+<meta property="og:image" content="https://www.zfl9.com/images/spring-tx.png">
+<meta property="og:image" content="https://www.zfl9.com/images/spring-tx-props.png">
+<meta property="og:image" content="https://www.zfl9.com/images/spring-tx-required.png">
+<meta property="og:image" content="https://www.zfl9.com/images/spring-tx-requires-new.png">
+<meta property="og:image" content="https://www.zfl9.com/images/ssm-employee-list.png">
+<meta property="og:image" content="https://www.zfl9.com/images/ssm-employee-new.png">
+<meta property="og:image" content="https://www.zfl9.com/images/ssm-employee-edit.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring + SpringMVC + MyBatis">
+<meta name="twitter:description" content="mybatis 基本已经学完了，现在我们来学习最后一个章节，即将 mybatis 与 spring 进行整合，也就是所谓的 SSM 三大框架。来重新回顾一下 SSM 三大框架，所谓 SSM 其实就是 Spring + SpringMVC + MyBatis，但其实我们也知道，SpringMVC 其实是 Spring 框架中一个 web 模块，所以本质上，应该称为 Spring + MyBatis">
+<meta name="twitter:image" content="https://www.zfl9.com/images/spring-tx.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/spring-mybatis.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Spring + SpringMVC + MyBatis | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/spring-mybatis.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Spring + SpringMVC + MyBatis
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-25T08:00:00+08:00">
+                2019-01-25
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/spring-mybatis.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="spring-mybatis.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/spring-mybatis.html" class="leancloud_visitors" data-flag-title="Spring + SpringMVC + MyBatis">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>mybatis 基本已经学完了，现在我们来学习最后一个章节，即将 mybatis 与 spring 进行整合，也就是所谓的 SSM 三大框架。来重新回顾一下 SSM 三大框架，所谓 SSM 其实就是 Spring + SpringMVC + MyBatis，但其实我们也知道，SpringMVC 其实是 Spring 框架中一个 web 模块，所以本质上，应该称为 Spring + MyBatis 框架（或者也叫做 SpringMVC + MyBatis 框架），即 SM 框架，而 Spring 和 Spring MVC 我们在这之前已经系统的学习过了，MyBatis 的学习也接近尾声了，现在我们要做的就是将 MyBatis 与 Spring 整合在一起。</p>
+<a id="more"></a>
+<h2 id="整合-Spring-框架"><a href="#整合-Spring-框架" class="headerlink" title="整合 Spring 框架"></a>整合 Spring 框架</h2><p>为什么要将 MyBatis 整合到 Spring 大家族中呢？还记得 Spring 的两大核心概念吗？IoC 和 AOP，IoC 即控制反转，也叫依赖注入，用来降低组件之间的耦合度，实现依赖的自动注入，而 AOP 则是面向切面编程，是 OOP 的一个延伸、补充，本质是动态代理的一个应用，我们可以利用 AOP 来做一些业务增强逻辑（业务类 + 增强类）；IoC 中的 <code>@Autowired</code> 可以说是非常好用的，使用者根本不需要关心依赖对象是如何创建的，只要使用这个注解标注依赖对象，Spring 就会在运行时自动将依赖对象注入进来，我们直接用就行了，而我们整合 MyBatis 的原因也是如此，为了使用 Spring 提供的 IoC 容器。</p>
+<p>先来回顾一下 SpringMVC 的配置，核心其实也就是一个 mvc.xml 配置文件，这个 mvc.xml 和 spring 学习中的 beans.xml、spring.xml 是一样的。这是在 springmvc 学习中用到的一个 springmvc + jdbctemplate 组合的 mvc.xml 配置文件，而我们的 springmvc + mybatis 其实和这个组合的作用是一样的，jdbctemplate 对标 mybatis，前者是轻量级的 jdbc 封装，后者是中量级的 jdbc 封装，而 hibernate 则是重量级的 jdbc 封装：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:component-scan base-package="com.zfl9"/>
+
+  <mvc:annotation-driven/>
+  <mvc:default-servlet-handler/>
+
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/views/"/>
+    <property name="suffix" value=".jsp"/>
+  </bean>
+
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost/test?serverTimezone=UTC"/>
+    <property name="username" value="root"/>
+    <property name="password" value="123456"/>
+  </bean>
+
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>注意后面两个 bean，dataSource 就是配置的数据源，因为是给 jdbctemplate 用的，所以直接使用最简单的 datasource，即 driverManager 的包装，并没有数据库连接池功能，而 jdbcTemplate 则是一个简易的 orm 框架，我们会在 dao 层中使用 <code>@Autowired</code> 自动装配这个 bean。那么其实 springmvc + mybatis 的整合也是类似的，只不过多了一个 spring 事务管理器的 bean 配置，因为 jdbcTemplate 中的 curd 都比较简单，所以我就没有配置什么事务管理器。</p>
+<p>而 ssm 框架整合，就是将 mybatis 的 mybatis-config.xml 全局配置文件全部转换为 spring 的 bean 配置，配置到 mvc.xml 文件中，让 spring 来管理，而 mybatis 我们知道，有这么几个核心概念：全局配置文件、mapper 接口、mapper 文件。而我们要做的就是将这个全局配置文件去掉（当然也不一定要去掉，也有人会保留它，但我选择去掉它，看起来干净一些，因为如果保留的话，mybatis 配置会东一点西一点，非常凌乱）。注意 mapper 接口和 mapper 文件我们是不会动它的，因为也不需要动；OK，来看看 mybatis-config.xml 配置文件的内容：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+
+      <dataSource type="POOLED">
+        <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost/test?serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+      </dataSource>
+    </environment>
+  </environments>
+
+  <mappers>
+    <mapper resource="com/zfl9/mapper/EmployeeMapper.xml"/>
+  </mappers>
+</configuration>
+</script></code></pre>
+<p>看似很多配置，其实就三个东西是必须要配置的，即 <strong>数据源</strong>、<strong>事务管理器</strong>、<strong>映射文件路径</strong>。mybatis 整合 spring 其实官方有提供适配包，我们要做的就是配置好 springmvc 环境，并且写好 mybatis 的 mapper 接口和 mapper 文件，然后导入 springmvc、mybatis、mybatis-spring 适配包，最后在 mvc.xml 中配置 mybatis-config.xml bean 就行了，这是官方提供的 spring 适配包项目地址：<a href="https://github.com/mybatis/spring" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/mybatis/spring</a>，因为我们通常使用 maven 管理项目，所以直接去 <a href="https://mvnrepository.com" rel="external nofollow noopener noreferrer" target="_blank">https://mvnrepository.com</a> 搜索 mybatis-spring 就行了，即在 pom.xml 中添加以下依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis-spring</artifactId>
+  <version>1.3.2</version>
+</dependency>
+</script></code></pre>
+<p><strong>数据源我们就使用最流行和最快速的 HikariCP（连接池）</strong><br>具体可参考我之前的 <a href="/java-datasource.html#HikariCP-%E4%BD%BF%E7%94%A8">Java DataSource 数据源</a> 的最后一节。</p>
+<p><strong>Spring 事务管理相关的知识（编程式事务、声明式事务）</strong><br>事务管理是应用系统开发中必不可少的一部分。Spring 为事务管理提供了丰富的功能支持。Spring 事务管理分为 <strong>编程式</strong> 和 <strong>声明式</strong> 的两种方式。编程式事务指的是通过编码方式实现事务；声明式事务基于 AOP，将具体业务逻辑与事务处理解耦。声明式事务管理使业务代码逻辑不受污染，因此在实际使用中声明式事务用的比较多。声明式事务有两种方式，一种是在配置文件（xml）中做相关的事务规则声明，另一种是基于 <code>@Transactional</code> 注解的方式。注释配置是目前流行的使用方式，因此本文将着重介绍基于 <code>@Transactional</code> 注解的事务管理。</p>
+<p>Spring 支持两种类型的事务管理：</p>
+<ul>
+<li>编程式事务管理：这意味着您必须在编程的帮助下管理事务。这为您提供了极大的灵活性，但很难维护。</li>
+<li>声明式事务管理：这意味着您将事务管理与业务代码分开。您只能使用注解或基于 XML 的配置来管理事务。</li>
+</ul>
+<p>声明式事务管理优于编程式事务管理，但它不如编程式事务管理灵活，编程式事务允许您通过 Java 代码控制事务。而声明式事务则是通过 Spring AOP 框架来将业务逻辑代码和事务管理代码分开，做到不同代码的解耦，对我们的业务代码侵入性非常低，看起来也很干净，可读性也很好，所以绝大多数情况下使用的都是声明式事务管理方式。</p>
+<p><strong>编程式事务</strong><br>所谓编程式事务管理其实就是使用 Java 代码手动进行事务的提交或回滚，基本上和使用原生的 JDBC API 是一样的，只不过 Spring 的编程式事务管理提供了更多的功能，因为平时都很少使用编程式事务管理，所以我也就不实际操作了，直接将 tutorialspoint 的 example 代码拿过来，大家看看就行了：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Initialization for data source -->
+   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://localhost:3306/TEST"/>
+      <property name="username" value="root"/>
+      <property name="password" value="password"/>
+   </bean>
+
+   <!-- Initialization for TransactionManager -->
+   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name="dataSource" ref="dataSource"/>
+   </bean>
+
+   <!-- Definition for studentJDBCTemplate bean -->
+   <bean id="studentJDBCTemplate" class="com.tutorialspoint.StudentJDBCTemplate">
+      <property name="dataSource" ref="dataSource"/>
+      <property name="transactionManager" ref="transactionManager"/>
+   </bean>
+</beans>
+</script></code></pre>
+<p>Spring 的配置还是比较简单明了的，首先就是配置一个 dataSource 数据源，这里直接就使用 Spring JDBC 的 DriverManagerDataSource，本质只是 DriverManager 的封装，没有数据库连接池功能；然后就是定义 Spring 的事务管理器，我们会在业务代码中通过这个事务管理器对象来进行 commit 和 rollback 操作；Spring 提供了一个事务管理器接口，即 <code>org.springframework.transaction.PlatformTransactionManager</code>，每个事务管理器都要实现这个接口，所以 Spring 其实并不关心事务管理器的具体实现，这是每个平台自己的事情，常见的事务管理器有 JDBC 事务管理器（比如上面的这个就是 JDBC 事务管理器，配置好一个数据源就可以直接用了），除了 JDBC 事务管理器外，还有 Hibernate 事务管理器、JPA 事务管理器、JTA 事务管理器等。因为这里使用的是 JdbcTemplate 作为 ORM 框架，所以使用的就是 JDBC 事务管理器。PlatformTransactionManager 接口和对应平台实现的 TransactionManager 的关系有点类似于 JDBC API 和 JDBC Driver 的关系，前者只提供接口，后者负责实现这个接口。</p>
+<p>来看一下这个 StudentJDBCTemplate 的具体实现：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public class StudentJDBCTemplate implements StudentDAO {
+    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplateObject;
+    private PlatformTransactionManager transactionManager;
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+    }
+
+    public void setTransactionManager(PlatformTransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
+    }
+
+    public void create(String name, Integer age, Integer marks, Integer year){
+        // 定义事务管理的一些属性，如事务的传播行为、事务的隔离级别等
+        TransactionDefinition def = new DefaultTransactionDefinition();
+        // 根据 TransactionDefinition 中定义的属性，创建对应的 status 对象
+        TransactionStatus status = transactionManager.getTransaction(def);
+
+        try {
+            String SQL1 = "insert into Student (name, age) values (?, ?)";
+            jdbcTemplateObject.update( SQL1, name, age);
+
+            String SQL2 = "select max(id) from Student";
+            int sid = jdbcTemplateObject.queryForInt( SQL2 );
+
+            String SQL3 = "insert into Marks(sid, marks, year) " + "values (?, ?, ?)";
+            jdbcTemplateObject.update( SQL3, sid, marks, year);
+
+            System.out.println("Created Name = " + name + ", Age = " + age);
+            transactionManager.commit(status); // 如果操作完成则提交事务
+        } catch (DataAccessException e) {
+            System.out.println("Error in creating record, rolling back");
+            transactionManager.rollback(status); // 如果操作失败则回滚事务
+            throw e;
+        }
+        return;
+    }
+}
+</script></code></pre>
+<p>但是实际上这种类型的事务管理太繁琐了，对原有代码有比较强的侵入性，而且感觉也不是很方便，还不如直接使用 JDBC 的 commit 和 rollback 呢。Spring 当然也知道这种方式不是很好用，所以后来就有了基于注解或者基于 XML 配置的声明式事务管理，所谓声明式事务管理其实就是通过注解或者 XML 告诉 Spring 来如何管理我的事务（声明一下就行了，如果执行成功，Spring 会自动帮我们提交事务，如果出现异常则自动帮我们回滚事务），而编程式事务管理则是全都是自己去管理的（自己主动去管理事务，如何时提交以及何时回滚等等），有点类似于 IoC，控制权反转了，基于 XML 配置的方式过时了，所以这里直接就介绍基于注解形式的声明式事务管理，注意，Spring 之所以能够进行声明式事务管理，还是因为它借助了 AOP 框架，将我们的业务方法包装了起来，Spring 会在调用业务方法的前后自动进行事务的开始、提交、回滚，以及其他一些操作。</p>
+<p><strong>类图结构</strong><br>Spring 事务管理的实现有许多细节，如果对整个接口框架有个大体了解会非常有利于我们理解事务，下面通过讲解 Spring 的事务接口来了解 Spring 实现事务的具体策略。Spring 事务管理涉及的接口的联系如下：<br><img src="/images/spring-tx.png" alt="Spring 事务管理接口"></p>
+<p><strong>事务管理器</strong><br>Spring 并不直接管理事务，而是提供了多种事务管理器，它们将事务管理的职责委托给 JDBC、Hibernate、JPA、JTA 等持久化机制所提供的相关平台框架的事务来实现。Spring 事务管理器的接口是 org.springframework.transaction.PlatformTransactionManager，通过这个接口，Spring 为各个平台如 JDBC、Hibernate 等都提供了对应的事务管理器，但是具体的实现就是各个平台自己的事情了。此接口的内容如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public interface PlatformTransactionManager {
+    // 由 TransactionDefinition 得到 TransactionStatus 对象
+    TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException;
+    // 提交
+    void commit(TransactionStatus status) throws TransactionException;
+    // 回滚
+    void rollback(TransactionStatus status) throws TransactionException;
+}
+</script></code></pre>
+<p>从这里可知具体的具体的事务管理机制对 Spring 来说是透明的，它并不关心那些，那些是对应各个平台需要关心的，所以 Spring 事务管理的一个优点就是为不同的事务 API 提供一致的编程模型，如 JTA、JDBC、Hibernate、JPA。下面分别介绍各个平台框架实现事务管理的机制。</p>
+<p><strong>JDBC 事务管理</strong><br>如果应用程序中直接使用 JDBC 来进行持久化（如 MyBatis），DataSourceTransactionManager 会为你处理事务边界。为了使用 DataSourceTransactionManager，你需要使用如下的 XML 将其装配到应用程序的上下文定义中：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  <property name="dataSource" ref="dataSource"/>
+</bean>
+</script></code></pre>
+<p>实际上，DataSourceTransactionManager 是通过从 dataSource 中获取的 Connection 对象来管理事务的，它通过调用 Connection 对象的 commit() 方法来提交事务，同样，在事务失败时通过调用 Connection 对象的 rollback() 方法进行回滚。</p>
+<p><strong>Hibernate 事务管理</strong><br>如果应用程序的持久化是通过 Hibernate 实现的，那么你需要使用 HibernateTransactionManager。对于 Hibernate3，需要在 Spring 上下文定义中添加如下的 <code>&lt;bean&gt;</code> 声明：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+</script></code></pre>
+<p>基本上无论什么类型的事务管理器，内部都会将实际的 commit()、rollback() 操作委托给我们传递给它的对象来做，当然 HibernateTransactionManager 也一样，它会通过 sessionFactory 对象获取 hibernate 的 Transaction 对象，然后通过调用 Transaction 对象的 commit() 方法来进行事务的提交，调用 Transaction 对象的 rollback() 方法来进行事务的回滚。</p>
+<p><strong>JPA 事务管理</strong><br>Hibernate 多年来一直是事实上的 Java 持久化标准，但是现在 Java 持久化 API 作为真正的 Java 持久化标准进入大家的视野。如果你计划使用 JPA 的话，那你需要使用 Spring 的 JpaTransactionManager 来处理事务。配置如下，其实和 HibernateTransactionManager 的配置很相似：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+  <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+</script></code></pre>
+<p>JpaTransactionManager 只需要装配一个 JPA 实体管理工厂（javax.persistence.EntityManagerFactory 接口的任意实现）。JpaTransactionManager 将与由该工厂所产生的 JPA EntityManager 合作来管理事务。</p>
+<p><strong>JTA 事务管理</strong><br>如果你没有使用以上所述的事务管理，或者是跨越了多个事务管理源（比如两个或者是多个不同的数据源），你就需要使用 JtaTransactionManager：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+  <property name="transactionManagerName" value="java:/TransactionManager"/>
+</bean>
+</script></code></pre>
+<p>JtaTransactionManager 将事务管理的责任委托给 javax.transaction.UserTransaction 和 javax.transaction.TransactionManager 对象，其中事务成功完成通过 UserTransaction.commit() 方法提交，事务失败通过 UserTransaction.rollback() 方法回滚。</p>
+<p><strong>基本事务属性的定义</strong><br>上面讲到的事务管理器接口 PlatformTransactionManager 通过 getTransaction(TransactionDefinition definition) 方法来得到 TransactionStatus 对象，这个方法里面的参数是 TransactionDefinition 类，这个类定义了一些基本的事务属性。那么什么是事务属性呢？事务属性可以理解成事务的一些基本配置，描述了事务策略如何应用到方法上。事务属性包含了 5 个方面，如图所示：<br><img src="/images/spring-tx-props.png" alt="事务的属性"></p>
+<p>TransactionDefinition 接口的定义如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public interface TransactionDefinition {
+    int getPropagationBehavior(); // 获取事务的传播行为
+    int getIsolationLevel(); // 获取事务的隔离级别
+    int getTimeout();  // 获取事务的超时时间
+    boolean isReadOnly(); // 事务是否为只读的
+}
+</script></code></pre>
+<p><strong>事务的传播行为</strong><br>事务的第一个方面是传播行为（propagation behavior）。当一个事务方法被另一个事务方法调用时，必须指定事务应该如何传播。例如：方法可能继续在现有事务中运行，也可能开启一个新事务，并在自己的事务中运行。Spring 定义了 7 种传播行为（注意，外部事务就是调用方开启的事务，内部事务则是被调用方开启的事务，调用方也称为父方法，被调用方也称为子方法）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">传播行为</th>
+<th style="text-align:center">具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_REQUIRED</strong></td>
+<td style="text-align:center">当前方法需要在事务中运行；如果存在外部事务，则加入外部事务；如果不存在外部事务，则开启一个新的事务运行；默认传播行为。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_REQUIRES_NEW</strong></td>
+<td style="text-align:center">当前方法在内部事务中运行；如果存在外部事务，则外部事务将被挂起并开启新的事务运行，如果不存在外部事务，则开启一个新的事务运行。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_NESTED</strong></td>
+<td style="text-align:center">当前方法可作为嵌套事务来运行；如果存在外部事务，则作为外部事务的嵌套事务运行，如果不存在外部事务，则开启一个新的事务运行。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_MANDATORY</strong></td>
+<td style="text-align:center">当前方法必须在外部事务中运行；如果存在外部事务，则加入外部事务；如果不存在外部事务，则抛出一个运行时异常。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_SUPPORTS</strong></td>
+<td style="text-align:center">当前方法不需要在事务中运行；如果存在外部事务，则加入外部事务；如果不存在外部事务，则作为普通方法运行。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_NOT_SUPPORTED</strong></td>
+<td style="text-align:center">当前方法不支持在事务中运行；如果存在外部事务，则外部事务将被挂起，如果不存在外部事务，则作为普通方法运行。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>PROPAGATION_NEVER</strong></td>
+<td style="text-align:center">当前方法不能在事务中运行；如果存在外部事务，则抛出一个运行时异常；如果不存在外部事务，则作为普通方法运行。</td>
+</tr>
+</tbody>
+</table>
+<p>这里需要指出的是，前面的 6 种事务传播行为是 Spring 从 EJB 中引入的，他们共享相同的概念。而 PROPAGATION_NESTED 是 Spring 所特有的。以 PROPAGATION_NESTED 启动的事务内嵌于外部事务中（如果存在外部事务的话），此时，内嵌事务并不是一个独立的事务，它依赖于外部事务的存在，只有通过外部事务的提交，才能引起内部事务的提交，嵌套的子事务不能单独提交。如果熟悉 JDBC 中的保存点（SavePoint）的概念，那嵌套事务就很容易理解了，其实嵌套的子事务就是 SavePoint 的一个应用，外部事务调用一个嵌套事务前会先创建一个 savepoint，然后再执行该嵌套事务，如果嵌套事务执行失败则会回滚到当前定义的保存点位置；一个事务中可以包括多个保存点；另外，外部事务的回滚也会导致嵌套子事务的回滚，因为它们本质上就是同一个事务，所谓嵌套事务不过是使用 savepoint 模拟出来的而已。总之自己多多联系 savepoint 来理解嵌套事务就行了。</p>
+<p><strong>PROPAGATION_REQUIRED</strong><br><img src="/images/spring-tx-required.png" alt="PROPAGATION_REQUIRED"></p>
+<p><strong>PROPAGATION_REQUIRES_NEW</strong><br><img src="/images/spring-tx-requires-new.png" alt="PROPAGATION_REQUIRES_NEW"></p>
+<p>PROPAGATION_REQUIRED 的外部事务和内部事务是相关联的，如果外部事务回滚那么内部事务会一起回滚，同样的，内部事务回滚也会导致外部事务一起回滚；但是 PROPAGATION_REQUIRES_NEW 的外部事务和内部事务是互相独立的，在执行内部事务时，外部事务是处于挂起状态的，外部事务的回滚不会导致内部事务的回滚，内部事务的回滚也不会影响外部事务的回滚，它们两个事务实际上是互不影响的。</p>
+<p><strong>PROPAGATION_NESTED</strong><br>由于嵌套事务其实是 jdbc savepoint 的一个应用，所以内部事务如果执行失败回滚的话，只会回滚到调用它之前的那个保存点上，因此我们可以利用这个特性来做一些分支操作，这可能是嵌套事务最有价值的一个地方：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+ServiceA {
+    // PROPAGATION_REQUIRED
+    void methodA() {
+        try {
+            ServiceB.methodB();
+        } catch (SomeException) {
+            // 执行其它业务
+            // 如 ServiceC.methodC()
+        }
+    }
+}
+
+ServiceB {
+    // PROPAGATION_NESTED
+    void methodB() {
+        // TODO
+    }
+}
+
+ServiceC {
+    // PROPAGATION_NESTED
+    void methodC() {
+        // TODO
+    }
+}
+</script></code></pre>
+<p><strong>事务的隔离级别</strong><br>事务的第二个维度就是隔离级别（isolation level）。隔离级别定义了一个事务可能受其他并发事务影响的程度。</p>
+<p><em>并发事务引起的问题</em><br>在典型的应用程序中，多个事务并发运行，经常会操作相同的数据来完成各自的任务。并发虽然是必须的，但可能会导致以下问题。</p>
+<ul>
+<li>脏读（Dirty reads）：脏读是指一个事务读取了另一个事务改写但还未提交的数据；如果这个改写最终被提交了，那么也没什么问题，但是如果这个改写在稍后被回滚了，那么第一个事务获取的数据就是无效的。</li>
+<li>不可重复读（Nonrepeatable read）：不可重复读是指一个事务执行相同的查询两次或两次以上，但是每次得到数据都不相同。这通常是因为另一个事务在两次查询期间进行了更新（update）。</li>
+<li>幻读（Phantom read）：幻读是指一个事务执行相同的查询两次或两次以上，但是每次得到的数据条数都不相同。这通常是因为另一个事务在两次查询期间进行了增删（insert、delete）。注意幻读与不可重复读的区别，不可重复读是进行了 update 操作，导致数据字段变了，而幻读是指记录的条数变了（多了或者少了）。</li>
+</ul>
+<p><em>不可重复读的重点是修改</em></p>
+<blockquote>
+<p>同样的条件，你读取过的数据，再次读取出来发现值不一样了。</p>
+</blockquote>
+<p>例如：在事务 1 中，Mary 读取了自己的工资为1000，操作并没有完成。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+con1 = getConnection();
+select salary from employee empId ="Mary";
+</script></code></pre>
+<p>在事务 2 中，这时财务人员修改了 Mary 的工资为 2000，并提交了事务。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+con2 = getConnection();
+update employee set salary = 2000;
+con2.commit();
+</script></code></pre>
+<p>在事务 1 中，Mary 再次读取自己的工资时，工资变为了 2000</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+//con1
+select salary from employee empId ="Mary";
+</script></code></pre>
+<p>在一个事务中前后两次读取的结果并不一致，导致了不可重复读。</p>
+<p><em>幻读的重点在于新增或者删除</em></p>
+<blockquote>
+<p>同样的条件，第 1 次和第 2 次读出来的记录数不一样。</p>
+</blockquote>
+<p>例如：目前工资为 1000 的员工有 10 人。事务 1 读取所有工资为 1000 的员工。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+con1 = getConnection();
+Select * from employee where salary =1000;
+</script></code></pre>
+<p>共读取到 10 条记录。这时另一个事务向 employee 表插入了一条员工记录，工资也为 1000：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+con2 = getConnection();
+Insert into employee(empId,salary) values("Lili",1000);
+con2.commit();
+</script></code></pre>
+<p>事务 1 再次读取所有工资为 1000 的员工</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+//con1
+select * from employee where salary =1000;
+</script></code></pre>
+<p>共读取到了 11 条记录，这就产生了幻像读。</p>
+<p>从总的结果来看，似乎不可重复读和幻读都表现为两次读取的结果不一致。但如果你从避免的角度来看，两者的区别就比较大。</p>
+<ul>
+<li>对于前者（不可重复读），只需要锁住满足条件的记录（记录锁）。</li>
+<li>对于后者（幻像读），要锁住满足条件及其相近的记录（间隙锁）。</li>
+</ul>
+<p><strong>隔离级别</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">隔离级别</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ISOLATION_DEFAULT</td>
+<td style="text-align:center">使用后端数据库默认的隔离级别，这是 Spring 的默认隔离级别</td>
+</tr>
+<tr>
+<td style="text-align:center">ISOLATION_READ_UNCOMMITTED</td>
+<td style="text-align:center">读未提交，最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、不可重复读、幻读</td>
+</tr>
+<tr>
+<td style="text-align:center">ISOLATION_READ_COMMITTED</td>
+<td style="text-align:center">读已提交，允许读取其他事务已经提交的数据，可以阻止脏读，但是不可重复读、幻读仍有可能发生</td>
+</tr>
+<tr>
+<td style="text-align:center">ISOLATION_REPEATABLE_READ</td>
+<td style="text-align:center">可重复读，对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生</td>
+</tr>
+<tr>
+<td style="text-align:center">ISOLATION_SERIALIZABLE</td>
+<td style="text-align:center">串行化，最高的隔离级别，完全服从 ACID 的隔离级别，确保阻止脏读、不可重复读以及幻读，也是最慢的事务隔离级别，因为它通常是通过完全锁定事务相关的数据库表来实现的</td>
+</tr>
+</tbody>
+</table>
+<p><strong>只读事务</strong><br>事务的第三个特性是它是否为只读事务。如果事务只对后端的数据库进行只读操作，数据库可以利用事务的只读特性来进行一些特定的优化。通过将事务设置为只读，你就可以给数据库一个机会，让它应用它认为合适的优化措施。</p>
+<p><strong>事务超时</strong><br>为了使应用程序很好地运行，事务不能运行太长的时间。因为事务可能涉及对后端数据库的锁定，所以长时间的事务会不必要的占用数据库资源。事务超时就是事务的一个定时器，在特定时间内事务如果没有执行完毕，那么就会自动回滚，而不是一直等待其结束。</p>
+<p><strong>回滚规则</strong><br>事务五边形的最后一个方面是一组规则，这些规则定义了哪些异常会导致事务回滚而哪些不会。默认情况下，事务只有遇到运行期异常时才会回滚（RuntimeException、Error），而在遇到检查型异常时不会回滚（这一行为与 EJB 的回滚行为是一致的），但通常我们希望的回滚行为是这样的：只要发生的异常，不管是 RuntimeException 还是 Error 还是普通的 Exception，都自动执行事务的回滚，如果要实现这个目标只需要将事务的 rollback-for 属性改为 <code>Exception.class</code>，这样就是只要抛出异常或错误，那么 Spring 就会自动进行事务回滚。当然，你还可以声明事务遇到特定的异常不回滚，即使这些异常是 RuntimeException 或 Error。</p>
+<p><strong>事务状态</strong><br>上面讲到的调用 PlatformTransactionManager 接口的 getTransaction() 方法得到的是 TransactionStatus 接口的一个实现，这个接口的定义如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public interface TransactionStatus {
+    boolean isNewTransaction(); // 是否是新的事务
+    boolean hasSavepoint(); // 是否有保存点
+    void setRollbackOnly();  // 设置为只回滚
+    boolean isRollbackOnly(); // 是否为只回滚
+    boolean isCompleted; // 是否已完成
+}
+</script></code></pre>
+<p><strong>编程式和声明式事务的区别</strong><br>Spring 提供了对编程式事务和声明式事务的支持，编程式事务允许用户在代码中精确定义事务的边界，而声明式事务（基于 AOP）有助于用户将操作与事务规则进行解耦。简单地说，编程式事务侵入到了业务代码里面，但是提供了更加详细的事务管理；而声明式事务由于基于 AOP，所以既能起到事务管理的作用，又可以不影响业务代码的具体实现。</p>
+<p><strong>如何实现编程式事务？</strong><br>Spring 提供两种方式的编程式事务管理，分别是：使用 TransactionTemplate（推荐）和直接使用 PlatformTransactionManager。</p>
+<p><strong>使用 TransactionTemplate</strong><br>采用 TransactionTemplate 和采用其它 Spring 模板，如 JdbcTempalte 和 HibernateTemplate 是一样的方法。它使用回调方法，把应用程序从处理取得和释放资源中解脱出来。如同其他模板，TransactionTemplate 是线程安全的。代码片段：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 新建一个TransactionTemplate
+TransactionTemplate tt = new TransactionTemplate();
+// 执行 execute 方法进行事务管理
+Object result = tt.execute(
+        new TransactionCallback() {
+            @Override
+            public Object doTransaction(TransactionStatus status) {
+                updateOperation();
+                return resultOfUpdateOperation();
+            }
+        });
+</script></code></pre>
+<p>使用 TransactionCallback 可以返回一个值。如果使用 TransactionCallbackWithoutResult 则没有返回值。</p>
+<p><strong>使用 PlatformTransactionManager</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 定义一个某个框架平台的 TransactionManager，如 JDBC、Hibernate
+DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+dataSourceTransactionManager.setDataSource(this.getJdbcTemplate().getDataSource()); // 设置数据源
+DefaultTransactionDefinition transDef = new DefaultTransactionDefinition(); // 定义事务属性
+transDef.setPropagationBehavior(DefaultTransactionDefinition.PROPAGATION_REQUIRED); // 设置传播行为属性
+TransactionStatus status = dataSourceTransactionManager.getTransaction(transDef); // 获得事务状态
+try {
+    // 数据库操作
+    dataSourceTransactionManager.commit(status); // 提交
+} catch (Exception e) {
+    dataSourceTransactionManager.rollback(status); // 回滚
+}
+</script></code></pre>
+<p><strong>声明式事务</strong><br>根据代理机制的不同，总结了五种 Spring 事务的配置方式，配置文件如下：</p>
+<p>1）每个 Bean 都有一个代理</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+    </bean>
+
+    <!-- 定义事务管理器（声明式的事务）-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 配置 DAO -->
+    <bean id="userDaoTarget" class="com.bluesky.spring.dao.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="userDao" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <!-- 配置事务管理器 -->
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="target" ref="userDaoTarget"/>
+        <property name="proxyInterfaces" value="com.bluesky.spring.dao.GeneratorDao"/>
+        <!-- 配置事务属性 -->
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
+</script></code></pre>
+<p>2）所有 Bean 共享一个代理基类</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+    </bean>
+
+    <!-- 定义事务管理器（声明式的事务）-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="transactionBase" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true" abstract="true">
+        <!-- 配置事务管理器 -->
+        <property name="transactionManager" ref="transactionManager"/>
+        <!-- 配置事务属性 -->
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 配置 DAO -->
+    <bean id="userDaoTarget" class="com.bluesky.spring.dao.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="userDao" parent="transactionBase">
+        <property name="target" ref="userDaoTarget"/>
+    </bean>
+</beans>
+</script></code></pre>
+<p>3）使用拦截器</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+    </bean>
+
+    <!-- 定义事务管理器（声明式的事务）-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="transactionManager"/>
+        <!-- 配置事务属性 -->
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames">
+            <list>
+                <value>*Dao</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置DAO -->
+    <bean id="userDao" class="com.bluesky.spring.dao.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+</beans>
+</script></code></pre>
+<p>4）使用 tx 标签配置的拦截器</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.bluesky"/>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+    </bean>
+
+    <!-- 定义事务管理器（声明式的事务）-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="interceptorPointCuts" expression="execution(* com.bluesky.spring.dao.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts"/>
+    </aop:config>
+</beans>
+</script></code></pre>
+<p>5）全注解</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.bluesky"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"> 
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/> 
+        <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+    </bean> 
+
+    <!-- 定义事务管理器（声明式的事务）--> 
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+</beans>
+</script></code></pre>
+<p>此时在 Service 方法上使用 @Transactional 注解，如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.bluesky.spring.dao;
+
+import java.util.List;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Component;
+import com.bluesky.spring.domain.User;
+
+@Service
+public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
+    @Transactional
+    public List<User> listUsers() {
+        return this.getSession().createQuery("from User").list();
+    }  
+}
+</script></code></pre>
+<p>目前流行的方式都是全注解形式的声明式事务，所以我们主要也是了解这种使用方式，spring.xml 配置为：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- 启用注解驱动形式的声明式事务 -->
+<tx:annotation-driven transaction-manager="transactionManager"/>
+<!-- 使用 JDBC 事务管理器（如 MyBatis）-->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  <property name="dataSource" ref="dataSource"/>
+</bean>
+</script></code></pre>
+<p>然后我们只需要在 Service 实现类的方法上使用 @Transactional 注解标注就行了，该注解上可以设置上述 5 个事务属性。除此以外，@Transactional 注解也可以添加到类级别上（Service 实现类上）。当把 @Transactional 注解放在类级别时，表示所有该类的公共方法都配置相同的事务属性信息。见清单 2，EmployeeService 的所有方法都支持事务并且是只读（注意，只要在类级别上使用了 @Transactional 注解，那么这个类里面的所有 public 方法都会自动配置事务）。当类级别配置了 @Transactional，方法级别也配置了 @Transactional 时，应用程序会以方法级别的事务属性信息来管理事务，换言之，方法级别的事务属性信息会覆盖类级别的相关配置信息。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+@Service("employeeService")
+public class EmployeeService
+</script></code></pre>
+<ul>
+<li>@Transactional 注解只能应用到 public 方法上。如果你在 protected、private 或者 package-visible 的方法上使用 @Transactional 注解，它也不会报错，但 Spring 不会对这些方法进行事务处理。</li>
+<li>注意，仅仅 @Transactional 注解的出现不足于开启事务行为，因为注解仅仅是一种元数据。必须在配置文件中使用配置元素（也就是上面的 <code>&lt;tx:annotation-driven&gt;</code> 元素），才真正开启了事务行为。</li>
+<li>通过 <code>&lt;tx:annotation-driven&gt;</code> 元素的 <code>proxy-target-class</code> 属性值来控制是使用 JDK 动态代理还是 CGLIB 动态代理，如果为 false（默认值）则表示优先选择 JDK 动态代理（基于接口），当目标对象没有实现任何接口时才会使用 CGLIB 动态代理（基于类），而如果将其设为 true，则表示默认使用 CGLIB 动态代理，而不是 JDK 动态代理。</li>
+<li>由于 Spring AOP 的一些实现限制，如果在业务类的一个方法中调用另一个配置了 @Transactional 的事务方法（称为自调用），那么 Spring 的事务不会起作用，因为这个方法调用是通过 this 对象来调用的目标方法，而不是先通过代理对象来委托调用的目标方法，所以没有走代理。简单来说就是 @Transactional 注解只对从 AOP 返回的对象有效，如果直接通过 this 指针来调用当前对象的目标方法，实际上根本没有机会执行外部的代理对象的事务处理逻辑。再换句话说，对于 JDK 动态代理，你需要通过代理对象来调用目标方法，才能让代理正常生效，如果你直接通过原对象（即 this 指针这种形式的调用）来访问目标方法，那么是不会走代理的！要解决这个问题，你需要使用 AspectJ 来取代 Spring AOP 代理（JDK 动态代理、CGLIB 动态代理）。当然也有简单的方法，那就是在 Service 类中添加一个成员变量，类型就是自己，然后使用 @Autowired 来让 Spring 自动将代理对象注入进来，然后我们通过这个注入进来的代理对象调用目标方法就没问题了。</li>
+</ul>
+<p><strong>@Transactional 注解的几个属性</strong></p>
+<ul>
+<li><code>String value</code>：如果配置了多个 transactionManager，则用于指定当前需要使用的事务管理器的 bean id（别名）。</li>
+<li><code>String transactionManager</code>：如果配置了多个 transactionManager，则用于指定当前需要使用的事务管理器的 bean id。</li>
+<li><code>Propagation propagation</code>：事务的传播行为，默认为 Propagation.REQUIRED。</li>
+<li><code>Isolation isolation</code>：事务的隔离级别，默认为 Isolation.DEFAULT。</li>
+<li><code>int timeout</code>：事务的超时事件（秒），如果超时则自动回滚，默认为 -1 表示永不超时，注意这个超时策略仅适用于 Propagation.REQUIRED、Propagation.REQUIRES_NEW 传播行为，因为它仅适用于新启动的事务。</li>
+<li><code>boolean readOnly</code>：事务是否为只读的，默认为 false，需要说明的是，这个属性的作用仅仅是给底层数据库的一个提示，不一定有效果。</li>
+<li><code>Class&lt;? extends java.lang.Throwable&gt;[] rollbackFor</code>：指定哪些异常将会导致事务的回滚，默认情况下只有 RuntimeException 和 Error 才会触发事务的回滚。</li>
+<li><code>String[] rollbackForClassName</code>：作用同上，只不过指定的是异常类的全限定类名。</li>
+<li><code>Class&lt;? extends java.lang.Throwable&gt;[] noRollbackFor</code>：指定哪些异常不会导致事务的回滚。默认为空。</li>
+<li><code>String[] noRollbackForClassName</code>：同上，只不过指定的是异常类的全限定类名。</li>
+</ul>
+<h2 id="SSM-框架整合-示例"><a href="#SSM-框架整合-示例" class="headerlink" title="SSM 框架整合-示例"></a>SSM 框架整合-示例</h2><h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="language-bash line-numbers"><script type="text/plain">
+$ tree
+.
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           ├── controller
+│   │           │   └── EmployeeController.java
+│   │           ├── domain
+│   │           │   └── Employee.java
+│   │           ├── mapper
+│   │           │   └── EmployeeMapper.java
+│   │           └── service
+│   │               ├── EmployeeService.java
+│   │               └── EmployeeServiceImpl.java
+│   ├── resources
+│   │   ├── com
+│   │   │   └── zfl9
+│   │   │       └── mapper
+│   │   │           └── EmployeeMapper.xml
+│   │   ├── jdbc.properties
+│   │   └── logback.xml
+│   └── webapp
+│       ├── index.jsp
+│       └── WEB-INF
+│           ├── mvc.xml
+│           ├── views
+│           │   ├── employee-edit.jsp
+│           │   └── employee-list.jsp
+│           └── web.xml
+└── test
+    ├── java
+    └── resources
+</script></code></pre>
+<h3 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.zfl9</groupId>
+  <artifactId>SpringMVC_MyBatis</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.version>4.12</junit.version>
+    <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
+    <logback.version>1.2.3</logback.version>
+    <spring.version>4.3.20.RELEASE</spring.version>
+    <mybatis.version>3.4.6</mybatis.version>
+    <mybatis-spring.version>1.3.2</mybatis-spring.version>
+    <hikaricp.version>3.3.0</hikaricp.version>
+    <mysql.version>8.0.13</mysql.version>
+    <servlet.version>3.1.0</servlet.version>
+    <jstl.version>1.2</jstl.version>
+    <jackson.version>2.9.7</jackson.version>
+    <fileupload.version>1.3.3</fileupload.version>
+    <validatorapi.version>2.0.1.Final</validatorapi.version>
+    <validatorimpl.version>6.0.13.Final</validatorimpl.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${jcl-over-slf4j.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>${mybatis-spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>${hikaricp.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${jstl.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>${fileupload.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${validatorapi.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${validatorimpl.version}</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<h3 id="logback-xml"><a href="#logback-xml" class="headerlink" title="logback.xml"></a>logback.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9" level="trace"/>
+  <logger name="org.mybatis.spring" level="trace"/>
+</configuration>
+</script></code></pre>
+<h3 id="jdbc-properties"><a href="#jdbc-properties" class="headerlink" title="jdbc.properties"></a>jdbc.properties</h3><pre><code class="language-properties line-numbers"><script type="text/plain">
+jdbc.driver = com.mysql.cj.jdbc.Driver
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.username = root
+jdbc.password = 123456
+jdbc.connectionTimeout = 10000
+jdbc.maxLifetime = 7200000
+jdbc.maximumPoolSize = 30
+</script></code></pre>
+<h3 id="web-xml"><a href="#web-xml" class="headerlink" title="web.xml"></a>web.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <servlet-name>springmvc</servlet-name>
+  </filter-mapping>
+
+  <servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+</web-app>
+</script></code></pre>
+<h3 id="mvc-xml"><a href="#mvc-xml" class="headerlink" title="mvc.xml"></a>mvc.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://mybatis.org/schema/mybatis-spring
+                           http://mybatis.org/schema/mybatis-spring.xsd">
+
+  <context:component-scan base-package="com.zfl9"/>
+  <context:property-placeholder ignore-unresolvable="true" file-encoding="UTF-8" location="classpath:jdbc.properties"/>
+
+  <mvc:annotation-driven/>
+  <mvc:default-servlet-handler/>
+
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/views/"/>
+    <property name="suffix" value=".jsp"/>
+  </bean>
+
+  <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+    <property name="driverClassName" value="${jdbc.driver}"/>
+    <property name="jdbcUrl" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+    <property name="connectionTimeout" value="${jdbc.connectionTimeout}"/>
+    <property name="maxLifetime" value="${jdbc.maxLifetime}"/>
+    <property name="maximumPoolSize" value="${jdbc.maximumPoolSize}"/>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+  <tx:annotation-driven/>
+
+  <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="typeAliasesPackage" value="com.zfl9.domain"/>
+    <property name="configuration">
+      <bean class="org.apache.ibatis.session.Configuration">
+        <property name="mapUnderscoreToCamelCase" value="true"/>
+      </bean>
+    </property>
+  </bean>
+
+  <mybatis:scan base-package="com.zfl9.mapper"/>
+
+</beans>
+</script></code></pre>
+<h3 id="Employee-java"><a href="#Employee-java" class="headerlink" title="Employee.java"></a>Employee.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.domain;
+
+public class Employee implements java.io.Serializable {
+    private static final long serialVersionUID = -8369197914775006439L;
+
+    private Integer id;
+    private String name;
+    private String email;
+    private String address;
+    private String telephone;
+
+    public Employee() {
+    }
+
+    public Employee(String name, String email, String address, String telephone) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Employee(Integer id, String name, String email, String address, String telephone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Employee[id=%s, name=%s, email=%s, address=%s, telephone=%s]", id, name, email, address, telephone);
+    }
+}
+</script></code></pre>
+<h3 id="EmployeeMapper-java"><a href="#EmployeeMapper-java" class="headerlink" title="EmployeeMapper.java"></a>EmployeeMapper.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.mapper;
+
+import java.util.List;
+import org.springframework.stereotype.Repository;
+import com.zfl9.domain.Employee;
+
+@Repository
+public interface EmployeeMapper {
+    Employee getEmployeeById(int id);
+
+    List<Employee> getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</script></code></pre>
+<h3 id="EmployeeMapper-xml"><a href="#EmployeeMapper-xml" class="headerlink" title="EmployeeMapper.xml"></a>EmployeeMapper.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zfl9.mapper.EmployeeMapper">
+  <select id="getEmployeeById" resultType="Employee">
+    select id,name,email,address,telephone from employee where id=#{id}
+  </select>
+
+  <select id="getAllEmployees" resultType="Employee">
+    select id,name,email,address,telephone from employee
+  </select>
+
+  <insert id="addEmployee" useGeneratedKeys="true" keyProperty="id">
+    insert into employee(name, email, address, telephone) values(#{name}, #{email}, #{address}, #{telephone})
+  </insert>
+
+  <update id="updateEmployee">
+    update employee set name=#{name}, email=#{email}, address=#{address}, telephone=#{telephone} where id=#{id}
+  </update>
+
+  <delete id="deleteEmployeeById">
+    delete from employee where id=#{id}
+  </delete>
+
+  <delete id="deleteAllEmployees">
+    delete from employee
+  </delete>
+
+  <delete id="truncateEmployeeTable">
+    truncate table employee
+  </delete>
+</mapper>
+</script></code></pre>
+<h3 id="EmployeeService-java"><a href="#EmployeeService-java" class="headerlink" title="EmployeeService.java"></a>EmployeeService.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.service;
+
+import java.util.List;
+import com.zfl9.domain.Employee;
+
+public interface EmployeeService {
+    Employee getEmployeeById(int id);
+
+    List<Employee> getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</script></code></pre>
+<h3 id="EmployeeServiceImpl-java"><a href="#EmployeeServiceImpl-java" class="headerlink" title="EmployeeServiceImpl.java"></a>EmployeeServiceImpl.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.service;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.zfl9.domain.Employee;
+import com.zfl9.mapper.EmployeeMapper;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    @Override
+    public Employee getEmployeeById(int id) {
+        return employeeMapper.getEmployeeById(id);
+    }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        return employeeMapper.getAllEmployees();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int addEmployee(Employee employee) {
+        return employeeMapper.addEmployee(employee);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateEmployee(Employee employee) {
+        return employeeMapper.updateEmployee(employee);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteEmployeeById(int id) {
+        return employeeMapper.deleteEmployeeById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteAllEmployees() {
+        return employeeMapper.deleteAllEmployees();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void truncateEmployeeTable() {
+        employeeMapper.truncateEmployeeTable();
+    }
+}
+</script></code></pre>
+<h3 id="EmployeeController-java"><a href="#EmployeeController-java" class="headerlink" title="EmployeeController.java"></a>EmployeeController.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.zfl9.domain.Employee;
+import com.zfl9.service.EmployeeService;
+
+@Controller
+@RequestMapping("/employees")
+public class EmployeeController {
+    @Autowired
+    private EmployeeService employeeService;
+
+    @GetMapping
+    public String listEmployee(Model model) {
+        model.addAttribute("employees", employeeService.getAllEmployees());
+        return "employee-list";
+    }
+
+    @GetMapping("/new")
+    public String newEmployee(Model model) {
+        model.addAttribute("title", "Create Employee");
+        model.addAttribute("employee", new Employee());
+        return "employee-edit";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editEmployee(Model model, @PathVariable int id) {
+        model.addAttribute("title", "Update Employee");
+        model.addAttribute("employee", employeeService.getEmployeeById(id));
+        return "employee-edit";
+    }
+
+    @PostMapping("/save")
+    public String saveEmployee(@ModelAttribute Employee employee) {
+        if (employee.getId() == null) {
+            employeeService.addEmployee(employee);
+        } else {
+            employeeService.updateEmployee(employee);
+        }
+        return "redirect:/employees";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteEmployee(@PathVariable String id) {
+        if ("all".equals(id)) {
+            employeeService.deleteAllEmployees();
+        } else {
+            employeeService.deleteEmployeeById(Integer.valueOf(id));
+        }
+        return "redirect:/employees";
+    }
+}
+</script></code></pre>
+<h3 id="index-jsp"><a href="#index-jsp" class="headerlink" title="index.jsp"></a>index.jsp</h3><pre><code class="language-html line-numbers"><script type="text/plain">
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
+<core:set var="ctx" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>index</title>
+  </head>
+  <body>
+    <div align="center">
+      <h2><a href="${ctx}/employees">Employee Management System</a></h2>
+    </div>
+  </body>
+</html>
+</script></code></pre>
+<h3 id="employee-list-jsp"><a href="#employee-list-jsp" class="headerlink" title="employee-list.jsp"></a>employee-list.jsp</h3><pre><code class="language-html line-numbers"><script type="text/plain">
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
+<core:set var="ctx" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>List Employee</title>
+  </head>
+  <body>
+    <div align="center">
+      <h1>List Employee</h1>
+      <table border="1">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Telephone</th>
+          <th>Action</th>
+        </tr>
+        <core:forEach items="${employees}" var="employee">
+          <tr>
+            <td>${employee.id}</td>
+            <td>${employee.name}</td>
+            <td>${employee.email}</td>
+            <td>${employee.address}</td>
+            <td>${employee.telephone}</td>
+            <td>
+              <a href="${ctx}/employees/edit/${employee.id}">Edit</a>
+              <a href="${ctx}/employees/delete/${employee.id}">Delete</a>
+            </td>
+          </tr>
+        </core:forEach>
+      </table>
+      <h3><a href="${ctx}/employees/new">Create Employee</a></h3>
+      <h3><a href="${ctx}/employees/delete/all">Delete All Employee</a></h3>
+    </div>
+  </body>
+</html>
+</script></code></pre>
+<h3 id="employee-edit-jsp"><a href="#employee-edit-jsp" class="headerlink" title="employee-edit.jsp"></a>employee-edit.jsp</h3><pre><code class="language-html line-numbers"><script type="text/plain">
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<core:set var="ctx" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Edit Employee</title>
+  </head>
+  <body>
+    <div align="center">
+      <h1>${title}</h1>
+      <form:form action="${ctx}/employees/save" method="post" modelAttribute="employee">
+        <form:hidden path="id"/>
+        <table>
+          <tr>
+            <td>Name:</td>
+            <td><form:input path="name"/></td>
+          </tr>
+          <tr>
+            <td>Email:</td>
+            <td><form:input path="email"/></td>
+          </tr>
+          <tr>
+            <td>Address:</td>
+            <td><form:input path="address"/></td>
+          </tr>
+          <tr>
+            <td>Telephone:</td>
+            <td><form:input path="telephone"/></td>
+          </tr>
+        </table>
+        <input type="submit" value="Save">
+      </form:form>
+    </div>
+  </body>
+</html>
+</script></code></pre>
+<h3 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h3><p>日志输出：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+C:\Otokaze\tomcat\bin\catalina.bat run
+[2019-01-27 11:56:47,647] Artifact SpringMVC_MyBatis:war exploded: Waiting for server connection to start artifact deployment...
+Using CATALINA_BASE:   "C:\Users\Otokaze\.IntelliJIdea2018.3\system\tomcat\Unnamed_SpringMVC_MyBatis"
+Using CATALINA_HOME:   "C:\Otokaze\tomcat"
+Using CATALINA_TMPDIR: "C:\Otokaze\tomcat\temp"
+Using JRE_HOME:        "C:\Program Files\Java\jdk1.8.0_172"
+Using CLASSPATH:       "C:\Otokaze\tomcat\bin\bootstrap.jar;C:\Otokaze\tomcat\bin\tomcat-juli.jar"
+27-Jan-2019 11:56:48.326 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Server version:        Tomcat
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Server number:         
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Windows 10
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            10.0
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             C:\Program Files\Java\jdk1.8.0_172\jre
+27-Jan-2019 11:56:48.329 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           1.8.0_172-b11
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Oracle Corporation
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         C:\Users\Otokaze\.IntelliJIdea2018.3\system\tomcat\Unnamed_SpringMVC_MyBatis
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         C:\Otokaze\tomcat
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=C:\Users\Otokaze\.IntelliJIdea2018.3\system\tomcat\Unnamed_SpringMVC_MyBatis\conf\logging.properties
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote=
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.port=1099
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.ssl=false
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.authenticate=false
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.rmi.server.hostname=127.0.0.1
+27-Jan-2019 11:56:48.330 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+27-Jan-2019 11:56:48.331 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+27-Jan-2019 11:56:48.331 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+27-Jan-2019 11:56:48.331 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=C:\Users\Otokaze\.IntelliJIdea2018.3\system\tomcat\Unnamed_SpringMVC_MyBatis
+27-Jan-2019 11:56:48.331 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=C:\Otokaze\tomcat
+27-Jan-2019 11:56:48.331 信息 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=C:\Otokaze\tomcat\temp
+27-Jan-2019 11:56:48.331 信息 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded APR based Apache Tomcat Native library [1.2.18] using APR version [1.6.5].
+27-Jan-2019 11:56:48.332 信息 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+27-Jan-2019 11:56:48.332 信息 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+27-Jan-2019 11:56:48.336 信息 [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 1.1.1  11 Sep 2018]
+27-Jan-2019 11:56:48.423 信息 [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-apr-0.0.0.0-80"]
+27-Jan-2019 11:56:48.436 信息 [main] org.apache.catalina.startup.Catalina.load Initialization processed in 344 ms
+27-Jan-2019 11:56:48.446 信息 [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+27-Jan-2019 11:56:48.446 信息 [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet Engine: Tomcat
+27-Jan-2019 11:56:48.464 信息 [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-apr-0.0.0.0-80"]
+27-Jan-2019 11:56:48.468 信息 [main] org.apache.catalina.startup.Catalina.start Server startup in 32 ms
+Connected to server
+[2019-01-27 11:56:48,747] Artifact SpringMVC_MyBatis:war exploded: Artifact is being deployed, please wait...
+27-Jan-2019 11:56:50.443 信息 [RMI TCP Connection(3)-127.0.0.1] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+11:56:50.608 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.DispatcherServlet - FrameworkServlet 'springmvc': initialization started
+11:56:50.631 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.context.support.XmlWebApplicationContext - Refreshing WebApplicationContext for namespace 'springmvc-servlet': startup date [Sun Jan 27 11:56:50 CST 2019]; root of context hierarchy
+11:56:50.723 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from ServletContext resource [/WEB-INF/mvc.xml]
+11:56:50.986 [RMI TCP Connection(3)-127.0.0.1] TRACE org.mybatis.spring.mapper.ClassPathMapperScanner - Scanning file [C:\Users\Otokaze\IdeaProjects\SpringMVC_MyBatis\target\SpringMVC_MyBatis-1.0-SNAPSHOT\WEB-INF\classes\com\zfl9\mapper\EmployeeMapper.class]
+11:56:50.986 [RMI TCP Connection(3)-127.0.0.1] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Identified candidate component class: file [C:\Users\Otokaze\IdeaProjects\SpringMVC_MyBatis\target\SpringMVC_MyBatis-1.0-SNAPSHOT\WEB-INF\classes\com\zfl9\mapper\EmployeeMapper.class]
+11:56:50.987 [RMI TCP Connection(3)-127.0.0.1] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'employeeMapper' and 'com.zfl9.mapper.EmployeeMapper' mapperInterface
+11:56:50.987 [RMI TCP Connection(3)-127.0.0.1] DEBUG org.mybatis.spring.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'employeeMapper'.
+11:56:51.435 [RMI TCP Connection(3)-127.0.0.1] DEBUG org.mybatis.spring.SqlSessionFactoryBean - Scanned package: 'com.zfl9.domain' for aliases
+11:56:51.435 [RMI TCP Connection(3)-127.0.0.1] DEBUG org.mybatis.spring.SqlSessionFactoryBean - Property 'mapperLocations' was not specified or no matching resources found
+11:56:51.726 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped "{[/employees/edit/{id}],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.editEmployee(org.springframework.ui.Model,int)
+11:56:51.727 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped "{[/employees/save],methods=[POST]}" onto public java.lang.String com.zfl9.controller.EmployeeController.saveEmployee(com.zfl9.domain.Employee)
+11:56:51.727 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped "{[/employees/delete/{id}],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.deleteEmployee(java.lang.String)
+11:56:51.727 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped "{[/employees],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.listEmployee(org.springframework.ui.Model)
+11:56:51.728 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped "{[/employees/new],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.newEmployee(org.springframework.ui.Model)
+11:56:51.784 [RMI TCP Connection(3)-127.0.0.1] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 6.0.13.Final
+11:56:52.414 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - Looking for @ControllerAdvice: WebApplicationContext for namespace 'springmvc-servlet': startup date [Sun Jan 27 11:56:50 CST 2019]; root of context hierarchy
+11:56:52.473 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - Looking for @ControllerAdvice: WebApplicationContext for namespace 'springmvc-servlet': startup date [Sun Jan 27 11:56:50 CST 2019]; root of context hierarchy
+11:56:52.531 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.handler.SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler 'org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler#0'
+11:56:52.625 [RMI TCP Connection(3)-127.0.0.1] INFO  org.springframework.web.servlet.DispatcherServlet - FrameworkServlet 'springmvc': initialization completed in 2014 ms
+[2019-01-27 11:56:52,645] Artifact SpringMVC_MyBatis:war exploded: Artifact is deployed successfully
+[2019-01-27 11:56:52,645] Artifact SpringMVC_MyBatis:war exploded: Deploy took 3,898 milliseconds
+</script></code></pre>
+<p>员工列表：<br><img src="/images/ssm-employee-list.png" alt="员工列表"></p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+11:59:43.289 [tomcat-exec-15] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+11:59:43.296 [tomcat-exec-15] DEBUG org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@34cc1901] was not registered for synchronization because synchronization is not active
+11:59:43.309 [tomcat-exec-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:59:43.503 [tomcat-exec-15] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+11:59:43.506 [tomcat-exec-15] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@916338379 wrapping com.mysql.cj.jdbc.ConnectionImpl@68966b5a] will not be managed by Spring
+11:59:43.509 [tomcat-exec-15] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+11:59:43.539 [tomcat-exec-15] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - ==> Parameters: 
+11:59:43.563 [tomcat-exec-15] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+11:59:43.563 [tomcat-exec-15] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 25, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 18819342665
+11:59:43.570 [tomcat-exec-15] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 26, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 15579122562
+11:59:43.570 [tomcat-exec-15] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 27, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 15307973676
+11:59:43.570 [tomcat-exec-15] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==      Total: 3
+11:59:43.571 [tomcat-exec-15] DEBUG org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@34cc1901]
+</script></code></pre>
+<p>新建员工：<br><img src="/images/ssm-employee-new.png" alt="新建员工"></p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+12:01:23.087 [tomcat-exec-2] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+12:01:23.087 [tomcat-exec-2] DEBUG org.mybatis.spring.SqlSessionUtils - Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7e7e3275]
+12:01:23.089 [tomcat-exec-2] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@1025260170 wrapping com.mysql.cj.jdbc.ConnectionImpl@68966b5a] will be managed by Spring
+12:01:23.089 [tomcat-exec-2] DEBUG com.zfl9.mapper.EmployeeMapper.addEmployee - ==>  Preparing: insert into employee(name, email, address, telephone) values(?, ?, ?, ?) 
+12:01:23.089 [tomcat-exec-2] DEBUG com.zfl9.mapper.EmployeeMapper.addEmployee - ==> Parameters: 曾飞龙(String), zfl9.com@gmail.com(String), 梅窖镇三僚村排上组 23 号(String), 13387972297(String)
+12:01:23.091 [tomcat-exec-2] DEBUG com.zfl9.mapper.EmployeeMapper.addEmployee - <==    Updates: 1
+12:01:23.092 [tomcat-exec-2] DEBUG org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7e7e3275]
+12:01:23.093 [tomcat-exec-2] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization committing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7e7e3275]
+12:01:23.093 [tomcat-exec-2] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7e7e3275]
+12:01:23.093 [tomcat-exec-2] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7e7e3275]
+12:01:23.103 [tomcat-exec-5] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+12:01:23.103 [tomcat-exec-5] DEBUG org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@4dc78a17] was not registered for synchronization because synchronization is not active
+12:01:23.104 [tomcat-exec-5] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@1124101599 wrapping com.mysql.cj.jdbc.ConnectionImpl@68966b5a] will not be managed by Spring
+12:01:23.104 [tomcat-exec-5] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+12:01:23.104 [tomcat-exec-5] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - ==> Parameters: 
+12:01:23.105 [tomcat-exec-5] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+12:01:23.105 [tomcat-exec-5] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 25, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 18819342665
+12:01:23.106 [tomcat-exec-5] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 26, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 15579122562
+12:01:23.106 [tomcat-exec-5] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 27, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 15307973676
+12:01:23.106 [tomcat-exec-5] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 28, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 13387972297
+12:01:23.106 [tomcat-exec-5] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==      Total: 4
+12:01:23.106 [tomcat-exec-5] DEBUG org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@4dc78a17]
+</script></code></pre>
+<p>编辑员工：<br><img src="/images/ssm-employee-edit.png" alt="编辑员工"></p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+12:02:50.506 [tomcat-exec-4] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+12:02:50.506 [tomcat-exec-4] DEBUG org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@71e6bf65] was not registered for synchronization because synchronization is not active
+12:02:50.506 [tomcat-exec-4] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@1977165185 wrapping com.mysql.cj.jdbc.ConnectionImpl@68966b5a] will not be managed by Spring
+12:02:50.506 [tomcat-exec-4] DEBUG com.zfl9.mapper.EmployeeMapper.getEmployeeById - ==>  Preparing: select id,name,email,address,telephone from employee where id=? 
+12:02:50.507 [tomcat-exec-4] DEBUG com.zfl9.mapper.EmployeeMapper.getEmployeeById - ==> Parameters: 28(Integer)
+12:02:50.507 [tomcat-exec-4] TRACE com.zfl9.mapper.EmployeeMapper.getEmployeeById - <==    Columns: id, name, email, address, telephone
+12:02:50.508 [tomcat-exec-4] TRACE com.zfl9.mapper.EmployeeMapper.getEmployeeById - <==        Row: 28, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 13387972297
+12:02:50.508 [tomcat-exec-4] DEBUG com.zfl9.mapper.EmployeeMapper.getEmployeeById - <==      Total: 1
+12:02:50.508 [tomcat-exec-4] DEBUG org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@71e6bf65]
+12:03:14.164 [tomcat-exec-8] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+12:03:14.164 [tomcat-exec-8] DEBUG org.mybatis.spring.SqlSessionUtils - Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@72db62d2]
+12:03:14.165 [tomcat-exec-8] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@2015562146 wrapping com.mysql.cj.jdbc.ConnectionImpl@68966b5a] will be managed by Spring
+12:03:14.165 [tomcat-exec-8] DEBUG com.zfl9.mapper.EmployeeMapper.updateEmployee - ==>  Preparing: update employee set name=?, email=?, address=?, telephone=? where id=? 
+12:03:14.166 [tomcat-exec-8] DEBUG com.zfl9.mapper.EmployeeMapper.updateEmployee - ==> Parameters: 曾飞龙(String), zfl9.com@gmail.com(String), 梅窖镇三僚村排上组 23 号(String), 1234567890(String), 28(Integer)
+12:03:14.167 [tomcat-exec-8] DEBUG com.zfl9.mapper.EmployeeMapper.updateEmployee - <==    Updates: 1
+12:03:14.168 [tomcat-exec-8] DEBUG org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@72db62d2]
+12:03:14.168 [tomcat-exec-8] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization committing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@72db62d2]
+12:03:14.168 [tomcat-exec-8] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@72db62d2]
+12:03:14.168 [tomcat-exec-8] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@72db62d2]
+12:03:14.214 [tomcat-exec-9] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+12:03:14.214 [tomcat-exec-9] DEBUG org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@2922764c] was not registered for synchronization because synchronization is not active
+12:03:14.215 [tomcat-exec-9] DEBUG org.mybatis.spring.transaction.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@669359384 wrapping com.mysql.cj.jdbc.ConnectionImpl@68966b5a] will not be managed by Spring
+12:03:14.215 [tomcat-exec-9] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+12:03:14.215 [tomcat-exec-9] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - ==> Parameters: 
+12:03:14.216 [tomcat-exec-9] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+12:03:14.216 [tomcat-exec-9] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 25, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 18819342665
+12:03:14.217 [tomcat-exec-9] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 26, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 15579122562
+12:03:14.218 [tomcat-exec-9] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 27, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 15307973676
+12:03:14.219 [tomcat-exec-9] TRACE com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==        Row: 28, 曾飞龙, zfl9.com@gmail.com, 梅窖镇三僚村排上组 23 号, 1234567890
+12:03:14.220 [tomcat-exec-9] DEBUG com.zfl9.mapper.EmployeeMapper.getAllEmployees - <==      Total: 4
+12:03:14.220 [tomcat-exec-9] DEBUG org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@2922764c]
+</script></code></pre>
+<h3 id="相关说明"><a href="#相关说明" class="headerlink" title="相关说明"></a>相关说明</h3><p><strong>mvc.xml 中的 mybatis 相关配置</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!--
+SqlSessionFactoryBean 实现了 org.springframework.beans.factory.FactoryBean 接口
+FactoryBean 返回的对象不是 FactoryBean 实例本身，而是 getObject() 方法返回的对象
+而 SqlSessionFactoryBean 的 getObject() 返回的是 SqlSessionFactory 对象，所以通过
+调用容器的 getBean("sessionFactory") 方法获取的将是 SqlSessionFactory 类的一个实例
+-->
+<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+  <!-- 数据源，需要与关联的事务管理器中的数据源相同 -->
+  <property name="dataSource" ref="dataSource"/>
+  <!-- 实体类的别名，为了方便直接设为 com.zfl9.domain 包 -->
+  <property name="typeAliasesPackage" value="com.zfl9.domain"/>
+  <!-- 原 mybatis-config.xml 中的 settings 标签，可以写在这里 -->
+  <property name="configuration">
+    <bean class="org.apache.ibatis.session.Configuration">
+      <!-- 自动进行下划线命名法到驼峰命名法的映射 -->
+      <property name="mapUnderscoreToCamelCase" value="true"/>
+    </bean>
+  </property>
+</bean>
+
+<!-- 扫描指定包下的 mapper，然后就可以使用 @Autowired 来自动装配 mapper -->
+<mybatis:scan base-package="com.zfl9.mapper"/>
+</script></code></pre>
+<p><strong>Mapper 接口上面的 @Repository 注解</strong><br>这个注解其实不是必须的，但是由于 idea 无法检测到 <code>&lt;mybatis:scan base-package=&quot;com.zfl9.mapper&quot;/&gt;</code> 这种形式的组件扫描，所以如果你不在 mapper 接口上使用这个注解（当然其它组件扫描注解都可以），那么当你在 service 上使用 @Autowired 来自动装配 Mapper 接口实现类的时候，idea 就会报错，所以干脆就在接口上面使用这个 @Repository 注解，这样 idea 就不会有报错了。</p>
+<p><strong>EmployeeServiceImpl 里面的注解说明</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    @Override
+    public Employee getEmployeeById(int id) {
+        return employeeMapper.getEmployeeById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int addEmployee(Employee employee) {
+        return employeeMapper.addEmployee(employee);
+    }
+}
+</script></code></pre>
+<p>注意我们直接使用 @Autowired 来自动装配 EmployeeMapper 的实现类，这时候有些人就有疑问了，不是说 SqlSession/Mapper 不是线程安全的么？为什么这里可以这样用呢？因为 Spring 中的 bean 默认都是单例模式，所以这个注入进来的 employeeMapper 实际上也是单例模式，而 servlet 是运行在多线程环境中的，难道不会出现线程安全问题？其实不用担心，mybatis-spring 早就考虑到了这种情况，并且我上面的这种用法和官方文档的用法也是一样的，那么这里面的机制到底是怎么样的呢？</p>
+<p>将 spring 与 mybatis 整合之后，对一级缓存和二级缓存产生了一些影响：</p>
+<ul>
+<li>如果当前 service 方法未开启事务，那么每次调用 mapper 的增删改查方法使用的都是新获取的 sqlSession，每次调用使用的 sqlSession 都是不一样的，所以此时一级缓存不会生效，但是二级缓存会生效，因为 sqlSession 关闭或提交之后，就会将一级缓存中的数据转移到二级缓存中。</li>
+<li>如果当前 service 方法开启了事务，那么该方法内的所有 mapper 的增删改查方法调用都是使用的同一个 sqlSession，mybatis-spring 会使用 thread-local 保存与当前线程相关联的 sqlSession，从而避免锁的存在；因为该方法内的所有 mapper 调用都是使用的同一个 sqlSession，所以此时一级缓存是有效的，当然二级缓存也是有效的（在开启了二级缓存的情况下）。</li>
+</ul>
+<p>所以这个自动装配的 employeeMapper 实际上与我们以前直接使用 mybatis 框架中的 employeeMapper 是不同的，前者是线程安全的，而且里面会做上述判断，如果当前方法未配置事务，则每次调用都是使用新的 sqlSession，如果配置了事务，则当前方法内的所有调用都是使用的同一个 sqlSession；而后者的线程安全性和生命周期都和原始 sqlSession 一样，非线程安全，且建议在方法内部进行初始化和销毁操作。</p>
+<p><strong>未开启事务</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Service
+public class CountryService {
+    @Autowired
+    private CountryDao countryDao;
+
+    public void noTranSactionMethod() throws JsonProcessingException {
+        CountryDo countryDo = countryDao.getById(1L);
+        CountryDo countryDo1 = countryDao.getById(1L);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(countryDo);
+        String json1 = objectMapper.writeValueAsString(countryDo1);
+        System.out.println(json);
+        System.out.println(json1);
+    }
+}
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[DEBUG] SqlSessionUtils Creating a new SqlSession
+[DEBUG] SpringManagedTransaction JDBC Connection [com.mysql.jdbc.JDBC4Connection@14a54ef6] will not be managed by Spring
+[DEBUG] getById ==>  Preparing: SELECT * FROM country WHERE country_id = ?
+[DEBUG] getById ==> Parameters: 1(Long)
+[DEBUG] getById <==      Total: 1
+[DEBUG] SqlSessionUtils Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@3359c978]
+[DEBUG] SqlSessionUtils Creating a new SqlSession
+[DEBUG] SqlSessionUtils SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@2aa27288] was not registered for synchronization because synchronization is not active
+[DEBUG] SpringManagedTransaction JDBC Connection [com.mysql.jdbc.JDBC4Connection@14a54ef6] will not be managed by Spring
+[DEBUG] getById ==>  Preparing: SELECT * FROM country WHERE country_id = ?
+[DEBUG] getById ==> Parameters: 1(Long)
+[DEBUG] getById <==      Total: 1
+[DEBUG] SqlSessionUtils Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@2aa27288]
+{"countryId":1,"country":"Afghanistan","lastUpdate":"2006-02-15 04:44:00.0"}
+{"countryId":1,"country":"Afghanistan","lastUpdate":"2006-02-15 04:44:00.0"}
+</script></code></pre>
+<p>可以看到每次调用 employeeMapper 的方法都是使用的新的 sqlSession 对象，调用完之后这个 sqlSession 就会被关闭。</p>
+<p><strong>开启了事务</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Service
+public class CountryService {
+    @Autowired
+    private CountryDao countryDao;
+
+    @Transactional
+    public void noTranSactionMethod() throws JsonProcessingException {
+        CountryDo countryDo = countryDao.getById(1L);
+        CountryDo countryDo1 = countryDao.getById(1L);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(countryDo);
+        String json1 = objectMapper.writeValueAsString(countryDo1);
+        System.out.println(json);
+        System.out.println(json1);
+    }
+}
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[DEBUG] SqlSessionUtils Creating a new SqlSession
+[DEBUG] SqlSessionUtils Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@109f5dd8]
+[DEBUG] SpringManagedTransaction JDBC Connection [com.mysql.jdbc.JDBC4Connection@55caeb35] will be managed by Spring
+[DEBUG] getById ==>  Preparing: SELECT * FROM country WHERE country_id = ?
+[DEBUG] getById ==> Parameters: 1(Long)
+[DEBUG] getById <==      Total: 1
+[DEBUG] SqlSessionUtils Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@109f5dd8]
+[DEBUG] SqlSessionUtils Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@109f5dd8] from current transaction
+[DEBUG] SqlSessionUtils Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@109f5dd8]
+{"countryId":1,"country":"Afghanistan","lastUpdate":"2006-02-15 04:44:00.0"}
+{"countryId":1,"country":"Afghanistan","lastUpdate":"2006-02-15 04:44:00.0"}
+</script></code></pre>
+<p>可以看到，两次 mapper 方法调用使用的是同一个 sqlSession 对象，所以此时一级缓存是有效的。</p>
+<p><strong><code>&lt;mybatis:scan base-package=&quot;com.zfl9.mapper&quot;/&gt;</code></strong><br>这种写法其实是 mybatis-spring 新版提供的简写方式，原先还有这种写法：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+  <property name="basePackage" value="com.zfl9.mapper"/>
+</bean>
+</script></code></pre>
+<p>貌似使用 <code>mybatis:scan</code> 简写方式，idea 会报错，如果有强迫症，最好使用原先的老方法。</p>
+<p><strong>idea 和 spring 不建议在私有属性上使用 @Autowired 自动装配</strong><br>idea 和 spring 的建议是，在构造函数、setter 方法上使用 @Autowired 自动装配，不建议直接在私有属性上使用它。</p>
+<h2 id="SSM-框架整合-全注解"><a href="#SSM-框架整合-全注解" class="headerlink" title="SSM 框架整合-全注解"></a>SSM 框架整合-全注解</h2><p>其实和上面的 xml-based 例子没多大区别，只是将 web.xml、mvc.xml 替换为 java-based 类文件而已：</p>
+<ul>
+<li><code>web.xml</code> servlet 配置文件：使用 <code>WebConfig.java</code> 类替代</li>
+<li><code>mvc.xml</code> springmvc 配置文件：使用 <code>MvcConfig.java</code> 类替代</li>
+</ul>
+<h3 id="WebConfig-java"><a href="#WebConfig-java" class="headerlink" title="WebConfig.java"></a>WebConfig.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import javax.servlet.Filter;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return null;
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{MvcConfig.class};
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[]{characterEncodingFilter};
+    }
+}
+</script></code></pre>
+<h3 id="MvcConfig-java"><a href="#MvcConfig-java" class="headerlink" title="MvcConfig.java"></a>MvcConfig.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import javax.sql.DataSource;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import com.zaxxer.hikari.HikariDataSource;
+
+@Configuration
+@ComponentScan
+@EnableWebMvc
+@EnableTransactionManagement
+@MapperScan("com.zfl9.mapper")
+@PropertySource("classpath:jdbc.properties")
+public class MvcConfig extends WebMvcConfigurerAdapter {
+    @Autowired
+    private Environment environment;
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.jsp("/WEB-INF/views/", ".jsp");
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
+        dataSource.setJdbcUrl(environment.getProperty("jdbc.url"));
+        dataSource.setUsername(environment.getProperty("jdbc.username"));
+        dataSource.setPassword(environment.getProperty("jdbc.password"));
+        dataSource.setConnectionTimeout(Long.parseLong(environment.getProperty("jdbc.connectionTimeout")));
+        dataSource.setMaxLifetime(Long.parseLong(environment.getProperty("jdbc.maxLifetime")));
+        dataSource.setMaximumPoolSize(Integer.parseInt(environment.getProperty("jdbc.maximumPoolSize")));
+        return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Bean
+    public SqlSessionFactoryBean sqlSessionFactory() {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource());
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.zfl9.domain");
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
+        sqlSessionFactoryBean.setConfiguration(configuration);
+        return sqlSessionFactoryBean;
+    }
+}
+</script></code></pre>
+<h3 id="mvc-xml-相关解释"><a href="#mvc-xml-相关解释" class="headerlink" title="mvc.xml 相关解释"></a>mvc.xml 相关解释</h3><p>先来说 MvcConfig.java，这个大家应该比较熟悉了，就是 spring.xml 的 java-based 版本：</p>
+<p><strong>注解相关</strong></p>
+<ul>
+<li><code>@Configuration</code>：表示当前类是一个 spring 配置类，类似于一个 spring.xml 配置文件。</li>
+<li><code>@ComponentScan</code>：启用组件扫描，如果不指定 basePackage，则默认为当前 package（含子包）。</li>
+<li><code>@EnableWebMvc</code>：启用 mvc 的注解驱动功能，等价于 xml 配置文件中的 <code>&lt;mvc:annotation-driven/&gt;</code>。</li>
+<li><code>@EnableTransactionManagement</code>：启用 tx 的注解驱动功能，等价于 xml 配置文件中的 <code>&lt;tx:annotation-driven/&gt;</code>。</li>
+<li><code>@MapperScan(&quot;com.zfl9.mapper&quot;)</code>：扫描指定包下的映射器并自动注入，等价于 <code>&lt;mybatis:scan base-package=&quot;com.zfl9.mapper&quot;/&gt;</code>。</li>
+<li><code>@PropertySource</code>：引入外部属性文件，等价于 xml 的 <code>&lt;context:property-placeholder location=&quot;classpath:jdbc.properties&quot;/&gt;</code>。</li>
+</ul>
+<blockquote>
+<p>如果看过 <code>@Configuration</code> 的 javadoc，你会发现它还被 <code>@Component</code> 标注了，所以 <code>@Configuration</code> 配置类也是一个 bean，会被自动注册到 Spring 的 Context 上下文容器中。所以适用于 @Component（及其衍生注解）的规则和方法基本上都适用于 @Configuration 标注的配置类。</p>
+</blockquote>
+<p><strong>继承的类</strong></p>
+<ul>
+<li><code>WebMvcConfigurer</code>：WebMvcConfigurer 配置接口，提供了一些常用配置方法，在 spring 5.0 之后，因为是使用 java 8 构建的，所以直接在接口中提供了默认实现，于是 WebMvcConfigurerAdapter 适配器就被弃用了，因此如果你使用 spring 5.0，请记得改用为 implements WebMvcConfigurer 接口，而不是 extends WebMvcConfigurerAdapter 抽象类；但是因为我还是使用的 spring 4.3.20，所以上面仍然使用 WebMvcConfigurerAdapter 适配器。</li>
+<li><code>WebMvcConfigurerAdapter</code>：WebMvcConfigurer 抽象基类，提供了接口的默认实现，这样我们只重写其中一些方法就可以使用了。</li>
+</ul>
+<p><strong>Environment</strong><br><code>org.springframework.core.env.Environment</code> 意为“环境”，environment 包括两个方面的抽象：profile 和 property，profile 就是所谓的运行环境，比如 dev 为开发环境、test 为测试环境、prod 为生产环境，通常这些运行环境的 dataSource 等配置是不同的，所以我们可以通过在不同的 profile 下面配置相应的 dataSource 来解决这个问题；而 property 就是我们常说的 java 属性了，在上面就是可以用来引用 @PropertySource 加载的外部属性文件中的属性值，通过 <code>environment.getProperty(&quot;jdbc.url&quot;)</code> 就可以读取了，而不需要使用传统的 <code>@Value(&quot;${jdbc.url}&quot;)</code> 注解来读取。</p>
+<p><strong>configureDefaultServletHandling()</strong><br>WebMvcConfigurer 接口定义的方法，便于我们启用 spring mvc 的默认静态资源映射配置，等价于 xml 的 <code>&lt;mvc:default-servlet-handler/&gt;</code>。</p>
+<p><strong>configureViewResolvers()</strong><br>WebMvcConfigurer 接口定义的方法，便于我们设置 spring mvc 的视图解析器，这里我们就是要 jsp 视图解析器，设置了 prefix 和 suffix。</p>
+<p><strong>其它的几个 @Bean 方法</strong><br>没什么可讲的，你和上面的 mvc.xml 中的配置进行对比就非常清楚了。</p>
+<h3 id="web-xml-相关解释"><a href="#web-xml-相关解释" class="headerlink" title="web.xml 相关解释"></a>web.xml 相关解释</h3><p>其实在学习 tomcat 的时候我们就知道，从 servlet 3.0 开始，已经完全可以不需要 web.xml 部署描述符文件了，但是当时我们只是介绍了无 web.xml + @WebServlet 注解的简单形式，但其实我们可以完全通过 javaconfig 来替代 web.xml，进入“完全使用注解来配置的时代”。那么这是如何实现的呢？</p>
+<p>servlet 3.0 提供了一个接口：<code>ServletContainerInitializer</code>，意为“servlet 容器初始化器”，其实就是 web.xml 的 java-based 版本。和 jdbc 4.0 的 driver 服务自动发现机制一样，ServletContainerInitializer 接口也使用了 JDK 1.6 开始提供的 SPI 机制，也就是说，实现了 servlet 3.0 规范的应用服务器会利用 SPI 机制，扫描类路径下的 <code>META-INF/services/javax.servlet.ServletContainerInitializer</code> 文件（在讲 SPI 机制的时候学过），获取其中以行为单位的 ServletContainerInitializer 接口实现类的全限定类名，然后通过反射 API 实例化它们，再依次调用这些对象的 <code>onStartup(Set&lt;Class&lt;?&gt;&gt; c, ServletContext ctx)</code> 方法来注册 servlet、filter、listener 等 web 应用的基本组件。</p>
+<p>ServletContainerInitializer 接口只有一个方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException
+</script></code></pre>
+<p>第二个参数比较好理解，就是当前 servlet 的上下文对象；重点解释第一个参数。如果 ServletContainerInitializer 实现类上使用了 <code>@HandlesTypes</code> 注解（该注解只有一个 value 属性，用于指定一个或多个 Class 对象），那么 Servlet 容器（如 Tomcat）就会自动扫描类路径下的这些 Class 对象对应的 type 的 <strong>子类</strong>（extends）、<strong>实现类</strong>（implements）以及 <strong>当前类型</strong>（总结一句话就是，Servlet 容器会自动将与其兼容的类型注入到我们的 ServletContainerInitializer 实现类中，作为 onStartup() 方法的第一个参数传入），然后在调用初始化器的 onStartup() 方法时，就会自动将这些符合要求的 Class 对象作为一个 Set 集合传入进去（通过第一个参数），然后我们就可以在初始化器中调用这些 Class 对象的 newInstance() 方法来获取它们的实例（这些对象通常是我们感兴趣的对象），然后进行其他一些操作。</p>
+<p>spring-web 模块提供了 ServletContainerInitializer 实现类：<code>SpringServletContainerInitializer</code>，且配置到了 META-INF/services 中：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@HandlesTypes(WebApplicationInitializer.class)
+public class SpringServletContainerInitializer implements ServletContainerInitializer {
+    @Override
+    public void onStartup(Set<Class<?>> webAppInitializerClasses, ServletContext servletContext)
+            throws ServletException {
+
+        List<WebApplicationInitializer> initializers = new LinkedList<WebApplicationInitializer>();
+
+        if (webAppInitializerClasses != null) {
+            for (Class<?> waiClass : webAppInitializerClasses) {
+                // Be defensive: Some servlet containers provide us with invalid classes,
+                // no matter what @HandlesTypes says...
+                if (!waiClass.isInterface() && !Modifier.isAbstract(waiClass.getModifiers()) &&
+                        WebApplicationInitializer.class.isAssignableFrom(waiClass)) {
+                    try {
+                        initializers.add((WebApplicationInitializer) waiClass.newInstance());
+                    }
+                    catch (Throwable ex) {
+                        throw new ServletException("Failed to instantiate WebApplicationInitializer class", ex);
+                    }
+                }
+            }
+        }
+
+        if (initializers.isEmpty()) {
+            servletContext.log("No Spring WebApplicationInitializer types detected on classpath");
+            return;
+        }
+
+        servletContext.log(initializers.size() + " Spring WebApplicationInitializers detected on classpath");
+        AnnotationAwareOrderComparator.sort(initializers);
+        for (WebApplicationInitializer initializer : initializers) {
+            initializer.onStartup(servletContext);
+        }
+    }
+
+}
+</script></code></pre>
+<p>通过 spring-web 模块的源码可以看到，SpringServletContainerInitializer 实现类上使用了 <code>@HandlesTypes(WebApplicationInitializer.class)</code> 注解，表示 SpringServletContainerInitializer 对 WebApplicationInitializer 实现类或子类感兴趣，希望 Servlet 容器在调用其 onStartup() 方法时自动传入这些类的 Class 对象。然后 SpringServletContainerInitializer 会在 onStartup() 方法中获取容器自动注入进来的 Class 对象，如果不是空的，那么说明应用程序使用了基于 javaconfig 形式的 ServletContainerInitializer 配置，所以就会调用 Class 对象的 newInstance() 方法来对其实例化，然后经过排序，再依次调用这些对象的 onStartup() 方法。</p>
+<p>所以我们只要实现 WebApplicationInitializer 接口就可以直接使用 javaconfig 形式的 web.xml 配置了。不过 spring 为了方便，也提供了若干个 WebApplicationInitializer 接口的抽象基类，比如常用的 <code>AbstractAnnotationConfigDispatcherServletInitializer</code>，这个抽象类其实又是 <code>AbstractDispatcherServletInitializer</code> 抽象基类的扩展类，而 <code>AbstractDispatcherServletInitializer</code> 抽象类其实又是 <code>AbstractContextLoaderInitializer</code> 抽象基类的扩展类，而 <code>WebApplicationInitializer</code> 则实现了 WebApplicationInitializer 接口。所以，我们通常不会去直接实现 WebApplicationInitializer 接口，而是继承 AbstractAnnotationConfigDispatcherServletInitializer 抽象基类，然后重写几个重要的方法就行了。比如上面我就是这样做的。AbstractAnnotationConfigDispatcherServletInitializer 抽象类的几个常用方法：</p>
+<ul>
+<li><code>getRootConfigClasses()</code>：获取 root-config 配置类（根配置类），其实就是 web.xml 中的 ContextLoaderListener 使用的 spring 配置文件，因为我们不需要这个，所以直接返回 null 即可。</li>
+<li><code>getServletConfigClasses()</code>：获取 servlet-config 配置类（mvc 配置类），其实就是 web.xml 中的 DispatcherServlet 使用的 spring 配置文件，返回我们自己提供的 MvcConfig.class 就行了。</li>
+<li><code>getServletMappings()</code>：设置 DispatcherServlet 的 url-pattern，这里我们就照常设置为 <code>/</code> 就行了（默认映射到所有 url）。</li>
+<li><code>getServletFilters()</code>：设置 web.xml 中的 Filter 过滤器，这里就注册了一个强制规定字符编码为 UTF-8 的过滤器。</li>
+</ul>
+<p>通过这些配置（记得删除 WEB-INF 目录下的 web.xml 和 mvc.xml），我们就可以配置 Tomcat 服务器，然后启动进行测试了。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/spring-boot.html" rel="next" title="Spring Boot">
+                <i class="fa fa-chevron-left"></i> Spring Boot
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/mybatis.html" rel="prev" title="MyBatis 笔记">
+                MyBatis 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#整合-Spring-框架"><span class="nav-number">1.</span> <span class="nav-text">整合 Spring 框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSM-框架整合-示例"><span class="nav-number">2.</span> <span class="nav-text">SSM 框架整合-示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构"><span class="nav-number">2.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml"><span class="nav-number">2.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logback-xml"><span class="nav-number">2.3.</span> <span class="nav-text">logback.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdbc-properties"><span class="nav-number">2.4.</span> <span class="nav-text">jdbc.properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web-xml"><span class="nav-number">2.5.</span> <span class="nav-text">web.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-xml"><span class="nav-number">2.6.</span> <span class="nav-text">mvc.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Employee-java"><span class="nav-number">2.7.</span> <span class="nav-text">Employee.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-java"><span class="nav-number">2.8.</span> <span class="nav-text">EmployeeMapper.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-xml"><span class="nav-number">2.9.</span> <span class="nav-text">EmployeeMapper.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeService-java"><span class="nav-number">2.10.</span> <span class="nav-text">EmployeeService.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeServiceImpl-java"><span class="nav-number">2.11.</span> <span class="nav-text">EmployeeServiceImpl.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeController-java"><span class="nav-number">2.12.</span> <span class="nav-text">EmployeeController.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-jsp"><span class="nav-number">2.13.</span> <span class="nav-text">index.jsp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#employee-list-jsp"><span class="nav-number">2.14.</span> <span class="nav-text">employee-list.jsp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#employee-edit-jsp"><span class="nav-number">2.15.</span> <span class="nav-text">employee-edit.jsp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行项目"><span class="nav-number">2.16.</span> <span class="nav-text">运行项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关说明"><span class="nav-number">2.17.</span> <span class="nav-text">相关说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSM-框架整合-全注解"><span class="nav-number">3.</span> <span class="nav-text">SSM 框架整合-全注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WebConfig-java"><span class="nav-number">3.1.</span> <span class="nav-text">WebConfig.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MvcConfig-java"><span class="nav-number">3.2.</span> <span class="nav-text">MvcConfig.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-xml-相关解释"><span class="nav-number">3.3.</span> <span class="nav-text">mvc.xml 相关解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web-xml-相关解释"><span class="nav-number">3.4.</span> <span class="nav-text">web.xml 相关解释</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/spring-mybatis.html';
+          this.page.identifier = 'spring-mybatis.html';
+          this.page.title = 'Spring + SpringMVC + MyBatis';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="yum, yum源, yum仓库">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="yum 仓库的出现极大方便了 RHEL/CentOS 软件包的管理，此帖整理了日常使用中一些常用的 yum 源（包括第三方仓库）。">
+<meta name="keywords" content="linux,yum">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用 yum源 整理">
+<meta property="og:url" content="https://www.zfl9.com/yum-repo.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="yum 仓库的出现极大方便了 RHEL/CentOS 软件包的管理，此帖整理了日常使用中一些常用的 yum 源（包括第三方仓库）。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.421Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用 yum源 整理">
+<meta name="twitter:description" content="yum 仓库的出现极大方便了 RHEL/CentOS 软件包的管理，此帖整理了日常使用中一些常用的 yum 源（包括第三方仓库）。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/yum-repo.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>常用 yum源 整理 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/yum-repo.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                常用 yum源 整理
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-28T18:07:00+08:00">
+                2016-11-28
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/yum/" itemprop="url" rel="index">
+                    <span itemprop="name">yum</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/yum-repo.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="yum-repo.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/yum-repo.html" class="leancloud_visitors" data-flag-title="常用 yum源 整理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>yum 仓库的出现极大方便了 RHEL/CentOS 软件包的管理，此帖整理了日常使用中一些常用的 yum 源（包括第三方仓库）。</p>
+<a id="more"></a>
+<h3 id="yum用法"><a href="#yum用法" class="headerlink" title="yum用法"></a>yum用法</h3><pre><code class="language-bash line-numbers"><script type="text/plain">## 安装 gcc/g++ 编译环境
+yum -y groupinstall "Development Tools"
+
+## 安装 epel 源
+yum -y install epel-release
+
+## 安装常用工具
+yum -y install vim curl wget unzip p7zip ipset bind-utils telnet nc nmap openssh openssl zsh git tcpdump iproute psmisc mlocate ctags mailx bc xorg-x11-xauth xorg-x11-server-utils xterm
+
+## 安装常用依赖
+yum -y install curl-devel pcre-devel readline-devel sqlite-devel openssl-devel
+
+## yum 常用插件
+yum -y install yum-plugin-fastestmirror
+
+## yum 常用参数
+yum check-update    # 检查软件是否有更新
+yum update -y       # 更新所有 rpm 包
+
+yum provides xhost  # 查询哪个 rpm 包提供了 xhost 命令
+yum search telnet   # 以名称查找 rpm 包
+
+yum deplist nginx   # 查看 nginx 包依赖
+
+yum clean dbcache
+yum clean headers
+yum clean metadata
+yum clean packages
+yum clean all       # 清除 dbcache headers packages metadata
+
+## 重建 yum 缓存
+yum clean all
+yum makecache
+yum makecache fast  # 建立 fast_mirrors 缓存
+
+## 查询 ipset 命令属于哪个 rpm 包
+rpm -qf `which ipset`
+</script></code></pre>
+<h3 id="epel"><a href="#epel" class="headerlink" title="epel"></a>epel</h3><blockquote>
+<p>RedHat 扩展软件 yum 源</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> http://mirrors.ustc.edu.cn/fedora/epel/
+
+CentOS 6
+rpm -ivh http://mirrors.ustc.edu.cn/fedora/epel/epel-release-latest-6.noarch.rpm
+
+CentOS 7
+rpm -ivh http://mirrors.ustc.edu.cn/fedora/epel/epel-release-latest-7.noarch.rpm
+</code></pre>
+<h3 id="remi"><a href="#remi" class="headerlink" title="remi"></a>remi</h3><blockquote>
+<p>php/mysql 等 yum 源</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> http://rpms.famillecollet.com/
+
+CentOS 6
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+
+CentOS 7
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+</code></pre>
+<h3 id="webtatic"><a href="#webtatic" class="headerlink" title="webtatic"></a>webtatic</h3><blockquote>
+<p>php7 最新版 yum 源</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> https://mirror.webtatic.com/yum/
+
+CentOS 6
+rpm -ivh https://mirror.webtatic.com/yum/el6/latest.rpm
+
+CentOS 7
+rpm -ivh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+</code></pre>
+<h3 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h3><blockquote>
+<p>nginx yum 源（epel 已经有了 nginx 软件包，可以不用配置 nginx 仓库）</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
+
+CentOS
+--- nginx.repo ---
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+--- nginx.repo ---
+
+RHEL
+--- nginx.repo ---
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/rhel/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+--- nginx.repo ---
+</code></pre>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><blockquote>
+<p>mysql 社区版 yum 源</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> http://repo.mysql.com/
+
+CentOS 6
+rpm -ivh http://repo.mysql.com/mysql57-community-release-el6.rpm
+
+CentOS 7
+rpm -ivh http://repo.mysql.com/mysql57-community-release-el7.rpm
+</code></pre>
+<h3 id="mariadb"><a href="#mariadb" class="headerlink" title="mariadb"></a>mariadb</h3><blockquote>
+<p>mariadb yum 源</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> https://downloads.mariadb.org/mariadb/repositories/#mirror=neusoft
+
+CentOS 6
+--- mariadb.repo ---
+# MariaDB 10.1 CentOS repository list - created 2016-11-28 10:25 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos6-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+--- mariadb.repo ---
+
+CentOS 7
+--- mariadb.repo ---
+# MariaDB 10.1 CentOS repository list - created 2016-11-28 10:27 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+--- mariadb.repo ---
+</code></pre>
+<h3 id="zabbix"><a href="#zabbix" class="headerlink" title="zabbix"></a>zabbix</h3><blockquote>
+<p>zabbix yum 源</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> https://repo.zabbix.com/zabbix/
+
+CentOS 6
+rpm -ivh https://repo.zabbix.com/zabbix/3.2/rhel/6/x86_64/zabbix-release-3.2-1.el6.noarch.rpm
+
+CentOS 7
+rpm -ivh https://repo.zabbix.com/zabbix/3.2/rhel/7/x86_64/zabbix-release-3.2-1.el7.noarch.rpm
+</code></pre>
+<h3 id="tunctl"><a href="#tunctl" class="headerlink" title="tunctl"></a>tunctl</h3><blockquote>
+<p>tunctl yum 源（仅用于 RHEL/CentOS 7）</p>
+</blockquote>
+<pre><code class="language-bash line-numbers">官网 --> https://pkgs.org/centos-7/nux-misc-x86_64/tunctl-1.5-12.el7.nux.x86_64.rpm.html
+
+CentOS 7
+--- tunctl.repo ---
+[nux-misc]
+name=Nux Misc
+baseurl=http://li.nux.ro/download/nux/misc/el7/x86_64/
+enabled=0
+gpgcheck=1
+gpgkey=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+--- tunctl.repo ---
+</code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/yum/" rel="tag"># yum</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/keepalived-nginx.html" rel="next" title="keepalived + nginx 高可用配置">
+                <i class="fa fa-chevron-left"></i> keepalived + nginx 高可用配置
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/ssh-scp-sftp.html" rel="prev" title="scp/sftp 实用工具">
+                scp/sftp 实用工具 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#yum用法"><span class="nav-number">1.</span> <span class="nav-text">yum用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epel"><span class="nav-number">2.</span> <span class="nav-text">epel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#remi"><span class="nav-number">3.</span> <span class="nav-text">remi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webtatic"><span class="nav-number">4.</span> <span class="nav-text">webtatic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx"><span class="nav-number">5.</span> <span class="nav-text">nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql"><span class="nav-number">6.</span> <span class="nav-text">mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mariadb"><span class="nav-number">7.</span> <span class="nav-text">mariadb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zabbix"><span class="nav-number">8.</span> <span class="nav-text">zabbix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tunctl"><span class="nav-number">9.</span> <span class="nav-text">tunctl</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/yum-repo.html';
+          this.page.identifier = 'yum-repo.html';
+          this.page.title = '常用 yum源 整理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

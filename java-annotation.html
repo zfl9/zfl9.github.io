@@ -1,0 +1,630 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="自 Java 5.0 版本引入注解之后，它就成为了 Java 平台中非常重要的一部分。开发过程中，我们也时常在应用代码中会看到诸如 @Override，@Deprecated 这样的注解。这篇文章中，我将向大家讲述到底什么是注解，为什么要引入注解，注解是如何工作的，如何编写自定义的注解，什么情况下可以使用注解以及最新注解和 ADF（应用开发框架）。这会花点儿时间，所以为自己准备一杯咖啡，让我们来进">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 注解原理">
+<meta property="og:url" content="https://www.zfl9.com/java-annotation.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="自 Java 5.0 版本引入注解之后，它就成为了 Java 平台中非常重要的一部分。开发过程中，我们也时常在应用代码中会看到诸如 @Override，@Deprecated 这样的注解。这篇文章中，我将向大家讲述到底什么是注解，为什么要引入注解，注解是如何工作的，如何编写自定义的注解，什么情况下可以使用注解以及最新注解和 ADF（应用开发框架）。这会花点儿时间，所以为自己准备一杯咖啡，让我们来进">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.191Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 注解原理">
+<meta name="twitter:description" content="自 Java 5.0 版本引入注解之后，它就成为了 Java 平台中非常重要的一部分。开发过程中，我们也时常在应用代码中会看到诸如 @Override，@Deprecated 这样的注解。这篇文章中，我将向大家讲述到底什么是注解，为什么要引入注解，注解是如何工作的，如何编写自定义的注解，什么情况下可以使用注解以及最新注解和 ADF（应用开发框架）。这会花点儿时间，所以为自己准备一杯咖啡，让我们来进">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-annotation.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 注解原理 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-annotation.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 注解原理
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-14T08:00:00+08:00">
+                2018-12-14
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-annotation.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-annotation.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-annotation.html" class="leancloud_visitors" data-flag-title="Java 注解原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>自 Java 5.0 版本引入注解之后，它就成为了 Java 平台中非常重要的一部分。开发过程中，我们也时常在应用代码中会看到诸如 <code>@Override</code>，<code>@Deprecated</code> 这样的注解。这篇文章中，我将向大家讲述到底什么是注解，为什么要引入注解，注解是如何工作的，如何编写自定义的注解，什么情况下可以使用注解以及最新注解和 ADF（应用开发框架）。这会花点儿时间，所以为自己准备一杯咖啡，让我们来进入注解的世界吧。</p>
+<a id="more"></a>
+<h2 id="反射相关-API"><a href="#反射相关-API" class="headerlink" title="反射相关 API"></a>反射相关 API</h2><p><strong>java.lang.Class</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 是否为注解类型
+boolean isAnnotation();
+// 是否存在指定注解
+boolean isAnnotationPresent(Class<? extends Annotation> annotationClass);
+
+// 包括继承的注解
+Annotation[] getAnnotations();
+<A extends Annotation> A getAnnotation(Class<A> annotationClass);
+
+// 忽略继承的注解
+Annotation[] getDeclaredAnnotations();
+<A extends Annotation> A getDeclaredAnnotation(Class<A> annotationClass);
+</script></code></pre>
+<p><strong>java.lang.reflect.Field</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 包括继承的注解
+Annotation[] getAnnotations();
+<A extends Annotation> A getAnnotation(Class<A> annotationClass);
+
+// 忽略继承的注解
+Annotation[] getDeclaredAnnotations();
+<A extends Annotation> A getDeclaredAnnotation(Class<A> annotationClass);
+</script></code></pre>
+<p><strong>java.lang.reflect.Method</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 包括继承的注解
+Annotation[] getAnnotations();
+<A extends Annotation> A getAnnotation(Class<A> annotationClass);
+
+// 忽略继承的注解
+Annotation[] getDeclaredAnnotations();
+<A extends Annotation> A getDeclaredAnnotation(Class<A> annotationClass);
+
+// 获取参数的注解
+Annotation[][] getParameterAnnotations();
+</script></code></pre>
+<p><strong>java.lang.reflect.Constructor</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 包括继承的注解
+Annotation[] getAnnotations();
+<A extends Annotation> A getAnnotation(Class<A> annotationClass);
+
+// 忽略继承的注解
+Annotation[] getDeclaredAnnotations();
+<A extends Annotation> A getDeclaredAnnotation(Class<A> annotationClass);
+
+// 获取参数的注解
+Annotation[][] getParameterAnnotations();
+</script></code></pre>
+<p>常用的反射 API 类有：Class、Field、Method、Constructor。这些类都是对应的 类、字段、方法、构造器 的抽象表示，或者说是他们的元数据对象。比如一个 Class 对象就表示一个“类”，一个 Field 对象就表示一个“成员变量”，一个 Method 对象就表示一个“成员方法”，一个 Constructor 对象就表示一个“构造函数”。</p>
+<h2 id="注解基本知识"><a href="#注解基本知识" class="headerlink" title="注解基本知识"></a>注解基本知识</h2><blockquote>
+<p>Java 注解相关的 API 存放在 <code>java.lang.annotation</code> 包。</p>
+</blockquote>
+<p>注解是 Java 5 引入的新特性，注解可以看作是一种注释，注解的通常作用是用来传递元数据。注解是 Java 中的一等公民，是一个类型，比如类、抽象类、接口、枚举都是一等公民，而注解也是一等公民，它们都是 Java 中的“类型”。</p>
+<p>注解的标识符由一个 <code>@</code> 符号开头，后接一个 Java 标识符，如 <code>@MyAnnotation</code>。注解可以包含元素，所谓元素可以理解为参数/选项，比如 <code>@MyAnnotation(name = &quot;Otokaze&quot;, age = 18)</code> 注解包含两个元素，name 和 age，这些数据又被称为元数据，我们可以通过 <strong>注解处理器</strong>、<strong>Java 反射 API</strong> 获取到这些元数据，从而执行某些操作。</p>
+<p>注解可以标注的元素：包、类、接口、枚举、注解、构造方法、成员方法、静态方法、方法参数、成员变量、局部变量等。虽然注解可以标注这么多东西，但是最常见的注解会标注在 <strong>类型（类、接口、枚举）</strong>、<strong>成员变量</strong>、<strong>成员方法</strong>、<strong>构造方法</strong>、<strong>静态方法</strong>、<strong>方法参数</strong>。其实说简单一点就是标注在这四种位置：类型、方法、字段、参数。</p>
+<p>元注解：所谓元注解就是用来标注 注解 的注解类型，可类比为数据和元数据。常用的几个：</p>
+<ul>
+<li><code>java.lang.annotation.Target</code>：限定指定注解类型可以标注的目标，默认可标注所有东西。<ul>
+<li>TYPE：类型</li>
+<li>FIELD：字段</li>
+<li>METHOD：方法</li>
+<li>PARAMETER：参数</li>
+<li>CONSTRUCTOR：构造器</li>
+</ul>
+</li>
+<li><code>java.lang.annotation.Retention</code>：限定指定注解类型的声明周期，有三种生命周期，默认为 CLASS：<ul>
+<li>SOURCE：仅存于源代码，在编译过程中有效，不会保存至 .class 字节码文件</li>
+<li>CLASS：默认值，注解在 .class 字节码文件中可用，在类被加载时被 JVM 丢弃</li>
+<li>RUNTIME：注解在运行时可用，JVM 不会将注解信息丢弃，可以通过反射获取注解信息</li>
+</ul>
+</li>
+</ul>
+<p>Java 内置注解，最常用的就是 <code>@Override</code> 了，它是一个源码注解，javac 编译器在检测到 @Override 标注的方法时会检查该方法是否正确重写了它的父类的相同签名的方法，如果没有则抛出编译错误，否则将忽略。</p>
+<p>如何创建自己的注解：很简单，和创建接口相似，来看一个简单的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public @interface MyAnnotation {
+    String name() default "name";
+    String value() default "value";
+}
+</script></code></pre>
+<p>创建注解的关键字是 <code>@interface</code>，即 <code>@</code> 符号加 interface 接口定义符，不要感到奇怪，为什么不创建一个新的关键字来定义注解，而是使用 <code>@interface</code>，这里面其实是一个强烈的暗示，注解和接口有什么关联？</p>
+<p>注解的元素其实就是“接口中的方法”，比如上面就定义了两个接口方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+String name();
+String value();
+</script></code></pre>
+<p>不过我们还定义了元素的默认值，写法是直接在元素定义的后面加上 <code>default</code> 关键字。</p>
+<p>如何使用注解就不多说了，相信各位都很熟悉。我们来分析一下注解与接口的关系。前面我们说了，注解与接口很相似，相似到它们的关键字都是一样的，一个是 <code>interface</code> 一个是 <code>@interface</code>。之所以名字相同不是没有原因的。我们可以使用 jdk 自带的 javap 反编译工具来查看注解 MyAnnotation 究竟是什么东西：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+$ javap MyAnnotation.class
+Compiled from "MyAnnotation.java"
+public interface com.zfl9.MyAnnotation extends java.lang.annotation.Annotation {
+  public abstract java.lang.String name();
+  public abstract java.lang.String value();
+}
+</script></code></pre>
+<p>看出什么了吗？没错，注解其实就是接口，所谓的注解类型其实就是继承自 java.lang.annotation.Annotation 接口的子接口，我们来看看 Annotation 接口的定义：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package java.lang.annotation;
+
+public interface Annotation {
+    boolean equals(Object obj);
+
+    int hashCode();
+
+    String toString();
+
+    Class<? extends Annotation> annotationType();
+}
+</script></code></pre>
+<p>我们忽略掉 Object 上的几个基类方法，Annotation 上只定义了一个 <code>Class annotationType()</code> 方法，用来获取当前注解实例对应的注解 Class 对象。好吧，这些其实都不重要，我们只需要知道一点，注解是一个继承自 Annotation 接口的子接口。记住这一点！！！</p>
+<p>还有一个有用的知识就是，如果注解只有一个元素，建议把这个元素的名称改为 value，因为当我们给注解的元素赋值时，如果没有指明元素名，那么 Java 默认假设这个元素名为 value，设为 value 是一个最佳实践。</p>
+<p><strong>元素的类型</strong></p>
+<blockquote>
+<p>所谓的元素类型其实就是抽象方法的返回值类型！</p>
+</blockquote>
+<p>1) 八大基本类型（boolean、byte、char、short、int、long、float、double）<br>2) String 字符串<br>3) Class 类<br>4) enum 枚举<br>5) Annotation 注解<br>6) 以上所有类型的数组</p>
+<p>使用其它类型会抛出一个编译错误。</p>
+<h2 id="注解底层原理"><a href="#注解底层原理" class="headerlink" title="注解底层原理"></a>注解底层原理</h2><p>注解可以粗略的分为两种，一种是 <strong>编译期注解</strong>，一种是 <strong>运行期注解</strong>。前面说了，注解主要起到的是一个传递元数据的作用，在注解出现之前，我们也有其他传递元数据的方式，比如 Java 中广泛使用的 XML 配置文件。XML 和注解的作用基本上是相同的，都是用来起到配置的作用。</p>
+<p>对于究竟使用注解来进行配置还是使用 XML 来进行配置，目前有很多争论，本文不讨论这些东西，我个人的观点是，对于经常改变的配置，建议使用 XML 文件，因为修改 XML 文件只需要重启应用程序就能生效，而修改注解就意味着修改 Java 源代码，所以要重新编译才能生效。而对于不经常改变的配置，建议使用注解，因为这样更加直观，与代码的联系也更加紧密，可读性也强。</p>
+<p>解析 XML 文件很简单，就是将 XML 文档载入内存，建立 DOM 文档对象模型，Java 中有非常多的 API 用来解析 XML 文件。不多讨论。我们主要关注如何解析注解的元数据。对于编译期间的注解，解析的工具有 APT（Annotation Processing Tool，注解处理器，jdk7 之后被移除，使用 JSR 269 API 替代），我也没接触过 APT，也不怎么讨论；而对于运行期间的注解，就很好办了，就是使用 JAVA 反射 API 来解析注解。</p>
+<p>在详细分析注解的底层原理之前，我先把注解原理的概括性描述放出来：</p>
+<blockquote>
+<p>注解本质是一个继承了 <strong>Annotation</strong> 的接口，其具体实现类是 Java 运行时生成的 JDK 动态代理类。通过代理对象调用自定义注解（接口）的方法，会最终调用 AnnotationInvocationHandler 的 invoke 方法。该方法会从 memberValues 这个 Map 中索引出对应的值（注解属性的值）。而 memberValues 的来源是 Java 常量池。</p>
+</blockquote>
+<p>我们先来写一个简单的运行时注解的解析例子：</p>
+<p>MyAnnotation.java，注解类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MyAnnotation {
+    String value() default "@MyAnnotation Default Value";
+}
+</script></code></pre>
+<p>AnnotationDemo.java，测试类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+@MyAnnotation("Hello, MyAnnotation")
+public class AnnotationDemo {
+    public static void main(String[] args) {
+        MyAnnotation myAnnotation = AnnotationDemo.class.getDeclaredAnnotation(MyAnnotation.class);
+        System.out.println(myAnnotation);
+        System.out.println(myAnnotation.value());
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+@com.zfl9.MyAnnotation(value=Hello, MyAnnotation)
+Hello, MyAnnotation
+</script></code></pre>
+<p>稍微解析一下：</p>
+<p>我们定义了一个 @MyAnnotation 注解，Target 为 TYPE，意味着它可以用来标注“类型”，如类、接口、枚举。它的生命周期是 RUNTIME，所以我们可以在运行时通过反射来处理这个注解的元数据。</p>
+<p>AnnotationDemo 类上我们用 MyAnnotation 标注了一下，value 为 <code>&quot;Hello, MyAnnotaion&quot;</code>，然后在 main 方法中，通过 AnnotationDemo 的 Class 对象，获取标注在上面的 MyAnnotation 注解的实例，然后赋值给 MyAnnotation 接口（向上转型）。这个 MyAnnotation 实例是由 JDK 动态代理生成的代理对象。</p>
+<p>JDK 动态代理我们知道，有两个重要的概念，一个是 java.lang.reflect.Proxy 类，一个是 java.lang.reflect.InvocationHandler 接口。Proxy 类是所有 JDK 动态代理机制生成的实例的共同父类，而 InvocationHandler 是调用处理器，委托类上的所有接口方法都将被调用处理器上实现，所有方法都会被传到调用处理器的 invoke() 方法中统一处理。</p>
+<p>而 MyAnnotation 的实现类（JDK 动态代理类）只需实现 MyAnnotation 接口上定义的方法（在这里就是 <code>String value()</code> 方法咯），顶层接口 Annotation 上的方法不需要代理类实现，JDK 有默认实现逻辑。</p>
+<p>而当我们调用 myAnnotation 实例的 value() 方法时，其实就是获取 myAnnotation 注解的属性值，记住了，注解上的元素的值，是通过调用其接口上的对应方法来获取的，这个也很明显，因为我们前面在定义注解时就看出来了，所谓注解元素就是接口上的方法。</p>
+<p>好了，现在一切都很清楚了，注解就是接口，毫无疑问。现在唯一的疑问就是 JDK 动态代理类的 value() 方法是如何获取到注解元素的值的呢？开头的总结说了，注解上的元素值都会被存储在注解的 class 文件的常量池中，记住了，常量池（是的，正是因为注解上的元素类型只能是字面量、常量，所以我们能够将注解上的数据存放在常量池中），而使用反射 API 获取注解接口的实例时，会读取常量池中的注解元素，然后将它们放入一个名为 memberValues 的 Map 中，key 就是元素名（String），value 就是 Object（各种值），而 value() 方法就是从这个 map 中获取 key 为 value 的值，然后返回而已，好了，解析结束。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-datasource.html" rel="next" title="Java DataSource">
+                <i class="fa fa-chevron-left"></i> Java DataSource
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-spi.html" rel="prev" title="Java 的 SPI 机制">
+                Java 的 SPI 机制 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#反射相关-API"><span class="nav-number">1.</span> <span class="nav-text">反射相关 API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解基本知识"><span class="nav-number">2.</span> <span class="nav-text">注解基本知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解底层原理"><span class="nav-number">3.</span> <span class="nav-text">注解底层原理</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-annotation.html';
+          this.page.identifier = 'java-annotation.html';
+          this.page.title = 'Java 注解原理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

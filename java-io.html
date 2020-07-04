@@ -1,0 +1,1465 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java IO流 阻塞IO 面向流的IO">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java IO流，主要有四大类：File文件、InputStream/OutputStream字节流、Reader/Writer字符流、RandomAccessFile随机存取文件类">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO流">
+<meta property="og:url" content="https://www.zfl9.com/java-io.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java IO流，主要有四大类：File文件、InputStream/OutputStream字节流、Reader/Writer字符流、RandomAccessFile随机存取文件类">
+<meta property="og:image" content="https://www.zfl9.com/images/java-io.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-io-byte-stream.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-io-char-stream.png">
+<meta property="og:updated_time" content="2019-02-18T12:48:44.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java IO流">
+<meta name="twitter:description" content="Java IO流，主要有四大类：File文件、InputStream/OutputStream字节流、Reader/Writer字符流、RandomAccessFile随机存取文件类">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-io.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-io.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java IO流 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-io.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java IO流
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-20T16:56:00+08:00">
+                2017-09-20
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-io.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-io.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-io.html" class="leancloud_visitors" data-flag-title="Java IO流">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java IO流，主要有四大类：<code>File</code>文件、<code>InputStream/OutputStream</code>字节流、<code>Reader/Writer</code>字符流、<code>RandomAccessFile</code>随机存取文件类</p>
+<a id="more"></a>
+<h2 id="IO-流"><a href="#IO-流" class="headerlink" title="IO 流"></a>IO 流</h2><p>IO 流类图结构：<br><img src="/images/java-io.jpg" alt="IO 流类图结构"></p>
+<p><strong>Stream 流的概念</strong><br>流是一组有顺序的，有起点和终点的字节集合，是对数据传输的总称或抽象；<br>即数据在两设备间的传输称为流，流的本质是数据传输，根据数据传输特性将流抽象为各种类，方便更直观的进行数据操作；</p>
+<p><strong>IO 流的分类</strong><br>1) 根据处理<code>数据类型</code>的不同分为：<code>字符流</code>和<code>字节流</code>；<br>2) 根据数据<code>流向</code>不同分为：<code>输入流</code>和<code>输出流</code>。</p>
+<p><strong>字符流和字节流</strong><br>字符流的由来：因为数据编码的不同，从而有了对字符进行高效操作的流对象；本质就是基于字节流读取时，去查了指定的码表。</p>
+<p>字节流和字符流的区别：<br>1) 读写单位不同：<code>字节流</code>以<code>字节（8bit）</code>为单位，<code>字符流</code>以<code>字符</code>为单位，根据码表映射字符，一次可能读多个字节（<code>2字节或者4字节</code>）；<br>2) 处理对象不同：字节流能处理所有类型的数据（如图片、视频、文字等），而字符流只能处理字符类型的数据；</p>
+<p>结论：只要是处理纯文本数据，就优先考虑使用字符流，除此之外都使用字节流；</p>
+<p><strong>输入流和输出流</strong><br>对输入流只能进行读操作，对输出流只能进行写操作，程序中需要根据待传输数据的不同特性而使用不同的流。</p>
+<p><strong>字节流类图</strong><br><img src="/images/java-io-byte-stream.png" alt="字节流类图"></p>
+<blockquote>
+<p>图中蓝色的为主要的对应部分，红色的部分就是不对应部分；紫色的虚线部分代表这些流一般要搭配使用。</p>
+</blockquote>
+<p>抽象类：<br><code>InputStream</code>：所有输入字节流的父类，它是一个抽象类；<br><code>OutputStream</code>：所有输出字节流的父类，它是一个抽象类。</p>
+<p>基本的类：<br>1) <code>ByteArrayInputStream/ByteArrayOutputStream</code>：从字节数组中获取数据/往字节数组中写入数据（在内存中操作）<br>2) <code>FileInputStream/FileOutputStream</code>：从磁盘文件中获取数据/往磁盘文件中写入数据（在外存中操作）<br>3) <code>PipedInputStream/PipedOutputStream</code>：从管道中获取数据/往管道中写入数据（线程间通信）</p>
+<p>缓冲 IO 流：<br><code>BufferedInputStream/BufferedOutputStream</code>：自带缓冲区的包装流，默认建立一个 8192 字节的缓冲区，可以显著提高 IO 效率</p>
+<p>序列化相关：<br>1) <code>DataInputStream/DataOutputStream</code>：用于基本类型的序列化、反序列化操作，包括 8 大基本类型、String字符串；<br>2) <code>ObjectInputStream/ObjectOutputStream</code>：用于引用类型的序列化、反序列化操作，需实现 java.io.Serializable 接口（标记接口）；</p>
+<p>“存在即合理”，简单分析一下”不对称”的流类：<br>1) <code>LineNumberInputStream</code>：可以获取/设置数据的行号信息，已被标记为<code>Deprecated</code>，不建议使用；<br>2) <code>PushbackInputStream</code>：可以用来“窥探”输入流的内容而不对它们进行破坏；比较少用；<br>3) <code>StringBufferInputStream</code>：已被标记为<code>Deprecated</code>，本身就不应该出现在 java.io 包中；<br>4) <code>SequenceInputStream</code>：一个工具类，将两个或者多个输入流当成一个输入流依次读取；完全可以从 IO 包中去除；<br>5) <code>PrintStream</code>：用于格式化输出，提供 print、println、printf、format 系列方法；<code>System.out</code>、<code>System.err</code>就是<code>PrintStream</code>的实例；</p>
+<p><strong>字符流类图</strong><br><img src="/images/java-io-char-stream.png" alt="字符流类图"></p>
+<blockquote>
+<p>图中蓝色的为主要的对应部分，红色的部分就是不对应部分；紫色的虚线部分代表这些流一般要搭配使用。</p>
+</blockquote>
+<p>抽象类：<br><code>Reader</code>：所有输入字符流的父类，它是一个抽象类；<br><code>Writer</code>：所有输出字符流的父类，它是一个抽象类。</p>
+<p>基本的类：<br>1) <code>CharArrayReader/CharArrayWriter</code>：从字符数组中获取数据/往字符数组中写入数据（在内存中操作）<br>2) <code>StringReader/StringWriter</code>：从字符串中获取数据/往字符串中写入数据（在内存中操作）<br>3) <code>InputStreamReader/OutputStreamWriter</code>：从字节流中获取数据（解码<code>decoding</code>）/往字节流中写入数据（编码<code>encoding</code>）（字节流和字符流之间的桥梁）<br>4) <code>FileReader/FileWriter</code>：针对磁盘文件的<code>InputStreamReader/OutputStreamWriter</code>特化版本<br>5) <code>PipedReader/PipedWriter</code>：从管道中获取数据/往管道中写入数据（线程间通信）</p>
+<p>缓冲 IO 流：<br><code>BufferedReader/BufferedWriter</code>：自带缓冲区的包装流，默认建立一个 8192 字符（即 16 KB）的缓冲区，可以显著提高 IO 效率；</p>
+<p>装饰 IO 流：<br>1) <code>LineNumberReader</code>：可以获取/设置数据的行号信息；<br>2) <code>PrintWriter</code>：支持格式化输出，提供 print、println、printf、format 方法，在 jdk1.4 之后，<code>PrintStream</code>、<code>PrintWriter</code>基本无区别，除了 autoFlush 的不同；</p>
+<p><strong>File 文件类</strong><br>File 类是对文件系统中文件以及文件夹进行封装的对象，可以通过对象的思想来操作文件和文件夹；</p>
+<p>File 类保存文件或目录的各种元数据信息，包括文件名、文件长度、最后修改时间、是否可读、获取当前文件的路径名，判断指定文件是否存在、获得当前目录中的文件列表，创建、删除文件和目录等方法；</p>
+<p>注意，实例化一个 File 对象并不会检查对应的文件（夹）的真实性，只有在进行真正的 IO 操作时才会检查（如创建文件、删除文件等）；</p>
+<p><strong>RandomAccessFile</strong><br>RandomAccessFile 并不是上述流体系中的一员，其封装了字节流，同时还封装了一个缓冲区，通过内部的文件指针来操作文件；<br>RandomAccessFile 的特点：既可以对文件进行读操作，也能进行写操作，在进行对象实例化时可指定操作模式（<code>r</code>、<code>rw</code>、<code>rws</code>、<code>rwd</code>）；<br>RandomAccessFile 多用于操作大文件、多线程下载、多个线程同时操作文件；</p>
+<p><strong>STDIN、STDOUT、STDERR</strong><br>Java 和 C/C++ 一样，默认为每个进程打开了 3 个文件，即<code>标准输入文件</code>、<code>标准输出文件</code>、<code>标准错误文件</code>；</p>
+<p>这 3 个标准文件定义在 java.lang.System 类中，均为静态成员：<br>1) <code>System.in</code>：<code>InputStream</code>类的实例，文件描述符 FileDescriptor 为 FileDescriptor.in，fd = 0；<br>2) <code>System.out</code>：<code>PrintStream</code>类的实例，文件描述符 FileDescriptor 为 FileDescriptor.out，fd = 1；<br>3) <code>System.err</code>：<code>PrintStream</code>类的实例，文件描述符 FileDescriptor 为 FileDescriptor.err，fd = 2；</p>
+<p><strong>File 和 FileDescriptor 的区别</strong><br>一个 File 对象代表一个抽象的”磁盘文件”，仅仅是一个记录而已，和真正的文件之间没有关联；<br>一个 FileDescriptor 表示一个已打开的文件，在 Linux 中就是一个”文件描述符 fd”，就像建立的网络连接一样；</p>
+<h2 id="File-类"><a href="#File-类" class="headerlink" title="File 类"></a>File 类</h2><p><strong>构造函数</strong><br><code>public File(String pathname);</code>：文件名（包含路径），可以为相对路径、绝对路径；<br><code>public File(String parent, String child);</code>：父路径 + 子路径；<br><code>public File(File parent, String child);</code>：父路径（File 对象） + 子路径；<br><code>public File(URI uri);</code>：java.net.URI 形式，如<code>file:///etc/sysctl.d/default.conf</code>；</p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public String getName(); // 获取文件名
+public String getParent(); // 获取路径名
+public File getParentFile(); // 获取 parent 的 File 对象
+public String getPath(); // 获取完整路径名
+
+public boolean isAbsolute(); // 是否为绝对路径
+public String getAbsolutePath(); // 获取绝对路径名
+public File getAbsoluteFile();  // 获取绝对路径的 File 对象
+
+public URL toURL() throws MalformedURLException; // toURL
+public URI toURI(); // toURI
+
+public boolean canRead(); // 可读
+public boolean canWrite(); // 可写
+public boolean canExecute(); // 可执行
+
+public boolean exists(); // 是否存在
+public boolean isDirectory(); // 是否为目录
+public boolean isFile(); // 是否为文件
+public boolean isHidden(); // 是否为隐藏文件
+
+public long lastModified(); // 获取 modify 时间
+public long length(); // 获取文件长度
+
+public boolean createNewFile() throws IOException; // 创建新文件
+public boolean mkdir(); // 新建文件夹
+public boolean mkdirs(); // 递归创建文件夹，如 mkdir -p /a/b/c
+
+public boolean delete(); // 删除文件、空文件夹（立即删除）
+public void deleteOnExit(); // 在程序结束时删除（一般用于临时文件的删除）
+
+public String[] list(); // 返回当前路径下的文件列表
+public File[] listFiles(); // 返回当前路径下的 File 对象列表
+
+public boolean renameTo(File dest); // 重命名
+public boolean setLastModified(long time); // 设置 modify 时间
+
+public boolean setReadOnly(); // 设置只读权限
+
+public boolean setReadable(boolean readable, boolean ownerOnly); // 设置读权限，ownerOnly 表示只作用在文件所有者上
+public boolean setReadable(boolean readable); // ownerOnly = true
+public boolean setWritable(boolean writable, boolean ownerOnly); // 设置写权限，ownerOnly 表示只作用在文件所有者上
+public boolean setWritable(boolean writable); // ownerOnly = true
+public boolean setExecutable(boolean executable, boolean ownerOnly); // 设置执行权限，ownerOnly 表示只作用在文件所有者上
+public boolean setExecutable(boolean executable); // ownerOnly = true
+
+public static File[] listRoots(); // 列出根文件系统 '/'
+
+public long getTotalSpace(); // 获取分区总大小
+public long getFreeSpace(); // 获取分区剩余空间大小
+public long getUsableSpace(); // 获取分区可用空间大小
+
+/**
+ * 创建 temp 临时文件.
+ * @param prefix 文件名前缀
+ * @param suffix 文件名后缀
+ * @param directory 在指定的文件夹下创建
+ * @throws IOException 在操作失败时抛出 IOException 异常
+ */
+public static File createTempFile(String prefix, String suffix, File directory) throws IOException;
+public static File createTempFile(String prefix, String suffix) throws IOException; // directory = null，默认在 /tmp/ 下创建
+
+public int compareTo(File pathname); // 比较
+public boolean equals(Object obj); // 判等
+public int hashCode(); // HashCode值
+
+public String toString(); // 等同于 getPath()
+</script></code></pre>
+<p><strong>File.separator</strong><br>在 Windows 下的路径分隔符和 Linux 下的路径分隔符是不一样的，当直接使用绝对路径时，跨平台会暴出“No such file or diretory”错误；</p>
+<p>比如要在 tmp 目录下建立一个临时文件 test.tmp：<br>Windows 下应写为：<code>File f = new File(&quot;C:\\tmp\\test.tmp&quot;);</code>，也可以为<code>File f = new File(&quot;C:/tmp/test.tmp&quot;);</code><br>Linux 下应写为：<code>File f = new File(&quot;/tmp/test.tmp&quot;);</code><br>如果考虑跨平台，最好这么写：<code>File f = new File(&quot;C:&quot; + File.separator + &quot;tmp&quot; + File.separator + &quot;test.tmp&quot;);</code></p>
+<p>File 类的几个 static 分隔符：<br>1) <code>public static final char separatorChar</code>：char 形式，文件路径分隔符，Windows下为<code>\</code>，Linux下为<code>/</code>；<br>2) <code>public static final String separator</code>：String 形式，同上；<br>3) <code>public static final char pathSeparatorChar</code>：char 形式，路径列表分隔符，Windows下为<code>;</code>，Linux下为<code>:</code>；<br>4) <code>public static final String pathSeparator</code>：String 形式，同上；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+public class Main {
+    public static void main(String[] args) {
+        // 创建 File 对象
+        File f1 = new File("/etc/sysctl.d/default.conf");
+        File f2 = new File("/etc/sysctl.d", "default.conf");
+        File f3 = new File(new File("/etc/sysctl.d"), "default.conf");
+        File f4 = null;
+        try {
+            f4 = new File(new URI("file:///etc/sysctl.d/default.conf"));
+        } catch (URISyntaxException e) {
+            System.err.println(e.getMessage());
+        }
+
+        System.out.printf("getName(): %s\n", f1.getName()); // default.conf
+        System.out.printf("getParent(): %s\n", f2.getParent()); // /etc/sysctl.d
+        System.out.printf("getParentFile().getPath(): %s\n", f3.getParentFile().getPath()); // /etc/sysctl.d
+        System.out.printf("getPath(): %s\n", f4.getPath()); // /etc/sysctl.d/default.conf
+
+        System.out.printf("isAbsolute(): %b\n", f1.isAbsolute()); // true
+
+        System.out.printf("exists(): %b\n", f2.exists());
+        System.out.printf("canRead(): %b\n", f2.canRead());
+        System.out.printf("canWrite(): %b\n", f2.canWrite());
+        System.out.printf("canExecute(): %b\n", f2.canExecute());
+        System.out.printf("isDirectory(): %b\n", f2.isDirectory());
+        System.out.printf("isFile(): %b\n", f2.isFile());
+        System.out.printf("isHidden(): %b\n", f2.isHidden());
+
+        System.out.printf("lastModified(): %1$tF %1$tT\n", f2.lastModified());
+        System.out.printf("length(): %d\n", f2.length());
+
+        System.out.printf("getTotalSpace(): %d GB\n", f3.getTotalSpace() / 1024 / 1024 / 1024);
+        System.out.printf("getFreeSpace(): %d GB\n", f3.getFreeSpace() / 1024 / 1024 / 1024);
+        System.out.printf("getUsableSpace(): %d GB\n", f3.getUsableSpace() / 1024 / 1024 / 1024);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:20:25]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:20:37]
+$ java Main
+getName(): default.conf
+getParent(): /etc/sysctl.d
+getParentFile().getPath(): /etc/sysctl.d
+getPath(): /etc/sysctl.d/default.conf
+isAbsolute(): true
+exists(): true
+canRead(): true
+canWrite(): true
+canExecute(): false
+isDirectory(): false
+isFile(): true
+isHidden(): false
+lastModified(): 2017-08-13 08:31:55
+length(): 803
+getTotalSpace(): 48 GB
+getFreeSpace(): 46 GB
+getUsableSpace(): 43 GB
+</script></code></pre>
+<h2 id="InputStream、OutputStream"><a href="#InputStream、OutputStream" class="headerlink" title="InputStream、OutputStream"></a>InputStream、OutputStream</h2><p><strong>InputStream 抽象类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 读取 1 个字节 byte，EOF 返回 -1
+public abstract int read() throws IOException;
+// 调用 read(b, 0, b.length) 方法
+public int read(byte b[]) throws IOException;
+// 读取一个自 offset 起 length 长度的字节数组
+public int read(byte b[], int off, int len) throws IOException;
+
+// 跳过 n 个字节
+public long skip(long n) throws IOException;
+// 返回可读取的字节数
+public int available() throws IOException;
+// 关闭输入流
+public void close() throws IOException;
+
+/**
+ * 标记当前位置 pos.
+ * @param readlimit 在标记位置无效之前可以读取的最大字节数限制
+ */
+public synchronized void mark(int readlimit);
+// 将此流重新定位到最近的调用 mark 方法时的位置
+public synchronized void reset() throws IOException;
+public boolean markSupported(); // 是否支持 mark 标记
+</script></code></pre>
+<p><strong>OutputStream 抽象类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 写入 1 个字节
+public abstract void write(int b) throws IOException;
+// 写入整个字节数组
+public void write(byte b[]) throws IOException;
+// 写入指定长度的字节
+public void write(byte b[], int off, int len) throws IOException;
+
+// flush 缓冲区(对 Buffered 流有效)
+public void flush() throws IOException;
+public void close() throws IOException; // 关闭输出流
+</script></code></pre>
+<h3 id="ByteArray-字节数组"><a href="#ByteArray-字节数组" class="headerlink" title="ByteArray 字节数组"></a>ByteArray 字节数组</h3><p><code>ByteArrayInputStream</code><br><strong>构造函数</strong><br><code>public ByteArrayInputStream(byte buf[]);</code><br><code>public ByteArrayInputStream(byte buf[], int offset, int length);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public synchronized int read();
+public synchronized int read(byte b[], int off, int len);
+
+public synchronized long skip(long n);
+public synchronized int available();
+
+public boolean markSupported(); // true
+public void mark(int readAheadLimit); // 在标记位置无效之前可以读取的最大字节数限制
+public synchronized void reset();
+
+public void close() throws IOException;
+</script></code></pre>
+<p><code>ByteArrayOutputStream</code><br><strong>构造函数</strong><br><code>public ByteArrayOutputStream();</code>：default 大小为 32（数组长度）<br><code>public ByteArrayOutputStream(int size);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public synchronized void write(int b);
+public synchronized void write(byte b[], int off, int len);
+
+// 写入到指定的 OutputStream 流
+public synchronized void writeTo(OutputStream out) throws IOException;
+
+public synchronized int size(); // 返回元素长度
+public synchronized void reset();
+
+public synchronized byte toByteArray()[]; // 导出字节数组
+public synchronized String toString();
+public synchronized String toString(String charsetName) throws UnsupportedEncodingException; // 指定字符编码，如"UTF-8"
+public void close() throws IOException;
+</script></code></pre>
+<h3 id="File-文件"><a href="#File-文件" class="headerlink" title="File 文件"></a>File 文件</h3><p><code>FileInputStream</code><br><strong>构造函数</strong><br><code>public FileInputStream(String name) throws FileNotFoundException;</code><br><code>public FileInputStream(File file) throws FileNotFoundException;</code><br><code>public FileInputStream(FileDescriptor fdObj);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public int read() throws IOException;
+public int read(byte b[]) throws IOException;
+public int read(byte b[], int off, int len) throws IOException;
+
+public native long skip(long n) throws IOException;
+public native int available() throws IOException;
+public void close() throws IOException;
+
+public final FileDescriptor getFD() throws IOException;
+public FileChannel getChannel();
+</script></code></pre>
+<p><code>FileOutputStream</code><br><strong>构造函数</strong><br><code>public FileOutputStream(String name) throws FileNotFoundException;</code><br><code>public FileOutputStream(String name, boolean append) throws FileNotFoundException;</code><br><code>public FileOutputStream(File file) throws FileNotFoundException;</code><br><code>public FileOutputStream(File file, boolean append) throws FileNotFoundException;</code><br><code>public FileOutputStream(FileDescriptor fdObj);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void write(int b) throws IOException;
+public void write(byte b[]) throws IOException;
+public void write(byte b[], int off, int len) throws IOException;
+
+public void close() throws IOException;
+
+public final FileDescriptor getFD()  throws IOException;
+public FileChannel getChannel();
+</script></code></pre>
+<h3 id="Buffered-缓冲流"><a href="#Buffered-缓冲流" class="headerlink" title="Buffered 缓冲流"></a>Buffered 缓冲流</h3><p><code>BufferedInputStream</code><br><strong>构造函数</strong><br><code>public BufferedInputStream(InputStream in);</code>：default 大小 8192 字节<br><code>public BufferedInputStream(InputStream in, int size);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public synchronized int read() throws IOException;
+public synchronized int read(byte b[], int off, int len) throws IOException;
+
+public synchronized long skip(long n) throws IOException;
+public synchronized int available() throws IOException;
+
+public synchronized void mark(int readlimit);
+public synchronized void reset() throws IOException;
+public boolean markSupported();
+
+public void close() throws IOException;
+</script></code></pre>
+<p><code>BufferedOutputStream</code><br><strong>构造函数</strong><br><code>public BufferedOutputStream(OutputStream out);</code>：default 大小 8192 字节<br><code>public BufferedOutputStream(OutputStream out, int size);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public synchronized void write(int b) throws IOException;
+public synchronized void write(byte b[], int off, int len) throws IOException;
+
+public synchronized void flush() throws IOException; // 刷新缓冲区
+</script></code></pre>
+<h3 id="Data-基本类型"><a href="#Data-基本类型" class="headerlink" title="Data 基本类型"></a>Data 基本类型</h3><p><code>DataInputStream</code><br><strong>构造函数</strong><br><code>public DataInputStream(InputStream in);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final int read(byte b[]) throws IOException;
+public final int read(byte b[], int off, int len) throws IOException;
+
+// 尽量读满
+public final void readFully(byte b[]) throws IOException;
+public final void readFully(byte b[], int off, int len) throws IOException;
+
+public final int skipBytes(int n) throws IOException;
+
+public final boolean readBoolean() throws IOException;
+public final byte readByte() throws IOException;
+public final int readUnsignedByte() throws IOException;
+public final short readShort() throws IOException;
+public final int readUnsignedShort() throws IOException;
+public final char readChar() throws IOException;
+public final int readInt() throws IOException;
+public final long readLong() throws IOException;
+public final float readFloat() throws IOException;
+public final double readDouble() throws IOException;
+
+public final String readUTF() throws IOException; // modified_UTF-8 变种UTF-8，专用于序列化
+</script></code></pre>
+<p><code>DataOutputStream</code><br><strong>构造函数</strong><br><code>public DataOutputStream(OutputStream out);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public synchronized void write(int b) throws IOException;
+public synchronized void write(byte b[], int off, int len) throws IOException;
+
+public void flush() throws IOException;
+public final int size(); // 返回已写入的字节数
+
+public final void writeBoolean(boolean v) throws IOException;
+public final void writeByte(int v) throws IOException;
+public final void writeShort(int v) throws IOException;
+public final void writeChar(int v) throws IOException;
+public final void writeInt(int v) throws IOException;
+public final void writeLong(long v) throws IOException;
+public final void writeFloat(float v) throws IOException;
+public final void writeDouble(double v) throws IOException;
+
+public final void writeUTF(String str) throws IOException; // 编码为 modified_UTF-8 字节流
+</script></code></pre>
+<h3 id="Object-引用类型"><a href="#Object-引用类型" class="headerlink" title="Object 引用类型"></a>Object 引用类型</h3><p><code>ObjectInputStream</code><br><strong>构造函数</strong><br><code>public ObjectInputStream(InputStream in) throws IOException;</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final Object readObject() throws IOException, ClassNotFoundException; // 反序列化对象
+public void defaultReadObject() throws IOException, ClassNotFoundException; // 默认的反序列化操作
+
+public int read() throws IOException;
+public int read(byte[] buf, int off, int len) throws IOException;
+
+public void readFully(byte[] buf) throws IOException;
+public void readFully(byte[] buf, int off, int len) throws IOException;
+
+public int skipBytes(int len) throws IOException;
+public int available() throws IOException;
+public void close() throws IOException;
+
+public boolean readBoolean() throws IOException;
+public byte readByte() throws IOException;
+public int readUnsignedByte()  throws IOException;
+public char readChar()  throws IOException;
+public short readShort()  throws IOException;
+public int readUnsignedShort() throws IOException;
+public int readInt()  throws IOException;
+public long readLong()  throws IOException;
+public float readFloat() throws IOException;
+public double readDouble() throws IOException;
+
+public String readUTF() throws IOException;
+</script></code></pre>
+<p><code>ObjectOutputStream</code><br><strong>构造函数</strong><br><code>public ObjectOutputStream(OutputStream out) throws IOException;</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final void writeObject(Object obj) throws IOException; // 序列化对象
+public void defaultWriteObject() throws IOException; // 默认的序列化操作
+
+public void write(int val) throws IOException;
+public void write(byte[] buf) throws IOException;
+public void write(byte[] buf, int off, int len) throws IOException;
+
+public void reset() throws IOException;
+public void flush() throws IOException;
+public void close() throws IOException;
+
+public void writeBoolean(boolean val) throws IOException;
+public void writeByte(int val) throws IOException;
+public void writeShort(int val)  throws IOException;
+public void writeChar(int val)  throws IOException;
+public void writeInt(int val)  throws IOException;
+public void writeLong(long val)  throws IOException;
+public void writeFloat(float val) throws IOException;
+public void writeDouble(double val) throws IOException;
+
+public void writeUTF(String str) throws IOException;
+</script></code></pre>
+<p><strong>自定义序列化</strong><br>readObject()、writeObject() 方法先检查序列化对象的类是否已定义 readObject()、writeObject() 方法，如果有那么就执行自定义的序列化操作，否则执行 defaultReadObject()、defaultWriteObject() 默认操作；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Student s = new Student("Otokaze", 18, 113.5f);
+
+        try {
+            ObjectOutputStream objOut = new ObjectOutputStream(new FileOutputStream("Student.ser"));
+            objOut.writeObject(s);
+            objOut.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+
+        s = null;
+        try {
+            ObjectInputStream objIn = new ObjectInputStream(new FileInputStream("Student.ser"));
+            s = (Student) objIn.readObject();
+            System.out.println(s);
+            objIn.close();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+}
+
+class Student implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String name;
+    private int age;
+    private float score;
+
+    public Student(String name, int age, float score) {
+        this.name = name;
+        this.age = age;
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("name: %s, age: %d, score: %.1f", name, age, score);
+    }
+
+    // 自定义 writeObject()
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject(); // 先调用默认的 writeObject() 方法
+        out.writeLong(System.currentTimeMillis()); // 记录序列化的时间
+    }
+
+    // 自定义 readObject()
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject(); // 先调用默认的 readObject() 方法
+        System.out.printf("lastModified: %1$tF %1$tT\n", in.readLong()); // 打印序列化的时间
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [7:59:07]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [7:59:23]
+$ java Main
+lastModified: 2017-09-21 07:59:25
+name: Otokaze, age: 18, score: 113.5
+</script></code></pre>
+<p><strong>对象序列化</strong><br>序列化是一种对象持久化的手段，普遍应用在网络传输、RMI（远程方法调用）等场景中；</p>
+<p>Java 平台允许我们在内存中创建可复用的 Java 对象，但一般情况下，只有当 JVM 处于运行时，这些对象才可能存在，即，这些对象的生命周期不会比 JVM 的生命周期更长；但在现实应用中，就可能要求在 JVM 停止运行之后能够保存(持久化)指定的对象，并在将来重新读取被保存的对象；Java 对象序列化就能够帮助我们实现该功能；</p>
+<p>使用 Java 对象序列化，在保存对象时，会把其状态保存为一组字节，在未来，再将这些字节组装成对象；必须注意地是，对象序列化保存的是对象的”状态”，即它的成员变量；由此可知，对象序列化不会关注类中的静态变量；</p>
+<p>除了在持久化对象时会用到对象序列化之外，当使用 RMI(远程方法调用)，或在网络中传递对象时，都会用到对象序列化；Java 序列化 API 为处理对象序列化提供了一个标准机制，该 API 简单易用；</p>
+<blockquote>
+<p>在 Java 中，只要一个类实现了<code>java.io.Serializable</code>接口，那么它就可以被序列化；</p>
+</blockquote>
+<p><strong>序列化及反序列化相关知识</strong><br>1、序列化只关心实例变量，并不会将静态变量进行序列化（对静态变量进行序列化也没有实际意义）；<br>2、使用 ObjectOutputStream 和 ObjectInputStream 的 writeObject()、readObject() 方法进行序列化及反序列化操作；<br>3、一个对象能否反序列化成功，非常重要的一点是序列化 ID 是否一致（<code>serialVersionUID</code>）；<br>4、<code>serialVersionUID</code>可以由 IDE 生成，也可以通过 jdk 自带的<code>serialver</code>工具生成；<br>5、<code>transient</code>（短暂的）关键字的作用是控制变量的序列化，在变量声明前加上该关键字，可以阻止该变量被序列化，在反序列化后，transient 变量的值被设为初始值，如 int 整型的是 0，引用类型的是 null；<br>6、Java 允许我们自己定义对象的序列化及反序列化操作，只需要在类中定义 writeObject()、readObject() 方法；<br><code>private void writeObject(ObjectOutputStream out) throws IOException</code><br><code>private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException</code></p>
+<p>如果一个类想被序列化，就必须实现 java.io.Serializable 接口。否则将抛出 NotSerializableException 运行时异常；<br>如果你仔细观察 ObjectOutputStream.writeObject0() 方法，可以发现，如果被序列化的对象不属于<strong>String字符串</strong>、<strong>Array内置数组</strong>、<strong>Enum枚举</strong>、<strong>Serializable可序列化对象</strong>，那么将抛出 NotSerializableException 异常。</p>
+<p>特别的，如果序列化对象的成员变量为引用类型，并且它不属于 String、Array、Enum，Serializable 类型，那么在执行序列化的过程中，将会抛出运行时异常 NotSerializableException；</p>
+<p>因此对于上述情况的引用类型成员变量，有两种选择：<br>1) 使用 transient 关键字声明该成员，在序列化时跳过该成员变量，在反序列化之后自动赋值 null；<br>2) 想办法让其实现 Serializable 接口，如果是自定义的类还好办，稍作修改就可以，否则只能选择第一种方式来处理了。</p>
+<blockquote>
+<p>其实还有一种刁钻的方式，创建一个序列化类的派生类，这个派生类没有任何声明的成员，仅仅实现了 Serializable 接口；<br>然后将这个派生类用于序列化反序列化操作，这样就能完美的避免 ObjectOutputStream.writeObject0() 的类型检查了。<br>不过有一个地方需要注意，序列化类不能实现 Serializable 接口，否则在运行时照样抛出 NotSerializableException 异常！</p>
+</blockquote>
+<p><strong>父类与子类的序列化问题</strong><br>思考两个问题：<br>1) 父类实现了 Serializable 接口，而子类没有实现该接口，在序列化子类对象时有问题吗？<br>2) 子类实现了 Serializable 接口，而父类没有实现该接口，在序列化子类对象时有问题吗？</p>
+<p>第一个问题很好解决，因为如果父类实现了 Serializable 接口，那么继承自父类的子类自然实现了 Serializable 接口，即使子类没有显式实现 Serializable 接口，在序列化子类对象时也不会有任何问题；</p>
+<p>第二个问题暂时不能下定论，我们还是实践得真知，先测试一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Arrays;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        B b1 = new B();
+        System.out.printf("b1 -> A.n: %d, A.arr: %s %s\n", b1.n, Arrays.toString(b1.arr), b1.arr);
+
+        B b2 = serial(b1);
+        System.out.printf("b2 -> A.n: %d, A.arr: %s %s\n", b2.n, Arrays.toString(b2.arr), b2.arr);
+
+        b1.arr[0] = 8;
+        b2.arr[0] = 9;
+        System.out.printf("b1 -> A.n: %d, A.arr: %s %s\n", b1.n, Arrays.toString(b1.arr), b1.arr);
+        System.out.printf("b2 -> A.n: %d, A.arr: %s %s\n", b2.n, Arrays.toString(b2.arr), b2.arr);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Serializable> T serial(T t) throws IOException, ClassNotFoundException {
+        FileOutputStream fout = new FileOutputStream("/tmp/tmp.ser");
+
+        ObjectOutputStream objout = new ObjectOutputStream(fout);
+        objout.writeObject(t);
+
+        ObjectInputStream objin = new ObjectInputStream(new FileInputStream("/tmp/tmp.ser"));
+        T result = (T) objin.readObject();
+
+        new File("/tmp/tmp.ser").delete();
+        return result;
+    }
+}
+
+class A {
+    public int n;
+    public int[] arr;
+
+    {
+        n = 10;
+        arr = new int[] {1, 2, 3, 4, 5};
+    }
+}
+
+class B extends A implements Serializable {
+    private static final long serialVersionUID = 1L;
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [18:19:25] C:127
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [18:19:27]
+$ java Main
+b1 -> A.n: 10, A.arr: [1, 2, 3, 4, 5] [I@15db9742
+b2 -> A.n: 10, A.arr: [1, 2, 3, 4, 5] [I@776ec8df
+b1 -> A.n: 10, A.arr: [8, 2, 3, 4, 5] [I@15db9742
+b2 -> A.n: 10, A.arr: [9, 2, 3, 4, 5] [I@776ec8df
+</script></code></pre>
+<p>我们在父类 A 中定义了一个整型 n、一个整型数组 arr，它们都是可序列化对象；<br>父类 A 没有实现 Serializable 接口，而子类 B 实现了 Serializable 接口；<br>在进行序列化和反序列化之后，发现父类的两个成员变量并未丢失，它们被序列化了。</p>
+<p>那么会不会是因为这两个成员都是可序列化的才导致了这么一个现象呢？<br>我们再来测试一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Arrays;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        B b1 = new B();
+        System.out.printf("b1 -> n: %d, arr: %s >> %s\n", b1.ref.n, Arrays.toString(b1.ref.arr), b1.ref.arr);
+
+        B b2 = serial(b1);
+        System.out.printf("b2 -> n: %d, arr: %s >> %s\n", b2.ref.n, Arrays.toString(b2.ref.arr), b2.ref.arr);
+
+        b1.ref.arr[0] = 8;
+        b2.ref.arr[0] = 9;
+        System.out.printf("b1 -> n: %d, arr: %s >> %s\n", b1.ref.n, Arrays.toString(b1.ref.arr), b1.ref.arr);
+        System.out.printf("b2 -> n: %d, arr: %s >> %s\n", b2.ref.n, Arrays.toString(b2.ref.arr), b2.ref.arr);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Serializable> T serial(T t) throws IOException, ClassNotFoundException {
+        FileOutputStream fout = new FileOutputStream("/tmp/tmp.ser");
+
+        ObjectOutputStream objout = new ObjectOutputStream(fout);
+        objout.writeObject(t);
+
+        ObjectInputStream objin = new ObjectInputStream(new FileInputStream("/tmp/tmp.ser"));
+        T result = (T) objin.readObject();
+
+        new File("/tmp/tmp.ser").delete();
+        return result;
+    }
+}
+
+class A {
+    public Ref ref = new Ref();
+
+    public static class Ref {
+        public int n = 10;
+        public int[] arr = {1, 2, 3, 4, 5};
+    }
+}
+
+class B extends A implements Serializable {
+    private static final long serialVersionUID = 1L;
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [18:33:18]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [18:33:29]
+$ java Main
+b1 -> n: 10, arr: [1, 2, 3, 4, 5] >> [I@15db9742
+b2 -> n: 10, arr: [1, 2, 3, 4, 5] >> [I@776ec8df
+b1 -> n: 10, arr: [8, 2, 3, 4, 5] >> [I@15db9742
+b2 -> n: 10, arr: [9, 2, 3, 4, 5] >> [I@776ec8df
+</script></code></pre>
+<p>到现在总算是可以得出答案了，如果父类没有实现 Serializable 接口，而子类实现了 Serializable 接口，那么序列化子类对象的同时也会序列其所有父类的非静态成员，不管其是否为可序列化对象。</p>
+<p>其实从虚拟机的角度来说，只要知道了引用（对象、对象的成员），那么直接可以将引用地址上的内存 dump 出来，完全不需要考虑 Serializable 的相关问题，因为你要知道 Serializable 只是一个标记接口，仅仅当做一个类型来使用，它并没有定义任何关于序列化有用的方法；</p>
+<h3 id="Print-格式化"><a href="#Print-格式化" class="headerlink" title="Print 格式化"></a>Print 格式化</h3><p><strong>构造函数</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/**
+ * autoFlush，即自动刷新缓冲区，对于没有缓冲区的输出字节流来说，该参数没有意义.
+ * 如果 autoFlush 的值为 true，那么 PrintStream 在这几种情况下会进行 flush() 调用：
+ * 1) 写入一个 byte[] 字节数组时，自动刷新缓冲区
+ * 2) 写入一个 '\n' 换行符时，自动刷新缓冲区
+ * 3) 调用 println() 时，自动刷新缓冲区
+ */
+public PrintStream(OutputStream out); // autoFlush = false
+public PrintStream(OutputStream out, boolean autoFlush);
+public PrintStream(OutputStream out, boolean autoFlush, String encoding) throws UnsupportedEncodingException;
+
+public PrintStream(String fileName) throws FileNotFoundException;
+public PrintStream(String fileName, String csn) throws FileNotFoundException, UnsupportedEncodingException;
+
+public PrintStream(File file) throws FileNotFoundException;
+public PrintStream(File file, String csn) throws FileNotFoundException, UnsupportedEncodingException;
+</script></code></pre>
+<p>到现在为止，我们可以创建自定义的 stdin、stdout、stderr 标准输入输出文件了：<br>1) <code>InputStream stdin = new FileInputStream(FileDescriptor.in);</code><br>2) <code>PrintStream stdout = new PrintStream(new FileOutputStream(FileDescriptor.out));</code><br>3) <code>PrintStream stderr = new PrintStream(new FileOutputStream(FileDescriptor.err));</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void flush();
+public void close();
+public boolean checkError(); // 检查是否发生 Error
+
+public void write(int b);
+public void write(byte buf[], int off, int len);
+
+public void print(boolean b);
+public void print(char c);
+public void print(int i);
+public void print(long l);
+public void print(float f);
+public void print(double d);
+public void print(char s[]);
+public void print(String s);
+public void print(Object obj);
+
+public void println();
+public void println(boolean x);
+public void println(char x);
+public void println(int x);
+public void println(long x);
+public void println(float x);
+public void println(double x);
+public void println(char x[]);
+public void println(String x);
+public void println(Object x);
+
+// printf() 内部调用 format()，是 format() 的一个别名
+public PrintStream printf(String format, Object ... args);
+public PrintStream printf(Locale l, String format, Object ... args);
+public PrintStream format(String format, Object ... args);
+public PrintStream format(Locale l, String format, Object ... args);
+
+public PrintStream append(char c);
+public PrintStream append(CharSequence csq); // CharSequence接口：String、StringBuffer、StringBuilder
+public PrintStream append(CharSequence csq, int start, int end);
+</script></code></pre>
+<h2 id="Reader、Writer"><a href="#Reader、Writer" class="headerlink" title="Reader、Writer"></a>Reader、Writer</h2><p><strong>Reader 抽象类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 读取 1 个字符 char，EOF 返回 -1
+public int read() throws IOException;
+// 读取整个字符数组
+public int read(char cbuf[]) throws IOException;
+// 读取指定长度
+public int read(char cbuf[], int off, int len) throws IOException;
+
+// skip 跳过 n 个字符
+public long skip(long n) throws IOException;
+public boolean ready() throws IOException; // 测试可读
+
+/**
+ * @param readAheadLimit 限制仍然保留标记时可能读取的字符数，
+ *                       读了这么多字符后，尝试重新设置流可能会失败.
+ * @throws IOException 操作失败时抛出 IOException 异常
+ */
+public void mark(int readAheadLimit) throws IOException;
+public boolean markSupported();
+public void reset() throws IOException; // 回到最近的 mark 位置
+
+public void close() throws IOException; // 关闭输入字符流
+</script></code></pre>
+<p><strong>Writer 抽象类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 写入 1 个字符
+public void write(int c) throws IOException;
+// 写入整个字符数组
+public void write(char cbuf[]) throws IOException;
+// 写入指定长度
+public void write(char cbuf[], int off, int len) throws IOException;
+
+// 写入字符串 String
+public void write(String str) throws IOException;
+public void write(String str, int off, int len) throws IOException;
+
+// flush 刷新缓冲区
+public void flush() throws IOException;
+// close 关闭输出字符流
+public void close() throws IOException;
+</script></code></pre>
+<p><a href="/java-lang-util.html#Unicode-%E5%92%8C-UTF-16">字符编码、内码、外码等知识</a>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 编码、解码 */
+编码："加密"，char[] -> byte[]
+解码："解密"，byte[] -> char[]
+
+/* 内码（internal encoding）、外码（external encoding）*/
+内码：程序内部使用的字符编码，特别是某种语言实现其 char 或 String 类型在"内存"中用的内部编码；
+外码：程序与外部"交互"时使用的字符编码。
+
+Java 使用 "UTF-16" 作为字符的内码，并且是 "UTF-16BE" big-endian 大端序
+
+/* 码点（code point）、码元（code unit）*/
+字符集中一个完整的字符就是一个 "code point" 码点
+一个 "code point" 对应 1 到 2 个 "code unit" 码元（UTF-16）
+一个 "code unit" 是固定的 2 字节，即一个 char 类型（Java）
+
+/* Java 中的 char 类型 */
+char 即 "code unit"，固定为 2 个字节，是一个 2 字节的"无符号整型"
+只有只需 1 个 "code unit" 的 "code point" 才可以完整的存在一个 char 中，
+所以 char 类型不一定能表示一个完整的 UTF-16 字符（需要使用代理对来表示）
+
+/* String.length() 方法 */
+String.length() 只是单纯地计算字符数组 char[] 的长度，即"code unit"的个数；
+
+/* 例子 */
+char u = '\u4E2D'; // 中
+String u2 = "\uD801\uDC0F"; // 一个特殊字符, length 2
+
+/* 代理对（surrogate pair）*/
+对于一个 "code unit" 可表示的 "code point" 来说，使用一个 char 即可；
+对于需要两个 "code unit" 才能表示的 "code point" 来说，必须使用代理对来表示，即两个 char，四个字节
+
+/* 内码转换为外码 */
+String.getBytes() 用于将 String 的内码转换为指定的外码：
+1. 无参数版使用平台的默认编码作为外码，"环境变量"
+2. 有参数版使用参数指定的编码作为外码，"指定编码"
+getBytes() 方法将 String 字符序列用外码编码后，结果放在一个新 byte[] 并返回
+
+/* 大小端 BOM */
+UTF-16LE：0xFF 0xFE
+UTF-16BE：0xFE 0xFF
+
+String str = "z中";
+System.out.println(str.length()); // 2
+
+String str1 = "z中\uD852\uDF62"; // 输出 3 个字符，后面两个 char 组成一个 Unicode 字符
+System.out.println(str1);
+System.out.println(str1.length()); // 4
+
+// 默认UTF-8, ASCII 使用 1 个字节
+System.out.println("z".getBytes().length);
+// 默认UTF-8, 中文使用 3 个字节
+System.out.println("中".getBytes().length);
+
+// 虽然两个字符都是在 UTF-16 的两个字节表示范围内，但是 UTF-16 默认会加上 BOM 信息
+System.out.println("z".getBytes("UTF-16").length); // 4
+System.out.println("中".getBytes("UTF-16").length); // 4
+
+// 指定 BOM 顺序后，不会再输出 BOM 信息
+System.out.println("z".getBytes("UTF-16BE").length); // 2
+System.out.println("中".getBytes("UTF-16BE").length); // 2
+</script></code></pre>
+<h3 id="CharArray-字符数组"><a href="#CharArray-字符数组" class="headerlink" title="CharArray 字符数组"></a>CharArray 字符数组</h3><p><code>CharArrayReader</code><br><strong>构造函数</strong><br><code>public CharArrayReader(char buf[]);</code><br><code>public CharArrayReader(char buf[], int offset, int length);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public int read() throws IOException;
+public int read(char b[], int off, int len) throws IOException;
+
+public long skip(long n) throws IOException;
+public boolean ready() throws IOException;
+
+public boolean markSupported();
+public void mark(int readAheadLimit) throws IOException;
+public void reset() throws IOException;
+
+public void close();
+</script></code></pre>
+<p><code>CharArrayWriter</code><br><strong>构造函数</strong><br><code>public CharArrayWriter();</code>：default 值为 32（字符数组长度）<br><code>public CharArrayWriter(int initialSize);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void write(int c);
+public void write(char c[], int off, int len);
+public void write(String str, int off, int len);
+
+public void writeTo(Writer out) throws IOException; // 输出至 out 字符流
+
+public CharArrayWriter append(char c);
+public CharArrayWriter append(CharSequence csq);
+public CharArrayWriter append(CharSequence csq, int start, int end);
+
+public int size()
+public void reset();
+public void flush(); // 空函数体
+public void close(); // 空函数体
+
+public char toCharArray()[]; // 导出字符数组
+public String toString();
+</script></code></pre>
+<h3 id="String-字符串"><a href="#String-字符串" class="headerlink" title="String 字符串"></a>String 字符串</h3><p><code>StringReader</code><br><strong>构造函数</strong><br><code>public StringReader(String s);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public int read() throws IOException;
+public int read(char cbuf[], int off, int len) throws IOException;
+
+public long skip(long ns) throws IOException;
+public boolean ready() throws IOException;
+
+public boolean markSupported();
+public void mark(int readAheadLimit) throws IOException;
+public void reset() throws IOException;
+
+public void close();
+</script></code></pre>
+<p><code>StringWriter</code><br><strong>构造函数</strong><br><code>public StringWriter();</code>：内部调用<code>new StringBuffer();</code>，默认大小 16 字符，即 32 字节；<br><code>public StringWriter(int initialSize);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void write(int c);
+public void write(char cbuf[], int off, int len);
+
+public void write(String str);
+public void write(String str, int off, int len);
+
+public StringWriter append(char c);
+public StringWriter append(CharSequence csq);
+public StringWriter append(CharSequence csq, int start, int end);
+
+public String toString();
+public StringBuffer getBuffer();
+
+public void flush(); // 函数体为空
+public void close() throws IOException; // 函数体为空
+</script></code></pre>
+<h3 id="InputStream-OutputStream-桥梁"><a href="#InputStream-OutputStream-桥梁" class="headerlink" title="InputStream/OutputStream 桥梁"></a>InputStream/OutputStream 桥梁</h3><p><code>InputStreamReader</code><br><strong>构造函数</strong><br><code>public InputStreamReader(InputStream in);</code>：自动识别编码<br><code>public InputStreamReader(InputStream in, String charsetName) throws UnsupportedEncodingException;</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public String getEncoding(); // 获取字符编码
+
+public int read() throws IOException;
+public int read(char cbuf[], int offset, int length) throws IOException;
+
+public boolean ready() throws IOException;
+public void close() throws IOException;
+</script></code></pre>
+<p><code>OutputStreamWriter</code><br><strong>构造函数</strong><br><code>public OutputStreamWriter(OutputStream out);</code>：使用平台默认编码，Linux 下为<code>UTF-8</code>；<br><code>public OutputStreamWriter(OutputStream out, String charsetName) throws UnsupportedEncodingException;</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public String getEncoding();
+
+public void write(int c) throws IOException;
+public void write(char cbuf[], int off, int len) throws IOException;
+
+public void write(String str, int off, int len) throws IOException;
+
+public void flush() throws IOException;
+public void close() throws IOException;
+</script></code></pre>
+<h3 id="File-文件-1"><a href="#File-文件-1" class="headerlink" title="File 文件"></a>File 文件</h3><p><code>FileReader</code><br><strong>构造函数</strong><br><code>public FileReader(String fileName) throws FileNotFoundException;</code><br><code>public FileReader(File file) throws FileNotFoundException;</code><br><code>public FileReader(FileDescriptor fd);</code></p>
+<p><code>FileWriter</code><br><strong>构造函数</strong><br><code>public FileWriter(String fileName) throws IOException;</code><br><code>public FileWriter(String fileName, boolean append) throws IOException;</code><br><code>public FileWriter(File file) throws IOException;</code><br><code>public FileWriter(File file, boolean append) throws IOException;</code><br><code>public FileWriter(FileDescriptor fd);</code></p>
+<h3 id="Buffered-缓冲流-1"><a href="#Buffered-缓冲流-1" class="headerlink" title="Buffered 缓冲流"></a>Buffered 缓冲流</h3><p><code>BufferedReader</code><br><strong>构造函数</strong><br><code>public BufferedReader(Reader in);</code>：default 值为 8192 字符，即 16 KB；<br><code>public BufferedReader(Reader in, int sz);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public int read() throws IOException;
+public int read(char cbuf[], int off, int len) throws IOException;
+
+public String readLine() throws IOException;
+
+public long skip(long n) throws IOException;
+public boolean ready() throws IOException;
+
+public boolean markSupported();
+public void mark(int readAheadLimit) throws IOException;
+public void reset() throws IOException;
+
+public void close() throws IOException;
+</script></code></pre>
+<p><code>BufferedWriter</code><br><strong>构造函数</strong><br><code>public BufferedWriter(Writer out);</code>：default 值为 8192 字符，即 16 KB；<br><code>public BufferedWriter(Writer out, int sz);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void write(int c) throws IOException;
+public void write(char cbuf[], int off, int len) throws IOException;
+
+public void write(String s, int off, int len) throws IOException;
+
+public void newLine() throws IOException;
+
+public void flush() throws IOException;
+public void close() throws IOException;
+</script></code></pre>
+<h3 id="LineNumber-行号"><a href="#LineNumber-行号" class="headerlink" title="LineNumber 行号"></a>LineNumber 行号</h3><p><strong>构造函数</strong><br><code>public LineNumberReader(Reader in);</code>：default 值为 8192 字符，即 16 KB；<br><code>public LineNumberReader(Reader in, int sz);</code></p>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void setLineNumber(int lineNumber); // 设置当前 LineNumber 号
+public int getLineNumber(); // 获取当前 LineNumber 号
+
+public int read() throws IOException;
+public int read(char cbuf[], int off, int len) throws IOException;
+
+public String readLine() throws IOException;
+
+public long skip(long n) throws IOException;
+public void mark(int readAheadLimit) throws IOException;
+public void reset() throws IOException;
+</script></code></pre>
+<h3 id="Print-格式化-1"><a href="#Print-格式化-1" class="headerlink" title="Print 格式化"></a>Print 格式化</h3><p><strong>构造函数</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/**
+ * 若 autoFlush 为 true:
+ * 当调用 println()、printf()、format() 方法时自动 flush()
+ */
+public PrintWriter(Writer out); // autoFlush = false
+public PrintWriter(Writer out, boolean autoFlush);
+
+public PrintWriter(OutputStream out); // autoFlush = false
+public PrintWriter(OutputStream out, boolean autoFlush);
+
+public PrintWriter(String fileName) throws FileNotFoundException;
+public PrintWriter(String fileName, String csn) throws FileNotFoundException, UnsupportedEncodingException;
+
+public PrintWriter(File file) throws FileNotFoundException;
+public PrintWriter(File file, String csn) throws FileNotFoundException, UnsupportedEncodingException;
+</script></code></pre>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void flush();
+public void close();
+public boolean checkError(); // 检查错误 Error
+
+public void write(int c);
+public void write(char buf[], int off, int len);
+public void write(char buf[]);
+
+public void write(String s, int off, int len);
+public void write(String s);
+
+public void print(boolean b);
+public void print(char c);
+public void print(int i);
+public void print(long l);
+public void print(float f);
+public void print(double d);
+public void print(char s[]);
+public void print(String s);
+public void print(Object obj);
+
+public void println();
+public void println(boolean x);
+public void println(char x);
+public void println(int x);
+public void println(long x);
+public void println(float x);
+public void println(double x);
+public void println(char x[]);
+public void println(String x);
+public void println(Object x);
+
+// printf() 内部调用 format()，是 format() 的一个别名
+public PrintWriter printf(String format, Object ... args);
+public PrintWriter printf(Locale l, String format, Object ... args);
+public PrintWriter format(String format, Object ... args);
+public PrintWriter format(Locale l, String format, Object ... args);
+
+public PrintWriter append(char c);
+public PrintWriter append(CharSequence csq);
+public PrintWriter append(CharSequence csq, int start, int end);
+</script></code></pre>
+<h2 id="RandomAccessFile"><a href="#RandomAccessFile" class="headerlink" title="RandomAccessFile"></a>RandomAccessFile</h2><blockquote>
+<p><code>RanndomAccessFile</code>实现了接口<code>DataOutput/DataInput</code><br>实际上与 InputStream/OutputStream、Reader/Writer 无关<br>最大的特点是支持随机存储，内部依靠一个”文件指针”实现</p>
+</blockquote>
+<p><strong>构造函数</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public RandomAccessFile(String name, String mode) throws FileNotFoundException;
+public RandomAccessFile(File file, String mode) throws FileNotFoundException;
+
+// mode: r、rw、rws、rwd
+"r"：以只读方式打开，调用结果对象的任何 write 方法都将导致抛出 IOException
+"rw"：打开以便读取和写入
+"rws"：打开以便读取和写入；对于 data 或 metadata 自动进行 sync
+"rwd"：打开以便读取和写入，对于 data 自动进行 sync
+
+// metadata 和 data 区别
+medadata：元数据，描述数据的数据，如文件权限、文件属性、访问时间、修改时间等等
+data：文件内容（数据）
+</script></code></pre>
+<p><strong>常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final FileDescriptor getFD() throws IOException;
+public final FileChannel getChannel();
+
+public int read() throws IOException;
+public int read(byte b[], int off, int len) throws IOException;
+public int read(byte b[]) throws IOException;
+
+public final void readFully(byte b[]) throws IOException;
+public final void readFully(byte b[], int off, int len) throws IOException;
+
+public int skipBytes(int n) throws IOException;
+
+public void write(int b) throws IOException;
+public void write(byte b[]) throws IOException;
+public void write(byte b[], int off, int len) throws IOException;
+
+// 操作文件指针 pos
+public native long getFilePointer() throws IOException;
+public void seek(long pos) throws IOException;
+
+/**
+ * 若 newLength < curLength：截断文件，需要的话将文件指针指向 newLength 位置
+ * 若 newLength > curLength：扩充文件，扩充部分的内容未定义
+ */
+public native long length() throws IOException;
+public native void setLength(long newLength) throws IOException;
+
+public void close() throws IOException;
+
+public final boolean readBoolean() throws IOException;
+public final byte readByte() throws IOException;
+public final int readUnsignedByte() throws IOException;
+public final short readShort() throws IOException;
+public final int readUnsignedShort() throws IOException;
+public final char readChar() throws IOException;
+public final int readInt() throws IOException;
+public final long readLong() throws IOException;
+public final float readFloat() throws IOException;
+public final double readDouble() throws IOException;
+
+public final String readLine() throws IOException;
+public final String readUTF() throws IOException;
+
+public final void writeBoolean(boolean v) throws IOException;
+public final void writeByte(int v) throws IOException;
+public final void writeShort(int v) throws IOException;
+public final void writeChar(int v) throws IOException;
+public final void writeInt(int v) throws IOException;
+public final void writeLong(long v) throws IOException;
+public final void writeFloat(float v) throws IOException;
+public final void writeDouble(double v) throws IOException;
+
+public final void writeUTF(String str) throws IOException;
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-lang-util.html" rel="next" title="Java Random、regex正则、Math类、String字符串">
+                <i class="fa fa-chevron-left"></i> Java Random、regex正则、Math类、String字符串
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-enum.html" rel="prev" title="Java Enum枚举">
+                Java Enum枚举 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IO-流"><span class="nav-number">1.</span> <span class="nav-text">IO 流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#File-类"><span class="nav-number">2.</span> <span class="nav-text">File 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InputStream、OutputStream"><span class="nav-number">3.</span> <span class="nav-text">InputStream、OutputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteArray-字节数组"><span class="nav-number">3.1.</span> <span class="nav-text">ByteArray 字节数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-文件"><span class="nav-number">3.2.</span> <span class="nav-text">File 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Buffered-缓冲流"><span class="nav-number">3.3.</span> <span class="nav-text">Buffered 缓冲流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-基本类型"><span class="nav-number">3.4.</span> <span class="nav-text">Data 基本类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-引用类型"><span class="nav-number">3.5.</span> <span class="nav-text">Object 引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Print-格式化"><span class="nav-number">3.6.</span> <span class="nav-text">Print 格式化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reader、Writer"><span class="nav-number">4.</span> <span class="nav-text">Reader、Writer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CharArray-字符数组"><span class="nav-number">4.1.</span> <span class="nav-text">CharArray 字符数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String-字符串"><span class="nav-number">4.2.</span> <span class="nav-text">String 字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InputStream-OutputStream-桥梁"><span class="nav-number">4.3.</span> <span class="nav-text">InputStream/OutputStream 桥梁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-文件-1"><span class="nav-number">4.4.</span> <span class="nav-text">File 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Buffered-缓冲流-1"><span class="nav-number">4.5.</span> <span class="nav-text">Buffered 缓冲流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LineNumber-行号"><span class="nav-number">4.6.</span> <span class="nav-text">LineNumber 行号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Print-格式化-1"><span class="nav-number">4.7.</span> <span class="nav-text">Print 格式化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RandomAccessFile"><span class="nav-number">5.</span> <span class="nav-text">RandomAccessFile</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-io.html';
+          this.page.identifier = 'java-io.html';
+          this.page.title = 'Java IO流';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

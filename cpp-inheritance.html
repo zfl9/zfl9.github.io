@@ -1,0 +1,1355 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C++ 继承与派生">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="C++ 继承与派生，继承性是面向对象程序设计最重要的特征，可以说，如果没有掌握继承性，就等于没有掌握类和对象的精华，就是没有掌握面向对象程序设计的真谛">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 继承与派生">
+<meta property="og:url" content="https://www.zfl9.com/cpp-inheritance.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="C++ 继承与派生，继承性是面向对象程序设计最重要的特征，可以说，如果没有掌握继承性，就等于没有掌握类和对象的精华，就是没有掌握面向对象程序设计的真谛">
+<meta property="og:image" content="https://www.zfl9.com/images/cpp-diamond.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 继承与派生">
+<meta name="twitter:description" content="C++ 继承与派生，继承性是面向对象程序设计最重要的特征，可以说，如果没有掌握继承性，就等于没有掌握类和对象的精华，就是没有掌握面向对象程序设计的真谛">
+<meta name="twitter:image" content="https://www.zfl9.com/images/cpp-diamond.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/cpp-inheritance.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>C++ 继承与派生 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/cpp-inheritance.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                C++ 继承与派生
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T10:48:00+08:00">
+                2017-08-25
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/cpp-inheritance.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cpp-inheritance.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/cpp-inheritance.html" class="leancloud_visitors" data-flag-title="C++ 继承与派生">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>C++ 继承与派生，继承性是面向对象程序设计最重要的特征，可以说，如果没有掌握继承性，就等于没有掌握类和对象的精华，就是没有掌握面向对象程序设计的真谛</p>
+<a id="more"></a>
+<h2 id="继承的概念"><a href="#继承的概念" class="headerlink" title="继承的概念"></a>继承的概念</h2><p><strong>继承是类与类之间的关系</strong>，是一个很简单很直观的概念，与现实世界中的继承类似，例如儿子继承父亲的财产；</p>
+<p><code>继承（Inheritance）</code>可以理解为一个类从另一个类获取成员变量和成员函数的过程；<br>例如类 B 继承于类 A，那么 B 就拥有 A 的成员变量和成员函数；<strong>被继承的类称为父类或基类，继承的类称为子类或派生类</strong>；</p>
+<p>派生类除了拥有基类的成员，还可以定义自己的新成员，以增强类的功能；</p>
+<p>以下是两种典型的使用继承的场景：<br>1) 当你创建的新类与现有的类相似，只是多出若干成员变量或成员函数时，可以使用继承，这样不但会减少代码量，而且新类会拥有基类的所有功能；</p>
+<p>2) 当你需要创建多个类，它们拥有很多相似的成员变量或成员函数时，也可以使用继承；可以将这些类的共同成员提取出来，定义为基类，然后从基类继承，既可以节省代码，也方便后续修改成员；</p>
+<p>下面，我们定义了一个基类 People，然后由此派生出 Student 类：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class People {
+public:
+    void setname(const char *name) { m_name = name; }
+    void setage(int age) { m_age = age; }
+    const char *getname() const { return m_name; }
+    int getage() const { return m_age; }
+private:
+    const char *m_name;
+    int m_age;
+};
+
+class Student : public People {
+public:
+    void setscore(float score) { m_score = score; }
+    float getscore() const { return m_score; }
+private:
+    float m_score;
+};
+
+int main() {
+    Student s;
+    s.setname("Otokaze");
+    s.setage(18);
+    s.setscore(111);
+    printf("name: %s, age: %d, score: %g\n", s.getname(), s.getage(), s.getscore());
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:05:22]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [11:05:47]
+$ ./a.out
+name: Otokaze, age: 18, score: 111
+</script></code></pre>
+<p>本例中，People 是基类，Student 是派生类。Student 类继承了 People 类的成员，同时还新增了自己的成员变量 m_score 和成员函数 setscore()、getscore()；这些继承过来的成员，可以通过子类对象访问，就像自己的一样；</p>
+<p><code>class Student : public People</code><br>class 后面的“Student”是新声明的派生类，冒号后面的“People”是已经存在的基类；在“People”之前有一关键宇 public，用来表示是<code>公有继承</code>；</p>
+<p>继承方式包括 <code>public（公有的）</code>、<code>private（私有的）</code>和 <code>protected（受保护的）</code>，此项是可选的，如果不写，那么默认为 <code>private</code>；</p>
+<h2 id="继承权限和继承方式"><a href="#继承权限和继承方式" class="headerlink" title="继承权限和继承方式"></a>继承权限和继承方式</h2><p>继承方式限定了基类成员在派生类中的访问权限，包括 public（公有的）、private（私有的）和 protected（受保护的）；此项是可选项，如果不写，默认为 private（成员变量和成员函数默认也是 private）；</p>
+<p>现在我们知道，public、protected、private 三个关键字除了可以修饰类的成员，还可以指定继承方式；</p>
+<p><strong>public、protected、private 修饰类的成员</strong><br>类成员的访问权限由高到低依次为 public –&gt; protected –&gt; private，public 成员可以通过对象来访问，private 成员不能通过对象访问；</p>
+<p>现在再来补充一下 protected；protected 成员和 private 成员类似，也不能通过对象访问；但是当存在继承关系时，protected 和 private 就不一样了：基类中的 protected 成员可以在派生类中使用，而基类中的 private 成员不能在派生类中使用；</p>
+<p><strong>public、protected、private 指定继承方式</strong><br>不同的继承方式会影响基类成员在派生类中的访问权限：</p>
+<p><strong>1) public继承方式</strong><br>基类中所有 public 成员在派生类中为 public 属性；<br>基类中所有 protected 成员在派生类中为 protected 属性；<br>基类中所有 private 成员在派生类中不能使用。</p>
+<p><strong>2) protected继承方式</strong><br>基类中的所有 public 成员在派生类中为 protected 属性；<br>基类中的所有 protected 成员在派生类中为 protected 属性；<br>基类中的所有 private 成员在派生类中不能使用。</p>
+<p><strong>3) private继承方式</strong><br>基类中的所有 public 成员在派生类中均为 private 属性；<br>基类中的所有 protected 成员在派生类中均为 private 属性；<br>基类中的所有 private 成员在派生类中不能使用。</p>
+<p>通过上面的分析可以发现：<br>1) 基类成员在派生类中的访问权限不得高于继承方式中指定的权限；例如，当继承方式为 protected 时，那么基类成员在派生类中的访问权限最高也为 protected，高于 protected 的会降级为 protected，但低于 protected 不会升级；再如，当继承方式为 public 时，那么基类成员在派生类中的访问权限将保持不变；</p>
+<p>也就是说，继承方式中的 public、protected、private 是用来指明基类成员在派生类中的最高访问权限的；</p>
+<p>2) 不管继承方式如何，基类中的 private 成员在派生类中始终不能使用（不能在派生类的成员函数中访问或调用）；</p>
+<p>3) 如果希望基类的成员能够被派生类继承并且毫无障碍地使用，那么这些成员只能声明为 public 或 protected；只有那些不希望在派生类中使用的成员才声明为 private；</p>
+<p>4) 如果希望基类的成员既不向外暴露（不能通过对象访问），还能在派生类中使用，那么只能声明为 protected；</p>
+<p>注意，我们这里说的是基类的 private 成员不能在派生类中使用，并没有说基类的 private 成员不能被继承；<br>实际上，基类的 private 成员是能够被继承的，并且（成员变量）会占用派生类对象的内存，它只是在派生类中不可见，导致无法使用罢了；<br>private 成员的这种特性，能够很好的对派生类隐藏基类的实现，以体现面向对象的<code>封装性</code>；</p>
+<blockquote>
+<p>由于 private 和 protected 继承方式会改变基类成员在派生类中的访问权限，导致继承关系复杂，所以实际开发中我们一般使用 public；</p>
+</blockquote>
+<p>在派生类中访问基类 private 成员的唯一方法就是借助基类的非 private 成员函数，如果基类没有非 private 成员函数，那么该成员在派生类中将无法访问；</p>
+<p><strong>改变访问权限</strong><br>使用 using 关键字可以改变基类成员在派生类中的访问权限，例如将 public 改为 private、将 protected 改为 public 等：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+protected:
+    int m_a;
+    char m_b;
+    float m_c;
+private:
+    char *m_d;
+};
+
+class B : public A {
+public:
+    using A::m_a;
+protected:
+    using A::m_b;
+//    using A::m_d; // 基类的private成员在派生类中不可见
+private:
+    using A::m_c;
+};
+
+int main() {
+    B b;
+    b.m_a = 1;
+    return 0;
+}
+</script></code></pre>
+<blockquote>
+<p>注意：在派生类中只能访问基类的非 private 成员，使用 using 时，也必须遵循这个规则；<br>对于父类的 public/protected 成员：using 可以将其改为 public、protected、private 属性；<br>对于父类的 private 成员：由于在派生类中不可见，所以也就不能使用 using 改变属性；</p>
+</blockquote>
+<h2 id="继承时的名字屏蔽"><a href="#继承时的名字屏蔽" class="headerlink" title="继承时的名字屏蔽"></a>继承时的名字屏蔽</h2><p>如果派生类中的成员（包括成员变量和成员函数）和基类中的成员重名，那么就会遮蔽从基类继承过来的成员；<br>所谓遮蔽，就是在派生类中使用该成员（包括在定义派生类时使用，也包括通过派生类对象访问该成员）时，实际上使用的是派生类新增的成员，而不是从基类继承来的；</p>
+<p>比如，在父类 A 和 派生类 B 中都有函数 func()，在调用的时候就会发生名字屏蔽：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    void func() {
+        printf("class A: func()\n");
+    }
+};
+
+class B : public A {
+public:
+    void func() {
+        printf("class B: func()\n");
+    }
+};
+
+int main() {
+    B b;
+    b.func();
+    b.A::func();
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:53:52]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [11:57:54]
+$ ./a.out
+class B: func()
+class A: func()
+</script></code></pre>
+<p>在基类 A 和 派生类 B 中都存在一个名字一样的函数 func()，名字一样，造成屏蔽；<br>由于派生类中的 func() 优先级更高，如不明确指定使用父类的 func()，默认调用派生类的 func() 函数；</p>
+<p><strong>基类成员函数和派生类成员函数不构成重载</strong><br>基类成员和派生类成员的<strong>名字一样</strong>时会造成遮蔽，这句话对于成员变量很好理解，对于成员函数要引起注意，<strong>不管函数的参数如何，只要名字一样就会造成遮蔽</strong>；</p>
+<p>换句话说，<strong>基类成员函数和派生类成员函数不会构成重载，如果派生类有同名函数，那么就会遮蔽基类中的所有同名函数，不管它们的参数是否一样</strong>；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    void func() {
+        printf("class A: func()\n");
+    }
+    void func(int) {
+        printf("class A: func(int)\n");
+    }
+};
+
+class B : public A {
+public:
+    void func(char) {
+        printf("class B: func(char)\n");
+    }
+    void func(float) {
+        printf("class B: func(float)\n");
+    }
+};
+
+int main() {
+    B b;
+    b.func('A'); // 正确
+    b.func(1.1f); // 正确
+//    b.func(); // 错误
+//    b.func(10); // 错误
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [12:09:38]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [12:09:40]
+$ ./a.out
+class B: func(char)
+class B: func(float)
+</script></code></pre>
+<p>如果说有重载关系，那么也是 A 类的两个 func 构成重载，而 B 类的两个 func 构成另外的重载；</p>
+<h2 id="类继承时的作用域嵌套"><a href="#类继承时的作用域嵌套" class="headerlink" title="类继承时的作用域嵌套"></a>类继承时的作用域嵌套</h2><p>类其实也是一种作用域，每个类都会定义它自己的作用域，在这个作用域内我们再定义类的成员；<br>当存在继承关系时，派生类的作用域嵌套在基类的作用域之内，如果一个名字在派生类的作用域内无法找到，编译器会继续到外层的基类作用域中查找该名字的定义；</p>
+<p>换句话说，作用域能够彼此包含，被包含（或者说被嵌套）的作用域称为内层作用域（inner scope），包含着别的作用域的作用域称为外层作用域（outer scope）；<br>一旦在外层作用域中声明（或者定义）了某个名字，那么它所嵌套着的所有内层作用域中都能访问这个名字；同时，允许在内层作用域中重新定义外层作用域中已有的名字；</p>
+<p>举个栗子：C 继承于 B，B 继承于 A，即 A –&gt; B –&gt; C；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    void func() {
+        printf("class_A: func()\n");
+    }
+    void print() {
+        printf("class_A: print()\n");
+    }
+};
+
+class B : public A {
+public:
+    void func() {
+        printf("class_B: func()\n");
+    }
+};
+
+class C : public B {
+public:
+    void print() {
+        printf("class_C: print()\n");
+    }
+};
+
+int main() {
+    B b;
+    b.func();   // 调用 B 的 func();
+    b.print();  // 调用 A 的 print();
+
+    C c;
+    c.func();   // 调用 B 的 func();
+    c.print();  // 调用 C 的 print();
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [12:58:55]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [12:59:16]
+$ ./a.out
+class_B: func()
+class_A: print()
+class_B: func()
+class_C: print()
+</script></code></pre>
+<p>如果当前类中没有找到该成员，就逐个的往外层作用域中查找，直到找到为止，否则就报错；<br>这个过程叫做<code>名字查找（name lookup）</code>，也就是在作用域链中寻找与所用名字最匹配的声明（或定义）的过程；</p>
+<p>对于成员变量这个过程很好理解，对于成员函数要引起注意，编译器<strong>仅仅是根据函数的名字来查找的，不会理会函数的参数</strong>；<br>换句话说，一旦内层作用域有同名的函数，不管有几个，编译器都不会再到外层作用域中查找，编译器仅把内层作用域中的这些同名函数作为一组候选函数；这组候选函数就是一组重载函数；</p>
+<p>说白了，只有一个作用域内的同名函数才具有重载关系，不同作用域内的同名函数是会造成遮蔽，使得外层函数无效。派生类和基类拥有不同的作用域，所以它们的同名函数不具有重载关系；</p>
+<h2 id="继承时的对象内存模型"><a href="#继承时的对象内存模型" class="headerlink" title="继承时的对象内存模型"></a>继承时的对象内存模型</h2><p><strong>没有继承关系时</strong>：成员变量和成员函数会分开存储，成员变量存储在栈、堆、全局数据区，而成员函数存储在代码区；<br><strong>有继承关系时</strong>：派生类的内存模型可以看成是基类成员变量和新增成员变量的总和，而所有成员函数仍然存储在代码区，由所有对象共享；</p>
+<p><strong>基类的成员变量排在前面，派生类的排在后面</strong>；</p>
+<p>在派生类的对象模型中，会包含所有基类的成员变量（包括被屏蔽的基类成员变量等）；这种设计方案的优点是访问效率高，能够在派生类对象中直接访问基类变量，无需经过好几层间接计算；</p>
+<p>我们来看一下这个例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A() : m_a(1) {}
+protected:
+    int m_a;
+};
+
+class B : public A {
+public:
+    B() : A(), m_a(2) {}
+protected:
+    int m_a;
+};
+
+class C : public B {
+public:
+    C() : B(), m_b(11) {}
+protected:
+    int m_b;
+};
+
+class D : public C {
+public:
+    D() : C(), m_b(22) {}
+protected:
+    int m_b;
+};
+
+int main() {
+    D d;
+    printf("sizeof(d) = %lu\n", sizeof(d));
+    printf("A::m_a = %d, B::m_a = %d, C::m_b = %d, D::m_b = %d\n",
+            *(int *)&d,
+            *(int *)((long)&d + 4),
+            *(int *)((long)&d + 8),
+            *(int *)((long)&d + 12));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:20:53]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [13:21:08]
+$ ./a.out
+sizeof(d) = 16
+A::m_a = 1, B::m_a = 2, C::m_b = 11, D::m_b = 22
+</script></code></pre>
+<p>即使造成名字屏蔽，父类的成员变量还是排在前面，并不会有什么影响；</p>
+<h2 id="派生类的构造函数"><a href="#派生类的构造函数" class="headerlink" title="派生类的构造函数"></a>派生类的构造函数</h2><p>前面我们说基类的成员函数可以被继承，可以通过派生类的对象访问，但这仅仅指的是普通的成员函数，<strong>类的构造函数不能被继承</strong>；<br>构造函数不能被继承是有道理的，因为即使继承了，它的名字和派生类的名字也不一样，不能成为派生类的构造函数，当然更不能成为普通的成员函数；</p>
+<p>在设计派生类时，对继承过来的成员变量的初始化工作也要由派生类的构造函数完成，但是大部分基类都有 private 属性的成员变量，它们在派生类中无法访问，更不能使用派生类的构造函数来初始化；</p>
+<p>这种矛盾在C++继承中是普遍存在的，解决这个问题的思路是：<strong>在派生类的构造函数中调用基类的构造函数</strong>；<br>还有一点要注意，<strong>派生类构造函数中只能调用直接基类的构造函数，不能调用间接基类的</strong>；</p>
+<p><strong>事实上，通过派生类创建对象时必须要调用基类的构造函数，这是语法规定</strong>；<br>换句话说，定义派生类构造函数时最好指明基类构造函数；如果不指明，就调用基类的默认构造函数（不带参数的构造函数）；如果没有默认构造函数，那么编译失败；</p>
+<p>派生类构造函数总是先调用基类构造函数再执行其他代码（包括参数初始化表以及函数体中的代码）；<br>并且<strong>只能将基类构造函数的调用放在函数头部，不能放在函数体中</strong>；</p>
+<p><strong>构造函数调用顺序</strong><br>基类构造函数总是被优先调用，这说明创建派生类对象时，会先调用基类构造函数，再调用派生类构造函数，如果继承关系有好几层的话，例如：A –&gt; B –&gt; C<br>那么创建 C 类对象时构造函数的执行顺序为：A类构造函数 –&gt; B类构造函数 –&gt; C类构造函数</p>
+<p><strong>构造函数的调用顺序是按照继承的层次自顶向下、从基类再到派生类的</strong></p>
+<p>举例说明：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A() {
+        printf("class_A A()\n");
+    }
+    A(int) {
+        printf("class_A A(int)\n");
+    }
+};
+
+class B : public A {
+public:
+    B() {
+        printf("class_B B()\n");
+    }
+    B(char) {
+        printf("class_B B(char)\n");
+    }
+};
+
+class C : public B {
+public:
+    C() : B('A') {
+        printf("class_C C()\n");
+    }
+};
+
+int main() {
+    C c;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:47:50]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [13:48:09]
+$ ./a.out
+class_A A()
+class_B B(char)
+class_C C()
+</script></code></pre>
+<h2 id="派生类的析构函数"><a href="#派生类的析构函数" class="headerlink" title="派生类的析构函数"></a>派生类的析构函数</h2><p><strong>和构造函数类似，析构函数也不能被继承</strong>；<br>与构造函数不同的是，在派生类的析构函数中不用显式地调用基类的析构函数，因为每个类只有一个析构函数，编译器知道如何选择，无需程序员干涉；</p>
+<p>另外<strong>析构函数的执行顺序和构造函数的执行顺序也刚好相反</strong>：</p>
+<ul>
+<li>创建派生类对象时，构造函数的执行顺序和继承顺序相同，即先执行基类构造函数，再执行派生类构造函数；</li>
+<li>而销毁派生类对象时，析构函数的执行顺序和继承顺序相反，即先执行派生类析构函数，再执行基类析构函数；</li>
+</ul>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A() {
+        printf("A()\n");
+    }
+    ~A() {
+        printf("~A()\n");
+    }
+};
+
+class B : public A {
+public:
+    B() {
+        printf("B()\n");
+    }
+    ~B() {
+        printf("~B()\n");
+    }
+};
+
+class C : public B {
+public:
+    C() {
+        printf("C()\n");
+    }
+    ~C() {
+        printf("~C()\n");
+    }
+};
+
+int main() {
+    C c;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:55:19]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [13:55:23]
+$ ./a.out
+A()
+B()
+C()
+~C()
+~B()
+~A()
+</script></code></pre>
+<h2 id="类的多继承"><a href="#类的多继承" class="headerlink" title="类的多继承"></a>类的多继承</h2><p>在前面的例子中，派生类都只有一个基类，称为<code>单继承（Single Inheritance）</code>；<br>除此之外，C++也支持<code>多继承（Multiple Inheritance）</code>，即一个派生类可以有两个或多个基类；</p>
+<blockquote>
+<p>多继承容易让代码逻辑复杂、思路混乱，一直备受争议，中小型项目中较少使用，后来的 Java、C#、PHP 等干脆取消了多继承；</p>
+</blockquote>
+<p>C++ 多继承的语法也很简单，将多个基类用逗号隔开即可：<code>class C : public A, public B { ... }</code>，表示 C 继承 A 和 B；</p>
+<p><strong>多继承下的构造函数</strong><br>多继承形式下的构造函数和单继承形式基本相同，只是要在派生类的构造函数中调用多个基类的构造函数；<br>比如对于上面的 C 类的构造函数：<code>C(形参列表) : A(实参列表), B(实参列表) {函数体}</code></p>
+<p><strong>基类构造函数的调用顺序和它们在派生类构造函数中出现的顺序无关，而是和声明派生类时基类出现的顺序相同</strong></p>
+<p><strong>多继承形式下析构函数的执行顺序和构造函数的执行顺序相反</strong>，和单继承中的析构函数一样；</p>
+<p><strong>命名冲突</strong><br>当两个或多个基类中有同名的成员时，如果直接访问该成员，就会产生命名冲突，编译器不知道使用哪个基类的成员；<br>这个时候需要在成员名字前面加上<strong>类名</strong>和<strong>域解析符</strong><code>::</code>，以显式地指明到底使用哪个类的成员，消除二义性；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A() {
+        printf("A()\n");
+    }
+    ~A() {
+        printf("~A()\n");
+    }
+protected:
+    void print() {
+        printf("A::print()\n");
+    }
+};
+
+class B {
+public:
+    B() {
+        printf("B()\n");
+    }
+    ~B() {
+        printf("~B()\n");
+    }
+protected:
+    void print() {
+        printf("B::print()\n");
+    }
+};
+
+class C : public A, public B {
+public:
+    C() : A(), B() {
+        printf("C()\n");
+    }
+    ~C() {
+        printf("~C()\n");
+    }
+public:
+    void print() {
+        A::print();
+        B::print();
+    }
+};
+
+int main() {
+    C c;
+    c.print();
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:12:30]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:12:50]
+$ ./a.out
+A()
+B()
+C()
+A::print()
+B::print()
+~C()
+~B()
+~A()
+</script></code></pre>
+<h2 id="多继承时的对象内存模型"><a href="#多继承时的对象内存模型" class="headerlink" title="多继承时的对象内存模型"></a>多继承时的对象内存模型</h2><p>前面讲解了单继承时对象的内存模型，这节我们来分析一下多继承时对象的内存模型；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    int m_a;
+};
+
+class B {
+public:
+    int m_b;
+};
+
+class C : public A, public B {
+public:
+    int m_c;
+};
+
+class D: public B, public A {
+public:
+    int m_d;
+};
+
+int main() {
+    C c;
+    printf("&c.m_a: %p, &c.m_b: %p, &c.m_c: %p\n", &c.m_a, &c.m_b, &c.m_c);
+    D d;
+    printf("&d.m_a: %p, &d.m_b: %p, &d.m_d: %p\n", &d.m_a, &d.m_b, &d.m_d);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:32:56]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [14:33:19]
+$ ./a.out
+&c.m_a: 0x7ffd506d1cb0, &c.m_b: 0x7ffd506d1cb4, &c.m_c: 0x7ffd506d1cb8
+&d.m_a: 0x7ffd506d1cc0, &d.m_b: 0x7ffd506d1cbc, &d.m_d: 0x7ffd506d1cc4
+</script></code></pre>
+<p>结论：<br><strong>基类对象的排列顺序和继承时声明的顺序相同</strong></p>
+<h2 id="借助指针突破访问权限的限制"><a href="#借助指针突破访问权限的限制" class="headerlink" title="借助指针突破访问权限的限制"></a>借助指针突破访问权限的限制</h2><p>我们都知道，C++ 不允许通过对象来访问 private、protected 属性的成员变量；<br>不过 C++ 的这种限制仅仅是语法层面的，通过某种“蹩脚”的方法，我们能够突破访问权限的限制，访问到 private、protected 属性的成员变量，赋予我们这种“特异功能”的，正是强大而又灵活的指针（Pointer）；</p>
+<p><strong>使用偏移</strong><br>在对象的内存模型中，成员变量和对象的开头位置会有一定的距离；和struct结构体中的数据成员偏移量（offset）是一个概念；</p>
+<p>一旦知道了对象的起始地址，再加上偏移就能够求得成员变量的地址，知道了成员变量的地址和类型，也就能够轻而易举地知道它的值；</p>
+<p>当通过对象指针访问成员变量时，编译器实际上也是使用这种方式来取得它的值；</p>
+<p>在前面讲解对象的内存模型的时候，已经多次的演示了如何通过 指针 + 计算偏移量 来访问对象的 protected、private 成员；这里就不再重复演示了；</p>
+<p>我们说 C++ 的成员访问权限仅仅是语法层面上的，是指访问权限仅对取成员运算符<code>.</code>和<code>-&gt;</code>起作用，而无法防止直接通过指针来访问；<br>本节的目的不是为了访问到 private、protected 属性的成员变量，这种“花拳绣腿”没有什么现实的意义，本节主要是让大家明白编译器内部的工作原理，以及指针的灵活运用；</p>
+<h2 id="虚继承和虚基类"><a href="#虚继承和虚基类" class="headerlink" title="虚继承和虚基类"></a>虚继承和虚基类</h2><p><code>多继承（Multiple Inheritance）</code>是指从多个直接基类中产生派生类的能力，多继承的派生类继承了所有父类的成员；尽管概念上非常简单，但是多个基类的相互交织可能会带来错综复杂的设计问题，命名冲突就是不可回避的一个；</p>
+<p>多继承时很容易产生命名冲突，即使我们很小心地将所有类中的成员变量和成员函数都命名为不同的名字，命名冲突依然有可能发生，比如典型的是<code>菱形继承</code>，如下图所示：<br><img src="/images/cpp-diamond.jpg" alt="C++ 菱形继承"></p>
+<p>类 A 派生出类 B 和类 C，类 D 继承自类 B 和类 C，这个时候类 A 中的成员变量和成员函数继承到类 D 中变成了两份，一份来自 A–&gt;B–&gt;D 这条路径，另一份来自 A–&gt;C–&gt;D 这条路径；</p>
+<p>在一个派生类中保留间接基类的多份同名成员，虽然可以在不同的成员变量中分别存放不同的数据，但大多数情况下这是多余的：因为保留多份成员变量不仅占用较多的存储空间，还容易产生命名冲突；假如类 A 有一个成员变量 a，那么在类 D 中直接访问 a 就会产生歧义，编译器不知道它究竟来自 A –&gt;B–&gt;D 这条路径，还是来自 A–&gt;C–&gt;D 这条路径；</p>
+<p>下面就是菱形继承的体现：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+protected:
+    int m_a;
+};
+
+class B : public A {
+protected:
+    int m_b;
+};
+
+class C : public A {
+protected:
+    int m_c;
+};
+
+class D: public B, public C {
+public:
+//  void seta(int a) { m_a = a; } // 命名冲突
+    void seta(int a) { B::m_a = a; } // 正确
+//  void seta(int a) { C::m_a = a; } // 正确
+    void setb(int b) { m_b = b; }
+    void setc(int c) { m_c = c; }
+    void setd(int d) { m_d = d; }
+private:
+    int m_d;
+};
+
+int main() {
+    D d;
+    return 0;
+}
+</script></code></pre>
+<p><strong>虚继承（Virtual Inheritance）</strong><br>为了解决多继承时的命名冲突和冗余数据问题，C++ 提出了虚继承，使得在派生类中只保留一份间接基类的成员；</p>
+<p>在继承方式前面加上<code>virtual</code>关键字就是虚继承：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+protected:
+    int m_a;
+};
+
+class B : virtual public A {
+protected:
+    int m_b;
+};
+
+class C : virtual public A {
+protected:
+    int m_c;
+};
+
+class D: public B, public C {
+public:
+    void seta(int a) { m_a = a; }
+//  void seta(int a) { B::m_a = a; } // 正确
+//  void seta(int a) { C::m_a = a; } // 正确
+    void setb(int b) { m_b = b; }
+    void setc(int c) { m_c = c; }
+    void setd(int d) { m_d = d; }
+private:
+    int m_d;
+};
+
+int main() {
+    D d;
+    return 0;
+}
+</script></code></pre>
+<p>这段代码使用虚继承重新实现了上图所示的菱形继承，这样在派生类 D 中就只保留了一份成员变量 m_a，直接访问就不会再有歧义了；</p>
+<p><strong>虚继承的目的是让某个类做出声明，承诺愿意共享它的基类</strong>；其中，这个<strong>被共享的基类</strong>就称为<code>虚基类（Virtual Base Class）</code>；<br>本例中的 A 就是一个虚基类。在这种机制下，不论虚基类在继承体系中出现了多少次，在派生类中都只包含一份虚基类的成员；</p>
+<p><strong>虚派生只影响从指定了虚基类的派生类中进一步派生出来的类，它不会影响派生类本身</strong></p>
+<p>C++标准库中的 iostream 类就是一个虚继承的实际应用案例；iostream 从 istream 和 ostream 直接继承而来，而 istream 和 ostream 又都继承自一个共同的名为 base_ios 的类，是典型的菱形继承；此时 istream 和 ostream 必须采用虚继承，否则将导致 iostream 类中保留两份 base_ios 类的成员；</p>
+<p><strong>虚继承的二义性问题</strong><br>因为在虚继承的最终派生类中只保留了一份虚基类的成员，所以该成员可以被直接访问，不会产生二义性；<br>但是这仅仅解决了虚基类中的成员的命名冲突，如果虚基类的派生类中有同名成员，那么还是无法避免命名冲突；</p>
+<p>以上图的菱形继承为例，假设 B 定义了一个名为 x 的成员变量，当我们在 D 中直接访问 x 时，会有三种可能性：</p>
+<ul>
+<li>如果 A 和 C 中都没有 x 的定义，那么 x 将被解析为 B 的成员，此时不存在二义性；</li>
+<li>如果 A 中定义了 x，也不会有二义性，派生类的 x 比虚基类的 x 优先级更高；</li>
+<li>如果 C 中定义了 x，那么直接访问 x 将产生二义性问题；需要指明使用 B 中的 x 还是 C 中的 x；</li>
+</ul>
+<p>可以看到，使用多继承经常会出现二义性问题，必须十分小心；<br>上面的例子是简单的，如果继承的层次再多一些，关系更复杂一些，程序员就很容易陷人迷魂阵，程序的编写、调试和维护工作都会变得更加困难，因此我不提倡在程序中使用多继承，只有在比较简单和不易出现二义性的情况或实在必要时才使用多继承，能用单一继承解决的问题就不要使用多继承；也正是由于这个原因，C++ 之后的很多面向对象的编程语言，例如 Java、C#、PHP 等，都不支持多继承；</p>
+<h2 id="虚继承时的构造函数"><a href="#虚继承时的构造函数" class="headerlink" title="虚继承时的构造函数"></a>虚继承时的构造函数</h2><p><strong>在虚继承中，虚基类是由最终的派生类初始化的</strong>，换句话说，最终派生类的构造函数必须要调用虚基类的构造函数；<br>对最终的派生类来说，虚基类是间接基类，而不是直接基类；这跟普通继承不同，在普通继承中，派生类构造函数中只能调用直接基类的构造函数，不能调用间接基类的构造函数；</p>
+<p>看下面的例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A(int a);
+protected:
+    int m_a;
+};
+
+A::A(int a) : m_a(a) {}
+
+class B : virtual public A {
+public:
+    B(int a, int b);
+    void print() const;
+protected:
+    int m_b;
+};
+
+B::B(int a, int b) : A(a), m_b(b) {}
+void B::print() const {
+    printf("m_a: %d, m_b: %d\n", m_a, m_b);
+}
+
+class C : virtual public A {
+public:
+    C(int a, int c);
+    void print() const;
+protected:
+    int m_c;
+};
+
+C::C(int a, int c) : A(a), m_c(c) {}
+void C::print() const {
+    printf("m_a: %d, m_c: %d\n", m_a, m_c);
+}
+
+class D : public B, public C {
+public:
+    D(int a, int b, int c, int d);
+    void print() const;
+private:
+    int m_d;
+};
+
+D::D(int a, int b, int c, int d) : A(a), B(0, b), C(0, c), m_d(d) {}
+void D::print() const {
+    printf("m_a: %d, m_b: %d, m_c: %d, m_d: %d\n", m_a, m_b, m_c, m_d);
+}
+
+int main() {
+    B(1, 2).print();
+
+    C(1, 3).print();
+
+    D(1, 2, 3, 4).print();
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:50:08]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [15:50:34]
+$ ./a.out
+m_a: 1, m_b: 2
+m_a: 1, m_c: 3
+m_a: 1, m_b: 2, m_c: 3, m_d: 4
+</script></code></pre>
+<p>注意第 48 行的代码，虽然我们都给 B 和 C 的构造函数的第一个参数传递了 0，但是编译器会默认忽略，以<code>A(a)</code>为准；</p>
+<p>另外需要关注的是<strong>构造函数的执行顺序</strong>，虚继承时构造函数的执行顺序与普通继承时不同：<br>在最终派生类的构造函数调用列表中，不管各个构造函数出现的顺序如何，编译器总是<strong>先调用虚基类的构造函数</strong>，<strong>再按照最终派生类的继承的顺序调用其他的构造函数</strong>；</p>
+<h2 id="虚继承下的内存模型"><a href="#虚继承下的内存模型" class="headerlink" title="虚继承下的内存模型"></a>虚继承下的内存模型</h2><p>简单的面向对象，只有单继承或多继承的情况下，内存模型很好理解，编译器实现起来也容易，C++ 的效率和 C 的效率不相上下；一旦和 virtual 关键字扯上关系，使用到虚继承或虚函数，内存模型就变得混乱起来，各种编译器的实现也不一致，让人抓狂；</p>
+<p>这是因为 C++ 标准仅对 C++ 的实现做了框架性的概述，并没有规定细节如何实现，所以不同厂商的编译器在具体实现方案上会有所差异；</p>
+<p>本节我们只关注虚继承时的内存模式，有关虚函数的内容将在虚函数一节中讲解；<br>对于普通继承，基类子对象始终位于派生类对象的前面（也即基类成员变量始终在派生类成员变量的前面），而且不管继承层次有多深，它相对于派生类对象顶部的偏移量是固定的；</p>
+<p>前面我们说过，编译器在知道对象首地址的情况下，通过计算偏移来存取成员变量；对于普通继承，基类成员变量的偏移是固定的，不会随着继承层级的增加而改变，存取起来非常方便；<br>而对于虚继承，恰恰和普通继承相反，大部分编译器会把基类成员变量放在派生类成员变量的后面，这样随着继承层级的增加，基类成员变量的偏移就会改变，就得通过其他方案来计算偏移量；</p>
+<p>虚继承时的派生类对象被分成了两部分：</p>
+<ul>
+<li>非虚基类的部分偏移量固定，不会随着继承层次的增加而改变，称为<code>固定部分</code>；</li>
+<li>虚基类的子对象，偏移量会随着继承层次的增加而改变，称为<code>共享部分</code>；</li>
+</ul>
+<p>当要访问对象的成员变量时，需要知道对象的首地址和变量的偏移，对象的首地址很好获得，关键是变量的偏移。对于固定部分，偏移是不变的，很好计算；而对于共享部分，偏移会随着继承层次的增加而改变，这就需要设计一种方案，在偏移不断变化的过程中准确地计算偏移。各个编译器正是在设计这一方案时出现了分歧，不同的编译器设计了不同的方案来计算共享部分的偏移。</p>
+<p>对于虚继承，将派生类分为固定部分和共享部分，并把共享部分放在最后，几乎所有的编译器都在这一点上达成了共识。主要的分歧就是如何计算共享部分的偏移，可谓是百花齐放，没有统一标准；</p>
+<p><strong>cfront解决方案</strong><br>早期的 cfront 编译器会在派生类对象中安插一些指针，每个指针指向一个虚基类的子对象，要存取继承来的成员变量，可以使用指针间接完成；</p>
+<p>这种方案的一个缺点是，随着虚继承层次的增加，访问顶层基类需要的间接转换会越来越多，效率越来越低；<br>这种方案另外的一个缺点是：当有多个虚基类时，派生类要为每个虚基类都安插一个指针，会增加对象的体积；</p>
+<p><strong>VC解决方案</strong><br>cfront 的后来者 VC 尝试对上面的方案进行了改进，一定程度上弥补了它的不足：<br>VC引入了<strong>虚基类表</strong>，如果某个派生类有一个或多个虚基类，编译器就会在派生类对象中安插一个指针，指向虚基类表；虚基类表其实就是一个数组，数组中的元素存放的是各个虚基类的偏移；</p>
+<p>虚继承表中保存的是所有虚基类（包括直接继承和间接继承到的）相对于当前对象的偏移，这样通过派生类指针访问虚基类的成员变量时，不管继承层次都多深，只需要一次间接转换就可以；<br>另外，这种方案还可以避免有多个虚基类时让派生类对象额外背负过多的指针；</p>
+<h2 id="向上转型（将派生类赋值给基类）"><a href="#向上转型（将派生类赋值给基类）" class="headerlink" title="向上转型（将派生类赋值给基类）"></a>向上转型（将派生类赋值给基类）</h2><p>在 C/C++ 中经常会发生数据类型的转换，例如将 int 类型的数据赋值给 float 类型的变量时，编译器会先把 int 类型的数据转换为 float 类型再赋值；反过来，float 类型的数据在经过类型转换后也可以赋值给 int 类型的变量；</p>
+<p>数据类型转换的前提是，编译器知道如何对数据进行取舍；</p>
+<p>类其实也是一种数据类型，也可以发生数据类型转换，不过这种转换只有在基类和派生类之间才有意义，并且只能将派生类赋值给基类，包括将派生类对象赋值给基类对象、将派生类指针赋值给基类指针、将派生类引用赋值给基类引用，这在 C++ 中称为<code>向上转型（Upcasting）</code>。相应地，将基类赋值给派生类称为<code>向下转型（Downcasting）</code>；</p>
+<p>向上转型非常安全，可以由编译器自动完成；向下转型有风险，需要程序员手动干预。本节只介绍向上转型，向下转型将在后续章节介绍；</p>
+<p><strong>将派生类对象赋值给基类对象</strong></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A(int a);
+    void print() const;
+protected:
+    int m_a;
+};
+
+A::A(int a) : m_a(a) {}
+void A::print() const {
+    printf("class A: m_a = %d\n", m_a);
+}
+
+class B : public A {
+public:
+    B(int a, int b);
+    void print() const;
+private:
+    int m_b;
+};
+
+B::B(int a, int b) : A(a), m_b(b) {}
+void B::print() const {
+    printf("class B: m_a = %d, m_b = %d\n", m_a, m_b);
+}
+
+int main() {
+    A a(1);
+    B b(11, 22);
+    a.print();
+    b.print();
+
+    printf("----------------\n");
+
+    a = b;
+    a.print();
+    b.print();
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:32:08] C:130
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [16:32:10]
+$ ./a.out
+class A: m_a = 1
+class B: m_a = 11, m_b = 22
+----------------
+class A: m_a = 11
+class B: m_a = 11, m_b = 22
+</script></code></pre>
+<p>赋值的本质是将现有的数据写入已分配好的内存中，对象的内存只包含了成员变量，所以对象之间的赋值是成员变量的赋值，成员函数不存在赋值问题。运行结果也有力地证明了这一点，虽然有<code>a = b;</code>这样的赋值过程，但是 a.print() 始终调用的都是 A 类的 print() 函数。换句话说，对象之间的赋值不会影响成员函数，也不会影响 this 指针；</p>
+<p>将派生类对象赋值给基类对象时，会舍弃派生类新增的成员，也就是“大材小用”；</p>
+<p>这种转换关系是不可逆的，只能用派生类对象给基类对象赋值，而不能用基类对象给派生类对象赋值。理由很简单，基类不包含派生类的成员变量，无法对派生类的成员变量赋值。同理，同一基类的不同派生类对象之间也不能赋值。</p>
+<p>要理解这个问题，还得从赋值的本质入手。赋值实际上是向内存填充数据，当数据较多时很好处理，舍弃即可；本例中将 b 赋值给 a 时（执行<code>a = b;</code>语句），成员 m_b 是多余的，会被直接丢掉，所以不会发生赋值错误。但当数据较少时，问题就很棘手，编译器不知道如何填充剩下的内存；如果本例中有<code>b = a;</code>这样的语句，编译器就不知道该如何给变量 m_b 赋值，所以会发生错误；</p>
+<p><strong>将派生类指针赋值给基类指针</strong><br>除了可以将派生类对象赋值给基类对象（对象变量之间的赋值），还可以将派生类指针赋值给基类指针（对象指针之间的赋值）；</p>
+<p>我们先来看一个多继承的例子：基类 A 拥有成员 m_a；中间派生类 B 继承于 A，并添加了新成员 m_b；基类 C 拥有成员 m_c；最终派生类 D 继承 B 和 C；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+class A {
+public:
+    A(int a);
+    void print() const;
+protected:
+    int m_a;
+};
+
+A::A(int a) : m_a(a) {}
+void A::print() const {
+    printf("class A: m_a = %d\n", m_a);
+}
+
+class B : public A {
+public:
+    B(int a, int b);
+    void print() const;
+protected:
+    int m_b;
+};
+
+B::B(int a, int b) : A(a), m_b(b) {}
+void B::print() const {
+    printf("class B: m_a = %d, m_b = %d\n", m_a, m_b);
+}
+
+class C {
+public:
+    C(int c);
+    void print() const;
+protected:
+    int m_c;
+};
+
+C::C(int c) : m_c(c) {}
+void C::print() const {
+    printf("class C: m_c = %d\n", m_c);
+}
+
+class D : public B, public C {
+public:
+    D(int a, int b, int c, int d);
+    void print() const;
+private:
+    int m_d;
+};
+
+D::D(int a, int b, int c, int d) : B(a, b), C(c), m_d(d) {}
+void D::print() const {
+    printf("class D: m_a = %d, m_b = %d, m_c = %d, m_d = %d\n", m_a, m_b, m_c, m_d);
+}
+
+int main() {
+    A *pa = new A(1);
+    pa -> print();
+
+    B *pb = new B(11, 22);
+    pb -> print();
+
+    C *pc = new C(3);
+    pc -> print();
+
+    D *pd = new D(110, 114, 119, 120);
+    pd -> print();
+
+    printf("--------------------------\n");
+
+    pa = pd;
+    pa -> print();
+
+    pb = pd;
+    pb -> print();
+
+    pc = pd;
+    pc -> print();
+
+    printf("---------------------------\n");
+
+    printf("pa = %p\npb = %p\npc = %p\npd = %p\n", pa, pb, pc, pd);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:55:12]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [16:55:25]
+$ ./a.out
+class A: m_a = 1
+class B: m_a = 11, m_b = 22
+class C: m_c = 3
+class D: m_a = 110, m_b = 114, m_c = 119, m_d = 120
+--------------------------
+class A: m_a = 110
+class B: m_a = 110, m_b = 114
+class C: m_c = 119
+---------------------------
+pa = 0xb61aee4090
+pb = 0xb61aee4090
+pc = 0xb61aee4098
+pd = 0xb61aee4090
+</script></code></pre>
+<p>本例中定义了多个对象指针，并尝试将派生类指针赋值给基类指针。与对象变量之间的赋值不同的是，对象指针之间的赋值并没有拷贝对象的成员，也没有修改对象本身的数据，仅仅是改变了指针的指向；</p>
+<p>1) <strong>通过基类指针访问派生类的成员</strong><br>将派生类指针 pd 赋值给了基类指针 pa，从运行结果可以看出，调用 print() 函数时虽然使用了派生类的成员变量，但是 print() 函数本身却是基类的；也就是说，将派生类指针赋值给基类指针时，通过基类指针只能使用派生类的成员变量，但不能使用派生类的成员函数，pb、pc 也是一样的情况；</p>
+<p>这是因为，调用哪个类的函数不是由指针指向的数据为判断标准，而是决定于指针的类型，如果指针的类型是<code>A *</code>，那么就调用类 A 的函数，如果是<code>D *</code>，就调用类 D 的函数；</p>
+<p>概括起来说就是：编译器通过指针来访问成员变量，指针指向哪个对象就使用哪个对象的数据；编译器通过指针的类型来访问成员函数，指针属于哪个类的类型就使用哪个类的函数。</p>
+<p>2) <strong>赋值后值不一致的情况</strong><br>本例中我们将最终派生类的指针 pd 分别赋值给了基类指针 pa、pb、pc，按理说它们的值应该相等，都指向同一块内存，但是运行结果却有力地反驳了这种推论，只有 pa、pb、pd 三个指针的值相等，pc 的值比它们都大。也就是说，执行<code>pc = pd;</code>语句后，pc 和 pd 的值并不相等；</p>
+<p>这是因为在赋值前，编译器会进行某些处理，就如同将 float 类型的 3.14 赋值给 int 类型的变量时，编译器会直接舍弃小数点后的值，最终变为 3；对象指针之间的赋值也是这个道理；</p>
+<p><strong>将派生类引用赋值给基类引用</strong><br>引用在本质上是通过指针的方式实现的，既然基类的指针可以指向派生类的对象，那么我们就有理由推断：基类的引用也可以指向派生类的对象，并且它的表现和指针是类似的；</p>
+<blockquote>
+<p>最后需要注意的是，向上转型后通过基类的对象、指针、引用只能访问从基类继承过去的成员（包括成员变量和成员函数），不能访问派生类新增的成员；</p>
+</blockquote>
+<h2 id="将派生类指针赋值给基类指针时到底发生了什么"><a href="#将派生类指针赋值给基类指针时到底发生了什么" class="headerlink" title="将派生类指针赋值给基类指针时到底发生了什么"></a>将派生类指针赋值给基类指针时到底发生了什么</h2><p>通过上节最后一个例子我们发现，将派生类的指针赋值给基类的指针后，它们的值有可能相等，也有可能不相等；</p>
+<p>我们通常认为，赋值就是将一个变量的值交给另外一个变量，这种想法虽然没错，但是有一点要注意，就是赋值以前编译器可能会对现有的值进行处理；</p>
+<p>例如将 double 类型的值赋给 int 类型的变量，编译器会直接抹掉小数部分，导致赋值运算符两边变量的值不相等；</p>
+<p>将派生类的指针赋值给基类的指针时也是类似的道理，编译器也可能会在赋值前进行处理；</p>
+<p>首先要明确的一点是，<strong>对象的指针必须要指向对象的起始位置</strong>；<br>对于 A 类和 B 类来说，它们的子对象的起始地址和 D 类对象一样，所以将 pd 赋值给 pa、pb 时不需要做任何调整，直接传递现有的值即可；<br>而 C 类子对象距离 D 类对象的开头有一定的偏移，将 pd 赋值给 pa 时要加上这个偏移，这样 pc 才能指向 C 类子对象的起始位置；<br>也就是说，执行<code>pc = pd;</code>语句时编译器对 pd 的值进行了调整，才导致 pc、pd 的值不同；</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/cpp-polymorphism.html" rel="next" title="C++ 多态与虚函数">
+                <i class="fa fa-chevron-left"></i> C++ 多态与虚函数
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/cpp-refer.html" rel="prev" title="C++ 引用">
+                C++ 引用 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#继承的概念"><span class="nav-number">1.</span> <span class="nav-text">继承的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承权限和继承方式"><span class="nav-number">2.</span> <span class="nav-text">继承权限和继承方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承时的名字屏蔽"><span class="nav-number">3.</span> <span class="nav-text">继承时的名字屏蔽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类继承时的作用域嵌套"><span class="nav-number">4.</span> <span class="nav-text">类继承时的作用域嵌套</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承时的对象内存模型"><span class="nav-number">5.</span> <span class="nav-text">继承时的对象内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#派生类的构造函数"><span class="nav-number">6.</span> <span class="nav-text">派生类的构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#派生类的析构函数"><span class="nav-number">7.</span> <span class="nav-text">派生类的析构函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的多继承"><span class="nav-number">8.</span> <span class="nav-text">类的多继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多继承时的对象内存模型"><span class="nav-number">9.</span> <span class="nav-text">多继承时的对象内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#借助指针突破访问权限的限制"><span class="nav-number">10.</span> <span class="nav-text">借助指针突破访问权限的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚继承和虚基类"><span class="nav-number">11.</span> <span class="nav-text">虚继承和虚基类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚继承时的构造函数"><span class="nav-number">12.</span> <span class="nav-text">虚继承时的构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚继承下的内存模型"><span class="nav-number">13.</span> <span class="nav-text">虚继承下的内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#向上转型（将派生类赋值给基类）"><span class="nav-number">14.</span> <span class="nav-text">向上转型（将派生类赋值给基类）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将派生类指针赋值给基类指针时到底发生了什么"><span class="nav-number">15.</span> <span class="nav-text">将派生类指针赋值给基类指针时到底发生了什么</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/cpp-inheritance.html';
+          this.page.identifier = 'cpp-inheritance.html';
+          this.page.title = 'C++ 继承与派生';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,861 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java 异常处理">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 异常处理">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 异常处理">
+<meta property="og:url" content="https://www.zfl9.com/java-exception.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 异常处理">
+<meta property="og:image" content="https://www.zfl9.com/images/java-exception.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:44:16.342Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 异常处理">
+<meta name="twitter:description" content="Java 异常处理">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-exception.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-exception.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 异常处理 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-exception.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 异常处理
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T17:22:00+08:00">
+                2017-09-10
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-exception.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-exception.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-exception.html" class="leancloud_visitors" data-flag-title="Java 异常处理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 异常处理</p>
+<a id="more"></a>
+<h2 id="Java-异常处理"><a href="#Java-异常处理" class="headerlink" title="Java 异常处理"></a>Java 异常处理</h2><p>Java 异常处理通过 5 个关键字控制：<code>try</code>、<code>catch</code>、<code>finally</code>、<code>throw</code>、<code>throws</code>。</p>
+<p>处理异常的一般形式：</p>
+<pre><code class="language-java"><script type="text/plain">try {
+    // 可能抛出异常的语句
+} catch (ExceptionType_1 e) {
+    // 处理异常的语句
+} catch (ExceptionType_2 e) {
+    // 处理异常的语句
+} finally {
+    // finally块中的代码总是被执行，不管有没有发生异常
+}
+</script></code></pre>
+<ul>
+<li>try 不可单独出现，允许 try…finally 这样的组合，catch 语句可以有多个，finally 语句只能有一个；</li>
+<li>ExceptionType_1、ExceptionType_2 是想要处理的异常类型，只有相匹配的类型才会被对应的 catch 捕获；</li>
+<li>如果 ExceptionType_1 和 ExceptionType_2 存在继承关系，要将子类的 catch 放在前面，否则会被其父类一并捕获；</li>
+<li>异常控制的流程和 if…else 一样，如果在 try 中检测到异常，会按照从上到下的顺序依次匹配所有的 catch 块，如果符合，则执行匹配到的 catch 语句，并停止向下匹配，执行完 catch 之后跳转到 finally 语句（如果存在的话），之后执行 finally 之后的正常语句；</li>
+<li>Java SE 7 之后，一个 catch 块可以匹配多个异常，使用<code>|</code>管道符号分割，如<code>catch (E1 | E2 e) { statement }</code>，这种情况下，变量 e 自动变为 final 常量。</li>
+</ul>
+<p><strong>异常类型</strong><br>所有异常类型都是 java.lang.Throwable 的子类，而 Throwable 有两大直接派生类：<code>Error</code>、<code>Exception</code>：<br><img src="/images/java-exception.jpg" alt="Java Throwable 继承体系"></p>
+<p>浅蓝色的<strong><code>Error</code></strong>、<strong><code>RuntimeException</code></strong>为<strong>非检查异常</strong>，即不要求一定要进行处理；而粉红色的则为<strong>检查异常</strong>，即此类异常必须进行处理，否则编译不通过。</p>
+<p>其实很好理解：</p>
+<ul>
+<li><strong>Error</strong>，即<strong>运行时错误</strong>，既然是错误，肯定是无法在编码上进行修复的，因此不要妄图去 catch 它，而应重新审视你的程序，或者是修改 JVM 配置（如内存溢出，说明分配的内存不够用）。</li>
+<li><strong>RuntimeException</strong>，即<strong>运行时异常</strong>，这种异常一般都是可以通过改进程序逻辑去避免的，比如数组越界异常，应该在操作数组前，检查参数的正确性。</li>
+<li><strong>Exception</strong>，即<strong>一般性异常</strong>，或者称为检查异常，这种异常才是我们应该去 catch 或 throws 的。如果你能够妥善的处理它，则进行 catch，否则请将它抛给调用者，即 throws。</li>
+</ul>
+<p>对于一般性异常（后面直接简称异常），想谈谈自己的个人理解。<br>首先，我们应该改变对异常的看法，很多人都认为异常就是错误，是一种非正常情况。其实不然，异常并不等同于错误，如果是的话，那就不会出现什么 Error、RuntimeException、Exception 了。异常其实是在<strong>方法调用过程中很有可能出现的一种正常情况</strong>，或者说，<strong>异常其实是函数返回值的另一种表现形式</strong>。</p>
+<p>为什么这么说呢？举个例子，在 java.util.concurrent.Future 接口中，有这么一个方法，它声明了三个异常：<br><code>V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException</code><br>分别为：<code>InterruptedException</code>即中断异常、<code>ExecutionException</code>即执行异常、<code>TimeoutException</code>即超时异常。</p>
+<p>这个方法是用来获取一个异步调用结果的，该方法会阻塞，我们可以指定阻塞时间（即超时时间），它们分别代表：<br><code>InterruptedException</code>：调用线程在阻塞期间被另一个线程中断<br><code>ExecutionException</code>：该异步任务在执行的过程中发生了异常<br><code>TimeoutException</code>：等待了指定时长后，异步任务仍未完成</p>
+<p>为什么要声明这么多异常呢？可以将它们都去除吗？当然可以，这三个异常都可以不要它，如<code>V get(long timeout, TimeUnit, unit)</code>，然后在方法内部的逻辑是：不论是发生超时、还是线程被中断、或者是任务执行异常，都返回 null 值。</p>
+<p>但是这样的话，调用此方法后，你获取了一个 null 引用，你还能知道这个任务的具体执行情况吗？是发生了超时呢？还是当前线程被中断了呢？还是该任务执行失败了呢？因此，我们需要这些异常的存在，因为它们都是检查异常，因此，你不能忽略它们，必须根据不同的异常来进行不同的程序逻辑。</p>
+<p>即<strong>异常其实是函数返回值的另一种表现形式</strong>的含义所在，有些方法调用情况是无法通过返回值区分的，必须通过异常来区分。</p>
+<p><strong>Throwable 类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public Throwable() {
+    fillInStackTrace(); // 保存当前栈跟踪
+}
+public Throwable(String message) {
+    fillInStackTrace(); // 保存当前栈跟踪
+    detailMessage = message; // 异常详细描述
+}
+public Throwable(String message, Throwable cause) {
+    fillInStackTrace(); // 保存当前栈跟踪
+    detailMessage = message; // 异常详细描述
+    this.cause = cause; // 导致异常的原因
+}
+public Throwable(Throwable cause) {
+    fillInStackTrace(); // 保存当前栈跟踪
+    detailMessage = (cause==null ? null : cause.toString()); // cause.toString()
+    this.cause = cause; // 导致异常的原因
+}
+
+/* 成员方法 */
+public String getMessage(); // detailMessage
+public String getLocalizedMessage(); // 本地化message，应由子类重写，默认返回 detailMessage
+
+public Throwable getCause(); // cause
+public Throwable initCause(Throwable cause); // 设置 cause，此方法只能被调用一次（构造函数中的也算一次）
+
+public String toString(); // "全限定类名: getLocalizedMessage()"、"全限定类名"(message 为空时)
+
+/*
+ * 打印当前异常的堆栈跟踪信息（System.err）
+ * 如果没有 cause 异常原因，则通常的格式为：
+ * 第一行：toString() 的调用结果
+ * 其余行：fillInStackTrace() 捕获的信息
+ * java.lang.NullPointerException
+ *         at MyClass.mash(MyClass.java:9)
+ *         at MyClass.crunch(MyClass.java:6)
+ *         at MyClass.main(MyClass.java:3)
+ *
+ * 如果存在 cause 异常原因，则通常的格式为：
+ * HighLevelException: MidLevelException: LowLevelException
+ *         at Junk.a(Junk.java:13)
+ *         at Junk.main(Junk.java:4)
+ * Caused by: MidLevelException: LowLevelException
+ *         at Junk.c(Junk.java:23)
+ *         at Junk.b(Junk.java:17)
+ *         at Junk.a(Junk.java:11)
+ *         ... 1 more
+ * Caused by: LowLevelException
+ *         at Junk.e(Junk.java:30)
+ *         at Junk.d(Junk.java:27)
+ *         at Junk.c(Junk.java:21)
+ *         ... 3 more
+ *
+ * 在 JDK1.7 后，引入了"抑制异常"的概念（try-with-resources）
+ * Exception in thread "main" java.lang.Exception: Something happened
+ *  at Foo.bar(Foo.java:10)
+ *  at Foo.main(Foo.java:5)
+ *  Suppressed: Resource$CloseFailException: Resource ID = 0
+ *          at Resource.close(Resource.java:26)
+ *          at Foo.bar(Foo.java:9)
+ *          ... 1 more
+ *
+ * 同时，一个异常对象可以有多个抑制异常和异常原因，如下：
+ * Exception in thread "main" java.lang.Exception: Main block
+ *  at Foo3.main(Foo3.java:7)
+ *  Suppressed: Resource$CloseFailException: Resource ID = 2
+ *          at Resource.close(Resource.java:26)
+ *          at Foo3.main(Foo3.java:5)
+ *  Suppressed: Resource$CloseFailException: Resource ID = 1
+ *          at Resource.close(Resource.java:26)
+ *          at Foo3.main(Foo3.java:5)
+ * Caused by: java.lang.Exception: I did it
+ *  at Foo3.main(Foo3.java:8)
+ */
+public void printStackTrace();
+public void printStackTrace(PrintStream s); // 输出到指定 PrintStream
+public void printStackTrace(PrintWriter s); // 输出到指定 PrintWriter
+
+public Throwable fillInStackTrace(); // 保存当前栈信息的"快照"
+
+public StackTraceElement[] getStackTrace(); // 获取当前的栈快照，一个栈帧对应一个元素
+public void setStackTrace(StackTraceElement[] stackTrace); // 设置当前的栈快照
+
+/* JDK1.7 新增 (try-with-resources) */
+public final void addSuppressed(Throwable exception); // 追加一个抑制异常
+public final Throwable[] getSuppressed(); // 获取被抑制的异常数组
+</script></code></pre>
+<p><strong>异常处理原则</strong><br>1、避免过大的 try 块，不把不会出现异常的代码放到 try 块里面，尽量保持一个 try 块对应一个或多个异常；<br>2、细化异常的类型，不要不管什么类型的异常都写成 Excetpion、RuntimeException、Throwable；<br>3、catch 块尽量保持一个块捕获一类异常，不要忽略捕获的异常，捕获到后要么处理，要么重新抛出新类型的异常；<br>4、不要把自己能处理的异常抛给别人；<br>5、不要用<code>try...catch</code>参与控制程序流程，异常控制的根本目的是处理程序的非正常情况。</p>
+<p><strong>异常转型</strong><br>异常转型实际上就是捕获到异常后，将异常以新的类型的异常再抛出，这样做一般为了异常的信息更直观！</p>
+<p><strong>异常默认处理方式</strong><br>所有未被 try…catch 处理的异常都将被 Java 运行时系统的默认处理程序捕获；默认处理程序会调用 Throwable.printStackTrace() 打印异常信息，然后结束程序。</p>
+<p><strong>自定义异常类型</strong><br>如果 Java 中的内置异常类型不能满足你的需要，你可以创建一个属于你自己的异常类型；自定义异常类型可以继承于 Exception、RuntimeException 等基类。</p>
+<p><strong>finally 的执行顺序</strong></p>
+<blockquote>
+<p>finally 块的作用和 C++ 的 RAII 很相似，只不过 Java 中没有析构函数，因此使用 finally 块来替代。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            out.printf("try statement block\n");
+            return;
+        } finally {
+            out.printf("finally statement block\n");
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [7:12:54] C:127
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [7:12:56]
+$ java Main
+try statement block
+finally statement block
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            out.printf("try statement block\n");
+            throw new RuntimeException();
+        } finally {
+            out.printf("finally statement block\n");
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [7:13:46]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [7:13:50]
+$ java Main
+try statement block
+finally statement block
+Exception in thread "main" java.lang.RuntimeException
+    at Main.main(Main.java:7)
+</script></code></pre>
+<p><strong>throw 抛出异常</strong><br>我们除了可以处理别人抛出的异常之外，还可以自己显式的抛出一个异常，语法：<code>throw exceptionObj</code>；exceptionObj 必须是 Throwable 类及其派生类的实例，其它类型都是不被允许的。</p>
+<p>抛出异常的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            func();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void func() {
+        try {
+            throw new RuntimeException("这是一个运行时异常");
+        } catch (RuntimeException e) {
+            out.printf("catch exception [func()]\n");
+            throw e; // 重新抛出
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:10:43]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:10:52]
+$ java Main
+catch exception [func()]
+java.lang.RuntimeException: 这是一个运行时异常
+    at Main.func(Main.java:14)
+    at Main.main(Main.java:6)
+</script></code></pre>
+<p><strong>throws 异常声明</strong><br>throws 表示方法可能会抛出异常的声明，如果添加了 throws 子句，表示该方法即将抛出异常，异常的处理交由它的调用者，至于调用者任何处理则不是它的责任范围内的了。</p>
+<p>所以如果一个方法会有异常发生时，但是又不想处理或者没有能力处理，就可以使用 throws 来抛出这个异常给调用者去处理。<code>throws</code>语句位于方法声明的后面，如：<code>void func() throws ClassCastException { ... }</code>，<code>throws</code>可以声明多个异常，多个异常之间使用逗号隔开。</p>
+<p>检查异常必须在 throws 中声明，非检查异常可不必声明。throws 语句的目的：明确告知调用者可能抛出哪些异常；JavaDoc 也可对该异常进行说明使 API 更加友善。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            func();
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void func() throws MyException {
+        throw new MyException("自定义错误");
+    }
+}
+
+class MyException extends Exception {
+    public MyException() {}
+    public MyException(String msg) {
+        super(msg);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:33:50]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:34:07]
+$ java Main
+MyException: 自定义错误
+    at Main.func(Main.java:13)
+    at Main.main(Main.java:6)
+</script></code></pre>
+<h2 id="异常的性能影响"><a href="#异常的性能影响" class="headerlink" title="异常的性能影响"></a>异常的性能影响</h2><p><strong>创建一个异常对象的时空开销比创建一个普通的对象要大的多</strong>；因为创建一个异常对象往往需要收集一个<code>栈跟踪（stack track）</code>，这个栈跟踪用于描述异常是在何处创建的；构建这些栈跟踪时需要为运行时栈做一份快照，正是这一部分开销很大。因此，<strong>异常处理过程中的主要开销就是<code>创建异常</code></strong>，<strong>抛出和捕获异常都没有什么性能影响</strong>（因为 try、catch 语句本质为 goto 语句）。</p>
+<p>那么 try…catch 和 for/while 循环一起使用呢？比如下面两个例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Test {
+    public static void main(String[] args) {
+        assert(args.length != 0) : "请提供运行程序的必要参数！";
+        try {
+            for (int i = 0; i < args.length; i++) {
+                out.printf("%d, ", Integer.parseInt(args[i]));
+            }
+            out.println();
+        } catch (NumberFormatException e) {
+            out.println("bad_format");
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:59:59]
+$ javac Test.java
+
+# root @ arch in ~/work on git:master x [10:00:02]
+$ java -ea Test
+Exception in thread "main" java.lang.AssertionError: 请提供运行程序的必要参数！
+    at Test.main(Test.java:5)
+
+# root @ arch in ~/work on git:master x [10:00:05] C:1
+$ java -ea Test 1 2 3 4 5 a b c
+1, 2, 3, 4, 5, bad_format
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Test {
+    public static void main(String[] args) {
+        assert(args.length != 0) : "请提供运行程序的必要参数！";
+        for (int i = 0; i < args.length; i++) {
+            try {
+                out.printf("%d, ", Integer.parseInt(args[i]));
+            } catch (NumberFormatException e) {
+                out.printf("bad_format, ");
+            }
+        }
+        out.println();
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:02:12]
+$ javac Test.java
+
+# root @ arch in ~/work on git:master x [10:02:16]
+$ java -ea Test 1 2 3 4 5
+1, 2, 3, 4, 5,
+
+# root @ arch in ~/work on git:master x [10:02:23]
+$ java -ea Test 1 2 3 4 5 a b c
+1, 2, 3, 4, 5, bad_format, bad_format, bad_format,
+</script></code></pre>
+<p>两者在功能上有很明显的区别：<br>前者：只要在 for 循环中有任何一个异常，循环就会终止；<br>后者：如果转换失败则打印”bad_format”，并不会直接终止循环。</p>
+<p>那它们的性能区别呢？<br>性能无非就是看<code>空间消耗</code>，<code>时间消耗</code>，一开始的时候我想当然得觉得 try…catch 重复执行了这么多次肯定比只执行了一次跑得肯定慢，空间消耗肯定更大；但是实际上并不是，具体的讨论贴地址为：<a href="http://stackoverflow.com/questions/141560/should-try-catch-go-inside-or-outside-a-loop" rel="external nofollow noopener noreferrer" target="_blank">Stack Overflow 讨论帖地址</a>，讨论的结果是：<strong>在没有抛出异常的情况下，性能完全没区别</strong>。</p>
+<p><a href="http://www.javaworld.com/javaworld/jw-01-1997/jw-01-hood.html?page=1" rel="external nofollow noopener noreferrer" target="_blank">Java 异常处理的原理</a>，大致流程：<br>1、类会跟随一张<code>异常表（exception table）</code>，每一个 try…catch 都会在这个表里添加行记录，每一个记录都有 4 个信息（try…catch 的开始地址，结束地址，异常的处理起始位，异常类名称）；<br>2、当代码在运行时抛出了异常时，首先拿着抛出位置到异常表中查找是否可以被 catch，如果可以则跑到异常处理的起始位置开始处理，如果没有找到则原地 return，并且 copy 异常的引用给父调用方，接着看父调用的异常表，以此类推。</p>
+<p>综合上面来看可以得出结论：<br>1、异常如果没发生，也就不会去查表，也就是说你写不写 try…catch 也就是有没有这个异常表的问题，如果没有发生异常，写 try…catch 对性能是没有消耗的，所以不会让程序跑得更慢；<br>2、try 的范围大小其实就是异常表中两个值（开始地址和结束地址）的差异而已，也是不会影响性能的。</p>
+<p>当然 try…catch 绝对不是在什么地方都可以乱加的！要在适当的场合使用适当的特性！</p>
+<h2 id="assert-断言功能"><a href="#assert-断言功能" class="headerlink" title="assert 断言功能"></a>assert 断言功能</h2><p><strong>断言的概念</strong><br>断言的目的是为了标示与验证程序开发者预期的结果，当程序运行到断言的位置时，对应的断言应该为真；若断言不为真时，程序会中止运行（抛出 AssertionError 错误），并打印错误消息；断言可以在运行时从代码中完全删除，所以对代码的运行速度没有影响。</p>
+<p><strong>断言的使用</strong><br>1) <code>assert bool_expression</code>：bool_expression 为布尔表达式，当它报告 false 时，将抛出 AssertionError<br>2) <code>assert bool_expression : expression</code>：expression 是其构造函数的参数，即<code>new AssertionError(expression)</code></p>
+<p>如果布尔表达式的值为 true，则表示程序的运行符合开发者预期的结果，这时候有没有断言都不影响程序的运行；如果布尔表达式的值为 false，则表示程序的运行存在问题，不符合预期，需要进行修改，断言失败将抛出 AssertionError 错误，AssertionError 继承自 Error 类，不应该被 catch 处理。</p>
+<p><strong>java.lang.AssertionError 错误</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 私有构造函数 */
+private AssertionError(String detailMessage) {
+    super(detailMessage);
+}
+
+/* 无参构造函数 */
+public AssertionError() {}
+
+/* Object-detailMessage */
+public AssertionError(Object detailMessage) {
+    this(String.valueOf(detailMessage));
+    if (detailMessage instanceof Throwable)
+        initCause((Throwable) detailMessage);
+}
+
+/* 基本类型-detailMessage */
+public AssertionError(boolean detailMessage) {
+    this(String.valueOf(detailMessage));
+}
+public AssertionError(char detailMessage) {
+    this(String.valueOf(detailMessage));
+}
+public AssertionError(int detailMessage) {
+    this(String.valueOf(detailMessage));
+}
+public AssertionError(long detailMessage) {
+    this(String.valueOf(detailMessage));
+}
+public AssertionError(float detailMessage) {
+    this(String.valueOf(detailMessage));
+}
+public AssertionError(double detailMessage) {
+    this(String.valueOf(detailMessage));
+}
+
+/* message & cause */
+public AssertionError(String message, Throwable cause) { // JDK1.7
+    super(message, cause);
+}
+</script></code></pre>
+<p>断言是 JDK1.4 引入的一个功能，并且 Java 是默认关闭断言的，需要使用选项<code>-ea</code>显式启用断言。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        assert args.length != 0 : "缺少必要的运行参数";
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:56:08]
+$ javac Main.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:56:23]
+$ java Main
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:56:24]
+$ java -ea Main
+Exception in thread "main" java.lang.AssertionError: 缺少必要的运行参数
+    at Main.main(Main.java:3)
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:56:29] C:1
+$ jad -p Main.class
+The class file version is 52.0 (only 45.3, 46.0 and 47.0 are supported)
+// Decompiled by Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.geocities.com/kpdus/jad.html
+// Decompiler options: packimports(3)
+// Source File Name:   Main.java
+
+
+public class Main
+{
+
+    public Main()
+    {
+    }
+
+    public static void main(String args[])
+    {
+        if(!$assertionsDisabled && args.length == 0)
+            throw new AssertionError("\u7F3A\u5C11\u5FC5\u8981\u7684\u8FD0\u884C\u53C2\u6570");
+        else
+            return;
+    }
+
+    static final boolean $assertionsDisabled = !Main.desiredAssertionStatus();
+
+}
+</script></code></pre>
+<p><strong>断言的使用场景</strong><br>断言通常用于验证方法中的内部逻辑，包括：<br>1) 内在不变式<br>2) 控制流程不变式<br>3) 后置条件和类不变式<br>不推荐用于公有方法内的前置条件的检查。</p>
+<p>断言中的布尔表达式不应改变上下文环境，关闭断言后会导致程序运行错乱；<br>断言的主要用途是用于开发阶段的测试，尽量发现可能的 bug，并进行修复；<br>不应该将断言用于函数入口的参数检查，并且在正式运行的时候需要关闭断言。</p>
+<p><strong>运行时屏蔽断言</strong><br>运行时要允许断言，可以用<code>java –enableassertions</code>或<code>java -ea</code>；<br>运行时要屏蔽断言，可以用<code>java –disableassertions</code>或<code>java -da</code>。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-multi-thread.html" rel="next" title="Java 多线程编程">
+                <i class="fa fa-chevron-left"></i> Java 多线程编程
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-generic.html" rel="prev" title="Java 泛型编程">
+                Java 泛型编程 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-异常处理"><span class="nav-number">1.</span> <span class="nav-text">Java 异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常的性能影响"><span class="nav-number">2.</span> <span class="nav-text">异常的性能影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#assert-断言功能"><span class="nav-number">3.</span> <span class="nav-text">assert 断言功能</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-exception.html';
+          this.page.identifier = 'java-exception.html';
+          this.page.title = 'Java 异常处理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

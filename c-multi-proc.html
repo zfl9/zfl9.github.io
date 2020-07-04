@@ -1,0 +1,1294 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 多进程编程 fork()">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 多进程编程">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 多进程编程">
+<meta property="og:url" content="https://www.zfl9.com/c-multi-proc.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 多进程编程">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 多进程编程">
+<meta name="twitter:description" content="c语言 - 多进程编程">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-multi-proc.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 多进程编程 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-multi-proc.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 多进程编程
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-11T11:08:19+08:00">
+                2017-08-11
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-multi-proc.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-multi-proc.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-multi-proc.html" class="leancloud_visitors" data-flag-title="c语言 - 多进程编程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 多进程编程</p>
+<a id="more"></a>
+<h2 id="进程、线程"><a href="#进程、线程" class="headerlink" title="进程、线程"></a>进程、线程</h2><p><strong>进程是资源分配的最小单位，线程是CPU调度的最小单位</strong></p>
+<p><strong>进程(Process)</strong><br>进程(Process)是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位，是操作系统结构的基础；<br>在早期面向进程设计的计算机结构中，进程是程序的基本执行实体；在当代面向线程设计的计算机结构中，进程是线程的容器；<br>程序是指令、数据及其组织形式的描述，进程是程序的实体；</p>
+<p><strong>线程(Thread)</strong><br>线程(Thread)，有时被称为轻量级进程(Lightweight Process，LWP)，是程序执行流的最小单元；一个标准的线程由线程ID，当前指令指针(PC)，寄存器集合和堆栈组成；<br>另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程自己不拥有系统资源，只拥有一点儿在运行中必不可少的资源，但它可与同属一个进程的其它线程共享进程所拥有的全部资源；<br>一个线程可以创建和撤消另一个线程，同一进程中的多个线程之间可以并发执行；<br>由于线程之间的相互制约，致使线程在运行中呈现出间断性；</p>
+<p>线程也有就绪、阻塞和运行三种基本状态：<br>就绪状态是指线程具备运行的所有条件，逻辑上可以运行，在等待处理机；<br>运行状态是指线程占有处理机正在运行；<br>阻塞状态是指线程在等待一个事件(如某个信号量)，逻辑上不可执行；</p>
+<p>每一个程序都至少有一个线程，若程序只有一个线程，那就是程序本身；<br>线程是程序中一个单一的顺序控制流程，进程内一个相对独立的、可调度的执行单元，是系统独立调度和分派CPU的基本单位指运行中的程序的调度单位；<br>在单个程序中同时运行多个线程完成不同的工作，称为多线程；</p>
+<p><strong>进程和线程的区别</strong></p>
+<ul>
+<li>地址空间和其它资源(如打开的文件)：进程间相互独立，同一进程的各线程间共享；某进程内的线程在其它进程不可见；</li>
+<li>通信：进程间通信IPC，线程间可以直接读写进程数据段(如全局变量)来进行通信(需要进程同步和互斥手段的辅助，以保证数据的一致性)；</li>
+<li>调度和切换：线程上下文切换比进程上下文切换要快得多；</li>
+<li>在多线程OS中，进程不是一个可执行的实体；</li>
+</ul>
+<h2 id="linux的进程"><a href="#linux的进程" class="headerlink" title="linux的进程"></a>linux的进程</h2><p>ps命令来查看当前系统中运行的进程：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [11:30:48]
+$ ps -eo pid,ppid,comm,cmd | head
+   PID   PPID COMMAND         CMD
+     1      0 systemd         /usr/lib/systemd/systemd --switched-root --system --deserialize 21
+     2      0 kthreadd        [kthreadd]
+     3      2 ksoftirqd/0     [ksoftirqd/0]
+     5      2 kworker/0:0H    [kworker/0:0H]
+     7      2 migration/0     [migration/0]
+     8      2 rcu_bh          [rcu_bh]
+     9      2 rcu_sched       [rcu_sched]
+    10      2 watchdog/0      [watchdog/0]
+    11      2 watchdog/1      [watchdog/1]
+
+# root @ localhost in ~ [11:31:20]
+$ pstree
+systemd─┬─NetworkManager───3*[{NetworkManager}]
+        ├─agetty
+        ├─auditd───{auditd}
+        ├─chronyd
+        ├─crond
+        ├─dbus-daemon
+        ├─irqbalance
+        ├─lvmetad
+        ├─polkitd───5*[{polkitd}]
+        ├─rsyslogd───2*[{rsyslogd}]
+        ├─sshd─┬─sshd───zsh───pstree
+        │      └─sshd───zsh
+        ├─systemd-journal
+        ├─systemd-logind
+        ├─systemd-udevd
+        └─tuned───4*[{tuned}]
+</script></code></pre>
+<p>ps命令中：<br>pid表示进程的进程ID，ppid表示进程的父进程ID，comm是进程的简称，cmd是进程对应的程序以及运行时的参数</p>
+<p>这里重点说一下<code>pid = 1</code>的进程<code>systemd</code>：</p>
+<blockquote>
+<p>我使用的Linux发行版是CentOS 7，而CentOS 7最大的变化就是用<code>systemd</code>取代了<code>sysvinit</code>；<br>在<code>sysvinit</code>中：<code>init</code>进程是所有进程的父进程；而在<code>systemd</code>中，<code>systemd</code>进程是所有进程的父进程；<br>为了叙述方便，我们还是用<code>init</code>这个名，指代pid为1的进程，在sysvinit中是init，在systemd中是systemd；</p>
+</blockquote>
+<p>当Linux启动的时候，init是系统创建的第一个进程，这一进程会一直存在，直到我们关闭计算机；</p>
+<p>实际上，在开机的时候，内核(kernel)只建立了一个init进程；<br>Linux内核并不提供直接建立新进程的系统调用，剩下的所有进程都是init进程通过fork机制建立的；<br>新的进程要通过老的进程复制自身得到，这就是fork，fork是一个系统调用；<br>进程存活于内存中，每个进程都在内存中分配有属于自己的一片空间(address space)；<br>当进程调用fork的时候，Linux在内存中开辟出一片新的内存空间给新的进程，并将老的进程空间中的内容复制到新的空间中，此后两个进程同时运行；</p>
+<p>老进程成为新进程的父进程(parent process)，而相应的，新进程就是老进程的子进程(child process)；<br>一个进程除了有一个PID之外，还会有一个PPID(parent PID)来存储的父进程PID；<br>如果我们循着PPID不断向上追溯的话，总会发现其源头是init进程，所以说，所有的进程也构成一个<code>以init为根的树状结构</code></p>
+<p>pstree命令可以显示一个以init为根的进程树；</p>
+<p>fork通常作为一个函数被调用，这个函数会有两次返回，将子进程的PID返回给父进程，0返回给子进程；<br>实际上，子进程总可以查询自己的PPID来知道自己的父进程是谁，这样，一对父进程和子进程就可以随时查询对方；</p>
+<p>通常在调用fork函数之后，程序会设计一个if分支结构：<br>当PID等于0时，说明该进程为子进程，那么让它执行某些指令，比如说使用exec库函数(library function)来执行另一个程序；<br>而当PID为一个正整数时，说明为父进程，则执行另外一些指令；由此，就可以在子进程建立之后，让它执行与父进程不同的功能；</p>
+<p><strong>孤儿进程和僵尸进程</strong><br>当子进程终结时，它会通知父进程，并清空自己所占据的内存，并在内核里留下自己的退出信息(exit code，如果顺利运行，为0；如果有错误或异常状况，为&gt;0的整数)；在这个信息里，会解释该进程为什么退出；<br>父进程在得知子进程终结时，有责任对该子进程使用wait系统调用，这个wait函数能从内核中取出子进程的退出信息，并清空该信息在内核中所占据的空间；</p>
+<p>但是，如果父进程早于子进程终结，子进程就会成为一个<code>孤儿(orphand)进程</code>；<br>孤儿进程会被过继给init进程，init进程也就成了该进程的父进程；init进程负责该子进程终结时调用wait函数；</p>
+<p>当然，一个糟糕的程序也完全可能造成子进程的退出信息滞留在内核中的状况(父进程不对子进程调用wait函数)；<br>这样的情况下，子进程成为<code>僵尸(zombie)进程</code>；当大量僵尸进程积累时，内存空间会被挤占；</p>
+<p>当进程退出，释放大多数资源和它的父进程收集它的返回值、释放剩余资源这两段时间之间，子进程处于一个特殊状态，被称为僵尸进程；<br>每个进程都会经过一个短暂的僵尸状态，僵尸进程的最大危害就是会占用宝贵的PID资源，如果不及时清理，会导致无法再创建新的进程；</p>
+<p><strong>僵尸进程的处理</strong><br>查看僵尸进程：<code>ps -ef | grep &#39;defunct&#39; | grep -v &#39;grep&#39;</code><br>僵尸进程的状态为<code>Z</code>，一般我们很难直接用<code>kill -9</code>杀死僵尸进程，不过我们可以<code>kill -9</code>它们的父进程；</p>
+<p>严格地来说，僵尸进程并不是问题的根源，罪魁祸首是产生出大量僵尸进程的那个父进程；<br>因此，当我们寻求如何消灭系统中大量的僵尸进程时，答案就是把产生大 量僵尸进程的那个元凶枪毙掉(也就是通过kill发送SIGTERM或者SIGKILL信号)；<br>枪毙了元凶进程之后，它产生的僵尸进程就变成了孤儿进程，这些孤儿进程会被init进程接管，init进程会wait()这些孤儿进程，释放它们占用的系统进程表中的资源；<br>这样，这些已经僵死的孤儿进程就能瞑目而去了；</p>
+<h2 id="进程的基本操作"><a href="#进程的基本操作" class="headerlink" title="进程的基本操作"></a>进程的基本操作</h2><p><strong>fork</strong><br><code>pid_t fork(void);</code>：进程的创建</p>
+<ul>
+<li>头文件：<code>unistd.h</code></li>
+<li>返回值：执行成功：在父进程中返回子进程的pid，在子进程中返回0；执行失败：返回-1，并设置errno</li>
+</ul>
+<p>头文件：<code>unistd.h</code><br><code>pid_t getpid(void);</code>：获取当前进程的进程ID<br><code>pid_t getppid(void);</code>：获取当前进程的父进程ID<br><code>uid_t getuid(void);</code>：获取进程的实际用户ID<br><code>uid_t geteuid(void);</code>：获取进程的有效用户ID<br><code>gid_t getgid(void);</code>：获取进程的实际用户组ID<br><code>gid_t getegid(void);</code>：获取进程的有效用户组ID</p>
+<p>新进程的创建，首先在内存中为新进程创建一个<code>task_struct</code>结构，然后将父进程的<code>task_struct</code>内容复制其中，再修改部分数据：分配新的内核堆栈、新的PID、再将这个task_struct添加到链表中，所谓创建，实际上是“复制”；</p>
+<p>子进程刚开始，内核并没有为它分配物理内存，而是以只读的方式共享父进程内存，只有当子进程写时，才复制；即<code>copy-on-write</code>；fork都是由do_fork实现的；</p>
+<p>一般来说，fork之后父、子进程执行顺序是不确定的，这取决于内核调度算法；进程之间实现同步需要进行进程通信；</p>
+<p>一个简单的fork演示程序：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+int main(void){
+    int n = 0;
+    printf("before fork: n = %d\n", n);
+
+    pid_t fpid = fork();
+    if(fpid < 0){
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    }else if(fpid == 0){
+        n++;
+        printf("child_proc(%d, ppid=%d): n = %d\n", getpid(), getppid(), n);
+    }else{
+        n--;
+        printf("parent_proc(%d): n = %d\n", getpid(), n);
+    }
+
+    printf("quit_proc(%d) ... \n", getpid());
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [13:17:34]
+$ gcc a.c
+
+# root @ localhost in ~/tmp [13:17:36]
+$ ./a.out
+before fork: n = 0
+parent_proc(5159): n = -1
+quit_proc(5159) ...
+child_proc(5160, ppid=5159): n = 1
+quit_proc(5160) ...
+</script></code></pre>
+<p><strong>fork和vfork</strong><br>fork创建子进程，把父进程数据空间、堆和栈复制一份；<br>vfork创建子进程，与父进程内存数据共享；<br>vfork先保证子进程先执行，当子进程调用exit()或者exec后，父进程才往下执行；</p>
+<p>为什么需要vfork？<br>因为用vfork时，一般都是紧接着调用exec，所以不会访问父进程数据空间，也就不需要在数据复制上花费时间了，因此vfork就是”为了exec而生“的；</p>
+<p>但是后来的fork也学聪明了，不是一开始调用fork就复制数据，而是只有在子进程要修改数据的时候，才进行复制，即<code>copy-on-write</code>；<br>所以我们现在也很少去用vfork，因为vfork的优势已经不复存在了；</p>
+<p><strong>wait、waitpid</strong><br><code>pid_t wait(int *status);</code>：等待任意子进程退出，并捕获退出状态</p>
+<ul>
+<li>头文件：<code>sys/wait.h</code>、<code>sys/types.h</code></li>
+<li><code>status</code>：输出参数，保存退出状态，可设置为NULL</li>
+<li>返回值：返回捕获到的子进程ID，失败返回-1，并设置errno</li>
+</ul>
+<p><code>pid_t waitpid(pid_t pid, int *status, int options);</code>：等待子进程退出，并捕获退出状态</p>
+<ul>
+<li>头文件：<code>sys/wait.h</code>、<code>sys/types.h</code></li>
+<li><code>pid</code>：输入参数，等待什么子进程：<br><code>&gt;0</code>：等待指定pid的子进程；<br><code>0</code>：等待与当前进程同一组ID下的任意子进程；<br><code>-1</code>：等待任意子进程；同wait()；<br><code>&lt;-1</code>：等待组ID为pid绝对值的任意子进程；</li>
+<li><code>status</code>：输出参数，保存退出状态，可设置为NULL</li>
+<li><code>options</code>：输入参数，等待子进程的选项，可以为0、宏或宏的组合(使用按位或<code>|</code>运算符)：<br><code>WNOHANG</code>：如果没有子进程终止就立即返回，返回值为0；<br><code>WUNTRACED</code>：如果一个子进程stoped且没有被traced，那么立即返回；<br><code>WCONTINUED</code>：如果stoped的子进程通过SIGCONT复苏，那么立即返回；</li>
+<li>返回值：成功返回捕获到的子进程ID，WNOHANG选项下若没捕获到子进程退出则返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>status</code>退出状态的相关宏：</p>
+<ul>
+<li><code>WIFEXITED(status)</code>：如果子进程正常退出返回真</li>
+<li><code>WEXITSTATUS(status)</code>：返回子进程的退出码，当且仅当WIFEXITED为真时有效</li>
+<li><code>WIFSIGNALED(status)</code>：如果子进程被一个信号终止时返回真</li>
+<li><code>WTERMSIG(status)</code>：返回终止子进程的信号编号，当且仅当WIFSIGNALED为真时有效</li>
+<li><code>WCOREDUMP(status)</code>：如果子进程导致了”核心已转储”则返回真，当且仅当WIFSIGNALED为真时有效</li>
+<li><code>WIFSTOPPED(status)</code>：如果子进程被一个信号暂停时返回真，当且仅当调用进程使用WUNTRACED或子进程正在traced时有效</li>
+<li><code>WSTOPSIG(status)</code>：返回引起子进程暂停的信号编号，当且仅当WIFSTOPPED为真时有效</li>
+<li><code>WIFCONTINUED(status)</code>：如果子进程收到SIGCONT而复苏时返回真</li>
+</ul>
+<p>处理子进程的退出有以下两种方式：<br>第一种：通过信号处理函数<code>signal()</code>，如可以忽略子进程的<code>SIGCHLD</code>信号来防止僵尸进程的产生：<code>signal(SIGCHLD, SIG_IGN);</code><br>第二种：通过调用<code>wait()</code>、<code>waitpid()</code>函数，来回收子进程，防止产生僵尸进程，占用PID等宝贵的系统资源；</p>
+<p><strong>wait实例</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <wait.h>
+
+int main(void){
+    pid_t fpid = fork(), pid;
+
+    if(fpid < 0){
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    }else if(fpid == 0){
+        sleep(5);
+        exit(5);
+    }else{
+        int stat;
+
+        for(;;){
+            pid = waitpid(fpid, &stat, WNOHANG);
+            if(pid > 0){
+                break;
+            }else{
+                printf("wait_child_proc ... \n");
+                sleep(1);
+            }
+        }
+
+        if(WIFEXITED(stat)){
+            printf("child_proc(%d): exit_code: %d\n", pid, WEXITSTATUS(stat));
+        }
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [14:36:03]
+$ gcc a.c
+
+# root @ localhost in ~/tmp [14:36:04]
+$ ./a.out
+wait_child_proc ...
+wait_child_proc ...
+wait_child_proc ...
+wait_child_proc ...
+wait_child_proc ...
+child_proc(5716): exit_code: 5
+</script></code></pre>
+<p><strong>exec系列函数</strong><br>exec系统调用是以新的进程空间替换现在的进程空间，但是pid不变，还是原来的pid，相当于换了个身体，但是名字不变；<br>调用exec后，系统会申请一块新的进程空间来存放被调用的程序，然后当前进程会携带pid跳转到新的进程空间，并从main函数开始执行，旧的进程空间被回收；</p>
+<p>exec是一个函数族，由6个函数组成：<br>头文件：<code>unistd.h</code><br><code>int execl(const char *path, const char *arg, ...);</code><br><code>int execlp(const char *file, const char *arg, ...);</code><br><code>int execle(const char *path, const char *arg, ..., char *const envp[]);</code><br><code>int execv(const char *path, char *const argv[]);</code><br><code>int execvp(const char *file, char *const argv[]);</code><br><code>int execve(const char *path, char *const argv[], char *const envp[]);</code></p>
+<p>我们先来看一下我们熟悉的main函数：<br><code>int main(int argc, char *argv[], char *envp[]);</code></p>
+<ul>
+<li><code>argc</code>：命令行参数的个数，一个整数；</li>
+<li><code>argv</code>：命令行参数，一个字符串数组，数组最后一个元素为NULL；</li>
+<li><code>envp</code>：环境变量，一个字符串数组，数组最后一个元素为NULL；</li>
+</ul>
+<p>我们主要看<code>execve()</code>函数，其他的函数都是此函数的不同包装而已：<br><code>int execve(const char *path, char *const argv[], char *const envp[]);</code></p>
+<p>有没有发现和main函数是如此的相似，第一个参数是目标程序的绝对路径，第二个参数是命令行参数，第三个参数是环境变量；<br>命令行参数和环境变量都是一个以NULL结尾的字符串数组，和main函数一样；</p>
+<p>主要分为两大类：</p>
+<ul>
+<li>以<code>execv</code>开头：argv参数是一个字符串数组的形式；</li>
+<li>以<code>execl</code>开头：argv参数是一个可变参数列表的形式；</li>
+</ul>
+<p>细分又有三类：</p>
+<ul>
+<li>不带后缀<code>e</code>：表示新进程继承旧进程的环境变量；</li>
+<li>带后缀<code>e</code>：表示新进程不继承旧进程的环境变量，环境变量由envp参数指定；</li>
+<li>带后缀<code>p</code>：表示第一个参数可以是一个程序名，该程序名可以在环境变量PATH中找到；</li>
+</ul>
+<p>命令行参数argv的第0个元素是执行的文件名；<br>环境变量envp的每个元素都是<code>KEY=VALUE</code>的形式，<code>KEY</code>是变量名，<code>VALUE</code>是变量的值；</p>
+<p>返回值：执行成功没有返回值，因为原来的进程空间都没了，执行失败则返回-1，并设置errno</p>
+<p>一个简单的例子：<code>execlp(&quot;echo&quot;, &quot;echo&quot;, &quot;www.zfl9.com&quot;, NULL);</code>将执行命令<code>echo www.zfl9.com</code></p>
+<p><strong>exit系列函数</strong><br>正常终止：</p>
+<ul>
+<li>从<code>main()</code>返回</li>
+<li>调用<code>exit()</code>、<code>_exit()</code>、<code>_Exit()</code></li>
+<li>最后一个线程从其启动例程返回</li>
+<li>最后一个线程调用<code>pthread_exit()</code></li>
+</ul>
+<p>异常终止：</p>
+<ul>
+<li>调用<code>abort()</code></li>
+<li>接到一个<code>信号</code>并终止</li>
+<li>最后一个线程对取消请求作出响应</li>
+</ul>
+<p>退出状态<code>exit status</code>是我们传入到<code>exit()</code>、<code>_exit()</code>、<code>_Exit()</code>函数的参数；<br>进程正常终止的情况下，内核将退出状态转变为终止状态以供父进程使用<code>wait()</code>、<code>waitpid()</code>等函数获取；<br>终止状态<code>termination status</code>除了上述正常终止进程的情况外，还包括异常终止的情况；<br>如果进程异常终止，那么内核也会用一个指示其异常终止原因的终止状态来表示进程，当然，这种终止状态也可以由父进程的<code>wait()</code>、<code>waitpid()</code>进程捕获；</p>
+<p>头文件：<code>stdlib.h</code><br><code>void exit(int status);</code><br><code>void _Exit(int status);</code><br>头文件：<code>unistd.h</code><br><code>void _exit(int status);</code></p>
+<p><strong><code>exit</code>和<code>_exit/_Exit</code>的区别</strong><br>exit是系统调用级别的，用于进程运行的过程中，随时结束进程；<br>return是语言级别的，用于调用堆栈的返回，返回上一层调用；<br>exit会调用终止处理程序和用户空间的标准I/O清理程序(如fclose)，而_exit和_Exit不调用而直接由内核接管进行清理；<br>在main函数中调用<code>exit(0)</code>等价于<code>return 0</code>；</p>
+<p><code>_exit()</code>函数的作用最为简单：直接使进程停止运行，清除其使用的内存空间，并销毁其在内核中的各种数据结构；<br><code>exit()</code>函数则在这些基础上作了一些包装，在执行退出之前加了若干道工序；<br><code>exit()</code>函数与<code>_exit()</code>函数最大的区别就在于<code>exit()</code>要检查文件的打开情况，把文件缓冲区中的内容写回文件，就是”清理I/O缓冲”；</p>
+<p>按照ANSI C的规定，一个进程可以登记至多32个函数，这些函数将由exit自动调用；<br>我们称这些函数为<code>终止处理程序(exit handler)</code>，并用<code>atexit</code>函数来登记这些函数；</p>
+<p><strong>atexit</strong><br>头文件：<code>stdlib.h</code><br><code>int atexit(void (*func)(void));</code>：登记终止处理函数</p>
+<ul>
+<li><code>void (*func)(void)</code>：函数指针，该函数不接受任何参数，也不返回任何值；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p>exit以登记这些函数的相反顺序调用它们，同一函数如若登记多次，则也被调用多次；</p>
+<p>根据ANSI C和POSIX.1，exit首先调用各终止处理程序，然后按需多次调用fclose，关闭所有打开的流；</p>
+<p><strong>on_exit</strong><br>头文件：<code>stdlib.h</code><br><code>int on_exit(void (*func)(int, void *), void *arg);</code>：登记带参数的终止处理函数</p>
+<ul>
+<li><code>void (*func)(int, void *)</code>：函数指针，该函数接收两个参数，第一个参数为exit的参数，即退出状态码；第二个参数为一个指针，通过后面的arg参数传递；</li>
+<li><code>arg</code>：传递给函数指针的第二个参数；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p>exit以登记这些函数的相反顺序调用它们，同一函数如若登记多次，则也被调用多次；</p>
+<p><strong>fork相关事项</strong><br>fork出的子进程会继承父进程的终止处理函数、信号处理设置；<br>但是在调用exec之后，终止处理函数和信号处理设置都会被清空；</p>
+<p><strong>exit例子</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+
+void func1(void){
+    printf("<atexit> func1\n");
+}
+
+void func2(void){
+    printf("<atexit> func2\n");
+}
+
+void func3(void){
+    printf("<atexit> func3\n");
+}
+
+void func(int status, void *str){
+    printf("<on_exit> exit_code: %d, arg: %s\n", status, (char *)str);
+}
+
+int main(void){
+    signal(SIGCHLD, SIG_IGN);
+
+    on_exit(func, "on_exit3");
+    on_exit(func, "on_exit2");
+    on_exit(func, "on_exit1");
+
+    atexit(func3);
+    atexit(func2);
+    atexit(func1);
+
+    pid_t pid;
+    pid = fork();
+    if(pid < 0){
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    }else if(pid == 0){
+        exit(0);
+    }else{
+        sleep(3);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [20:36:23]
+$ gcc a.c
+
+# root @ localhost in ~/tmp [20:36:44]
+$ ./a.out
+<atexit> func1
+<atexit> func2
+<atexit> func3
+<on_exit> exit_code: 0, arg: on_exit1
+<on_exit> exit_code: 0, arg: on_exit2
+<on_exit> exit_code: 0, arg: on_exit3
+<atexit> func1
+<atexit> func2
+<atexit> func3
+<on_exit> exit_code: 0, arg: on_exit1
+<on_exit> exit_code: 0, arg: on_exit2
+<on_exit> exit_code: 0, arg: on_exit3
+</script></code></pre>
+<h2 id="daemon守护进程"><a href="#daemon守护进程" class="headerlink" title="daemon守护进程"></a>daemon守护进程</h2><p>Linux Daemon(守护进程)是运行在后台的一种特殊进程；</p>
+<p>它独立于控制终端并且周期性地执行某种任务或等待处理某些发生的事件，它不需要用户输入就能运行而且提供某种服务，不是对整个系统就是对某个用户程序提供服务；<br>Linux系统的大多数服务器就是通过守护进程实现的，常见的守护进程包括系统日志进程syslogd、web服务器httpd、邮件服务器sendmail和数据库服务器mysqld等；</p>
+<p>守护进程一般在系统启动时开始运行，除非强行终止，否则直到系统关机都保持运行，守护进程经常以超级用户(root)权限运行，因为它们要使用特殊的端口(1-1024)或访问某些特殊的资源；</p>
+<p>一个守护进程的父进程是init进程，因为它真正的父进程在fork出子进程后就先于子进程exit退出了，所以它是一个由init继承的孤儿进程；<br>守护进程是非交互式程序，没有控制终端，所以任何输出，无论是向标准输出设备stdout还是标准出错设备stderr的输出都需要特殊处理；</p>
+<p>守护进程的名称通常以d结尾，比如sshd、xinetd、crond等；</p>
+<p><strong>创建守护进程的一般步骤</strong></p>
+<ul>
+<li>在父进程中执行fork并exit退出；</li>
+<li>在子进程中调用setsid函数创建新的会话；</li>
+<li>在子进程中调用chdir函数，让根目录 ”/” 成为子进程的工作目录；</li>
+<li>在子进程中调用umask函数，设置进程的umask为0；</li>
+<li>在子进程中关闭任何不需要的文件描述符</li>
+</ul>
+<p>其实我们完全可以用库函数<code>daemon()</code>来创建守护进程：<br>头文件：<code>unistd.h</code><br><code>int daemon(int nochdir, int noclose);</code></p>
+<ul>
+<li><code>nochdir</code>：输入参数，当该参数为0时，改变进程的工作目录为根目录，否则不改变工作目录；</li>
+<li><code>noclose</code>：输入参数，当该参数为0时，stdin、stdout、stderr均重定向至/dev/null，否则不变；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><strong>daemon例子</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+int main(void){
+    printf("before daemon ... \n");
+
+    if(daemon(0, 0) < 0){
+        perror("daemon error");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("after daemon ... \n");
+
+    FILE *fp = fopen("/root/test.log", "a");
+    if(fp == NULL){
+        perror("fopen error");
+        exit(EXIT_FAILURE);
+    }
+
+    for(;;){
+        fprintf(fp, "A");
+        fflush(fp);
+        sleep(2);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [9:26:03]
+$ gcc a.c
+
+# root @ localhost in ~ [9:26:20]
+$ ./a.out
+before daemon ...
+
+# root @ localhost in ~ [9:26:21]
+$ ps -ef | grep a.out
+root       6538      1  0 09:26 ?        00:00:00 ./a.out
+root       6545   1005  0 09:26 pts/0    00:00:00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn a.out
+
+# root @ localhost in ~ [9:26:25]
+$ pstree
+systemd─┬─NetworkManager───2*[{NetworkManager}]
+        ├─a.out
+        ├─agetty
+        ├─auditd───{auditd}
+        ├─chronyd
+        ├─crond
+        ├─dbus-daemon
+        ├─irqbalance
+        ├─lvmetad
+        ├─polkitd───5*[{polkitd}]
+        ├─rsyslogd───2*[{rsyslogd}]
+        ├─sshd─┬─sshd───zsh───pstree
+        │      └─sshd───zsh
+        ├─systemd-journal
+        ├─systemd-logind
+        ├─systemd-udevd
+        └─tuned───4*[{tuned}]
+
+# root @ localhost in ~ [9:26:54]
+$ cat /root/test.log
+AAAAAAAAAAAAAAAAAA#
+</script></code></pre>
+<h2 id="system和popen"><a href="#system和popen" class="headerlink" title="system和popen"></a>system和popen</h2><p><strong>system()</strong><br>头文件：<code>stdlib.h</code><br><code>int system(const char *command);</code>：执行shell命令</p>
+<p>system()函数调用/bin/sh来执行参数指定的命令，/bin/sh一般是一个软连接，指向某个具体的shell，比如bash；<br>-c选项是告诉shell从字符串command中读取并执行命令；</p>
+<p>在该command执行期间，SIGCHLD是被阻塞的，好比在说：”hi，内核，这会不要给我发送SIGCHLD信号，等我忙完再说”；<br>在该command执行期间，SIGINT和SIGQUIT是被忽略的，意思是进程收到这两个信号后没有任何动作；</p>
+<p>实际上system()函数执行了三步操作：</p>
+<ul>
+<li>fork一个子进程；</li>
+<li>在子进程中调用exec函数去执行command；</li>
+<li>在父进程中调用wait去等待子进程结束；</li>
+</ul>
+<p>但是system的返回值太过复杂，一般我都会选择使用popen函数，popen函数随后介绍；</p>
+<p>而且，对于system()，并不能获取命令执行的输出结果，只能得到执行的返回值；</p>
+<p>system函数的例子：<code>system(&quot;cat /etc/sysctl.conf&quot;);</code>；</p>
+<p><strong>popen()</strong><br>标准I/O函数库提供了popen函数，它启动另外一个进程去执行一个shell命令行；<br>这里我们称调用popen的进程为父进程，由popen启动的进程称为子进程；</p>
+<p>popen函数还创建一个管道用于父子进程间通信；父进程要么从管道读信息，要么向管道写信息，至于是读还是写取决于父进程调用popen时传递的参数；</p>
+<p>下在给出popen、pclose的定义：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+FILE *popen(const char *command, const char *type);
+/*
+函数功能：popen()会调用fork()产生子进程，然后从子进程中调用/bin/sh -c来执行参数command的指令;
+          参数type可使用"r"代表读取，"w"代表写入;
+          依照此type值，popen()会建立管道连到子进程的标准输出设备或标准输入设备，然后返回一个文件指针;
+          随后进程便可利用此文件指针来读取子进程的输出设备或是写入到子进程的标准输入设备中;
+返回值：若成功则返回文件指针，否则返回NULL，错误原因存于errno中
+*/
+
+int pclose(FILE *stream);
+/*
+函数功能：pclose()用来关闭由popen所建立的管道及文件指针；参数stream为先前由popen()所返回的文件指针;
+返回值：若成功则返回shell的终止状态(也即子进程的终止状态)，若出错返回-1，错误原因存于errno中;
+*/
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <cmd>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    char output[1024+1];
+
+    FILE *pp = popen(argv[1], "r");
+    if(pp == NULL){
+        perror("popen error");
+        exit(EXIT_FAILURE);
+    }
+
+    int nread = fread(output, 1, 1024, pp);
+    int status = pclose(pp);
+    if(status < 0){
+        perror("pclose error");
+        exit(EXIT_FAILURE);
+    }
+
+    output[nread] = 0;
+    if(WIFEXITED(status)){
+        printf("status: %d\n%s", WEXITSTATUS(status), output);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [11:16:54] C:1
+$ gcc a.c
+
+# root @ localhost in ~ [11:16:56]
+$ ./a.out
+usage: ./a.out <cmd>
+
+# root @ localhost in ~ [11:16:57] C:1
+$ ./a.out 'll 2>&1'
+status: 127
+sh: ll: command not found
+
+# root @ localhost in ~ [11:17:17]
+$ ./a.out 'ls 2>&1'
+status: 0
+a.c
+a.out
+code
+fproxy
+include
+lib
+tmp
+work
+</script></code></pre>
+<h2 id="signal信号"><a href="#signal信号" class="headerlink" title="signal信号"></a>signal信号</h2><blockquote>
+<p>信号(signal)是一种软中断，信号机制是进程间通信的一种方式，采用异步通信方式</p>
+</blockquote>
+<p>Linux系统共定义了64种信号，分为两大类：可靠信号与不可靠信号，前32种信号为不可靠信号，后32种为可靠信号；</p>
+<ul>
+<li>不可靠信号：也称为非实时信号，不支持排队，信号可能会丢失，比如发送多次相同的信号，进程只能收到一次；信号值取值区间为1~31；</li>
+<li>可靠信号：也称为实时信号，支持排队，信号不会丢失，发多少次，就可以收到多少次；信号值取值区间为32~64；</li>
+</ul>
+<p>在终端，可通过<code>kill -l</code>查看所有的signal信号：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">取值</th>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">解释</th>
+<th style="text-align:center">默认动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">SIGHUP</td>
+<td style="text-align:center">挂起</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">SIGINT</td>
+<td style="text-align:center">中断</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">SIGQUIT</td>
+<td style="text-align:center">退出</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">SIGILL</td>
+<td style="text-align:center">非法指令</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">SIGTRAP</td>
+<td style="text-align:center">断点或陷阱指令</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">SIGABRT</td>
+<td style="text-align:center">abort发出的信号</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">SIGBUS</td>
+<td style="text-align:center">非法内存访问</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">SIGFPE</td>
+<td style="text-align:center">浮点异常</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">SIGKILL</td>
+<td style="text-align:center">kill信号</td>
+<td style="text-align:center">不能被忽略、处理和阻塞</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">SIGUSR1</td>
+<td style="text-align:center">用户信号1</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">11</td>
+<td style="text-align:center">SIGSEGV</td>
+<td style="text-align:center">无效内存访问</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">SIGUSR2</td>
+<td style="text-align:center">用户信号2</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">SIGPIPE</td>
+<td style="text-align:center">管道破损，没有读端的管道写数据</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">SIGALRM</td>
+<td style="text-align:center">alarm发出的信号</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center">SIGTERM</td>
+<td style="text-align:center">终止信号</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">16</td>
+<td style="text-align:center">SIGSTKFLT</td>
+<td style="text-align:center">栈溢出</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">17</td>
+<td style="text-align:center">SIGCHLD</td>
+<td style="text-align:center">子进程退出</td>
+<td style="text-align:center">默认忽略</td>
+</tr>
+<tr>
+<td style="text-align:center">18</td>
+<td style="text-align:center">SIGCONT</td>
+<td style="text-align:center">进程继续</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">19</td>
+<td style="text-align:center">SIGSTOP</td>
+<td style="text-align:center">进程停止</td>
+<td style="text-align:center">不能被忽略、处理和阻塞</td>
+</tr>
+<tr>
+<td style="text-align:center">20</td>
+<td style="text-align:center">SIGTSTP</td>
+<td style="text-align:center">进程停止</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">21</td>
+<td style="text-align:center">SIGTTIN</td>
+<td style="text-align:center">进程停止，后台进程从终端读数据时</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">22</td>
+<td style="text-align:center">SIGTTOU</td>
+<td style="text-align:center">进程停止，后台进程想终端写数据时</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">23</td>
+<td style="text-align:center">SIGURG</td>
+<td style="text-align:center">I/O有紧急数据到达当前进程</td>
+<td style="text-align:center">默认忽略</td>
+</tr>
+<tr>
+<td style="text-align:center">24</td>
+<td style="text-align:center">SIGXCPU</td>
+<td style="text-align:center">进程的CPU时间片到期</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">25</td>
+<td style="text-align:center">SIGXFSZ</td>
+<td style="text-align:center">文件大小的超出上限</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">26</td>
+<td style="text-align:center">SIGVTALRM</td>
+<td style="text-align:center">虚拟时钟超时</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">27</td>
+<td style="text-align:center">SIGPROF</td>
+<td style="text-align:center">profile时钟超时</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">28</td>
+<td style="text-align:center">SIGWINCH</td>
+<td style="text-align:center">窗口大小改变</td>
+<td style="text-align:center">默认忽略</td>
+</tr>
+<tr>
+<td style="text-align:center">29</td>
+<td style="text-align:center">SIGIO</td>
+<td style="text-align:center">I/O相关</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">30</td>
+<td style="text-align:center">SIGPWR</td>
+<td style="text-align:center">关机</td>
+<td style="text-align:center">默认忽略</td>
+</tr>
+<tr>
+<td style="text-align:center">31</td>
+<td style="text-align:center">SIGSYS</td>
+<td style="text-align:center">系统调用异常</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>对于signal信号，绝大部分的默认处理都是终止进程或停止进程，或dump内核映像转储；<br>上述的31的信号为非实时信号，其他的信号32-64 都是实时信号；</p>
+<p>信号来源分为硬件类和软件类：</p>
+<ul>
+<li>硬件方式<ul>
+<li>用户输入：比如在终端上按下组合键ctrl+c，产生SIGINT信号；</li>
+<li>硬件异常：CPU检测到内存非法访问等异常，通知内核生成相应信号，并发送给发生事件的进程；</li>
+</ul>
+</li>
+<li>软件方式<ul>
+<li>通过系统调用，发送signal信号：kill()、raise()、sigqueue()、alarm()、setitimer()、abort()；</li>
+<li>kernel，使用 kill_proc_info() 等；</li>
+<li>native，使用 kill() 或者 raise() 等；</li>
+<li>java，使用 Procees.sendSignal() 等；</li>
+</ul>
+</li>
+</ul>
+<p>进程对信号的处理方式有3种：</p>
+<ul>
+<li>默认：接收到信号后按默认的行为处理该信号；这是多数应用采取的处理方式；</li>
+<li>自定义：用自定义的信号处理函数来执行特定的动作；</li>
+<li>忽略：接收到信号后不做任何反应；</li>
+</ul>
+<p>进程处理某个信号前，需要先在进程中安装此信号；安装过程主要是建立信号值和进程对相应信息值的动作；<br>signal()：不支持信号传递信息，主要用于非实时信号安装；<br>sigaction()：支持信号传递信息，可用于所有信号安装；</p>
+<p><strong>signal()</strong><br>头文件：<code>signal.h</code><br><code>void (*signal(int signum, void (*handler)(int)))(int);</code></p>
+<p>如果该函数原型不容易理解的话，可以参考下面的分解方式来理解：<br><code>typedef void (*sighandler_t)(int);</code><br><code>sighandler_t signal(int signum, sighandler_t handler);</code></p>
+<p>第一个参数指定信号的值，可参照上表；<br>第二个参数指定对应的信号处理函数：</p>
+<ul>
+<li><code>SIG_IGN</code>：忽略该信号；</li>
+<li><code>SIG_DFL</code>：采用系统默认方式处理信号；</li>
+<li><code>void (*func)(int)</code>：自定义的信号处理函数；</li>
+</ul>
+<p>如果signal()调用成功，返回最后一次为安装信号signum而调用signal()时的handler值；失败则返回SIG_ERR；</p>
+<p><strong>signal例子</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+#include <unistd.h>
+
+void handle_signal(int signum){
+    printf("received signal: %d\n", signum);
+    exit(0);
+}
+
+int main(void){
+    signal(SIGINT, handle_signal);
+
+    for(;;){
+        printf("running ... \n");
+        sleep(1);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [12:08:34] C:127
+$ gcc a.c
+
+# root @ localhost in ~ [12:08:36]
+$ ./a.out
+running ...
+running ...
+running ...
+running ...
+^Creceived signal: 2
+</script></code></pre>
+<p><strong>sigaction()</strong><br><code>int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);</code>：安装信号处理函数</p>
+<ul>
+<li><code>signum</code>：输入参数，要处理的信号值；</li>
+<li><code>act</code>：输入参数，新的处理方式，可为NULL；</li>
+<li><code>oldact</code>：输出参数，旧的处理方式，可为NULL；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>struct sigaction</code>结构体：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">/* Structure describing the action to be taken when a signal arrives.  */
+struct sigaction
+  {
+    /* Signal handler.  */
+#ifdef __USE_POSIX199309
+    union
+      {
+    /* Used if SA_SIGINFO is not set.  */
+    __sighandler_t sa_handler;
+    /* Used if SA_SIGINFO is set.  */
+    void (*sa_sigaction) (int, siginfo_t *, void *);
+      }
+    __sigaction_handler;
+# define sa_handler    __sigaction_handler.sa_handler
+# define sa_sigaction    __sigaction_handler.sa_sigaction
+#else
+    __sighandler_t sa_handler;
+#endif
+
+    /* Additional set of signals to be blocked.  */
+    __sigset_t sa_mask;
+
+    /* Special flags.  */
+    int sa_flags;
+
+    /* Restore handler.  */
+    void (*sa_restorer) (void);
+  };
+</script></code></pre>
+<p>主要看这三个成员：<code>sa_handler</code>、<code>sa_mask</code>、<code>sa_flags</code>：</p>
+<ul>
+<li><code>sa_handler</code>：函数指针，同signal()的第二个参数；</li>
+<li><code>sa_mask</code>：指定信号处理程序执行过程中需要阻塞的信号；</li>
+<li><code>sa_flags</code>：标示位，多个flag可用按位或<code>|</code>连接，当使用<code>sa_handler</code>时，通常将此参数置为0：<br><code>SA_RESTART</code>：使被信号打断的syscall重新发起；<br><code>SA_NOCLDSTOP</code>：使父进程在它的子进程暂停或继续运行时不会收到<code>SIGCHLD</code>信号；<br><code>SA_NOCLDWAIT</code>：使父进程在它的子进程退出时不会收到<code>SIGCHLD</code>信号，这时子进程如果退出也不会成为僵尸进程；<br><code>SA_NODEFER</code>：使对信号的屏蔽无效，即在信号处理函数执行期间仍能发出这个信号；<br><code>SA_RESETHAND</code>：信号处理之后重新设置为默认的处理方式；<br><code>SA_SIGINFO</code>：使用sa_sigaction成员而不是sa_handler作为信号处理函数；</li>
+</ul>
+<p><strong>信号集函数</strong><br><code>sigemptyset(sigset_t *set)</code>：信号集全部清0；<br><code>sigfillset(sigset_t *set)</code>：信号集全部置1，则信号集包含linux支持的64种信号；<br><code>sigaddset(sigset_t *set, int signum)</code>：向信号集中加入signum信号；<br><code>sigdelset(sigset_t *set, int signum)</code>：向信号集中删除signum信号；<br><code>sigismember(const sigset_t *set, int signum)</code>：判定信号signum是否存在信号集中；</p>
+<p><strong>信号的发送</strong><br><code>kill()</code>：用于向进程或进程组发送信号；<br><code>sigqueue()</code>：只能向一个进程发送信号，不能像进程组发送信号；主要针对实时信号提出，与sigaction()组合使用，当然也支持非实时信号的发送；<br><code>alarm()</code>：用于调用进程指定时间后发出<code>SIGALARM</code>信号；<br><code>setitimer()</code>：设置定时器，计时达到后给进程发送<code>SIGALRM</code>信号，功能比alarm更强大；<br><code>abort()</code>：向进程发送<code>SIGABORT</code>信号，默认进程会异常退出；<br><code>raise()</code>：用于向进程自身发送信号；</p>
+<p><strong>sigaction例子</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+
+void handle_sig(int signo){
+    printf("got signal: %d\n", signo);
+    exit(0);
+}
+
+int main(void){
+    struct sigaction act;
+    act.sa_handler = handle_sig;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+
+    sigaction(SIGINT, &act, NULL);
+
+    while(1){
+        printf("running ... \n");
+        sleep(1);
+    }
+
+    return 0;
+}
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-ipc-pipe.html" rel="next" title="c语言 - 进程间通信 管道">
+                <i class="fa fa-chevron-left"></i> c语言 - 进程间通信 管道
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-socket-io-model.html" rel="prev" title="c语言 - socket编程(四)">
+                c语言 - socket编程(四) <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程、线程"><span class="nav-number">1.</span> <span class="nav-text">进程、线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux的进程"><span class="nav-number">2.</span> <span class="nav-text">linux的进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程的基本操作"><span class="nav-number">3.</span> <span class="nav-text">进程的基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#daemon守护进程"><span class="nav-number">4.</span> <span class="nav-text">daemon守护进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#system和popen"><span class="nav-number">5.</span> <span class="nav-text">system和popen</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#signal信号"><span class="nav-number">6.</span> <span class="nav-text">signal信号</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-multi-proc.html';
+          this.page.identifier = 'c-multi-proc.html';
+          this.page.title = 'c语言 - 多进程编程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

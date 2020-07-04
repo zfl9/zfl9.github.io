@@ -1,0 +1,1314 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java Zip GZIP Jar">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java Zip压缩">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Zip压缩">
+<meta property="og:url" content="https://www.zfl9.com/java-zip.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java Zip压缩">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.374Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Zip压缩">
+<meta name="twitter:description" content="Java Zip压缩">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-zip.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java Zip压缩 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-zip.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java Zip压缩
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-19T11:03:00+08:00">
+                2017-10-19
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-zip.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-zip.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-zip.html" class="leancloud_visitors" data-flag-title="Java Zip压缩">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java Zip压缩</p>
+<a id="more"></a>
+<h2 id="Zip、GZIP、Jar"><a href="#Zip、GZIP、Jar" class="headerlink" title="Zip、GZIP、Jar"></a>Zip、GZIP、Jar</h2><blockquote>
+<p>Java API 提供了<code>java.util.zip</code>包和<code>java.util.jar</code>包，前者支持<code>zip</code>、<code>gzip</code>格式的压缩、后者支持<code>jar</code>格式的压缩</p>
+</blockquote>
+<p>zip：打包 + 压缩<br>gzip：压缩，通常配合 tar 使用<br>jar：打包 + 压缩，与 zip 兼容</p>
+<p><strong>Jar文件是什么</strong>？</p>
+<blockquote>
+<p>JAR 文件（Java归档，英语：Java Archive）是一种软件包文件格式，通常用于聚合大量的Java类文件、相关的元数据和资源（文本、图片等）文件到一个文件，以便分发Java平台应用软件或库。</p>
+</blockquote>
+<p><strong><code>*.jar</code>和<code>*.zip</code>异同</strong><br>jar 文件基本可以和 zip 格式兼容，可以自由的使用<code>zip</code>、<code>unzip</code>工具进行 jar 包的编辑；<br>唯一不同的是，不能直接使用 zip 工具创建一个新的 jar 包，新建 jar 包只能使用<code>jar</code>命令。</p>
+<blockquote>
+<p>jar 命令和 tar 命令的命令行选项基本一样，因此可以很容易的使用 jar 命令。</p>
+</blockquote>
+<p><strong><code>META-INF/MANIFEST.MF</code></strong></p>
+<blockquote>
+<p>目录清单文件，用于存储 jar 包的元数据，通常由 jar 命令自动生成。</p>
+</blockquote>
+<p>清单文件可以只有一行<code>Main-Class: com.zfl9.tools.HashMap</code>用于指定 main() 入口函数所在的类；<br>如果清单文件中指定了<code>Main-Class</code>条目，并且配置无误，则可以使用<code>java -jar xxx.jar</code>运行该 jar 包。</p>
+<p><strong>jar包的两个主要用法</strong><br>1) <code>java -jar xxx.jar</code>：直接运行带有<code>Main-Class</code>条目的 jar 包；<br>2) <code>java -cp xxx.jar</code>：将其作为一个 ClassPath 搜索路径，而无需解包。</p>
+<p><strong>主要的几个类</strong><br><code>InflaterInputStream</code>：基类，解压<br><code>DeflaterOutputStream</code>：基类，压缩</p>
+<p><code>ZipFile</code>：Zip 压缩文件<br><code>ZipEntry</code>：Zip 压缩实体<br><code>ZipInputstream</code>：zip 格式，解压<br><code>ZipOutputStream</code>：zip 格式，压缩</p>
+<p><code>JarFile</code>：ZipFile 的子类<br><code>JarEntry</code>：ZipEntry 的子类<br><code>JarInputStream</code>：ZipInputStream 的子类<br><code>JarOutputStream</code>：ZipOutputStream 的子类</p>
+<p><code>GZIPInputStream</code>：gzip 格式，解压（自带Buffer）<br><code>GZIPOutputStream</code>：gzip 格式，压缩（自带Buffer）</p>
+<h2 id="Zip"><a href="#Zip" class="headerlink" title="Zip"></a>Zip</h2><h3 id="ZipFile"><a href="#ZipFile" class="headerlink" title="ZipFile"></a>ZipFile</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 打开方式 */
+public static final int OPEN_READ;
+public static final int OPEN_DELETE;
+
+/* 构造函数 */
+// (default) mode=OPEN_READ; charset=UTF-8
+public ZipFile(File file, int mode, Charset charset) throws IOException;
+public ZipFile(File file, Charset charset) throws IOException;
+public ZipFile(String name, Charset charset) throws IOException;
+public ZipFile(File file, int mode) throws IOException;
+public ZipFile(File file) throws ZipException, IOException;
+public ZipFile(String name) throws IOException;
+
+/* 文件注释 */
+public String getComment();
+
+/* 获取Entry */
+public ZipEntry getEntry(String name);
+
+/* 获取Entry的输入流 */
+public InputStream getInputStream(ZipEntry entry) throws IOException;
+
+/* 相关信息 */
+public String getName(); // zip文件名
+public int size(); // entry的数目
+
+/* close() */
+public void close() throws IOException;
+</script></code></pre>
+<h3 id="ZipEntry"><a href="#ZipEntry" class="headerlink" title="ZipEntry"></a>ZipEntry</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public ZipEntry(String name);
+public ZipEntry(ZipEntry e);
+
+// 名称
+public String getName();
+
+// 注释
+public String getComment();
+public void setComment(String comment);
+
+// 是否为目录
+public boolean isDirectory();
+</script></code></pre>
+<h3 id="ZipInputStream"><a href="#ZipInputStream" class="headerlink" title="ZipInputStream"></a>ZipInputStream</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+// charset: 指定EntryName的字符集
+public ZipInputStream(InputStream in); // UTF-8
+public ZipInputStream(InputStream in, Charset charset);
+
+/* ZipEntry */
+public ZipEntry getNextEntry() throws IOException;
+public void closeEntry() throws IOException;
+
+/* read() */
+public int read(byte[] b, int off, int len) throws IOException;
+
+/* avail、skip */
+public int available() throws IOException;
+public long skip(long n) throws IOException;
+
+/* close() */
+public void close() throws IOException;
+</script></code></pre>
+<h3 id="ZipOutputStream"><a href="#ZipOutputStream" class="headerlink" title="ZipOutputStream"></a>ZipOutputStream</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public ZipOutputStream(OutputStream out); // UTF-8
+public ZipOutputStream(OutputStream out, Charset charset);
+
+/* 属性设置 */
+public void setComment(String comment); // 注释
+public void setLevel(int level); // 0-9，压缩比
+
+/* Entry */
+public void putNextEntry(ZipEntry e) throws IOException;
+public void closeEntry() throws IOException;
+
+/* write() */
+public synchronized void write(byte[] b, int off, int len) throws IOException;
+
+/* finish() */
+// 表示完成压缩，但是不调用close()释放底层资源
+public void finish() throws IOException;
+
+/* close() */
+public void close() throws IOException;
+</script></code></pre>
+<p>例1，压缩、解压缩（仅支持文件，不支持目录）：<br>Zip.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
+
+public class Zip {
+    public static void main(String[] args)
+        throws IOException
+    {
+        if (args.length < 2) {
+            System.err.println("Usage: Zip <archive.zip> <file...>");
+            System.exit(1);
+        }
+
+        ZipOutputStream zipOut =
+            new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(args[0])));
+
+        BufferedInputStream in = null;
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+
+        for (int i = 1; i < args.length; i++) {
+            zipOut.putNextEntry(new ZipEntry(args[i]));
+            in = new BufferedInputStream(new FileInputStream(args[i]));
+            while ((nbuf = in.read(buf)) != -1) {
+                zipOut.write(buf, 0, nbuf);
+            }
+            in.close();
+            zipOut.closeEntry();
+        }
+
+        zipOut.close();
+    }
+}
+</script></code></pre>
+<p>Unzip.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
+
+public class Unzip {
+    public static void main(String[] args)
+        throws IOException
+    {
+        if (args.length < 1) {
+            System.err.println("Usage: Unzip <archive.zip>");
+            System.exit(1);
+        }
+
+        ZipInputStream zipIn =
+            new ZipInputStream(new BufferedInputStream(new FileInputStream(args[0])));
+
+        ZipEntry entry = null;
+        BufferedOutputStream out = null;
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+
+        while ((entry = zipIn.getNextEntry()) != null) {
+            out = new BufferedOutputStream(new FileOutputStream(entry.getName()));
+            while ((nbuf = zipIn.read(buf)) != -1) {
+                out.write(buf, 0, nbuf);
+            }
+            out.close();
+            zipIn.closeEntry();
+        }
+
+        zipIn.close();
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/zip on git:master o [11:31:04]
+$ javac *.java
+
+# root @ arch in ~/work/zip on git:master o [11:31:07]
+$ ls
+Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip on git:master o [11:31:09]
+$ echo 'www.zfl9.com' > file1
+
+# root @ arch in ~/work/zip on git:master x [11:31:27]
+$ echo 'www.google.com' > file2
+
+# root @ arch in ~/work/zip on git:master x [11:31:37]
+$ echo 'www.baidu.com' > file3
+
+# root @ arch in ~/work/zip on git:master x [11:31:46]
+$ ls
+file1  file2  file3  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip on git:master x [11:31:47]
+$ java Zip files.zip file*
+
+# root @ arch in ~/work/zip on git:master x [11:31:59]
+$ ls
+file1  file2  file3  files.zip  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip on git:master x [11:32:01]
+$ unzip -l files.zip
+Archive:  files.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+       13  2017-10-19 11:31   file1
+       15  2017-10-19 11:31   file2
+       14  2017-10-19 11:31   file3
+---------                     -------
+       42                     3 files
+
+# root @ arch in ~/work/zip on git:master x [11:32:08]
+$ rm -fr file?
+
+# root @ arch in ~/work/zip on git:master x [11:32:17]
+$ ls
+files.zip  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip on git:master x [11:32:19]
+$ java Unzip files.zip
+
+# root @ arch in ~/work/zip on git:master x [11:32:26]
+$ ls
+file1  file2  file3  files.zip  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip on git:master x [11:32:27]
+$ cat file1
+www.zfl9.com
+
+# root @ arch in ~/work/zip on git:master x [11:32:32]
+$ cat file2
+www.google.com
+
+# root @ arch in ~/work/zip on git:master x [11:32:34]
+$ cat file3
+www.baidu.com
+</script></code></pre>
+<p>例2，压缩、解压缩（支持多级目录）<br>Zip.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.Arrays;
+
+public class Zip {
+    private ZipOutputStream zipOut;
+    private BufferedInputStream in;
+    private int nbuf;
+    private byte[] buf = new byte[1024 * 4];
+
+    public Zip(String zipFile) throws IOException {
+        zipOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
+    }
+
+    public void compress(String... files) throws IOException {
+        File[] arr = new File[files.length];
+        for (int i = 0; i < arr.length; i++)
+            arr[i] = new File(files[i]);
+        compress(arr);
+    }
+
+    public void compress(File... files) throws IOException {
+        for (File f : files) {
+            if (f.isFile()) {
+                in = new BufferedInputStream(new FileInputStream(f));
+                zipOut.putNextEntry(new ZipEntry(f.getPath()));
+
+                while ((nbuf = in.read(buf)) != -1)
+                    zipOut.write(buf, 0, nbuf);
+
+                zipOut.closeEntry();
+                in.close();
+            }
+
+            if (f.isDirectory()) {
+                zipOut.putNextEntry(new ZipEntry(f.getPath() + File.separator));
+                zipOut.closeEntry();
+
+                File[] childs = f.listFiles();
+
+                if (childs.length == 0)
+                    continue;
+
+                for (File child : childs)
+                    compress(child);
+            }
+        }
+    }
+
+    public void close() throws IOException {
+        zipOut.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length < 2) {
+            System.err.println("Usage: Zip <archive.zip> <file ...>");
+            System.exit(1);
+        }
+
+        Zip zip = new Zip(args[0]);
+        zip.compress(Arrays.copyOfRange(args, 1, args.length));
+        zip.close();
+    }
+}
+</script></code></pre>
+<p>Unzip.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
+
+public class Unzip {
+    public static void unCompress(String zipFile) throws IOException {
+        ZipEntry entry = null;
+        ZipInputStream zipIn =
+            new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
+        BufferedOutputStream out = null;
+
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+
+        while ((entry = zipIn.getNextEntry()) != null) {
+            if (entry.isDirectory()) {
+                new File(entry.getName()).mkdirs();
+                zipIn.closeEntry();
+                continue;
+            }
+
+            out = new BufferedOutputStream(new FileOutputStream(entry.getName()));
+            while ((nbuf = zipIn.read(buf)) != -1)
+                out.write(buf, 0, nbuf);
+            out.close();
+
+            zipIn.closeEntry();
+        }
+
+        zipIn.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length < 1) {
+            System.err.println("Usage: Unzip <archive.zip ...>");
+            System.exit(1);
+        }
+
+        for (String f : args) {
+            unCompress(f);
+        }
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/zip_dir on git:master x [11:34:45]
+$ javac *.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:34:49]
+$ ls
+Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:34:50]
+$ cp -af /root/java_src/java/time .
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:07]
+$ cp -af /root/java_src/java/io .
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:12]
+$ ls
+io  time  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:13]
+$ ls io
+Bits.java                     FileFilter.java              LineNumberInputStream.java     PushbackInputStream.java
+BufferedInputStream.java      FileInputStream.java         LineNumberReader.java          PushbackReader.java
+BufferedOutputStream.java     File.java                    NotActiveException.java        RandomAccessFile.java
+BufferedReader.java           FilenameFilter.java          NotSerializableException.java  Reader.java
+BufferedWriter.java           FileNotFoundException.java   ObjectInput.java               SequenceInputStream.java
+ByteArrayInputStream.java     FileOutputStream.java        ObjectInputStream.java         SerialCallbackContext.java
+ByteArrayOutputStream.java    FilePermission.java          ObjectInputValidation.java     Serializable.java
+CharArrayReader.java          FileReader.java              ObjectOutput.java              SerializablePermission.java
+CharArrayWriter.java          FileSystem.java              ObjectOutputStream.java        StreamCorruptedException.java
+CharConversionException.java  FileWriter.java              ObjectStreamClass.java         StreamTokenizer.java
+Closeable.java                FilterInputStream.java       ObjectStreamConstants.java     StringBufferInputStream.java
+Console.java                  FilterOutputStream.java      ObjectStreamException.java     StringReader.java
+DataInput.java                FilterReader.java            ObjectStreamField.java         StringWriter.java
+DataInputStream.java          FilterWriter.java            OptionalDataException.java     SyncFailedException.java
+DataOutput.java               Flushable.java               OutputStream.java              UncheckedIOException.java
+DataOutputStream.java         InputStream.java             OutputStreamWriter.java        UnixFileSystem.java
+DefaultFileSystem.java        InputStreamReader.java       PipedInputStream.java          UnsupportedEncodingException.java
+DeleteOnExitHook.java         InterruptedIOException.java  PipedOutputStream.java         UTFDataFormatException.java
+EOFException.java             InvalidClassException.java   PipedReader.java               WriteAbortedException.java
+ExpiringCache.java            InvalidObjectException.java  PipedWriter.java               Writer.java
+Externalizable.java           IOError.java                 PrintStream.java
+FileDescriptor.java           IOException.java             PrintWriter.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:18]
+$ ls time
+chrono                  Duration.java   LocalDateTime.java  OffsetDateTime.java  Ser.java        zone                ZoneRegion.java
+Clock.java              format          LocalTime.java      OffsetTime.java      temporal        ZonedDateTime.java
+DateTimeException.java  Instant.java    MonthDay.java       package-info.java    Year.java       ZoneId.java
+DayOfWeek.java          LocalDate.java  Month.java          Period.java          YearMonth.java  ZoneOffset.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:21]
+$ java Zip test.zip io time
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:40]
+$ ls
+io  test.zip  time  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:41]
+$ rm -fr io time
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:51]
+$ ls
+test.zip  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:51]
+$ java Unzip test.zip
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:55]
+$ ls
+io  test.zip  time  Unzip.class  Unzip.java  Zip.class  Zip.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:56]
+$ ls io
+Bits.java                     FileFilter.java              LineNumberInputStream.java     PushbackInputStream.java
+BufferedInputStream.java      FileInputStream.java         LineNumberReader.java          PushbackReader.java
+BufferedOutputStream.java     File.java                    NotActiveException.java        RandomAccessFile.java
+BufferedReader.java           FilenameFilter.java          NotSerializableException.java  Reader.java
+BufferedWriter.java           FileNotFoundException.java   ObjectInput.java               SequenceInputStream.java
+ByteArrayInputStream.java     FileOutputStream.java        ObjectInputStream.java         SerialCallbackContext.java
+ByteArrayOutputStream.java    FilePermission.java          ObjectInputValidation.java     Serializable.java
+CharArrayReader.java          FileReader.java              ObjectOutput.java              SerializablePermission.java
+CharArrayWriter.java          FileSystem.java              ObjectOutputStream.java        StreamCorruptedException.java
+CharConversionException.java  FileWriter.java              ObjectStreamClass.java         StreamTokenizer.java
+Closeable.java                FilterInputStream.java       ObjectStreamConstants.java     StringBufferInputStream.java
+Console.java                  FilterOutputStream.java      ObjectStreamException.java     StringReader.java
+DataInput.java                FilterReader.java            ObjectStreamField.java         StringWriter.java
+DataInputStream.java          FilterWriter.java            OptionalDataException.java     SyncFailedException.java
+DataOutput.java               Flushable.java               OutputStream.java              UncheckedIOException.java
+DataOutputStream.java         InputStream.java             OutputStreamWriter.java        UnixFileSystem.java
+DefaultFileSystem.java        InputStreamReader.java       PipedInputStream.java          UnsupportedEncodingException.java
+DeleteOnExitHook.java         InterruptedIOException.java  PipedOutputStream.java         UTFDataFormatException.java
+EOFException.java             InvalidClassException.java   PipedReader.java               WriteAbortedException.java
+ExpiringCache.java            InvalidObjectException.java  PipedWriter.java               Writer.java
+Externalizable.java           IOError.java                 PrintStream.java
+FileDescriptor.java           IOException.java             PrintWriter.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:35:58]
+$ ls time
+chrono                  Duration.java   LocalDateTime.java  OffsetDateTime.java  Ser.java        zone                ZoneRegion.java
+Clock.java              format          LocalTime.java      OffsetTime.java      temporal        ZonedDateTime.java
+DateTimeException.java  Instant.java    MonthDay.java       package-info.java    Year.java       ZoneId.java
+DayOfWeek.java          LocalDate.java  Month.java          Period.java          YearMonth.java  ZoneOffset.java
+
+# root @ arch in ~/work/zip_dir on git:master x [11:36:00]
+$ ls time/format
+DateTimeFormatterBuilder.java  DateTimeParseException.java  DecimalStyle.java  Parsed.java         TextStyle.java
+DateTimeFormatter.java         DateTimePrintContext.java    FormatStyle.java   ResolverStyle.java  ZoneName.java
+DateTimeParseContext.java      DateTimeTextProvider.java    package-info.java  SignStyle.java
+</script></code></pre>
+<h2 id="GZIP"><a href="#GZIP" class="headerlink" title="GZIP"></a>GZIP</h2><h3 id="GZIPInputStream"><a href="#GZIPInputStream" class="headerlink" title="GZIPInputStream"></a>GZIPInputStream</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public GZIPInputStream(InputStream in, int size) throws IOException; // size: 输入buffer大小
+public GZIPInputStream(InputStream in) throws IOException; // size=512
+
+/* read() */
+public int read(byte[] buf, int off, int len) throws IOException;
+
+/* close() */
+public void close() throws IOException;
+</script></code></pre>
+<h3 id="GZIPOutputStream"><a href="#GZIPOutputStream" class="headerlink" title="GZIPOutputStream"></a>GZIPOutputStream</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+// size: 输出buffer大小(512); syncFlush: 刷新模式(false)
+public GZIPOutputStream(OutputStream out, int size, boolean syncFlush) throws IOException;
+public GZIPOutputStream(OutputStream out, int size) throws IOException;
+public GZIPOutputStream(OutputStream out, boolean syncFlush) throws IOException;
+public GZIPOutputStream(OutputStream out) throws IOException;
+
+/* write() */
+public synchronized void write(byte[] buf, int off, int len) throws IOException;
+
+/* finish() */
+public void finish() throws IOException;
+</script></code></pre>
+<p>例1，压缩、解压缩（不支持文件夹）<br>GZIP.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.util.zip.GZIPOutputStream;
+
+public class GZIP {
+    public static void main(String[] args)
+        throws IOException
+    {
+        if (args.length < 1) {
+            System.err.println("Usage: GZip <file...>");
+            System.exit(1);
+        }
+
+        BufferedInputStream in = null;
+        GZIPOutputStream out = null;
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+
+        for (String f : args) {
+            in = new BufferedInputStream(new FileInputStream(f));
+            out = new GZIPOutputStream(new FileOutputStream(f + ".gz"), 1024 * 4);
+            while ((nbuf = in.read(buf)) != -1) {
+                out.write(buf, 0, nbuf);
+            }
+            out.close();
+            in.close();
+        }
+    }
+}
+</script></code></pre>
+<p>UnGZIP.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.FileInputStream;
+import java.util.zip.GZIPInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedOutputStream;
+
+public class UnGZIP {
+    public static void main(String[] args)
+        throws IOException
+    {
+        if (args.length < 1) {
+            System.err.println("Usage: UnGZip <file...>");
+            System.exit(1);
+        }
+
+        GZIPInputStream in = null;
+        BufferedOutputStream out = null;
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+
+        for (String f : args) {
+            in = new GZIPInputStream(new FileInputStream(f));
+            out = new BufferedOutputStream(new FileOutputStream(f.substring(0, f.length() - 3)));
+            while ((nbuf = in.read(buf)) != -1) {
+                out.write(buf, 0, nbuf);
+            }
+            out.close();
+            in.close();
+        }
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/tar_gzip on git:master x [11:41:19]
+$ javac *.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:41:31]
+$ ls
+GZIP.class  GZIP.java  TarGZIP.class  TarGZIP.java  UnGZIP.class  UnGZIP.java  UnTarGZIP.class  UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:41:31]
+$ echo 'www.zfl9.com' > file1
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:41:56]
+$ echo 'www.google.com' > file2
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:00]
+$ echo 'www.baidu.com' > file3
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:04]
+$ ls
+file1  file2  file3  GZIP.class  GZIP.java  TarGZIP.class  TarGZIP.java  UnGZIP.class  UnGZIP.java  UnTarGZIP.class  UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:05]
+$ java GZIP file?
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:22]
+$ ls
+file1     file2     file3     GZIP.class  TarGZIP.class  UnGZIP.class  UnTarGZIP.class
+file1.gz  file2.gz  file3.gz  GZIP.java   TarGZIP.java   UnGZIP.java   UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:23]
+$ rm -fr file?
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:37]
+$ ls
+file1.gz  file2.gz  file3.gz  GZIP.class  GZIP.java  TarGZIP.class  TarGZIP.java  UnGZIP.class  UnGZIP.java  UnTarGZIP.class  UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:38]
+$ java UnGZIP file?.gz
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:45]
+$ ls
+file1     file2     file3     GZIP.class  TarGZIP.class  UnGZIP.class  UnTarGZIP.class
+file1.gz  file2.gz  file3.gz  GZIP.java   TarGZIP.java   UnGZIP.java   UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:45]
+$ cat file1
+www.zfl9.com
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:51]
+$ cat file2
+www.google.com
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:42:53]
+$ cat file3
+www.baidu.com
+</script></code></pre>
+<p>例2，压缩、解压缩（配合tar，支持文件夹）<br>TarGZIP.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.util.zip.GZIPOutputStream;
+import java.io.File;
+
+public class TarGZIP {
+    public static void main(String[] args)
+        throws IOException, InterruptedException
+    {
+        if (args.length < 2) {
+            System.out.println("Usage: TarGZip <archive.tar.gz> <file...>");
+            System.exit(1);
+        }
+
+        String[] cmdarray = new String[args.length + 2];
+        cmdarray[0] = "tar";
+        cmdarray[1] = "-cf";
+        File tmp = File.createTempFile("java_tar_gzip", ".tar");
+        tmp.deleteOnExit();
+        cmdarray[2] = tmp.getPath();
+        System.arraycopy(args, 1, cmdarray, 3, args.length - 1);
+
+        Process proc = Runtime.getRuntime().exec(cmdarray);
+        int status;
+        if ((status = proc.waitFor()) != 0) {
+            System.exit(status);
+        }
+
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(tmp.getPath()));
+        GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(args[0]));
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+
+        while ((nbuf = in.read(buf)) != -1) {
+            out.write(buf, 0, nbuf);
+        }
+
+        out.close();
+        in.close();
+    }
+}
+</script></code></pre>
+<p>UnTarGZIP.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.FileInputStream;
+import java.util.zip.GZIPInputStream;
+import java.io.FileOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+
+public class UnTarGZIP {
+    public static void main(String[] args)
+        throws IOException, InterruptedException
+    {
+        if (args.length < 1) {
+            System.err.println("Usage: UnTarGZip <archive.tar.gz>");
+            System.exit(1);
+        }
+
+        GZIPInputStream in = null;
+        BufferedOutputStream out = null;
+        int nbuf = 0;
+        byte[] buf = new byte[1024 * 4];
+        File tmp = null;
+        String[] cmdarray = new String[3];
+        cmdarray[0] = "tar";
+        cmdarray[1] = "-xf";
+
+        tmp = File.createTempFile("java_tmp", ".tar");
+        tmp.deleteOnExit();
+        cmdarray[2] = tmp.getPath();
+        in = new GZIPInputStream(new FileInputStream(args[0]));
+        out = new BufferedOutputStream(new FileOutputStream(tmp.getPath()));
+        while ((nbuf = in.read(buf)) != -1) {
+            out.write(buf, 0, nbuf);
+        }
+        out.close();
+        in.close();
+
+        Process proc = Runtime.getRuntime().exec(cmdarray);
+        int status;
+        if ((status = proc.waitFor()) != 0) {
+            System.exit(status);
+        }
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/tar_gzip on git:master x [11:45:08]
+$ javac *.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:45:11]
+$ ls
+file1     file2     file3     GZIP.class  TarGZIP.class  UnGZIP.class  UnTarGZIP.class
+file1.gz  file2.gz  file3.gz  GZIP.java   TarGZIP.java   UnGZIP.java   UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:45:15]
+$ cp -af /root/java_src/java/io .
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:45:46] C:1
+$ cp -af /root/java_src/java/time .
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:45:51]
+$ ls
+file1     file2     file3     GZIP.class  io             TarGZIP.java  UnGZIP.class  UnTarGZIP.class
+file1.gz  file2.gz  file3.gz  GZIP.java   TarGZIP.class  time          UnGZIP.java   UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:06]
+$ java TarGZIP test.tar.gz file* io time
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:24]
+$ ls
+file1     file2     file3     GZIP.class  io             TarGZIP.java  time          UnGZIP.java      UnTarGZIP.java
+file1.gz  file2.gz  file3.gz  GZIP.java   TarGZIP.class  test.tar.gz   UnGZIP.class  UnTarGZIP.class
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:26]
+$ rm -fr file* io time
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:36]
+$ ls
+GZIP.class  GZIP.java  TarGZIP.class  TarGZIP.java  test.tar.gz  UnGZIP.class  UnGZIP.java  UnTarGZIP.class  UnTarGZIP.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:37]
+$ java UnTarGZIP test.tar.gz
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:42]
+$ ls
+file1     file2     file3     GZIP.class  io             TarGZIP.java  time          UnGZIP.java      UnTarGZIP.java
+file1.gz  file2.gz  file3.gz  GZIP.java   TarGZIP.class  test.tar.gz   UnGZIP.class  UnTarGZIP.class
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:43]
+$ ls io
+Bits.java                     FileFilter.java              LineNumberInputStream.java     PushbackInputStream.java
+BufferedInputStream.java      FileInputStream.java         LineNumberReader.java          PushbackReader.java
+BufferedOutputStream.java     File.java                    NotActiveException.java        RandomAccessFile.java
+BufferedReader.java           FilenameFilter.java          NotSerializableException.java  Reader.java
+BufferedWriter.java           FileNotFoundException.java   ObjectInput.java               SequenceInputStream.java
+ByteArrayInputStream.java     FileOutputStream.java        ObjectInputStream.java         SerialCallbackContext.java
+ByteArrayOutputStream.java    FilePermission.java          ObjectInputValidation.java     Serializable.java
+CharArrayReader.java          FileReader.java              ObjectOutput.java              SerializablePermission.java
+CharArrayWriter.java          FileSystem.java              ObjectOutputStream.java        StreamCorruptedException.java
+CharConversionException.java  FileWriter.java              ObjectStreamClass.java         StreamTokenizer.java
+Closeable.java                FilterInputStream.java       ObjectStreamConstants.java     StringBufferInputStream.java
+Console.java                  FilterOutputStream.java      ObjectStreamException.java     StringReader.java
+DataInput.java                FilterReader.java            ObjectStreamField.java         StringWriter.java
+DataInputStream.java          FilterWriter.java            OptionalDataException.java     SyncFailedException.java
+DataOutput.java               Flushable.java               OutputStream.java              UncheckedIOException.java
+DataOutputStream.java         InputStream.java             OutputStreamWriter.java        UnixFileSystem.java
+DefaultFileSystem.java        InputStreamReader.java       PipedInputStream.java          UnsupportedEncodingException.java
+DeleteOnExitHook.java         InterruptedIOException.java  PipedOutputStream.java         UTFDataFormatException.java
+EOFException.java             InvalidClassException.java   PipedReader.java               WriteAbortedException.java
+ExpiringCache.java            InvalidObjectException.java  PipedWriter.java               Writer.java
+Externalizable.java           IOError.java                 PrintStream.java
+FileDescriptor.java           IOException.java             PrintWriter.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:46]
+$ ls time
+chrono                  Duration.java   LocalDateTime.java  OffsetDateTime.java  Ser.java        zone                ZoneRegion.java
+Clock.java              format          LocalTime.java      OffsetTime.java      temporal        ZonedDateTime.java
+DateTimeException.java  Instant.java    MonthDay.java       package-info.java    Year.java       ZoneId.java
+DayOfWeek.java          LocalDate.java  Month.java          Period.java          YearMonth.java  ZoneOffset.java
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:47]
+$ cat file1
+www.zfl9.com
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:56]
+$ cat file2
+www.google.com
+
+# root @ arch in ~/work/tar_gzip on git:master x [11:46:57]
+$ cat file3
+www.baidu.com
+</script></code></pre>
+<h2 id="Jar"><a href="#Jar" class="headerlink" title="Jar"></a>Jar</h2><h3 id="JarFile"><a href="#JarFile" class="headerlink" title="JarFile"></a>JarFile</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final String MANIFEST_NAME = "META-INF/MANIFEST.MF";
+
+/* 构造函数 */
+public JarFile(File file, boolean verify, int mode) throws IOException;
+public JarFile(File file, boolean verify) throws IOException;
+public JarFile(File file) throws IOException; // verify=true
+public JarFile(String name, boolean verify) throws IOException;
+public JarFile(String name) throws IOException; // verify=true
+
+/* Manifest */
+public Manifest getManifest() throws IOException; // 没有则返回null
+
+/* Entry */
+public JarEntry getJarEntry(String name); // 调用getEntry()
+public ZipEntry getEntry(String name); // ZipEntry
+
+/* InputStream */
+public synchronized InputStream getInputStream(ZipEntry ze) throws IOException;
+</script></code></pre>
+<h3 id="JarEntry"><a href="#JarEntry" class="headerlink" title="JarEntry"></a>JarEntry</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public JarEntry(String name);
+public JarEntry(ZipEntry ze);
+public JarEntry(JarEntry je);
+
+/* 相关属性 */
+public Attributes getAttributes() throws IOException;
+public Certificate[] getCertificates();
+public CodeSigner[] getCodeSigners();
+</script></code></pre>
+<h3 id="JarInputStream"><a href="#JarInputStream" class="headerlink" title="JarInputStream"></a>JarInputStream</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public JarInputStream(InputStream in, boolean verify) throws IOException;
+public JarInputStream(InputStream in) throws IOException; // verify=true
+
+/* Manifest */
+public Manifest getManifest();
+
+/* Entry */
+public ZipEntry getNextEntry() throws IOException;
+public JarEntry getNextJarEntry() throws IOException; // 调用getNextEntry()
+
+/* read() */
+public int read(byte[] b, int off, int len) throws IOException;
+</script></code></pre>
+<h3 id="JarOutputStream"><a href="#JarOutputStream" class="headerlink" title="JarOutputStream"></a>JarOutputStream</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public JarOutputStream(OutputStream out, Manifest man) throws IOException;
+public JarOutputStream(OutputStream out) throws IOException;
+
+/* Entry */
+public void putNextEntry(ZipEntry ze) throws IOException;
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/shell-script.html" rel="next" title="Shell - 脚本编程">
+                <i class="fa fa-chevron-left"></i> Shell - 脚本编程
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-jni.html" rel="prev" title="Java JNI入门">
+                Java JNI入门 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Zip、GZIP、Jar"><span class="nav-number">1.</span> <span class="nav-text">Zip、GZIP、Jar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zip"><span class="nav-number">2.</span> <span class="nav-text">Zip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ZipFile"><span class="nav-number">2.1.</span> <span class="nav-text">ZipFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZipEntry"><span class="nav-number">2.2.</span> <span class="nav-text">ZipEntry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZipInputStream"><span class="nav-number">2.3.</span> <span class="nav-text">ZipInputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZipOutputStream"><span class="nav-number">2.4.</span> <span class="nav-text">ZipOutputStream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GZIP"><span class="nav-number">3.</span> <span class="nav-text">GZIP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GZIPInputStream"><span class="nav-number">3.1.</span> <span class="nav-text">GZIPInputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GZIPOutputStream"><span class="nav-number">3.2.</span> <span class="nav-text">GZIPOutputStream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jar"><span class="nav-number">4.</span> <span class="nav-text">Jar</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JarFile"><span class="nav-number">4.1.</span> <span class="nav-text">JarFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JarEntry"><span class="nav-number">4.2.</span> <span class="nav-text">JarEntry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JarInputStream"><span class="nav-number">4.3.</span> <span class="nav-text">JarInputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JarOutputStream"><span class="nav-number">4.4.</span> <span class="nav-text">JarOutputStream</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-zip.html';
+          this.page.identifier = 'java-zip.html';
+          this.page.title = 'Java Zip压缩';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

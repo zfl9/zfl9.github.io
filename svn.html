@@ -1,0 +1,653 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="svn, 版本控制, subversion">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="SVN 是 Subversion 的简称，是一个开放源代码的版本控制系统，相较于 RCS、CVS，它采用了分支管理系统，它的设计目标就是取代 CVS。互联网上很多版本控制服务已从 CVS 迁移到 Subversion。说得简单一点 SVN 就是用于多个人共同开发同一个项目，共用资源的目的。">
+<meta name="keywords" content="版本控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="svn 简明笔记">
+<meta property="og:url" content="https://www.zfl9.com/svn.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="SVN 是 Subversion 的简称，是一个开放源代码的版本控制系统，相较于 RCS、CVS，它采用了分支管理系统，它的设计目标就是取代 CVS。互联网上很多版本控制服务已从 CVS 迁移到 Subversion。说得简单一点 SVN 就是用于多个人共同开发同一个项目，共用资源的目的。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.406Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="svn 简明笔记">
+<meta name="twitter:description" content="SVN 是 Subversion 的简称，是一个开放源代码的版本控制系统，相较于 RCS、CVS，它采用了分支管理系统，它的设计目标就是取代 CVS。互联网上很多版本控制服务已从 CVS 迁移到 Subversion。说得简单一点 SVN 就是用于多个人共同开发同一个项目，共用资源的目的。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/svn.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>svn 简明笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/svn.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                svn 简明笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-13T15:36:00+08:00">
+                2017-04-13
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/版本控制/" itemprop="url" rel="index">
+                    <span itemprop="name">版本控制</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/svn.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="svn.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/svn.html" class="leancloud_visitors" data-flag-title="svn 简明笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>SVN 是 Subversion 的简称，是一个开放源代码的版本控制系统，相较于 RCS、CVS，它采用了分支管理系统，它的设计目标就是取代 CVS。互联网上很多版本控制服务已从 CVS 迁移到 Subversion。说得简单一点 SVN 就是用于多个人共同开发同一个项目，共用资源的目的。</p>
+<a id="more"></a>
+<h3 id="svn-安装及配置"><a href="#svn-安装及配置" class="headerlink" title="svn 安装及配置"></a>svn 安装及配置</h3><p><strong>安装</strong><br><code>yum -y install subversion</code></p>
+<p><strong>创建 svn 中央版本库</strong></p>
+<pre><code class="language-bash line-numbers"># 指定svn调用的编辑器为vim
+# 设置环境变量
+SVN_EDITOR=vim
+
+# 提交的文件存放路径
+$svn/repo/db/revs/版本号
+
+# 初始化版本库
+mkdir -p /opt/svn/
+svnadmin create /opt/svn/python3
+
+# 配置版本库
+cd /opt/svn/python3/conf/
+
+--- svnserve.conf ---
+[general]
+anon-access = none
+auth-access = write
+password-db = passwd
+authz-db = authz
+realm = python3
+
+## 参数解释
+# anon-access: 控制非鉴权用户访问版本库的权限，取值范围为"write"、"read"和"none"。 即"write"为可读可写，"read"为只读，"none"表示无访问权限。 缺省值：read
+# auth-access: 控制鉴权用户访问版本库的权限。取值范围为"write"、"read"和"none"。 即"write"为可读可写，"read"为只读，"none"表示无访问权限。 缺省值：write
+# authz-db: 指定权限配置文件名，通过该文件可以实现以路径为基础的访问控制。 除非指定绝对路径，否则文件位置为相对conf目录的相对路径。 缺省值：authz
+# realm: 指定版本库的认证域，即在登录时提示的认证域名称。若两个版本库的 认证域相同，建议使用相同的用户名口令数据文件。 缺省值：一个UUID(Universal Unique IDentifier，全局唯一标示)。
+--- svnserve.conf ---
+
+# 密码文件
+--- passwd ---
+[users]
+admin = 123456
+test = 123456
+--- passwd ---
+
+# 权限配置
+--- authz ---
+[groups]
+all = admin, test
+
+[python3:/]
+* =
+@all = r
+admin = rw
+--- authz ---
+
+# 启动svn
+svnserve -d -r /opt/svn
+</code></pre>
+<h3 id="apache-svn"><a href="#apache-svn" class="headerlink" title="apache + svn"></a>apache + svn</h3><pre><code class="language-bash line-numbers"># 安装apache和dav_svn模块
+yum -y install httpd httpd-tools mod_dav_svn subversion
+
+# 配置apache
+vim /etc/httpd/conf.d/svn.conf
+&lt;Location /py3&gt;
+    DAV svn
+    SVNPath /opt/svn/py3
+    AuthzSVNAccessFile /opt/svn/py3/conf/authz
+    AuthType Basic
+    AuthName &quot;Authorization SVN&quot;
+    AuthUserFile /opt/svn/py3/conf/passwd
+    Require valid-user
+    Satisfy all
+&lt;/Location&gt;
+
+# 创建passwd文件
+htpasswd -cb /opt/svn/py3/conf/passwd admin 123456
+htpasswd -b /opt/svn/py3/conf/passwd test 123456
+
+# 启动apache
+systemctl start httpd
+
+# 检出svn库，和原来的方式没什么不同，只不过用http协议传输了，并且passwd是经过md5加密的，安全一些
+svn checkout http://192.168.255.101/py3/ --username admin --password 123456
+
+浏览器访问 http://192.168.255.101/py3/ 输入用户名密码即可访问
+</code></pre>
+<h3 id="svn基本命令"><a href="#svn基本命令" class="headerlink" title="svn基本命令"></a>svn基本命令</h3><pre><code class="language-bash line-numbers">cd ~
+# checkout 检出版本库到工作区
+svn checkout svn://127.0.0.1/python3 --username admin --password 123456
+svn checkout svn://127.0.0.1/python3 --username admin --password 123456 my_works    # 指定本地路径
+yes -> 缓存密码
+
+# 提交commit
+cd python3
+
+--- readme.md ---
+hello, subversion!
+--- readme.md ---
+
+svn status  # 查看待变更列表
+svn status -u   # 显示更新信息
+svn status -v   # 显示详细信息
+svn add readme.md  # 添加文件(夹)到暂存区
+svn commit -m 'add file readme.md'  # 提交暂存区至版本库
+
+svn update  # 同步最新版本库至工作区
+svn update -r 15    # 同步指定版本
+
+# 版本回退
+svn revert fire     # 回退工作区文件至暂存区版本
+svn revert -R dir   # 目录
+svn merge -r 22:20 file     # 回退文件至指定版本库版本(22->20)
+
+svn log         # 查看版本信息
+svn log -r 1:4  # 查看指定版本之间的信息
+svn log -l 3 -v # -v 详细信息，-l N 指定输出条目
+
+svn diff                    # 对比工作区文件和暂存区文件
+svn diff -r 3 readme.md     # 对比工作区文件和版本库文件
+svn diff -r 2:3 readme.md   # 对比版本库文件
+
+svn cat -r 3 readme.md      # 查看指定版本文件
+
+svn list svn://127.0.0.1/python3    # 查看版本库文件
+
+svn export svn://127.0.0.1/python3 --username admin --password 123456 # 导出svn库(不包含.svn目录)
+svn export svn://127.0.0.1/python3 --username admin --password 123456 exp   # 导出至指定目录
+
+svn import ~/works/dest/ -m '...' svn://127.0.0.1/python3 --username admin  # 导入文件夹内容至版本库
+svn import ~/.oh-my-zsh/ -m '...' svn://127.0.0.1/python3/oh-my-zsh --username admin    # 指定版本库中的文件夹名
+
+# 分支branch
+ls
+branches tags master
+
+svn copy master branches/dev
+
+svn commit -m 'add new branch'
+
+cd branches/dev/
+
+do something...
+
+svn add ..
+svn status
+svn commit -m 'add ...'
+
+## 合并
+cd master
+svn update
+svn merge ../branches/dev/
+svn commit -m '...'
+
+# 标签tag
+svn copy master tags/v1.0_stable
+svn commit -m '...'
+</code></pre>
+<h3 id="svn文件冲突"><a href="#svn文件冲突" class="headerlink" title="svn文件冲突"></a>svn文件冲突</h3><pre><code class="language-bash line-numbers"># 文件冲突原因:
+当两个或者两个以上开发人员同时修改一个文件的同一个地方，就会出现冲突
+
+# eg:
+A和B两位工程师，版本库最新版本为10，A和B checkout，版本都是10，没问题
+
+A 修改文件test的第一行为 A，然后提交到版本库，没问题，此时版本号已经是11了
+
+B 修改文件test的第一行为 B, 然后提交到版本库，svn提示需要更新本地工作区副本至最新版本11
+然后B执行 svn update , 又报错，提示文件冲突，需要手动解决，选择p
+
+这时候工作区出现了4个文件
+test    test.mine   test.r10    test.r11
+
+test        冲突后的文件，主要就是手动修改此文件就行
+test.mine   B修改后的文件test
+test.r10    B提交前的版本，也就是没有导致冲突的版本
+test.r11    A提交后的版本，就是A修改的文件test, 导致冲突
+
+## 分两种情况
+1. A和B讨论后，决定保留A的修改，放弃B的修改:
+svn resolve --accept theirs-full test
+svn ci -m '保留A的更改'
+
+1. A和B讨论后，决定保留B的修改，放弃A的修改:
+svn resolve --accept working test
+svn ci -m '保留B的修改'
+
+# svn resolve 用法
+svn resolve --accept base FILE/DIR              # 保留test.r10
+svn resolve --accept working FILE/DIR           # 保留test
+svn resolve --accept mine-full FILE/DIR         # 保留test.mine
+svn resolve --accept theirs-full FILE/DIR       # 保留test.r11
+svn resolve --accept mine-conflict FILE/DIR     # 冲突部分以test.mine的为准
+svn resolve --accept theirs-conflict FILE/DIR   # 冲突部分以test.r11的为准
+</code></pre>
+<h3 id="svn树冲突"><a href="#svn树冲突" class="headerlink" title="svn树冲突"></a>svn树冲突</h3><pre><code class="language-bash line-numbers"># 树冲突:
+当一名开发人员移动、重命名、删除一个文件或文件夹，而另一名开发人员也对它们进行了移动、重命名、删除或者仅仅是修改时就会发生树冲突。
+
+# 解决: http://www.jianshu.com/p/e3cc83ca512d
+</code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/版本控制/" rel="tag"># 版本控制</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/ssh-port-forwarding.html" rel="next" title="ssh端口转发">
+                <i class="fa fa-chevron-left"></i> ssh端口转发
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/oh-my-zsh.html" rel="prev" title="oh-my-zsh打造超级终端">
+                oh-my-zsh打造超级终端 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#svn-安装及配置"><span class="nav-number">1.</span> <span class="nav-text">svn 安装及配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apache-svn"><span class="nav-number">2.</span> <span class="nav-text">apache + svn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svn基本命令"><span class="nav-number">3.</span> <span class="nav-text">svn基本命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svn文件冲突"><span class="nav-number">4.</span> <span class="nav-text">svn文件冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svn树冲突"><span class="nav-number">5.</span> <span class="nav-text">svn树冲突</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/svn.html';
+          this.page.identifier = 'svn.html';
+          this.page.title = 'svn 简明笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

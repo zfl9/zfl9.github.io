@@ -1,0 +1,4006 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java J.U.C包 J.U.C框架 Java5 并发编程包 ThreadPool 线程池">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java J.U.C 并发包入门；">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java J.U.C 包入门">
+<meta property="og:url" content="https://www.zfl9.com/java-juc-framework.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java J.U.C 并发包入门；">
+<meta property="og:image" content="https://www.zfl9.com/images/java-executor.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-forkjoin.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-forkjoin-algo.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-forkjoin-leitu.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-objhead.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-markword.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-blockingqueue.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-blockingdeque-1.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-blockingdeque-2.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-hashmap7.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-juc-hashmap8.png">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.343Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java J.U.C 包入门">
+<meta name="twitter:description" content="Java J.U.C 并发包入门；">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-executor.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-juc-framework.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java J.U.C 包入门 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-juc-framework.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java J.U.C 包入门
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-14T18:13:00+08:00">
+                2017-09-14
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-juc-framework.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-juc-framework.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-juc-framework.html" class="leancloud_visitors" data-flag-title="Java J.U.C 包入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java J.U.C 并发包入门；</p>
+<a id="more"></a>
+<h2 id="J-U-C-包简介"><a href="#J-U-C-包简介" class="headerlink" title="J.U.C 包简介"></a>J.U.C 包简介</h2><p>J.U.C 即 java.util.concurrent，该包参考自 EDU.oswego.cs.dl.util.concurrent，是 JSR 166 标准规范的一个实现；那么 JSR 166 以及 J.U.C 包的作者是谁呢，没错，就是 Doug Lea 大神，膜拜！</p>
+<p>J.U.C 框架是 Java 5 中引入的，而我们最熟悉的线程池机制就在这个包，合理使用线程池能够带来 3 个好处：</p>
+<ul>
+<li>降低资源消耗：通过重复利用已创建的线程降低线程创建和销毁造成的消耗；</li>
+<li>提高响应速度：当任务到达时，任务可以不需要等到线程创建就立即执行；</li>
+<li>提高线程的可管理性：线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以统一的分配、调优和监控；</li>
+</ul>
+<p>J.U.C 框架包含的内容有：</p>
+<ul>
+<li>Executor 框架（线程池、Callable、Future），任务的执行和调度框架；</li>
+<li>AbstractQueuedSynchronizer（AQS框架），J.U.C 中实现锁和同步机制的基础；</li>
+<li>Locks &amp; Condition（锁和条件变量），比 synchronized、wait、notify 更细粒度的锁机制；</li>
+<li>Synchronizers（同步器），主要用于协助线程同步，有 CountDownLatch、CyclicBarrier、Semaphore、Exchanger；</li>
+<li>Atomic Variables（原子变量），方便程序员在多线程环境下，无锁的进行原子操作，核心操作是 CAS 原子操作，所谓的 CAS 操作，即 compare and swap，指的是将预期值与当前变量的值比较(compare)，如果相等则使用新值替换(swap)当前变量，否则不作操作；</li>
+<li>BlockingQueue（阻塞队列），阻塞队列提供了可阻塞的入队和出对操作，如果队列满了，入队操作将阻塞直到有空间可用，如果队列空了，出队操作将阻塞直到有元素可用；</li>
+<li>Concurrent Collections（并发容器），说到并发容器，不得不提同步容器，在 JDK1.5 之前，为了线程安全，我们一般都是使用同步容器，同步容器主要的缺点是：对所有容器状态的访问都串行化，严重降低了并发性；某些复合操作，仍然需要加锁来保护；迭代期间，若其它线程并发修改该容器，会抛出 ConcurrentModificationException 异常，即快速失败机制；</li>
+<li>Fork/Join 并行计算框架，这块内容是在 JDK1.7 中引入的，可以方便利用多核平台的计算能力，简化并行程序的编写，开发人员仅需关注如何划分任务和组合中间结果；框架的核心是 ForkJoinPool 类，实现了工作窃取算法（对那些处理完自身任务的线程，会从其它线程窃取任务执行）并且能够执行 ForkJoinTask 任务；</li>
+<li>TimeUnit 枚举，TimeUnit 是 java.util.concurrent 包下面的一个枚举类，TimeUnit 提供了可读性更好的线程暂停操作，以及方便的时间单位转换方法；</li>
+</ul>
+<h2 id="Executor-框架"><a href="#Executor-框架" class="headerlink" title="Executor 框架"></a>Executor 框架</h2><p>Executor 框架继承关系图：<br><img src="/images/java-executor.jpg" alt="线程池继承关系图"></p>
+<h3 id="Callable-接口"><a href="#Callable-接口" class="headerlink" title="Callable 接口"></a>Callable 接口</h3><p>在介绍线程池之前，我们先来看一下 Callable 接口（函数式接口），它只有一个 call() 方法；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">@FunctionalInterface
+public interface Callable<V> {
+    /**
+     * Computes a result, or throws an exception if unable to do so.
+     *
+     * @return computed result
+     * @throws Exception if unable to compute a result
+     */
+    V call() throws Exception;
+}
+</script></code></pre>
+<p>在 Java5 之前，我们只有一个 Runnable 接口，用来定义任务，将它交给一个 Thread 对象去执行；<br>但是 Runnable 接口的 run() 方法是没有返回值的，也不能抛出任何检查性异常，有些时候不方便。</p>
+<p>现在我们可以利用 Callable 接口，来定义有返回值并且可抛出检查异常的任务，将它交给 ExecutorService 去执行；<br>ExecutorService.submit() 方法将返回一个 Future 对象（待完成的任务结果对象），Future.get() 方法可获取结果。</p>
+<h3 id="Future-接口"><a href="#Future-接口" class="headerlink" title="Future 接口"></a>Future 接口</h3><p>Future 表示异步任务的结果，Future 提供了任务查询、任务取消、获取任务结果等实用方法；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Future<V> {
+    /**
+     * 用于尝试取消当前任务.
+     * 如果任务已开始，并且 mayInterruptIfRunning 为 true，则给任务发送中断信号，否则任务将继续执行
+     * 此调用返回后，后续的 isDone() 始终返回 true；如果此调用返回 true，则后续的 isCancelled() 始终返回 true
+     * @param mayInterruptIfRunning 如果任务已运行，定义是否中断任务的执行
+     * @return boolean              如果任务取消失败则返回 false，否则返回 true
+     */
+    boolean cancel(boolean mayInterruptIfRunning);
+
+    /* 任务是否已被取消 */
+    boolean isCancelled();
+
+    /* 任务是否已完成 */
+    boolean isDone();
+
+    /* 获取任务结果，该调用将阻塞 */
+    V get() throws InterruptedException, ExecutionException;
+
+    /* 获取任务结果，该调用将阻塞给定时间 */
+    V get(long timeout, TimeUnit unit)
+        throws InterruptedException, ExecutionException, TimeoutException;
+}
+</script></code></pre>
+<h3 id="FutureTask-类"><a href="#FutureTask-类" class="headerlink" title="FutureTask 类"></a>FutureTask 类</h3><p>FutureTask 表示异步计算任务；它同时实现了 Runnable、Future 接口，因此可直接交给 Thread 执行，并获取结果；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* RunnableFuture 接口 (继承 Runnable、Future 接口) */
+public interface RunnableFuture<V> extends Runnable, Future<V> {
+    /**
+     * Sets this Future to the result of its computation
+     * unless it has been cancelled.
+     */
+    void run();
+}
+
+public class FutureTask<V> implements RunnableFuture<V> {
+    /* 构造方法 */
+    public FutureTask(Callable<V> callable);
+    public FutureTask(Runnable runnable, V result); // result 在调用 get() 时返回，可为 null
+
+    /* 实现接口方法 */
+    public boolean cancel(boolean mayInterruptIfRunning);
+
+    public boolean isCancelled();
+    public boolean isDone();
+
+    public V get() throws InterruptedException, ExecutionException;
+    public V get(long timeout, TimeUnit unit)
+        throws InterruptedException, ExecutionException, TimeoutException;
+
+    public void run();
+}
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ExecutionException;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        FutureTask<String> task =
+            new FutureTask<>(new Task("test success"));
+        new Thread(task).start();
+        System.out.println("task result: " + task.get());
+    }
+}
+
+class Task implements Callable<String> {
+    private String result;
+
+    public Task(String result) {
+        this.result = result;
+    }
+
+    @Override
+    public String call() {
+        System.out.println("task is running ...");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            System.out.println("task is interrupted!");
+            return "(null)";
+        }
+        System.out.println("task is completed.");
+        return result;
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:16:37]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:16:39]
+$ java Main
+task is running ...
+task is completed.
+task result: test success
+</script></code></pre>
+<h3 id="Executor-接口"><a href="#Executor-接口" class="headerlink" title="Executor 接口"></a>Executor 接口</h3><p>最顶层是 Executor 接口，它的定义很简单，只有一个用于执行任务的 execute() 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Executor {
+    /**
+     * Executes the given command at some time in the future.  The command
+     * may execute in a new thread, in a pooled thread, or in the calling
+     * thread, at the discretion of the {@code Executor} implementation.
+     *
+     * @param command the runnable task
+     * @throws RejectedExecutionException if this task cannot be
+     * accepted for execution
+     * @throws NullPointerException if command is null
+     */
+    void execute(Runnable command);
+}
+</script></code></pre>
+<h3 id="ExecutorService-接口"><a href="#ExecutorService-接口" class="headerlink" title="ExecutorService 接口"></a>ExecutorService 接口</h3><p>ExecutorService 接口继承自 Executor 公共接口，它提供了更丰富的线程池控制方法，比如 shutdown() 用于平滑关闭线程池，submit() 用于提交 Callable 任务（相比 Runnable 任务，它可以有返回值、可以抛出异常）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface ExecutorService extends Executor {
+    /**
+     * 关闭线程池 (设置 shutdown 标志位)，执行该方法后线程池将不会再接收新的任务
+     * 但是线程池也不会等待未完成的任务继续执行，这个应该交给 awaitTermination().
+     */
+    void shutdown();
+
+    /**
+     * 关闭线程池 (设置 shutdown 标志位并调用 interrupt() 中断任务)，中断不一定奏效
+     * 因此，我们在编写 Runnable/Callable 任务时一定要注意处理好 interrupt 中断标志.
+     * @return List<Runnable>   返回还未开始执行的任务列表
+     */
+    List<Runnable> shutdownNow();
+
+    /**
+     * 判断线程池的 shutdown 标志位是否已设置，即是否执行了 shutdown()、shutdownNow().
+     */
+    boolean isShutdown();
+
+    /**
+     * 判断线程池的 shutdown 标志位是否已设置并且所有任务是否都已完成，如果是才返回 true.
+     */
+    boolean isTerminated();
+
+    /**
+     * 等待线程池中的任务完成执行 (前提是设置了 shutdown 标志位)，该调用将阻塞调用线程.
+     * 如果任务都已完成则返回，或者发生超时，或者执行线程收到中断，以先发生的事件为准
+     * @param timeout   超时时间，为 0 或 -1 也不代表永久等待，而是立即返回
+     * @param unit      时间单位，java.util.concurrent.TimeUnit 枚举类
+     * @return boolean  如果线程池中的任务都已完成执行，则返回 true，否则返回 false
+     * @throws InterruptedException 当收到中断信号时将清除中断位，并抛出该异常
+     */
+    boolean awaitTermination(long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    /**
+     * 提交 Callable 任务，该调用将返回一个 Future 对象，用于控制任务的执行结果.
+     * @param task          要执行的任务
+     * @return Future<T>    返回 Future<T> 结果对象
+     */
+    <T> Future<T> submit(Callable<T> task);
+
+    /**
+     * 提交 Runnable 任务，该调用将返回一个 Future 对象，任务完成时调用 get() 将返回 result.
+     * @param task          要执行的任务
+     * @param result        任务完成时返回的结果
+     * @return Future<T>    返回 Future<T> 结果对象
+     */
+    <T> Future<T> submit(Runnable task, T result);
+
+    /**
+     * 提交 Runnable 任务，它相当于 submit(task, null)，因此调用 get() 将返回 null 值.
+     */
+    Future<?> submit(Runnable task);
+
+    /**
+     * 执行所提交的任务列表，当该调用返回时，所有任务都已完成，调用 Future.isDone() 将返回 true.
+     */
+    <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+        throws InterruptedException;
+
+    /**
+     * 执行所提交的任务列表，当全部完成或超时到期时返回一个 Future 列表，调用 Future.isDone() 将返回 true.
+     * 如果超时到期时，任务还未完成，那么这些未完成的任务将被取消
+     */
+    <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
+                                  long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    /**
+     * 执行所提交的任务列表，返回成功完成的结果列表 (即未抛出异常)，该调用返回时，未完成的任务将被取消.
+     */
+    <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+        throws InterruptedException, ExecutionException;
+
+    /**
+     * 执行所提交的任务列表，返回成功完成的结果列表或者超时到期时返回，该调用返回时，未完成的任务将被取消.
+     */
+    <T> T invokeAny(Collection<? extends Callable<T>> tasks,
+                    long timeout, TimeUnit unit)
+        throws InterruptedException, ExecutionException, TimeoutException;
+}
+</script></code></pre>
+<h3 id="AbstractExecutorService-抽象类"><a href="#AbstractExecutorService-抽象类" class="headerlink" title="AbstractExecutorService 抽象类"></a>AbstractExecutorService 抽象类</h3><p>AbstractExecutorService 抽象类实现了 ExecutorService 接口的 submit、invoke 系列方法；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public abstract class AbstractExecutorService implements ExecutorService {
+    /* submit */
+    public Future<?> submit(Runnable task);
+    public <T> Future<T> submit(Runnable task, T result);
+    public <T> Future<T> submit(Callable<T> task);
+
+    /* invoke */
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+        throws InterruptedException, ExecutionException;
+
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks,
+                           long timeout, TimeUnit unit)
+        throws InterruptedException, ExecutionException, TimeoutException;
+
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+        throws InterruptedException;
+
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
+                                         long timeout, TimeUnit unit)
+        throws InterruptedException;
+}
+</script></code></pre>
+<h3 id="ThreadPoolExecutor-类"><a href="#ThreadPoolExecutor-类" class="headerlink" title="ThreadPoolExecutor 类"></a>ThreadPoolExecutor 类</h3><p>ThreadPoolExecutor 核心类，创建自定义线程池就靠它了，下面是其主要方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造方法 */
+public ThreadPoolExecutor(int corePoolSize,     // 核心线程数的最大值
+                          int maximumPoolSize,  // 可同时拥有的最大线程数
+                          long keepAliveTime,   // 空闲线程的存活时间 *
+                          TimeUnit unit,        // keepAliveTime 单位
+                          BlockingQueue<Runnable> workQueue) {  // 用于缓存任务的阻塞队列
+    this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+         Executors.defaultThreadFactory(), defaultHandler);
+}
+
+public ThreadPoolExecutor(int corePoolSize,     // 核心线程数的最大值
+                          int maximumPoolSize,  // 可同时拥有的最大线程数
+                          long keepAliveTime,   // 空闲线程的存活时间 *
+                          TimeUnit unit,        // keepAliveTime 单位
+                          BlockingQueue<Runnable> workQueue,    // 用于缓存任务的阻塞队列
+                          ThreadFactory threadFactory) {        // 指定产生线程的线程工厂
+    this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+         threadFactory, defaultHandler);
+}
+
+public ThreadPoolExecutor(int corePoolSize,     // 核心线程数的最大值
+                          int maximumPoolSize,  // 可同时拥有的最大线程数
+                          long keepAliveTime,   // 空闲线程的存活时间 *
+                          TimeUnit unit,        // keepAliveTime 单位
+                          BlockingQueue<Runnable> workQueue,    // 用于缓存任务的阻塞队列
+                          RejectedExecutionHandler handler) {   // 指定拒绝接收新任务的策略 *
+    this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+         Executors.defaultThreadFactory(), handler);
+}
+
+public ThreadPoolExecutor(int corePoolSize,     // 核心线程数的最大值
+                          int maximumPoolSize,  // 可同时拥有的最大线程数
+                          long keepAliveTime,   // 空闲线程的存活时间 *
+                          TimeUnit unit,        // keepAliveTime 单位
+                          BlockingQueue<Runnable> workQueue,    // 用于缓存任务的阻塞队列
+                          ThreadFactory threadFactory,          // 指定产生线程的线程工厂
+                          RejectedExecutionHandler handler);    // 指定拒绝接收新任务的策略 *
+/* 空闲超时策略默认针对"临时"线程，即超过 corePoolSize 数的线程，核心线程即使空闲也不会超时终止 */
+/* 拒绝策略是指当 workQueue 已满，且池内线程数达到 maximumPoolSize 时拒绝接受新任务采取的策略 */
+
+/* execute */
+public void execute(Runnable command);
+
+/* shutdown */
+public void shutdown(); // 设置标志位
+public List<Runnable> shutdownNow(); // 设置标志位且发送中断信号
+public boolean isShutdown(); // 是否已设置标志位
+public boolean isTerminating(); // 是否已设置标志位且还在关闭中
+public boolean isTerminated(); // 是否已设置标志位且已完成关闭
+public boolean awaitTermination(long timeout, TimeUnit unit) // 等待池中的任务完成执行或超时
+    throws InterruptedException;
+
+/* threadFactory */
+public void setThreadFactory(ThreadFactory threadFactory); // 设置新的线程工厂
+public ThreadFactory getThreadFactory();    // 获取当前线程工厂
+
+/* reject-handler */
+public void setRejectedExecutionHandler(RejectedExecutionHandler handler); // 设置新的拒绝策略
+public RejectedExecutionHandler getRejectedExecutionHandler(); // 获取当前拒绝策略
+
+/* 核心线程数 */
+// 如果新值小于当前值，那么多余的现有线程在下一次空闲时将被终止
+// 如果新值大于当前值，那么新线程将在需要时启动以执行排队的任务
+public void setCorePoolSize(int corePoolSize);
+public int getCorePoolSize();
+
+/* 预启动核心线程 */
+public boolean prestartCoreThread(); // 一个，如果成功则返回 true
+public int prestartAllCoreThreads(); // 全部，返回成功启动的线程数量
+
+/* 将超时策略应用于 core 线程，默认只应用于临时线程 */
+public void allowCoreThreadTimeOut(boolean value); // setter
+public boolean allowsCoreThreadTimeOut(); // getter
+
+/* 最大线程数 */
+// 如果新值小于当前值，那么多余的现有线程在下一次空闲时将被终止
+public void setMaximumPoolSize(int maximumPoolSize);
+public int getMaximumPoolSize();
+
+/* 超时时间 */
+public void setKeepAliveTime(long time, TimeUnit unit);
+public long getKeepAliveTime(TimeUnit unit);
+
+/* 阻塞队列 */
+public BlockingQueue<Runnable> getQueue(); // 返回任务队列，主要用于调试与监视
+
+// 删除一个还未执行的任务，如果你有 Future，推荐使用 Future.cancel() 方法来取消任务
+public boolean remove(Runnable task);
+// 清空所有已被取消的任务，此方法可用于内存回收，因为已取消的任务不会再执行了，存在也是浪费内存
+public void purge();
+
+/* 获取当前线程池的相关信息 */
+public int getPoolSize(); // 获取当前的核心线程数
+public int getActiveCount(); // 获取正在执行任务的线程数 (近似值)
+public int getLargestPoolSize(); // 获取池中同时存在的最大线程数
+public long getTaskCount(); // 获取正在被执行的任务数 (近似值)
+public long getCompletedTaskCount(); // 获取已完成的任务数 (近似值)
+
+/* Object.toString() */
+public String toString(); // 获取字符串描述，运行状态 + 工作线程数 + 任务计数等
+
+/* 拒绝策略(内部类)，实现了 RejectedExecutionHandler 接口，均为无参构造函数 */
+ThreadPoolExecutor.AbortPolicy // (默认)丢弃新任务并抛出 RejectedExecutionException 异常(RT)
+ThreadPoolExecutor.CallerRunsPolicy // 让调用线程执行新任务
+ThreadPoolExecutor.DiscardPolicy // 丢弃新任务，不抛出异常
+ThreadPoolExecutor.DiscardOldestPolicy // 丢弃旧任务(最先提交却未得到执行的任务)，然后重新尝试执行新任务
+</script></code></pre>
+<p><strong>构造函数详解</strong><br>前三个构造函数都是调用的第四个构造函数进行初始化操作，各参数的作用：</p>
+<ul>
+<li><code>corePoolSize</code>：线程池中的核心线程数，也就是正式员工数量；</li>
+<li><code>maximumPoolSize</code>：线程池中能同时拥有的最大线程数（<code>maximumPoolSize - corePoolSize = 临时线程数</code>）；</li>
+<li><code>keepAliveTime</code>：空闲线程的存活时间（默认针对临时线程）；</li>
+<li><code>unit</code>：keepAliveTime 单位；<ul>
+<li><code>TimeUnit.NANOSECONDS</code>纳秒</li>
+<li><code>TimeUnit.MICROSECONDS</code>微秒</li>
+<li><code>TimeUnit.MILLISECONDS</code>毫秒</li>
+<li><code>TimeUnit.SECONDS</code>秒</li>
+<li><code>TimeUnit.MINUTES</code>分</li>
+<li><code>TimeUnit.HOURS</code>时</li>
+<li><code>TimeUnit.DAYS</code>天</li>
+</ul>
+</li>
+<li><code>workQueue</code>：缓存任务的阻塞队列；<ul>
+<li><code>ArrayBlockingQueue</code>：一个由<code>数组结构</code>组成的<code>有界</code>阻塞队列；</li>
+<li><code>LinkedBlockingQueue</code>：一个由<code>链表结构</code>组成的<code>有界</code>阻塞队列；</li>
+<li><code>LinkedTransferQueue</code>：一个由<code>链表结构</code>组成的<code>无界</code>阻塞队列；</li>
+<li><code>LinkedBlockingDeque</code>：一个由<code>链表结构</code>组成的<code>有界</code>阻塞双端队列；</li>
+<li><code>SynchronousQueue</code>：一个不存储元素的<code>无界</code>阻塞（同步）队列；</li>
+<li><code>PriorityBlockingQueue</code>：一个支持<code>优先级</code>排序的<code>无界</code>阻塞队列；</li>
+<li><code>DelayQueue</code>：一个支持<code>延时</code>获取元素的<code>无界</code>阻塞队列；</li>
+</ul>
+</li>
+<li><code>threadFactory</code>：创建线程的工厂；</li>
+<li><code>handler</code>：当 workQueue 已满，且线程数达 maximumPoolSize 时，拒绝新任务采取的策略；<ul>
+<li><code>ThreadPoolExecutor.AbortPolicy</code>：（默认）丢弃新任务并抛出 RejectedExecutionException 异常（RT）</li>
+<li><code>ThreadPoolExecutor.CallerRunsPolicy</code>：让调用线程执行新任务</li>
+<li><code>ThreadPoolExecutor.DiscardPolicy</code>：丢弃新任务，不抛出异常</li>
+<li><code>ThreadPoolExecutor.DiscardOldestPolicy</code>：丢弃旧任务（最先提交却未得到执行的任务），然后重新尝试执行新任务</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>一个线程即一个执行流，一个任务即一个 Runnable/Callable 对象；</p>
+</blockquote>
+<p><strong>提交任务之后的流程</strong><br>当试图通过 execute()、submit() 方法将一个任务添加到线程池中时，将按照如下顺序处理：</p>
+<ol>
+<li>如果线程池中的线程数量少于 corePoolSize，即使线程池中有空闲线程，也会创建一个新线程来执行新添加的任务；</li>
+<li>如果线程池中的线程数量为 corePoolSize，并且缓冲队列 workQueue 未满，则将新添加的任务放到 workQueue 中，等待线程池中的空闲线程按照 FIFO 原则依次从队列中取出任务并执行；</li>
+<li>如果线程池中的线程数量为 corePoolSize，并且缓冲队列 workQueue 已满，则创建新的线程（临时工）来执行新添加的任务，直到线程池中的线程数达到 maximumPoolSize；</li>
+<li>如果线程池中的线程数量达到 maximumPoolSize，则按照饱和策略进行处理，默认为丢弃任务并抛出 RejectedExecutionException RT异常；</li>
+<li>当（临时工）线程在线程池中的空闲时间超过 keepAliveTime 后，该（临时工）线程将被自动结束，移出线程池，直到线程数恢复到 corePoolSize；</li>
+</ol>
+<blockquote>
+<p>线程池并没有标记哪个线程是核心线程，哪个是非核心线程，线程池只关心核心线程的数量；</p>
+</blockquote>
+<p><strong>线程池工作流程简述</strong><br>通俗解释，如果把线程池比作一个单位的话，corePoolSize 就表示正式工，线程就可以表示一个员工；<br>当我们向单位委派一项工作时，如果单位发现正式工还没招满，单位就会招个正式工来完成这项工作；</p>
+<p>随着我们向这个单位委派的工作增多，即使正式工全部满了，工作还是干不完，那么单位只能按照我们新委派的工作按先后顺序将它们找个地方搁置起来，这个地方就是 workQueue，等正式工完成了手上的工作，就到这里来取新的任务；</p>
+<p>如果不巧，年末了，各个部门都向这个单位委派任务，导致 workQueue 已经没有空位置放新的任务，于是单位决定招点临时工吧（临时工：又是我！）；<br>临时工也不是想招多少就招多少，上级部门通过这个单位的 maximumPoolSize 确定了你这个单位的人数的最大值，换句话说最多招 maximumPoolSize - corePoolSize 个临时工；当然，在线程池中，谁是正式工，谁是临时工是没有区别的，完全同工同酬；</p>
+<p>如果单位已经招了些临时工，但新任务没有继续增加，所以随着每个员工忙完手头的工作，都来 workQueue 领取新的任务；<br>随着各个员工齐心协力，任务越来越少，员工数没变，那么就必定有闲着没事干的员工；于是领导想了个办法，设定了 keepAliveTime，当空闲的员工在 keepAliveTime 这段时间还没有找到事情干，就被辞退啦，毕竟地主家也没有余粮啊！当然辞退到 corePoolSize 个员工时就不再辞退了，领导也不想当光杆司令啊；</p>
+<p>如果单位招满了临时工，但新任务依然继续增加，线程池从上到下，从里到外真心忙的不可开交，阻塞队列也满了，只好拒绝上级委派下来的任务；怎么拒绝也是一门艺术哈；</p>
+<p><strong>预启动线程</strong><br>在创建了线程池后，默认情况下，线程池中并没有任何线程，而是等待有任务到来才创建线程去执行任务，除非调用 prestartAllCoreThreads() 和 prestartCoreThread() 方法，从方法名字可以看出，是预创建线程的意思，即在没有任务到来之前，就创建 corePoolSize 个线程或 1 个线程；</p>
+<p><strong>keepAliveTime 超时</strong><br>默认情况下，keepAliveTime 只在线程数大于 corePoolSize 时才会生效；但是如果调用了<code>allowCoreThreadTimeOut(true)</code>方法，在线程池中的线程数不大于 corePoolSize 时，keepAliveTime 参数也会起作用，直到线程池中的线程数为 0；</p>
+<p><strong>阻塞队列</strong><br>阻塞队列用来存储等待执行的任务；该参数很重要，会对线程池的运行过程产生很大的影响，一般而言，有以下几种选择：</p>
+<ul>
+<li><code>ArrayBlockingQueue</code>：基于数组结构的有界阻塞队列；</li>
+<li><code>LinkedBlockingQueue</code>：基于链表结构的有界（默认为 Integer.MAX_VALUE）阻塞队列，吞吐量通常要高于 ArrayBlockingQueue；</li>
+<li><code>SynchronousQueue</code>：不存储元素的无界阻塞队列；每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，反之亦然；吞吐量通常要高于 LinkedBlockingQueue；</li>
+</ul>
+<p><strong>线程池的状态</strong><br>线程池具有以下五种状态，当创建一个线程池时初始化状态为 RUNNING：<br><code>RUNNING</code>：允许提交并处理任务，线程池新创建时的状态；<br><code>SHUTDOWN</code>：不允许提交新的任务，调用 shutdown() 方法的状态；<br><code>STOP</code>：不允许提交新的任务并向池中线程发送中断信号，调用 shutdownNow() 方法的状态；<br><code>TIDYING</code>：所有任务都已执行完毕，池中工作的线程数为 0，等待执行 terminated() 钩子方法；<br><code>TERMINATED</code>：terminated() 钩子方法执行完毕，线程池已完全关闭的状态；</p>
+<p><strong>默认线程工厂</strong><br>在 ThreadPoolExecutor 的构造方法中，如果我们不指定线程工厂对象，那么它会使用 Executors.DefaultThreadFactory：</p>
+<ul>
+<li>创建的线程属于同一个线程组</li>
+<li>线程优先级均为 Thread.NORM_PRIORITY (5)</li>
+<li>线程名规则为 <code>&quot;pool-XXX-thread-xxx&quot;</code></li>
+<li>创建的线程均不是守护线程</li>
+</ul>
+<p>当然我们也可以使用自定义的线程工厂，只需实现 java.util.concurrent.ThreadFactory 接口：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface ThreadFactory {
+    /**
+     * Constructs a new {@code Thread}.  Implementations may also initialize
+     * priority, name, daemon status, {@code ThreadGroup}, etc.
+     *
+     * @param r a runnable to be executed by new thread instance
+     * @return constructed thread, or {@code null} if the request to
+     *         create a thread is rejected
+     */
+    Thread newThread(Runnable r);
+}
+</script></code></pre>
+<p>例子，虽然 maximumPoolSize 为 Integer.MAX_VALUE，但是由于线程工厂中限制了最大线程数，因此新任务被拒绝：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class MyThreadFactory implements ThreadFactory {
+    private final int MAX_NUM; // 最大线程数
+    private AtomicInteger num = new AtomicInteger(0); // 原子量
+
+    public MyThreadFactory(int maxNum) {
+        if (maxNum < 0)
+            this.MAX_NUM = 0;
+        else
+            this.MAX_NUM = maxNum;
+    }
+
+    @Override
+    public Thread newThread(Runnable r) {
+        int n = num.getAndIncrement(); // 原子后自增
+        if (num.get() > MAX_NUM)
+            return null;
+        return new Thread(r, "MyFactory-Thread-" + n);
+    }
+
+    public static void main(String[] args) {
+        ThreadPoolExecutor pool =
+            new ThreadPoolExecutor(0, Integer.MAX_VALUE, // 无核心线程，可存在任意多个线程
+                                   30L, TimeUnit.SECONDS, // 超时时间为 30s
+                                   new SynchronousQueue<Runnable>(), // 长度为 0 的阻塞队列
+                                   new MyThreadFactory(5)); // 线程工厂只允许创建 5 个线程
+
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(Thread.currentThread().getName());
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        for (int i = 0; i < 10; i++)
+            pool.execute(task);
+
+        pool.shutdown();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:22:58]
+$ javac MyThreadFactory.java
+
+# root @ arch in ~/work on git:master x [11:23:01]
+$ java MyThreadFactory
+MyFactory-Thread-0
+MyFactory-Thread-1
+MyFactory-Thread-2
+MyFactory-Thread-3
+MyFactory-Thread-4
+Exception in thread "main" java.util.concurrent.RejectedExecutionException: Task MyThreadFactory$1@42a57993 rejected from java.util.concurrent.ThreadPoolExecutor@75b84c92[Running, pool size = 5, active threads = 5, queued tasks = 0, completed tasks = 0]
+    at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2063)
+    at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:830)
+    at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1379)
+    at MyThreadFactory.main(MyThreadFactory.java:46)
+^C#
+</script></code></pre>
+<p>我们先来看该线程池的相关参数：<br>1) 核心线程数为 0，临时线程数为 Integer.MAX_VALUE，因此理论可存在任意多个线程；<br>2) 临时线程超时时间为 15 秒，因为池内所有线程都是临时线程，因此它们都会被应用超时策略；<br>3) 因为任务队列为 SynchronousQueue（只要来任务就表示队列已满），因此随时都可能启动新线程；<br>4) 但是由于 MyThreadFactory 限制了最大线程数为 5，因此池中线程数超过该值后将启用拒绝策略。</p>
+<p><strong>线程池例子</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadPoolExecutor pool =
+            new ThreadPoolExecutor(5, 5,
+                                   0L, TimeUnit.SECONDS,
+                                   new LinkedBlockingQueue<Runnable>(20));
+
+        pool.execute(new Task("A"));
+        pool.execute(new Task("B"));
+        pool.execute(new Task("C"));
+        pool.execute(new Task("D"));
+        pool.execute(new Task("E"));
+        pool.execute(new Task("F"));
+        pool.execute(new Task("G"));
+
+        pool.shutdown();
+        pool.awaitTermination(3, TimeUnit.SECONDS);
+        pool.shutdownNow();
+    }
+}
+
+class Task implements Runnable {
+    private String name;
+
+    public Task(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        System.out.printf("task-%s running ...\n", name);
+        try {
+            Thread.sleep(new Random().nextInt(2500) + 500);
+        } catch (InterruptedException e) {
+            System.out.printf("task-%s interrupted!\n", name);
+            return;
+        }
+        System.out.printf("task-%s completed.\n", name);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:09:31] C:127
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [13:09:33]
+$ java Main
+task-B running ...
+task-E running ...
+task-D running ...
+task-C running ...
+task-A running ...
+task-B completed.
+task-F running ...
+task-E completed.
+task-G running ...
+task-D completed.
+task-A completed.
+task-C completed.
+task-F completed.
+task-G interrupted!
+</script></code></pre>
+<h3 id="ScheduledExecutorService-接口"><a href="#ScheduledExecutorService-接口" class="headerlink" title="ScheduledExecutorService 接口"></a>ScheduledExecutorService 接口</h3><p>ScheduledExecutorService 是 J.U.C 包提供的计划任务执行器，在这之前，我们通常使用 java.util.Timer 来执行计划任务；</p>
+<ul>
+<li>Timer：优点是简单易用，但由于所有任务都是由同一个线程来调度，因此所有任务都是串行执行的，同一时间只能有一个任务在执行，前一个任务的延迟或异常都将会影响到之后的任务；</li>
+<li>ScheduledExecutorService：依赖于 JDK1.5 的线程池机制，其设计思想是，每一个被调度的任务都会由线程池中一个线程去执行，因此任务是并发执行的，相互之间不会受到干扰。需要注意的是，只有当任务的执行时间到来时，ScheduedExecutor 才会真正启动一个线程，其余时间 ScheduledExecutor 都是在轮询任务的状态；</li>
+</ul>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface ScheduledExecutorService extends ExecutorService {
+    /**
+     * 创建一个在给定延迟后启动的一次性任务.
+     * @param command   要执行的任务
+     * @param delay     距现在的延时
+     * @param unit      延时时间单位
+     * @return ScheduledFuture<?>   返回待完成的任务结果，调用 get() 将返回 null
+     */
+    public ScheduledFuture<?> schedule(Runnable command,
+                                       long delay, TimeUnit unit);
+
+    /**
+     * 创建一个在给定延迟后启动的一次性任务.
+     * @param callable  要执行的任务
+     * @param delay     距现在的延时
+     * @param unit      延时时间单位
+     * @return ScheduledFuture<V>   返回待完成的任务结果
+     */
+    public <V> ScheduledFuture<V> schedule(Callable<V> callable,
+                                           long delay, TimeUnit unit);
+
+    /**
+     * 创建一个在给定延迟后启动的周期性任务.
+     * 如果任务在执行中遇到异常，则后续任务将会被禁止执行
+     * 如果任务的执行时间长于给定的周期，那么后续任务可能会晚些执行，但是不会同时执行
+     * @param command       要执行的任务
+     * @param initialDelay  多久后开始启动这个任务
+     * @param period        每隔多久执行这个任务
+     * @param unit          initialDelay、period 单位
+     * @return ScheduledFuture<?>   返回待完成的任务结果，调用 get() 将返回 null
+     */
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
+                                                  long initialDelay,
+                                                  long period,
+                                                  TimeUnit unit);
+
+    /**
+     * 创建一个在给定延迟后启动的周期性任务.
+     * 如果任务在执行中遇到异常，则后续任务将会被禁止执行
+     * 注意与 scheduleAtFixedRate 的区别，这里的周期是指一个任务完成和下一个任务开始之间的时间
+     * @param command       要执行的任务
+     * @param initialDelay  多久后开始启动这个任务
+     * @param delay         前一个任务结束后多久开始执行下一个任务
+     * @param unit          initialDelay、delay 单位
+     * @return ScheduledFuture<?>   返回待完成的任务结果，调用 get() 将返回 null
+     */
+    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
+                                                     long initialDelay,
+                                                     long delay,
+                                                     TimeUnit unit);
+}
+</script></code></pre>
+<p>这里提到了 ScheduledFuture 接口，我们来看一下 ScheduledFuture 接口有什么东西：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// ScheduledFuture 是 Delayed、Future 的子接口，它本身未定义任何新方法
+public interface ScheduledFuture<V> extends Delayed, Future<V> {}
+
+// Delayed 是 Comparable 的子接口，因此是可比较的
+public interface Delayed extends Comparable<Delayed> {
+    /**
+     * Returns the remaining delay associated with thi
+     * given time unit.
+     *
+     * @param unit the time unit
+     * @return the remaining delay; zero or negative v
+     * that the delay has already elapsed
+     */
+    long getDelay(TimeUnit unit); // 获取当前计划任务的剩余延迟，0 或负值表示时间已过去
+}
+</script></code></pre>
+<h3 id="ScheduledThreadPoolExecutor-类"><a href="#ScheduledThreadPoolExecutor-类" class="headerlink" title="ScheduledThreadPoolExecutor 类"></a>ScheduledThreadPoolExecutor 类</h3><p>实现了 ScheduledExecutorService 接口，是 ThreadPoolExecutor 的子类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class ScheduledThreadPoolExecutor
+    extends ThreadPoolExecutor
+    implements ScheduledExecutorService
+{
+    /* 构造函数 */
+    public ScheduledThreadPoolExecutor(int corePoolSize) { // 指定核心线程数
+        super(corePoolSize, Integer.MAX_VALUE, // 不限制临时线程数
+              0, NANOSECONDS, // 不允许存在空闲线程
+              new DelayedWorkQueue()); // DelayedWorkQueue (阻塞队列，内部类)
+    }
+
+    public ScheduledThreadPoolExecutor(int corePoolSize,    // 指定核心线程数
+                                       ThreadFactory threadFactory) { // 指定使用的线程工厂
+        super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+              new DelayedWorkQueue(), threadFactory);
+    }
+
+    public ScheduledThreadPoolExecutor(int corePoolSize,    // 指定核心线程数
+                                       RejectedExecutionHandler handler) { // 指定使用的拒绝策略
+        super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+              new DelayedWorkQueue(), handler);
+    }
+
+    public ScheduledThreadPoolExecutor(int corePoolSize,    // 指定核心线程数
+                                       ThreadFactory threadFactory, // 指定使用的线程工厂
+                                       RejectedExecutionHandler handler) { // 指定使用的拒绝策略
+        super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+              new DelayedWorkQueue(), threadFactory, handler);
+    }
+
+    /* 实现接口定义的方法 */
+    public ScheduledFuture<?> schedule(Runnable command,
+                                       long delay,
+                                       TimeUnit unit);
+
+    public <V> ScheduledFuture<V> schedule(Callable<V> callable,
+                                           long delay,
+                                           TimeUnit unit);
+
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
+                                                  long initialDelay,
+                                                  long period,
+                                                  TimeUnit unit);
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
+                                                     long initialDelay,
+                                                     long delay,
+                                                     TimeUnit unit);
+
+    /* 重写 execute/submit 方法 */
+    public void execute(Runnable command) {
+        schedule(command, 0, NANOSECONDS);
+    }
+
+    public Future<?> submit(Runnable task) {
+        return schedule(task, 0, NANOSECONDS);
+    }
+
+    public <T> Future<T> submit(Runnable task, T result) {
+        return schedule(Executors.callable(task, result), 0, NANOSECONDS);
+    }
+
+    public <T> Future<T> submit(Callable<T> task) {
+        return schedule(task, 0, NANOSECONDS);
+    }
+
+    /*
+     * 是否允许在 shutdown() 后继续执行已有的周期性任务
+     * 默认为 false，如果为 true，则需要使用 shutdownNow() 来关闭或改为 false
+     */
+    public void setContinueExistingPeriodicTasksAfterShutdownPolicy(boolean value);
+    public boolean getContinueExistingPeriodicTasksAfterShutdownPolicy();
+
+    /*
+     * 是否允许在 shutdown() 后继续执行已有的一次性任务
+     * 默认为 false，如果为 true，则需要使用 shutdownNow() 来关闭或改为 false
+     */
+    public void setExecuteExistingDelayedTasksAfterShutdownPolicy(boolean value);
+    public boolean getExecuteExistingDelayedTasksAfterShutdownPolicy();
+
+    /* 是否在取消任务时立即从工作队列中移除已取消的任务，默认为 false */
+    public void setRemoveOnCancelPolicy(boolean value);
+    public boolean getRemoveOnCancelPolicy();
+
+    /* 继承自父类的方法 */
+    public void shutdown();
+    public List<Runnable> shutdownNow();
+    public BlockingQueue<Runnable> getQueue();
+}
+</script></code></pre>
+<p><strong>周期任务的例子</strong><br>我们先来试试一次性任务，这个和 Linux 下的 at 很相似，只执行一次；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.Date;
+
+public class Main {
+    public static void main(String[] args) {
+        ScheduledThreadPoolExecutor atService =
+            new ScheduledThreadPoolExecutor(1);
+
+        System.out.printf("current datetime: %1$tF %1$tT\n", new Date());
+
+        atService.schedule(() -> System.out.printf("execute datetime: %1$tF %1$tT\n", new Date()),
+                           3, TimeUnit.SECONDS);
+
+        atService.shutdown();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:34:23]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:34:25]
+$ java Main
+current datetime: 2017-12-01 17:34:26
+execute datetime: 2017-12-01 17:34:29
+</script></code></pre>
+<p>上面我们演示了 at，接下来我们再看一下 crontab，即周期性任务：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.Date;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ScheduledThreadPoolExecutor crontabService =
+            new ScheduledThreadPoolExecutor(1);
+
+        System.out.printf("current datetime: %1$tF %1$tT\n", new Date());
+        crontabService.scheduleAtFixedRate(
+            () -> System.out.printf("execute datetime: %1$tF %1$tT\n", new Date()),
+            0, 1, TimeUnit.SECONDS); // 每秒执行一次
+
+        Thread.sleep(5 * 1000); // 睡眠 5s
+        crontabService.shutdown(); // 关闭线程池
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:43:59]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:44:16]
+$ java Main
+current datetime: 2017-12-01 17:44:17
+execute datetime: 2017-12-01 17:44:17
+execute datetime: 2017-12-01 17:44:18
+execute datetime: 2017-12-01 17:44:19
+execute datetime: 2017-12-01 17:44:20
+execute datetime: 2017-12-01 17:44:21
+execute datetime: 2017-12-01 17:44:22
+</script></code></pre>
+<h3 id="Executors-工具类"><a href="#Executors-工具类" class="headerlink" title="Executors 工具类"></a>Executors 工具类</h3><p>因为 ThreadPoolExecutor 的配置参数很多，对于不太熟悉线程池的人来说，要手动配置一个线程池并非易事；<br>因此 J.U.C 框架提供了 Executors 工具类，Executors 提供了一系列创建常见线程池的工厂方法，方便 Java 程序的编写；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/*
+ * 固定线程数的线程池，适合 "计算密集型" 任务
+ * 因为 nCore 和 nMax 一样，因此不存在临时线程
+ * LinkedBlockingQueue 默认大小为 Integer.MAX_VALUE
+ */
+public static ExecutorService newFixedThreadPool(int nThreads) {
+    return new ThreadPoolExecutor(nThreads, nThreads,
+                                  0L, TimeUnit.MILLISECONDS,
+                                  new LinkedBlockingQueue<Runnable>());
+}
+// 指定线程工厂
+public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
+    return new ThreadPoolExecutor(nThreads, nThreads,
+                                  0L, TimeUnit.MILLISECONDS,
+                                  new LinkedBlockingQueue<Runnable>(),
+                                  threadFactory);
+}
+
+/* 一个线程的线程池，适合 "串行执行" 任务 */
+public static ExecutorService newSingleThreadExecutor() {
+    return new FinalizableDelegatedExecutorService
+        (new ThreadPoolExecutor(1, 1,
+                                0L, TimeUnit.MILLISECONDS,
+                                new LinkedBlockingQueue<Runnable>()));
+}
+// 指定线程工厂
+public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
+    return new FinalizableDelegatedExecutorService
+        (new ThreadPoolExecutor(1, 1,
+                                0L, TimeUnit.MILLISECONDS,
+                                new LinkedBlockingQueue<Runnable>(),
+                                threadFactory));
+}
+
+/*
+ * 任意线程数的线程池，适合 "I/O 密集型" 任务
+ * 没有核心线程，临时线程数为 Integer.MAX_VALUE
+ * 临时线程的空闲时间超过 60s 将会被线程池回收
+ * 使用的是 SynchronousQueue 无界阻塞队列(同步队列)
+ */
+public static ExecutorService newCachedThreadPool() {
+    return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                  60L, TimeUnit.SECONDS,
+                                  new SynchronousQueue<Runnable>());
+}
+// 指定线程工厂
+public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
+    return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                  60L, TimeUnit.SECONDS,
+                                  new SynchronousQueue<Runnable>(),
+                                  threadFactory);
+}
+
+/* 核心线程数为 1 的计划任务线程池，适合 "周期、计划" 任务 */
+public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
+    return new DelegatedScheduledExecutorService
+        (new ScheduledThreadPoolExecutor(1));
+}
+// 指定线程工厂
+public static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory) {
+    return new DelegatedScheduledExecutorService
+        (new ScheduledThreadPoolExecutor(1, threadFactory));
+}
+
+/* 指定核心线程数的计划任务线程池，适合 "周期、计划" 任务 */
+public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
+    return new ScheduledThreadPoolExecutor(corePoolSize);
+}
+// 指定线程工厂
+public static ScheduledExecutorService newScheduledThreadPool(
+        int corePoolSize, ThreadFactory threadFactory) {
+    return new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
+}
+
+/* 包装现有的线程池对象，返回配置不可修改的线程池 */
+public static ExecutorService unconfigurableExecutorService(ExecutorService executor) {
+    if (executor == null)
+        throw new NullPointerException();
+    return new DelegatedExecutorService(executor);
+}
+/* 包装现有的计划任务线程池对象，返回配置不可修改的线程池 */
+public static ScheduledExecutorService unconfigurableScheduledExecutorService(ScheduledExecutorService executor) {
+    if (executor == null)
+        throw new NullPointerException();
+    return new DelegatedScheduledExecutorService(executor);
+}
+
+/*
+ * 创建一个默认线程工厂对象，线程命名：
+ * pool-[线程池编号]-thread-[线程编号]
+ */
+public static ThreadFactory defaultThreadFactory() {
+    return new DefaultThreadFactory();
+}
+
+/* 包装 Runnable 任务为 Callable 任务 */
+public static <T> Callable<T> callable(Runnable task, T result); // Future.get() 返回 result
+public static Callable<Object> callable(Runnable task); // Future.get() 返回 null
+</script></code></pre>
+<h3 id="CompletionService-接口"><a href="#CompletionService-接口" class="headerlink" title="CompletionService 接口"></a>CompletionService 接口</h3><p><strong>批量任务的执行方式</strong><br>方式一：首先定义任务集合，然后定义 Future 集合用于存放执行结果，执行任务，最后遍历 Future 集合获取结果；<br>优点：可以依次得到有序的结果；<br>缺点：不能及时获取已完成的结果；</p>
+<p>方式二：首先定义任务集合，通过 CompletionService 包装 Executor 来执行任务，然后调用其 take() 方法去取 Future 对象；<br>优点：能及时得到已完成的结果；<br>缺点：不能依次得到有序的结果；</p>
+<p>在方式一中，从集合中遍历的每个 Future 对象并不一定处于完成状态，这时调用 get() 方法就会被阻塞住，所以后面的任务即使已完成也不能得到结果；<br>而方式二中，CompletionService 的实现是维护一个保存 Future 对象的 BlockingQueue，只有当这个 Future 对象状态是结束的时候，才会加入到这个 Queue 中，所以调用 take() 能从阻塞队列中拿到最新的已完成任务的结果；</p>
+<p>方式一的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args)
+        throws InterruptedException, ExecutionException
+    {
+        ExecutorService pool = Executors.newCachedThreadPool();
+        List<Future<String>> futures = new ArrayList<>(5);
+
+        futures.add(pool.submit(new Task("Task-A")));
+        futures.add(pool.submit(new Task("Task-B")));
+        futures.add(pool.submit(new Task("Task-C")));
+        futures.add(pool.submit(new Task("Task-D")));
+        futures.add(pool.submit(new Task("Task-E")));
+
+        for (Future<String> future : futures)
+            System.out.println("task result: " + future.get());
+
+        pool.shutdown();
+    }
+}
+
+class Task implements Callable<String> {
+    private String result;
+
+    public Task(String result) {
+        this.result = result;
+    }
+
+    @Override
+    public String call() {
+        try {
+            Thread.sleep(new Random().nextInt(2001) + 500); // 随机睡眠 0.5s ~ 2.5s
+        } catch (InterruptedException e) {
+            return "interrupted";
+        }
+        return result;
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:17:55]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [19:18:14]
+$ java Main
+task result: Task-A
+task result: Task-B
+task result: Task-C
+task result: Task-D
+task result: Task-E
+</script></code></pre>
+<p><strong>CompletionService 接口</strong><br>为了了解第二种方式，我们必须先来看看 CompletionService 接口：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface CompletionService<V> {
+    /* 提交 Callable 任务 */
+    Future<V> submit(Callable<V> task);
+    /* 提交 Runnable 任务 */
+    Future<V> submit(Runnable task, V result); // result 在任务完成时返回
+
+    /* 获取下一个已完成的 Future，并将其从队列中删除 */
+    Future<V> take() throws InterruptedException;
+
+    /* 获取下一个已完成的 Future，如果没有则返回 null */
+    Future<V> poll();
+    /* 获取下一个已完成的 Future，如果没有则等待给点时间 */
+    Future<V> poll(long timeout, TimeUnit unit) throws InterruptedException;
+}
+</script></code></pre>
+<h3 id="ExecutorCompletionService-类"><a href="#ExecutorCompletionService-类" class="headerlink" title="ExecutorCompletionService 类"></a>ExecutorCompletionService 类</h3><p>了解 CompletionService 接口后，我们来看一下它的实现类 - ExecutorCompletionService，用于包装一个 Executor：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class ExecutorCompletionService<V> implements CompletionService<V> {
+    /* 构造函数 */
+    public ExecutorCompletionService(Executor executor); // new LinkedBlockingQueue<Future<V>>()
+    public ExecutorCompletionService(Executor executor,
+                                     BlockingQueue<Future<V>> completionQueue);
+
+    /* submit */
+    public Future<V> submit(Callable<V> task);
+    public Future<V> submit(Runnable task, V result);
+
+    /* take、poll */
+    public Future<V> take() throws InterruptedException;
+    public Future<V> poll();
+    public Future<V> poll(long timeout, TimeUnit unit)
+        throws InterruptedException;
+}
+</script></code></pre>
+<p>这个类也很简单，就是实现了接口定义的方法而已，没有其它的了。我们来看看它的简单使用：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args)
+        throws InterruptedException, ExecutionException
+    {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        ExecutorCompletionService<String> executorCompletion =
+            new ExecutorCompletionService<>(executor);
+
+        executorCompletion.submit(new Task("Task-A"));
+        executorCompletion.submit(new Task("Task-B"));
+        executorCompletion.submit(new Task("Task-C"));
+        executorCompletion.submit(new Task("Task-D"));
+        executorCompletion.submit(new Task("Task-E"));
+
+        for (int i = 0; i < 5; i++)
+            System.out.println("task result: " + executorCompletion.take().get());
+
+        executor.shutdown();
+    }
+}
+
+class Task implements Callable<String> {
+    private String result;
+
+    public Task(String result) {
+        this.result = result;
+    }
+
+    @Override
+    public String call() {
+        try {
+            Thread.sleep(new Random().nextInt(2001) + 500); // 随机睡眠 0.5s ~ 2.5s
+        } catch (InterruptedException e) {
+            return "interrupted";
+        }
+        return result;
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:58:01]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [19:58:03]
+$ java Main
+task result: Task-C
+task result: Task-A
+task result: Task-E
+task result: Task-D
+task result: Task-B
+
+# root @ arch in ~/work on git:master x [19:58:07]
+$ java Main
+task result: Task-D
+task result: Task-E
+task result: Task-A
+task result: Task-C
+task result: Task-B
+</script></code></pre>
+<h2 id="Fork-Join-并行框架"><a href="#Fork-Join-并行框架" class="headerlink" title="Fork/Join 并行框架"></a>Fork/Join 并行框架</h2><p><strong>什么是 Fork/Join 框架</strong><br>Fork/Join 框架是 Java7 提供的一个用于并行执行任务的框架，是一个把大任务分割成若干个小任务，最终汇总每个小任务结果后得到大任务结果的框架。</p>
+<p>我们再通过 Fork 和 Join 这两个单词来理解下 Fork/Join 框架：Fork 就是把一个大任务切分为若干子任务并行的执行，Join 就是合并这些子任务的执行结果，最后得到这个大任务的结果。比如计算 1 + 2 + 3 + … + 10000，可以分割成 10 个子任务，每个子任务分别对 1000 个数进行求和，最终汇总这 10 个子任务的结果。Fork/Join 的运行流程图如下：<br><img src="/images/java-juc-forkjoin.png" alt="Fork/Join 运行流程图"></p>
+<p><strong>工作窃取算法</strong><br><code>工作窃取（work-stealing）算法</code>是指<strong>某个线程从其它队列里窃取任务来执行</strong>。工作窃取的运行流程图如下：<br><img src="/images/java-juc-forkjoin-algo.png" alt="工作窃取算法"></p>
+<p>为什么需要使用工作窃取算法呢？假如我们需要做一个比较大的任务，我们可以把这个任务分割为若干互不依赖的子任务，为了减少线程间的竞争，于是把这些子任务分别放到不同的队列里，并为每个队列创建一个单独的线程来执行队列里的任务，线程和队列一一对应，比如 A 线程负责处理 A 队列里的任务。但是有的线程会先把自己队列里的任务干完，而其它线程对应的队列里还有任务等待处理。干完活的线程与其等着，不如去帮其它线程干活，于是它就去其它线程的队列里窃取一个任务来执行。而在这时它们会访问同一个队列，所以为了减少窃取任务线程和被窃取任务线程之间的竞争，通常会使用双端队列，被窃取任务线程永远从双端队列的头部拿任务执行，而窃取任务的线程永远从双端队列的尾部拿任务执行。</p>
+<p>工作窃取算法的优点是充分利用线程进行并行计算，并减少了线程间的竞争，其缺点是在某些情况下还是存在竞争，比如双端队列里只有一个任务时。并且消耗了更多的系统资源，比如创建多个线程和多个双端队列。</p>
+<p><strong>Fork/Join 框架的介绍</strong><br>我们已经很清楚 Fork/Join 框架的需求了，那么我们可以思考一下，如果让我们来设计一个 Fork/Join 框架，该如何设计？这个思考有助于你理解 Fork/Join 框架的设计。</p>
+<ul>
+<li>第一步 - <strong>分割任务</strong>：首先我们需要有一个 fork 类来把大任务分割成子任务，有可能子任务还是很大，所以还需要不停的分割，直到分割出的子任务足够小。</li>
+<li>第二步 - <strong>执行任务并合并结果</strong>：分割的子任务分别放在双端队列里，然后启动几个线程分别从双端队列里获取任务执行。子任务执行完的结果都统一放在一个队列里，启动一个线程从队列里拿数据，然后合并这些数据。</li>
+</ul>
+<p><strong>Fork/Join 框架的两个类</strong><br>Fork/Join 使用两个类来完成以上两件事情：</p>
+<ul>
+<li><code>ForkJoinTask</code>：我们要使用 ForkJoin 框架，必须首先创建一个 ForkJoin 任务。它提供在任务中执行 fork() 和 join() 操作的机制，通常情况下我们不需要直接继承 ForkJoinTask 类，而只需要继承它的子类，Fork/Join 框架提供了以下两个子类：<ul>
+<li><code>RecursiveAction</code>：用于没有返回结果的任务；</li>
+<li><code>RecursiveTask</code>：用于有返回结果的任务。</li>
+</ul>
+</li>
+<li><code>ForkJoinPool</code>：ForkJoinTask 需要通过 ForkJoinPool 来执行，ForkJoinPool 是 Executor 接口的一个实现类，ForkJoinPool 与普通线程池的区别在于”工作窃取算法”；当一个工作线程的队列里暂时没有任务时，它会随机从其它工作线程的队列的尾部获取任务并执行。</li>
+</ul>
+<p><strong>Fork/Join 继承类图</strong><br><img src="/images/java-juc-forkjoin-leitu.jpg" alt="Fork/Join 框架继承类图"></p>
+<p>对于一般的 ForkJoin 任务，我们仅需重写 compute() 方法即可：<br><code>RecursiveTask</code>：<code>protected abstract V compute()</code><br><code>RecursiveAction</code>：<code>protected abstract void compute()</code></p>
+<p><strong>几个需要注意的地方</strong></p>
+<ul>
+<li>每个 task 应该执行相对少量的计算，一个非常粗略的经验是：每个 task 执行的基本运算步骤应该在 100 - 10000 之间。但是还是需要依据实际情况而定，不可一概而论。如果单个任务过大，并行性反而不高；如果单个任务过小，会带来较大的内存压力和内部队列的维护开销。</li>
+<li>ForkJoinTask 最好不要执行 IO 操作以及其它可能阻塞的操作，因为 ForkJoin 框架的初衷是利用多核处理器来提高纯计算任务的执行效率，提高并行性。</li>
+<li>ForkJoinPool 默认的线程数为当前主机可用的 CPU 核数，启用过少线程则无法充分利用多个 CPU 核心，启用过多线程则会带来额外的线程切换及线程维护开销，反而得不偿失，而启用 CPU 核心数个线程正好合适。</li>
+</ul>
+<p><strong>Executors 的相关工厂方法</strong><br><code>ExecutorService newWorkStealingPool()</code>：新建”工作窃取线程池”，线程数为可用 CPU 核数；<br><code>ExecutorService newWorkStealingPool(int parallelism)</code>：新建”工作窃取线程池”，使用给定的线程数；</p>
+<p><strong>ForkJoin 例子</strong><br>利用 ForkJoin 给大数组求和（PS：个人测试发现，对于这种”轻量级”计算任务，ForkJoin 的效率反而不高，甚至比单线程还低）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.Future;
+import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ExecutionException;
+
+public class ForkJoinTest {
+    public static void main(String[] args)
+        throws ExecutionException, InterruptedException
+    {
+        int[] arr = new int[100_000_000]; // 该数组占用内存 381.46 MB
+        Arrays.parallelSetAll(arr,        // 使用随机数填充数组
+                              i -> ThreadLocalRandom.current().nextInt(100));
+
+        ForkJoinPool pool = new ForkJoinPool(); // CPU 核数个线程
+
+        long beg = System.nanoTime(); // 起始时间
+        Future<Integer> future = pool.submit(new SumTask(arr, 0, arr.length));
+        int result = future.get(); // 计算结果
+        long end = System.nanoTime(); // 结束时间
+
+        System.out.printf("计算结果: %d, 计算用时: %g ms\n", result, (end - beg) / 1000_000.0D);
+        pool.shutdown(); // 关闭 ForkJoinPool 执行器
+    }
+}
+
+class SumTask extends RecursiveTask<Integer> {
+    private static final long serialVersionUID = -7073936093401677580L;
+    private static final int THRESHOLD = 80000; // 阀值
+
+    private int[] arr;
+    private int beg;
+    private int end;
+
+    public SumTask(int[] arr, int beg, int end) {
+        this.arr = arr;
+        this.beg = beg;
+        this.end = end;
+    }
+
+    @Override
+    protected Integer compute() {
+        int sum = 0;
+        if (end - beg <= THRESHOLD) { // 如果小于阀值则直接计算
+            for (int i = beg; i < end; i++)
+                sum += arr[i];
+        } else { // 否则进行分割（递归）
+            int mid = (beg + end) >> 1; // 取均值
+            SumTask left = new SumTask(arr, beg, mid); // 任务 1
+            SumTask right = new SumTask(arr, mid, end); // 任务 2
+            left.fork(); // 执行任务 1
+            right.fork(); // 执行任务 2
+            sum = left.join() + right.join(); // 合并任务 1、2
+        }
+        return sum; // 返回计算结果
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [16:52:20]
+$ javac ForkJoinTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [16:52:22]
+$ java com.zfl9.ForkJoinTest
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+    at com.zfl9.ForkJoinTest.main(ForkJoinTest.java:14)
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [16:52:27] C:1
+$ java -Xms600M -Xmx600M com.zfl9.ForkJoinTest
+计算结果: 654984554, 计算用时: 47.6307 ms
+</script></code></pre>
+<h2 id="Lock、Condition"><a href="#Lock、Condition" class="headerlink" title="Lock、Condition"></a>Lock、Condition</h2><p>在 Java 5 中，专门提供了锁对象，利用锁可以方便的实现资源的封锁，用来控制对竞争资源并发访问的控制，这些内容主要集中在 java.util.concurrent.locks 包下面，里面有三个重要的接口 Lock、ReadWriteLock、Condition；</p>
+<ul>
+<li><code>Lock</code>：互斥锁，Lock 提供了比 synchronized 方法和语句块更广泛、更细粒度的锁定操作；</li>
+<li><code>ReadWriteLock</code>：读写锁，ReadWriteLock 分为读锁、写锁，它们是一个整体，读锁有任意多把，写锁只有一把，读锁和写锁不能同一时间锁定；</li>
+<li><code>Condition</code>：条件变量，Condition 将 Object 监视器方法（wait、notify 和 notifyAll）分解成截然不同的对象，以便通过将这些对象与任意 Lock 实现组合使用；</li>
+</ul>
+<p>Lock 可以说是 synchronized 的一个替代品，synchronized 能做的事，lock 基本都可以做，而且能做得更好；它们的一些区别是：</p>
+<ul>
+<li>Lock 在获取锁的过程可以被中断；</li>
+<li>Lock 可以尝试获取锁，如果锁被其它线程持有，则返回 false，不会使当前线程阻塞；</li>
+<li>Lock 在尝试获取锁的时候，传入一个时间参数，如果在这个时间范围内，没有获得锁，那么就终止请求；</li>
+<li>synchronized 会自动释放锁，Lock 则不会自动释放锁，需要调用 unlock() 进行释放；</li>
+</ul>
+<p>这样可以看到，Lock 比起 synchronized 具有更细粒度的控制；但是也不是说 Lock 就完全可以取代 synchronized，因为 Lock 的学习成本，复杂度等方面要比 synchronized 高，对于初级 Java 程序员，使用 synchronized 的风险要比 Lock 低；</p>
+<p><strong>Lock 锁相关的接口、类</strong><br>所在的包：java.util.concurrent.locks<br>接口：Lock、ReadWriteLock、Condition；<br>实现：ReentrantLock、ReentrantReadWriteLock、ConditionObject；</p>
+<h3 id="Lock-接口"><a href="#Lock-接口" class="headerlink" title="Lock 接口"></a>Lock 接口</h3><pre><code class="language-java line-numbers"><script type="text/plain">/*
+ * 不同于 synchronized，使用 Lock 对象需要显式释放锁，即调用 unlock()，一般形式如下：
+ * Lock l = ...;
+ * l.lock();
+ * try {
+ *     // 访问由此锁保护的资源
+ * } finally {
+ *     l.unlock();
+ * }
+ */
+public interface Lock {
+    /* 类似 synchronized，如果尝试获取锁失败，则当前线程进入睡眠状态，直到锁被获取 */
+    void lock(); // 不可中断
+    void lockInterruptibly() throws InterruptedException; // 同上，但是可中断
+
+    /*
+     * 尝试获取锁，如果锁立即可用则获取锁并返回 true，否则立即返回 false；一般形式如下：
+     * Lock lock = ...;
+     * if (lock.tryLock()) {
+     *     try {
+     *         // 访问由此锁保护的资源
+     *     } finally {
+     *         lock.unlock();
+     *     }
+     * } else {
+     *     // 执行未获取锁的动作
+     * }
+     */
+    boolean tryLock(); // 立刻返回 (总是非公平的抢占锁，即便是设置为公平锁)
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException; // 等待指定时间
+
+    void unlock(); // 释放锁
+
+    /*
+     * 获取与当前锁绑定的新的条件变量，类似 Object.notify/notifyAll
+     * 调用 condition.await() 方法前，调用线程必须先持有与之关联的锁
+     * 执行 await() 方法后，会以原子方式释放锁，并在唤醒前重新获得锁
+     */
+    Condition newCondition();
+}
+</script></code></pre>
+<h3 id="ReadWriteLock-接口"><a href="#ReadWriteLock-接口" class="headerlink" title="ReadWriteLock 接口"></a>ReadWriteLock 接口</h3><pre><code class="language-java line-numbers"><script type="text/plain">public interface ReadWriteLock {
+    /**
+     * Returns the lock used for reading.
+     *
+     * @return the lock used for reading
+     */
+    Lock readLock();
+
+    /**
+     * Returns the lock used for writing.
+     *
+     * @return the lock used for writing
+     */
+    Lock writeLock();
+}
+</script></code></pre>
+<h3 id="Condition-接口"><a href="#Condition-接口" class="headerlink" title="Condition 接口"></a>Condition 接口</h3><pre><code class="language-java line-numbers"><script type="text/plain">public interface Condition {
+    /**
+     * 此调用将导致当前线程等待，直到它收到来自此条件变量的通知或被中断.
+     * 同时与之关联的锁被自动释放，然后此线程进入休眠状态，直到发生以下四件事：
+     * 1. 其它线程调用该条件变量的 signal() 方法，并且当前线程恰巧被选中为唤醒的线程；
+     * 2. 其它线程调用该条件变量的 signalAll() 方法；
+     * 3. 其它线程调用此线程的 interrupt() 方法，被中断；
+     * 4. "虚假唤醒" 的发生。
+     * 以上事件之一发生后，当前线程保证在休眠唤醒之前获得与之关联的锁
+     * 因此在此调用前，当前线程必须先持有与之关联的锁，并且在调用返回后，需要释放与之关联的锁
+     */
+    void await() throws InterruptedException; // 可中断
+    void awaitUninterruptibly(); // 同上，除了不可中断
+
+    /**
+     * 可中断的，并且可以指定纳秒精度的等待时间.
+     * @param nanosTimeout  指定要等待的时长
+     * @return long         nanosTimeout - 实际等待的时间，如果为 0 或负数则说明已超时
+     * @throws InterruptedException 收到中断时将清除中断标志位，并抛出此异常
+     */
+    long awaitNanos(long nanosTimeout) throws InterruptedException; // 指定纳秒精度的等待时长
+    boolean await(long time, TimeUnit unit) throws InterruptedException; // 同上，支持其它单位
+    boolean awaitUntil(Date deadline) throws InterruptedException; // 同上，直到某个绝对时间点
+
+    /*
+     * Condition.await()、Object.wait() 必须先持有锁的原因：
+     * 因为调用此方法后，调用线程会以原子方式释放与之关联的锁，并进入休眠状态；因此要求先获取锁；
+     * 因为此调用返回前，调用线程必须先重新获得与之关联的锁，保证返回前持有锁；因此后面要释放锁。
+     * Condition.signal/signalAll()、Object.notify/notifyAll() 必须先持有锁的原因：
+     * 因为调用线程在通知等待线程前，通常伴随着 "条件" 的改变，因此需要在锁的保护下进行；
+     * 注意，这不是硬性要求，因为在逻辑上，调用线程完全可以在不获取锁的情况下进行 "通知"；
+     * 但是，Java 语言层面上要求必须这么做，否则会抛出 IllegalMonitorStateException RT异常。
+     * 但是，在 C/C++ 的 pthread 库中，调用线程完全可以在不获取互斥锁的情况下通知等待线程。
+     */
+    void signal(); // 唤醒某个线程
+    void signalAll(); // 唤醒全部线程
+}
+</script></code></pre>
+<h3 id="ReentrantLock-类"><a href="#ReentrantLock-类" class="headerlink" title="ReentrantLock 类"></a>ReentrantLock 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class ReentrantLock implements Lock, java.io.Serializable {
+    /* 构造函数 */
+    /*
+     * 什么公平锁？什么是非公平锁？
+     * 公平锁是指：严格按照先来先得的顺序排队等待去获取锁
+     * 非公平锁是指：每次获取锁时，先直接尝试获取锁，若获取不到再按照先来先得的顺序排队等待
+     * synchronized 和默认的 ReentrantLock() 构造函数都是非公平的，一般来说非公平锁吞吐量较高
+     */
+    public ReentrantLock(); // 默认为非公平锁
+    public ReentrantLock(boolean fair); // 如果为 true 则为公平锁
+
+    /* Lock 接口定义的方法 */
+    public void lock();
+    public void lockInterruptibly() throws InterruptedException;
+    public boolean tryLock(); // 不具备公平性
+    public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException;
+    public void unlock();
+    public Condition newCondition();
+
+    /* 锁状态查询 */
+    public final boolean isFair(); // 查询当前锁的公平性
+
+    public boolean isLocked(); // 查询当前锁是否已被任意线程持有
+    public boolean isHeldByCurrentThread(); // 查询当前线程是否持有锁
+    public int getHoldCount(); // 查询当前线程持有锁的重入计数
+
+    public final boolean hasQueuedThreads(); // 查询是否有线程正在等待这把锁
+    public final boolean hasQueuedThread(Thread thread); // 查询指定线程是否正在等待这把锁
+    public final int getQueueLength(); // 获取当前锁的等待队列长度，即等待线程数
+
+    public boolean hasWaiters(Condition condition); // 查询是否有线程正在等待与之相关的给定条件变量
+    public int getWaitQueueLength(Condition condition); // 获取与之关联的条件变量的等待队列长度
+
+    public String toString(); // 返回锁的状态描述字符串，"Unlocked" 或 "Locked by ThreadName"
+}
+</script></code></pre>
+<h3 id="ReentrantReadWriteLock-类"><a href="#ReentrantReadWriteLock-类" class="headerlink" title="ReentrantReadWriteLock 类"></a>ReentrantReadWriteLock 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">/*
+ * 读写锁实现了与 ReentrantLock 类似的语义，可重入读写锁有以下属性：
+ * 1. 公平模式，读写锁支持公平锁、非公平锁两种构造模式，默认为非公平锁；
+ * 2. 可重入，持有写锁的线程可同时持有读锁，但持有读锁的线程却不可能同时持有写锁；
+ * 3. 锁降级，持有写锁的线程可继续持有读锁，然后释放写锁，从写锁降级为读锁；但读锁不能升级至写锁；
+ * 4. 可中断，读锁和写锁在线程持有期间都会响应 Thread.interrupt() 中断信号；
+ * 5. 条件变量，写锁支持 Lock.newCondition() 来获取一个与写锁关联的条件变量，读锁不支持，将抛出异常；
+ * 6. 状态查询，与 ReentrantLock 一样，支持灵活的锁状态查询方法，用来监视系统状态（而不是用于同步控制）。
+ *
+ * 下面是 JavaDoc 提供的一个锁降级示例：
+ * class CachedData {
+ *   Object data;
+ *   volatile boolean cacheValid;
+ *   final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+
+ *   void processCachedData() {
+ *     rwl.readLock().lock();   // 获取读锁
+ *     if (!cacheValid) {       // 如果缓存无效
+ *       // 获取写锁之前，必须先释放读锁，否则不可能成功
+ *       rwl.readLock().unlock();   // 释放读锁
+ *       rwl.writeLock().lock();    // 获取写锁
+ *       try {
+ *         // 重新检查缓存状态，因为其它线程可能对缓存状态做了更改
+ *         if (!cacheValid) {
+ *           data = ...
+ *           cacheValid = true;
+ *         }
+ *         // 将写锁降级前，先获取读锁
+ *         rwl.readLock().lock();
+ *       } finally {
+ *         rwl.writeLock().unlock(); // 释放写锁，降级为读锁
+ *       }
+ *     }
+
+ *     try {
+ *       use(data); // 使用数据
+ *     } finally {
+ *       rwl.readLock().unlock(); // 释放读锁
+ *     }
+ *   }
+ * }
+ *
+ * 注意事项：
+ * 此锁最多支持 65535 个递归写入锁定和 65535 个读取锁定；尝试超过这些限制会导致从锁定方法中引发错误。
+ */
+
+public class ReentrantReadWriteLock
+    implements ReadWriteLock, java.io.Serializable
+{
+    /* 构造函数 */
+    public ReentrantReadWriteLock(); // 默认非公平
+    public ReentrantReadWriteLock(boolean fair); // true 公平、false 非公平
+
+    /* 获取写锁、读锁，写锁与读锁不可同时锁定（写锁在前的情况除外），写锁一把，读锁任意多把 */
+    public ReentrantReadWriteLock.WriteLock writeLock() { return writerLock; }
+    public ReentrantReadWriteLock.ReadLock  readLock()  { return readerLock; }
+
+    /* 静态内部类 - 读锁，实现了 Lock 接口 */
+    public static class ReadLock implements Lock, java.io.Serializable {
+        public void lock();
+        public void lockInterruptibly() throws InterruptedException;
+        public boolean tryLock();
+        public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException;
+        public void unlock();
+        public Condition newCondition(); // throw new UnsupportedOperationException()
+        public String toString();
+    }
+
+    /* 静态内部类 - 写锁，实现了 Lock 接口 */
+    public static class WriteLock implements Lock, java.io.Serializable {
+        public void lock();
+        public void lockInterruptibly() throws InterruptedException;
+        public boolean tryLock();
+        public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException;
+        public void unlock();
+        public Condition newCondition();
+        public String toString();
+
+        /* JDK1.6 */
+        public boolean isHeldByCurrentThread(); // 查询当前线程是否持有写锁
+        public int getHoldCount(); // 查询当前线程持有写锁的重入计数
+    }
+
+    /* 锁状态查询 */
+    public final boolean isFair(); // 查询当前读写锁是否公平
+
+    public int getReadLockCount(); // 查询读锁的持有计数，即当前有多少把读锁
+    public int getReadHoldCount(); // 查询当前线程持有读锁的重入计数 (JDK1.6)
+    public int getWriteHoldCount(); // 查询当前线程持有写锁的重入计数
+
+    public boolean isWriteLocked(); // 查询写锁是否已被锁定
+    public boolean isWriteLockedByCurrentThread(); // 查询当前线程是否持有写锁
+
+    public final boolean hasQueuedThreads(); // 查询是否有线程正在等待读锁或写锁
+    public final boolean hasQueuedThread(Thread thread); // 查询给定线程是否正在等待读锁或写锁
+    public final int getQueueLength(); // 查询正在等待读锁或写锁的线程数量
+
+    public boolean hasWaiters(Condition condition); // 查询是否有线程正在等待与写锁相关联的条件变量
+    public int getWaitQueueLength(Condition condition); // 查询正在等待与写锁相关联的条件变量的队列长度
+
+    public String toString(); // 获取当前读写锁的状态描述字符串
+}
+</script></code></pre>
+<h3 id="可重入锁是什么意思"><a href="#可重入锁是什么意思" class="headerlink" title="可重入锁是什么意思"></a>可重入锁是什么意思</h3><p>ReentrantLock 中的 Reentrant 是可重入的意思；也就是说 ReentrantLock 是可重入锁，synchronized 也是可重入锁，读写锁类推；</p>
+<p><strong>可重入锁是什么意思</strong>？<br>可重入锁，也叫做递归锁，指的是同一线程在外层函数获得锁之后，内层递归函数仍然有获取该锁的代码，但不受影响（可以立即获取，而不需要等待）；<br>在 JAVA 环境下 ReentrantLock、ReentrantReadWriteLock 和 synchronized 都是可重入锁；虽是可重入的，但是 lock() 与 unlock() 必须成对存在。</p>
+<p><code>可重入锁最大的作用是避免死锁</code></p>
+<h3 id="synchronized、Lock-对比"><a href="#synchronized、Lock-对比" class="headerlink" title="synchronized、Lock 对比"></a>synchronized、Lock 对比</h3><p>在 JDK1.5 中，synchronized 是性能低效的；因为这是一个重量级操作，它对性能最大的影响是阻塞的实现，挂起线程和恢复线程的操作都需要转入内核态中完成，这些操作给系统的并发性带来了很大的压力；</p>
+<p>相比之下使用 Java 提供的 Lock 对象，性能更高一些；Brian Goetz 对这两种锁在 JDK1.5、单核处理器及双 Xeon 处理器环境下做了一组吞吐量对比的实验，发现多线程环境下，synchronized 的吞吐量下降的非常严重，而 ReentrantLock 则能基本保持在同一个比较稳定的水平上；</p>
+<p>但与其说 ReetrantLock 性能好，倒不如说 synchronized 还有非常大的优化余地，于是到了 JDK1.6，发生了变化，对 synchronized 加入了很多优化措施，有自适应自旋，锁消除，锁粗化，轻量级锁，偏向锁等等；导致在 JDK1.6 上 synchronize 的性能并不比 Lock 差；</p>
+<p>官方也表示，他们也更支持 synchronized，在未来的版本中还有优化余地，所以还是提倡在 synchronized 能实现需求的情况下，优先考虑使用 synchronized 来进行同步；</p>
+<h3 id="阻塞同步、非阻塞同步"><a href="#阻塞同步、非阻塞同步" class="headerlink" title="阻塞同步、非阻塞同步"></a>阻塞同步、非阻塞同步</h3><p>互斥同步最主要的问题就是进行线程阻塞和唤醒所带来的性能问题，因而这种同步又称为<code>阻塞同步</code>，它属于一种<code>悲观</code>的并发策略，即线程获得的是独占锁；独占锁意味着其它线程只能依靠阻塞来等待线程释放锁；而在 CPU 转换线程阻塞时会引起线程上下文切换，当有很多线程竞争锁的时候，会引起 CPU 频繁的上下文切换导致效率很低；synchronized 采用的便是这种并发策略；</p>
+<p>随着指令集的发展，我们有了另一种选择：基于冲突检测的<code>乐观</code>并发策略，通俗地讲就是先进性操作，如果没有其他线程争用共享数据，那操作就成功了，如果共享数据被争用，产生了冲突，那就再进行其它的补偿措施（最常见的补偿措施就是不断地重试，直到试成功为止），这种乐观的并发策略的许多实现都不需要把线程挂起，因此这种同步被称为<code>非阻塞同步</code>；ReetrantLock 采用的便是这种并发策略；</p>
+<p>在乐观的并发策略中，需要操作和冲突检测这两个步骤具备原子性，它靠硬件指令来保证，这里用的是<code>CAS操作（Compare and Swap）</code>；JDK1.5 之后，Java 程序才可以使用 CAS 操作；我们可以进一步研究 ReentrantLock 的源代码，会发现其中比较重要的获得锁的一个方法是 compareAndSetState，这里其实就是调用的 CPU 提供的特殊指令；现代的 CPU 提供了指令，可以自动更新共享数据，而且能够检测到其它线程的干扰，而 compareAndSet() 就用这些代替了锁定；这个算法称作<code>非阻塞算法</code>，意思是一个线程的失败或者挂起不应该影响其他线程的失败或挂起；</p>
+<p>Java5 中引入了 AutomicInteger、AutomicLong、AutomicReference 等特殊的原子性变量类，它们提供的如：compareAndSet()、incrementAndSet() 和 getAndIncrement() 等方法都使用了 CAS 操作；因此，它们都是由硬件指令来保证的原子方法；</p>
+<h3 id="Lock-对象的使用方式"><a href="#Lock-对象的使用方式" class="headerlink" title="Lock 对象的使用方式"></a>Lock 对象的使用方式</h3><p>Lock 接口有 3 个实现它的类：ReentrantLock、ReetrantReadWriteLock.ReadLock 和 ReetrantReadWriteLock.WriteLock，即可重入锁、读锁和写锁；</p>
+<p>为了保证锁最终一定会被释放（可能会有异常发生），要把互斥区放在 try 语句块内，并在 finally 语句块中释放锁，尤其当有 return 语句时，return 语句必须放在 try 字句中，以确保 unlock()不会过早发生，从而将数据暴露给第二个任务；</p>
+<p>因此，采用 Lock 加锁和释放锁的一般形式如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">Lock lock = new ReentrantLock(); // 默认使用非公平锁，如果要使用公平锁，需要传入参数 true
+lock.lock(); // 获取锁
+try {
+    // 更新对象的状态
+    // 捕获异常，必要时恢复到原来的不变约束
+    // 如果有 return 语句，放在这里
+} finally {
+    lock.unlock(); // 在 finally 块中释放锁(在 return 之前执行)
+}
+</script></code></pre>
+<h3 id="synchronized、Lock-用途比较"><a href="#synchronized、Lock-用途比较" class="headerlink" title="synchronized、Lock 用途比较"></a>synchronized、Lock 用途比较</h3><p>基本语法上，ReentrantLock 与 synchronized 很相似，它们都具备一样的<code>线程重入特性</code>，只是代码写法上有点区别而已，一个表现为 API 层面的互斥锁（Lock），一个表现为原生语法层面的互斥锁（synchronized）；ReentrantLock 相对 synchronized 而言还是增加了一些高级功能，主要有以下三项：</p>
+<p>1) <code>等待可中断</code>：当持有锁的线程长期不释放锁时，正在等待的线程可以选择放弃等待，改为处理其他事情；而在等待由 synchronized 产生的互斥锁时，会一直阻塞，是不能被中断的；<br>2) <code>可实现公平锁</code>：多个线程在等待同一个锁时，必须按照申请锁的时间顺序排队等待，而非公平锁则不保证这点，在锁释放时，任何一个等待锁的线程都有机会获得锁；<code>synchronized</code>中的锁是<code>非公平锁</code>，<code>ReentrantLock</code>默认情况下也是<code>非公平锁</code>，但可以通过构造方法<code>ReentrantLock(ture)</code>来要求使用<code>公平锁</code>；<br>3) <code>锁可以绑定多个条件</code>：ReentrantLock 对象可以同时绑定多个 Condition 对象，而在 synchronized 中，锁对象的 wait() 和 notify()/notifyAll() 方法可以实现一个隐含条件，但如果要和多于一个的条件关联的时候，就不得不额外地添加一个锁，而 ReentrantLock 则无需这么做，只需要多次调用 newCondition() 方法即可；而且我们还可以通过绑定 Condition 对象来判断当前线程通知的是哪些线程（即与 Condition 对象绑定在一起的其他线程）；</p>
+<blockquote>
+<p>Condition 的 await()、signal()、signalAll() 方法必须在配套的 Lock 的保护下进行，这点和 Object 的 wait()、notify()、notifyAll() 是一样的，否则抛出 IllegalMonitorStateException 异常！</p>
+</blockquote>
+<h3 id="不可中断锁、可中断锁"><a href="#不可中断锁、可中断锁" class="headerlink" title="不可中断锁、可中断锁"></a>不可中断锁、可中断锁</h3><p>ReetrantLock 有两种锁：忽略中断锁（不可中断）和响应中断锁（可中断）；忽略中断锁与 synchronized 实现的互斥锁一样，不能响应中断，而响应中断锁可以响应中断；Lock 对象获得响应中断锁的方法：<code>lock.lockInterruptibly()</code>；</p>
+<p>synchronized 不可中断的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args)
+        throws InterruptedException
+    {
+        // 锁对象
+        Object lock = new Object();
+
+        // 线程 A，我们故意让它先持有锁
+        Runnable taskA = () -> {
+            synchronized (lock) {
+                System.out.println("[A]\t你们都别想了，锁已经归我所有了");
+                while (true) {
+                    try {
+                        Thread.sleep(Integer.MAX_VALUE); // 就是不释放锁
+                    } catch (InterruptedException e) {
+                        System.out.println("[A]\t别吵我睡觉");
+                    }
+                }
+            }
+        };
+
+        // 线程 B，一直无法获取锁，无限制等待
+        Runnable taskB = () -> {
+            System.out.println("[B]\t我就不信了，我就一直在这等 ...");
+            synchronized (lock) {
+                System.out.println("[B]\t终于轮到老子装逼了，哈哈哈");
+            }
+        };
+
+        // 创建线程 A、线程 B
+        Thread t1 = new Thread(taskA);
+        Thread t2 = new Thread(taskB);
+
+        // 先启动线程 A
+        t1.start();
+        // 休息片刻
+        Thread.sleep(100);
+        // 再启动线程 B
+        t2.start();
+
+        // 尝试中断线程 B
+        t2.interrupt(); // 无法中断
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:09:52]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [10:10:12]
+$ java Main
+[A]    你们都别想了，锁已经归我所有了
+[B]    我就不信了，我就一直在这等 ...
+^C#
+</script></code></pre>
+<p>ReentrantLock 可中断锁，例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.locks.ReentrantLock;
+
+public class Main {
+    public static void main(String[] args)
+        throws InterruptedException
+    {
+        // 锁对象
+        ReentrantLock lock = new ReentrantLock();
+
+        // 线程 A，我们故意让它先持有锁
+        Runnable taskA = () -> {
+            lock.lock(); // 获取锁
+            try {
+                System.out.println("[A]\t你们都别想了，锁已经归我所有了");
+                while (true) {
+                    try {
+                        Thread.sleep(Integer.MAX_VALUE); // 就是不释放锁
+                    } catch (InterruptedException e) {
+                        System.out.println("[A]\t别吵我睡觉");
+                    }
+                }
+            } finally {
+                lock.unlock(); // 释放锁
+            }
+        };
+
+        // 线程 B，一直无法获取锁，无限制等待
+        Runnable taskB = () -> {
+            try {
+                System.out.println("[B]\t我就不信了，我就一直在这等 ...");
+                lock.lockInterruptibly(); // 获取锁(可中断)
+                try {
+                    System.out.println("[B]\t终于轮到老子装逼了，哈哈哈");
+                } finally {
+                    lock.unlock(); // 释放锁
+                }
+            } catch (InterruptedException e) {
+                System.out.println("[B]\t算了算了，我不要这把破锁了");
+            }
+        };
+
+        // 创建线程 A、线程 B
+        Thread t1 = new Thread(taskA);
+        Thread t2 = new Thread(taskB);
+
+        // 先启动线程 A
+        t1.start();
+        // 休息片刻
+        Thread.sleep(100);
+        // 再启动线程 B
+        t2.start();
+
+        // 尝试中断线程 B
+        Thread.sleep(3000);
+        t2.interrupt();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:22:55]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [10:23:16]
+$ java Main
+[A]    你们都别想了，锁已经归我所有了
+[B]    我就不信了，我就一直在这等 ...
+[B]    算了算了，我不要这把破锁了
+^C#
+</script></code></pre>
+<h3 id="Condition-条件变量"><a href="#Condition-条件变量" class="headerlink" title="Condition 条件变量"></a>Condition 条件变量</h3><p>Condition 对象需要通过 Lock.newCondition() 方法来获取，Condition 总是和 Lock 一起出现；<br>一个 Lock 可以有多个不同的 Condition，它们之间互不影响，而 wait()、notify()/notifyAll() 不能；</p>
+<p>一个简单的生产者消费者例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Condition;
+
+public class Main {
+    public static void main(String[] args) {
+        Godown godown = new Godown();
+
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++)
+                godown.put(i);
+        }).start();
+
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++)
+                godown.get();
+        }).start();
+    }
+}
+
+// 仓库
+class Godown {
+    // 产品
+    private static class Product {
+        private int id;
+        public Product(int id) {
+            this.id = id;
+        }
+        @Override
+        public String toString() {
+            return "(产品名: 吊牌洗衣粉" + ", 产品编号: " + id + ")";
+        }
+    }
+
+    private ReentrantLock lock = new ReentrantLock(); // 非公平锁
+    private Condition condProduce = lock.newCondition(); // 生产队列
+    private Condition condConsume = lock.newCondition(); // 消费队列
+    private Product product; // 当前产品
+    private boolean isProduced = false; // 标识产品已生产
+
+    // 生产产品
+    public void put(int id) {
+        lock.lock();
+        try {
+            while (isProduced) { // 如果有产品
+                try {
+                    condConsume.signalAll(); // 通知消费者
+                    condProduce.await(); // 进入生产队列等待
+                } catch (InterruptedException e) {
+                    // TODO
+                }
+            }
+            isProduced = true;
+            product = new Product(id);
+            System.out.println("[生产了一个产品] -> " + product);
+            condConsume.signalAll(); // 通知消费者
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // 消费产品
+    public void get() {
+        lock.lock();
+        try {
+            while (!isProduced) { // 如果没有产品
+                try {
+                    condProduce.signalAll(); // 通知生产者
+                    condConsume.await(); // 进入消费队列等待
+                } catch (InterruptedException e) {
+                    // TODO
+                }
+            }
+            isProduced = false;
+            System.out.println("[消费了一个产品] -> " + product);
+            product = null;
+            condProduce.signalAll(); // 通知生产者
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:31:59]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [11:33:11]
+$ java Main
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 0)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 0)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 1)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 1)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 2)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 2)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 3)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 3)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 4)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 4)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 5)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 5)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 6)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 6)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 7)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 7)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 8)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 8)
+[生产了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 9)
+[消费了一个产品] -> (产品名: 吊牌洗衣粉, 产品编号: 9)
+</script></code></pre>
+<p>从这个例子中并不能看出 Condition 相比 Object 的 wait()、notify/notifyAll() 方法有什么优势；<br>但在处理复杂多线程问题时，条件变量的优势就体现出来了，因此要具体情况具体分析，不能一概而论。</p>
+<h3 id="Java-中的各种锁总结"><a href="#Java-中的各种锁总结" class="headerlink" title="Java 中的各种锁总结"></a>Java 中的各种锁总结</h3><p><strong>公平锁/非公平锁</strong><br>公平锁：严格按照先来先得的顺序排队等待去获取锁；<br>非公平锁：每次获取锁时，先直接尝试获取锁，若获取不到再按照先来先得的顺序排队等待。</p>
+<p>对于 ReentrantLock 而言，通过构造函数指定该锁是否是公平锁，默认是非公平锁；非公平锁的优点在于吞吐量比公平锁大；<br>对于 synchronized 而言，也是一种非公平锁；由于其并不像 ReentrantLock 是通过 AQS 的来实现线程调度，所以并没有任何办法使其变成公平锁。</p>
+<p><strong>可重入锁</strong><br>可重入锁：又名递归锁，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁；</p>
+<p>对于 ReentrantLock 而言，从名字就可以看出是一个可重入锁，其名字是 Re entrant Lock；<br>对于 synchronized 而言，也是一个可重入锁；可重入锁的一个好处是可一定程度避免死锁。</p>
+<p><strong>独享锁/共享锁</strong><br>独享锁：是指该锁同时只能被一个线程持有；<br>共享锁：是指该锁可同时被多个线程所持有。</p>
+<p>对于 ReentrantLock、synchronized 而言，都是独享锁；<br>对于 ReadWriteLock 而言，其读锁是共享锁，其写锁是独享锁。</p>
+<p><strong>互斥锁/读写锁</strong><br>上面讲的独享锁/共享锁就是一种广义的说法，互斥锁/读写锁就是具体的实现；<br>互斥锁：在 Java 中的具体实现就是 ReentrantLock、synchronized；<br>读写锁：在 Java 中的具体实现就是 ReentrantReadWriteLock。</p>
+<p><strong>自旋锁</strong><br>自旋锁是指尝试获取锁的线程不会立即阻塞，而是采用循环的方式去尝试获取锁，这样的好处是减少线程上下文切换的消耗，缺点是循环会消耗 CPU。</p>
+<p><strong>乐观锁/悲观锁</strong><br>乐观锁与悲观锁不是指具体的什么类型的锁，而是指看待并发同步的角度。</p>
+<ul>
+<li>悲观锁：<strong>假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作</strong>；<br>悲观锁认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改；因此对于同一个数据的并发操作，悲观锁采取加锁的形式；悲观的认为，不加锁的并发操作一定会出问题；</li>
+<li>乐观锁：<strong>假定不会发生并发冲突，只在提交操作时检测是否违反数据完整性</strong>。（使用版本号或者时间戳等来配合实现）<br>乐观锁则认为对于同一个数据的并发操作，是不会发生修改的；在更新数据的时候，会采用尝试更新，不断重新的方式更新数据；乐观的认为，不加锁的并发操作是没有事情的。</li>
+</ul>
+<p>从上面的描述我们可以看出，悲观锁适合写操作非常多的场景，乐观锁适合读操作非常多的场景；<br>悲观锁有：内置锁之<strong>重量级锁</strong>（互斥量）；<br>乐观锁有：内置锁之<strong>偏向锁</strong>、内置锁之<strong>轻量级锁</strong>、J.U.C 的 ReentrantLock、CAS 原子类等（主要基于 CAS）。</p>
+<p><strong>偏向锁/轻量级锁/重量级锁</strong><br>它们是指的 Java 内置锁的不同状态，在 JDK1.6 后，JVM 对 synchronized 进行了大量的优化，引入了分级锁的概念，性能得到很大的提升，因此在 JDK1.6 之后请优先考虑使用 synchronized 内置锁，性能不比 ReentrantLock 差。</p>
+<p><strong>锁的信息存放在哪</strong>？<br>锁的信息存放在<strong>对象头</strong>。在 32 位和 64 位下，<strong>对象头的三部分内容</strong>是：<br><img src="/images/java-juc-objhead.jpg" alt="Java 对象头"></p>
+<p><strong>Mark Word 结构</strong>（32 位 JVM，锁的不同状态）<br><img src="/images/java-juc-markword.png" alt="Mark Word 结构"></p>
+<p>注意，启用偏向锁和未启用偏向锁时的对象头 Mark Word 初始状态是不一样的：</p>
+<ul>
+<li>启用偏向锁：对象创建时 Mark Word 就是上图中的”偏向锁状态”，持有锁的线程 ID 为 0；</li>
+<li>禁用偏向锁：对象创建时 Mark Word 就是上图中的”未锁定状态”，存储的是对象的哈希值。</li>
+</ul>
+<blockquote>
+<p>启用偏向锁的情况下，如果 Mark Word 的锁状态为偏向锁，并且线程 ID 为 0，那么我们将其称为<strong>可偏向状态</strong>。</p>
+</blockquote>
+<p>在 JDK1.6 之后（含），偏向锁默认启用，但是默认有 4000 毫秒的启动延迟（用于判断是否存在锁竞争）：</p>
+<ul>
+<li>启用偏向锁：<code>-XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=0</code>（消除延迟）；</li>
+<li>禁用偏向锁：<code>-XX:-UseBiasedLocking</code>（默认启用偏向锁）；</li>
+</ul>
+<p>当禁用偏向锁时，锁状态根据竞争激烈程度<strong>从弱到强</strong>分别为：无锁状态 -&gt; 轻量级锁 -&gt; 重量级锁。<br>当启用偏向锁时，锁状态根据竞争激烈程度<strong>从弱到强</strong>分别为：可偏向状态 -&gt; 偏向锁 -&gt; 轻量级锁 -&gt; 重量级锁；</p>
+<blockquote>
+<p>注意，<strong>锁只能升级，不能降级</strong>。因为锁降级的效率较低，如果频繁升降级的话对 JVM 性能会造成影响。</p>
+</blockquote>
+<p>使用分级锁的原因：<strong>避免直接使用互斥量（即重量级锁）进行线程同步，减少线程频繁挂起和恢复带来的上下文切换开销</strong>。</p>
+<p><strong>CAS 的概念</strong><br>CAS，Compare And Swap，即<strong>比较并交换</strong>。是原子操作的一种，是 CPU 的一个指令。不要与锁的概念混淆了，CAS 不是锁，它可以用来实现锁。不要将它们等价。</p>
+<p>还有，后面会经常提到”CAS操作成功”、”CAS操作失败”，什么意思呢？</p>
+<ul>
+<li>CAS 成功：即我们提供的预期值与内存中的实际值一致，成功将数据替换为了新值；</li>
+<li>CAS 失败：即我们提供的预期值与内存中的实际值不一致，导致实际数据未被替换。</li>
+</ul>
+<p><strong>各种锁的适用情形</strong></p>
+<ul>
+<li>偏向锁：只有一个线程进入临界区；</li>
+<li>轻量级锁：多个线程交替进入临界区（允许短暂自旋）；</li>
+<li>重量级锁：多个线程同时进入临界区（持锁时间较长）；</li>
+</ul>
+<p><strong>偏向锁的获取过程</strong></p>
+<ol>
+<li>先检查是否为可偏向状态，即锁标志位为 01 且偏向锁标志位为 1；</li>
+<li>如果是可偏向状态，则测试线程 ID 是否指向当前线程，如果是则执行步骤 5，否则执行步骤 3；</li>
+<li>如果线程 ID 未指向当前线程，则尝试通过 CAS 置换为当前线程 ID，如果成功则执行步骤 5，否则执行步骤 4；</li>
+<li>如果置换线程 ID 失败，说明此时已发生竞争，当到达全局安全点（safepoint）时获得偏向锁的线程将被挂起，偏向锁升级为轻量级锁，然后被挂起的线程继续执行剩下的同步代码（撤销偏向锁时发生 stop-the-world）；</li>
+<li>此时当前线程已持有偏向锁，于是开始执行临界区的代码。</li>
+</ol>
+<p><strong>偏向锁的释放过程</strong><br>当线程持有偏向锁后，并不会主动去释放偏向锁，只有当其它线程尝试竞争锁时才会发生偏向锁撤销。具体的撤销细节在上面的步骤 4 中有说到。因为存在 STW，虽然很短暂，但是如果频繁出现，会对性能产生较大影响。</p>
+<p><strong>轻量级锁的获取过程</strong></p>
+<ol>
+<li>如果对象为无锁状态，即锁标志位为 01 且偏向锁标志位为 0；那么将在当前线程栈中创建锁记录（Lock Record）空间，用于存放当前对象头的 Mark Word 拷贝（称为 Displaced Mark Word）；</li>
+<li>拷贝当前对象头的 Mark Word 字段至锁记录空间；</li>
+<li>接着尝试使用 CAS 将当前对象头的锁记录指针指向当前线程栈中的锁记录空间，并将当前锁记录的 owner 指针指向对象头的 Mark Word，如果成功则执行步骤 4，否则执行步骤 5；</li>
+<li>如果这个 CAS 置换动作成功了，那么当前线程就拥有了这个对象的锁，并且对象的 Mark Word 的锁标志位设为 00，表示此对象处于轻量级锁定状态；</li>
+<li>如果这个 CAS 置换动作失败了，首先会检查对象的 Mark Word 的锁记录指针是否已指向当前线程栈中的锁记录空间，如果是则说明已获取锁，可以进入同步块；否则说明存在锁竞争，此时当前线程会自旋一段时间，如果获取到了锁则不进行锁升级，否则轻量级锁会膨胀为重量级锁。</li>
+</ol>
+<p><strong>轻量级锁的释放过程</strong></p>
+<ol>
+<li>通过 CAS 操作尝试把线程中复制的 Displaced Mark Word 替换对象当前的 Mark Word；</li>
+<li>如果替换成功，整个同步过程就完成了；</li>
+<li>如果替换失败，说明此时已不是轻量级锁定状态，已经膨胀为重量级锁；那就要在释放锁的同时，唤醒被挂起的线程。</li>
+</ol>
+<p><strong>轻量级锁什么情况下升级至重量级锁</strong><br>轻量级锁认为竞争存在，但是竞争的程度很轻，一般多个线程对于同一个锁的操作都会错开，或者说稍微等待一下（自旋），另一个线程就会释放锁。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁就会膨胀为重量级锁，重量级锁使除了拥有锁的线程以外的线程都阻塞，防止 CPU 空转。</p>
+<p><strong>偏向锁是为了在<code>只有一个线程执行同步块</code>时提高性能</strong>，<strong>轻量级锁是为了在<code>多个线程交替执行同步块</code>时提高性能</strong>。</p>
+<p><strong>重量级锁</strong><br>重量级锁是使用底层操作系统提供的 Mutex Lock 来实现的，当线程尝试获取锁失败时，该线程就会被挂起。线程之间的切换需要从用户态转换到内核态，这个成本非常高，状态之间的转换需要相对比较长的时间，这就是为什么 synchronized（JDK1.6 之前）效率低的原因。因此，我们将这种依赖于操作系统互斥量实现的锁称为”重量级锁”。JDK 中对 synchronized 做的种种优化，其核心都是为了减少这种重量级锁的使用。也就是使用我们前面说的”偏向锁”、”轻量级锁”，只有在不得已的情况下才会动用”重量级锁”。</p>
+<p><strong>synchronized 获取锁的过程</strong></p>
+<ul>
+<li>检测 Mark Word 里面是不是当前线程的 ID，如果是则表示当前线程处于偏向锁状态；</li>
+<li>如果不是，则使用 CAS 将它置换为当前线程 ID，如果成功则表示当前线程获得偏向锁；</li>
+<li>如果失败，则说明发生竞争，撤销偏向锁，进而升级为轻量级锁；</li>
+<li>然后使用 CAS 将 Mark Word 的锁记录指针指向当前线程栈中的锁记录，如果成功，则获得轻量级锁；</li>
+<li>如果失败，表示其它线程竞争锁，当前线程便尝试使用自旋来获取锁；</li>
+<li>如果自旋成功则依然处于轻量级状态；</li>
+<li>如果自旋失败，则升级为重量级锁。</li>
+</ul>
+<p><strong>JVM 的其它优化手段</strong><br>1、<strong>适应性自旋</strong>（Adaptive Spinning）：从轻量级锁获取的流程中我们知道，当线程在获取轻量级锁的过程中执行 CAS 操作失败时，是要通过自旋来获取轻量级锁的。问题在于，自旋是需要消耗 CPU 的，如果一直获取不到锁的话，那该线程就一直处在自旋状态，白白浪费 CPU 资源。因此 JDK 采用了聪明的方式 - 适应性自旋，基本认为一个线程上下文切换的时间是最佳的一个时间，同时 JVM 还会针对当前 CPU 的负荷情况做优化。</p>
+<p>2、<strong>锁粗化</strong>（Lock Coarsening）：锁粗化的概念应该比较好理解，就是将多次连接在一起的加锁、解锁操作合并为一次，将多个连续的锁扩展成一个范围更大的锁。举个例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class StringBufferTest {
+    StringBuffer stringBuffer = new StringBuffer();
+
+    public void append() {
+        stringBuffer.append("a");
+        stringBuffer.append("b");
+        stringBuffer.append("c");
+    }
+}
+</script></code></pre>
+<p>因为 StringBuffer.append() 是同步方法，因此调用三次就意味着要连续加锁解锁三次，并且中间没有任何其它代码。如果 JVM 检测到有一系列连串的对同一个对象加锁和解锁操作，就会将其合并成一次范围更大的加锁和解锁操作，即在第一次 append() 方法时进行加锁，最后一次 append() 方法结束后进行解锁。</p>
+<p>3、<strong>锁消除</strong>（Lock Elimination）：锁消除即删除不必要的加锁操作。根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸出当前线程，那么可以认为这段代码是线程安全的，不必要加锁。看下面这段程序：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public void vectorTest() {
+    Vector<String> vector = new Vector<String>();
+    for (int i = 0 ; i < 10 ; i++) {
+        vector.add(i + "");
+    }
+    System.out.println(vector);
+}
+</script></code></pre>
+<p>在运行这段代码时，JVM 可以明显检测到变量 vector 没有逃逸出方法 vectorTest() 之外（意思就是说在该方法外不可能拿到 vector 对象的引用），所以 JVM 可以大胆地将 vector 内部的加锁操作消除。</p>
+<p><strong>编码上的优化</strong><br>我们不能依赖 JVM 的锁优化手段，因为你不能保证 JVM 能理解你的烂代码而去采取优化手段，我们必须显式的帮助 JVM 去优化代码。</p>
+<p>1、<strong>减少锁的持有时间</strong>：只在必要的时候使用锁，不要随意放大同步代码块的范围，比如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 优化前 */
+public synchronized void func() {
+    otherfunc1(); // 无需同步
+    mutexfunc(); // 需要同步
+    otherfunc2(); // 无需同步
+}
+
+/* 优化后 */
+public void func() {
+    otherfunc1();
+    synchronized (this) {
+        mutexfunc();
+    }
+    otherfunc2();
+}
+</script></code></pre>
+<p>2、<strong>避免频繁加/解同一把锁</strong>：当然大多数情况下我们自己是一清二楚的，是否存在竞争、变量是否逃逸等等，我们不会笨到去频繁加锁解锁。但是有时候这个不是我们能够控制的，在使用 Java 类库的时候，很多线程安全的类都存在隐式的加锁、解锁，比如 StringBuffer.append() 方法。这个只能交给 JVM 去发现了，我们无能为力。</p>
+<p>3、<strong>锁分离</strong>：比如在读多写少的情况下考虑使用 J.U.C 的 ReadWriteLock 读写锁，来提高性能、吞吐量。当然读写锁不只用在表面的”读和写”，只要是操作互不影响，就可以利用读写分离思想。</p>
+<p><strong>三种内置锁的对比</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">锁类型</th>
+<th style="text-align:center">优点</th>
+<th style="text-align:center">缺点</th>
+<th style="text-align:center">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">偏向锁</td>
+<td style="text-align:center">加锁和解锁过程不需要额外的消耗，和执行非同步代码块仅存在纳秒级别的差距</td>
+<td style="text-align:center">如果线程间存在锁竞争，会带来额外的锁撤销的消耗</td>
+<td style="text-align:center">适用于只有一个线程访问同步块的场景</td>
+</tr>
+<tr>
+<td style="text-align:center">轻量级锁</td>
+<td style="text-align:center">竞争的线程不会阻塞，而是采取自适应自旋的方式等待，提高了程序的响应速度</td>
+<td style="text-align:center">如果参与竞争的线程始终无法得到锁，那么自旋会白白浪费 CPU 资源</td>
+<td style="text-align:center">适用于追求响应时间，但要求同步块的执行速度非常快，避免因自旋导致 CPU 的持续空转</td>
+</tr>
+<tr>
+<td style="text-align:center">重量级锁</td>
+<td style="text-align:center">线程竞争不使用自旋，如果竞争不到锁，线程将会被挂起（休眠），并释放 CPU 资源</td>
+<td style="text-align:center">如果参与锁竞争失败则线程因为线程调度而挂起，但是频繁的上下文切换带来的开销很大且响应时间缓慢</td>
+<td style="text-align:center">适用于同步块的执行时间较长的情况</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Synchronizer-同步器"><a href="#Synchronizer-同步器" class="headerlink" title="Synchronizer 同步器"></a>Synchronizer 同步器</h2><p>J.U.C 中的同步器主要用于协助线程同步，有以下四种：<br>1) 闭锁 CountDownLatch<br>2) 栅栏 CyclicBarrier<br>3) 信号量 Semaphore<br>4) 交换器 Exchanger</p>
+<h3 id="CountDownLatch-闭锁"><a href="#CountDownLatch-闭锁" class="headerlink" title="CountDownLatch 闭锁"></a>CountDownLatch 闭锁</h3><p>闭锁的作用：<strong>允许一个或多个线程等待，直到在其它线程中执行的一组操作完成</strong>。</p>
+<p>CountDownLatch 用给定的计数初始化，线程调用 await() 方法后将被阻塞，直到当前计数由于调用 countDown() 方法而达到零，在此之后所有等待的线程被释放，并且任何后续的调用立即返回。这是一次性现象，即计数不能被重置。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class CountDownLatch {
+    /* 构造函数 */
+    public CountDownLatch(int count); // count 为计数器初始值
+
+    /* 等待一组操作的完成 */
+    public void await() throws InterruptedException; // 如果等待的线程被中断则抛出中断异常
+    /* 在指定时间内等待一组操作的完成，如果发生超时则返回 false */
+    public boolean await(long timeout, TimeUnit unit) throws InterruptedException;
+    /* 将计数器减一，减到零则所有等待的线程被释放 */
+    public void countDown();
+
+    public long getCount(); // 返回当前的计数值
+    public String toString(); // 返回字符串描述，包含当前计数值
+}
+</script></code></pre>
+<p>例子，我、爸爸、妈妈，一家三口人，约定今天晚上一起去饭店吃饭：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+
+public class CountDownLatchTest {
+    public static void main(String[] args) throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(3);
+        final Random rand = new Random();
+
+        new Thread(() -> {
+            System.out.println("爸爸: 我正在赶来的路上 ...");
+            try {
+                Thread.sleep(rand.nextInt(2501) + 500); // 500 ~ 3000 ms
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("爸爸: 我已经到了饭店。");
+            latch.countDown();
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("妈妈: 我正在赶来的路上 ...");
+            try {
+                Thread.sleep(rand.nextInt(2501) + 500); // 500 ~ 3000 ms
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("妈妈: 我已经到了饭店。");
+            latch.countDown();
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("我: 我正在赶来的路上 ...");
+            try {
+                Thread.sleep(rand.nextInt(2501) + 500); // 500 ~ 3000 ms
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("我: 我已经到了饭店。");
+            latch.countDown();
+        }).start();
+
+        latch.await(); // 等待大家的到来
+
+        System.out.println("大家伙都到了，开饭咯。");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [9:46:50]
+$ javac CountDownLatchTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [9:46:52]
+$ java com.zfl9.CountDownLatchTest
+爸爸: 我正在赶来的路上 ...
+妈妈: 我正在赶来的路上 ...
+我: 我正在赶来的路上 ...
+爸爸: 我已经到了饭店。
+我: 我已经到了饭店。
+妈妈: 我已经到了饭店。
+大家伙都到了，开饭咯。
+</script></code></pre>
+<h3 id="CyclicBarrier-栅栏"><a href="#CyclicBarrier-栅栏" class="headerlink" title="CyclicBarrier 栅栏"></a>CyclicBarrier 栅栏</h3><p>CyclicBarrier 和 CountDownLatch 有点类似，但是又有点不一样：<strong>栅栏是多个线程互相等待，直到全部线程都到齐，等待的线程才会继续运行</strong>。</p>
+<p>并且，栅栏是可循环利用的，从它的名字 Cyclic 也看得出，而闭锁只能使用一次。</p>
+<p>同时，栅栏还支持一个可选的 Runnable 任务，该任务将会被最后一个到达的线程执行，执行完该任务后所有的线程才会被释放，这个特性对更新共享状态是很有用的。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class CyclicBarrier {
+    /* 构造函数 */
+    /**
+     * @param parties       表示总共有多少线程等待，即参与方有多少人
+     * @param barrierAction 由最后一个到达的线程执行的命令，可以为 null
+     */
+    public CyclicBarrier(int parties, Runnable barrierAction);
+    public CyclicBarrier(int parties); // barrierAction = null
+
+    /**
+     * 等待其它线程的到来. 如果当前线程不是最后一个到达的，那么它将被挂起，直到以下事件的发生：
+     * 1. 最后一个线程到达；
+     * 2. 其它线程中断当前线程；
+     * 3. 其它线程中断其它等待的线程之一；
+     * 4. 其它等待的线程发生等待超时；
+     * 5. 其它一些线程调用了当前栅栏的 reset() 方法。
+     * @return int  返回当前的到达索引值，从 [parties-1, 0] 递减，为 0 表示最后一个到达
+     * @throws InterruptedException     上述的情况 2 将导致此异常
+     * @throws BrokenBarrierException   上述的情况 3、4、5 将导致此异常
+     */
+    public int await() throws InterruptedException, BrokenBarrierException;
+    /**
+     * 等待其它线程的到来或者发生超时. 如果当前线程不是最后一个到达的，那么它将被挂起，直到以下事件的发生：
+     * 1. 最后一个线程到达；
+     * 2. 指定的超时时间到了；
+     * 3. 其它线程中断当前线程；
+     * 4. 其它线程中断其它等待的线程之一；
+     * 5. 其它等待的线程发生等待超时；
+     * 6. 其它一些线程调用了当前栅栏的 reset() 方法。
+     * @param timeout   超时时间
+     * @param unit      时间单位
+     * @return int  返回当前的到达索引值，从 [parties-1, 0] 递减，为 0 表示最后一个到达
+     * @throws InterruptedException     上述的情况 3 将导致此异常
+     * @throws TimeoutException         上述的情况 2 将导致此异常
+     * @throws BrokenBarrierException   上述的情况 4、5、6 将导致此异常
+     */
+    public int await(long timeout, TimeUnit unit)
+        throws InterruptedException, BrokenBarrierException, TimeoutException;
+
+    public int getParties(); // 返回参与方数量
+    public boolean isBroken(); // 查询当前屏障是否已破裂
+    public int getNumberWaiting(); // 查询当前等待的线程数
+
+    public void reset(); // 重置当前屏障，建议使用新的栅栏，而不是重置
+}
+</script></code></pre>
+<p>例子，A、B、C、D、E 五个人，参加 100 米短跑比赛：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.Random;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.BrokenBarrierException;
+
+public class CyclicBarrierTest {
+    public static void main(String[] args) {
+        final CyclicBarrier barrier =
+            new CyclicBarrier(5, () -> System.out.println("大家都到了，此轮比赛结束"));
+        final Random rand = new Random();
+
+        new Thread(() -> {
+            System.out.println("[A]\t开始起跑");
+            try {
+                Thread.sleep(rand.nextInt(501) + 1000);
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("[A]\t到达终点");
+            try {
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                // TODO
+            }
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("[B]\t开始起跑");
+            try {
+                Thread.sleep(rand.nextInt(501) + 1000);
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("[B]\t到达终点");
+            try {
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                // TODO
+            }
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("[C]\t开始起跑");
+            try {
+                Thread.sleep(rand.nextInt(501) + 1000);
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("[C]\t到达终点");
+            try {
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                // TODO
+            }
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("[D]\t开始起跑");
+            try {
+                Thread.sleep(rand.nextInt(501) + 1000);
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("[D]\t到达终点");
+            try {
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                // TODO
+            }
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("[E]\t开始起跑");
+            try {
+                Thread.sleep(rand.nextInt(501) + 1000);
+            } catch (InterruptedException e) {
+                // TODO
+            }
+            System.out.println("[E]\t到达终点");
+            try {
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                // TODO
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [10:52:06]
+$ javac CyclicBarrierTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [10:53:12]
+$ java com.zfl9.CyclicBarrierTest
+[A]    开始起跑
+[B]    开始起跑
+[C]    开始起跑
+[D]    开始起跑
+[E]    开始起跑
+[A]    到达终点
+[D]    到达终点
+[B]    到达终点
+[C]    到达终点
+[E]    到达终点
+大家都到了，此轮比赛结束
+</script></code></pre>
+<h3 id="Exchanger-交换器"><a href="#Exchanger-交换器" class="headerlink" title="Exchanger 交换器"></a>Exchanger 交换器</h3><p>Exchanger：用来给两个线程互换数据的交换器，可以理解为 SynchronousQueue 同步队列的双向形式。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Exchanger<V> {
+    /* 构造函数 */
+    public Exchanger();
+
+    /* 交换数据，x 为提供给对方的数据，返回由对方提供的数据 */
+    public V exchange(V x) throws InterruptedException;
+    /* 交换数据，发生中断则抛出中断异常，发生超时则抛出超时异常 */
+    public V exchange(V x, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException;
+}
+</script></code></pre>
+<p>例子，线程 A、B 互换数据：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.concurrent.Exchanger;
+
+public class ExchangerTest {
+    public static void main(String[] args) {
+        final Exchanger<String> exchanger = new Exchanger<>();
+        final String a = "这是 A 的数据";
+        final String b = "这是 B 的数据";
+
+        new Thread(() -> {
+            System.out.println("[A]\t" + a);
+            try {
+                System.out.println("[A]\t" + exchanger.exchange(a));
+            } catch (InterruptedException e) {
+                // TODO
+            }
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("[B]\t" + b);
+            try {
+                System.out.println("[B]\t" + exchanger.exchange(b));
+            } catch (InterruptedException e) {
+                // TODO
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:24:33]
+$ javac ExchangerTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:24:49]
+$ java com.zfl9.ExchangerTest
+[A]    这是 A 的数据
+[B]    这是 B 的数据
+[B]    这是 A 的数据
+[A]    这是 B 的数据
+</script></code></pre>
+<h3 id="Semaphore-信号量"><a href="#Semaphore-信号量" class="headerlink" title="Semaphore 信号量"></a>Semaphore 信号量</h3><p>计数信号量，从概念上讲，信号量拥有一套许可证。使用 acquire() 方法申请许可证，使用完后调用 release() 方法归还许可证。在 Semaphore 的构造函数中可以指定一个数值，表示可用的许可证数量。</p>
+<p>如果许可证数量为 1，则可以作为互斥锁使用。我们把拥有一个许可证的信号量称为二进制信号量，因为它只有两个状态，资源可用，资源不可用。</p>
+<p>信号量除了作为互斥锁使用，还常用于实现资源池，如数据库连接池、线程池。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Semaphore implements java.io.Serializable {
+    /* 构造函数 */
+    public Semaphore(int permits); // 非公平
+    public Semaphore(int permits, boolean fair); // 可选公平
+
+    /* 申请资源 - 1 个 */
+    public void acquire() throws InterruptedException; // 可中断
+    public void acquireUninterruptibly(); // 不可中断
+    public boolean tryAcquire(); // [非公平] 立即获取，如果资源立即可用则返回 true，否则返回 false
+    public boolean tryAcquire(long timeout, TimeUnit unit) throws InterruptedException; // 指定等待时间
+    /* 释放资源 - 1 个*/
+    public void release();
+
+    /* 申请资源 - N 个 */
+    public void acquire(int permits) throws InterruptedException;
+    public void acquireUninterruptibly(int permits);
+    public boolean tryAcquire(int permits); // [非公平]
+    public boolean tryAcquire(int permits, long timeout, TimeUnit unit) throws InterruptedException;
+    /* 释放资源 - N 个 */
+    public void release(int permits);
+
+    /* 状态查询 */
+    public boolean isFair(); // 是否公平
+
+    public int availablePermits(); // 当前可用的资源数量
+    public int drainPermits(); // 获取当前立即可用的所有资源，返回获取的资源数
+
+    public final boolean hasQueuedThreads(); // 查询当前是否有线程正在等待获取资源
+    public final int getQueueLength(); // 获取正在等待资源的线程数目
+
+    public String toString(); // 字符串描述信息
+}
+</script></code></pre>
+<p>例子，作为互斥锁来使用：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreTest {
+    public static void main(String[] args) {
+        final Semaphore sem = new Semaphore(1);
+        final String strA = "www.zfl9.com\n";
+        final String strB = "www.baidu.com\n";
+        final String strC = "www.google.com\n";
+
+        new Thread(() -> {
+            sem.acquireUninterruptibly();
+            try {
+                for (int i = 0; i < strA.length(); i++) {
+                    System.out.print(strA.charAt(i));
+                }
+            } finally {
+                sem.release();
+            }
+        }).start();
+
+        new Thread(() -> {
+            sem.acquireUninterruptibly();
+            try {
+                for (int i = 0; i < strB.length(); i++) {
+                    System.out.print(strB.charAt(i));
+                }
+            } finally {
+                sem.release();
+            }
+        }).start();
+
+        new Thread(() -> {
+            sem.acquireUninterruptibly();
+            try {
+                for (int i = 0; i < strC.length(); i++) {
+                    System.out.print(strC.charAt(i));
+                }
+            } finally {
+                sem.release();
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:14:20]
+$ javac SemaphoreTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:14:40]
+$ java com.zfl9.SemaphoreTest
+www.zfl9.com
+www.baidu.com
+www.google.com
+</script></code></pre>
+<h2 id="Atomic-原子变量"><a href="#Atomic-原子变量" class="headerlink" title="Atomic 原子变量"></a>Atomic 原子变量</h2><p>原子变量主要是方便程序员在多线程环境下，无锁的进行原子操作。原子类是<code>sun.misc.Unsafe</code>类的包装类，其核心操作是 CAS 原子操作。所谓 CAS 原子操作，即 Compare And Swap，指的是将预期值与内存中的实际值进行比较（Compare），如果相等则使用新值替换（Swap）当前的值，否则不作操作。而这个比较并交换的过程是不可被外部因素打断的，这就是其原子性的体现。</p>
+<blockquote>
+<p>原子变量的底层使用了处理器提供的原子指令，但是不同的 CPU 架构可能提供的原子指令不一样，也有可能需要某种形式的内部锁，所以该方法不能绝对保证线程不被阻塞。</p>
+</blockquote>
+<p><strong>原子性</strong>：指一个操作是按原子的方式执行的。要么该操作不被执行；要么以原子方式执行，即执行过程中不会被其它线程中断。</p>
+<ul>
+<li>除了<code>long</code>、<code>double</code>外的所有类型（基本类型、引用类型），读取和写入操作都是原子的；</li>
+<li>对于声明为<code>volatile</code>的所有变量（包括<code>long</code>、<code>double</code>），读取和写入操作都是原子的。</li>
+</ul>
+<p><strong><code>long</code>和<code>double</code>的非原子性协定</strong>：<br>对于 64 位的数据，如 long 和 double，Java 内存模型规范允许虚拟机将没有被 volatile 修饰的 64 位数据的读写操作划分为两次 32 位的操作来进行，即允许虚拟机实现选择可以不保证 64 位数据类型的 load、store、read 和 write 这四个操作的原子性；即如果有多个线程共享一个并未声明为 volatile 的 long 或 double 类型的变量，并且同时对它们进行读取和修改操作，那么某些线程可能会读取到一个既非原值，也不是其他线程修改值的代表了“半个变量”的数值。</p>
+<p><strong>但由于目前各种平台下的商用虚拟机几乎都选择把 64 位数据的读写操作作为原子操作来对待，因此在编写代码时一般也不需要将用到的 long 和 double 变量专门声明为 volatile</strong>。</p>
+<p>因此<strong>我们可以认为所有类型的变量（基本类型、引用类型）的读写操作都是原子的</strong>；但类似于<code>i++</code>、<code>volatile_var++</code>这种<strong>复合操作并不具备原子性</strong>。</p>
+<p>在 Atomic 包中一共有 12 个类（JDK1.8 中又增加了 4 个类，稍后介绍），四种原子更新方式，分别是<code>原子更新基本类型</code>，<code>原子更新数组</code>，<code>原子更新引用</code>和<code>原子更新字段</code>；Atomic 包里的类基本都是使用 Unsafe 实现的包装类；</p>
+<h3 id="原子更新基本类型"><a href="#原子更新基本类型" class="headerlink" title="原子更新基本类型"></a>原子更新基本类型</h3><p><code>AtomicBoolean</code>：布尔型；<br><code>AtomicInteger</code>：整型；<br><code>AtomicLong</code>：长整型；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class AtomicIntTest {
+    public static void main(String[] args) {
+        AtomicInteger atomicInt = new AtomicInteger(10);
+        System.out.println("初始值: " + atomicInt.get()); // 10
+
+        System.out.println("前自增: " + atomicInt.incrementAndGet()); // 11
+        System.out.println("前自减: " + atomicInt.decrementAndGet()); // 10
+        System.out.println("后自增: " + atomicInt.getAndIncrement()); // 10
+        System.out.println("后自减: " + atomicInt.getAndDecrement()); // 11
+        System.out.println("当前值: " + atomicInt.get());             // 10
+
+        System.out.println("前更新: " + atomicInt.updateAndGet(v -> v + 10)); // 20
+        System.out.println("后更新: " + atomicInt.getAndUpdate(v -> v - 10)); // 20
+        System.out.println("当前值: " + atomicInt.get());                     // 10
+
+        System.out.println("前累加: " + atomicInt.accumulateAndGet(10, (x, y) -> x + y)); // 20
+        System.out.println("后累加: " + atomicInt.getAndAccumulate(10, (x, y) -> x + y)); // 20
+        System.out.println("当前值: " + atomicInt.get());                                 // 30
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:30:41]
+$ javac AtomicIntTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:30:58]
+$ java com.zfl9.AtomicIntTest
+初始值: 10
+前自增: 11
+前自减: 10
+后自增: 10
+后自减: 11
+当前值: 10
+前更新: 20
+后更新: 20
+当前值: 10
+前累加: 20
+后累加: 20
+当前值: 30
+</script></code></pre>
+<h3 id="AtomicBoolean-类"><a href="#AtomicBoolean-类" class="headerlink" title="AtomicBoolean 类"></a>AtomicBoolean 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicBoolean implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicBoolean(boolean initialValue); // 给定初始值
+    public AtomicBoolean(); // 默认值 false
+
+    /* 相关操作 */
+    public final boolean get();
+    public final void set(boolean newValue); // 保证可见性
+    public final void lazySet(boolean newValue); // 不保证可见性
+
+    public final boolean getAndSet(boolean newValue);
+    public final boolean compareAndSet(boolean expect, boolean update);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="AtomicInteger-类"><a href="#AtomicInteger-类" class="headerlink" title="AtomicInteger 类"></a>AtomicInteger 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicInteger extends Number implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicInteger(int initialValue); // 给定初始值
+    public AtomicInteger(); // 默认值 0
+
+    /* 相关操作 */
+    public final int get();
+    public final void set(int newValue); // 保证可见性
+    public final void lazySet(int newValue); // 不保证可见性
+
+    public final int getAndSet(int newValue);
+    public final boolean compareAndSet(int expect, int update);
+
+    public final int incrementAndGet(); // 前自增
+    public final int decrementAndGet(); // 前自减
+    public final int getAndIncrement(); // 后自增
+    public final int getAndDecrement(); // 后自减
+
+    public final int getAndAdd(int delta);
+    public final int addAndGet(int delta);
+
+    /* int applyAsInt(int) */
+    public final int getAndUpdate(IntUnaryOperator updateFunction);
+    public final int updateAndGet(IntUnaryOperator updateFunction);
+
+    /* int applyAsInt(int, int)，当前值作为第一个参数，给定值 x 作为第二个参数 */
+    public final int getAndAccumulate(int x, IntBinaryOperator accumulatorFunction);
+    public final int accumulateAndGet(int x, IntBinaryOperator accumulatorFunction);
+
+    public int intValue();
+    public long longValue(); // 强制类型转换，下同
+    public float floatValue();
+    public double doubleValue();
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="AtomicLong-类"><a href="#AtomicLong-类" class="headerlink" title="AtomicLong 类"></a>AtomicLong 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicLong extends Number implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicLong(long initialValue);
+    public AtomicLong();
+
+    /* 相关操作 */
+    public final long get();
+    public final void set(long newValue);
+    public final void lazySet(long newValue);
+
+    public final long getAndSet(long newValue);
+    public final boolean compareAndSet(long expect, long update);
+
+    public final long getAndIncrement();
+    public final long getAndDecrement();
+    public final long incrementAndGet();
+    public final long decrementAndGet();
+
+    public final long getAndAdd(long delta);
+    public final long addAndGet(long delta);
+
+    public final long getAndUpdate(LongUnaryOperator updateFunction);
+    public final long updateAndGet(LongUnaryOperator updateFunction);
+
+    public final long getAndAccumulate(long x, LongBinaryOperator accumulatorFunction);
+    public final long accumulateAndGet(long x, LongBinaryOperator accumulatorFunction);
+
+    public int intValue();
+    public long longValue();
+    public float floatValue();
+    public double doubleValue();
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="原子更新数组"><a href="#原子更新数组" class="headerlink" title="原子更新数组"></a>原子更新数组</h3><p><code>AtomicIntegerArray</code>：整型数组；<br><code>AtomicLongArray</code>：长整型数组；<br><code>AtomicReferenceArray&lt;E&gt;</code>：引用类型数组（存在 ABA 问题）；</p>
+<h3 id="AtomicIntegerArray-类"><a href="#AtomicIntegerArray-类" class="headerlink" title="AtomicIntegerArray 类"></a>AtomicIntegerArray 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicIntegerArray implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicIntegerArray(int length); // 指定数组长度
+    public AtomicIntegerArray(int[] array); // 拷贝构造
+
+    /* 相关操作 */
+    public final int length(); // 数组长度
+
+    public final int get(int i); // 获取指定下标的元素
+    public final void set(int i, int newValue); // 修改指定下标的元素(保证可见性)
+    public final void lazySet(int i, int newValue); // 修改指定下标的元素(不保证可见性)
+
+    public final int getAndSet(int i, int newValue);
+    public final boolean compareAndSet(int i, int expect, int update);
+
+    public final int incrementAndGet(int i); // 前自增
+    public final int decrementAndGet(int i); // 前自减
+    public final int getAndIncrement(int i); // 后自增
+    public final int getAndDecrement(int i); // 后自减
+
+    public final int getAndAdd(int i, int delta);
+    public final int addAndGet(int i, int delta);
+
+    public final int getAndUpdate(int i, IntUnaryOperator updateFunction);
+    public final int updateAndGet(int i, IntUnaryOperator updateFunction);
+
+    public final int getAndAccumulate(int i, int x, IntBinaryOperator accumulatorFunction);
+    public final int accumulateAndGet(int i, int x, IntBinaryOperator accumulatorFunction);
+
+    public String toString(); // 包含数组的各元素值
+}
+</script></code></pre>
+<h3 id="AtomicLongArray-类"><a href="#AtomicLongArray-类" class="headerlink" title="AtomicLongArray 类"></a>AtomicLongArray 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicLongArray implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicLongArray(int length);
+    public AtomicLongArray(long[] array);
+
+    /* 相关操作 */
+    public final int length();
+
+    public final long get(int i);
+    public final void set(int i, long newValue);
+    public final void lazySet(int i, long newValue);
+
+    public final long getAndSet(int i, long newValue);
+    public final boolean compareAndSet(int i, long expect, long update);
+
+    public final long incrementAndGet(int i);
+    public final long decrementAndGet(int i);
+    public final long getAndIncrement(int i);
+    public final long getAndDecrement(int i);
+
+    public final long getAndAdd(int i, long delta);
+    public long addAndGet(int i, long delta);
+
+    public final long getAndUpdate(int i, LongUnaryOperator updateFunction);
+    public final long updateAndGet(int i, LongUnaryOperator updateFunction);
+
+    public final long getAndAccumulate(int i, long x, LongBinaryOperator accumulatorFunction);
+    public final long accumulateAndGet(int i, long x, LongBinaryOperator accumulatorFunction);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="AtomicReferenceArray-类"><a href="#AtomicReferenceArray-类" class="headerlink" title="AtomicReferenceArray 类"></a>AtomicReferenceArray 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicReferenceArray<E> implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicReferenceArray(int length);
+    public AtomicReferenceArray(E[] array);
+
+    /* 相关操作 */
+    public final int length();
+
+    public final E get(int i);
+    public final void set(int i, E newValue);
+    public final void lazySet(int i, E newValue);
+
+    public final E getAndSet(int i, E newValue);
+    public final boolean compareAndSet(int i, E expect, E update); // 比较内存地址，而非 equals()
+
+    public final E getAndUpdate(int i, UnaryOperator<E> updateFunction);
+    public final E updateAndGet(int i, UnaryOperator<E> updateFunction);
+
+    public final E getAndAccumulate(int i, E x, BinaryOperator<E> accumulatorFunction);
+    public final E accumulateAndGet(int i, E x, BinaryOperator<E> accumulatorFunction);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="原子更新引用"><a href="#原子更新引用" class="headerlink" title="原子更新引用"></a>原子更新引用</h3><p><code>AtomicReference&lt;V&gt;</code>，存在 ABA 问题；<br><code>AtomicStampedReference&lt;V&gt;</code>，使用整型标记避免 ABA 问题；<br><code>AtomicMarkableReference&lt;V&gt;</code>，使用布尔标记避免 ABA 问题；</p>
+<p><strong>ABA 问题是什么</strong>？<br>在 <a href="#原子更新数组">原子更新数组</a> 中，我也提到了 AtomicReferenceArray 存在 ABA 问题。那么什么是 ABA 问题呢？</p>
+<p>ABA 不是什么英文的缩写，应该理解为 A -&gt; B -&gt; A 问题。我还是以 C++ 代码来模拟 A-B-A 问题吧：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">/* 基本类型，以 int 为例 */
+bool compareAndSwap(int *addr, int old_value, int new_value) {
+    if (*addr == old_value) {
+        *addr = new_value;
+        return true;
+    }
+    return false;
+}
+
+/* 引用类型，以 Object 为例 */
+class Object {}; // 先定义 Object 类
+bool compareAndSwap(Object **addr, Object *old_value, Object *new_value) {
+    if (*addr == old_value) {
+        *addr = new_value;
+        return true;
+    }
+    return false;
+}
+
+int main() {
+    /* 模拟 ABA 问题，语句 (a)、(b)、(c) 按出现顺序被 T1、T2 线程执行 */
+    int value = 1; // 初始值为 1
+    compareAndSwap(&value, 1, 2); // 线程 T1 执行 (a)
+    compareAndSwap(&value, 2, 1); // 线程 T1 执行 (b)
+    compareAndSwap(&value, 1, 3); // 线程 T2 执行 (c)
+    return 0;
+}
+</script></code></pre>
+<p>假设存在两个线程 T1、T2，线程 T1 先执行语句 (a)，将 1 置换为了 2，接着又执行语句 (b)，将 2 置换回 1；然后线程 T2 执行语句 (c)，发现当前的值为 1，于是又将 1 置换为 3。</p>
+<p>从上面的描述中并未发现任何问题，是的，对于基本类型来说的确没有问题，因为我们关心的只是值本身而已。但是如果是引用类型就有问题了，因为 CAS 判断是仅仅是内存地址，如果这个地址被重用了呢，CAS 根本发现不了，地址还是那个地址，但是对象已经完全不同了（地址被重用是有可能发生的，一个内存被释放后，再分配，很有可能还是原来的地址），这就是所谓的”你大爷还是你大爷，你大妈已经不是你大妈了”。</p>
+<p>那么有什么办法解决 ABA 问题呢？利用 AtomicStampedReference、AtomicMarkableReference 原子类：</p>
+<ul>
+<li>AtomicStampedReference，从名字看的出来，每次使用 CAS 更新后，都给对象盖个戳（使用 int 来计数）；</li>
+<li>AtomicMarkableReference，从名字也看的出来，只要使用 CAS 更新过，就给对象打上布尔标记（如 false）。</li>
+</ul>
+<p>举个通俗的例子：你倒了一杯水放在了桌子上，然后你因为临时有点事走开了。这时你的同事把你的水给喝了然后又给倒满了。等你回来，发现那杯水还在，于是你拿起来就喝。如果你不关心这杯水是否被别人喝过，只关心水是否还在，那么就不存在 ABA 问题。如果你是一个讲卫生的小伙子，不但关心水是否还在，还关心这杯水是否被人喝过，于是你放了个纸条在水的旁边，别人喝过水后都会在纸条上加个 1，表示被喝过一次，这就是 AtomicStampedReference 的策略；而如果是 AtomicMarkableReference，就是只关心这杯水是否被人喝过，而不关心它被喝过几次。</p>
+<h3 id="AtomicReference-类"><a href="#AtomicReference-类" class="headerlink" title="AtomicReference 类"></a>AtomicReference 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicReference<V> implements java.io.Serializable {
+    /* 构造函数 */
+    public AtomicReference(V initialValue);
+    public AtomicReference(); // null
+
+    /* 相关操作 */
+    public final V get();
+    public final void set(V newValue);
+    public final void lazySet(V newValue);
+
+    public final boolean compareAndSet(V expect, V update); // 比较引用地址
+    public final V getAndSet(V newValue);
+
+    public final V getAndUpdate(UnaryOperator<V> updateFunction);
+    public final V updateAndGet(UnaryOperator<V> updateFunction);
+    public final V getAndAccumulate(V x, BinaryOperator<V> accumulatorFunction);
+    public final V accumulateAndGet(V x, BinaryOperator<V> accumulatorFunction);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="AtomicStampedReference-类"><a href="#AtomicStampedReference-类" class="headerlink" title="AtomicStampedReference 类"></a>AtomicStampedReference 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicStampedReference<V> {
+    /* 构造函数 */
+    public AtomicStampedReference(V initialRef, int initialStamp); // [ref, stamp] 二元组
+
+    /* 相关查询 */
+    public V getReference(); // 获取值
+    public int getStamp(); // 获取戳
+
+    /* 相关操作 */
+    public V get(int[] stampHolder); // stampHolder[0] 用于接收戳值
+    public void set(V newReference, int newStamp); // 无条件更新值和戳
+
+    public boolean compareAndSet(V   expectedReference, // 预期值
+                                 V   newReference, // 新的值
+                                 int expectedStamp, // 预期戳
+                                 int newStamp); // 新的戳
+
+    public boolean attemptStamp(V expectedReference, int newStamp); // 仅更新戳
+}
+</script></code></pre>
+<h3 id="AtomicMarkableReference-类"><a href="#AtomicMarkableReference-类" class="headerlink" title="AtomicMarkableReference 类"></a>AtomicMarkableReference 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class AtomicMarkableReference<V> {
+    /* 构造函数 */
+    public AtomicMarkableReference(V initialRef, boolean initialMark);
+
+    /* 相关查询 */
+    public V getReference(); // 获取引用
+    public boolean isMarked(); // 获取标记
+
+    /* 相关操作 */
+    public V get(boolean[] markHolder);
+    public void set(V newReference, boolean newMark);
+
+    public boolean compareAndSet(V       expectedReference,
+                                 V       newReference,
+                                 boolean expectedMark,
+                                 boolean newMark);
+
+    public boolean attemptMark(V expectedReference, boolean newMark);
+}
+</script></code></pre>
+<h3 id="原子更新字段"><a href="#原子更新字段" class="headerlink" title="原子更新字段"></a>原子更新字段</h3><p><code>AtomicIntegerFieldUpdater&lt;T&gt;</code>，整型字段更新器；<br><code>AtomicLongFieldUpdater&lt;T&gt;</code>，长整型字段更新器；<br><code>AtomicReferenceFieldUpdater&lt;T, V&gt;</code>，引用字段更新器（存在 ABA 问题）；</p>
+<blockquote>
+<p>被更新的字段须被<code>volatile</code>修饰，并且确保该字段的访问性，最好为<code>public</code>。</p>
+</blockquote>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
+public class AtomicIntFieldUpdaterTest {
+    private static class Info {
+        public volatile int id;
+        public Info(int id) { this.id = id;}
+    }
+
+    public static void main(String[] args) {
+        AtomicIntegerFieldUpdater<Info> intUpdater =
+            AtomicIntegerFieldUpdater.newUpdater(Info.class, "id");
+        Info info = new Info(10);
+        System.out.println(intUpdater.getAndIncrement(info));
+        System.out.println(intUpdater.get(info));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:32:18]
+$ javac AtomicIntFieldUpdaterTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:32:31]
+$ java com.zfl9.AtomicIntFieldUpdaterTest
+10
+11
+</script></code></pre>
+<h3 id="AtomicIntegerFieldUpdater-抽象类"><a href="#AtomicIntegerFieldUpdater-抽象类" class="headerlink" title="AtomicIntegerFieldUpdater 抽象类"></a>AtomicIntegerFieldUpdater 抽象类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public abstract class AtomicIntegerFieldUpdater<T> {
+    /* 静态方法 */
+    public static <U> /* tclass: 所在类的 Class 对象，fieldName: 字段名 (必须为 volatile int) */
+        AtomicIntegerFieldUpdater<U> newUpdater(Class<U> tclass, String fieldName);
+
+    /* 相关操作 */
+    public abstract int get(T obj);
+    public abstract void set(T obj, int newValue);
+    public abstract void lazySet(T obj, int newValue);
+    public int getAndSet(T obj, int newValue);
+
+    public abstract boolean compareAndSet(T obj, int expect, int update); // CAS
+
+    public int incrementAndGet(T obj); // 前自增
+    public int decrementAndGet(T obj); // 前自减
+    public int getAndIncrement(T obj); // 后自增
+    public int getAndDecrement(T obj); // 后自减
+
+    public int getAndAdd(T obj, int delta);
+    public int addAndGet(T obj, int delta);
+
+    public final int getAndUpdate(T obj, IntUnaryOperator updateFunction);
+    public final int updateAndGet(T obj, IntUnaryOperator updateFunction);
+
+    public final int getAndAccumulate(T obj, int x, IntBinaryOperator accumulatorFunction);
+    public final int accumulateAndGet(T obj, int x, IntBinaryOperator accumulatorFunction);
+}
+</script></code></pre>
+<h3 id="AtomicLongFieldUpdater-抽象类"><a href="#AtomicLongFieldUpdater-抽象类" class="headerlink" title="AtomicLongFieldUpdater 抽象类"></a>AtomicLongFieldUpdater 抽象类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public abstract class AtomicLongFieldUpdater<T> {
+    /* 静态方法 */
+    public static <U>
+        AtomicLongFieldUpdater<U> newUpdater(Class<U> tclass, String fieldName);
+
+    /* 相关方法 */
+    public abstract long get(T obj);
+    public abstract void set(T obj, long newValue);
+    public abstract void lazySet(T obj, long newValue);
+    public long getAndSet(T obj, long newValue);
+
+    public abstract boolean compareAndSet(T obj, long expect, long update);
+
+    public long incrementAndGet(T obj);
+    public long decrementAndGet(T obj);
+    public long getAndIncrement(T obj);
+    public long getAndDecrement(T obj);
+
+    public long getAndAdd(T obj, long delta);
+    public long addAndGet(T obj, long delta);
+
+    public final long getAndUpdate(T obj, LongUnaryOperator updateFunction);
+    public final long updateAndGet(T obj, LongUnaryOperator updateFunction);
+
+    public final long getAndAccumulate(T obj, long x, LongBinaryOperator accumulatorFunction);
+    public final long accumulateAndGet(T obj, long x, LongBinaryOperator accumulatorFunction);
+}
+</script></code></pre>
+<h3 id="AtomicReferenceFieldUpdater-抽象类"><a href="#AtomicReferenceFieldUpdater-抽象类" class="headerlink" title="AtomicReferenceFieldUpdater 抽象类"></a>AtomicReferenceFieldUpdater 抽象类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public abstract class AtomicReferenceFieldUpdater<T, V> {
+    /* 静态方法 */
+    public static <U, W> /* tclass: 类的 Class 对象; vclass: 字段的 Class 对象; fieldName: 字段名(必须为 volatile) */
+        AtomicReferenceFieldUpdater<U, W> newUpdater(Class<U> tclass,
+                                                     Class<W> vclass,
+                                                     String fieldName);
+
+    /* 相关方法 */
+    public abstract V get(T obj);
+    public abstract void set(T obj, V newValue);
+    public abstract void lazySet(T obj, V newValue);
+    public V getAndSet(T obj, V newValue);
+
+    public abstract boolean compareAndSet(T obj, V expect, V update);
+
+    public final V getAndUpdate(T obj, UnaryOperator<V> updateFunction);
+    public final V updateAndGet(T obj, UnaryOperator<V> updateFunction);
+
+    public final V getAndAccumulate(T obj, V x, BinaryOperator<V> accumulatorFunction);
+    public final V accumulateAndGet(T obj, V x, BinaryOperator<V> accumulatorFunction);
+}
+</script></code></pre>
+<h3 id="JDK1-8-新增类"><a href="#JDK1-8-新增类" class="headerlink" title="JDK1.8 新增类"></a>JDK1.8 新增类</h3><p>在 Java 8 中，Doug Lea 大神又添加了<code>LongAdder</code>、<code>LongAccumulator</code>、<code>DoubleAdder</code>、<code>DoubleAccumulator</code>四个类。</p>
+<p><code>LongAdder</code>是 JDK1.8 提供的累加器，基于 Striped64 实现。它常用于状态采集、统计等场景。AtomicLong 也可以用于这种场景，但在线程竞争激烈的情况下，LongAdder 要比 AtomicLong 拥有更高的吞吐量，但会耗费更多的内存空间。<br><code>LongAccumulator</code>和<code>LongAdder</code>类似，也基于 Striped64 实现。但要比 LongAdder 更加灵活（要传入一个函数接口），LongAdder 相当于 LongAccumulator 的一种特例。</p>
+<p>原有的 Atomic 系列类通过 CAS 来保证并发时操作的原子性，但是高并发也就意味着 CAS 的失败次数会增多，失败次数的增多会引起更多线程的重试，最后导致 AtomicLong 的效率降低。新的四个类通过减少并发，将单一 value 的更新压力分担到多个 value 中去，降低单个 value 的“热度”以提高高并发情况下的吞吐量。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.util.concurrent.atomic.LongAdder;
+
+public class LongAdderTest {
+    public static void main(String[] args) throws InterruptedException {
+        final LongAdder adder = new LongAdder();
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 10; i++)
+                adder.add(1);
+        });
+
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 10; i++)
+                adder.add(1);
+        });
+
+        System.out.println("before: " + adder.sum());
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        System.out.println("after: " + adder.sum());
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [14:51:38] C:2
+$ javac LongAdderTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [14:51:44]
+$ java com.zfl9.LongAdderTest
+before: 0
+after: 20
+</script></code></pre>
+<h3 id="LongAdder-类"><a href="#LongAdder-类" class="headerlink" title="LongAdder 类"></a>LongAdder 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class LongAdder extends Striped64 implements Serializable {
+    /* 构造函数 */
+    public LongAdder(); // 初始值 0
+
+    /* 相关操作 */
+    public void add(long x); // 累加
+    public void increment(); // 加一
+    public void decrement(); // 减一
+
+    public long sum(); // 获取当前总和 (非原子快照)
+    public void reset(); // 重置 (只在没有并发更新的情况下有效)
+    public long sumThenReset(); // 获取当前总和并重置
+
+    public long longValue();
+    public int intValue();
+    public float floatValue();
+    public double doubleValue();
+
+    public String toString(); // sum() 的字符串形式
+}
+</script></code></pre>
+<h3 id="LongAccumulator-类"><a href="#LongAccumulator-类" class="headerlink" title="LongAccumulator 类"></a>LongAccumulator 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class LongAccumulator extends Striped64 implements Serializable {
+    /* 构造函数 */
+    /**
+     * @param accumulatorFunction   累加函数
+     * @param identity              初始值
+     */
+    public LongAccumulator(LongBinaryOperator accumulatorFunction, long identity);
+
+    /* 相关操作 */
+    public void accumulate(long x); // 累加
+
+    public long get(); // 获取当前值 (非原子快照)
+    public void reset(); // 重置 (只在没有并发更新的情况下有效)
+    public long getThenReset(); // 获取当前值并重置
+
+    public long longValue();
+    public int intValue();
+    public float floatValue();
+    public double doubleValue();
+
+    public String toString(); // get() 的字符串形式
+}
+</script></code></pre>
+<h3 id="DoubleAdder-类"><a href="#DoubleAdder-类" class="headerlink" title="DoubleAdder 类"></a>DoubleAdder 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class DoubleAdder extends Striped64 implements Serializable {
+    /* 构造函数 */
+    public DoubleAdder(); // 初始值 0
+
+    /* 相关操作 */
+    public void add(double x);
+
+    public double sum();
+    public void reset();
+    public double sumThenReset();
+
+    public double doubleValue();
+    public float floatValue();
+    public long longValue();
+    public int intValue();
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="DoubleAccumulator-类"><a href="#DoubleAccumulator-类" class="headerlink" title="DoubleAccumulator 类"></a>DoubleAccumulator 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class DoubleAccumulator extends Striped64 implements Serializable {
+    /* 构造函数 */
+    public DoubleAccumulator(DoubleBinaryOperator accumulatorFunction, double identity);
+
+    /* 相关操作 */
+    public void accumulate(double x);
+
+    public double get();
+    public void reset();
+    public double getThenReset();
+
+    public double doubleValue();
+    public float floatValue();
+    public long longValue();
+    public int intValue();
+
+    public String toString();
+}
+</script></code></pre>
+<h2 id="BlockingQueue-阻塞队列"><a href="#BlockingQueue-阻塞队列" class="headerlink" title="BlockingQueue 阻塞队列"></a>BlockingQueue 阻塞队列</h2><p>阻塞队列提供了可阻塞的入队和出队操作：如果队列满了，入队操作将阻塞直到有空间可用，如果队列空了，出队操作将阻塞直到有元素可用。</p>
+<p>如果你想避免使用错综复杂的 wait–notify 语句，BlockingQueue 非常有用；BlockingQueue 的典型用途就是解决生产者-消费者问题。<br>任何有效的生产者-消费者问题解决方案都是通过控制生产者 put() 方法（生产资源）和消费者 take() 方法（消费资源）的调用来实现的，一旦你实现了对方法的阻塞控制，那么你将解决该问题。</p>
+<blockquote>
+<p>阻塞队列的实现原理也很简单，就是利用 ReentrantLock、Condition，将那些错综复杂的 await-signal 语句隐藏在内部，好让我们专注于实际问题，而不用考虑这些乱七八糟的东西。</p>
+</blockquote>
+<p><code>BlockingQueue</code>是<code>Queue</code>的子接口，同时<code>BlockingQueue</code>还有两个子接口：<code>BlockingDeque</code>、<code>TransferQueue</code>；因此，它们三个都是 Java 集合框架的一员。</p>
+<ul>
+<li><code>BlockingDeque</code>同时还继承了<code>Deque</code>接口，也就是双端阻塞队列，可以当作 BlockingStack 阻塞栈来使用。</li>
+<li><code>TransferQueue</code>被称为<strong>传递队列</strong>；对于阻塞队列：当生产者向队列添加元素但队列已满时，生产者会被阻塞；当消费者从队列移除元素但队列为空时，消费者会被阻塞；而 TransferQueue 则更进一步，<strong>生产者会一直阻塞直到所添加到队列的元素被某一个消费者所消费（不仅仅是添加到队列里就完事）</strong>；新添加的 transfer() 方法用来实现这种约束。顾名思义，阻塞就是发生在元素从一个线程 transfer 到另一个线程的过程中，它有效地实现了元素在线程之间的传递（以建立 Java 内存模型中的 happens-before 关系的方式）。</li>
+</ul>
+<p>第一次看到 TransferQueue 时，首先想到了已有的阻塞队列实现类：SynchronousQueue；SynchronousQueue 是利用容量为 0 这个特殊限制来实现元素在线程之间传递的。因为只要有生产者向队列添加元素，队列就是满状态，导致生产者被阻塞直到消费者的到来；只要有消费者从队列移除元素，队列就是空状态，导致消费者被阻塞直到生产者的到来。</p>
+<p><strong>BlockingQueue 特点</strong></p>
+<ul>
+<li>BlockingQueue 不接受 null 元素，否则将抛出 NullPointerException 异常；因为 null 值在内部被用作标记值来指示轮询操作的失败；</li>
+<li>BlockingQueue 可能是容量有限的（如 ArrayBlockingQueue），而无界阻塞队列总是报告 Integer.MAX_VALUE 的剩余容量；</li>
+<li>BlockingQueue 主要被用于解决”生产者-消费者问题”，虽然它是集合框架的一员，但是像 remove(e) 一类的方法通常不是非常高效，要尽量少用；</li>
+<li>BlockingQueue 是线程安全的，然而，批量操作 addAll()、containsAll()、retainAll()、removeAll() 不一定是按照原子方式执行的，除非在实现中另有说明。</li>
+</ul>
+<p>阻塞队列的主要<strong>实现类</strong>有 7 个：</p>
+<ul>
+<li><code>ArrayBlockingQueue</code>：基于<code>数组</code>结构的<code>有界</code>阻塞队列（长度不可变）；</li>
+<li><code>LinkedBlockingQueue</code>：基于<code>链表</code>结构的<code>有界</code>阻塞队列（默认容量 Integer.MAX_VALUE）；</li>
+<li><code>LinkedTransferQueue</code>：基于<code>链表</code>结构的<code>无界</code>阻塞/传递队列；</li>
+<li><code>LinkedBlockingDeque</code>：基于<code>链表</code>结构的<code>有界</code>阻塞双端队列（默认容量 Integer.MAX_VALUE）；</li>
+<li><code>SynchronousQueue</code>：不存储元素的阻塞/传递队列；</li>
+<li><code>PriorityBlockingQueue</code>：支持<code>优先级</code>排序的<code>无界</code>阻塞队列；</li>
+<li><code>DelayQueue</code>：支持<code>延时</code>获取元素的<code>无界</code>阻塞队列。</li>
+</ul>
+<p><strong>阻塞队列方法摘要</strong><br><img src="/images/java-blockingqueue.png" alt="阻塞队列方法摘要"></p>
+<h3 id="BlockingQueue-接口"><a href="#BlockingQueue-接口" class="headerlink" title="BlockingQueue 接口"></a>BlockingQueue 接口</h3><pre><code class="language-java line-numbers"><script type="text/plain">public interface BlockingQueue<E> extends Queue<E> {
+    /* 抛异常系列 */
+    boolean add(E e);
+    E remove();
+    E element();
+
+    /* 特定值系列 */
+    boolean offer(E e);
+    E poll();
+    E peek();
+
+    /* 阻塞系列 */
+    void put(E e) throws InterruptedException;
+    E take() throws InterruptedException;
+
+    /* 超时系列 */
+    boolean offer(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    E poll(long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    /* 其它方法 */
+    int remainingCapacity(); // 剩余容量
+
+    boolean contains(Object o); // 是否包含给定元素
+    boolean remove(Object o); // 移除与之匹配的第一个元素
+
+    int drainTo(Collection<? super E> c); // 转移元素到给定集合，返回已转移的数量
+    int drainTo(Collection<? super E> c, int maxElements); // 限制最大转移数量
+}
+</script></code></pre>
+<h3 id="BlockingDeque-接口"><a href="#BlockingDeque-接口" class="headerlink" title="BlockingDeque 接口"></a>BlockingDeque 接口</h3><p>BlockingDeque 方法摘要<br><img src="/images/java-blockingdeque-1.png" alt="BlockingDeque 接口 - 方法预览"></p>
+<p>BlockingQueue 与 BlockingDeque 方法对比<br><img src="/images/java-blockingdeque-2.png" alt="BlockingDeque vs BlockingQueue"></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface BlockingDeque<E> extends BlockingQueue<E>, Deque<E> {
+    /* 抛异常系列 */
+    void addFirst(E e);
+    void addLast(E e);
+    E removeFirst();
+    E removeLast();
+    E getFirst();
+    E getLast();
+
+    /* 特定值系列 */
+    boolean offerFirst(E e);
+    boolean offerLast(E e);
+    E pollFirst();
+    E pollLast();
+    E peekFirst();
+    E peekLast();
+
+    /* 阻塞系列 */
+    void putFirst(E e) throws InterruptedException;
+    void putLast(E e) throws InterruptedException;
+    E takeFirst() throws InterruptedException;
+    E takeLast() throws InterruptedException;
+
+    /* 超时系列 */
+    boolean offerFirst(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    boolean offerLast(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    E pollFirst(long timeout, TimeUnit unit)
+        throws InterruptedException;
+    E pollLast(long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    /* 抛异常系列 - Queue */
+    boolean add(E e);
+    E remove();
+    E element();
+
+    /* 特定值系列 - Queue */
+    boolean offer(E e);
+    E poll();
+    E peek();
+
+    /* 阻塞系列 - Queue */
+    void put(E e) throws InterruptedException;
+    E take() throws InterruptedException;
+
+    /* 超时系列 - Queue */
+    boolean offer(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    E poll(long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    boolean removeFirstOccurrence(Object o); // 移除第一个与之匹配的元素
+    boolean removeLastOccurrence(Object o); // 移除最后一个与之匹配的元素
+    boolean remove(Object o); // 移除与之匹配的第一个元素
+
+    public boolean contains(Object o); // 测试是否存在指定元素
+
+    public int size(); // 队列长度
+    Iterator<E> iterator(); // 获取迭代器
+}
+</script></code></pre>
+<h3 id="TransferQueue-接口"><a href="#TransferQueue-接口" class="headerlink" title="TransferQueue 接口"></a>TransferQueue 接口</h3><pre><code class="language-java line-numbers"><script type="text/plain">public interface TransferQueue<E> extends BlockingQueue<E> {
+    /* 如果有线程正在等待此元素，则立即传递给它并返回 true，否则返回 false */
+    boolean tryTransfer(E e);
+
+    /* 传递给定元素给消费者，如果需要的话则进行等待 */
+    void transfer(E e) throws InterruptedException;
+
+    /* 在给定时间内等待，如果传递成功则返回 true，如果发生超时则返回 false */
+    boolean tryTransfer(E e, long timeout, TimeUnit unit) throws InterruptedException;
+
+    /* 查询操作 */
+    boolean hasWaitingConsumer(); // 查询是否有消费者正在等待获取元素
+    int getWaitingConsumerCount(); // 查询等待队列的估计长度，仅用于监视，该方法可能比 hasWaitingConsumer() 慢
+}
+</script></code></pre>
+<h3 id="ArrayBlockingQueue-类"><a href="#ArrayBlockingQueue-类" class="headerlink" title="ArrayBlockingQueue 类"></a>ArrayBlockingQueue 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class ArrayBlockingQueue<E> extends AbstractQueue<E>
+        implements BlockingQueue<E>, java.io.Serializable {
+    /* 构造函数 */
+    public ArrayBlockingQueue(int capacity); // [非公平] 指定容量，后续不可再改变
+    public ArrayBlockingQueue(int capacity, boolean fair); // [可选公平]
+    public ArrayBlockingQueue(int capacity, boolean fair, Collection<? extends E> c); // 拷贝构造
+
+    /* 成员方法 */
+    public boolean remove(Object o);
+    public boolean contains(Object o);
+
+    public int remainingCapacity(); // 剩余容量
+    public int size(); // 队列长度
+    public void clear();
+
+    public int drainTo(Collection<? super E> c);
+    public int drainTo(Collection<? super E> c, int maxElements);
+
+    public Iterator<E> iterator();
+    public Spliterator<E> spliterator();
+
+    public Object[] toArray();
+    public <T> T[] toArray(T[] a);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="LinkedBlockingQueue-类"><a href="#LinkedBlockingQueue-类" class="headerlink" title="LinkedBlockingQueue 类"></a>LinkedBlockingQueue 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class LinkedBlockingQueue<E> extends AbstractQueue<E>
+        implements BlockingQueue<E>, java.io.Serializable {
+    /* 构造函数 */
+    public LinkedBlockingQueue(); // Integer.MAX_VALUE
+    public LinkedBlockingQueue(int capacity); // 指定容量
+    public LinkedBlockingQueue(Collection<? extends E> c); // 拷贝构造 && Integer.MAX_VALUE
+
+    /* 成员方法 */
+    public int size(); // 队列长度
+    public int remainingCapacity(); // 剩余容量
+    public void clear();
+
+    public boolean remove(Object o);
+    public boolean contains(Object o);
+
+    public int drainTo(Collection<? super E> c);
+    public int drainTo(Collection<? super E> c, int maxElements);
+
+    public Iterator<E> iterator();
+    public Spliterator<E> spliterator();
+
+    public Object[] toArray();
+    public <T> T[] toArray(T[] a);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="SynchronousQueue-类"><a href="#SynchronousQueue-类" class="headerlink" title="SynchronousQueue 类"></a>SynchronousQueue 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class SynchronousQueue<E> extends AbstractQueue<E>
+    implements BlockingQueue<E>, java.io.Serializable {
+    /* 构造函数 */
+    /*
+     * 同步队列，每个插入操作必须等待另一线程进行相应的删除操作，反之亦然
+     * 同步队列没有任何内部容量，因此无法进行迭代，队列中不允许 null 元素
+     */
+    public SynchronousQueue(); // 非公平
+    public SynchronousQueue(boolean fair); // 可选公平
+
+    /* 成员方法 */
+    public void put(E e) throws InterruptedException;
+    public E take() throws InterruptedException;
+
+    public boolean offer(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    public E poll(long timeout, TimeUnit unit) throws InterruptedException;
+
+    public boolean isEmpty(); // true
+    public int size(); // 0
+    public int remainingCapacity(); // 0
+}
+</script></code></pre>
+<h3 id="PriorityBlockingQueue-类"><a href="#PriorityBlockingQueue-类" class="headerlink" title="PriorityBlockingQueue 类"></a>PriorityBlockingQueue 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class PriorityBlockingQueue<E> extends AbstractQueue<E>
+    implements BlockingQueue<E>, java.io.Serializable {
+    /* 构造方法 */
+    public PriorityBlockingQueue(); // 初始容量 11
+    public PriorityBlockingQueue(int initialCapacity); // 指定初始容量
+    public PriorityBlockingQueue(int initialCapacity, Cmparator<? super E> comparator); // 给定比较器
+    public PriorityBlockingQueue(Collection<? extends E> c); // 若为 SortedSet/PriorityQueue，则按照相同顺序排序
+
+    /* 成员方法 */
+    public Comparator<? super E> comparator(); // 返回当前比较器
+
+    public int size(); // 队列长度
+    public int remainingCapacity(); // 剩余容量
+    public void clear();
+
+    public boolean remove(Object o);
+    public boolean contains(Object o);
+
+    public int drainTo(Collection<? super E> c);
+    public int drainTo(Collection<? super E> c, int maxElements);
+
+    public Object[] toArray();
+    public <T> T[] toArray(T[] a);
+
+    public Iterator<E> iterator();
+    public Spliterator<E> spliterator();
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="DelayQueue-类"><a href="#DelayQueue-类" class="headerlink" title="DelayQueue 类"></a>DelayQueue 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">/*
+ * 无界阻塞队列，队列元素类型为 Delayed，只有延迟时间已到期的元素才会被出队
+ * 队列头部是延迟时间即将到期的元素，未到期的元素不能被 take()、poll() 移除
+ */
+public class DelayQueue<E extends Delayed> extends AbstractQueue<E>
+    implements BlockingQueue<E> {
+    /* 构造方法 */
+    public DelayQueue(); // 初始为空
+    public DelayQueue(Collection<? extends E> c);
+
+    /* 成员方法 */
+    public boolean offer(E e); // 总是成功，因为是无界的嘛
+    public boolean add(E e); // 调用 offer(e)
+    public void put(E e); // 调用 offer(e)
+    public boolean offer(E e, long timeout, TimeUnit unit); // 调用 offer(e)
+
+    public E poll(); // 如果没有已到期的元素，则返回 null
+    public E take() throws InterruptedException; // 阻塞，直到有元素已到期
+    public E poll(long timeout, TimeUnit unit) throws InterruptedException; // 指定超时
+    public E peek(); // 如果队列为空则返回 null，否则返回即将到期的元素
+
+    public int size(); // 队列长度
+    public int remainingCapacity(); // Integer.MAX_VALUE
+    public void clear();
+    public boolean remove(Object o);
+
+    public Object[] toArray();
+    public <T> T[] toArray(T[] a);
+
+    public Iterator<E> iterator();
+}
+</script></code></pre>
+<h3 id="LinkedBlockingDeque-类"><a href="#LinkedBlockingDeque-类" class="headerlink" title="LinkedBlockingDeque 类"></a>LinkedBlockingDeque 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class LinkedBlockingDeque<E>
+    extends AbstractQueue<E>
+    implements BlockingDeque<E>, java.io.Serializable {
+    /* 构造函数 */
+    public LinkedBlockingDeque(); // Integer.MAX_VALUE
+    public LinkedBlockingDeque(int capacity); // 给定容量
+    public LinkedBlockingDeque(Collection<? extends E> c); // Integer.MAX_VALUE && 拷贝构造
+
+    /* 抛异常系列 */
+    public void addFirst(E e);
+    public void addLast(E e);
+    public E removeFirst();
+    public E removeLast();
+    public E getFirst();
+    public E getLast();
+
+    /* 特定值系列 */
+    public boolean offerFirst(E e);
+    public boolean offerLast(E e);
+    public E pollFirst();
+    public E pollLast();
+    public E peekFirst();
+    public E peekLast();
+
+    /* 阻塞系列 */
+    public void putFirst(E e) throws InterruptedException;
+    public void putLast(E e) throws InterruptedException;
+    public E takeFirst() throws InterruptedException;
+    public E takeLast() throws InterruptedException;
+
+    /* 超时系列 */
+    public boolean offerFirst(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    public boolean offerLast(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    public E pollFirst(long timeout, TimeUnit unit)
+        throws InterruptedException;
+    public E pollLast(long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    /* 抛异常系列 - Queue */
+    public boolean add(E e);
+    public E remove();
+    public E element();
+
+    /* 特定值系列 - Queue */
+    public boolean offer(E e);
+    public E poll();
+    public E peek();
+
+    /* 阻塞系列 - Queue */
+    public void put(E e) throws InterruptedException;
+    public E take() throws InterruptedException;
+
+    /* 超时系列 - Queue */
+    public boolean offer(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+    public E poll(long timeout, TimeUnit unit) throws InterruptedException;
+
+    /* 栈相关方法 */
+    public void push(E e); // addFirst(e)
+    public E pop(); // removeFirst()
+
+    /* 其它方法 */
+    public boolean contains(Object o); // 查询当前队列是否包含指定元素
+    public boolean remove(Object o); // 移除第一个与之匹配的元素
+    public boolean removeFirstOccurrence(Object o); // 移除第一个与之匹配的元素
+    public boolean removeLastOccurrence(Object o); // 移除最后一个与之匹配的元素
+
+    public int size(); // 队列长度
+    public int remainingCapacity(); // 剩余容量
+    public void clear();
+
+    public int drainTo(Collection<? super E> c); // 转移元素至给定集合
+    public int drainTo(Collection<? super E> c, int maxElements); // 限制最大转移数
+
+    public Iterator<E> iterator();
+    public Iterator<E> descendingIterator();
+    public Spliterator<E> spliterator();
+
+    public Object[] toArray();
+    public <T> T[] toArray(T[] a);
+
+    public String toString();
+}
+</script></code></pre>
+<h3 id="LinkedTransferQueue-类"><a href="#LinkedTransferQueue-类" class="headerlink" title="LinkedTransferQueue 类"></a>LinkedTransferQueue 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public class LinkedTransferQueue<E> extends AbstractQueue<E>
+    implements TransferQueue<E>, java.io.Serializable {
+    /* 构造函数 */
+    public LinkedTransferQueue(); // 初始为空 [无界队列]
+    public LinkedTransferQueue(Collection<? extends E> c); // 拷贝构造 [无界队列]
+
+    /* 传递元素 */
+    public boolean tryTransfer(E e); // 尝试传递
+    public void transfer(E e) throws InterruptedException; // 阻塞生产者直到该元素被消费
+    public boolean tryTransfer(E e, long timeout, TimeUnit unit) // 阻塞给定时间，如果没有被消费则返回 false
+        throws InterruptedException;
+
+    /* 存放元素 */
+    public boolean add(E e); // 因为是无界队列，因此总是成功，下同
+    public boolean offer(E e);
+    public void put(E e);
+    public boolean offer(E e, long timeout, TimeUnit unit);
+
+    /* 获取元素 */
+    public E remove();
+    public E poll();
+    public E take() throws InterruptedException;
+    public E poll(long timeout, TimeUnit unit) throws InterruptedException;
+
+    /* 窥探元素 */
+    public E element();
+    public E peek();
+
+    /* 其它方法 */
+    public boolean hasWaitingConsumer();
+    public int getWaitingConsumerCount();
+
+    public boolean remove(Object o);
+    public boolean contains(Object o);
+
+    public int drainTo(Collection<? super E> c);
+    public int drainTo(Collection<? super E> c, int maxElements);
+
+    public int size();
+    public boolean isEmpty();
+    public int remainingCapacity(); // Integer.MAX_VALUE
+
+    public Iterator<E> iterator();
+    public Spliterator<E> spliterator();
+}
+</script></code></pre>
+<h3 id="阻塞队列应用例子"><a href="#阻塞队列应用例子" class="headerlink" title="阻塞队列应用例子"></a>阻塞队列应用例子</h3><pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class BlockingQueueTest {
+    public static void main(String[] args) throws InterruptedException {
+        BlockingQueue<Product> queue = new LinkedBlockingQueue<>(10);
+
+        Thread p1 = new Thread(new Producer(queue), "Producer-1");
+        Thread p2 = new Thread(new Producer(queue), "Producer-2");
+        Thread c1 = new Thread(new Consumer(queue), "Consumer-1");
+        Thread c2 = new Thread(new Consumer(queue), "Consumer-2");
+        Thread c3 = new Thread(new Consumer(queue), "Consumer-3");
+
+        p1.start();
+        p2.start();
+        c1.start();
+        c2.start();
+        c3.start();
+
+        Thread.sleep(1500);
+
+        p1.interrupt();
+        p2.interrupt();
+        c1.interrupt();
+        c2.interrupt();
+        c3.interrupt();
+    }
+}
+
+// 产品
+class Product {
+    public Product() {}
+
+    @Override
+    public String toString() {
+        return "product$" + this.hashCode();
+    }
+}
+
+// 生产者
+class Producer implements Runnable {
+    private BlockingQueue<Product> queue;
+
+    public Producer(BlockingQueue<Product> queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        Product prod = null;
+        String tName = Thread.currentThread().getName();
+        while (!Thread.interrupted()) {
+            prod = new Product();
+            System.out.printf("[%s] produce %s\n", tName, prod);
+            try {
+                queue.put(prod);
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+}
+
+// 消费者
+class Consumer implements Runnable {
+    private BlockingQueue<Product> queue;
+
+    public Consumer(BlockingQueue<Product> queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        Product prod = null;
+        String tName = Thread.currentThread().getName();
+        while (!Thread.interrupted()) {
+            try {
+                prod = queue.take();
+                System.out.printf("[%s] consume %s\n", tName, prod);
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [10:53:40]
+$ javac BlockingQueueTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [10:54:08]
+$ java com.zfl9.BlockingQueueTest
+[Producer-2] produce product$809629941
+[Producer-1] produce product$1617421289
+[Consumer-1] consume product$1617421289
+[Consumer-2] consume product$809629941
+[Producer-1] produce product$1855979925
+[Producer-2] produce product$1048969357
+[Consumer-1] consume product$1048969357
+[Consumer-3] consume product$1855979925
+[Producer-1] produce product$1788840089
+[Consumer-2] consume product$1788840089
+[Producer-2] produce product$985240453
+[Consumer-1] consume product$985240453
+[Producer-1] produce product$798821294
+[Consumer-3] consume product$798821294
+[Producer-2] produce product$2142964406
+[Consumer-2] consume product$2142964406
+[Producer-1] produce product$1882905887
+[Consumer-1] consume product$1882905887
+[Producer-2] produce product$1073923044
+[Consumer-3] consume product$1073923044
+[Producer-1] produce product$519620132
+[Consumer-2] consume product$519620132
+[Producer-2] produce product$1309552897
+[Consumer-1] consume product$1309552897
+</script></code></pre>
+<h2 id="同步容器与并发容器"><a href="#同步容器与并发容器" class="headerlink" title="同步容器与并发容器"></a>同步容器与并发容器</h2><p><strong>同步容器</strong><br>在 JDK1.5 之前，Java 提供的主要同步容器有：</p>
+<ul>
+<li><code>Vector</code>、<code>Stack</code>、<code>Hashtable</code></li>
+<li><code>Collections.synchronizedXXX()</code></li>
+</ul>
+<p>这些同步容器的线程安全是指<strong>单个操作是线程安全的</strong>，而<strong>复合操作不是线程安全的</strong>！比如迭代操作就是典型的复合操作，它不是线程安全的。<br>最主要的是，同步容器一般都是使用 synchronized 进行同步，有的甚至每个公共方法都使用 synchronized 同步，严重降低了并发性。</p>
+<p><strong>并发容器</strong><br>这里主要提这两种并发容器：<code>ConcurrentHashMap</code>、<code>CopyOnWriteArrayList</code>。</p>
+<p><strong>ConcurrentHashMap</strong><br>ConcurrentHashMap 与 HashMap、Hashtable 之间的对比：</p>
+<ul>
+<li>Hashtable、ConcurrentHashMap 线程安全，HashMap 非线程安全；</li>
+<li>Hashtable 的线程安全仅仅是指单个操作是线程安全的，而复合操作不是（如迭代操作）；</li>
+<li>ConcurrentHashMap 的迭代操作是线程安全的，并且支持在迭代的同时修改映射，但不保证立即可见；</li>
+<li>HashMap 允许 null 键和 null 值；Hashtable、ConcurrentHashMap 均不允许 null 键和 null 值，因为有些情况下意义不明确；</li>
+<li>HashMap 如果在迭代期间进行修改操作，则会触发快速失败机制，抛出 ConcurrentModificationException 异常；Hashtable 的迭代器是强一致性的，意味着修改操作对后续迭代操作立即可见；ConcurrentHashMap 的迭代器是弱一致性的，意味着修改操作对后续迭代操作不保证立即可见（尽量保证立即可见）。</li>
+</ul>
+<p><strong>迭代器的弱一致性</strong><br>ConcurrentHashMap 的弱一致性主要是为了提升效率，是一致性与效率之间的一种权衡。要成为强一致性，就得到处使用锁，甚至是全局锁，这就与 Hashtable 和同步的 HashMap 一样了。</p>
+<p>在 Java7 中，采用<strong>分段锁机制</strong>，理论最大并发数与 Segment 个数相等。Java7 中的 ConcurrentHashMap 的底层数据结构仍然是数组和链表。与 HashMap 不同的是，ConcurrentHashMap最外层不是一个大的数组，而是一个 Segment 的数组。每个 Segment 包含一个与 HashMap 数据结构差不多的链表数组。整体数据结构如下图所示：<br><img src="/images/java-juc-hashmap7.png" alt="Java7 ConcurrentHashMap 数据结构"></p>
+<p>在 Java8 中，为了进一步提高性能，摒弃了分段锁机制，采用更高效的 CAS 操作。底层与同期的 HashMap 一样，都是”数组 + 链表 + 红黑树”。当链表长度超过一定阈值（8）时将链表（寻址时间复杂度为 O(N)）转换为红黑树（寻址时间复杂度为 O(log(N))）。整体数据结构如下图所示：<br><img src="/images/java-juc-hashmap8.png" alt="Java8 ConcurrentHashMap 数据结构"></p>
+<p><strong>CopyOnWriteArrayList</strong><br><code>CopyOnWrite</code>即<strong>写时复制</strong>，简称 COW。COW 是一种用于程序设计中的优化策略。其基本思路是，从一开始大家都在共享同一个内容，当某个人想要修改这个内容的时候，才会真正把内容 Copy 出去形成一个新的内容然后再改，这是一种延时懒惰策略。从 JDK1.5 开始 Java 并发包里提供了两个使用 CopyOnWrite 机制实现的并发容器，它们是 CopyOnWriteArrayList 和 CopyOnWriteArraySet。CopyOnWrite 容器非常有用，可以在非常多的并发场景中使用到。</p>
+<p><strong>什么是 CopyOnWrite 容器</strong><br>CopyOnWrite 容器即写时复制容器。通俗的理解是当我们往一个容器添加元素的时候，不直接往当前容器添加，而是先将当前容器进行 Copy，复制出一个新的容器，然后往新的容器里添加元素，添加完元素之后，再将原容器的引用指向新的容器。这样做的好处是我们可以对 CopyOnWrite 容器进行并发的读，而不需要加锁，因为当前容器不会添加任何元素。所以 CopyOnWrite 容器也是一种读写分离的思想，读和写不同的容器。</p>
+<p><strong>CopyOnWrite 容器的应用场景</strong><br>CopyOnWrite 并发容器用于<strong>读多写少</strong>的并发场景。比如白名单，黑名单，商品类目的访问和更新场景等等。</p>
+<h3 id="ConcurrentMap-接口"><a href="#ConcurrentMap-接口" class="headerlink" title="ConcurrentMap 接口"></a>ConcurrentMap 接口</h3><p>ConcurrentMap 是 Map 的子接口，关于 Map 接口的内容请查看 - <a href="/java-collection.html#Map-%E6%98%A0%E5%B0%84">Java 集合框架 - Map</a>。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface ConcurrentMap<K, V> extends Map<K, V> {
+    default void forEach(BiConsumer<? super K, ? super V> action); // 迭代
+
+    default V getOrDefault(Object key, V defaultValue); // 如果不存在则返回默认值
+    V putIfAbsent(K key, V value); // 如果给定键尚未与值关联，则进行 put()
+    boolean remove(Object key, Object value); // 如果给定键关联的值与给定值相同，则删除
+
+    V replace(K key, V value); // 直接更新，返回旧值
+    boolean replace(K key, V oldValue, V newValue); // 如果给定键关联的值与给定值相同，则更新
+    default void replaceAll(BiFunction<? super K, ? super V, ? extends V> function); // 更新全部
+
+    // 如果不存在则 mappingFunction
+    default V computeIfAbsent(K key,
+                              Function<? super K, ? extends V> mappingFunction);
+    // 如果存在则 remappingFunction
+    default V computeIfPresent(K key,
+                               BiFunction<? super K, ? super V, ? extends V> remappingFunction);
+    // 直接 remappingFunction
+    default V compute(K key,
+                      BiFunction<? super K, ? super V, ? extends V> remappingFunction);
+    // 如果给定键不存在则将其与给定值关联，否则使用给定函数合并旧值与给定值得到新值，然后与之关联
+    default V merge(K key, V value,
+                    BiFunction<? super V, ? super V, ? extends V> remappingFunction);
+}
+</script></code></pre>
+<h3 id="ConcurrentNavigableMap-接口"><a href="#ConcurrentNavigableMap-接口" class="headerlink" title="ConcurrentNavigableMap 接口"></a>ConcurrentNavigableMap 接口</h3><p>ConcurrentNavigableMap 是 ConcurrentMap、NavigableMap 的子接口，支持一系列的导航方法，是一个<strong>有序</strong>的 Map。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface ConcurrentNavigableMap<K,V>
+    extends ConcurrentMap<K,V>, NavigableMap<K,V>
+{
+    // 子视图
+    ConcurrentNavigableMap<K,V> subMap(K fromKey, boolean fromInclusive,
+                                       K toKey,   boolean toInclusive);
+    // 头部视图
+    ConcurrentNavigableMap<K,V> headMap(K toKey, boolean inclusive);
+    // 尾部视图
+    ConcurrentNavigableMap<K,V> tailMap(K fromKey, boolean inclusive);
+
+    // 子视图 [from, to)
+    ConcurrentNavigableMap<K,V> subMap(K fromKey, K toKey);
+    // 头部视图 [from, to)
+    ConcurrentNavigableMap<K,V> headMap(K toKey);
+    // 尾部视图 [from, to)
+    ConcurrentNavigableMap<K,V> tailMap(K fromKey);
+
+    // 逆向视图
+    ConcurrentNavigableMap<K,V> descendingMap();
+
+    // key 视图 [升序]
+    public NavigableSet<K> navigableKeySet();
+    // key 视图 [升序]
+    NavigableSet<K> keySet();
+    // key 视图 [降序]
+    public NavigableSet<K> descendingKeySet();
+}
+</script></code></pre>
+<h3 id="ConcurrentHashMap-类"><a href="#ConcurrentHashMap-类" class="headerlink" title="ConcurrentHashMap 类"></a>ConcurrentHashMap 类</h3><p>相关说明：</p>
+<ul>
+<li>ConcurrentHashMap 不允许 null 键以及 null 值。HashMap 允许。</li>
+<li>ConcurrentHashMap 的迭代器（iterators 和 spliterators）是”弱一致”的。</li>
+</ul>
+<p>构造函数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public ConcurrentHashMap(); // 默认初始容量 16
+public ConcurrentHashMap(int initialCapacity); // 给定初始容量
+
+public ConcurrentHashMap(Map<? extends K, ? extends V> m); // 初始容量为 16，然后调用 putAll()
+
+/* concurrencyLevel 并发级别：是指并发更新 Map 的线程数量估计值，作为一个提示传给 Map */
+public ConcurrentHashMap(int initialCapacity,
+                         float loadFactor, int concurrencyLevel);
+public ConcurrentHashMap(int initialCapacity, float loadFactor); // concurrencyLevel = 1
+</script></code></pre>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - ConcurrentHashMap</a>。</p>
+<h3 id="ConcurrentSkipListMap-类"><a href="#ConcurrentSkipListMap-类" class="headerlink" title="ConcurrentSkipListMap 类"></a>ConcurrentSkipListMap 类</h3><p>相关说明：</p>
+<ul>
+<li>与大多数并发集合一样，该类不允许 null 键或 null 值，因为一些 null 返回值的意义很不清晰。</li>
+<li>ConcurrentSkipListMap 实现了 ConcurrentNavigableMap 接口，因此这是一个有序的 Map 映射。</li>
+<li>ConcurrentSkipListMap 的迭代器（Iterators 和 spliterators）是”弱一致”的。</li>
+</ul>
+<p>构造函数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public ConcurrentSkipListMap(); // 按照 Key 的自然顺序排序
+public ConcurrentSkipListMap(Comparator<? super K> comparator); // 使用给定比较器进行排序
+
+public ConcurrentSkipListMap(Map<? extends K, ? extends V> m); // 自然顺序排序，putAll()
+public ConcurrentSkipListMap(SortedMap<K, ? extends V> m); // 使用相同的顺序进行排序
+</script></code></pre>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentSkipListMap.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - ConcurrentSkipListMap</a>。</p>
+<h3 id="ConcurrentSkipListSet-类"><a href="#ConcurrentSkipListSet-类" class="headerlink" title="ConcurrentSkipListSet 类"></a>ConcurrentSkipListSet 类</h3><p>相关说明：</p>
+<ul>
+<li>ConcurrentSkipListSet 底层使用 ConcurrentSkipListMap 存储元素，同时实现了 NavigableSet 接口。</li>
+<li>批量操作（addAll、removeAll、retainAll、containsAll、equals、toArray）不保证以原子方式执行。</li>
+<li>与大多数并发集合一样，该类不允许使用 null 元素，因为对于某些 null 返回值的方法很难明确其意义。</li>
+<li>ConcurrentSkipListSet 的迭代器（Iterators 和 spliterators）是”弱一致”的。</li>
+</ul>
+<p>构造函数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public ConcurrentSkipListSet(); // 自然顺序排序
+public ConcurrentSkipListSet(Comparator<? super E> comparator); // 给定比较器
+
+public ConcurrentSkipListSet(Collection<? extends E> c); // 自然顺序排序，addAll()
+public ConcurrentSkipListSet(SortedSet<E> s); // 与之相同的顺序进行排序
+</script></code></pre>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentSkipListSet.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - ConcurrentSkipListSet</a>。</p>
+<h3 id="CopyOnWriteArrayList-类"><a href="#CopyOnWriteArrayList-类" class="headerlink" title="CopyOnWriteArrayList 类"></a>CopyOnWriteArrayList 类</h3><p>相关说明：</p>
+<ul>
+<li>ArrayList 的线程安全版本（不同于 Vector），所有的修改操作都是通过创建底层数组的新副本来实现的。</li>
+<li>因为是 CopyOnWrite 机制，因此这类集合不适用于写多读少的场景，特别是底层数组很大的时候，特别的慢。</li>
+<li>迭代器保证不抛出 ConcurrentModificationException，因为修改的数组和正在被遍历的数组不是同一个数组。</li>
+<li>迭代器本身的元素更改操作（remove()、set()、add()）不受支持，会抛出 UnsupportedOperationException 异常。</li>
+<li>与其它的并发容器不同，CopyOnWriteArrayList 允许存在包括 null 在内的所有元素。</li>
+</ul>
+<p>构造函数：</p>
+<ul>
+<li><code>public CopyOnWriteArrayList()</code>：空 list</li>
+<li><code>public CopyOnWriteArrayList(Collection&lt;? extends E&gt; c)</code>：拷贝构造</li>
+<li><code>public CopyOnWriteArrayList(E[] toCopyIn)</code>：拷贝构造</li>
+</ul>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CopyOnWriteArrayList.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - CopyOnWriteArrayList</a>。</p>
+<h3 id="CopyOnWriteArraySet-类"><a href="#CopyOnWriteArraySet-类" class="headerlink" title="CopyOnWriteArraySet 类"></a>CopyOnWriteArraySet 类</h3><p>相关说明：</p>
+<ul>
+<li>CopyOnWriteArraySet 内部使用 CopyOnWriteArrayList 存储元素，因此 CopyOnWriteArrayList 的特性在此依旧适用。</li>
+<li>因为是写时复制型容器，因此只适用于读多写少的应用场景，毕竟每次修改操作都会进行一次 Copy，开销是比较昂贵的。</li>
+</ul>
+<p>构造函数：</p>
+<ul>
+<li><code>public CopyOnWriteArraySet()</code>：空 set</li>
+<li><code>public CopyOnWriteArraySet(Collection&lt;? extends E&gt; c)</code>：拷贝构造</li>
+</ul>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CopyOnWriteArraySet.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - CopyOnWriteArraySet</a>。</p>
+<h3 id="ConcurrentLinkedQueue-类"><a href="#ConcurrentLinkedQueue-类" class="headerlink" title="ConcurrentLinkedQueue 类"></a>ConcurrentLinkedQueue 类</h3><p>相关说明：</p>
+<ul>
+<li>基于链表结构的大小无限制的线程安全队列（FIFO，先进先出），与其它并发集合一样，不允许 null 元素。</li>
+<li>批量操作（addAll、removeAll、retainAll、containsAll、equals、toArray）不保证以原子方式执行。</li>
+<li>ConcurrentLinkedQueue 的迭代器（Iterators 和 spliterators）是”弱一致”的。</li>
+</ul>
+<p>构造函数：</p>
+<ul>
+<li><code>public ConcurrentLinkedQueue()</code>：空 queue</li>
+<li><code>public ConcurrentLinkedQueue(Collection&lt;? extends E&gt; c)</code>：拷贝构造</li>
+</ul>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - ConcurrentLinkedQueue</a>。</p>
+<h3 id="ConcurrentLinkedDeque-类"><a href="#ConcurrentLinkedDeque-类" class="headerlink" title="ConcurrentLinkedDeque 类"></a>ConcurrentLinkedDeque 类</h3><p>相关说明：</p>
+<ul>
+<li>基于链表结构的大小无限制的线程安全双端队列（可在两端进行插入和删除），与其它并发集合一样，不允许 null 元素。</li>
+<li>批量操作（addAll、removeAll、retainAll、containsAll、equals、toArray）不保证以原子方式执行。</li>
+<li>ConcurrentLinkedDeque 的迭代器（Iterators 和 spliterators）是”弱一致”的。</li>
+</ul>
+<p>构造函数：</p>
+<ul>
+<li><code>public ConcurrentLinkedDeque()</code>：空 deque</li>
+<li><code>public ConcurrentLinkedDeque(Collection&lt;? extends E&gt; c)</code>：拷贝构造</li>
+</ul>
+<p>其它方法具体请查看 - <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedDeque.html" rel="external nofollow noopener noreferrer" target="_blank">Javadoc - ConcurrentLinkedDeque</a>。</p>
+<h2 id="TimeUnit-枚举"><a href="#TimeUnit-枚举" class="headerlink" title="TimeUnit 枚举"></a>TimeUnit 枚举</h2><p>TimeUnit 表示给定粒度单位的持续时间，并提供跨设备转换的实用方法，可在这些时间单元中执行计时和延迟操作。</p>
+<p><strong>时间单位的转换</strong></p>
+<ul>
+<li><code>1   天 -&gt;   24 小时</code></li>
+<li><code>1 小时 -&gt;   60 分钟</code></li>
+<li><code>1 分钟 -&gt;   60 秒钟</code></li>
+<li><code>1 秒钟 -&gt; 1000 毫秒</code></li>
+<li><code>1 毫秒 -&gt; 1000 微秒</code></li>
+<li><code>1 微妙 -&gt; 1000 纳秒</code></li>
+</ul>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum TimeUnit {
+    /* 枚举常量 */
+    NANOSECONDS, // 纳秒
+    MICROSECONDS, // 微秒
+    MILLISECONDS, // 毫秒
+    SECONDS, // 秒
+    MINUTES, // 分
+    HOURS, // 时
+    DAYS; // 天
+
+    /* 单位转换 */
+    /*
+     * 将给定的持续时间转换为当前单位
+     * 从较细粒度转换为较粗粒度将被截断导致精度损失；如将 999 毫秒转换为秒的结果是 0 秒，而不是 1 秒；
+     * 从较粗粒度转换为较细粒度可能导致溢出，如果为负则为 Long.MIN_VALUE，如果为正则为 Long.MAX_VALUE；
+     */
+    public long convert(long sourceDuration, TimeUnit sourceUnit);
+    public long toNanos(long duration); // 转换为纳秒
+    public long toMicros(long duration); // 转换为微秒
+    public long toMillis(long duration); // 转换为毫秒
+    public long toSeconds(long duration); // 转换为秒
+    public long toMinutes(long duration); // 转换为分
+    public long toHours(long duration); // 转换为时
+    public long toDays(long duration); // 转换为天
+
+    /* 实用方法 */
+    public void timedWait(Object obj, long timeout) // Object.wait()
+        throws InterruptedException;
+
+    public void timedJoin(Thread thread, long timeout) // Thread.join()
+        throws InterruptedException;
+
+    public void sleep(long timeout) throws InterruptedException; // Thread.sleep()
+}
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-enum.html" rel="next" title="Java Enum枚举">
+                <i class="fa fa-chevron-left"></i> Java Enum枚举
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-multi-thread.html" rel="prev" title="Java 多线程编程">
+                Java 多线程编程 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#J-U-C-包简介"><span class="nav-number">1.</span> <span class="nav-text">J.U.C 包简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Executor-框架"><span class="nav-number">2.</span> <span class="nav-text">Executor 框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Callable-接口"><span class="nav-number">2.1.</span> <span class="nav-text">Callable 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Future-接口"><span class="nav-number">2.2.</span> <span class="nav-text">Future 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FutureTask-类"><span class="nav-number">2.3.</span> <span class="nav-text">FutureTask 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executor-接口"><span class="nav-number">2.4.</span> <span class="nav-text">Executor 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ExecutorService-接口"><span class="nav-number">2.5.</span> <span class="nav-text">ExecutorService 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AbstractExecutorService-抽象类"><span class="nav-number">2.6.</span> <span class="nav-text">AbstractExecutorService 抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadPoolExecutor-类"><span class="nav-number">2.7.</span> <span class="nav-text">ThreadPoolExecutor 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ScheduledExecutorService-接口"><span class="nav-number">2.8.</span> <span class="nav-text">ScheduledExecutorService 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ScheduledThreadPoolExecutor-类"><span class="nav-number">2.9.</span> <span class="nav-text">ScheduledThreadPoolExecutor 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executors-工具类"><span class="nav-number">2.10.</span> <span class="nav-text">Executors 工具类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CompletionService-接口"><span class="nav-number">2.11.</span> <span class="nav-text">CompletionService 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ExecutorCompletionService-类"><span class="nav-number">2.12.</span> <span class="nav-text">ExecutorCompletionService 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-并行框架"><span class="nav-number">3.</span> <span class="nav-text">Fork/Join 并行框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lock、Condition"><span class="nav-number">4.</span> <span class="nav-text">Lock、Condition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lock-接口"><span class="nav-number">4.1.</span> <span class="nav-text">Lock 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ReadWriteLock-接口"><span class="nav-number">4.2.</span> <span class="nav-text">ReadWriteLock 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Condition-接口"><span class="nav-number">4.3.</span> <span class="nav-text">Condition 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ReentrantLock-类"><span class="nav-number">4.4.</span> <span class="nav-text">ReentrantLock 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ReentrantReadWriteLock-类"><span class="nav-number">4.5.</span> <span class="nav-text">ReentrantReadWriteLock 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可重入锁是什么意思"><span class="nav-number">4.6.</span> <span class="nav-text">可重入锁是什么意思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized、Lock-对比"><span class="nav-number">4.7.</span> <span class="nav-text">synchronized、Lock 对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞同步、非阻塞同步"><span class="nav-number">4.8.</span> <span class="nav-text">阻塞同步、非阻塞同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lock-对象的使用方式"><span class="nav-number">4.9.</span> <span class="nav-text">Lock 对象的使用方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized、Lock-用途比较"><span class="nav-number">4.10.</span> <span class="nav-text">synchronized、Lock 用途比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不可中断锁、可中断锁"><span class="nav-number">4.11.</span> <span class="nav-text">不可中断锁、可中断锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Condition-条件变量"><span class="nav-number">4.12.</span> <span class="nav-text">Condition 条件变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-中的各种锁总结"><span class="nav-number">4.13.</span> <span class="nav-text">Java 中的各种锁总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Synchronizer-同步器"><span class="nav-number">5.</span> <span class="nav-text">Synchronizer 同步器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CountDownLatch-闭锁"><span class="nav-number">5.1.</span> <span class="nav-text">CountDownLatch 闭锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CyclicBarrier-栅栏"><span class="nav-number">5.2.</span> <span class="nav-text">CyclicBarrier 栅栏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exchanger-交换器"><span class="nav-number">5.3.</span> <span class="nav-text">Exchanger 交换器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Semaphore-信号量"><span class="nav-number">5.4.</span> <span class="nav-text">Semaphore 信号量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Atomic-原子变量"><span class="nav-number">6.</span> <span class="nav-text">Atomic 原子变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原子更新基本类型"><span class="nav-number">6.1.</span> <span class="nav-text">原子更新基本类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicBoolean-类"><span class="nav-number">6.2.</span> <span class="nav-text">AtomicBoolean 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicInteger-类"><span class="nav-number">6.3.</span> <span class="nav-text">AtomicInteger 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicLong-类"><span class="nav-number">6.4.</span> <span class="nav-text">AtomicLong 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原子更新数组"><span class="nav-number">6.5.</span> <span class="nav-text">原子更新数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicIntegerArray-类"><span class="nav-number">6.6.</span> <span class="nav-text">AtomicIntegerArray 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicLongArray-类"><span class="nav-number">6.7.</span> <span class="nav-text">AtomicLongArray 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicReferenceArray-类"><span class="nav-number">6.8.</span> <span class="nav-text">AtomicReferenceArray 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原子更新引用"><span class="nav-number">6.9.</span> <span class="nav-text">原子更新引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicReference-类"><span class="nav-number">6.10.</span> <span class="nav-text">AtomicReference 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicStampedReference-类"><span class="nav-number">6.11.</span> <span class="nav-text">AtomicStampedReference 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicMarkableReference-类"><span class="nav-number">6.12.</span> <span class="nav-text">AtomicMarkableReference 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原子更新字段"><span class="nav-number">6.13.</span> <span class="nav-text">原子更新字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicIntegerFieldUpdater-抽象类"><span class="nav-number">6.14.</span> <span class="nav-text">AtomicIntegerFieldUpdater 抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicLongFieldUpdater-抽象类"><span class="nav-number">6.15.</span> <span class="nav-text">AtomicLongFieldUpdater 抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicReferenceFieldUpdater-抽象类"><span class="nav-number">6.16.</span> <span class="nav-text">AtomicReferenceFieldUpdater 抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK1-8-新增类"><span class="nav-number">6.17.</span> <span class="nav-text">JDK1.8 新增类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LongAdder-类"><span class="nav-number">6.18.</span> <span class="nav-text">LongAdder 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LongAccumulator-类"><span class="nav-number">6.19.</span> <span class="nav-text">LongAccumulator 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DoubleAdder-类"><span class="nav-number">6.20.</span> <span class="nav-text">DoubleAdder 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DoubleAccumulator-类"><span class="nav-number">6.21.</span> <span class="nav-text">DoubleAccumulator 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BlockingQueue-阻塞队列"><span class="nav-number">7.</span> <span class="nav-text">BlockingQueue 阻塞队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BlockingQueue-接口"><span class="nav-number">7.1.</span> <span class="nav-text">BlockingQueue 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BlockingDeque-接口"><span class="nav-number">7.2.</span> <span class="nav-text">BlockingDeque 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TransferQueue-接口"><span class="nav-number">7.3.</span> <span class="nav-text">TransferQueue 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayBlockingQueue-类"><span class="nav-number">7.4.</span> <span class="nav-text">ArrayBlockingQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedBlockingQueue-类"><span class="nav-number">7.5.</span> <span class="nav-text">LinkedBlockingQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SynchronousQueue-类"><span class="nav-number">7.6.</span> <span class="nav-text">SynchronousQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PriorityBlockingQueue-类"><span class="nav-number">7.7.</span> <span class="nav-text">PriorityBlockingQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DelayQueue-类"><span class="nav-number">7.8.</span> <span class="nav-text">DelayQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedBlockingDeque-类"><span class="nav-number">7.9.</span> <span class="nav-text">LinkedBlockingDeque 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedTransferQueue-类"><span class="nav-number">7.10.</span> <span class="nav-text">LinkedTransferQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阻塞队列应用例子"><span class="nav-number">7.11.</span> <span class="nav-text">阻塞队列应用例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步容器与并发容器"><span class="nav-number">8.</span> <span class="nav-text">同步容器与并发容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentMap-接口"><span class="nav-number">8.1.</span> <span class="nav-text">ConcurrentMap 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentNavigableMap-接口"><span class="nav-number">8.2.</span> <span class="nav-text">ConcurrentNavigableMap 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentHashMap-类"><span class="nav-number">8.3.</span> <span class="nav-text">ConcurrentHashMap 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentSkipListMap-类"><span class="nav-number">8.4.</span> <span class="nav-text">ConcurrentSkipListMap 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentSkipListSet-类"><span class="nav-number">8.5.</span> <span class="nav-text">ConcurrentSkipListSet 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CopyOnWriteArrayList-类"><span class="nav-number">8.6.</span> <span class="nav-text">CopyOnWriteArrayList 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CopyOnWriteArraySet-类"><span class="nav-number">8.7.</span> <span class="nav-text">CopyOnWriteArraySet 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentLinkedQueue-类"><span class="nav-number">8.8.</span> <span class="nav-text">ConcurrentLinkedQueue 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentLinkedDeque-类"><span class="nav-number">8.9.</span> <span class="nav-text">ConcurrentLinkedDeque 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TimeUnit-枚举"><span class="nav-number">9.</span> <span class="nav-text">TimeUnit 枚举</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-juc-framework.html';
+          this.page.identifier = 'java-juc-framework.html';
+          this.page.title = 'Java J.U.C 包入门';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

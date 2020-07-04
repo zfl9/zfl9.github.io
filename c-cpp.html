@@ -1,0 +1,679 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C语言 预处理指令">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 预处理指令">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 预处理指令">
+<meta property="og:url" content="https://www.zfl9.com/c-cpp.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 预处理指令">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 预处理指令">
+<meta name="twitter:description" content="c语言 - 预处理指令">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-cpp.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 预处理指令 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-cpp.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 预处理指令
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-09T19:23:00+08:00">
+                2017-07-09
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-cpp.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-cpp.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-cpp.html" class="leancloud_visitors" data-flag-title="c语言 - 预处理指令">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 预处理指令</p>
+<a id="more"></a>
+<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include "userdef.h"
+</script></code></pre>
+<p>主要用来包含头文件，include 指令的处理很简单，就是把头文件插入到源文件，之后就不需要头文件了，因为头文件的内容都包含进来了。</p>
+<p>一个 include 命令只能包含一个文件，可以有多个 include 指令，允许嵌套包含。</p>
+<ul>
+<li><code>&lt;&gt;</code>形式一般用于标准库头文件，<code>&quot;&quot;</code>一般用于自定义头文件</li>
+<li><code>&lt;&gt;</code>的头文件搜索路径不包含当前路径，而<code>&quot;&quot;</code>则包含当前路径</li>
+</ul>
+<p>所以，可以都用<code>&quot;&quot;</code>形式来包含头文件，包括系统的和自定义的，但是这不符合规范，标准库的就用<code>&lt;&gt;</code>，其他的就用<code>&quot;&quot;</code></p>
+<p>我们来查看一下预处理的过程</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    printf("hello, world!\n");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [19:36:07]
+$ gcc -E a.c -o a.i
+
+# root @ localhost in ~ [19:36:17]
+$ tail a.i
+
+extern void funlockfile (FILE *__stream) __attribute__ ((__nothrow__ , __leaf__));
+# 943 "/usr/include/stdio.h" 3 4
+
+# 2 "a.c" 2
+
+int main(){
+    printf("hello, world!\n");
+    return 0;
+}
+</script></code></pre>
+<h2 id="无参宏定义"><a href="#无参宏定义" class="headerlink" title="无参宏定义"></a>无参宏定义</h2><p>允许用一个标识符来表示一个字符串</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#define PI 3.14
+
+int main(){
+    printf("%.2f\n", PI);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [19:38:33]
+$ gcc a.c
+
+# root @ localhost in ~ [19:38:36]
+$ ./a.out
+3.14
+</script></code></pre>
+<p><code>#define PI 3.14</code>是一个宏定义，<code>PI</code>是一个宏名(宏名是标识符的一种，所以要遵循标识符的命名规则)，<code>3.14</code>是宏的内容<br>在预处理时，所有遇到<code>PI</code>的地方，都会被替换为<code>3.14</code>，除了引号内的内容不会被替换，这个过程叫做<code>宏展开</code></p>
+<p>宏定义的作用域：从宏定义开始到源程序结束，除非用<code>#undef</code>来终止</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#define PI 3.14
+
+int main(){
+#undef PI
+    printf("%.2f\n", PI);
+    return 0;
+}
+</script></code></pre>
+<p>这样，在源文件第5行之后，这个宏定义就消失了</p>
+<p>宏定义允许嵌套</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#define PI 3.14
+#define S PI*10*10
+</script></code></pre>
+<p>S展开后为<code>3.14*10*10</code></p>
+<p>宏名一般用大写，不过也可以用小写<br>可以用宏表示数据类型，书写方便<br><code>#define UINT unsigned int</code><br><code>UINT a, b;</code></p>
+<p>注意和<code>typedef</code>的区别：<br>宏定义只是简单的字符串代换，是在预处理完成的，而typedef是在编译时处理的，它不是作简单的代换，而是对类型说明符重新命名，被命名的标识符具有类型定义说明的功能</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+#define PTR1 int *
+typedef int * PTR2;
+
+int main(){
+    int a = 10, b = 20;
+    PTR1 p1, p2;
+    p1 = &a, p2 = &b;
+    PTR2 p3, p4;
+    p3 = &a, p4 = &b;
+    printf("%d, %d, %d, %d\n", *p1, *p2, *p3, *p4);
+    return 0;
+}
+</script></code></pre>
+<p>这段代码编译会报错，因为，只有 p1、p3、p4 是指针变量，而 p2 只是一个 int 类型的变量</p>
+<h2 id="带参宏定义"><a href="#带参宏定义" class="headerlink" title="带参宏定义"></a>带参宏定义</h2><p>定义：<code>#define 宏名(形参列表) 字符串</code><br>使用：<code>宏名(实参列表)</code></p>
+<p>例如：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#define POW(x) x*x
+int a = POW(10);
+</script></code></pre>
+<p>展开后会替换为<code>int a = 10*10;</code></p>
+<p>对于带参宏定义不仅要在参数两侧加括号，还应该在整个字符串外加括号，防止发生错误</p>
+<p>如果一个宏一行写不下，可以用 “\” 连接，如：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#define STR \
+    "https://www.zfl9.com/iptables.html?userid=d89sd9f2j398ds2&auth=true"
+
+int main(){
+    printf("%s\n", STR);
+    return 0;
+}
+</script></code></pre>
+<p>在宏定义中，有时还会用到<code>#</code>、<code>##</code>两个符号，它们能对宏参数进行操作</p>
+<ul>
+<li><code>#</code>的用法<br>用来将宏参数转换为字符串，也就是在宏参数前后添加双引号<br><code>#define STRING(str) #str</code><br><code>STRING(www.zfl9.com)</code>会替换为<code>&quot;www.zfl9.com&quot;</code><br><code>STRING(&quot;www.zfl9.com&quot;)</code>会替换为<code>&quot;\&quot;www.zfl9.com\&quot;&quot;</code></li>
+<li><code>##</code>的用法<br><code>##</code>称为连接符，将宏参数和其他的串拼接起来<br><code>#define CAT(a, b) a##b</code><br><code>CAT(12, 34)</code>会替换为<code>1234</code></li>
+</ul>
+<h2 id="预定义的宏"><a href="#预定义的宏" class="headerlink" title="预定义的宏"></a>预定义的宏</h2><ul>
+<li><code>__DATE__</code>：当前日期，”MMM DD YYYY”格式的字符串常量</li>
+<li><code>__TIME__</code>：当前时间，”HH:mm:ss”格式的字符串常量</li>
+<li><code>__FILE__</code>：当前文件名，一个字符串常量</li>
+<li><code>__LINE__</code>：当前行号，一个十进制值常量</li>
+<li><code>__STDC__</code>：当编译器以 ANSI 标准编译时，被定义为 1</li>
+<li><code>__cplusplus</code>：当编写 C++ 程序时（C++ 环境），该标识符被定义</li>
+</ul>
+<h2 id="条件编译"><a href="#条件编译" class="headerlink" title="条件编译"></a>条件编译</h2><pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    #if _WIN32
+        printf("Windows\n");
+    #elif __linux__
+        printf("Linux\n");
+    #endif
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [21:17:38]
+$ gcc a.c
+
+# root @ localhost in ~ [21:17:39]
+$ ./a.out
+Linux
+</script></code></pre>
+<p>这段代码的意思是，如果宏<code>_WIN32</code>的值为真，则保留第 5 行的代码，如果宏<code>__linux__</code>的值为真，则保留第 7 行的代码<br>注意，判断条件为<code>整型常量表达式</code>，也就是说表达式中不能包含变量，而且结果必须是整数</p>
+<p><strong><code>#if</code></strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#if 整型常量表达式1
+    程序段1
+#elif 整型常量表达式2
+    程序段2
+#elif 整型常量表达式3
+    程序段3
+#else
+    程序段4
+#endif
+</script></code></pre>
+<p><strong><code>#ifdef</code></strong>，表示如果当前宏名已经定义，则保留程序段1，否则保留程序段2</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#ifdef  宏名
+    程序段1
+#else
+    程序段2
+#endif
+</script></code></pre>
+<p><strong><code>#ifndef</code></strong>，和<code>#ifdef</code>正好相反</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#ifndef 宏名
+    程序段1 
+#else 
+    程序段2 
+#endif
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#define N1 10
+#define N2 20
+
+int main(){
+    #if N1 == 10 || N2 == 10
+        printf("N1: %d\n", N1);
+    #else
+        printf("error!\n");
+    #endif
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [21:29:57]
+$ gcc a.c
+
+# root @ localhost in ~ [21:29:58]
+$ ./a.out
+N1: 10
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#define N1
+#define N2
+
+int main(){
+    #if defined N1 && defined N2
+        printf("True!\n");
+    #else
+        printf("False!\n");
+    #endif
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [21:31:11]
+$ gcc a.c
+
+# root @ localhost in ~ [21:31:13]
+$ ./a.out
+True!
+</script></code></pre>
+<h2 id="阻止编译"><a href="#阻止编译" class="headerlink" title="阻止编译"></a>阻止编译</h2><p><code>#error error_msg</code>：强制终止编译。<br>如，我们的程序只支持 Windows，不兼容 Linux</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    #ifndef _WIN32
+        #error 抱歉，请使用 Windows 系统，该程序暂时不支持其他平台
+    #endif
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [21:37:44]
+$ gcc a.c
+a.c: In function ‘main’:
+a.c:5:10: error: #error 抱歉，请使用 Windows 系统，该程序暂时不支持其他平台
+         #error 抱歉，请使用 Windows 系统，该程序暂时不支持其他平台
+          ^
+</script></code></pre>
+<h2 id="预处理小结"><a href="#预处理小结" class="headerlink" title="预处理小结"></a>预处理小结</h2><p>预处理指令是以<code>#</code>号开头的代码行，<code>#</code>号必须是该行除了任何空白字符外的第一个字符<br><code>#</code>后是指令关键字，在关键字和<code>#</code>号之间允许存在任意个数的空白字符，整行语句构成了一条预处理指令<br>该指令将在编译器进行编译之前对源代码做某些转换，<strong>C/C++ 源程序经预处理后仍然是合法的 C/C++ 源程序</strong></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-struct.html" rel="next" title="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+                <i class="fa fa-chevron-left"></i> c语言 - 结构体、位域、共用体、枚举、内存对齐
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-pointer.html" rel="prev" title="c语言 - 指针">
+                c语言 - 指针 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件包含"><span class="nav-number">1.</span> <span class="nav-text">文件包含</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无参宏定义"><span class="nav-number">2.</span> <span class="nav-text">无参宏定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带参宏定义"><span class="nav-number">3.</span> <span class="nav-text">带参宏定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预定义的宏"><span class="nav-number">4.</span> <span class="nav-text">预定义的宏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件编译"><span class="nav-number">5.</span> <span class="nav-text">条件编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻止编译"><span class="nav-number">6.</span> <span class="nav-text">阻止编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预处理小结"><span class="nav-number">7.</span> <span class="nav-text">预处理小结</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-cpp.html';
+          this.page.identifier = 'c-cpp.html';
+          this.page.title = 'c语言 - 预处理指令';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,885 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言输入与输出">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 输入与输出，gcc分步编译，输入缓冲区，以及如何清空输入缓冲区">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 输入与输出">
+<meta property="og:url" content="https://www.zfl9.com/c-input-output.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 输入与输出，gcc分步编译，输入缓冲区，以及如何清空输入缓冲区">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 输入与输出">
+<meta name="twitter:description" content="c语言 - 输入与输出，gcc分步编译，输入缓冲区，以及如何清空输入缓冲区">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-input-output.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 输入与输出 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-input-output.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 输入与输出
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-01T16:58:00+08:00">
+                2017-07-01
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-input-output.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-input-output.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-input-output.html" class="leancloud_visitors" data-flag-title="c语言 - 输入与输出">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 输入与输出，gcc分步编译，输入缓冲区，以及如何清空输入缓冲区</p>
+<a id="more"></a>
+<h2 id="GCC-编译步骤"><a href="#GCC-编译步骤" class="headerlink" title="GCC 编译步骤"></a>GCC 编译步骤</h2><p>GNU 编译器套装（英语：GNU Compiler Collection，缩写为 GCC），指一套编程语言编译器，以 GPL 及 LGPL 许可证所发行的自由软件，也是 GNU 项目的关键部分，也是 GNU 工具链的主要组成部分之一。GCC（特别是其中的 C 语言编译器）也常被认为是跨平台编译器的事实标准。1985 年由理查德·马修·斯托曼开始发展，现在由自由软件基金会负责维护工作。</p>
+<p>原名为 GNU C 语言编译器（GNU C Compiler），因为它原本只能处理 C 语言。GCC 在发布后很快地得到扩展，变得可处理 C++。之后也变得可处理 Fortran、Pascal、Objective-C、Java、Ada，Go 与其他语言。</p>
+<p>许多操作系统，包括许多类 Unix 系统，如 Linux 及 BSD 家族都采用 GCC 作为标准编译器。苹果电脑预装的 Mac OS X 操作系统也采用这个编译器。</p>
+<p>GCC 将 C 源码文件编译成最终的可执行文件要经历四个步骤：<strong>预处理</strong> -&gt; <strong>编译</strong> -&gt; <strong>汇编</strong> -&gt; <strong>链接</strong>。</p>
+<ul>
+<li><strong>预处理（Preprocessing）</strong>：<code>gcc -E hello.c -o hello.i</code>，处理 C 源码文件中的<strong>预处理指令</strong>，处理之后依旧是 C 源码文件。如果省略 -o 选项，则默认将预处理结果输出到屏幕。</li>
+<li><strong>编译（Compilation）</strong>：<code>gcc -S hello.i -o hello.s</code>，将 C 源码文件编译为平台相关的汇编语言源代码，如果省略 -o 选项，则默认输出文件名为 hello.s。</li>
+<li><strong>汇编（Assembly）</strong>：<code>gcc -c hello.s -o hello.o</code>，将汇编语言源代码转换为可重定位目标文件（二进制），如果省略 -o 选项，则默认输出文件名为 hello.o。</li>
+<li><strong>链接（Linking）</strong>：<code>gcc hello.o -o hello</code>，将 hello.o 以及一些其它必要的可重定位目标文件（printf() 函数）组合起来，创建可执行目标文件 hello，如果省略 -o 选项，则默认输出文件名为 a.out。</li>
+</ul>
+<p>经历了这四个步骤后，hello.c 源码文件变成了 hello 可执行目标文件，然后我们就可以在 shell 中使用<code>./hello</code>来执行它。当然，实际上我们完全可以使用<code>gcc -o hello hello.c</code>来一并执行这四个步骤。</p>
+<h2 id="C-语言输出函数"><a href="#C-语言输出函数" class="headerlink" title="C 语言输出函数"></a>C 语言输出函数</h2><p>C 语言输出函数主要有 3 个：<code>putchar</code>、<code>puts</code>、<code>printf</code>，它们都包含在<code>stdio.h</code>头文件中。<br><code>puts</code>会自动添加换行符<code>\n</code>，而<code>printf</code>不会，<code>printf</code>完全可替代<code>putchar</code>和<code>puts</code>，且<code>printf</code>支持格式化输出。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    putchar('A');
+    putchar('\n');
+    puts("www.zfl9.com");
+    printf("www.baidu.com\n");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work [14:06:38]
+$ gcc -o main main.c
+
+# root @ arch in ~/work [14:06:53]
+$ ./main
+A
+www.zfl9.com
+www.baidu.com
+</script></code></pre>
+<p><strong>printf 函数原型</strong><br><code>int printf(const char *format, ...)</code></p>
+<ul>
+<li><code>format</code>输入参数，字符常量指针，即指向字符常量的指针，格式化字符串就写在这里</li>
+<li><code>...</code>输入参数，可变参数，可以有任意个（零个或多个），根据 format 的格式化参数个数而定</li>
+<li>成功则返回写入的字符个数，失败则返回负数</li>
+</ul>
+<p><strong>printf 格式化参数</strong><br><strong>格式占位符</strong>的一般形式：<code>%[n$][flags][width][.prec]type</code>，方括号表示可选。</p>
+<ul>
+<li>每个格式占位符均以<code>%</code>开头，然后以<code>type</code>数据类型结束。如需输出<code>%</code>本身，请使用<code>%%</code>。</li>
+<li><code>n$</code>，表示当前 type 所在的参数位置（从 1 开始），如果有一个格式占位符使用了<code>n$</code>，则全部都要使用<code>n$</code>，否则 gcc 会产生<code>Wformat</code>警告。</li>
+<li><code>flags</code>，标志位，可以有多个。具体的 flag 如下：<ul>
+<li><code>#</code>：<strong>规范输出</strong>。<code>o</code>八进制值前面自动添加数字<code>0</code>、<code>x</code>或<code>X</code>十六进制值前面自动添加<code>0x</code>或<code>0X</code>、<code>a</code>或<code>A</code>或<code>e</code>或<code>E</code>或<code>f</code>或<code>F</code>或<code>g</code>或<code>G</code>浮点值始终包含小数点，而<code>g</code>或<code>G</code>则尾部的 0 始终保留。</li>
+<li><code>0</code>：<strong>零填充</strong>。对于数值类型（整型、浮点型），使用 0 填充左边的空白，而非使用默认的空格填充。</li>
+<li><code>-</code>：<strong>左对齐</strong>。默认为右对齐。</li>
+<li><code> </code>：<strong>符号位-占位</strong>。如果为正数则使用空格占位，如果为负数则被忽略。</li>
+<li><code>+</code>：<strong>符号位-显示</strong>。如果为正数则使用<code>+</code>前缀符，如果为负数则被忽略。</li>
+</ul>
+</li>
+<li><code>width</code>，字段最小宽度，如果参数的宽度（一个字符占有的宽度为 1）小于 width，则使用空格或 0 填充字段左边或右边（具体要看 flags），如果参数的宽度大于 width，则该 width 被忽略。width 为一个十进制数值，除了静态指定外，我们还可以使用<code>*</code>或<code>*n$</code>（n 从 1 开始）来动态指定 width 值。</li>
+<li><code>.prec</code>，字段输出精度，以<code>.</code>开头，然后接一个十进制数字表示精度。除了静态指定外，我们还可以使用<code>*</code>或<code>*n$</code>（n 从 1 开始）来动态指定 prec 值。对于<code>d, i, o, u, x, X</code>整型，表示输出的最小位数，不足用 0 填充；对于<code>a, A, e, E, f, F</code>浮点型，表示输出的小数位数；对于<code>g, G</code>浮点型，表示最大有效数；对于<code>s, S</code>字符串，表示输出的最大字符数。</li>
+<li><code>type</code>，字段数据类型。具体的 type 如下：<ul>
+<li><code>d, i</code>：<strong>有符号十进制数字</strong>，即<code>signed int</code>。</li>
+<li><code>o, u, x, X</code>：<strong>无符号N进制数字</strong>，即<code>unsigned int</code>，分别代表：八进制、十进制、十六进制（x 使用小写 abcdef 表示，X 使用大小 ABCDEF 表示）。</li>
+<li><code>f, F</code>：<strong>浮点型-一般表示法</strong>，即<code>double</code>，输出的格式为：<code>[-]ddd.ddd</code>，默认精度为 6。</li>
+<li><code>a, A</code>：<strong>浮点型-十六进制数</strong>，即<code>double</code>，输出的格式为：<code>[-]0xh.hhhhp±</code>，如果 type 为 A，则输出大写的 0X、ABCDEF、P。</li>
+<li><code>e, E</code>：<strong>浮点型-科学记数法</strong>，即<code>double</code>，输出的格式为：<code>[-]d.ddde±dd</code>，默认精度为 6。如果 type 为 E，则输出大写的 E。</li>
+<li><code>g, G</code>：<strong>浮点型-自适应格式</strong>，即<code>double</code>，根据浮点数的大小自动的选择<code>%f、%e</code>（<code>%g</code>）或<code>%F、%E</code>（<code>%G</code>）。</li>
+<li><code>c</code>：<strong>无符号字符型</strong>，即<code>unsigned char</code>。</li>
+<li><code>s</code>：<strong>字符常量指针</strong>，即<code>const char *</code>，如果没有指定精度，则默认输出到<code>\0</code>终止字符（不包括终止字符）。</li>
+<li><code>p</code>：<strong>无类型的指针</strong>，即<code>void *</code>，打印指针的地址，使用<code>%#x</code>输出格式。</li>
+</ul>
+</li>
+<li>对于<code>d, i, o, u, x, or X</code> type，它还存在以下 length modifier 长度修饰符（位于 type 之前）：<ul>
+<li><code>hh</code>：<strong>signed char、unsigned char</strong></li>
+<li><code>h</code>：<strong>signed short、unsigned short</strong></li>
+<li><code>l</code>：<strong>signed long、unsigned long</strong></li>
+<li><code>ll</code>：<strong>signed long long、unsigned long long</strong></li>
+<li><code>L</code>：<strong>long double</strong></li>
+<li><code>z</code>：<strong>size_t、ssize_t</strong></li>
+</ul>
+</li>
+</ul>
+<p><code>%n$</code>的用法举例，<code>printf(&quot;%1$s, %1$s\n&quot;, &quot;www.zfl9.com&quot;)</code>，将输出<code>www.zfl9.com, www.zfl9.com</code>。</p>
+<p><code>*</code>的用法举例，我要打印两个数字，分别是 999 和 1，但是我想输出的结果为<code>999001</code>而非<code>9991</code>，该怎么做呢？<br>第一种，<strong>静态</strong>指定<strong>字段宽度</strong>，即<code>printf(&quot;%d%03d\n&quot;, 999, 1)</code>，每个格式说明符都与传入的参数一一对应<br>第二种，<strong>动态</strong>指定<strong>字段宽度</strong>，即<code>printf(&quot;%d%0*d\n&quot;, 999, 3, 1)</code>，<code>%0*d</code>的<code>*</code>占用参数<code>3</code>，<code>d</code>占用参数<code>1</code><br>第三种，结合<code>%n$</code>，即<code>printf(&quot;%1$d%2$0*3$d\n&quot;, 999, 1, 3)</code>，开头的<code>n$</code>表示 type 的位置，后面的<code>n$</code>则为<code>*</code>的位置</p>
+<p><strong>转义序列</strong><br>此处的转移序列仅针对 ASCII，ASCII 字符集只定义了 128 个字符，这 128 个字符使用 [0, 127] 区间的一个唯一数字表示，该数字称为<strong>码点（code point）</strong>，因为 128 个字符仅需要 7-bit 空间，因此，我们可以使用一个 char 变量存储一个 ASCII 字符，而第一个比特位为 0。</p>
+<p>在 C 语言的<strong>字符</strong>、<strong>字符串</strong>字面量中，除了可以使用字面字符来表示一个字符外，还可以直接用它的码点值来表示，码点值必须使用<strong>八进制</strong>或<strong>十六进制</strong>数字表示，如果想了解 ASCII 的码表，可以查看 - <a href="https://1024tools.com/ascii" rel="external nofollow noopener noreferrer" target="_blank">7 Bit ASCII Codes 在线码表查询</a>。</p>
+<ul>
+<li>八进制值，<code>\n</code>、<code>\nn</code>、<code>\nnn</code>，其中 n、nn、nnn 为 ASCII 字符对应的码点值，最小值为<code>\0</code>，最大值为<code>\177</code>；</li>
+<li>十六进制值，<code>\xh</code>、<code>\xhh</code>，其中 h、hh 为 ASCII 字符对应的码点值，最小值为<code>\x0</code>、最大值为<code>\x7F</code>。</li>
+</ul>
+<p>在 ASCII 字符集中，码点区间 <code>[0, 31]</code>（十进制）的字符均为<strong>控制字符</strong>，因为这些字符无法直接书写，因此必须使用<code>\nnn</code>或<code>\xhh</code>来表示。不过由于码点值太难记，C 语言又定义了其简写形式，完整的列表如下（引自维基百科）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">转移序列</th>
+<th style="text-align:center">十六进制值</th>
+<th style="text-align:center">字符的意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>\a</code></td>
+<td style="text-align:center"><code>07</code></td>
+<td style="text-align:center">BEL 警铃符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\b</code></td>
+<td style="text-align:center"><code>08</code></td>
+<td style="text-align:center">BS 退格符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\t</code></td>
+<td style="text-align:center"><code>09</code></td>
+<td style="text-align:center">HT 水平制表</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\v</code></td>
+<td style="text-align:center"><code>0B</code></td>
+<td style="text-align:center">VT 垂直制表</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\r</code></td>
+<td style="text-align:center"><code>0D</code></td>
+<td style="text-align:center">CR 回车符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\n</code></td>
+<td style="text-align:center"><code>0A</code></td>
+<td style="text-align:center">LF 换行符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\f</code></td>
+<td style="text-align:center"><code>0C</code></td>
+<td style="text-align:center">FF 换页符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\e</code></td>
+<td style="text-align:center"><code>1B</code></td>
+<td style="text-align:center">ESC 退出符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\\</code></td>
+<td style="text-align:center"><code>5C</code></td>
+<td style="text-align:center">反斜线</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\&#39;</code></td>
+<td style="text-align:center"><code>27</code></td>
+<td style="text-align:center">单引号</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\&quot;</code></td>
+<td style="text-align:center"><code>22</code></td>
+<td style="text-align:center">双引号</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\?</code></td>
+<td style="text-align:center"><code>3F</code></td>
+<td style="text-align:center">问号</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\nnn</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">八进制值代表的 ASCII 字符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\xhh</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">十六进制值代表的 ASCII 字符</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\uhhhh</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">Unicode BMP 码点值（十六进制）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>\Uhhhhhhhh</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">Unicode 码点值（十六进制）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Unicode 码点在线查询 -&gt; <a href="http://www.unicode.org/cgi-bin/GetUnihanData.pl" rel="external nofollow noopener noreferrer" target="_blank">Unihan data（中日韩越统一表意文字）</a>，提醒一下，<code>\uhhhh</code>和<code>\Uhhhhhhhh</code>分别占用 2 字节、4 字节，因此无法在 char 变量中存储！</p>
+</blockquote>
+<h2 id="C-语言输入函数"><a href="#C-语言输入函数" class="headerlink" title="C 语言输入函数"></a>C 语言输入函数</h2><p>C 语言输入函数主要有<code>getchar</code>、<code>getche</code>、<code>getch</code>、<code>gets</code>和<code>scanf</code>，其中<code>getche</code>和<code>getch</code>是 VS 中的函数（在 conio.h 头文件），GCC 中没有，<code>gets</code>在 GCC、VS2017 中已经不能使用了。在代码中，最好使用<code>getchar</code>和<code>scanf</code>（后面主要也是讨论它们）。</p>
+<p>无论是 getchar 还是 scanf，都是从<strong>输入缓冲区</strong>中提取（剪切）数据的，当我们输入一行字符串时，这些数据其实还未进入它的输入缓冲区，直到我们按下回车键，shell 才会将这行字符串以及换行符（其实就是我们刚才按下的回车键，只不过被 shell 给转换为了换行符）送入到它的输入缓冲区。</p>
+<p>第一次调用 getchar/scanf 时，因为输入缓冲区中没有数据，因此该调用被阻塞，直到缓冲区中有数据流入而被唤醒。被唤醒后，getchar/scanf 开始从输入缓冲区中抽取数据（剪切数据），并且是有多少（至少有数据）取多少。然后当下一次调用 getchar 和 scanf 时，如果输入缓冲区中还有未读完的数据，则该调用不会被阻塞，而是直接读取剩下的数据（有多少读多少）；如果输入缓冲区中没有数据了，则该调用会被阻塞，直到输入缓冲区中流入了数据，以此类推。</p>
+<h3 id="getchar-单字符"><a href="#getchar-单字符" class="headerlink" title="getchar 单字符"></a>getchar 单字符</h3><pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    char c = getchar();
+    putchar(c);
+    return 0;
+}
+</script></code></pre>
+<p>输入任意字符（串）并回车，<code>getchar()</code>只会获取第一个字符，剩下的字符（如果有的话）则还在缓冲区中。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    printf("enter 5 char: ");
+    char c;
+    int i;
+    for (i = 0; i < 5; i++) {
+        c = getchar();
+        putchar(c);
+    }
+    return 0;
+}
+</script></code></pre>
+<p>编译并运行，输入 5 个字符</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [10:03:10]
+$ gcc hello.c
+
+# root @ localhost in ~ [10:05:58]
+$ ./a.out
+enter 5 char: 12345
+12345#
+</script></code></pre>
+<h3 id="getche-单字符-有回显"><a href="#getche-单字符-有回显" class="headerlink" title="getche 单字符/有回显"></a>getche 单字符/有回显</h3><p>获取单个字符，有回显，编译环境是 VS2017</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+
+int main(void) {
+    char c;
+    c = getche();
+    putchar(c);
+    system("pause");
+    return 0;
+}
+</script></code></pre>
+<p>输入<code>a</code></p>
+<pre><code class="language-none line-numbers"><script type="text/plain">aa请按任意键继续. . .
+</script></code></pre>
+<h3 id="getch-单字符-无回显"><a href="#getch-单字符-无回显" class="headerlink" title="getch 单字符/无回显"></a>getch 单字符/无回显</h3><p>获取单个字符，没有回显，编译环境是 VS2017</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+
+int main(void) {
+    char c;
+    c = getch();
+    putchar(c);
+    system("pause");
+    return 0;
+}
+</script></code></pre>
+<p>输入<code>a</code></p>
+<pre><code class="language-none line-numbers"><script type="text/plain">a请按任意键继续. . .
+</script></code></pre>
+<h3 id="scanf-格式化扫描"><a href="#scanf-格式化扫描" class="headerlink" title="scanf 格式化扫描"></a>scanf 格式化扫描</h3><p><code>scanf</code>与<code>printf</code>是一对，用法也很相似，scanf 是格式化扫描，printf 是格式化打印，并且它们的 format 格式很相似，基本通用，除了 scanf 多出<code>%[^sep]</code>（设置分隔符为 sep）、<code>%*type</code>（读取输入，但是不保存它）。</p>
+<p>scanf 和 getchar 一样，都不是直接从键盘获取字符，而是当我们按下回车键，将输入数据送入了它们的输入缓冲区后才开始从这个输入缓冲区中获取输入数据的（scanf 和 getchar 共享一个输入缓冲区）。</p>
+<p>scanf 中存在所谓的<strong>分隔符</strong>的概念，默认的分隔符为<strong>空白符</strong>（空格、制表、回车、换行等）。scanf 在处理输入序列时，先将控制权交给第一个格式占位符（从左到右），格式占位符会忽略所有的前导空白，当此格式占位符无法继续匹配或者遇到了分隔符时，就会让出控制权，将其交给下一个格式占位符，以此类推，直到整个 format 格式字符串匹配完毕。</p>
+<p>因此，默认情况下，<code>%s</code>无法获取一整行的字符串，因为会被中间的空白符截断。不过我们可以使用<code>%[^sep]</code>来改变默认的分隔符为 sep，注意不能少了前面的 ^，如果没有了 ^，则表示除 sep 外的任意字符都为分隔符，很显然不是我们想要的。现在，我们就可以使用<code>scanf(&quot;%[^\n]&quot;, str)</code>来获取一整行字符串了（不包括换行符，因为它是我们指定的分隔符）。</p>
+<p>说了这么多，我们先来感性的认识一下 scanf 格式化扫描函数：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    printf("a + b: ");
+    int a, b;
+    scanf("%d + %d", &a, &b);
+    printf("%d + %d = %d\n", a, b, a + b);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [10:11:21]
+$ gcc hello.c
+
+# root @ localhost in ~ [10:13:01]
+$ ./a.out
+a + b: 1+1
+1 + 1 = 2
+
+# root @ localhost in ~ [10:13:05]
+$ ./a.out
+a + b: 2 + 4
+2 + 4 = 6
+</script></code></pre>
+<p>可以发现，<code>scanf</code>对于空白符的数量并不要求严格匹配。我们也可以多次调用 scanf 来读完输入缓冲区的剩余数据。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    printf("enter 5 char: ");
+    char c;
+    int i;
+    for(i = 0; i < 5; i++) {
+        scanf("%c", &c);
+        printf("%c", c);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [10:29:02]
+$ gcc hello.c
+
+# root @ localhost in ~ [10:29:09]
+$ ./a.out
+enter 5 char: 12345
+12345#
+
+# root @ localhost in ~ [10:29:11]
+$ ./a.out
+enter 5 char: 1234567890
+12345#
+</script></code></pre>
+<p>我们来看看如何用<code>scanf</code>录入字符串，以及如何录入带有空格的字符串（即获取一整行字符串）：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    char str[100];
+    scanf("%s", str);
+    printf("%s", str);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [8:13:15]
+$ gcc a.c
+
+# root @ localhost in ~ [8:13:17]
+$ ./a.out
+my name is otokaze
+my#
+</script></code></pre>
+<p>因为<code>scanf</code>遇到分隔符就停止扫描了，所以只保存了第一个单词<code>my</code>，那怎么输入带有空白符（默认分隔符）的字符串呢？我们可以用<code>%[^\n]</code>来指定<code>scanf</code>的分隔符为<code>\n</code>换行符，这样就可以录入完整的一行字符串了。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    char str[100];
+    scanf("%[^\n]", str);
+    printf("%s", str);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [8:18:14]
+$ gcc a.c
+
+# root @ localhost in ~ [8:18:16]
+$ ./a.out
+my name is otokaze
+my name is otokaze#
+</script></code></pre>
+<h3 id="清空输入缓冲区"><a href="#清空输入缓冲区" class="headerlink" title="清空输入缓冲区"></a>清空输入缓冲区</h3><p>我们先来看这段代码：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    char c1, c2;
+    printf("char1: ");
+    c1 = getchar();
+    printf("char2: ");
+    c2 = getchar();
+    printf("ASCII of char: %d\t%d\n", c1, c2);
+    return 0;
+}
+</script></code></pre>
+<p>这个程序用来打印输入的字符的 ASCII 码，但是很不幸，由于输入缓冲区的存在，并不能达到我们要的结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [10:42:22]
+$ gcc a.c
+
+# root @ localhost in ~ [10:43:54]
+$ ./a.out
+char1: a
+char2: ASCII of char: 97    10
+
+# root @ localhost in ~ [10:44:00]
+$ ./a.out
+char1: ab
+char2: ASCII of char: 97    98
+</script></code></pre>
+<p>我们只输入了第一个字符，就直接显示了结果，为什么会这样呢？仔细观察可以发现，输入 a，然后回车，直接打印了 97 和 10，查看 ASCII 码表，发现对应的 ASCII 字符为 a 和换行符。</p>
+<p>其实很好理解，因为输入缓冲区的存在，导致第二次调用 getchar 时直接从输入缓冲区中读取了剩余的字符，而未给我们机会来输入下一个字符。</p>
+<p>那要如何实现我们想要的结果呢？只要清空输入缓冲区就行。Windows 用<code>fflush(stdin)</code>或<code>rewind(stdin)</code>，Linux 则要用<code>setbuf(stdin, NULL)</code>，这三个函数都在<code>stdio.h</code>头文件中。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    char c1, c2;
+    printf("char1: ");
+    c1 = getchar();
+    setbuf(stdin, NULL);
+    printf("char2: ");
+    c2 = getchar();
+    printf("ASCII of char: %d\t%d\n", c1, c2);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [11:22:57]
+$ gcc aa.c
+
+# root @ localhost in ~ [11:23:29]
+$ ./a.out
+char1: a
+char2: b
+ASCII of char: 97    98
+</script></code></pre>
+<h3 id="非阻塞式键盘监听"><a href="#非阻塞式键盘监听" class="headerlink" title="非阻塞式键盘监听"></a>非阻塞式键盘监听</h3><p>输入函数被执行的时候，线程因为等待 IO 会被挂起，只有等我们输入完成后，线程才会被唤醒，继续执行后面的代码，这种就是<code>阻塞式键盘监听</code>（scanf、getchar）。</p>
+<p>现在我们设计一个小程序，该程序每隔 500ms 打印一行字符串，只有当我们按下 ESC 键后程序才会退出。如果用之前的方法，需要每次都按键才能使得程序继续运行，显然达不到我们的要求，这时候就需要<code>非阻塞式键盘监听</code>了（仅限 Windows）。</p>
+<p><code>kbhit()</code>函数用来检测键盘缓冲区是否有按键被按下，如果有则返回非 0 值，没有则返回 0，<code>kbhit()</code>不会读取缓冲区的字符，字符还在缓冲区。</p>
+<p>注意，下面的程序只能在 Windows 下（VS2017）运行，因为 GCC 没有<code>conio.h</code>头文件。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <windows.h>
+
+int main(void) {
+    char c;
+    int i = 0;
+
+    while (1) {
+        if (kbhit()) {  // kbhit() 位于 <conio.h> 头文件
+            c = getch();
+            if (c == 27) {
+                printf("The ESC key is pressed!\n");
+                break;
+            }
+        }
+        printf("No.%d\n", ++i);
+        Sleep(500); // sleep 500ms, 位于 <windows.h> 头文件
+    }
+
+    system("pause");
+    return 0;
+}
+</script></code></pre>
+<p>按下<code>ESC</code>键时，会跳出循环</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">No.1
+No.2
+No.3
+No.4
+No.5
+No.6
+The ESC key is pressed!
+请按任意键继续. . .
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-var-datatype.html" rel="next" title="c语言 - 变量与数据类型">
+                <i class="fa fa-chevron-left"></i> c语言 - 变量与数据类型
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/ascii-unicode.html" rel="prev" title="ASCII 和 Unicode">
+                ASCII 和 Unicode <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GCC-编译步骤"><span class="nav-number">1.</span> <span class="nav-text">GCC 编译步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-语言输出函数"><span class="nav-number">2.</span> <span class="nav-text">C 语言输出函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-语言输入函数"><span class="nav-number">3.</span> <span class="nav-text">C 语言输入函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#getchar-单字符"><span class="nav-number">3.1.</span> <span class="nav-text">getchar 单字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getche-单字符-有回显"><span class="nav-number">3.2.</span> <span class="nav-text">getche 单字符/有回显</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getch-单字符-无回显"><span class="nav-number">3.3.</span> <span class="nav-text">getch 单字符/无回显</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scanf-格式化扫描"><span class="nav-number">3.4.</span> <span class="nav-text">scanf 格式化扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清空输入缓冲区"><span class="nav-number">3.5.</span> <span class="nav-text">清空输入缓冲区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非阻塞式键盘监听"><span class="nav-number">3.6.</span> <span class="nav-text">非阻塞式键盘监听</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-input-output.html';
+          this.page.identifier = 'c-input-output.html';
+          this.page.title = 'c语言 - 输入与输出';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

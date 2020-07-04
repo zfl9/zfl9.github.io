@@ -1,0 +1,574 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言缓冲区详解 刷新缓冲区">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 缓冲区详解，缓冲区(Buffer)又称为缓存(Cache)，是内存空间的一部分也就是说，在内存中预留了一定的存储空间，用来暂时保存输入或输出的数据，这部分预留的空间就叫做缓冲区">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 缓冲区详解">
+<meta property="og:url" content="https://www.zfl9.com/c-buffer.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 缓冲区详解，缓冲区(Buffer)又称为缓存(Cache)，是内存空间的一部分也就是说，在内存中预留了一定的存储空间，用来暂时保存输入或输出的数据，这部分预留的空间就叫做缓冲区">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 缓冲区详解">
+<meta name="twitter:description" content="c语言 - 缓冲区详解，缓冲区(Buffer)又称为缓存(Cache)，是内存空间的一部分也就是说，在内存中预留了一定的存储空间，用来暂时保存输入或输出的数据，这部分预留的空间就叫做缓冲区">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-buffer.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 缓冲区详解 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-buffer.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 缓冲区详解
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-07T18:29:00+08:00">
+                2017-07-07
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-buffer.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-buffer.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-buffer.html" class="leancloud_visitors" data-flag-title="c语言 - 缓冲区详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 缓冲区详解，<code>缓冲区</code>(Buffer)又称为<code>缓存</code>(Cache)，是内存空间的一部分<br>也就是说，在内存中预留了一定的存储空间，用来暂时保存输入或输出的数据，这部分预留的空间就叫做缓冲区</p>
+<a id="more"></a>
+<h2 id="缓冲区"><a href="#缓冲区" class="headerlink" title="缓冲区"></a>缓冲区</h2><p>缓冲区根据其对应的是<code>输入设备</code>还是<code>输出设备</code>，分为<code>输入缓冲区</code>和<code>输出缓冲区</code></p>
+<p><strong>为什么要引入缓冲区</strong>？<br>比如从磁盘里取信息，我们先把读出的数据放在缓冲区，计算机再直接从缓冲区中取数据，等缓冲区的数据取完后再去磁盘中读取，这样就可以减少磁盘的读写次数，再加上计算机对缓冲区的操作大大快于对磁盘的操作，故应用缓冲区可大大提高计算机的运行速度。</p>
+<p>又比如，我们使用打印机打印文档，由于打印机的打印速度相对较慢，我们先把文档输出到打印机相应的缓冲区，打印机再自行逐步打印，这时我们的CPU可以处理别的事情。</p>
+<p>现在你基本明白了吧，缓冲区就是一块内存区，它用在输入输出设备和CPU之间，用来缓存数据。它使得低速的输入输出设备和高速的CPU能够协调工作，避免低速的输入输出设备占用CPU，解放出CPU，使其能够高效率工作。</p>
+<h2 id="缓冲区类型"><a href="#缓冲区类型" class="headerlink" title="缓冲区类型"></a>缓冲区类型</h2><p>缓冲区分为三种类型：全缓冲、行缓冲和不带缓冲</p>
+<ul>
+<li><code>全缓冲</code><br>在这种情况下，当填满缓冲区后才进行实际I/O操作。<br>全缓冲的典型代表是对磁盘文件的读写。</li>
+<li><code>行缓冲</code><br>在这种情况下，当在输入和输出中遇到换行符时，执行真正的I/O操作。<br>这时，我们输入的字符先存放在缓冲区，等按下回车键换行时才进行实际的I/O操作。<br>典型代表是标准输入(stdin)和标准输出(stdout)。</li>
+<li><code>不带缓冲</code><br>也就是不进行缓冲，标准错误文件 stderr 是典型代表，这使得出错信息可以直接尽快地显示出来</li>
+</ul>
+<h2 id="缓冲区大小"><a href="#缓冲区大小" class="headerlink" title="缓冲区大小"></a>缓冲区大小</h2><p>如果我们没有自己设置缓冲区的话，系统会默认为标准输入输出设置一个缓冲区，这个缓冲区的大小通常是<code>512个字节</code>的大小</p>
+<p>缓冲区大小由 stdio.h 头文件中的宏 BUFSIZ 定义，如果希望查看它的大小，包含头文件，直接输出它的值即可<br>缓冲区的大小是可以改变的，也可以将文件关联到自定义的缓冲区，详情可以查看 <code>setvbuf()</code> 和 <code>setbuf()</code> 函数</p>
+<h2 id="刷新缓冲区"><a href="#刷新缓冲区" class="headerlink" title="刷新缓冲区"></a>刷新缓冲区</h2><p>下列情况会引发缓冲区的刷新：</p>
+<ul>
+<li>缓冲区满时</li>
+<li>行缓冲区遇到回车时</li>
+<li>关闭文件</li>
+<li>使用特定函数刷新缓冲区</li>
+</ul>
+<p><strong>scanf() 缓冲区的影响</strong><br>scanf()是带有缓冲区的，scanf()先从缓冲区获取数据，如果缓冲区没有数据，则等待用户输入<br>scanf()匹配到想要的数据之后，就会将匹配到的数据从缓冲区中删除，没有匹配到的数据不被影响</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a, b;
+    char str[50];
+    printf("b: ");
+    scanf("%d", &b);
+    scanf("%d", &a);
+    scanf("%d", &b);
+    scanf("%s", str);
+    printf("a: %d, b: %d, str: %s\n", a, b, str);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [18:51:11]
+$ gcc a.c
+
+# root @ localhost in ~ [18:51:12]
+$ ./a.out
+b: 99
+11 22 string
+a: 11, b: 22, str: string
+
+# root @ localhost in ~ [18:51:25]
+$ ./a.out
+b: 99
+11 string
+a: 11, b: 99, str: string
+
+# root @ localhost in ~ [18:51:35]
+$ ./a.out
+b: 99
+string
+a: 0, b: 99, str: string
+</script></code></pre>
+<p>需要注意的是，从命令行输入的都是字符串类型，都可以被<code>%s</code>匹配</p>
+<p>输入缓冲区虽然方便，但是有时候却会带来别的麻烦：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int m, n;
+    scanf("m=%d", &m);
+    scanf("n=%d", &n);
+    printf("m=%d, n=%d\n", m, n);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [19:01:19]
+$ gcc a.c
+
+# root @ localhost in ~ [19:01:49]
+$ ./a.out
+m=10
+m=10, n=0
+</script></code></pre>
+<p>我们还没有输入n，就直接打印数值了，这就是输入缓冲区导致的。输入<code>m=10</code>然后按下回车，第一个scanf()匹配成功，这时候缓冲区的内容是换行符，一般情况下scanf()会忽略它，但是当控制字符串不是以<code>%xxx</code>开头时，就不会忽略了，比如，下面这种情况就会被scanf()忽略。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int m, n;
+    printf("enter 2 nums:\n");
+    scanf("%d", &m);
+    scanf("%d", &n);
+    printf("m = %d, n = %d\n", m, n);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [19:07:31]
+$ ./a.out
+enter 2 nums:
+10
+20
+m = 10, n = 20
+</script></code></pre>
+<p><strong>清空缓冲区</strong><br>清空缓冲区主要有两种思路：一是将缓冲区的数据直接丢弃，二是将缓冲区的数据读取出来，但不使用<br>第一种思路：<br>windows下用<code>fflush(stdin)</code>，linux下用<code>setbuf(stdin, NULL)</code>，这两个函数都在头文件<code>stdio.h</code>中</p>
+<p>第二种思路：</p>
+<ul>
+<li><p>第一种方法</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int c;
+while((c = getchar()) != '\n' && c != EOF);
+</script></code></pre>
+</li>
+<li><p>第二种方法</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">scanf("%*[^\n]%*c");
+/*
+%*[^\n] 匹配除了换行符之外的字符，前面的*号表示不保存这些数据，直接丢弃
+%c      匹配剩下的换行符，*号的作用同上
+*/
+</script></code></pre>
+</li>
+</ul>
+<p>综上所述，如果不考虑移植性，就用第一种思路的方法，如果考虑移植性，建议用第二种思路的第二种方法</p>
+<p><strong>getch() getche() getchar()</strong><br>getchar()是有缓冲区的，而getche()和getch()没有缓冲区</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-pointer.html" rel="next" title="c语言 - 指针">
+                <i class="fa fa-chevron-left"></i> c语言 - 指针
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-point-library.html" rel="prev" title="c语言 - 野指针、静态/动态链接库">
+                c语言 - 野指针、静态/动态链接库 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓冲区"><span class="nav-number">1.</span> <span class="nav-text">缓冲区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓冲区类型"><span class="nav-number">2.</span> <span class="nav-text">缓冲区类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓冲区大小"><span class="nav-number">3.</span> <span class="nav-text">缓冲区大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#刷新缓冲区"><span class="nav-number">4.</span> <span class="nav-text">刷新缓冲区</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-buffer.html';
+          this.page.identifier = 'c-buffer.html';
+          this.page.title = 'c语言 - 缓冲区详解';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

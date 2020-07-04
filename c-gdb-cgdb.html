@@ -1,0 +1,895 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C语言 gdb cgdb调试器">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - gdb、cgdb调试器">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - gdb、cgdb调试器">
+<meta property="og:url" content="https://www.zfl9.com/c-gdb-cgdb.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - gdb、cgdb调试器">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - gdb、cgdb调试器">
+<meta name="twitter:description" content="c语言 - gdb、cgdb调试器">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-gdb-cgdb.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - gdb、cgdb调试器 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-gdb-cgdb.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - gdb、cgdb调试器
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T17:11:00+08:00">
+                2017-07-19
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-gdb-cgdb.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-gdb-cgdb.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-gdb-cgdb.html" class="leancloud_visitors" data-flag-title="c语言 - gdb、cgdb调试器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - gdb、cgdb调试器</p>
+<a id="more"></a>
+<h2 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h2><p>gdb是gnu软件系统中的标准调试器，gdb中的命令有很多，但是通常只要掌握其中的10来个命令就足够我们日常的调试工作了</p>
+<p><strong>安装gdb</strong></p>
+<ul>
+<li>CentOS/RHEL：<code>yum -y install gdb</code></li>
+<li>ArchLinux：<code>pacman -S gdb</code></li>
+</ul>
+<p>配置alias别名：<code>alias gdb=&#39;gdb -q&#39;</code>，不显示gdb版本等信息</p>
+<p>好了，gdb装好之后，我们先来写一个阶乘的代码：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+int factorial(int n){
+    if(n == 0 || n == 1){
+        return 1;
+    }else{
+        return n * factorial(n-1);
+    }
+}
+
+int main(int argc, char *argv[]){
+    int result, n = atoi(argv[1]);
+    result = factorial(n);
+    printf("%d! = %d\n", n, result);
+    return 0;
+}
+</script></code></pre>
+<p>编译，注意加上-g选项，添加debug信息</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [17:25:43]
+$ gcc a.c -g
+a.c: In function ‘main’:
+a.c:12:14: warning: unused parameter ‘argc’ [-Wunused-parameter]
+ int main(int argc, char *argv[]){
+              ^
+
+# root @ localhost in ~ [17:27:13]
+$ ll
+total 16K
+-rw-r--r-- 1 root root  310 Jul 19 16:33 a.c
+-rwxr-xr-x 1 root root 9.7K Jul 19 17:27 a.out
+</script></code></pre>
+<p>我们先来正常执行一下程序：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [17:27:18]
+$ ./a.out 5
+5! = 120
+</script></code></pre>
+<p>启用gdb调试：<br><code>l</code>：显示源代码，默认显示10行<br><code>l 10</code>：显示第10行附近的代码<br><code>l main</code>：显示main()函数的代码</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [17:31:00]
+$ gdb a.out
+Reading symbols from /root/a.out...done.
+(gdb)
+(gdb) l
+4    int factorial(int n){
+5        if(n == 0 || n == 1){
+6            return 1;
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+11
+12    int main(int argc, char *argv[]){
+13        int result, n = atoi(argv[1]);
+(gdb)
+14        result = factorial(n);
+15        printf("%d! = %d\n", n, result);
+16        return 0;
+17    }
+(gdb)
+Line number 18 out of range; a.c has 17 lines.
+(gdb) l 1
+1    #include <stdio.h>
+2    #include <stdlib.h>
+3
+4    int factorial(int n){
+5        if(n == 0 || n == 1){
+6            return 1;
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+(gdb) l main
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+11
+12    int main(int argc, char *argv[]){
+13        int result, n = atoi(argv[1]);
+14        result = factorial(n);
+15        printf("%d! = %d\n", n, result);
+16        return 0;
+(gdb) l factorial
+1    #include <stdio.h>
+2    #include <stdlib.h>
+3
+4    int factorial(int n){
+5        if(n == 0 || n == 1){
+6            return 1;
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+</script></code></pre>
+<p>设置断点，所谓断点，就是当程序运行到断点处时，会暂停运行，方便调试<br><code>b 13</code>：在13行处设置断点<br><code>b 14</code>：在14行处设置断点<br><code>b main</code>：在main()函数入口处设置断点<br><code>i b</code>：查看断点信息<br><code>d 2</code>：删除断点2<br><code>d</code>：删除所有断点</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">(gdb) l main
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+11
+12    int main(int argc, char *argv[]){
+13        int result, n = atoi(argv[1]);
+14        result = factorial(n);
+15        printf("%d! = %d\n", n, result);
+16        return 0;
+(gdb) b 13
+Breakpoint 1 at 0x4005bd: file a.c, line 13.
+(gdb) b 14
+Breakpoint 2 at 0x4005d3: file a.c, line 14.
+(gdb) i b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x00000000004005bd in main at a.c:13
+2       breakpoint     keep y   0x00000000004005d3 in main at a.c:14
+(gdb) d 2
+(gdb) i b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x00000000004005bd in main at a.c:13
+</script></code></pre>
+<p>然后我们就可以运行程序了：<br><code>r</code>：运行程序<br><code>r 5</code>：传递参数5<br><code>r 10 20 30</code>：传递参数10 20 30<br>也可以使用<code>set args 10 20 30</code>设置参数，<code>show args</code>显示当前参数，<code>set args</code>清空参数</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">(gdb) l main
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+11
+12    int main(int argc, char *argv[]){
+13        int result, n = atoi(argv[1]);
+14        result = factorial(n);
+15        printf("%d! = %d\n", n, result);
+16        return 0;
+(gdb) b main
+Breakpoint 4 at 0x4005bd: file a.c, line 13.
+(gdb) r
+Starting program: /root/a.out main
+
+Breakpoint 4, main (argc=2, argv=0x7fffffffe408) at a.c:13
+13        int result, n = atoi(argv[1]);
+</script></code></pre>
+<p>因为我们在13行的地方设置了断点，所以执行run后，在13行处会暂停(注意：13行还没有执行)<br>这时候，我们可以使用<code>p</code>命令来查看变量的值：<br><code>p result</code>：查看result的值<br><code>p n</code>：查看n的值<br><code>p argv[1]</code>：查看argv[1]的值</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">(gdb) r
+Starting program: /root/a.out 3
+
+Breakpoint 1, main (argc=2, argv=0x7fffffffe408) at a.c:13
+13        int result, n = atoi(argv[1]);
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-157.el7_3.4.x86_64
+(gdb) p result
+$1 = 0
+(gdb) p n
+$2 = 0
+(gdb) p argv[1]
+$3 = 0x7fffffffe6b4 "3"
+</script></code></pre>
+<p>单步执行代码：<br><code>s</code>：step，若有函数调用时，进入函数<br><code>n</code>：next，若有函数调用时，执行函数，而不进入函数内部<br><code>c</code>：继续运行(直到下一个断点或结束)</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">(gdb) p result
+$1 = 0
+(gdb) p n
+$2 = 0
+(gdb) p argv[1]
+$3 = 0x7fffffffe6b4 "3"
+(gdb) s
+14        result = factorial(n);
+(gdb) l factorial
+1    #include <stdio.h>
+2    #include <stdlib.h>
+3
+4    int factorial(int n){
+5        if(n == 0 || n == 1){
+6            return 1;
+7        }else{
+8            return n * factorial(n-1);
+9        }
+10    }
+(gdb) p result
+$4 = 0
+(gdb) p n
+$5 = 3
+(gdb) s
+factorial (n=3) at a.c:5
+5        if(n == 0 || n == 1){
+(gdb) p n
+$6 = 3
+(gdb) s
+8            return n * factorial(n-1);
+(gdb) p n
+$7 = 3
+(gdb) s
+factorial (n=2) at a.c:5
+5        if(n == 0 || n == 1){
+(gdb) p n
+$8 = 2
+(gdb) s
+8            return n * factorial(n-1);
+(gdb) p n
+$9 = 2
+(gdb) s
+factorial (n=1) at a.c:5
+5        if(n == 0 || n == 1){
+(gdb) p n
+$10 = 1
+(gdb) s
+6            return 1;
+(gdb) p n
+$11 = 1
+(gdb) s
+10    }
+(gdb) s
+10    }
+(gdb) s
+10    }
+(gdb)
+main (argc=2, argv=0x7fffffffe408) at a.c:15
+15        printf("%d! = %d\n", n, result);
+(gdb) p result
+$12 = 6
+(gdb) p n
+$13 = 3
+(gdb) c
+Continuing.
+3! = 6
+[Inferior 1 (process 13024) exited normally]
+</script></code></pre>
+<h2 id="gdb常用参数"><a href="#gdb常用参数" class="headerlink" title="gdb常用参数"></a>gdb常用参数</h2><p><strong>生成调试信息</strong><br>一般来说GDB主要用来调试c/c++，要调试c/c++，必须在gcc编译时，加上参数-g<br>如果没有-g参数，变量名、函数名、数组名等地址助记符都会被替换为运行时的内存地址</p>
+<p><strong>启动gdb的方法</strong></p>
+<ul>
+<li><code>gdb program</code>：program也就是你的执行文件，一般在当前目录下</li>
+<li><code>gdb program core</code>：用gdb同时调试一个运行程序和core文件，core是非法执行后core dump产生的文件</li>
+<li><code>gdb program 1234</code>：如果你的程序是一个服务程序，那么你可以指定这个服务程序运行时的PID，gdb会自动attach上去，并调试它，program应该在PATH环境变量中搜索得到</li>
+</ul>
+<p><strong>程序运行时参数</strong></p>
+<ul>
+<li><code>set args 1 2 3</code>：设置运行时参数为1 2 3</li>
+<li><code>show args</code>：显示设置好的运行参数</li>
+<li><code>set args</code>：清空之前的运行时参数</li>
+<li><code>r</code>：不指定运行参数</li>
+<li><code>r 1 2 3</code>：设置运行时参数为1 2 3</li>
+</ul>
+<p><strong>工作目录</strong></p>
+<ul>
+<li><code>cd</code>：切换工作目录</li>
+<li><code>pwd</code>：打印当前工作目录</li>
+<li><code>shell &lt;command&gt;</code>：执行shell命令</li>
+</ul>
+<p><strong>程序的输入输出</strong></p>
+<ul>
+<li><code>info terminal</code>：显示终端模式</li>
+<li><code>run &gt; out.file</code>：输出重定向至文件out.file</li>
+</ul>
+<p><strong>设置断点</strong><br><strong>简单断点</strong></p>
+<ul>
+<li><code>b 10</code>：在第10行设置断点</li>
+<li><code>b func</code>：在func入口处设置断点</li>
+</ul>
+<p><strong>多文件设置断点</strong><br>C++中可以使用class::function或function(type,type)格式来指定函数名<br>如果有名称空间，可以使用namespace::class::function或者function(type,type)格式来指定函数名</p>
+<ul>
+<li><code>break filename:linenum</code>：在源文件filename的linenum行处停住</li>
+<li><code>break filename:function</code>：在源文件filename的function函数的入口处停住</li>
+<li><code>break class::function或function(type,type)</code>：在类class的function函数的入口处停住</li>
+<li><code>break namespace::class::function</code>：在名称空间为namespace的类class的function函数的入口处停住</li>
+</ul>
+<p><strong>查询所有断点</strong></p>
+<ul>
+<li><code>info b</code>：查询所有断点</li>
+</ul>
+<p><strong>观察点</strong></p>
+<ul>
+<li><code>watch 变量名</code>：为该变量名设置一个观察点，当值发生变化时停住程序</li>
+<li><code>rwatch 变量名</code>：当变量被读取时，停住程序</li>
+<li><code>awatch 变量名</code>：当变量被读取或修改时，停住程序</li>
+<li><code>info watch</code>：查看当前设置的所有观察点</li>
+</ul>
+<p><strong>条件断点</strong><br>为断点设置一个条件，我们使用if关键词，后面跟其断点条件<br>并且，条件设置好后，我们可以用condition命令来修改断点的条件<br>只有break和watch命令支持if，catch目前暂不支持if<br>condition与break if类似，只是condition只能用在已存在的断点上</p>
+<ul>
+<li><code>b test.c:8 if intValue == 5</code>：在test.c第8行设置一个条件断点</li>
+<li><code>condition bnum expression</code>：修改断点号为bnum的停止条件为expression</li>
+<li><code>condition bnum</code>：清除断点号为bnum的停止条件</li>
+<li><code>ignore bnum count</code>：表示忽略断点号为bnum的停止条件count次</li>
+</ul>
+<p><strong>维护断点</strong></p>
+<ul>
+<li><code>clear</code>：清除所有的已定义的停止点</li>
+<li><code>clear function</code>：清除所有设置在函数上的停止点</li>
+<li><code>clear linenum</code>：清除所有设置在指定行上的停止点</li>
+<li><code>clear filename:linenum</code>：清除所有设置在指定文件的指定行上的停止点</li>
+<li><code>delete [breakpoints] [range...]</code>：删除指定的断点，breakpoints为断点号，如果不指定断点号，则表示删除所有的断点，range表示断点号的范围（如：3-7）</li>
+<li><code>disable [breakpoints] [range...]</code>：disable所指定的停止点，breakpoints为停止点号，如果什么都不指定，表示disable所有的停止点</li>
+<li><code>enable [breakpoints] [range...]</code>：enable所指定的停止点，breakpoints为停止点号</li>
+<li><code>enable [breakpoints] once range…</code>：enable所指定的停止点一次，当程序停止后，该停止点马上被GDB自动disable</li>
+<li><code>enable [breakpoints] delete range…</code>：enable所指定的停止点一次，当程序停止后，该停止点马上被GDB自动删除</li>
+</ul>
+<p><strong>为停止点设定运行命令</strong><br>我们可以使用GDB提供的command命令来设置停止点的运行命令<br>也就是说，当运行的程序在被停止住时，我们可以让其自动运行一些别的命令，这很有利行自动化调试<br><code>commands [bnum]</code>：设置断点bnum的命令列表，当程序被该断点停住时，gdb会依次运行命令列表中的命令<br>例如:</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">break foo if x>0
+commands
+printf "x is %d", x
+continue
+end
+</script></code></pre>
+<p>断点设置在函数foo中，断点条件是x&gt;0，如果程序被断住后，也就是，一旦x的值在foo函数中大于0，GDB会自动打印出x的值，并继续运行程序<br>如果你要清除断点上的命令序列，那么只要简单的执行一下commands命令，并直接在打个end就行了</p>
+<p><strong>调试代码</strong></p>
+<ul>
+<li><code>run</code>：运行程序，可简写为r</li>
+<li><code>next</code>：单步跟踪，函数调用当作一条简单语句执行，可简写为n</li>
+<li><code>step</code>：单步跟踪，函数调进入被调用函数体内，可简写为s</li>
+<li><code>finish</code>：退出函数</li>
+<li><code>until</code>：在一个循环体内单步跟踪时，这个命令可以运行程序直到退出循环体,可简写为u</li>
+<li><code>continue</code>：继续运行程序，可简写为c</li>
+<li><code>stepi</code>或<code>si</code>、<code>nexti</code>或<code>ni</code>：单步跟踪一条机器指令，一条程序代码有可能由数条机器指令完成，stepi和nexti可以单步执行机器指令</li>
+<li><code>info program</code>：来查看程序的是否在运行，进程号，被暂停的原因</li>
+</ul>
+<p><strong>查看运行时的数据</strong></p>
+<ul>
+<li><code>print</code>：打印变量、字符串、表达式等的值，可简写为p</li>
+<li><code>p count</code>：打印count的值</li>
+<li><code>p cou1+cou2+cou3</code>：打印表达式值</li>
+<li><code>p *array@10</code>：array是一个数组，@左边是数组第0个元素的值，@右边是数组长度</li>
+</ul>
+<p><code>p/&lt;fmt&gt;</code>：fmt是输出的格式，同<code>x</code>命令的fmt<br>print接受一个表达式，GDB会根据当前的程序运行的数据来计算这个表达式，表达式可以是当前程序运行中的const常量、变量、函数等内容，但是GDB不能使用程序中定义的宏</p>
+<p><strong>程序变量</strong><br>在gdb中，可以随时查看这三种变量的值：全局变量(所有文件可见)、静态全局变量(当前文件可见)、局部变量(当前作用域中可见)<br>当局部变量和全局变量重名时，优先显示局部变量的值，想查看全局变量的值可以使用<code>::</code>，如<code>p &#39;main.c&#39;::var</code>、<code>p &#39;module.c&#39;::func::var</code>等</p>
+<p><strong>自动显示</strong><br>你可以设置一些自动显示的变量，当程序停住时，或是在你单步跟踪时，这些变量会自动显示，相关的GDB命令是display</p>
+<ul>
+<li><code>display expr</code></li>
+<li><code>display/fmt expr</code></li>
+<li><code>display/fmt addr</code></li>
+</ul>
+<p>expr是一个表达式，fmt表示显示的格式，addr表示内存地址，当你用display设定好了一个或多个表达式后，只要你的程序被停下来，GDB会自动显示你所设置的这些表达式的值</p>
+<p><code>info display</code>：查看display设置的自动显示的信息</p>
+<p><code>undisplay dnums…</code><br><code>delete display dnums…</code><br>删除自动显示，dnums意为所设置好了的自动显示的编号<br>如果要同时删除几个，编号可以用空格分隔，如果要删除一个范围内的编号，可以用减号表示（如：2-5）</p>
+<p><code>disable display dnums…</code><br><code>enable display dnums…</code><br>disable和enalbe不删除自动显示的设置，而只是让其失效和恢复</p>
+<p><strong>历史记录</strong></p>
+<ul>
+<li><code>show val 10</code>：查看编号10附近的历史记录</li>
+<li><code>show val</code>：查看最后10个历史记录</li>
+</ul>
+<p><strong>改变程序的运行</strong><br><strong>修改变量的值</strong><br>一种方法是用print：<code>p x=4</code>：修改变量x的值为4，但是这种方式很容易与gdb的参数冲突，推荐使用<code>set var x=4</code>这种方式</p>
+<p><strong>跳转执行</strong><br>一般来说，被调试程序会按照程序代码的运行顺序依次执行<br>GDB提供了乱序执行的功能，也就是说，GDB可以修改程序的执行顺序，可以让程序执行随意跳跃<br>这个功能可以由GDB的jump命令来完成：</p>
+<ul>
+<li><code>jump linespec</code>：指定下一条语句的运行点，可以是文件的行号，可以是file:line格式，可以是+num这种偏移量格式，表示下一条运行语句从哪里开始</li>
+<li><code>jump *address</code>：这里的是代码行的内存地址</li>
+</ul>
+<p>注意，jump命令不会改变当前的程序栈中的内容<br>所以，当你从一个函数跳到另一个函数时，当函数运行完返回时进行弹栈操作时必然会发生错误<br>可能结果还是非常奇怪的，甚至于产生程序Core Dump，所以最好是同一个函数中进行跳转</p>
+<p>熟悉汇编的人都知道，程序运行时，eip寄存器用于保存当前代码所在的内存地址<br>所以，jump命令也就是改变了这个寄存器中的值，于是，你可以使用<code>set $pc</code>来更改跳转执行的地址<br>如：<code>set $pc = 0×485</code></p>
+<p><strong>强制函数返回</strong><br>如果你的调试断点在某个函数中，并还有语句没有执行完<br>你可以使用return命令强制函数忽略还没有执行的语句并返回<br><code>return</code>、<code>return expression</code><br>使用return命令取消当前函数的执行，并立即返回，如果指定了，那么该表达式的值会被认作函数的返回值</p>
+<p><strong>强制调用函数</strong><br><code>call expr</code>：表达式中可以一是函数，以此达到强制调用函数的目的，并显示函数的返回值，如果函数返回值是void，那么就不显示<br><code>print expr</code>：另一个相似的命令也可以完成这一功能：print，print后面可以跟表达式，所以也可以用他来调用函数，print和call的不同是，如果函数返回void，call则不显示，print则显示函数返回值，并把该值存入历史数据中</p>
+<p><strong>显示源代码</strong><br>GDB可以打印出所调试程序的源代码，当然，在程序编译时一定要加上 –g 的参数，把源程序信息编译到执行文件中，不然就看不到源程序了<br>当程序停下来以后，GDB会报告程序停在了那个文件的第几行上<br>你可以用list命令来打印程序的源代码，默认打印10行</p>
+<p><code>list linenum</code>：显示行号linenum附近10行的源程序<br><code>list function</code>：显示函数名为function的函数的源程序<br><code>list</code>：显示当前行后面的源程序<br><code>list -</code>：显示当前行前面的源程序</p>
+<p>一般是打印当前行的上5行和下5行，默认是10行，当然，你也可以定制显示的范围，使用下面命令可以设置一次显示源程序的行数</p>
+<p><code>set listsize count</code>：设置一次显示源代码的行数<br><code>show listsize</code>：查看当前listsize的设置</p>
+<p><strong>调试已运行的进程</strong><br>1、在UNIX下用ps查看正在运行的程序的PID，然后用gdb PID process-id格式挂接正在运行的程序<br>2、先用gdb关联上源代码，并进行gdb，在gdb中用attach process-id命令来挂接进程的PID，并用detach来取消挂接的进程</p>
+<p><strong>线程</strong><br>如果你程序是多线程的话，你可以定义你的断点是否在所有的线程上，或是在某个特定的线程<br><code>break linespec thread threadno</code><br><code>break linespec thread threadno if …</code><br>linespec指定了断点设置在的源程序的行号<br>threadno指定了线程的ID，注意，这个ID是GDB分配的，你可以通过”info threads”命令来查看正在运行程序中的线程信息，如果你不指定”thread threadno”则表示你的断点设在所有线程上面</p>
+<p>你还可以为某线程指定断点条件，如：<br><code>break frik.c:13 thread 28 if bartab &gt; lim</code><br>当你的程序被GDB停住时，所有的运行线程都会被停住，这方便你你查看运行程序的总体情况<br>而在你恢复程序运行时，所有的线程也会被恢复运行，那怕是主进程在被单步调试时</p>
+<p><strong>栈信息</strong><br>当你调用了一个函数，函数的地址、函数参数、函数内的局部变量都会被压入<code>栈(stack)</code>中<br><code>bt</code>：查看当前函数调用栈的所有信息<br><code>bt n</code>：当n为正整数时，只打印栈顶上n层的信息；当n为负整数时，只打印栈底下n层的信息</p>
+<p>如果你要查看某一层的信息，你需要在切换当前的栈，一般来说，程序停止时，最顶层的栈就是当前栈，如果你要查看栈下面层的详细信息，首先要做的是切换当前栈<br><code>frame n</code>：n是一个从0开始的整数，是栈中的层编号；比如：frame 0，表示栈顶，frame 1，表示栈的第二层<br><code>frame addr</code>：地址为addr的栈帧<br><code>up n</code>：表示向栈的上面移动n层，可以不打n，表示向上移动一层<br><code>down n</code>：表示向栈的下面移动n层，可以不打n，表示向下移动一层</p>
+<p>上面的命令，都会打印出移动到的栈层的信息<br>如果你不想让其打出信息，你可以使用这三个命令：<br><code>select-frame</code>对应于<code>frame</code>命令<br><code>up-silently n</code>对应于<code>up</code>命令<br><code>down-silently n</code>对应于<code>down</code>命令</p>
+<p>查看当前栈层的信息，你可以用以下GDB命令：<br><code>frame</code>或<code>f</code>：栈的层编号，当前的函数名，函数参数值，函数所在文件及行号，函数执行到的语句<br><code>info frame</code>：打印当前栈的信息</p>
+<p><strong>信号</strong><br>信号是一种软中断，是一种处理异步事件的方法<br>一般来说，操作系统都支持许多信号，尤其是UNIX，比较重要应用程序一般都会处理信号<br>UNIX定义了许多信号，比如SIGINT表示中断字符信号，也就是Ctrl+C的信号；SIGBUS表示硬件故障的信号；SIGCHLD表示子进程状态改变信号；SIGKILL表示终止程序运行的信号，等等</p>
+<p>调试程序的时候处理信号: <code>handle signal [keywords...]</code><br>signal可以以SIG开头或不以SIG开头，可以用定义一个要处理信号的范围（如：SIGIO-SIGKILL，表示处理从 SIGIO信号到SIGKILL的信号，其中包括SIGIO，SIGIOT，SIGKILL三个信号），也可以使用关键字all来标明要处理所有的信号<br>一旦被调试的程序接收到信号，运行程序马上会被GDB停住，以供调试</p>
+<p>keywords列表如下:</p>
+<ul>
+<li><code>nostop</code>：当被调试的程序收到信号时，GDB不会停住程序的运行，但会打出消息告诉你收到这种信号</li>
+<li><code>stop</code>：当被调试的程序收到信号时，GDB会停住你的程序</li>
+<li><code>print</code>：当被调试的程序收到信号时，GDB会显示出一条信息</li>
+<li><code>noprint</code>：当被调试的程序收到信号时，GDB不会告诉你收到信号的信息</li>
+<li><code>pass</code>：当被调试的程序收到信号时，GDB不处理信号，这表示，GDB会把这个信号交给被调试程序处理</li>
+<li><code>nopass</code>：当被调试的程序收到信号时，GDB不会让被调试程序来处理这个信号</li>
+</ul>
+<p><code>info signals</code><br><code>info handle</code><br>查看有哪些信号在被GDB检测中</p>
+<p><strong>捕获异常</strong><br>当event发生时，停住程序，event可以是下面的内容：<br><code>catch throw</code>：一个C++抛出的异常<br><code>catch catch</code>：一个C++捕捉到的异常</p>
+<p><strong>指定源文件搜索路径</strong><br>某些时候，用-g编译过后的执行程序中只是包括了源文件的名字，没有路径名<br>GDB提供了可以让你指定源文件的路径的命令，以便GDB进行搜索<br><code>dir dirname …</code>：加一个源文件路径到当前路径的前面，如果你要指定多个路径，UNIX下你可以使用”:”，Windows下你可以使用”;”<br><code>dir</code>：清除所有的自定义的源文件搜索路径信息<br><code>show dir</code>：显示定义了的源文件搜索路径</p>
+<p><strong>查看内存中的值</strong><br><code>x/&lt;n/f/u&gt; &lt;addr&gt;</code>：查看内存中的值<br>其中n为正整数，表示需要显示的内存单元个数<br>f为显示的格式，如果该地址的值是字符串，可以用s<br>u为一个单元的长度，默认是4bytes，可用b表示单字节、h表示双字节、w表示四字节、g表示八字节<br>addr表示一个内存地址，可用&amp;取地址符</p>
+<p>其中f的格式可以为：<br>c字符、s字符串、d十进制、f浮点数、t二进制、o八进制、x十六进制、u无符号型十六进制、a地址、i指令</p>
+<p>n/f/u 三个参数可以任意组合，可以都没有，也可以都指定</p>
+<p><strong>其他命令</strong><br><code>i args</code>：查看参数信息<br><code>i locals</code>：查看当前函数的局部变量</p>
+<p><code>for &lt;regex&gt;</code>：向前搜索源代码，正则方式<br><code>rev &lt;regex&gt;</code>：向后搜索</p>
+<p><code>disass func</code>：查看func()函数的汇编代码</p>
+<p><code>file EXEC_FILE</code>：加载执行文件</p>
+<p><code>show version</code>：查看gdb版本信息</p>
+<p><code>q</code>：退出gdb shell</p>
+<h2 id="gdb调试多进程"><a href="#gdb调试多进程" class="headerlink" title="gdb调试多进程"></a>gdb调试多进程</h2><p>默认设置下，在调试多进程程序时gdb只会调试主进程；<br>gdb7以上的版本(gdb –version)支持多进程调试，只需要设置好<code>follow-fork-mode</code>(fork追踪模式)以及<code>detach-on-fork</code>(指示GDB在fork之后是否断开某个进程的调试)即可；</p>
+<p>这两个参数的设置命令分别是：<br><code>set follow-fork-mode [parent|child]</code>，默认值<code>parent</code><br><code>set detach-on-fork [on|off]</code>，默认值<code>on</code><br>两者结合起来构成了GDB的调试模式；</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">follow-fork-mode  detach-on-fork    说明
+    parent              on          GDB默认的调试模式：只调试主进程
+    child               on          只调试子进程
+    parent              off         同时调试两个进程，gdb跟主进程，子进程block在fork位置
+    child               off         同时调试两个进程，gdb跟子进程，主进程block在fork位置
+</script></code></pre>
+<p>首先进行一个名词解释<code>inferior</code>，GDB将每个被调试程序的执行状态的记录结构称为一个<code>inferior</code>；<br>一般情况下一个<code>inferior会对应一个进程</code>，当然嵌入式平台可能有不同情况；<br><code>inferior</code>有时候会在进程没有启动的情况下就存在(这在命令中会有所体现，后面会详细介绍)，每个<code>inferior</code>会有不同的地址空间，并且一个<code>inferior</code>里面可以包含多个线程；</p>
+<p><code>info inferiors</code>：显示GDB调试的所有inferior<br>前面有*的是当前inferior，直接发GDB命令控制的就是当前inferior；</p>
+<p><code>inferior infno</code>：设置infno号inferior为当前inferior；</p>
+<p><code>add-inferior [ -copies n ] [ -exec executable ]</code>：增加n个inferior并且其执行程序为executable<br>如果不指定n则只增加一个inferior；如果不指定executable，则执行程序留空，增加后可使用file命令重新指定执行程序；<br>注意：这时候创建的inferior其关联的进程并没有启动；</p>
+<p><code>clone-inferior [ -copies n ] [ infno ]</code>：增加n个其执行程序为指定infno号的inferior<br>如果不指定n则只增加一个inferior；如果不指定infno，则指定跟当前inferior一样的执行程序；<br>注意：这个命令只是克隆了另一个infno的执行文件名称，和clone这个系统调用并没什么相关性(个人觉得用copy更不容易产生歧义)；</p>
+<p><code>remove-inferior infno</code>：删除一个infno号inferior<br>如果inferior在运行，则不能删除inferior，所以在删除以前需要先kill或者detach这个inferior；</p>
+<p><code>detach inferior infno</code>：detach掉infno号inferior<br>注意这个inferior仍然存在，可以再次用run等命令执行它，如果想删除结构需要用remove-inferior命令；</p>
+<p><code>kill inferior infno</code>：kill掉infno号inferior<br>注意这个inferior仍然存在，可以再次用run等命令执行它，如果想删除结构需要用remove-inferior命令；</p>
+<p><code>set print inferior-events on|off</code><br><code>show print inferior-events</code><br>这个选项用来打开和关闭inferior状态的提示信息；</p>
+<p><code>set detach-on-fork on|off</code><br><code>show detach-on-fork</code><br>这个选项用来控制fork的时候，是否detach掉父进程或者子进程(至于具体哪个就由下面的命令决定)，默认值是打开，所以想同时调试父进程和子进程的就需要关闭这个选项；</p>
+<p><code>set follow-fork-mode parent|child</code><br><code>show follow-fork-mode</code><br>这个选项用来设置fork的时候，GDB将继续调试父进程或者子进程，上面的命令也介绍了，如果<code>detach-on-fork</code>选项打开，不被调试的那个进程将被detach；</p>
+<p><code>set follow-exec-mode new|same</code><br><code>show follow-exec-mode</code><br>当发生exec的时候，如果这个选项是same(默认值)，因为父进程已经退出，所以自动在执行exec的inferior上控制子进程；<br>如果选项是new，则新建一个inferior给执行起来的子进程，而父进程的inferior仍然保留，当前保留的inferior的程序状态是没有执行；</p>
+<p><code>set schedule-multiple on|off</code><br><code>show schedule-multiple</code><br>这个选项类似于多线程调试里的<code>set scheduler-locking</code>选项；<br>当选项是off(默认值)的时候，GDB发出执行指令的时候，只有当前inferior会执行；<br>而当选项是on的时候，GDB发出执行命令后，全部状态是执行状态的inferior都会执行；<br>注意，如果scheduler-locking选项设置为lock的时候，即使schedule-multiple设置为on，也只有当前进程的当前线程会执行；</p>
+<p><code>maint info program-spaces</code>：显示当前GDB一共管理了多少地址空间</p>
+<h2 id="gdb调试多线程"><a href="#gdb调试多线程" class="headerlink" title="gdb调试多线程"></a>gdb调试多线程</h2><p><code>info threads</code>：显示当前可调试的所有线程，每个线程会有一个GDB为其分配的ID，后面操作线程的时候会用到这个ID；前面有*的是当前调试的线程；</p>
+<p><code>thread &lt;ID&gt;</code>：切换当前调试的线程为指定ID的线程；</p>
+<p><code>break test.c:123 thread all</code>：在所有线程中相应的行上设置断点；</p>
+<p><code>thread apply ID1 ID2 command</code>：让一个或者多个线程执行GDB命令command；</p>
+<p><code>thread apply all command</code>：让所有被调试线程执行GDB命令command；</p>
+<p><code>set scheduler-locking off|on|step</code>：<br>默认情况下，在使用step或者continue命令调试当前线程时，其他线程也是同时执行的；<br>怎么只让被调试的线程执行呢？通过这个命令就可以实现这个需求；<br><code>off</code>：不锁定任何线程，也就是所有线程都执行，这是默认值；<br><code>on</code>：只有当前被调试的线程会执行；<br><code>step</code>：在单步的时候，除了next过一个函数的情况以外，只有当前线程会执行；</p>
+<h2 id="cgdb"><a href="#cgdb" class="headerlink" title="cgdb"></a>cgdb</h2><p>可能是我用惯了oh-my-zsh和vim，严重依赖语法高亮<br>前面的gdb都是黑底白字，代码也没有高亮，后来找到一个叫cgdb的调试器<br>其实还是调用的gdb，但是它包装的更好，支持vim风格的操作，还支持代码高亮</p>
+<p><strong>安装cgdb</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">git clone https://github.com/cgdb/cgdb.git
+cd cgdb
+./autogen.sh
+./configure --prefix=/usr/local/cgdb
+make && make install
+
+vim /etc/profile
+PATH=$PATH:/usr/local/cgdb/bin
+
+source /etc/profile
+</script></code></pre>
+<p><strong>cgdb简要介绍</strong></p>
+<ol>
+<li>cgdb分为上下两栏，上面是一个类似vim的窗口，下面是gdb shell</li>
+<li>通过ESC可进入vim模式，i键进入gdb shell</li>
+<li>在vim窗口中，按o键，打开文件对话框窗口，ctrl+w切换布局</li>
+<li>选中某行后，按空格键设置断点，再按一次取消断点</li>
+<li>-号将vim窗口缩小、=号则相反</li>
+</ol>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-regex-pcre.html" rel="next" title="c语言 - 正则表达式">
+                <i class="fa fa-chevron-left"></i> c语言 - 正则表达式
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-manual.html" rel="prev" title="c语言 - 常用函数手册">
+                c语言 - 常用函数手册 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gdb"><span class="nav-number">1.</span> <span class="nav-text">gdb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gdb常用参数"><span class="nav-number">2.</span> <span class="nav-text">gdb常用参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gdb调试多进程"><span class="nav-number">3.</span> <span class="nav-text">gdb调试多进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gdb调试多线程"><span class="nav-number">4.</span> <span class="nav-text">gdb调试多线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cgdb"><span class="nav-number">5.</span> <span class="nav-text">cgdb</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-gdb-cgdb.html';
+          this.page.identifier = 'c-gdb-cgdb.html';
+          this.page.title = 'c语言 - gdb、cgdb调试器';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

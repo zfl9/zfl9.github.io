@@ -1,0 +1,3826 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java Random随机数 regex正则 Math类 String StringBuffer StringBuilder类 Date日期时间">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java Random、regex正则、Math类、String字符串">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Random、regex正则、Math类、String字符串">
+<meta property="og:url" content="https://www.zfl9.com/java-lang-util.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java Random、regex正则、Math类、String字符串">
+<meta property="og:image" content="https://www.zfl9.com/images/java-string.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/unicode-plane.png">
+<meta property="og:image" content="https://www.zfl9.com/images/unicode-utf16.png">
+<meta property="og:updated_time" content="2019-02-18T12:48:38.750Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Random、regex正则、Math类、String字符串">
+<meta name="twitter:description" content="Java Random、regex正则、Math类、String字符串">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-string.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-lang-util.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java Random、regex正则、Math类、String字符串 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-lang-util.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java Random、regex正则、Math类、String字符串
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T11:02:00+08:00">
+                2017-09-21
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-lang-util.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-lang-util.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-lang-util.html" class="leancloud_visitors" data-flag-title="Java Random、regex正则、Math类、String字符串">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java Random、regex正则、Math类、String字符串</p>
+<a id="more"></a>
+<h2 id="Random-随机数"><a href="#Random-随机数" class="headerlink" title="Random 随机数"></a>Random 随机数</h2><p>实际上，计算机只能为我们提供<code>伪随机数</code>，所谓伪随机数就是按照一定<code>算法</code>模拟产生的，其结果是<code>确定的</code>，是<code>可见的</code>；</p>
+<p>计算机产生随机数的过程，是根据一个<code>种子seed</code>为基准，以某个<code>递推公式</code>推算出来的<code>一系列数</code>，当递推的<strong>范围足够大</strong>、<strong>往复性足够强</strong>、又<strong>符合正态分布或平均分布</strong>时，我们就可以认为这是一个近似的真随机数；</p>
+<p>在 java.util 包中，Random 类就是一个<strong>伪随机数生成器</strong>。<br>Random 类的默认种子在 JDK1.5 版本以前是<code>System.currentTimeMillis()</code>的返回值；<br>由于 System.currentTimeMillis() 的粒度太大，随机性不是很好，所以改为了<code>System.nanoTime()</code>的返回值。</p>
+<blockquote>
+<p><code>System.currentTimeMillis()</code>：返回自 1970-01-01 00:00:00 UTC 到现在经过的毫秒(ms)数；<strong>绝对时间</strong>、<strong>时间戳</strong>；<br><code>System.nanoTime()</code>：JDK1.5 起，由 JVM 提供的纳秒精度的时间，开始时间不确定（可能是负的）；<strong>相对时间</strong>，通常用于衡量一段代码的执行时间。</p>
+</blockquote>
+<p>大家可能已经发现了，在 java.lang.Math 类中也有一个 random() 静态方法，和 java.util.Random 有什么区别？</p>
+<p>看一下 Math.random() 的源码就明白了：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public static double random() {
+    return RandomNumberGeneratorHolder.randomNumberGenerator.nextDouble();
+}
+
+private static final class RandomNumberGeneratorHolder {
+    static final Random randomNumberGenerator = new Random();
+}
+</script></code></pre>
+<p>也就是说，Math.random() 就是调用的 java.util.Random 类的 nextDouble() 方法，返回区间<code>[0.0d, 1.0d)</code>的 double 随机数；</p>
+<p>java.util.Random 的实例是<code>线程安全</code>的；但是，跨线程同时使用相同的 java.util.Random 实例可能会导致同步锁的竞争，从而导致性能下降。在多线程设计中考虑使用<code>java.util.concurrent.ThreadLocalRandom</code>（稍后讲解）；</p>
+<h3 id="Random"><a href="#Random" class="headerlink" title="Random"></a>Random</h3><p><strong>构造函数</strong><br><code>public Random()</code>：无参构造函数，<code>System.nanoTime()</code>为 seed；<br><code>public Random(long seed)</code>：使用指定的 seed，long 长整型；</p>
+<p>我们使用一样的种子，看一下是不是都是一样的数字序列：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Random;
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        long seed = 0L;
+        Random r1 = new Random(seed);
+        Random r2 = new Random(seed);
+
+        int[] arr1 = new int[10];
+        int[] arr2 = new int[10];
+
+        for (int i = 0; i < arr1.length; i++) {
+            arr1[i] = r1.nextInt();
+        }
+
+        for (int i = 0; i < arr2.length; i++) {
+            arr2[i] = r2.nextInt();
+        }
+
+        System.out.println(Arrays.toString(arr1));
+        System.out.println(Arrays.toString(arr2));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [12:03:33] C:127
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [12:03:35]
+$ java Main
+[-1155484576, -723955400, 1033096058, -1690734402, -1557280266, 1327362106, -1930858313, 502539523, -1728529858, -938301587]
+[-1155484576, -723955400, 1033096058, -1690734402, -1557280266, 1327362106, -1930858313, 502539523, -1728529858, -938301587]
+
+# root @ arch in ~/work on git:master x [12:03:36]
+$ java Main
+[-1155484576, -723955400, 1033096058, -1690734402, -1557280266, 1327362106, -1930858313, 502539523, -1728529858, -938301587]
+[-1155484576, -723955400, 1033096058, -1690734402, -1557280266, 1327362106, -1930858313, 502539523, -1728529858, -938301587]
+
+# root @ arch in ~/work on git:master x [12:03:41]
+$ java Main
+[-1155484576, -723955400, 1033096058, -1690734402, -1557280266, 1327362106, -1930858313, 502539523, -1728529858, -938301587]
+[-1155484576, -723955400, 1033096058, -1690734402, -1557280266, 1327362106, -1930858313, 502539523, -1728529858, -938301587]
+</script></code></pre>
+<p>从运行结果看得出，一个 seed 种子就代表了属于它的一系列数字，也说明了 Random 生成的数字是伪随机数；</p>
+<p>常用方法：<br><code>synchronized public void setSeed(long seed)</code>：设置新种子 seed<br><code>public void nextBytes(byte[] bytes)</code>：随机字节数组<br><code>public int nextInt()</code>：随机 int 值，该值介于 int 的区间<code>[-2^31, 2^31 - 1]</code><br><code>public int nextInt(int bound)</code>：随机 int 值，介于区间<code>[0, bound)</code><br><code>public long nextLong()</code>：随机 long 值，该值介于 long 的区间<code>[-2^63, 2^63 - 1]</code><br><code>public boolean nextBoolean()</code>：随机 boolean 值，true 或 false<br><code>public float nextFloat()</code>：随机 float 值，介于区间<code>[0.0f, 1.0f)</code><br><code>public double nextDouble()</code>：随机 double 值，介于区间<code>[0.0d, 1.0d)</code></p>
+<p>JDK1.8 新增（与 <a href="/java-jdk7-jdk8.html#Stream-API">Stream API</a> 相关）：<br><code>public IntStream ints(long streamSize)</code><br><code>public IntStream ints()</code>：相当于 ints(Long.MAX_VALUE)；<br><code>public IntStream ints(long streamSize, int randomNumberOrigin, int randomNumberBound)</code>：区间<code>[origin, bound)</code>；<br><code>public IntStream ints(int randomNumberOrigin, int randomNumberBound)</code>：同上，无限流；</p>
+<p><code>public LongStream longs(long streamSize)</code><br><code>public LongStream longs()</code><br><code>public LongStream longs(long streamSize, long randomNumberOrigin, long randomNumberBound)</code><br><code>public LongStream longs(long randomNumberOrigin, long randomNumberBound)</code></p>
+<p><code>public DoubleStream doubles(long streamSize)</code><br><code>public DoubleStream doubles()</code><br><code>public DoubleStream doubles(long streamSize, double randomNumberOrigin, double randomNumberBound)</code><br><code>public DoubleStream doubles(double randomNumberOrigin, double randomNumberBound)</code></p>
+<p><strong>生成指定区间</strong><code>[m, n]</code>，<code>m &lt; n</code>的 int <strong>随机数</strong>的方法：<code>nextInt(n + 1 - m) + m</code>。</p>
+<p>观察 Random 对象的 nextInt(int bound) 方法，发现这个方法将生成 0 ~ bound 之间随机取值的整数；包括 0，排除 bound；比如<code>rand.nextInt(100);</code>，生成区间<code>[0, 100)</code>之间的整数（实际就是<code>for (int i = 0; i &lt; 100; i++) { ... }</code>）；</p>
+<p>那么如果要获得区间<code>[1, 100]</code>的随机数，该怎么办呢？<br>稍微动动脑筋就可以想到：区间 [0, 100) 内的整数，实际上就是区间 [0, 99]；<br>因为最大边界为 100，可惜不能等于 100，因此最大可能产生的“整数”就是 99；</p>
+<p>既然 rand.nextInt(100) 获得的值是区间 [0, 99]，那么在这个区间左右各加 1，就得到了区间 [1, 100]；<br>因此，代码写成：<code>rand.nextInt(100) + 1;</code>即可；运行下面的代码，将获得 [1, 100] 的 10 个取值：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Random;
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        Random rand = new Random();
+        int[] arr = new int[10];
+
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = rand.nextInt(100) + 1;
+        }
+
+        System.out.println(Arrays.toString(arr));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:23:12]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [13:23:20]
+$ java Main
+[91, 45, 82, 54, 20, 49, 63, 22, 2, 5]
+
+# root @ arch in ~/work on git:master x [13:23:23]
+$ java Main
+[55, 74, 68, 28, 82, 19, 27, 42, 61, 35]
+
+# root @ arch in ~/work on git:master x [13:23:24]
+$ java Main
+[99, 40, 83, 12, 23, 8, 14, 99, 98, 27]
+</script></code></pre>
+<p>同理，很容易知道如果要获得随机的两位整数，代码写成：<code>rand.nextInt(90) + 10;</code><br>在 nextInt() 方法中作为参数的数字 90 表示要生成的随机数的<strong>个数</strong>（两位整数有 90 个），加上后面的数字 10 ，表示区间的<strong>最小取值</strong>为 10（含）；</p>
+<p>生成随机三位数的代码为：<code>rand.nextInt(900) + 100;</code>（[100, 999]）<br>生成区间 [64, 128] 中随机值的代码为：<code>rand.nextInt(65) + 64;</code></p>
+<p>取值可能性的数量是如何计算出来的呢？当然是<code>最大取值 - 最小取值 + 1</code><br>因此，获取在区间<code>[min, max]</code>的随机整数的公式为：<code>nextInt(max - min + 1) + min</code></p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Random;
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        Random rand = new Random();
+        int[] arr = new int[10];
+
+        // 随机的两位数 [10, 99]
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = rand.nextInt(90) + 10;
+        }
+        System.out.println(Arrays.toString(arr));
+
+        // 随机月份 [1, 12]
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = rand.nextInt(12) + 1;
+        }
+        System.out.println(Arrays.toString(arr));
+
+        // 随机秒数 [0, 59]
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = rand.nextInt(60);
+        }
+        System.out.println(Arrays.toString(arr));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:44:27]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [13:44:29]
+$ java Main
+[42, 51, 11, 83, 94, 20, 42, 52, 60, 20]
+[10, 1, 2, 5, 7, 3, 9, 9, 8, 11]
+[8, 41, 58, 28, 30, 46, 33, 20, 40, 9]
+
+# root @ arch in ~/work on git:master x [13:44:30]
+$ java Main
+[40, 64, 59, 29, 19, 53, 97, 89, 76, 58]
+[10, 2, 6, 2, 5, 7, 11, 8, 8, 9]
+[19, 41, 57, 1, 38, 20, 26, 39, 39, 33]
+
+# root @ arch in ~/work on git:master x [13:44:32]
+$ java Main
+[35, 52, 79, 78, 22, 26, 33, 66, 64, 79]
+[8, 7, 12, 3, 7, 12, 9, 11, 2, 6]
+[32, 15, 28, 15, 21, 33, 58, 5, 48, 51]
+</script></code></pre>
+<h3 id="ThreadLocalRandom"><a href="#ThreadLocalRandom" class="headerlink" title="ThreadLocalRandom"></a>ThreadLocalRandom</h3><p>java.util.Random 是线程安全的，但是如果在多线程环境中使用同一个 Random 实例，会造成同步锁的争用，降低并发性。在 JDK1.7 之后，J.U.C 包中添加了 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadLocalRandom.html" rel="external nofollow noopener noreferrer" target="_blank">ThreadLocalRandom</a>（Random 的子类），用于获取线程本地的 Random 伪随机数生成器。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class ThreadLocalRandom extends Random {
+    /* 静态方法 */
+    public static ThreadLocalRandom current(); // 获取当前线程的伪随机数生成器
+
+    /* 成员方法 */
+    public void setSeed(long seed); // 抛出 UnsupportedOperationException，不能修改种子
+
+    public int nextInt();
+    public int nextInt(int bound); // [0, bound)
+    public int nextInt(int origin, int bound); // [origin, bound)
+
+    public long nextLong();
+    public long nextLong(long bound);
+    public long nextLong(long origin, long bound);
+
+    public double nextDouble();
+    public double nextDouble(double bound);
+    public double nextDouble(double origin, double bound);
+
+    public float nextFloat();
+    public boolean nextBoolean();
+
+    public IntStream ints(long streamSize);
+    public IntStream ints();
+    public IntStream ints(long streamSize,
+                          int randomNumberOrigin,
+                          int randomNumberBound);
+    public IntStream ints(int randomNumberOrigin,
+                          int randomNumberBound);
+
+    public LongStream longs(long streamSize);
+    public LongStream longs();
+    public LongStream longs(long streamSize,
+                            long randomNumberOrigin,
+                            long randomNumberBound);
+    public LongStream longs(long randomNumberOrigin,
+                            long randomNumberBound);
+
+    public DoubleStream doubles(long streamSize);
+    public DoubleStream doubles();
+    public DoubleStream doubles(long streamSize,
+                                double randomNumberOrigin,
+                                double randomNumberBound);
+    public DoubleStream doubles(double randomNumberOrigin,
+                                double randomNumberBound);
+}
+</script></code></pre>
+<h3 id="SecureRandom"><a href="#SecureRandom" class="headerlink" title="SecureRandom"></a>SecureRandom</h3><p>java.util.Random 类有两个子类，一个是 ThreadLocalRandom，另一个则是 SecureRandom。SecureRandom 位于 java.security 包。正如其名，SecureRandom 提供一个强密码的随机数发生器（RNG），SecureRandom 必须产生非确定性输出，因此传递给 SecureRandom 对象的任何种子序列必须是不可预知的。在 Unix 中，这个不可预测的字节序列通常由 /dev/random 特殊字符设备文件提供（另一个特殊文件 /dev/urandom 和它类似，前者在系统的熵池不足时调用进程会被阻塞，后者则不会，因此 urandom 适用于安全性要求不高的应用）。默认情况下，SecureRandom 会同时使用这个设备文件（Unix 系统中）。</p>
+<p><strong>构造函数</strong></p>
+<ul>
+<li><code>public SecureRandom()</code>：默认随机种子序列</li>
+<li><code>public SecureRandom(byte[] seed)</code>：自定义随机种子序列</li>
+</ul>
+<p><strong>静态方法</strong></p>
+<ul>
+<li><code>public static byte[] getSeed(int numBytes)</code>：获取指定字节长度的随机种子序列</li>
+<li><code>public static SecureRandom getInstance(String algorithm) throws NoSuchAlgorithmException</code>：使用指定算法构造 SecureRandom 实例<ul>
+<li><code>NativePRNG</code>：从底层本地操作系统获取随机数。没有规定产生这些数字的阻塞性质（由操作系统决定）</li>
+<li><code>NativePRNGBlocking</code>：从底层本地操作系统获取随机数字，如有必要则进行阻塞。例如，类 UNIX 系统上的 <code>/dev/random</code></li>
+<li><code>NativePRNGNonBlocking</code>：从底层本地操作系统获取随机数，调用进程不会被阻塞。例如，类 UNIX 系统上的 <code>/dev/urandom</code></li>
+<li><code>PKCS11</code>：从底层安装和配置的 PKCS11 库中获取随机数</li>
+<li><code>SHA1PRNG</code>：由 SUN 提供的伪随机数生成（PRNG）算法的名称</li>
+<li><code>Windows-PRNG</code>：从底层 Windows 操作系统获取随机数</li>
+</ul>
+</li>
+<li><code>public static SecureRandom getInstanceStrong() throws NoSuchAlgorithmException</code>：JDK1.8 新增，使用强安全性的随机源</li>
+</ul>
+<p>基本方法与 java.util.Random 类似，这里主要提新增的 <code>nextBytes()</code> 方法：<br><code>public void nextBytes(byte[] bytes)</code>：产生一串随机字节，并将它存放在传入的 bytes 数组中。</p>
+<h2 id="Date-日期时间"><a href="#Date-日期时间" class="headerlink" title="Date 日期时间"></a>Date 日期时间</h2><p>在 JDK1.8 之前，我们主要通过 java.util.Date、java.util.Calendar 来处理日期时间；但是它们用起来并不顺手，于是很多时候都是使用第三方的 Joda-Time；不过到了 Java 8，终于引入了新的日期时间 API（java.time 包），该包由 Joda-Time 作者和 Oracle 共同开发，因此和 Joda-Time 有很多相似之处，具体请查看 - <a href="/java-jdk7-jdk8.html#DateTime-API">Java8 新日期时间 API</a>。</p>
+<p><strong><code>java.util.Date</code>类简介</strong><br>Date 用于表示特定的<strong>即时时间</strong>（瞬时时间），精确到毫秒。在 JDK1.1 之前，Date 类有两个附加的功能：它允许将日期解释为年，月，日，时，分和秒值；它也允许格式化和解析日期时间字符串。<br>不幸的是，这些功能的 API 不适合国际化。从 JDK1.1 开始，应使用 Calendar 类在日期和时间字段之间进行转换，并使用 DateFormat 类来格式化和解析日期时间字符串。而 Date 中的相应方法已被弃用。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Date
+    implements java.io.Serializable, Cloneable, Comparable<Date>
+{
+    /* 构造函数 */
+    public Date(long date); // 给定时间戳，自 1970.01.01T00:00:00 UTC 起的毫秒数
+    public Date(); // this(System.currentTimeMillis()) 当前时间戳
+
+    /* 成员方法 */
+    public long getTime(); // 返回此对象的毫秒数值（自 1970.01.01T00:00:00 UTC 起，下同）
+    public void setTime(long time); // 设置此对象的毫秒数值
+
+    public boolean before(Date when); // 测试当前时间是否在给定时间之前
+    public boolean after(Date when); // 测试当前时间是否在给定时间之后
+
+    public Object clone(); // 克隆当前对象
+    public int compareTo(Date anotherDate); // 比较当前时间与给定时间
+
+    public boolean equals(Object obj); // 判等
+    public int hashCode(); // 哈希值
+
+    public String toString(); // "dow mon dd hh:mm:ss zzz yyyy"，dow即星期，zzz即时区
+
+    /* JDK1.8 */
+    public static Date from(Instant instant); // Instant -> Date
+    public Instant toInstant(); // Date -> Instant
+}
+</script></code></pre>
+<p><a href="https://www.zfl9.com/java-grammar.html#输入与输出">时间输出格式化 System.out.printf()</a></p>
+<p><strong>使用 PrintStream.printf/format() 进行日期时间格式化输出</strong>：</p>
+<blockquote>
+<p>使用<code>Date timestamp = new Date()</code>也是一样的。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class DateTimeFormatTest {
+    public static void main(String[] args) {
+        long timestamp = System.currentTimeMillis();
+        System.out.printf("time-zone-offset: %tz\n", timestamp);
+        System.out.printf("time-zone-short-name: %tZ\n", timestamp);
+        System.out.printf("date: %tF\n", timestamp);
+        System.out.printf("time: %tT\n", timestamp);
+        System.out.printf("datetime: %1$tF %1$tT %1$tZ\n", timestamp);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:55:48]
+$ javac DateTimeFormatTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:57:10]
+$ java com.zfl9.DateTimeFormatTest
+time-zone-offset: +0800
+time-zone-short-name: CST
+date: 2017-12-13
+time: 19:57:11
+datetime: 2017-12-13 19:57:11 CST
+</script></code></pre>
+<p><strong>使用 SimpleDateFormat 格式化日期时间</strong><br>java.text.SimpleDateFormat 是 java.text.DateFormat 抽象类的子类。SimpleDateFormat 用于以区域敏感的方式格式化和解析日期。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class SimpleDateFormat extends DateFormat {
+    /* 构造函数 */
+    /*
+     * 比较常用的模式字符有：
+     * y: 年
+     * M: 月
+     * d: 日
+     * E: 星期几
+     * a: AM/PM 标记
+     * h: 12 小时制
+     * H: 24 小时制
+     * m: 分
+     * s: 秒
+     * S: 毫秒
+     * z: 时区名称
+     * Z: 时区偏移(RFC 822) "+0800"
+     * X: 时区偏移(ISO 8601) "+08" "+0800" "+08:00"
+     */
+    public SimpleDateFormat(String pattern);
+
+    /* 成员方法 */
+    public String toPattern(); // 获取当前模式
+    public void applyPattern(String pattern); // 更新当前模式
+
+    public final String format(Date date); // 格式化给定 Date 对象为日期字符串
+    public Date parse(String source) throws ParseException; // 解析日期字符串，转换为 Date 对象
+}
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Date;
+import java.text.SimpleDateFormat;
+
+public class Main {
+    public static void main(String[] args) {
+        SimpleDateFormat datef = new SimpleDateFormat("E yyyy-MM-dd hh:mm:ss a");
+        System.out.println("current datetime: " + datef.format(new Date()));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:15:59] C:1
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [14:16:01]
+$ java Main
+current datetime: Thu 2017-09-21 02:16:02 PM
+</script></code></pre>
+<p>同时，SimpleDateFormat 的 parse(String s) 方法可以从字符串中解析指定格式的 datetime，并返回 Date 实例：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+public class Main {
+    public static void main(String[] args) {
+        SimpleDateFormat datef = new SimpleDateFormat("yyyy-MM-dd");
+        String input = args.length == 0 ? "1999-12-12" : args[0];
+        try {
+            System.out.println("datetime: " + datef.parse(input));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:30:14]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [14:30:17]
+$ java Main
+datetime: Sun Dec 12 00:00:00 CST 1999
+
+# root @ arch in ~/work on git:master x [14:30:18]
+$ java Main 2017-10-1
+datetime: Sun Oct 01 00:00:00 CST 2017
+</script></code></pre>
+<p><strong><code>java.util.Calendar</code>类简介</strong><br>Calendar 类是一个抽象类，它提供了在特定时刻之间进行转换的方法，以及一组日历字段（如 YEAR，MONTH，DAY_OF_MONTH，HOUR 等等），以及用于处理日历字段的方法，如获取下周的日期。即时时间可以用一个毫秒值来表示，该值是从 1970 年 1 月 1 日 00:00:00.000 GMT（公历）开始的偏离时间。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public abstract class Calendar
+    implements Serializable, Cloneable, Comparable<Calendar> {
+    /* 静态字段 - field */
+    public static final int YEAR; // 年
+    public static final int MONTH; // 月
+    public static final int DATE; // 日
+    public static final int HOUR; // 12 小时制
+    public static final int HOUR_OF_DAY; // 24 小时制
+    public static final int MINUTE; // 分
+    public static final int SECOND; // 秒
+    public static final int MILLISECOND; // 毫秒
+
+    public static final int AM; // 上午
+    public static final int PM; // 下午
+    public static final int AM_PM; // 上下午标记
+
+    public static final int WEEK_OF_YEAR;
+    public static final int WEEK_OF_MONTH;
+
+    public static final int DAY_OF_YEAR;
+    public static final int DAY_OF_MONTH;
+    public static final int DAY_OF_WEEK;
+
+    public static final int ZONE_OFFSET; // 时区偏移
+
+    public static final int SUNDAY; // 星期天
+    public static final int MONDAY; // 星期一
+    public static final int TUESDAY; // 星期二
+    public static final int WEDNESDAY; // 星期三
+    public static final int THURSDAY; // 星期四
+    public static final int FRIDAY; // 星期五
+    public static final int SATURDAY; // 星期六
+
+    public static final int JANUARY; // 一月
+    public static final int FEBRUARY; // 二月
+    public static final int MARCH; // 三月
+    public static final int APRIL; // 四月
+    public static final int MAY; // 五月
+    public static final int JUNE; // 六月
+    public static final int JULY; // 七月
+    public static final int AUGUST; // 八月
+    public static final int SEPTEMBER; // 九月
+    public static final int OCTOBER; // 十月
+    public static final int NOVEMBER; // 十一月
+    public static final int DECEMBER; // 十二月
+
+    /* 静态字段 - style */
+    public static final int SHORT; // 短样式 "Jan"
+    public static final int LONG; // 长样式 "January"
+    public static final int ALL_STYLES; // 所有样式 "January" and "Jan"
+
+    /* 获取实例 */
+    public static Calendar getInstance(); // 系统默认时区 + 系统默认区域
+    public static Calendar getInstance(TimeZone zone);
+    public static Calendar getInstance(Locale aLocale);
+    public static Calendar getInstance(TimeZone zone, Locale aLocale);
+
+    /* 静态方法 */
+    public static Locale[] getAvailableLocales(); // 获取所有可用区域
+    public static Set<String> getAvailableCalendarTypes(); // 获取所有可用日历类型
+
+    /* 实例方法 */
+    public final Date getTime(); // 获取时间值（与 Epoch 的毫秒偏移量）
+    public final void setTime(Date date); // 设置时间值（与 Epoch 的毫秒偏移量）
+
+    public long getTimeInMillis(); // 获取时间值，毫秒精度
+    public void setTimeInMillis(long millis); // 设置时间值，毫秒精度
+
+    public int get(int field); // 获取给定字段的值
+    public void set(int field, int value); // 设置给定字段的值
+
+    public final void set(int year, // 年
+                          int month, // 月
+                          int date); // 日
+    public final void set(int year, // 年
+                          int month, // 月
+                          int date, // 日
+                          int hourOfDay, // 时
+                          int minute); // 分
+    public final void set(int year, // 年
+                          int month, // 月
+                          int date, // 日
+                          int hourOfDay, // 时
+                          int minute, // 分
+                          int second); // 秒
+
+    /* 习惯设置 */
+    public void setFirstDayOfWeek(int value); // 设置一周的起始是星期几
+    public int getFirstDayOfWeek();
+
+    /* 时区设置 */
+    public void setTimeZone(TimeZone value); // 设置时区
+    public TimeZone getTimeZone(); // 获取时区
+
+    /* 宽松设置 */
+    public void setLenient(boolean lenient); // 设置宽松或不宽松
+    public boolean isLenient(); // 默认为宽松
+
+    /* 其它方法 */
+    public abstract int getMinimum(int field); // Min 值
+    public abstract int getMaximum(int field); // Max 值
+
+    /* 清空字段 */
+    public final void clear(); // 清空各字段的值
+    public final void clear(int field); // 清空给定字段的值
+    public final boolean isSet(int field); // 查询给定字段是否已设置
+
+    /* 显示字符串 */
+    public String getDisplayName(int field, // 字段
+                                 int style, // 样式
+                                 Locale locale); // 区域
+    public Map<String,Integer> getDisplayNames(int field, // 字段名 - 字段值
+                                               int style,
+                                               Locale locale);
+
+    public String getCalendarType(); // 获取当前日历类型
+
+    /* 修改方法 */
+    public abstract void add(int field, int amount); // 加/减，正负值
+    public abstract void roll(int field, boolean up); // 前后滚动一个单位值
+    public void roll(int field, int amount); // 滚动给定值（正负）
+
+    /* 比较方法 */
+    public boolean before(Object when);
+    public boolean after(Object when);
+    public int compareTo(Calendar anotherCalendar);
+
+    /* Object */
+    public boolean equals(Object obj);
+    public int hashCode();
+    public Object clone(); // 克隆
+    public String toString();
+
+    /* JDK1.8 */
+    public final Instant toInstant(); // 转换为 Instant 对象
+}
+</script></code></pre>
+<p><strong><code>java.util.TimeZone</code>类简介</strong><br>TimeZone 表示<strong>时区偏移量</strong>。通常我们使用 getDefault() 方法获取当前系统的默认时区，如<code>&quot;Asia/Shanghai&quot;</code>。</p>
+<blockquote>
+<p>常用时区 ID：<strong>协调世界时</strong>：<code>UTC</code>、<strong>中国-上海</strong>：<code>Asia/Shanghai</code>（中国标准时区，CST）。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">public abstract class TimeZone implements Serializable, Cloneable {
+    /* 静态字段 */
+    public static final int SHORT; // 短名称，如 "CST"
+    public static final int LONG; // 长名称，如 "China Standard Time"
+
+    /* 构造方法 */
+    public TimeZone(); // 基本没啥用，因为是空的
+
+    /* 静态方法 */
+    public static TimeZone getTimeZone(String ID); // 获取给定 ID 的 TimeZone 对象
+    public static TimeZone getTimeZone(ZoneId zoneId); // JDK1.8，ZoneId 对象
+
+    public static String[] getAvailableIDs(); // 获取所有可用时区
+    public static String[] getAvailableIDs(int rawOffset); // rawOffset: UTC 毫秒级偏移量
+
+    public static TimeZone getDefault(); // (JVM) 当前默认时区
+    public static void setDefault(TimeZone zone); // (JVM) 修改默认时区
+
+    /* 实例方法 */
+    public abstract int getOffset(int era, // 获取时区偏移量（毫秒为单位）
+                                  int year,
+                                  int month,
+                                  int day,
+                                  int dayOfWeek,
+                                  int milliseconds);
+    public int getOffset(long date); // date: Epoch 偏移量，比如 CST 的偏移量为 28800000 ms
+
+    public String getID(); // 获取时区 ID，如 "Asia/Shanghai"
+    public void setID(String ID); // 设置时区 ID，如 "Asia/Shanghai"
+
+    public final String getDisplayName(); // LONG-style
+    public final String getDisplayName(Locale locale); // LONG-style
+    public final String getDisplayName(boolean daylight, int style); // 夏令时、样式
+    public String getDisplayName(boolean daylight, int style, Locale locale); // 中国不使用夏令时
+
+    public boolean hasSameRules(TimeZone other); // 如果当前时区与给定时区具有相同的规则则为 true
+    public Object clone(); // 克隆当前对象
+
+    /* JDK1.8 */
+    public ZoneId toZoneId(); // TimeZone -> ZoneId
+}
+</script></code></pre>
+<p>Calendar、TimeZone 的综合例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+
+public class DateTimeDemo {
+    public static void main(String[] args) {
+        Calendar calendar = Calendar.getInstance(); // 当前时间
+        System.out.printf("datetime: %1$tF %1$tT.%1$tL %1$tZ\n", calendar.getTime());
+
+        calendar.clear(); // 1970-01-01T00:00:00.000Z
+        System.out.printf("datetime: %1$tF %1$tT.%1$tL %1$tZ\n", calendar.getTime());
+
+        calendar.roll(Calendar.YEAR, false); // 年份减一
+        System.out.printf("datetime: %1$tF %1$tT.%1$tL %1$tZ\n", calendar.getTime());
+        calendar.roll(Calendar.YEAR, true); // 年份加一
+        System.out.printf("datetime: %1$tF %1$tT.%1$tL %1$tZ\n", calendar.getTime());
+
+        TimeZone timezone = TimeZone.getTimeZone("Asia/Shanghai");
+        System.out.println(timezone.getDisplayName(false, TimeZone.SHORT));
+        System.out.println(timezone.getDisplayName(false, TimeZone.LONG));
+
+        TimeZone shanghai = TimeZone.getTimeZone("Asia/Shanghai"), // 上海时区
+                 chongqing = TimeZone.getTimeZone("Asia/Chongqing"); // 重庆时区
+        System.out.println("zone-shanghai == zone-chongqing ? " + shanghai.hasSameRules(chongqing));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:16:39]
+$ javac DateTimeDemo.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:16:41]
+$ java com.zfl9.DateTimeDemo
+datetime: 2017-12-14 12:16:42.042 CST
+datetime: 1970-01-01 00:00:00.000 CST
+datetime: 1969-01-01 00:00:00.000 CST
+datetime: 1970-01-01 00:00:00.000 CST
+CST
+China Standard Time
+zone-shanghai == zone-chongqing ? true
+</script></code></pre>
+<h2 id="Locale-区域"><a href="#Locale-区域" class="headerlink" title="Locale 区域"></a>Locale 区域</h2><p>Locale 的中文翻译：<strong>区域</strong>、<strong>语言环境</strong>、<strong>本地环境</strong>。在 Java 中，一个 Locale 对象表示一个特定的地理，政治或文化区域。我们将依赖 Locale 的操作称为<strong>区域设置敏感</strong>的操作（Date、Calendar 等）。例如，打印一个时间是一个区域敏感的操作，程序应该根据用户所在区域的惯例进行格式化。</p>
+<blockquote>
+<p>在 Linux 中，Locale 无处不在，最常见的就是<code>en_US.UTF-8</code>、<code>zh_CN.UTF-8</code>、<code>zh_CN.GBK</code>。</p>
+</blockquote>
+<p><strong>注意，一个 Locale 对象仅仅表示一个特定的区域，如果需要进行国际化（支持多种区域环境），还需要定义对应的资源文件（使用 java.util.ResourceBundle 类）</strong>。</p>
+<p>一个 Locale 对象主要使用以下字段描述（大部分情况下）：</p>
+<ul>
+<li><code>language</code>语言（小写），比如中文<code>zh</code>、英文<code>en</code>；</li>
+<li><code>country</code>国家（大写），比如大陆<code>CN</code>、香港<code>HK</code>、台湾<code>TW</code>、美国<code>US</code>；</li>
+<li>它们之间使用<code>_</code>下划线连接，比如<code>zh_CN</code>、<code>zh_TW</code>、<code>en_US</code>、<code>zh_SG</code>。</li>
+</ul>
+<p>Locale 类的具体方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final class Locale implements Cloneable, Serializable {
+    /* 静态字段 - language */
+    public static final Locale ENGLISH; // 英语 en
+    public static final Locale FRENCH; // 法语 fr
+    public static final Locale GERMAN; // 德语 de
+    public static final Locale ITALIAN; // 意大利语 it
+    public static final Locale JAPANESE; // 日语 ja
+    public static final Locale KOREAN; // 朝鲜语 ko
+    public static final Locale CHINESE; // 中文 zh
+    public static final Locale SIMPLIFIED_CHINESE; // 简体中文 zh_CN
+    public static final Locale TRADITIONAL_CHINESE; // 繁体中文 zh_TW
+
+    /* 静态字段 - country */
+    public static final Locale FRANCE; // 法国 fr_FR
+    public static final Locale GERMANY; // 德国 de_DE
+    public static final Locale ITALY; // 意大利 it_IT
+    public static final Locale JAPAN; // 日本 ja_JP
+    public static final Locale KOREA; // 韩国 ko_KR
+    public static final Locale CHINA; // 中国 zh_CN
+    public static final Locale PRC; // 中国 zh_CN
+    public static final Locale TAIWAN; // 台湾 zh_TW
+    public static final Locale UK; // 英国 en_GB
+    public static final Locale US; // 美国 en_US
+    public static final Locale CANADA; // 加拿大 en_CA
+    public static final Locale CANADA_FRENCH; // 法裔加拿大 fr_CA
+
+    /* 静态字段 - language&country */
+    public static final Locale ROOT; // 空、默认
+
+    /* 构造函数 */
+    public Locale(String language, // 语言，如 zh
+                  String country, // 区域，如 CN
+                  String variant); // 变种
+
+    public Locale(String language,
+                  String country);
+
+    public Locale(String language);
+
+    /* 静态方法 */
+    public static Locale getDefault(); // 获取 JVM 默认区域
+    public static void setDefault(Locale newLocale); // 设置 JVM 默认区域
+
+    public static String[] getISOLanguages(); // 获取所有可用的语言代码
+    public static String[] getISOCountries(); // 获取所有可用的国家代码
+    public static Locale[] getAvailableLocales(); // 获取所有可用的区域
+
+    /* 实例方法 */
+    public String getLanguage(); // 当前 Locale 的语言
+    public String getScript(); // 当前 Locale 的脚本
+    public String getCountry(); // 当前 Locale 的国家
+    public String getVariant(); // 当前 Locale 的变种
+
+    public boolean hasExtensions(); // 当前 Locale 是否存在扩展
+    public Locale stripExtensions(); // 返回当前 Locale 的副本，不包含扩展信息
+
+    public String getISO3Language() throws MissingResourceException; // 三字母缩写 - 语言，RT异常
+    public String getISO3Country() throws MissingResourceException; // 三字母缩写 - 国家，RT异常
+
+    public final String getDisplayLanguage(); // 语言（默认区域）
+    public String getDisplayLanguage(Locale inLocale); // 语言（给定区域）
+
+    public String getDisplayScript();
+    public String getDisplayScript(Locale inLocale);
+
+    public final String getDisplayCountry();
+    public String getDisplayCountry(Locale inLocale);
+
+    public final String getDisplayVariant();
+    public String getDisplayVariant(Locale inLocale);
+
+    public final String getDisplayName();
+    public String getDisplayName(Locale inLocale);
+
+    /* language + "_" + country + "_" + (variant + "_#" | "#") + script + "-" + extensions */
+    public final String toString();
+
+    public Object clone(); // 克隆
+    public int hashCode();
+    public boolean equals(Object obj);
+}
+</script></code></pre>
+<p><strong>ResourceBundle 类</strong><br>java.util.ResourceBundle 是抽象类，它有两个子类：ListResourceBundle（二维数组）、PropertyResourceBundle（资源文件）。一般来说，我们都是使用后者。</p>
+<p><strong>资源文件的命名</strong></p>
+<ul>
+<li><code>basename_zh_CN.properties</code>：中文（中国）</li>
+<li><code>basename_zh.properties</code>：中文</li>
+<li><code>basename.properties</code>：默认</li>
+</ul>
+<p>ResourceBundle 在查找时会按照匹配度依次往下匹配。比如当前系统区域为 zh_CN，则使用第一个；如果当前系统区域为 zh_TW，则使用第二个；如果当前系统区域为 en_US，则使用第三个；如果没有定义默认的 properties 文件，将抛出 MissingResourceException 运行时异常。</p>
+<p><strong>资源文件的格式</strong></p>
+<ul>
+<li><code>key = value</code>：键值对，key 区分大小写，value 的前导空格将被忽略，value 中可使用<code>\t</code>、<code>\n</code>等转移序列；</li>
+<li>key 和 value 都可以有中文，但是必须使用 unicode 字符，JDK 提供了 native2ascii 工具用于 unicode 的转换。</li>
+</ul>
+<p><strong>native2ascii 用法</strong></p>
+<ul>
+<li><code>native2ascii [inputfile] [outputfile]</code>，输入文件和输出文件可以相同，如果省略则使用标准输入、标准输出；</li>
+<li>将非 ISO-8859-1 字符集（西欧语言，单字节字符集，以 ASCII 为基础，兼容 ASCII）转换为<code>\uXXXX</code>Unicode 字符；</li>
+<li><code>-reverse</code>进行反向转换、<code>-encoding encoding_name</code>指定 native 编码、<code>-Joption</code>指定 JVM 参数，如<code>-J-Xms50M</code>。</li>
+</ul>
+<p><strong>ResourceBundle 类的主要方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public abstract class ResourceBundle {
+    /* 构造函数 */
+    public ResourceBundle(); // 空函数体
+
+    /* 静态方法 */
+    public static final ResourceBundle getBundle(String baseName); // Locale.getDefault()
+    public static final ResourceBundle getBundle(String baseName, Locale locale); // baseName 为全限定名
+
+    public static final void clearCache(); // 清空缓存中已加载的资源包
+    public static final void clearCache(ClassLoader loader); // 指定 ClassLoader
+
+    /* 实例方法 */
+    public final String getString(String key); // *常用* 调用 (String) getObject(key)
+    public final String[] getStringArray(String key); // 调用 (String[]) getObject(key)
+    public final Object getObject(String key); // 获取给定 key 对应的 value
+
+    public String getBaseBundleName(); // 获取当前 bundle 名称
+    public Locale getLocale(); //获取当前 locale 区域
+
+    public Set<String> keySet(); // 返回所有键
+    public abstract Enumeration<String> getKeys(); // 返回所有键
+    public boolean containsKey(String key); // 测试是否包含给定键
+}
+</script></code></pre>
+<p>国际化的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.util.ResourceBundle;
+
+public class I18NTest {
+    public static void main(String[] args) {
+        ResourceBundle res = ResourceBundle.getBundle("com.zfl9.myres"); // 默认区域
+        System.out.println(res.getString("hello"));
+        System.out.println(res.getString("zh_CN"));
+        System.out.printf(res.getString("fmt"), "张三", 15, 120.0F);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:07]
+$ javac I18NTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:12]
+$ ll
+total 16K
+-rw-r--r-- 1 root root 921 Dec 14 20:59 I18NTest.class
+-rw-r--r-- 1 root root 393 Dec 14 20:55 I18NTest.java
+-rw-r--r-- 1 root root  85 Dec 14 20:57 myres_en_US.properties
+lrwxrwxrwx 1 root root  22 Dec 14 20:42 myres.properties -> myres_en_US.properties
+-rw-r--r-- 1 root root 101 Dec 14 20:58 myres_zh_CN.properties
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:12]
+$ cat myres_en_US.properties
+hello = hello, world!
+zh_CN = Chinese (China)
+fmt = name: %s, age: %d, score: %.1f\n
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:18]
+$ cat myres_zh_CN.properties
+hello = 世界，你好！
+zh_CN = 中文（中国）
+fmt = 姓名: %s，年龄: %d，成绩: %.1f\n
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:24]
+$ native2ascii myres_zh_CN.properties myres_zh_CN.properties
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:32]
+$ cat myres_zh_CN.properties
+hello = \u4e16\u754c\uff0c\u4f60\u597d\uff01
+zh_CN = \u4e2d\u6587\uff08\u4e2d\u56fd\uff09
+fmt = \u59d3\u540d: %s\uff0c\u5e74\u9f84: %d\uff0c\u6210\u7ee9: %.1f\n
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:59:36]
+$ locale
+LANG=en_US.UTF-8
+LC_CTYPE=en_US.UTF-8
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
+LC_ALL=
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [21:00:07]
+$ java com.zfl9.I18NTest
+hello, world!
+Chinese (China)
+name: 张三, age: 15, score: 120.0
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [21:00:10]
+$ LANG=zh_CN.UTF-8 java com.zfl9.I18NTest
+世界，你好！
+中文（中国）
+姓名: 张三，年龄: 15，成绩: 120.0
+</script></code></pre>
+<h2 id="regex-正则"><a href="#regex-正则" class="headerlink" title="regex 正则"></a>regex 正则</h2><p><strong>正则表达式的派别</strong></p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended" rel="external nofollow noopener noreferrer" target="_blank">BRE（Basic Regular Expressions）</a>：POSIX 基本正则，grep、sed 等都属于 BRE；</li>
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression#POSIX_extended" rel="external nofollow noopener noreferrer" target="_blank">ERE（Extended Regular Expressions）</a>：POSIX 扩展正则，egrep、awk 等都属于 ERE；</li>
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression#Perl" rel="external nofollow noopener noreferrer" target="_blank">PCRE（Perl Compatible Regular Expressions）</a>：Perl 兼容正则，Perl、Python、Java 等都属于 PCRE。</li>
+</ul>
+<p><strong>Java 正则表达式</strong><br>java.util.regex 包主要包括以下三个类（PCRE 正则，regex 模式支持中文）：</p>
+<ul>
+<li>Pattern 类：Pattern 对象是一个正则表达式的编译表示；Pattern 类没有公共构造方法；要创建一个 Pattern 对象，需要调用 Pattern.compile(String regex) 静态方法，它返回一个 Pattern 对象；</li>
+<li>Matcher 类：Matcher 对象是对输入字符串进行解释和匹配操作的引擎；与 Pattern 类一样，Matcher 也没有公共构造方法；需要调用 Pattern 对象的 matcher() 方法来获得一个 Matcher 对象；</li>
+<li>PatternSyntaxException：一个 RuntimeException 异常类，它表示一个正则表达式模式中的语法错误。</li>
+</ul>
+<p>Pattern 仅仅是一个正则模式的抽象，如果需要进行字符序列匹配，必须调用<code>Matcher matcher(CharSequence input)</code>方法来获取一个与给定输入序列相关的 Matcher 正则匹配器。这样做的好处是一个 Pattern 对象可以重复利用，用于匹配不同的输入字符串。</p>
+<h3 id="正则语法"><a href="#正则语法" class="headerlink" title="正则语法"></a>正则语法</h3><p>正则测试工具[在线工具] -&gt; <a href="http://regex.zjmainstay.cn/" rel="external nofollow noopener noreferrer" target="_blank">正则表达式测试工具在线调试与分享 - Zjmainstay</a><br>正则测试工具[Windows版] -&gt; <a href="https://www.regexbuddy.com/" rel="external nofollow noopener noreferrer" target="_blank">Learn, Create, Understand, Test, Use and Save Regular Expressions with RegexBuddy</a></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 字符 [宽度为一] */
+x         // 匹配字符 x
+\\        // 匹配字符 \
+\0n       // 匹配八进制值为 0n 的字符 (0 <= n <= 7)
+\0nn      // 匹配八进制值为 0nn 的字符 (0 <= n <= 7)
+\0mnn     // 匹配八进制值为 0mnn 的字符 (0 <= m <= 3, 0 <= n <= 7)
+\xhh      // 匹配十六进制值为 0xhh 的字符
+\uhhhh    // 匹配十六进制值为 0xhhhh 的字符
+\x{h...h} // 匹配十六进制值为 0xh...h 的字符 (0x0000 <= 0xh...h <= 0x10FFFF)
+\t        // 匹配水平制表符 HT ('\u0009')
+\v        // 匹配垂直制表符 VT ('\u000B')
+\r        // 匹配回车符 CR ('\u000D')
+\n        // 匹配换行符 LF ('\u000A')
+\f        // 匹配换页符 FF ('\u000C')
+\a        // 匹配警铃符 BEL ('\u0007')
+\b        // 匹配退格符 BS ('\u0008')
+\e        // 匹配 ESC 符 ('\u001B')
+\cX       // 匹配控制字符 X，如 \cC 匹配 Control-C
+
+/* 自定义字符集合 [宽度为一] */
+// 自定义字符集合的 [] 方括号中的特殊字符有 6 个：
+// 1. "["：表示一个字符集合的开始，如果需要匹配 [ 本身，请使用 \[
+// 2. "]"：表示一个字符集合的结束，如果需要匹配 ] 本身，请使用 \]
+// 3. "^"：只有位于字符集合的起始位置才有特殊意义，表示取反操作、排除语义
+// 4. "-"：只有位于字符集合的非边界位置才有特殊意义，表示一个字符范围（从小到大）
+// 5. "&"：用于连接前后两个字符集合（逻辑与），并且必须是两个连续的 & 才有特殊意义
+// 6. "\"：表示一个转义序列的开始，本身不匹配任何字符，如果要匹配 \ 本身，请使用 \\
+// 除了这六个字符外，其它字符都是普通字符，比如 .?*+$|(){} 等都属于普通字面意义字符
+[abc]         // 匹配集合中的单个字符 (枚举)
+[a-z]         // 匹配集合中的单个字符 (范围)
+[^abc]        // [逻辑非] 匹配不在集合中的单个字符 (枚举)
+[^a-z]        // [逻辑非] 匹配不在集合中的单个字符 (范围)
+[a-z[A-Z]]    // [逻辑或] 表达式 a-z 和表达式 A-Z 只要有一个匹配则整个表达式匹配
+[a-zA-Z]      // [逻辑或] 可以省略嵌套中括号，但如果后一个表达式为否定则不能省略
+[a-z[^0-9]]   // [逻辑或] 表达式 a-z 和表达式 ^0-9 只要有一个匹配则整个表达式匹配
+[a-z&&[def]]  // [逻辑与] 表达式 a-z 和表达式 def 只有两个都匹配时整个表达式才匹配
+[a-z&&[^bc]]  // [逻辑与] 表达式 a-z 和表达式 ^bc 只有两个都匹配时整个表达式才匹配
+[a-z&&[^m-p]] // [逻辑与] 表达式 a-z 和表达式 ^m-p 只有两个都匹配时整个表达式才匹配
+
+/* 预定义字符集合 [宽度为一] */
+.    // 匹配除行结束符外的任意字符（单行模式匹配任意字符）
+\d   // 匹配数字 [0-9]
+\D   // 匹配非数字 [^0-9]
+\w   // 匹配单词字符 [a-zA-Z_0-9]
+\W   // 匹配非单词字符 [^\w]
+\s   // 匹配空白符 [ \t\n\x0B\f\r]
+\S   // 匹配非空白符 [^\s]
+\h   // 匹配水平空白符 [ \t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]
+\H   // 匹配非水平空白符 [^\h]
+\v   // 匹配垂直空白符 [\n\x0B\f\r\x85\u2028\u2029]
+\V   // 匹配非垂直空白符 [^\v]
+
+/* POSIX 字符集合 (ASCII only) [宽度为一] */
+\p{Lower}  // 匹配小写字母 [a-z]
+\p{Upper}  // 匹配大写字母 [A-Z]
+\p{Alpha}  // 匹配所有字母 [\p{Lower}\p{Upper}]
+\p{Digit}  // 匹配所有数字 [0-9]
+\p{Alnum}  // 匹配数字字母 [\p{Alpha}\p{Digit}]
+\p{Punct}  // 匹配标点符号 !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+\p{Graph}  // 匹配可见字符 [\p{Alnum}\p{Punct}]
+\p{Print}  // 匹配可打印字符 [\p{Graph}\x20]
+\p{Cntrl}  // 匹配控制字符 [\x00-\x1F\x7F]
+\p{Blank}  // 匹配空格符 [ \t]
+\p{Space}  // 匹配空白符 [ \t\n\x0B\f\r]
+\p{XDigit} // 匹配十六进制数字 [0-9a-fA-F]
+\p{ASCII}  // 匹配所有 ASCII 字符 [\x00-\x7F]
+
+/* Java 字符集合 [宽度为一] */
+\p{javaLowerCase}  // 等价于 Character.isLowerCase()
+\p{javaUpperCase}  // 等价于 Character.isUpperCase()
+\p{javaWhitespace} // 等价于 Character.isWhitespace()
+\p{javaMirrored}   // 等价于 Character.isMirrored() 镜像字符，如 () [] {}
+
+/* Unicode 脚本/块/分类/二进制属性 [宽度为一] */
+\p{IsLatin}        // 拉丁字符 (script)
+\p{InGreek}        // 希腊字符 (block)
+\p{Lu}             // 大写字母 (category)
+\p{IsAlphabetic}   // 字母字符 (binary property)
+\p{Sc}             // 货币符号
+\P{InGreek}        // 除希腊字符外的任意字符 (negation)
+[\p{L}&&[^\p{Lu}]] // 除大写字母外的任意字母 (subtraction)
+
+/* EOF 序列 */
+\R // 任何 Unicode 行结束序列，如 \r\n、\n、\f，它等同于
+   // \u000D\u000A|[\u000A\u000B\u000C\u000D\u0085\u2028\u2029]
+
+/* 边界匹配符(零宽断言) [宽度为零] */
+// "零宽断言"：应将其拆分为"零宽"和"断言"两个部分进行理解。
+// 要了解这些，我们必须先来了解正则匹配的相关知识（有点多）。
+//
+// "输入序列的组成"
+// 对于字符串 "abc" 来说，除了存在三个字符外，它还存在四个位置 "0a1b2c3"。
+// 即每个字符的边界位置：a 的左边、a 的右边、b 的右边、c 的右边，共四个。
+// 不过我们通常都会使用一个数字来表示一个位置，它们的表示规则为 "0a1b2c3"。
+// 位置总是从 0 开始，最大值为字符串的长度，而每个位置的数值其实就是它后面
+// 的字符的索引值。如位置 0 就是字符 a 的索引值，位置 2 就是字符 c 的索引值
+//
+// "正则模式的组成"
+// 对于模式 "www\d+.*+" 来说，存在 5 个子表达式（模式的最小单位称为子表达式）
+// 它们分别为："w"、"w"、"w"、"\d+"、".*+"。一个子表达式是不可再分的最小单位
+//
+// "占有字符和零宽度"
+// 如果一个子表达式匹配的是字符，并且所匹配的字符会保存到最终结果中，
+// 那么该子表达式就是占有字符的。
+// 如果一个子表达式匹配的是位置，或者匹配的字符不会保存到最终结果中，
+// 那么该子表达式就是零宽度的。
+// 占有字符的表达式称为占宽表达式，零宽度的表达式称为零宽表达式。
+// 占宽表达式是互斥的，零宽表达式是非互斥的。也就是说：同一个字符
+// 在同一时间只能被一个占宽表达式匹配；而同一个位置在同一时间却能
+// 被多个零宽表达式匹配。
+// 在 Java 的正则中，只有"边界匹配符"、"顺序环视"、"逆序环视"是零宽
+// 表达式，其它的都是非零宽(占宽)表达式。
+//
+// "正则匹配的过程"
+// 控制权：如果正则引擎当前所执行的子表达式为 A，那么我们说子表达式 A
+//        取得控制权。A 执行完后，它会将控制权转交给下一个子表达式 B，
+//        子表达式 B 则从 A 匹配成功的结束位置开始进行匹配，以此类推。
+//        对于正则模式 "ABCDEF" 来说，控制权总是先交给 A，然后再交给
+//        B，最后交给 F。即按照从左到右的顺序依次传递控制权。
+// 匹配细节：除了"逆序环视"外，其它的所有子表达式都是匹配当前位置右侧的
+//          字符序列。比如，字符序列"ABCDEFG"，假设子表达式 A 从位置 3
+//          开始匹配（即字符 D 前面），它只会从位置 3 往后看，看看能不
+//          能匹配后面的 DEFG 字符序列。而对于逆序环视子表达式 B 来说，
+//          假设它从位置 3 开始匹配，它只会从位置 3 往前看，看看能不能
+//          匹配前面的 ABC 字符序列。
+// 分支与回溯：对于模式 "(?:g|f)ood" 来说，它存在两条分支（或者叫做执行
+//            路径），一条是"good"，另一条是"food"。而正则引擎总是按照
+//            从左到右的顺序选择分支的，因此"good"分支首先被执行，只有
+//            当该分支在某一位置无法继续匹配时才会进入下一个分支"food"
+//            而这个进入下一个分支的行为叫做"回溯"，也就是说，当前这条
+//            路已经走不通了，只能尝试下一条路了。分支是可以有多个的，
+//            比如模式"(?:a|b)X(?:c|d)Y"，第一个岔路口"a|b"，第二个岔路
+//            口"c|d"，因此它有四条分支：aXcY、aXdY、bXcY、bXdY。正则引
+//            擎会先选择 aXcY 分支，如果该分支可以将整个正则模式匹配完
+//            毕（即整个模式匹配成功），那么其它的所有分支将被丢弃，开始
+//            进入下一轮匹配（如果启用了 global 标志位）或者结束匹配并报
+//            告该轮匹配成功；如果该分支走到某个地方匹配失败了，则进行回
+//            溯，开始进入离它最近的下一个分支，即 aXdY 分支。以此类推。
+// 量词与回溯：对于模式 "\d{1,3}www" 来说，它存在三条分支，即 "\d\d\dwww"、
+//            "\d\dwww"、"\dwww"。为什么是倒着排呢？因为量词默认都是贪婪
+//            的，它总是会先尝试匹配 max 次（在这里就是 3 次咯），而如果
+//            给量词加上修饰符 ? 即 "\d{1,3}?"，则三条分支依次为："\dwww"、
+//            "\d\dwww"、"\d\d\dwww"，加上 ? 后贪婪量词就会变成懒惰量词，
+//            而懒惰量词总是先尝试匹配 min 次（在这里就是 1 次咯）。具体
+//            的回溯过程就不再复述了，在上面的"分支与回溯"中已进行讲解。
+// 向前传动：如果当前选择的分支匹配失败了，则正则引擎会进行回溯，进入下一
+//          条分支再次尝试，但是如果当前的所有分支都匹配失败了或者当前根
+//          本就没有任何分支可用的情况下会怎么样呢？答案是进行向前传动。
+//          我们将上面的这种无分支可用或全部分支都匹配失败的情况称为"本轮
+//          匹配失败"，那么就要进入"下一轮匹配"。那么要怎么进入下一轮呢？
+//          别急，首先，正则引擎第一轮匹配总是从输入序列的位置 0 开始的，
+//          因此，进入第二轮就是说从输入序列的位置 1 开始重新匹配整个模式，
+//          而进入第三轮就是从输入序列的位置 2 开始重新匹配整个模式，以此
+//          类推，直到输入序列的最后一个位置 n，如果到了最后一轮还是失败，
+//          那么正则引擎将报告模式匹配失败。这个进入下一轮的过程就称为向前
+//          传动，简称传动。也就是说，将输入序列往前挪动一个字符长度，最前
+//          面的一个字符将会被丢弃，后续匹配不会再考虑被丢弃的字符序列。
+//          最后再说一下 global 匹配的过程，默认情况下，正则引擎匹配成功了
+//          一次之后，就会返回，不会再管剩下的字符序列；但如果启用了 global
+//          全局匹配标志，则匹配成功一次后，不会立即返回，而是接着从本次匹配
+//          成功的结束位置开始重新匹配整个模式，即：将本次匹配成功的结束位置
+//          前的字符都丢弃掉（向前传动），然后重新开始匹配整个模式，直到整个
+//          字符序列都被传动完毕（消耗完毕，导致没有字符可匹配）为止，引擎才
+//          会返回。
+//
+// 说了这么多，其实是为了后面的贪婪量词、懒惰量词、占有量词、顺序环视、逆序环视
+// 做准备呢！那么最后，我简单的解释一下什么是"零宽断言"：零宽即零宽表达式，这个
+// 前面已经说了，而断言就相当于我们编程语言中的 if 条件，只不过这个条件必须为真，
+// 结合起来就是说，零宽断言表达式用于在当前位置测试某个给定条件，如果条件为真，
+// 接下来的匹配才会继续，如果条件为假则进行回溯、传动，寻找下一个条件为真的位置，
+// 并且表达式在匹配的过程中不会消耗任何字符，即零宽的体现。
+//
+^  // 匹配输入序列的起始位置（默认模式）
+   // 如果为多行模式，同时还会匹配行结束符之后的位置
+$  // 匹配输入序列的结束位置（默认模式）
+   // 如果为多行模式，同时还会匹配行结束符之前的位置
+\b // 匹配单词的边界
+\B // 匹配非单词边界
+\A // 匹配输入序列的起始位置
+\G // 匹配上一次成功 match 的结束位置
+\z // 匹配输入序列的结束位置
+\Z // 匹配输入序列的结束位置，如果输入序列以行结束符结尾，则匹配该行结束符前面的位置
+
+/* 贪婪量词 */
+// 首先我们要知道，正则中只有三种量词：{n}、{n,}、{n,m}，而 ?、+、* 都是简写模式：
+// ? == {0,1}、* == {0,}、+ == {1,}。并且，"默认情况下，量词都是贪婪的"。这很重要。
+// 使用 {min,max} 来表示量词，如果省略 max，则为正无穷。量词可用区间[min, max]表示
+//
+// "量词的贪婪性"
+// 当控制权由贪婪量词接手时，贪婪量词会尽量多的匹配字符序列，只要当前次数未超过 max，
+// 就会先把能匹配的给匹配了，然后才会让出控制权给下一个子表达式。
+// 如果下一个子表达式 A 正好能够匹配接下来的字符序列，则不进行回溯；如果无法匹配，则
+// 进行回溯，让贪婪量词吐出一个单位长度的字符序列（该长度由量词所修饰的子表达式决定）
+// 然后子表达式 A 会再次尝试，如果匹配成功则将控制权交给下一个子表达式，如果还是不行，
+// 则继续让贪婪量词吐出一个单位长度的字符序列，以此类推，当减到量词的 min 次时，如果
+// 还不行，则查找当前可用的其它分支，如果没有其它分支或其它分支都失败了，则进行向前传
+// 动，直到传动至字符序列的最后一个位置。这个吐出字符序列的过程其实就是我们说的"回溯"。
+//
+// 举个栗子，正则模式"<.*>"，输入序列"<p>www.zfl9.com</p>"，匹配结果"<p>www.zfl9.com</p>"。
+// 1. "<" 首先获取控制权，从输入的第 0 个位置开始匹配，正好匹配 <p> 的 < 字符
+// 2. ".*" 接手控制权，因为是贪婪量词，因此它会尽量的匹配 max 次，而 * 的 max
+//    值为正无穷，因此将尽量的匹配，直到表达式 . 无法匹配为止。因此它将吞掉剩
+//    余的 p>www.zfl9.com</p>
+// 3. ">" 接手控制权，因为输入序列都被匹配完了，因此进行第一次回溯，回到 </p>
+//    的 > 前面的位置，再次进行尝试，匹配成功。
+// 因此最终的匹配结果为 "<p>www.zfl9.com</p>"，而非预期的 "<p>"。
+X?     // 匹配模式 X 0~1 次（含 0、1）
+X*     // 匹配模式 X 0+ 次（含 0）
+X+     // 匹配模式 X 1+ 次（含 1）
+X{n}   // 匹配模式 X n 次
+X{n,}  // 匹配模式 X n+ 次（含 n）
+X{n,m} // 匹配模式 X n~m 次（含 n、m）
+
+/* 懒惰量词 */
+// 默认的量词都是贪婪的。当在贪婪量词的后面加上 ? 修饰符时，贪婪量词就会变为懒惰量词。
+// 懒惰量词与贪婪量词正好相反，贪婪量词是尽量匹配 max 次，而懒惰量词则是先匹配 min 次，
+// 然后懒惰量词就会将控制权让出，交给下一个子表达式。如果下一个子表达式可以匹配接下来
+// 的字符序列，则不进行回溯；如果无法匹配，则进行回溯，即将控制权交还给懒惰量词，然后
+// 懒惰量词会尝试吞掉一个单位长度的字符序列，如果吞食失败，则查找其它可用的分支，进行
+// 回溯，如果吞食成功，则将控制权转让给下一个子表达式，子表达式会再次尝试能否匹配，如
+// 果匹配成功，则将控制权交个下一个子表达式，如果还是不行，则继续重复上面的过程，直到
+// 懒惰量词达到上限 max 次，如果还是不行，则查找其它的可用分支，如果没有分支或其它分支
+// 都匹配失败了，则进行向前传动，直到传动至字符序列的最后一个位置。
+//
+// 还是上面的那个例子，我们使用懒惰模式来测试一下："<.*?>"，结果是匹配到 "<p>"。
+// 1. "<" 首先获取控制权，匹配 <p> 的 <
+// 2. ".*?" 接手控制权，因为 * 的 min 值为 0，因此它一个也不匹配，让出控制权
+// 3. ">" 接手控制权，发现匹配不了接下来的字符 p，因此又将控制权交还给".*?"，
+//    发现它可以吞掉此字符，因此吞掉字符后将控制权交还给 >，正好匹配 <p> 的 >
+// 因此，最终结果为 "<p>"，是我们的预期结果。
+X??     // 匹配模式 X 0~1 次（含 0、1）
+X*?     // 匹配模式 X 0+ 次（含 0）
+X+?     // 匹配模式 X 1+ 次（含 1）
+X{n}?   // 匹配模式 X n 次
+X{n,}?  // 匹配模式 X n+ 次（含 n）
+X{n,m}? // 匹配模式 X n~m 次（含 n、m）
+
+/* 占有量词 */
+// 默认的量词都是贪婪的。当在贪婪量词的后面加上 + 修饰符时，贪婪量词就会变为占有量词。
+// "占有量词"和"贪婪量词"相似，唯一不同的是它不会进行回溯！即吃了就不会再吐出来了。具
+// 体的分析过程我就不说了，打字很累的。
+//
+// 还是上面的那个例子，我们使用占有模式来测试一下："<.*+>"，结果是什么都没匹配。
+// 1. "<" 首先获取控制权，匹配 <p> 的 <
+// 2. ".*+" 接手控制权，因为 max 值为正无穷，因此吞掉剩余的所有字符，让出控制权
+// 3. ">" 接手控制权，因为没有字符可匹配了，而又因为 .*+ 不肯吐字符出来，因此第
+//    一轮匹配失败，进行下轮匹配，即传动一个字符，从位置 1 开始重新匹配整个模式。
+//    "<" 又接手控制权，但是此时无法匹配第二个字符 p，因此继续传动一个字符，还是
+//    失败，直到传动至 </p> 的 < 前面的位置，终于发现可以匹配了，然后将控制权交给
+//    ".*+"，可惜的是，它又会吞掉剩余的字符，等轮到 > 时，依旧匹配失败，然后又要进
+//    行传动，结果是到了最后也没匹配到 < 字符，因此最终的结果是匹配失败。
+X?+     // 匹配模式 X 0~1 次（含 0、1）
+X*+     // 匹配模式 X 0+ 次（含 0）
+X++     // 匹配模式 X 1+ 次（含 1）
+X{n}+   // 匹配模式 X n 次
+X{n,}+  // 匹配模式 X n+ 次（含 n）
+X{n,m}+ // 匹配模式 X n~m 次（含 n、m）
+
+/* 逻辑符 */
+XY  // [逻辑与] 最普通的一种形式
+X|Y // [逻辑或]，比如"g|food"匹配"g"或"food"，"(g|f)ood"匹配"good"或"food"。
+    // 不过为了不被当作捕获组，我一般都会使用"(?:g|f)ood"来消除这一副作用。
+
+/* 捕获组 */
+(X)        // 将 X 匹配的序列存储起来，作为一个捕获组，后续可引用该捕获组的内容
+(?<name>X) // 定义命名捕获组，必须以字母开头，后面可接数字和字母。即使是命名捕获组，
+           // 我们依旧可以根据组号 N 来引用它。给它定义名字只不过是为了方便引用而已
+
+/* 非捕获组 */
+(?:X)      // 逻辑上的括号，一般用于限定一个范围，或者将表达式 X 作为一个整体。
+           // 比如"(?:\d{3})+"表示长度为 3N (N >= 1) 的连续数字，而"\d{3}+"的
+           // 意义却完全不同了，我们来解析一下，这里存在三个元素 "\d" "{3}" "+"
+           // 元素二和元素三都属于量词，但是在正则模式中，如果存在两个连续的量词，
+           // 则会将 "贪婪量词" -> "懒惰量词"/"占有量词"，而两个以上的连续量词是
+           // 不允许的，会导致语法错误！这一点要十分清楚，刚开始时我也稀里糊涂的：
+           // ".*": 为 "贪婪属性"
+           // ".*?": 为 "懒惰属性"
+           // ".*+": 为 "占有属性"
+           // ".*??": 非法，语法错误
+           // ".*++": 非法，语法错误
+(?>X)      // 原子组，原子组中的子表达式的任何回溯点都会被丢弃（即不保存任何分支）
+           // 因此位于原子组中的贪婪量词、懒惰量词、分支语句都不会被执行回溯操作。
+           // 1. "贪婪量词"：吃完了当前能够吃的所有字符后，它将不会再吐出来了；
+           // 2. "懒惰量词"：吃完了 min 次能够吃掉的字符后，它将不会再吃进去了；
+           // 3. "分支语句"：对于模式 (?>X|Y|Z) 只会执行 X 分支，其它分支被丢弃。
+
+/* 反向引用 */
+\n        // 引用捕获组 n (0 <= n <= 9)，N 的第 1 位数字总会被解释为第 N 组，
+          // 而不管模式中有没有这个组，当然如果模式中的捕获组有 10+ 以上，
+          // 那么 $10、$11 之类的引用也是合法的，可以被 Java 正则引擎解释。
+          // 注意正则模式中使用 \n 语法，替换文本中使用 $n 语法，别搞错了。
+\k<name>  // 引用捕获组 name，即引用具名捕获组，当然，即使是有名字的捕获组，
+          // 我们也是可以根据组号来引用它，给它命名只不过为了好记而已。
+
+/* 引用/引句 */
+// 在 \Q 和 \E 之间的字符序列不再具有任何特殊性，而是普通的字面意义字符
+// 比如模式 "\Q.*\E"，它只会匹配字符串 ".*"，而不会匹配其它的任意字符串。
+\  // 用于转义随后的字符，它本身不匹配任何内容，除非使用 \\
+\Q // 用于表示一个普通字符序列的开始，它本身不匹配任何内容
+\E // 用于表示一个普通字符序列的结束，它本身不匹配任何内容
+
+/* 环视/预查(零宽断言) [宽度为零] */
+(?=X)  // "顺序肯定环视" "表示所在位置的右侧能够匹配子表达式 X"
+       // 零宽断言的意思我已经在"边界匹配符"中详细说明了，可以这样理解：
+       // "边界匹配符": 预定义的断言条件；"环视/预查": 自定义的断言条件。
+       // 因此，它们具有相同的属性，也即不占有任何字符、不消耗任何字符。
+       // 举个栗子：输入序列"Windows10 WindowsXP"，需求是：只获取 WindowsXP
+       // 的 Windows 字符串，而不获取 Windows10 的 Windows 字符串，该怎么做？
+       // 我先给出答案吧，使用正则模式"Windows(?=XP)"即可，详细匹配过程如下：
+       // 1. "W" 获得控制权，匹配成功，消耗字符"W"，指针往后移动一个长度
+       // 2. "i" 获得控制权，匹配成功，消耗字符"i"，指针往后移动一个长度
+       // 3. "n" 获得控制权，匹配成功，消耗字符"n"，指针往后移动一个长度
+       // 4. "d" 获得控制权，匹配成功，消耗字符"d"，指针往后移动一个长度
+       // 5. "o" 获得控制权，匹配成功，消耗字符"o"，指针往后移动一个长度
+       // 6. "w" 获得控制权，匹配成功，消耗字符"w"，指针往后移动一个长度
+       // 7. "s" 获得控制权，匹配成功，消耗字符"s"，指针往后移动一个长度
+       // 8. "X" 获得控制权，因为字符是 1，因此匹配失败，进行向前传动
+       // 9. "W" 获得控制权，因为字符是 i，因此匹配失败，进行向前传动
+       // 10. "W" 获得控制权，因为字符是 n，因此匹配失败，进行向前传动
+       // 11. "W" 获得控制权，因为字符是 d，因此匹配失败，进行向前传动
+       // 12. "W" 获得控制权，因为字符是 o，因此匹配失败，进行向前传动
+       // 13. "W" 获得控制权，因为字符是 w，因此匹配失败，进行向前传动
+       // 14. "W" 获得控制权，因为字符是 s，因此匹配失败，进行向前传动
+       // 15. "W" 获得控制权，因为字符是 1，因此匹配失败，进行向前传动
+       // 16. "W" 获得控制权，因为字符是 0，因此匹配失败，进行向前传动
+       // 17. "W" 获得控制权，因为字符是空格，因此匹配失败，进行向前传动
+       // 18. "W" 获得控制权，匹配成功，消耗字符"W"，指针往后移动一个长度
+       // 19. "i" 获得控制权，匹配成功，消耗字符"i"，指针往后移动一个长度
+       // 20. "n" 获得控制权，匹配成功，消耗字符"n"，指针往后移动一个长度
+       // 21. "d" 获得控制权，匹配成功，消耗字符"d"，指针往后移动一个长度
+       // 22. "o" 获得控制权，匹配成功，消耗字符"o"，指针往后移动一个长度
+       // 23. "w" 获得控制权，匹配成功，消耗字符"w"，指针往后移动一个长度
+       // 24. "s" 获得控制权，匹配成功，消耗字符"s"，指针往后移动一个长度
+       // 25. "X" 获得控制权，因为字符是 X，因此匹配成功（不消耗字符）
+       // 26. "P" 获得控制权，因为字符是 P，因此匹配成功（不消耗字符）
+
+(?!X)  // "顺序否定环视" "表示所在位置的右侧不能匹配子表达式 X"
+       // 顺序肯定环视的作用是保证当前位置的右侧能够匹配表达式 X
+       // 顺序否定环视的作用是保证当前位置的右侧不能匹配表达式 X
+       // 即若X匹配成功，则(?!X)匹配失败，若X匹配失败，则(?!X)匹配成功
+       // 还是上面的例子，使用否定语义来完成匹配，模式为"Windows(?!10)"
+
+(?<=X) // "逆序肯定环视" "表示所在位置的左侧能够匹配子表达式 X"
+       // 这就有点意思了，正则中的子表达式一般都是匹配当前位置右侧(后面)的字符序列
+       // 而逆序环视却偏偏相反，逆序环视子表达式是匹配当前位置左侧(前面)的字符序列
+       // 顺序环视匹配的起点位置是确定的，就是当前所在的位置，而匹配的终点是不确定的（简单，正常思维）
+       // 逆序环视匹配的起点位置是不定的，是当前位置左侧某一位置，而终点则是当前位置（复杂，逆向思维）
+       //
+       // JDK1.6 之前，逆序环视中不支持非定长量词的子表达式，JDK1.6 之后（含），逆序环视中
+       // 支持部分非定长量词的子表达式。目前只有 .NET 支持完整的不定长量词子表达式。
+       //
+       // JDK1.8 中可使用的一些不定长量词子表达式如下（其它版本请自行测试）：
+       // 1. 当环视表达式中只有一个子表达式时，允许 max 值为正无穷的量词，如
+       //    "(?<=\d*)"，同时还允许零宽子表达式的存在，如"(?<=\b\d*)"、"(?<=\B\d*\b)"
+       // 2. 除了情况一外，环视表达式中的量词的 max 值必须为确定值，不能为正
+       //    无穷。合法例子："(?<=\d{1,3}\s{5,10})"、"(?<=[java]{5}\s[python]{1,3})"
+       //
+       // 还有一个细节需要注意：除逆序环视外，其它的子表达式都是按照从左到右的顺序接手
+       // 控制权的。而对于逆序环视表达式"(?<=\.\d+)"，控制权首先会被"\d+"接手，然后才会
+       // 由"\."接手！
+       //
+       // 举个栗子：输入序列"PCRE"，正则模式"(?<=PC)RE"，获取字符串"RE"，过程如下：
+       // 1. "(?<=PC)"获取控制权(准确来说应该为"C"，不要在意这些细节)，当前位置为 0，
+       //    左侧没有字符可匹配，断言失败，向前传动
+       // 2. "(?<=PC)"获取控制权，当前位置为 1，左侧只有一个字符，断言失败，向前传动
+       // 3. "(?<=PC)"获取控制权，当前位置为 2，左侧字符为"PC"，断言成功，让出控制权
+       // 4. "R"获取控制权，右侧字符为"R"，匹配成功，消耗字符"R"，让出控制权
+       // 5. "E"获取控制权，右侧字符为"E"，匹配成功，消耗字符"E"，整个表达式匹配完毕
+       // 因此，最终的匹配结果为"RE"，字符串"PC"不会保存至最终匹配结果。
+
+(?<!X) // "逆序否定环视" "表示所在位置的左侧不能匹配子表达式 X"
+       // 例子：对于字符串"BRE ERE PCRE"，我想匹配"BRE"、"ERE"中的"RE"，而不匹配"PCRE"的"RE"
+       // 可以使用模式："(?<!PC)RE"（否定型环视）、或者使用模式："(?<=B|E)RE"（肯定型环视）。
+
+/* 正则 flags */
+(?idmsuxU-idmsuxU)  // 不匹配任何字符，而是打开或关闭给定的正则模式标志位
+                    // 其作用范围是从该模式位置到模式结束位置，可以理解为全局
+                    // - 前面的表示要打开的标志位，- 后面的表示要关闭的标志位
+                    // 比如："(?i)www" 将匹配 "WwW"，因为打开了忽略大小写属性
+                    // 比如："(?-i)www" 不匹配 "WwW"，因为显式关闭了忽略大小写属性
+(?idmsux-idmsux:X)  // 同上，但是作用范围仅限于圆括号内部，即仅针对表达式 X 设置
+</script></code></pre>
+<p><strong>其它说明</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 转义字符 */
+// 在非转义字母字符前添加 \，会导致 PatternSyntaxException 异常，如 \j
+// 允许在非字母字符前添加 \，正则模式在编译时不会报错，没有影响，如 \@
+// 因为 Java 本身的字符串转义，因此正则模式中的 \ 须表示为 \\，如模式 \[ 须写做 \\[
+// Java 的正则库支持中文，不需要像 PCRE 库那样添加前缀 (*UTF8) 来启用 Unicode 支持
+
+/* 行结束符 */
+// 行结束符是一个单字符或双字符序列，用于标记输入字符序列的一行的结尾。以下是公认的行结束符：
+// 1. LF 换行符（Unix）：'\n'
+// 2. CRLF 回车换行（Windows）："\r\n"
+// 3. CR 回车符：'\r'
+// 4. NEL 符（下一行符）：'\u0085'
+// 5. LS 符（行分隔符）：'\u2028'
+// 6. PS 符（段落分隔符）：'\u2029'
+
+"如果启用 UNIX_LINES 标志，则只有 '\n' 换行符是被正则认可的行结束符"
+"正则模式 . 默认匹配除行结束符外的任意字符，除非启用 DOTALL 单行模式"
+"默认情况下，^、$ 匹配输入字符序列的起始和结束位置，即忽略行结束符"
+"如果启用 MULTILINE 标志，则 ^ 还会匹配行结束符之后的位置，$ 还会匹配行结束符之前的位置"
+
+/* 捕获组 */
+// 捕获组通过从左到右数起的左括号数进行编号，如模式 ((A)(B(C))) 有这四个组：
+// 1. ((A)(B(C)))
+// 2. (A)
+// 3. (B(C))
+// 4. (C)
+
+"组号为 0 总是代表整个匹配的表达式" "在替换模式中，不使用 \N 来引用捕获组，而是使用 $N 来引用"
+"捕获组可以有名字，组名必须以字母开头，后可接大小写字母和数字。命名捕获组依旧按照组号进行编号。"
+
+/* Unicode 字符支持 */
+// 如果启用 UNICODE_CHARACTER_CLASS 标志，则"预定义字符集合"和"POSIX字符集合"将支持 Unicode 字符
+// 比如模式 "\w+" 只能匹配 "world" 而不能匹配 "世界"，但是模式 "(?U)\w+" 对于两种情况都会匹配成功
+
+/* 对比 Perl 5 的正则 */
+// Java 和 Perl 5 都是使用 "传统型 NFA 引擎" 进行正则匹配的。
+//
+// "Perl 支持而 Java 不支持的语法"
+// - 预定义的字符类(Unicode 字符)："\X" 匹配 Unicode 扩展字形群集
+// - 使用反向引用 "\g{N}"、"\g{name}" 来引用匿名捕获组、具名捕获组
+// - 字符结构 "\N{name}" 表示名为 name 的 Unicode 字符
+// - 条件结构 "(?(condition)X)"、"(?(condition)X|Y)"
+// - 嵌入代码结构 "(?{code})"、"(??{code})"
+// - 嵌入注释语法 (?#comment)
+// - 预处理操作 "\l"、"\u"、"\L"、"\U"
+//
+// "Java 支持而 Perl 不支持的语法"
+// - "自定义字符集合" 中的 "逻辑或"、"逻辑与" 语法
+//
+// "Java 与 Perl 正则的显著差异"
+// - 在 Perl 中，\1 ~ \9 总是被解释为反向引用，如果存在 10+ 个子捕获组，则 \10+ 也会被解释
+//   为反向引用，否则将被尝试解释为八进制数值转义。
+// - 在 Java 中，\1 ~ \9 总是被解释为反向引用，如果存在 10+ 个子捕获组，则 \10+ 也会被解释
+//   为反向引用，否则解释器将丢弃数字，直到数字小于或等于现有的子捕获组数，或者为单个数字。
+//   而对于八进制数值转义，数值部分必须以 0 开头，否则不会被当作八进制数值来解释。
+// - 在 Perl 中，使用 g 标志来启用全局匹配（即匹配了第一次后不会立即返回，而是一直尝试匹配，
+//   直到当前字符序列被传动完毕）。而在 Java 中，该功能由 Matcher.find() 方法提供，它将会一
+//   直匹配模式，直到当前字符序列被转动完毕。
+// - 在 Perl 中，正则模式顶级的嵌入式标志会影响整个表达式的匹配属性。而在 Java 中，嵌入式标
+//   志总是从定义的地方开始生效，如果是 (?flags-flags:X)，则嵌入式标志只在圆括号范围内生效。
+</script></code></pre>
+<h3 id="扩展知识"><a href="#扩展知识" class="headerlink" title="扩展知识"></a>扩展知识</h3><p><strong>正则表达式引擎</strong>：<code>非确定型有穷自动机（NFA）</code>和<code>确定型有穷自动机（DFA）</code></p>
+<ul>
+<li>DFA：<strong>文本主导</strong>、<strong>确保获得最长的匹配文本</strong>、<strong>预编译复杂</strong>、<strong>匹配简单快速</strong>、<strong>特性较少</strong></li>
+<li>传统型NFA：<strong>模式主导</strong>、<strong>找到匹配后丢弃其它分支</strong>、<strong>预编译简单</strong>、<strong>匹配复杂</strong>、<strong>特性多</strong></li>
+<li>POSIX NFA：与传统型NFA差别不大，最大的区别是它会尝试所有分支，确保获得最长的匹配文本，速度略慢</li>
+</ul>
+<p>大多数编程语言都是使用<strong>传统型NFA引擎</strong>，如 Java、Perl、PHP、Python、.NET；而 grep、awk 则使用 DFA。</p>
+<p>两类正则引擎要顺利工作，都必须有一个正则式和一个文本串，一个捏在手里，一个吃下去：</p>
+<ul>
+<li>DFA 捏着文本串去比较正则式，看到一个子正则式，就把可能的匹配串全标注出来，然后再看正则式的下一个部分，根据新的匹配结果更新标注。</li>
+<li>NFA 则捏着正则式去比文本，吃掉一个字符，就把它跟正则式比较，匹配就记下来：“某年某月某日在某处匹配上了！”，然后接着往下干。一旦不匹配，就把刚吃的这个字符吐出来，一个个的吐，直到回到上一次匹配的地方。</li>
+</ul>
+<p>DFA 与 NFA 机制上的不同带来 5 个影响：</p>
+<ol>
+<li>DFA 对于文本串里的每一个字符只需扫描一次，比较快，但特性较少；NFA 要翻来覆去吃字符、吐字符，速度慢，但是特性丰富，因此应用广泛，当今主要的正则表达式引擎，如 Perl、Ruby、Python、Java 和 .NET 的 regex 库，都是 NFA 的。</li>
+<li>只有 NFA 才支持 lazy（懒惰量词）和 backreference（反向引用）等特性。</li>
+<li>NFA 急于邀功请赏，所以最左子正则式优先匹配成功，因此偶尔会错过最佳匹配结果；DFA 则是最长的左子正则式优先匹配成功。</li>
+<li>NFA 缺省采用 greedy（贪婪量词），使用相应的修饰符可将贪婪量词转换为懒惰量词、占有量词。</li>
+<li>NFA 可能会陷入递归调用的陷阱而表现得性能极差。</li>
+</ol>
+<p><strong>环视的八种组合</strong></p>
+<ol>
+<li>顺序肯定常规<code>[a-z]+(?=;)</code>：字母序列后面跟着<code>;</code></li>
+<li>顺序肯定变种<code>(?=[a-z]+$).+$</code>：字母序列</li>
+<li>顺序否定常规<code>[a-z]+\b(?!;)</code>：不以<code>;</code>结尾的字母序列</li>
+<li>顺序否定变种<code>(?!.*?[lo0])\b[a-z0-9]+\b</code>：不包含<code>l/o/0</code>的字母数字系列</li>
+<li>逆序肯定常规<code>(?&lt;=:)[0-9]+</code>：<code>:</code>后面的数字序列</li>
+<li>逆序肯定变种<code>\b[0-9]\b(?&lt;=[13579])</code>：0~9 中的奇数</li>
+<li>逆序否定常规<code>(?&lt;!age)=([0-9]+)</code>：参数名不为 age 的数据</li>
+<li>逆序否定变种<code>\b[a-z]+(?&lt;!z)\b</code>：不以 z 结尾的单词</li>
+</ol>
+<p><strong><code>\b</code>单词边界</strong><br>很多人都知道<code>\b</code>是匹配单词边界，但是关于”单词”的范围，却很少提及。正则中所指的单词就是<code>\w</code>定义的字符组成的序列。</p>
+<p><code>\w</code>是一个<strong>预定义字符集合</strong>，它等价于<code>[a-zA-Z0-9_]</code>，即<strong>由<code>字母</code>、<code>数字</code>、<code>下划线</code>组成的字符序列被称为单词</strong>。如果启用了 Unicode 字符支持，则<code>\w</code>还会匹配 Unicode 中定义的单词字符，如汉字、全角数字。</p>
+<p><code>\b</code>是一个零宽子表达式，它只<strong>匹配位置</strong>，因此单词边界就是<strong>一侧是<code>\w</code>而另一侧不是<code>\w</code>的这样一个位置</strong>，因此<code>\b</code>等价于<code>(?&lt;=\w)(?!\w)|(?&lt;!\w)(?=\w)</code>。<br>而<code>\B</code>则表示<strong>非单词边界</strong>，所谓的非单词边界就是指<strong>一侧是<code>\w</code>且另一侧也是<code>\w</code>的这样一个位置</strong>，因此<code>\B</code>等价于<code>(?&lt;=\w)(?=\w)</code>。</p>
+<p>最后还有一点要说明，位于字符集合中的<code>\b</code>（如<code>[0-9\b]</code>）不是表示单词边界，而是代表<strong>退格键</strong>！</p>
+<h3 id="Pattern-类"><a href="#Pattern-类" class="headerlink" title="Pattern 类"></a>Pattern 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public final class Pattern
+    implements java.io.Serializable
+{
+    /* 静态字段 - flags */
+    // (?s) 启用单行模式，单行模式会改变 . 的语义，使得它将匹配任意字符（包括行结束符）
+    // 默认情况下，模式 . 只会匹配除行结束符外的任意字符，但可以使用 [\s\S] 来匹配任意字符
+    public static final int DOTALL;
+    // (?m) 启用多行模式，多行模式会改变 ^$ 的语义，使得它们还会匹配每行的边界位置
+    // 默认情况下，^$ 只会匹配输入序列的边界位置，但多行模式中，还会匹配每行的边界位置
+    public static final int MULTILINE;
+    // (?i) 忽略大小写匹配，仅针对 ASCII 字符（有轻微性能损失）
+    public static final int CASE_INSENSITIVE;
+    // (?u) 与 CASE_INSENSITIVE 一并使用，将对 ASCII 字符和 Unicode 字符忽略大小写（有轻微性能损失）
+    public static final int UNICODE_CASE;
+    // (?U) 启用 Unicode 支持，预定义字符集合、POSIX字符集合将支持 Unicode 字符（有轻微性能损失）
+    public static final int UNICODE_CHARACTER_CLASS;
+    // (?d) 启用 Unix 行模式，即指定 '\n' 为唯一的行结束符
+    public static final int UNIX_LINES;
+    // (?x) 启用注释语法，在此模式下空白和以 # 开头的行将被引擎忽略
+    public static final int COMMENTS;
+    // 启用模式字面值解析，即取消正则符的特殊意义，将它们作为普通字符进行文本匹配
+    public static final int LITERAL;
+    // 启用规范等价，默认关闭，对于字符 é 来说，有两个 Unicode 码："\u00E9"、"\u0065\u0301"
+    // 因为正则引擎判断两个字符是否相等的依据是 Unicode 码相等，因此，默认情况下它们不匹配；
+    // 但是如果启用了规范等价，就不一样了，正则引擎会将"\u00E9"等价为"\u0065\u0301"，就像是
+    // 同一个事物的两个不同叫法一样，因此在启用规范等价的情况下这两个字符序列可以匹配成功。
+    // 但是，由于存在一个转换对比的过程，因此可能会丧失轻微的性能，因此非必要请勿开启。
+    public static final int CANON_EQ;
+
+    /* 静态方法 */
+    public static Pattern compile(String regex); // 编译正则表达式
+    public static Pattern compile(String regex, int flags); // 多个 flag 之间使用 | 连接
+
+    // 内部调用 Pattern.compile(regex).matcher(input).matches()
+    public static boolean matches(String regex, CharSequence input);
+    public static String quote(String s); // 前后添加 \Qs\E
+
+    /* 实例方法 */
+    public Matcher matcher(CharSequence input); // 创建一个与给定输入序列相关联的匹配器
+
+    /**
+     * 使用当前模式分割给定输入序列，并返回分割后的字符串数组.
+     * @param input 输入序列
+     * @param limit 次数限制
+     *              limit > 0 最多分割 limit - 1 次
+     *                        数组长度不超过 limit
+     *                        数组最后一个元素包含剩下的所有输入
+     *              limit = 0 尽可能多次的分割输入
+     *                        尾部的空字符串将被丢弃
+     *              limit < 0 尽可能多次的分割输入
+     *                        尾部的空字符串将被保留
+     * @return 返回分割后的字符串数组
+     */
+    public String[] split(CharSequence input, int limit);
+    public String[] split(CharSequence input); // limit = 0
+
+    /* JDK1.8 */
+    public Predicate<String> asPredicate(); // return s -> matcher(s).find();
+    public Stream<String> splitAsStream(CharSequence input); // limit = 0，只不过为 Stream 而已
+
+    /* 查询方法 */
+    public String pattern(); // 返回当前的模式
+    public int flags(); // 返回模式的编译 flags
+    public String toString(); // 返回当前的模式
+}
+</script></code></pre>
+<h3 id="Matcher-类"><a href="#Matcher-类" class="headerlink" title="Matcher 类"></a>Matcher 类</h3><p>一个 Matcher 对象是通过 Pattern.matcher(CharSequence input) 方法来获取的，调用此方法后并未开始正则匹配。</p>
+<p>对于一个 Matcher 对象，可以使用以下三种方法来进行不同的匹配操作：</p>
+<ul>
+<li><code>matches()</code>：尝试将模式与整个输入序列进行匹配，返回布尔值；</li>
+<li><code>lookingAt()</code>：尝试从输入序列的开始处匹配模式，返回布尔值；</li>
+<li><code>find()</code>：扫描输入序列，寻找与模式匹配的下一个子序列（推进式），返回布尔值。</li>
+</ul>
+<p>Matcher 在称为 region 的输入子集中查找匹配项。默认情况下，该 region 包含整个输入序列。我们可以通过 region(beg, end) 方法修改这个区域，然后通过 regionStart()、regionEnd() 方法查询。</p>
+<blockquote>
+<p>Matcher 在多线程环境中是非线程安全的。</p>
+</blockquote>
+<p><strong>MatchResult 接口</strong><br>该接口表示 Matcher 匹配操作的结果。主要用于查询正则匹配的相关结果，不能通过 MatchResult 修改正则匹配结果。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface MatchResult {
+    int start();            // 返回匹配的起始索引 (group0)
+    int end();              // 返回匹配的结束索引 + 1 (group0)
+    int start(int group);   // 返回给定组的起始索引
+    int end(int group);     // 返回给定组的结束索引 + 1
+
+    String group(); // 返回 group0 捕获组字符串
+    String group(int group); // 返回 groupN 捕获组字符串
+    int groupCount(); // 返回子捕获组的数量，不包括 group0
+}
+</script></code></pre>
+<p><strong>Matcher 类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final class Matcher implements MatchResult {
+    /* 静态方法 */
+    public static String quoteReplacement(String s); // 取消 s 中的 \ $ 特殊含义
+
+    /* 模式相关 */
+    public Pattern pattern(); // 返回对应的 Pattern 对象
+    public Matcher usePattern(Pattern newPattern); // 使用新的模式，匹配器在输入中的位置不变
+
+    /* 输入相关 */
+    public Matcher reset(); // 重置当前匹配器
+    public Matcher reset(CharSequence input); // 重置当前匹配器并匹配新的输入序列
+
+    /* 查询结果 */
+    public MatchResult toMatchResult(); // 返回当前匹配结果对象，该对象不会受到当前对象后续操作的影响
+
+    public int start(); // 查询当前匹配结果的 group0 捕获组起始索引
+    public int start(int group); // 查询当前匹配结果的 groupN 捕获组起始索引
+    public int start(String name); // 查询当前匹配结果的给定命名捕获组的起始索引
+    public int end(); // 查询当前匹配结果的 group0 捕获组结束索引 + 1
+    public int end(int group); // 查询当前匹配结果的 groupN 捕获组结束索引 + 1
+    public int end(String name); // 查询当前匹配结果的给定命名捕获组的结束索引 + 1
+
+    public String group(); // 返回当前匹配结果的 group0 捕获组字符串
+    public String group(int group); // 返回当前匹配结果的 groupN 捕获组字符串
+    public String group(String name); // 返回当前匹配结果的给定命名捕获组字符串
+    public int groupCount(); // 返回子捕获组的数量，不包括 group0
+
+    /* 匹配方法 */
+    public boolean matches(); // 尝试将模式与整个 region 输入区域进行匹配
+
+    public boolean find(); // 从当前位置开始，查找与模式匹配的下一子序列
+    public boolean find(int start); // 先 reset 至给定位置，然后进行 find()
+
+    public boolean lookingAt(); // 尝试将模式与输入序列开头进行匹配
+
+    /* 替换方法 */
+    // 渐进式地替换输入序列（不修改原串），并将替换后的结果 append 到 StringBuffer 中
+    // 在 replacement 中可以使用 $N 来引用子串，但是要注意不能使用 \N 来引用子串的内容
+    // 该操作总是和 appendTail() 方法一起使用，用来结束替换，返回完整的替换后结果序列。
+    public Matcher appendReplacement(StringBuffer sb, String replacement);
+    // 与 appendReplacement() 一起使用，将剩余的未替换输入序列 append 到 StringBuffer 中。
+    public StringBuffer appendTail(StringBuffer sb);
+
+    public String replaceFirst(String replacement); // 首次替换，replacement 中可使用 $N 引用子串
+    public String replaceAll(String replacement); // 全局替换，replacement 中可使用 $N 引用子串
+
+    /* 属性设置 */
+    public Matcher region(int start, int end); // 调整 region 范围 [start,end)，默认为整个输入序列
+    public int regionStart(); // 查询 region 的起始索引
+    public int regionEnd(); // 查询 region 的结束索引 + 1
+
+    // 设置 Matcher 的透明边界属性，true 表示启用，false 表示禁用。默认为 false。
+    // 如果启用：则 region 的限制对 (?=X)、(?!X)、(?<=X)、(?<!X)、边界匹配符是透明的，意味着可以越界
+    // 如果禁用：则 region 的限制对 (?=X)、(?!X)、(?<=X)、(?<!X)、边界匹配符是非透明的，也即不可越界
+    public Matcher useTransparentBounds(boolean b);
+    public boolean hasTransparentBounds(); // 查询是否启用了透明边界属性，默认为 false
+
+    // 设置 Matcher 的锚定边界属性，true 表示启用，false 表示禁用。默认为 true。
+    // 如果启用：则边界匹配符将匹配 region 的边界，如 ^、$、\b、\B、\A、\G、\Z、\z
+    // 如果禁用：则边界匹配符不匹配 region 的边界，如 ^、$、\b、\B、\A、\G、\Z、\z
+    public Matcher useAnchoringBounds(boolean b);
+    public boolean hasAnchoringBounds(); // 查询是否启用了锚定边界属性，默认为 true
+
+    /* 其它方法 */
+    // 如果上一个匹配操作命中了输入序列的结尾，则返回 true
+    public boolean hitEnd();
+    // 如果在输入序列尾部添加一些字符序列后，会导致匹配成功变为匹配失败，则返回 true
+    public boolean requireEnd();
+
+    /* Object 方法 */
+    public String toString(); // 返回匹配器的字符串描述信息
+}
+</script></code></pre>
+<h3 id="正则例子"><a href="#正则例子" class="headerlink" title="正则例子"></a>正则例子</h3><p><strong>默认模式、单行模式、多行模式</strong></p>
+<ul>
+<li>默认模式：<code>^</code>、<code>$</code>匹配输入序列的边界位置，<code>.</code>匹配除行结束符外的任意字符；</li>
+<li>单行模式：<code>^</code>、<code>$</code>匹配输入序列的边界位置，<code>.</code>匹配任意字符；</li>
+<li>多行模式：<code>^</code>、<code>$</code>匹配任意一行的边界位置，<code>.</code>匹配除行结束符外的任意字符。</li>
+</ul>
+<p>简单的说：<strong>单行模式改变<code>.</code>的意义，多行模式改变<code>^</code>、<code>$</code>的意义</strong>。</p>
+<p>我们不妨来测试一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class RegexTest {
+    public static void main(String[] args) {
+        if (args.length < 2)
+            System.exit(1);
+
+        Pattern pattern = Pattern.compile(args[0]);
+        Matcher matcher = pattern.matcher(args[1]);
+
+        System.out.printf("regex: \"%s\"\n", args[0]);
+        System.out.printf("input: \"%s\"\n", args[1]);
+
+        for (int i = 0; matcher.find(); i++) {
+            System.out.printf("[result-%d]\n\tgroup0: \"%s\"\n", i, matcher.group());
+            for (int j = 1; j <= matcher.groupCount(); j++) {
+                System.out.printf("\tgroup%d: \"%s\"\n", j, matcher.group(j));
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:12:25]
+$ javac RegexTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:12:28]
+$ java com.zfl9.RegexTest '^.+$' $'www.zfl9.com'
+regex: "^.+$"
+input: "www.zfl9.com"
+[result-0]
+    group0: "www.zfl9.com"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:13:21]
+$ java com.zfl9.RegexTest '^.+$' $'www.zfl9.com\nwww.baidu.com\nwww.google.com'
+regex: "^.+$"
+input: "www.zfl9.com
+www.baidu.com
+www.google.com"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:13:36]
+$ java com.zfl9.RegexTest '(?s)^.+$' $'www.zfl9.com\nwww.baidu.com\nwww.google.com'
+regex: "(?s)^.+$"
+input: "www.zfl9.com
+www.baidu.com
+www.google.com"
+[result-0]
+    group0: "www.zfl9.com
+www.baidu.com
+www.google.com"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:13:52]
+$ java com.zfl9.RegexTest '(?m)^.+$' $'www.zfl9.com\nwww.baidu.com\nwww.google.com'
+regex: "(?m)^.+$"
+input: "www.zfl9.com
+www.baidu.com
+www.google.com"
+[result-0]
+    group0: "www.zfl9.com"
+[result-1]
+    group0: "www.baidu.com"
+[result-2]
+    group0: "www.google.com"
+</script></code></pre>
+<p>Unicode 标志位启用与不启用的区别：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:19:35]
+$ java com.zfl9.RegexTest '^\w+\s+\w+\s+\w+$' $'hello world java'
+regex: "^\w+\s+\w+\s+\w+$"
+input: "hello world java"
+[result-0]
+    group0: "hello world java"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:19:37]
+$ java com.zfl9.RegexTest '^\w+\s+\w+\s+\w+$' $'你好 世界 爪哇'
+regex: "^\w+\s+\w+\s+\w+$"
+input: "你好 世界 爪哇"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:19:50]
+$ java com.zfl9.RegexTest '(?U)^\w+\s+\w+\s+\w+$' $'你好 世界 爪哇'
+regex: "(?U)^\w+\s+\w+\s+\w+$"
+input: "你好 世界 爪哇"
+[result-0]
+    group0: "你好 世界 爪哇"
+</script></code></pre>
+<p>贪婪量词、懒惰量词、独占量词：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:51:56]
+$ java com.zfl9.RegexTest '<(.*)>' '<h1>hello, world</h1>' # 贪婪量词
+regex: "<(.*)>"
+input: "<h1>hello, world</h1>"
+[result-0]
+    group0: "<h1>hello, world</h1>"
+    group1: "h1>hello, world</h1"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:52:34]
+$ java com.zfl9.RegexTest '<(.*?)>' '<h1>hello, world</h1>' # 懒惰量词
+regex: "<(.*?)>"
+input: "<h1>hello, world</h1>"
+[result-0]
+    group0: "<h1>"
+    group1: "h1"
+[result-1]
+    group0: "</h1>"
+    group1: "/h1"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:52:50]
+$ java com.zfl9.RegexTest '<(.*)>(.*)<(.*)>' '<h1>hello, world</h1>' # 贪婪量词 vs 独占量词 (贪婪模式，进行回溯)
+regex: "<(.*)>(.*)<(.*)>"
+input: "<h1>hello, world</h1>"
+[result-0]
+    group0: "<h1>hello, world</h1>"
+    group1: "h1"
+    group2: "hello, world"
+    group3: "/h1"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:54:31]
+$ java com.zfl9.RegexTest '<(.*+)>(.*+)<(.*+)>' '<h1>hello, world</h1>' # 贪婪量词 vs 独占量词 (独占模式，不回溯)
+regex: "<(.*+)>(.*+)<(.*+)>"
+input: "<h1>hello, world</h1>"
+</script></code></pre>
+<p>正向肯定预查：<br>文本：<code>Windows2000 Windows2003 WindowsXP Windows7 Windows8 Windows10</code><br>目的：将 WindowsXP、Windows7、Windows8、Windows10 中的 Windows 替换为 WINDOWS，其它的不替换</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class LookaheadTest {
+    public static void main(String[] args) {
+        String regex = "Windows(?=XP|7|8|10)";
+        String input = "Windows2000 Windows2003 WindowsXP Windows7 Windows8 Windows10";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        System.out.println(input);
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find())
+            matcher.appendReplacement(result, matcher.group().toUpperCase());
+        matcher.appendTail(result);
+
+        System.out.println(result);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:41:01]
+$ javac LookaheadTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:41:05]
+$ java com.zfl9.LookaheadTest
+Windows2000 Windows2003 WindowsXP Windows7 Windows8 Windows10
+Windows2000 Windows2003 WINDOWSXP WINDOWS7 WINDOWS8 WINDOWS10
+</script></code></pre>
+<p>分割输入序列：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.util.regex.Pattern;
+
+public class SplitTest {
+    public static void main(String[] args) {
+        String regex = "\\s+",
+               input = "C C++  Java   Python Perl PHP Go JavaScript";
+        System.out.println(input);
+        for (String item : Pattern.compile(regex).split(input))
+            System.out.printf("\"%s\", ", item);
+        System.out.println("\b\b ");
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:48:58]
+$ javac SplitTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [12:49:19]
+$ java com.zfl9.SplitTest
+C C++  Java   Python Perl PHP Go JavaScript
+"C", "C++", "Java", "Python", "Perl", "PHP", "Go", "JavaScript"
+</script></code></pre>
+<p>首字母转换为大写（如果是小写的话）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class ReplaceTest {
+    public static void main(String[] args) {
+        String regex = "\\b([a-z])(\\w+)?\\b",
+               input = "c C++ java Python go perl";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find())
+            matcher.appendReplacement(result, matcher.group(1).toUpperCase() +
+                                      (matcher.group(2) == null ? "" : matcher.group(2)));
+        matcher.appendTail(result);
+
+        System.out.println(input);
+        System.out.println(result);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:25:36]
+$ javac ReplaceTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:25:56]
+$ java com.zfl9.ReplaceTest
+c C++ java Python go perl
+C C++ Java Python Go Perl
+</script></code></pre>
+<h3 id="进阶例子"><a href="#进阶例子" class="headerlink" title="进阶例子"></a>进阶例子</h3><p><strong>如何使用正则表达式给数字添加千分位逗号分隔符</strong>？</p>
+<blockquote>
+<p>如：<code>12345678</code> -&gt; <code>12,345,678</code>、<code>123456.1415926</code> -&gt; <code>123,456.1415926</code></p>
+</blockquote>
+<p><strong>纯整数的情况</strong><br>将一个数字序列千分位格式化的重点是<strong>找出要添加逗号的位置</strong>！那要怎么找到这个位置呢？</p>
+<ol>
+<li>从该位置到数字序列末尾这段空间，必须与 3n (n&gt;=0)个数字相匹配，使用<strong>顺序肯定环视</strong>即可</li>
+<li>但是，仅仅有条件一还不够，该位置左侧还必须至少有一个数字存在，使用<strong>逆序肯定环视</strong>即可</li>
+</ol>
+<p>因此最终的模式为：<code>(?&lt;=\d)(?=(?:\d{3})+\b)</code>，我们来测试一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class ReplaceTest {
+    public static void main(String[] args) {
+        if (args.length < 3) {
+            System.err.println("Missing running parameters");
+            System.exit(1);
+        }
+
+        String regex = args[0],
+               repl  = args[1],
+               input = args[2];
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        String result = matcher.replaceAll(repl);
+
+        System.out.printf("regex:  \"%s\"\n", regex);
+        System.out.printf("repl:   \"%s\"\n", repl);
+        System.out.printf("input:  \"%s\"\n", input);
+        System.out.printf("result: \"%s\"\n", result);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:59:44]
+$ javac ReplaceTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:00:10]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '123'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "123"
+result: "123"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:01:31]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '1234'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "1234"
+result: "1,234"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:01:33]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '12345'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "12345"
+result: "12,345"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:01:35]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '123456'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "123456"
+result: "123,456"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:01:36]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '1234567'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "1234567"
+result: "1,234,567"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:01:38]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '12345678'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "12345678"
+result: "12,345,678"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:01:39]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?=(?:\d{3})+\b)' ',' '12345678.12345678'
+regex:  "(?<=\d)(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "12345678.12345678"
+result: "12,345,678.12,345,678"
+</script></code></pre>
+<p>很好，前几个都是我们想要的结果，但是对于最后一个，有小数的情况下，就出现问题了。</p>
+<p><strong>整数、小数混合的情况</strong><br>数字序列<code>12345678.12345678</code>为什么会变成<code>12,345,678.12,345,678</code>而不是<code>12,345,678.12345678</code>呢？<br>使用的正则为<code>(?&lt;=\d)(?=(?:\d{3})+\b)</code>，首先我们可以肯定的是，<code>(?=(?:\d{3})+\b)</code>是没有问题的；<br>问题出现在<code>(?&lt;=\d)</code>！我们还需再添加一个逆序环视条件，即添加逗号的位置前面不能存在<code>.</code>小数点符；<br>因此，我们最终的正则模式为：<code>(?&lt;=\d)(?&lt;!\.\d{1,50})(?=(?:\d{3})+\b)</code>，该模式中有三个限定的条件：</p>
+<ol>
+<li><code>(?&lt;=\d)</code>：添加逗号的位置前面必须有数字</li>
+<li><code>(?&lt;!\.\d{1,50})</code>：添加逗号的位置前面不能有小数点存在（为什么不使用<code>\d+</code>呢？稍后会解释）</li>
+<li><code>(?=(?:\d{3})+\b)</code>：从添加逗号的位置后面到匹配单词边界间的字符必须为 3N 个数字（N &gt;= 1）</li>
+</ol>
+<p>在第二个条件中，为什么不使用<code>\d+</code>，而是使用<code>\d{1,50}</code>（可将 50 改为 100、1000，依小数部分长度而定）这种别扭的写法呢？没办法呀，<code>\d+</code>会导致模式编译失败，因为<code>+</code>的<code>max</code>值为正无穷，而又因为 Java 逆序环视的非定长量词的<code>max</code>值不允许为正无穷，所有才不得已使用后者！（.NET 可以）</p>
+<p>我们来测试一下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:21:01]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?<!\.\d{1,50})(?=(?:\d{3})+\b)' ',' '123456'
+regex:  "(?<=\d)(?<!\.\d{1,50})(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "123456"
+result: "123,456"
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [20:48:03]
+$ java com.zfl9.ReplaceTest '(?<=\d)(?<!\.\d{1,50})(?=(?:\d{3})+\b)' ',' '123456.123456'
+regex:  "(?<=\d)(?<!\.\d{1,50})(?=(?:\d{3})+\b)"
+repl:   ","
+input:  "123456.123456"
+result: "123,456.123456"
+</script></code></pre>
+<h2 id="Math-算数类"><a href="#Math-算数类" class="headerlink" title="Math 算数类"></a>Math 算数类</h2><p>java.lang.Math 包含了用于执行基本数学运算的属性和方法，如初等指数、对数、平方根和三角函数。Math 类的方法都被定义为 static 形式，不需要也不能创建 Math 类的对象。</p>
+<p>常用方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public static final double E = 2.7182818284590452354; // 常数E
+public static final double PI = 3.14159265358979323846; // 圆周率PI
+
+public static double sin(double a); // sin正弦
+public static double cos(double a); // cos余弦
+public static double tan(double a); // tan正切
+public static double asin(double a); // 反正弦
+public static double acos(double a); // 反余弦
+public static double atan(double a); // 反正切
+public static double atan2(double y, double x);
+
+public static double toRadians(double angdeg); // 将角度转换为弧度
+public static double toDegrees(double angrad); // 将弧度转化为角度
+
+public static double exp(double a); // 计算 Math.E ^ a
+public static double pow(double a, double b); // 计算 a ^ b
+
+public static double random(); // new Random().nextDouble(), 区间 [0.0d, 1.0d) 的随机浮点数
+
+public static double log(double a); // 计算以 Math.E 为底 a 的对数
+public static double log10(double a); // 计算以 10 为底 a 的对数
+
+public static double sqrt(double a); // 计算 a 的算术平方根
+public static double cbrt(double a); // 计算 a 的立方根
+
+public static double ceil(double a); // 上舍入，如 1.1 -> 2.0
+public static double floor(double a); // 下舍入，如 1.9 -> 1.0
+public static double rint(double a); // 四舍五入，如 1.1 -> 1.0、1.9 -> 2.0
+public static int round(float a); // 四舍五入，float -> int
+public static long round(double a); // 四舍五入，double -> long
+
+public static int abs(int a); // 绝对值
+public static long abs(long a);
+public static float abs(float a);
+public static double abs(double a);
+
+public static int max(int a, int b); // maximum值
+public static long max(long a, long b);
+public static float max(float a, float b);
+public static double max(double a, double b);
+
+public static int min(int a, int b); // minimum值
+public static long min(long a, long b);
+public static float min(float a, float b);
+public static double min(double a, double b);
+</script></code></pre>
+<h2 id="Arrays-工具类"><a href="#Arrays-工具类" class="headerlink" title="Arrays 工具类"></a>Arrays 工具类</h2><p>java.util.Arrays 类能方便地操作数组，它提供的所有方法都是静态的。</p>
+<p>Arrays 类具有以下功能：<br>1) 给数组赋值：通过 fill 方法；<br>2) 对数组排序：通过 sort 方法，升序排序；<br>3) 比较数组：通过 equals 方法比较数组中元素值是否相等；<br>4) 查找数组元素：通过 binarySearch 方法能对排序好的数组进行二分查找法操作。</p>
+<p>常用方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 串行排序 */
+// 默认为自然排序（升序）
+public static void sort(byte[] a);
+public static void sort(char[] a);
+public static void sort(short[] a);
+public static void sort(int[] a);
+public static void sort(long[] a);
+public static void sort(float[] a);
+public static void sort(double[] a);
+public static void sort(Object[] a);
+// 指定区间 [fromIndex, toIndex)
+public static void sort(byte[] a, int fromIndex, int toIndex);
+public static void sort(char[] a, int fromIndex, int toIndex);
+public static void sort(short[] a, int fromIndex, int toIndex);
+public static void sort(int[] a, int fromIndex, int toIndex);
+public static void sort(long[] a, int fromIndex, int toIndex);
+public static void sort(float[] a, int fromIndex, int toIndex);
+public static void sort(double[] a, int fromIndex, int toIndex);
+public static void sort(Object[] a, int fromIndex, int toIndex);
+// 自定义排序，传入谓词 c
+public static <T> void sort(T[] a, Comparator<? super T> c);
+public static <T> void sort(T[] a, int fromIndex, int toIndex, Comparator<? super T> c);
+
+/* 并行排序 */
+// 默认为自然排序（升序）
+public static void parallelSort(byte[] a);
+public static void parallelSort(char[] a);
+public static void parallelSort(short[] a);
+public static void parallelSort(int[] a);
+public static void parallelSort(long[] a);
+public static void parallelSort(float[] a);
+public static void parallelSort(double[] a);
+public static <T extends Comparable<? super T>> void parallelSort(T[] a);
+// 指定区间 [fromIndex, toIndex)
+public static void parallelSort(byte[] a, int fromIndex, int toIndex);
+public static void parallelSort(char[] a, int fromIndex, int toIndex);
+public static void parallelSort(short[] a, int fromIndex, int toIndex);
+public static void parallelSort(int[] a, int fromIndex, int toIndex);
+public static void parallelSort(long[] a, int fromIndex, int toIndex);
+public static void parallelSort(float[] a, int fromIndex, int toIndex);
+public static void parallelSort(double[] a, int fromIndex, int toIndex);
+public static <T extends Comparable<? super T>> void parallelSort(T[] a, int fromIndex, int toIndex)
+// 自定义排序，传入谓词 c
+public static <T> void parallelSort(T[] a, Comparator<? super T> cmp);
+public static <T> void parallelSort(T[] a, int fromIndex, int toIndex, Comparator<? super T> cmp);
+
+/* 二分查找 */
+public static int binarySearch(byte[] a, byte key);
+public static int binarySearch(char[] a, char key);
+public static int binarySearch(short[] a, short key);
+public static int binarySearch(int[] a, int key);
+public static int binarySearch(long[] a, long key);
+public static int binarySearch(float[] a, float key);
+public static int binarySearch(double[] a, double key);
+public static int binarySearch(Object[] a, Object key);
+public static <T> int binarySearch(T[] a, T key, Comparator<? super T> c);
+public static int binarySearch(byte[] a, int fromIndex, int toIndex, byte key);
+public static int binarySearch(char[] a, int fromIndex, int toIndex, char key);
+public static int binarySearch(short[] a, int fromIndex, int toIndex, short key);
+public static int binarySearch(int[] a, int fromIndex, int toIndex, int key);
+public static int binarySearch(long[] a, int fromIndex, int toIndex, long key);
+public static int binarySearch(float[] a, int fromIndex, int toIndex, float key);
+public static int binarySearch(double[] a, int fromIndex, int toIndex, double key);
+public static int binarySearch(Object[] a, int fromIndex, int toIndex, Object key);
+public static <T> int binarySearch(T[] a, int fromIndex, int toIndex, T key, Comparator<? super T> c);
+
+/* parallelPrefix */
+/*
+ * 例子:
+ * int[] arr = new int[] {1, 2, 3, 4, 5};
+ * System.out.println(Arrays.toString(arr));
+ * 
+ * Arrays.parallelPrefix(arr, (n1, n2) -> n1 + n2); // 进行累加
+ * System.out.println(Arrays.toString(arr));
+ *
+ * >>> output:
+ * [1, 2, 3, 4, 5]
+ * [1, 3, 6, 10, 15]
+ */
+public static <T> void parallelPrefix(T[] array, BinaryOperator<T> op);
+public static <T> void parallelPrefix(T[] array, int fromIndex,
+                                      int toIndex, BinaryOperator<T> op);
+public static void parallelPrefix(int[] array, IntBinaryOperator op);
+public static void parallelPrefix(int[] array, int fromIndex,
+                                  int toIndex, IntBinaryOperator op);
+public static void parallelPrefix(long[] array, LongBinaryOperator op);
+public static void parallelPrefix(long[] array, int fromIndex,
+                                  int toIndex, LongBinaryOperator op);
+public static void parallelPrefix(double[] array, DoubleBinaryOperator op);
+public static void parallelPrefix(double[] array, int fromIndex,
+                                  int toIndex, DoubleBinaryOperator op);
+
+/* 填充元素 */
+public static void fill(boolean[] a, boolean val);
+public static void fill(boolean[] a, int fromIndex, int toIndex, boolean val);
+public static void fill(byte[] a, byte val);
+public static void fill(byte[] a, int fromIndex, int toIndex, byte val);
+public static void fill(char[] a, char val);
+public static void fill(char[] a, int fromIndex, int toIndex, char val);
+public static void fill(short[] a, short val);
+public static void fill(short[] a, int fromIndex, int toIndex, short val);
+public static void fill(int[] a, int val);
+public static void fill(int[] a, int fromIndex, int toIndex, int val);
+public static void fill(long[] a, long val);
+public static void fill(long[] a, int fromIndex, int toIndex, long val);
+public static void fill(float[] a, float val);
+public static void fill(float[] a, int fromIndex, int toIndex, float val);
+public static void fill(double[] a, double val);
+public static void fill(double[] a, int fromIndex, int toIndex,double val);
+public static void fill(Object[] a, Object val);
+public static void fill(Object[] a, int fromIndex, int toIndex, Object val);
+
+/* 拷贝数组 */
+public static boolean[] copyOf(boolean[] original, int newLength);
+public static byte[] copyOf(byte[] original, int newLength);
+public static char[] copyOf(char[] original, int newLength);
+public static short[] copyOf(short[] original, int newLength);
+public static int[] copyOf(int[] original, int newLength);
+public static long[] copyOf(long[] original, int newLength);
+public static float[] copyOf(float[] original, int newLength);
+public static double[] copyOf(double[] original, int newLength);
+public static <T> T[] copyOf(T[] original, int newLength);
+public static <T, U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType);
+// 指定区间
+public static boolean[] copyOfRange(boolean[] original, int from, int to);
+public static byte[] copyOfRange(byte[] original, int from, int to);
+public static char[] copyOfRange(char[] original, int from, int to);
+public static short[] copyOfRange(short[] original, int from, int to);
+public static int[] copyOfRange(int[] original, int from, int to);
+public static long[] copyOfRange(long[] original, int from, int to);
+public static float[] copyOfRange(float[] original, int from, int to);
+public static double[] copyOfRange(double[] original, int from, int to);
+public static <T> T[] copyOfRange(T[] original, int from, int to);
+public static <T, U> T[] copyOfRange(U[] original, int from, int to, Class<? extends T[]> newType);
+
+/* Array -> List<E> 集合 */
+public static <T> List<T> asList(T... a);
+
+/* hashCode 方法 */
+// 适用于计算"一维数组"的hashCode值
+public static int hashCode(boolean a[]);
+public static int hashCode(byte a[]);
+public static int hashCode(char a[]);
+public static int hashCode(short a[]);
+public static int hashCode(int a[]);
+public static int hashCode(long a[]);
+public static int hashCode(float a[]);
+public static int hashCode(double a[]);
+public static int hashCode(Object a[]);
+// 适用于计算"多维数组"的hashCode值
+public static int deepHashCode(Object a[]);
+
+/* equals 方法 */
+// 适用于"一维数组"的equals判等
+public static boolean equals(boolean[] a, boolean[] a2);
+public static boolean equals(byte[] a, byte[] a2);
+public static boolean equals(char[] a, char[] a2);
+public static boolean equals(short[] a, short a2[]);
+public static boolean equals(int[] a, int[] a2);
+public static boolean equals(long[] a, long[] a2);
+public static boolean equals(float[] a, float[] a2);
+public static boolean equals(double[] a, double[] a2);
+public static boolean equals(Object[] a, Object[] a2);
+// 适用于"多维数组"的equals判等
+/*
+ * 例子1:
+ * String
+ *     arr1[] = new String[] {"a", "b", "c"},
+ *     arr2[] = new String[] {"a", "b", "c"};
+ * System.out.println("arr1.equals(arr2) -> " + arr1.equals(arr2)); // false
+ * System.out.println("Arrays.equals(arr1, arr2) -> " + Arrays.equals(arr1, arr2)); // true
+ * System.out.println("Arrays.deepEquals(arr1, arr2) -> " + Arrays.deepEquals(arr1, arr2)); // true
+ *
+ * >>> Output:
+ * arr1.equals(arr2) -> false
+ * Arrays.equals(arr1, arr2) -> true
+ * Arrays.deepEquals(arr1, arr2) -> true
+ *
+ * 例子2:
+ * String
+ *     arr1[][] = new String[][] {{"a"}, {"b"}, {"c"}},
+ *     arr2[][] = new String[][] {{"a"}, {"b"}, {"c"}};
+ * System.out.println("Arrays.equals(arr1, arr2) -> " + Arrays.equals(arr1, arr2)); // false
+ * System.out.println("Arrays.deepEquals(arr1, arr2) -> " + Arrays.deepEquals(arr1, arr2)); // true
+ *
+ * >>> Output:
+ * Arrays.equals(arr1, arr2) -> false
+ * Arrays.deepEquals(arr1, arr2) -> true
+ */
+public static boolean deepEquals(Object[] a1, Object[] a2);
+
+/* toString 方法 */
+// 适用于"一维数组"
+public static String toString(long[] a);
+public static String toString(int[] a);
+public static String toString(short[] a);
+public static String toString(char[] a);
+public static String toString(byte[] a);
+public static String toString(boolean[] a);
+public static String toString(float[] a);
+public static String toString(double[] a);
+public static String toString(Object[] a);
+// 适用于"多维数组"
+public static String deepToString(Object[] a);
+
+/* 使用指定生成器填充数组 */
+public static <T> void setAll(T[] array, IntFunction<? extends T> generator);
+public static <T> void parallelSetAll(T[] array, IntFunction<? extends T> generator);
+public static void setAll(int[] array, IntUnaryOperator generator);
+public static void parallelSetAll(int[] array, IntUnaryOperator generator);
+public static void setAll(long[] array, IntToLongFunction generator);
+public static void parallelSetAll(long[] array, IntToLongFunction generator);
+public static void setAll(double[] array, IntToDoubleFunction generator);
+public static void parallelSetAll(double[] array, IntToDoubleFunction generator);
+
+/* spliterator 迭代器 */
+public static <T> Spliterator<T> spliterator(T[] array);
+public static <T> Spliterator<T> spliterator(T[] array, int startInclusive, int endExclusive);
+public static Spliterator.OfInt spliterator(int[] array);
+public static Spliterator.OfInt spliterator(int[] array, int startInclusive, int endExclusive);
+public static Spliterator.OfLong spliterator(long[] array);
+public static Spliterator.OfLong spliterator(long[] array, int startInclusive, int endExclusive);
+public static Spliterator.OfDouble spliterator(double[] array);
+public static Spliterator.OfDouble spliterator(double[] array, int startInclusive, int endExclusive);
+
+/* stream 流 */
+public static <T> Stream<T> stream(T[] array);
+public static <T> Stream<T> stream(T[] array, int startInclusive, int endExclusive);
+public static IntStream stream(int[] array);
+public static IntStream stream(int[] array, int startInclusive, int endExclusive);
+public static LongStream stream(long[] array);
+public static LongStream stream(long[] array, int startInclusive, int endExclusive);
+public static DoubleStream stream(double[] array);
+public static DoubleStream stream(double[] array, int startInclusive, int endExclusive);
+</script></code></pre>
+<p><strong>Comparable 和 Comparator 接口的区别</strong><br>Comparable 接口在 java.lang 包，Comparator 接口在 java.util 包；<br>Comparable 是<strong>可比较</strong>的意思，Comparator 是<strong>比较器</strong>的意思；<br>Comparable 是对象的特性，Comparator 是用于比较两个对象的工具。</p>
+<p>Comparable 和 Comparator 都是用来实现集合中元素的比较、排序的；<br>Comparable 使用集合内部定义的方法实现排序，Comparator 使用集合外部定义的方法实现排序。</p>
+<p>所以，如想实现排序，有两种方式：<br>1) 在类的内部实现 java.lang.Comparable 接口，重写<code>public int compareTo(T o)</code>方法；<br>2) 在类的外部提供一个实现了 java.util.Comparator 接口的类，重写<code>int compare(T o1, T o2)</code>方法。</p>
+<p>在类外部提供一个专门的比较器的方式更灵活一些，可以根据需求，自定义排序方式，可以随意的实现升序、降序排列；</p>
+<p>例1，使用 Comparable + Collections.reverseOrder() 进行升序，降序排列：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args) {
+        Student[] infos = {
+            new Student("A", 12, 67),
+            new Student("B", 12, 79),
+            new Student("C", 11, 59),
+            new Student("D", 12, 98),
+            new Student("E", 13, 72),
+        };
+
+        System.out.println("original >>> " + Arrays.toString(infos));
+
+        Arrays.sort(infos); // 升序
+        System.out.println("ASC >>> " + Arrays.toString(infos));
+
+        Arrays.sort(infos, Collections.reverseOrder()); // 降序
+        System.out.println("DESC >>> " + Arrays.toString(infos));
+    }
+}
+
+class Student implements Comparable<Student> {
+    private String name;
+    private int age;
+    private float score;
+
+    public Student(String name, int age, float score) {
+        this.name = name;
+        this.age = age;
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("@%s: %.1f", name, score);
+    }
+
+    @Override
+    public int compareTo(Student s) {
+        if (score > s.score) {
+            return 1;
+        } else if (score < s.score) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:56:46] C:127
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [9:56:48]
+$ java Main
+original >>> [@A: 67.0, @B: 79.0, @C: 59.0, @D: 98.0, @E: 72.0]
+ASC >>> [@C: 59.0, @A: 67.0, @E: 72.0, @B: 79.0, @D: 98.0]
+DESC >>> [@D: 98.0, @B: 79.0, @E: 72.0, @A: 67.0, @C: 59.0]
+</script></code></pre>
+<p>例2，使用 Comparator 进行升序，降序排列：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Arrays;
+import java.util.Comparator;
+
+public class Main {
+    public static void main(String[] args) {
+        Student[] infos = {
+            new Student("A", 12, 67),
+            new Student("B", 12, 79),
+            new Student("C", 11, 59),
+            new Student("D", 12, 98),
+            new Student("E", 13, 72),
+        };
+
+        System.out.println("original >>> " + Arrays.toString(infos));
+
+        Arrays.sort(infos, Student.Cmp.ASC); // 升序
+        System.out.println("ASC >>> " + Arrays.toString(infos));
+
+        Arrays.sort(infos, Student.Cmp.DESC); // 降序
+        System.out.println("DESC >>> " + Arrays.toString(infos));
+    }
+}
+
+class Student {
+    private String name;
+    private int age;
+    private float score;
+
+    public Student(String name, int age, float score) {
+        this.name = name;
+        this.age = age;
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("@%s: %.1f", name, score);
+    }
+
+    public static class Cmp implements Comparator<Student> {
+        public static final Cmp ASC = new Cmp(true);
+        public static final Cmp DESC = new Cmp(false);
+
+        private boolean flag;
+        public Cmp(boolean flag) {
+            this.flag = flag;
+        }
+
+        @Override
+        public int compare(Student s1, Student s2) {
+            if (s1.score > s2.score) {
+                return flag ? 1 : -1;
+            } else if (s1.score < s2.score) {
+                return flag ? -1 : 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:13:40]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [10:13:56]
+$ java Main
+original >>> [@A: 67.0, @B: 79.0, @C: 59.0, @D: 98.0, @E: 72.0]
+ASC >>> [@C: 59.0, @A: 67.0, @E: 72.0, @B: 79.0, @D: 98.0]
+DESC >>> [@D: 98.0, @B: 79.0, @E: 72.0, @A: 67.0, @C: 59.0]
+</script></code></pre>
+<h2 id="String-字符串"><a href="#String-字符串" class="headerlink" title="String 字符串"></a>String 字符串</h2><p>java.lang.String 是 Java 中的字符串类，String 实现了 CharSequence 字符序列接口；除 String 外，StringBuffer 和 StringBuilder 也实现了 CharSequence 接口；</p>
+<p>StringBuilder 和 StringBuffer 都是<code>可变</code>的字符序列，它们都继承于 AbstractStringBuilder，实现了 CharSequence 接口。但是，<strong>StringBuilder 是非线程安全的，而 StringBuffer 是线程安全的</strong>，因此，在单线程环境中建议使用 StringBuilder，在多线程环境中建议使用 StringBuffer。</p>
+<p>CharSequence、String、StringBuilder、StringBuffer 的继承关系如下图所示：<br><img src="/images/java-string.jpg" alt="CharSequence、String、StringBuilder、StringBuffer 继承关系图"></p>
+<p><strong>String 类</strong><br>String 内部使用一个<code>char[]</code>字符数组来存储我们的字符序列（字符串），不过该字符数组被 final 修饰了，即该数组对象在初始化后就不能在指向其它数组对象了，也即指针的指向不可变；但是数组的内容是可以改变的，因此，String 的不可变只是一个逻辑要求，是一个规定，我们依然可以通过反射来修改这个字符数组的元素，稍后会进行演示。</p>
+<p><strong>StringBuilder/StringBuffer 类</strong><br>StringBuilder/StringBuffer 内部也是使用一个<code>char[]</code>字符数组来存储我们的字符序列（字符串），在实例化时可以指定该数组的初始长度，默认长度为 16。当数组空间不足时，StringBuilder/StringBuffer 会重新申请一块内存，并将原数组的内容拷贝至新数组，因此，如果可以估算出需要的存储空间，最好在构造时指明长度，避免频繁的内存拷贝。</p>
+<p><strong>利用反射破坏 String 类的封装性</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.lang.reflect.Field;
+
+public class StringModifyTest {
+    public static void main(String[] args)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        // s1、s2 都指向同一个 String 对象，即 "www.zfl9.com"
+        String s1 = "www.zfl9.com";
+        String s2 = "www.zfl9.com";
+
+        System.out.println("s1 = " + s1);
+        System.out.println("s2 = " + s2);
+        System.out.println("(s1 == s2) -> " + (s1 == s2)); // true
+
+        Field fieldOfValue = s1.getClass().getDeclaredField("value"); // 数组名为 value
+        fieldOfValue.setAccessible(true); // 因为是 private 成员，所以必须修改访问性
+        ((char[]) fieldOfValue.get(s1))[7] = '8'; // "www.zfl9.com" -> "www.zfl8.com"
+
+        System.out.println("s1 = " + s1); // "www.zfl8.com"
+        System.out.println("s2 = " + s2); // "www.zfl8.com"
+        System.out.println("(s1 == s2) -> " + (s1 == s2)); // true
+
+        // s3 和 s1/s2 指向的是同一个 String 对象，因此此时字符串为 "www.zfl8.com"
+        String s3 = "www.zfl9.com";
+        System.out.println("s3 = " + s3); // "www.zfl8.com"
+        System.out.println("(s1 == s2 && s2 == s3) -> " + (s1 == s2 && s2 == s3)); // true
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:38:40]
+$ javac StringModifyTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:38:57]
+$ java com.zfl9.StringModifyTest
+s1 = www.zfl9.com
+s2 = www.zfl9.com
+(s1 == s2) -> true
+s1 = www.zfl8.com
+s2 = www.zfl8.com
+(s1 == s2) -> true
+s3 = www.zfl8.com
+(s1 == s2 && s2 == s3) -> true
+</script></code></pre>
+<p>上面的程序只是为了演示，String 对象并不是”物理上的不可变”而是”逻辑上的不可变”，没有任何实际意义，实际编码中也不要去利用反射来修改 String 对象，会带来不可预测的后果。</p>
+<p><strong>String 类的其它说明</strong><br>String 是 final 类，因此不能定义 String 的派生类。除此之外，Java 语言还特别为 String 提供了 operator+() 运算符重载操作，即我们可以将一个 String 对象与其它对象（基本类型、引用类型）执行 + 运算，对于引用类型来说，它会调用对象的 toString() 方法，而基本类型就是它们的字面值。</p>
+<p>除了使用 + 运算符进行字符串拼接之外，我们还可以使用 StringBuilder（或者 StringBuffer）的 append() 方法。那么这两种方法有区别吗？我们应该使用哪种呢？</p>
+<p>来看一下 + 运算符的本质：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class StringAppendTest {
+    public static void main(String[] args) {
+        String s1 = "a";
+        String s2 = s1 + "b";
+        System.out.printf("s1: %s\ts2: %s\n", s1, s2);
+
+        String result = "";
+        for (char c = 65; c <= 90; c++) {
+            result += c;
+        }
+        System.out.println(result);
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [14:21:09]
+$ javac StringAppendTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [14:21:23]
+$ java com.zfl9.StringAppendTest
+s1: a    s2: ab
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+</script></code></pre>
+<p>反编译结果：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [14:21:24]
+$ jad -p StringAppendTest.class
+The class file version is 52.0 (only 45.3, 46.0 and 47.0 are supported)
+// Decompiled by Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.geocities.com/kpdus/jad.html
+// Decompiler options: packimports(3)
+// Source File Name:   StringAppendTest.java
+
+package com.zfl9;
+
+import java.io.PrintStream;
+
+public class StringAppendTest
+{
+
+    public StringAppendTest()
+    {
+    }
+
+    public static void main(String args[])
+    {
+        String s = "a";
+        String s1 = (new StringBuilder()).append(s).append("b").toString();
+        System.out.printf("s1: %s\ts2: %s\n", new Object[] {
+            s, s1
+        });
+        String s2 = "";
+        for(char c = 'A'; c <= 'Z'; c++)
+            s2 = (new StringBuilder()).append(s2).append(c).toString();
+
+        System.out.println(s2);
+    }
+}
+</script></code></pre>
+<p>从反编译结果中可以看出，字符串之间的 + 操作就是一颗语法糖，先 new 一个 StringBuilder 对象，然后依次将每个操作数传入它的 append() 方法，最后再调用 toString() 方法。</p>
+<p>因此，我们可以得出结论，<strong>在 Java 中无论使用何种方式进行字符串连接，实际上都使用的是 StringBuilder</strong>（JDK1.5 前为 StringBuffer）。</p>
+<p>那么是不是可以根据这个结论推出使用”+”和 StringBuilder 的效果是一样的呢？这个要从两个方面的解释。如果从运行结果来解释，那么”+”和 StringBuilder 是完全等效的。但如果从运行效率和资源消耗方面看，那它们将存在很大的区别。</p>
+<p>从上面的循环添加 ASCII 大写字母中也可以看出，每循环一次就会产生一个新的 StringBuilder 对象，因此总共产生了 26 个 StringBuilder 对象，虽然 Java 有垃圾收集器，但是这样的循环多了，会给 GC 带来很大的负担，占有大量的内存资源。</p>
+<p>因此，对于这种在循环内部进行字符串连接的操作，应该改用 StringBuilder/StringBuffer 来进行，避免短时间产生大量无用的 StringBuilder/StringBuffer 对象。即：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class StringAppendTest {
+    public static void main(String[] args) {
+        String s1 = "a";
+        String s2 = s1 + "b";
+        System.out.printf("s1: %s\ts2: %s\n", s1, s2);
+
+        // String result = "";
+        // for (char c = 65; c <= 90; c++) {
+        //     result += c;
+        // }
+
+        StringBuilder result = new StringBuilder(26);
+        for (char c = 65; c <= 90; c++)
+            result.append(c);
+        System.out.println(result);
+    }
+}
+</script></code></pre>
+<p>如果是在 JDK1.5 之前，那么 StringBuilder 应该被替换为 StringBuffer，因为 StringBuilder 是 JDK1.5 引入的。它们的区别前面已经说了，StringBuilder 非线程安全，StringBuffer 线程安全。</p>
+<p>既然 StringBuilder 是非线程安全的，那为什么还会使用它来进行字符串拼接呢？不会有问题吗？不会的，因为 StringBuilder 对象的引用不会逸出，也就是说，在方法的外部，无法获取这个对象的引用，既然都无法获得引用了，也就不存在所谓的多线程问题了。</p>
+<p>最后还有一点说明的是，<strong>在使用 + 运算符进行字符串拼接时，如果所有操作数都是字符串字面量（非字符串引用），则在编译期间，javac 会将它们先进行连接，而不会调用 StringBuilder.append() 方法</strong>！举个例子说明一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class StringTest {
+    public static void main(String[] args) {
+        String s1 = "abc123";
+        String s2 = "abc123";
+        String s3 = "abc" + "123";
+        String s4 = "a" + "b" + "c" + "1" + "2" + "3";
+        String s5 = "a" + "b" + "c" + "1" + "2" + "" + "3";
+        String s6 = "a" + "" + "" + "" + "b" + "c" + "1" + "2" + "" + "3";
+
+        System.out.println("(s1 == s2) -> " +
+                           (s1 == s2)); // true
+
+        System.out.println("(s1 == s2 && s2 == s3) -> " +
+                           (s1 == s2 && s2 == s3)); // true
+
+        System.out.println("(s3 == s4) -> " +
+                           (s3 == s4)); // true
+
+        System.out.println("(s4 == s5 && s5 == s6) ->" +
+                           (s4 == s5 && s5 == s6)); // true
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:42:03]
+$ javac StringTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:42:05]
+$ java com.zfl9.StringTest
+(s1 == s2) -> true
+(s1 == s2 && s2 == s3) -> true
+(s3 == s4) -> true
+(s4 == s5 && s5 == s6) ->true
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:42:09]
+$ jad -p StringTest.class
+The class file version is 52.0 (only 45.3, 46.0 and 47.0 are supported)
+// Decompiled by Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.geocities.com/kpdus/jad.html
+// Decompiler options: packimports(3)
+// Source File Name:   StringTest.java
+
+package com.zfl9;
+
+import java.io.PrintStream;
+
+public class StringTest
+{
+
+    public StringTest()
+    {
+    }
+
+    public static void main(String args[])
+    {
+        String s = "abc123";
+        String s1 = "abc123";
+        String s2 = "abc123";
+        String s3 = "abc123";
+        String s4 = "abc123";
+        String s5 = "abc123";
+        System.out.println((new StringBuilder()).append("(s1 == s2) -> ").append(s == s1).toString());
+        System.out.println((new StringBuilder()).append("(s1 == s2 && s2 == s3) -> ").append(s == s1 && s1 == s2).toString());
+        System.out.println((new StringBuilder()).append("(s3 == s4) -> ").append(s2 == s3).toString());
+        System.out.println((new StringBuilder()).append("(s4 == s5 && s5 == s6) ->").append(s3 == s4 && s4 == s5).toString());
+    }
+}
+</script></code></pre>
+<h3 id="Unicode-和-UTF-16"><a href="#Unicode-和-UTF-16" class="headerlink" title="Unicode 和 UTF-16"></a>Unicode 和 UTF-16</h3><p><strong>字符集</strong><br><a href="https://zh.wikipedia.org/wiki/Unicode" rel="external nofollow noopener noreferrer" target="_blank">Unicode</a> 是<strong>字符集</strong>，除了 Unicode 字符集外，其它常见的字符集有：</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/ASCII" rel="external nofollow noopener noreferrer" target="_blank">ASCII</a> 字符集：ASCII 即<strong>美国信息交换标准代码</strong>，主要用于处理<strong>现代英语</strong>，ASCII 字符集定义了 128 个字符，包括<strong>控制字符</strong>、<strong>大小写字母</strong>、<strong>阿拉伯数字</strong>、<strong>标点符号</strong>；</li>
+<li><a href="https://zh.wikipedia.org/wiki/EASCII" rel="external nofollow noopener noreferrer" target="_blank">EASCII</a> 字符集：为了处理<strong>表格符号</strong>、<strong>计算符号</strong>、<strong>希腊字母</strong>和<strong>特殊的拉丁符号</strong>，又将 ASCII 码由 7 为扩充为 8 位，这样总共就可以表示 256 个字符。因此命名为扩展 ASCII 字符集；</li>
+<li><a href="https://zh.wikipedia.org/wiki/ISO/IEC_8859-1" rel="external nofollow noopener noreferrer" target="_blank">ISO 8859-1</a> 字符集：EASCII 的替代产物，正式编号为 ISO/IEC 8859-1:1998，又称 Latin-1 或“西欧语言”，是国际标准化组织内 ISO/IEC 8859 的第一个 8 位字符集。它以 ASCII 为基础，在空置的 0xA0-0xFF 的范围内，加入 96 个字母及符号，藉以供使用附加符号的拉丁字母语言使用；</li>
+<li><a href="https://zh.wikipedia.org/wiki/GB_2312" rel="external nofollow noopener noreferrer" target="_blank">GB2312</a> 字符集：GB2312 或 GB2312–80 是中华人民共和国国家标准简体中文字符集，全称《信息交换用汉字编码字符集·基本集》，又称 GB0，由中国国家标准总局发布，1981 年 5 月 1 日实施。GB2312 编码通行于中国大陆；新加坡等地也采用此编码。中国大陆几乎所有的中文系统和国际化的软件都支持 GB2312；</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97%E5%86%85%E7%A0%81%E6%89%A9%E5%B1%95%E8%A7%84%E8%8C%83" rel="external nofollow noopener noreferrer" target="_blank">GBK</a> 字符集：汉字内码扩展规范，简称 GBK，全名为《汉字内码扩展规范(GBK)》1.0 版，由中华人民共和国全国信息技术标准化技术委员会 1995 年 12 月 1 日制订，国家技术监督局标准化司和电子工业部科技与质量监督司 1995 年 12 月 15 日联合以《技术标函[1995]229号》文件的形式公布。GBK 共收录 21886 个汉字和图形符号，其中汉字（包括部首和构件）21003 个，图形符号 883 个。</li>
+</ul>
+<p><strong>Unicode、ISO 8859-1 兼容</strong><br>目前，几乎所有电脑系统都支持基本拉丁字母，并各自支持不同的其他编码方式。Unicode 为了和它们相互兼容，其头 256 个字符保留给 ISO 8859-1（兼容 ASCII）所定义的字符，使既有的西欧语系文字的转换不需特别考量；并且把大量相同的字符重复编到不同的字符码中去，使得旧有纷杂的编码方式得以和 Unicode 编码间互相直接转换，而不会丢失任何信息。举例来说，全角格式区块包含了主要的拉丁字母的全角格式，在中文、日文、以及韩文字形当中，这些字符以全角的方式来呈现，而不以常见的半角形式显示，这对竖排文字和等宽排列文字有重要作用。</p>
+<p><strong>如何表示一个 Unicode 字符</strong><br>在表示一个 Unicode 的字符时，通常会用<code>U+</code>然后紧接着一组<strong>十六进制数字</strong>来表示这一个字符。在<a href="https://zh.wikipedia.org/wiki/%E5%9F%BA%E6%9C%AC%E5%A4%9A%E6%96%87%E7%A8%AE%E5%B9%B3%E9%9D%A2" rel="external nofollow noopener noreferrer" target="_blank"><strong>基本多文种平面</strong></a>（英文：Basic Multilingual Plane，简写 BMP。又称为“零号平面”、plane0）里的所有字符，要用<strong>4 个十六进制数字</strong>（例如<code>U+4AE0</code>，共支持 65536 个字符）；在零号平面以外的字符则需要使用 5 个或 6 个十六进制数字（1 个十六进制数字的长度为 4 bit）。旧版的 Unicode 标准使用相近的标记方法，但却有些微小差异：在 Unicode 3.0 里使用<code>U-</code>然后紧接着 8 个十六进制数字，而<code>U+</code>则必须随后紧接着 4 个十六进制数字。</p>
+<p><strong>Unicode 字符平面映射</strong><br>目前的 Unicode 字符分为 17 组编排，每组称为<code>平面（Plane）</code>，而每平面拥有 65536（即 2^16）个<code>码点（code point）</code>。其中平面 0 就是我们前面说的<strong>基本多文种平面 BMP</strong>，目前只用了少数平面。具体的编排如下图所示：<br><img src="/images/unicode-plane.png" alt="Unicode 17 个平面"></p>
+<ul>
+<li><strong>基本多文种平面（Basic Multilingual Plane, BMP）</strong>，或称第 0 平面或 0 号平面（Plane 0），是 Unicode 中的一个编码区段。编码从<code>U+0000</code>至<code>U+FFFF</code>，拥有 65536 个码点（code point），可以表示日常使用中的绝大多数字符，如绝大部分日常使用汉字。但是从<code>U+D800</code>到<code>U+DFFF</code>之间的码点区块是永久保留不映射到 Unicode 字符。UTF-16 就利用保留下来的 0xD800-0xDFFF 区段的码点来对辅助平面的字符的码位进行编码；</li>
+<li><strong>第一辅助平面</strong>，又称<strong>多文种补充平面（Supplementary Multilingual Plane，缩写 SMP，或简称 Plane1）</strong>，摆放拼音文字（主要为现时已不再使用的古老文字）、手写文字、音符、绘文字和其他图形符号。用于学者的专业论文中使用的古老或过时的语言书写符号，以及网络通信等使用的表情符号。范围在<code>U+10000</code>～<code>U+1FFFD</code>；</li>
+<li><strong>第二辅助平面</strong>，又称<strong>表意文字补充平面（Supplementary Ideographic Plane，缩写 SIP，或简称 Plane2）</strong>，整个范围在<code>U+20000</code>～<code>U+2FFFD</code>。整个平面配置的都是一些罕用的汉字或地区的方言用字，如粤语用字及越南语的字喃。现时摆放了“中日韩统一表意文字扩展 B 区”（4 万 3253 个汉字）、“中日韩统一表意文字扩展 C 区”（4149 个汉字）、“中日韩统一表意文字扩展 D 区”（222 个汉字）、“中日韩统一表意文字扩展 E 区”（5762 个汉字）、“中日韩统一表意文字扩展 F 区”（7473 个汉字）以及中日韩兼容表意文字增补（CJK Compatibility Ideographs Supplement）；</li>
+<li><strong>第三辅助平面</strong>，尚未使用，但打算用来摆放甲骨文、金文、小篆、中国战国时期文字等。计划分配的编码区块为：<code>U+30000</code>-<code>U+317FF</code>甲骨文、<code>U+32000</code>-<code>U+32FFF</code>金文、<code>U+34000</code>-<code>U+368FF</code>小篆；</li>
+<li><strong>第四至第十三辅助平面</strong>，并未计划使用；</li>
+<li><strong>第十四辅助平面</strong>，又称<strong>特别用途补充平面（Supplementary Special-purpose Plane，简称 SSP）</strong>，摆放“语言编码标签”和“字形变换选取器”，它们都是控制字符。范围在<code>U+E0000</code>～<code>U+E01FF</code>；</li>
+<li><strong>第十五至十六辅助平面</strong>，都是私人使用区。它们的范围是<code>U+F0000</code>～<code>U+FFFFD</code>及<code>U+100000</code>～<code>U+10FFFD</code>。</li>
+</ul>
+<p><strong>字符编码</strong><br>对于 ASCII、ISO 8859-1 字符集来说，因为只需 1 个字节的长度就可以存储，因此它不需要额外的字符编码方案，因此 ASCII 既代表 ASCII 字符集也代表 ASCII 字符编码（ISO 8859-1 字符集类似）。</p>
+<p>但是对于 Unicode 字符集来说，因为其目标是统一码、万国码，因此收录的字符非常多，并且 Unicode 至今仍在不断增修，每个新版本都加入更多新的字符。目前最新的版本为 2017 年 6 月 20 日公布的 10.0.0[2]，已经收录超过十万个字符（第十万个字符在 2005 年获采纳）。Unicode 涵盖的数据除了视觉上的字形、编码方法、标准的字符编码外，还包含了字符特性，如大小写字母。</p>
+<p>但是，我们平时很少会使用到除了辅助平面 1 以外的其它辅助平面的字符，因此，为了不浪费储存资源，并且可能的兼容现有的 ASCII 编码方案，在 Unicode 的发展中就涌现了好几种 Unicode 编码方案，如 UTF-7、UTF-8、UTF-16（分为 UTF-16LE、UTF-16BE）、UCS-2、UTF-32、UCS-4，目前比较常用的是：<a href="https://zh.wikipedia.org/wiki/UTF-8" rel="external nofollow noopener noreferrer" target="_blank">UTF-8</a>、<a href="https://zh.wikipedia.org/wiki/UTF-16" rel="external nofollow noopener noreferrer" target="_blank">UTF-16LE</a>、<a href="https://zh.wikipedia.org/wiki/UTF-16" rel="external nofollow noopener noreferrer" target="_blank">UTF-16BE</a> Unicode 编码方案。</p>
+<p><strong>码点、码元</strong></p>
+<ul>
+<li><code>code point</code>码点：又称码位，是字符集中用于表示一个字符的唯一数字。例如，ASCII 码包含 128 个码位，范围是<code>0x0</code>-<code>0x7F</code>，扩展 ASCII 码包含 256 个码位，范围是<code>0x0</code>-<code>0xFF</code>，而 Unicode 包含 1,114,112 个码位，范围是<code>0x0</code>-<code>0x10FFFF</code>。Unicode 码空间划分为 17 个 Unicode 字符平面（基本多文种平面，16 个辅助平面），每个平面有 65,536（= 2^16）个码位。因此 Unicode 码空间总计是 17 × 65,536 = 1,114,112。</li>
+<li><code>code unit</code>码元：也称代码单元，是指一个已编码的文本中具有<strong>最短的比特组合的单元</strong>。对于 UTF-8 来说，码元是 8 比特长；对于 UTF-16 来说（Java），码元是 16 比特长；对于 UTF-32 来说，码元是 32 比特长。码值（Code Value）是过时的用法。</li>
+</ul>
+<p>简单的说，<strong><code>code point</code>码点是字符集中的概念</strong>，一个码点表示一个完整独立的字符；<strong><code>code unit</code>码元是字符编码中的概念</strong>，一个码元可能代表一个完整独立的字符，也可能不是。比如 UTF-16 的代理对，对于辅助平面字符来说，都是使用 2 个码元（一个 char 就是一个码元，两个码元就是 4 个字节）来表示的。<strong>一个<code>code point</code>可能由多个<code>code unit</code>组成</strong>。</p>
+<p>UTF-8 编码的<code>code unit</code>大小为 1 字节，UTF-16 编码的<code>code unit</code>大小为 2 字节，UTF-32 编码的<code>code unit</code>大小为 4 字节。</p>
+<p><strong>UTF-8 字符编码</strong><br>UTF-8（8-bit Unicode Transformation Format）是一种针对 Unicode 的<strong>可变长度字符编码</strong>，也是一种<strong>前缀码</strong>。它可以用来表示 Unicode 标准中的任何字符，且<strong>其编码中的第一个字节仍与 ASCII 兼容</strong>，这使得原来处理 ASCII 字符的软件无须或只须做少部分修改，即可继续使用。因此，它逐渐成为电子邮件、网页及其他存储或发送文字的应用中，优先采用的编码。</p>
+<p><strong>UTF-8 使用 1 至 6 个字节为每个字符编码</strong>（尽管如此，2003 年 11 月 UTF-8 被 RFC 3629 重新规范，只能使用原来 Unicode 定义的区域，<code>U+0000</code>到<code>U+10FFFF</code>，也就是说最多四个字节）：</p>
+<ol>
+<li>128 个 US-ASCII 字符只需一个字节编码（Unicode 范围由<code>U+0000</code>至<code>U+007F</code>）；</li>
+<li>带有附加符号的拉丁文、希腊文、西里尔字母、亚美尼亚语、希伯来文、阿拉伯文、叙利亚文及它拿字母则需要两个字节编码（Unicode 范围由<code>U+0080</code>至<code>U+07FF</code>）；</li>
+<li>其它基本多文种平面（BMP）中的字符（这包含了大部分常用字，如大部分的汉字）使用三个字节编码（Unicode 范围由<code>U+0800</code>至<code>U+FFFF</code>）；</li>
+<li>其它极少使用的 Unicode 辅助平面的字符使用四至六字节编码（Unicode 范围由<code>U+10000</code>至<code>U+1FFFFF</code>使用四字节，Unicode 范围由<code>U+200000</code>至<code>U+3FFFFFF</code>使用五字节，Unicode 范围由<code>U+4000000</code>至<code>U+7FFFFFFF</code>使用六字节）。</li>
+</ol>
+<p>对上述提及的第 4 种字符而言，UTF-8 使用四至六个字节来编码似乎太耗费资源了。但<strong>UTF-8 对所有常用的字符都可以用 3 个字节表示</strong>，而且它的另一种选择，UTF-16 编码，对前述的第 4 种字符同样需要 4 个字节来编码，所以要决定 UTF-8 或 UTF-16 哪种编码比较有效率，还要视所使用的字符的分布范围而定。不过，如果使用一些传统的压缩系统，比如 DEFLATE，则这些不同编码系统间的的差异就变得微不足道了。若顾及传统压缩算法在压缩较短文字上的效果不大，可以考虑使用 Unicode 标准压缩格式（SCSU）。</p>
+<blockquote>
+<p>互联网工程工作小组（IETF）要求所有互联网协议都必须支持 UTF-8 编码。互联网邮件联盟（IMC）建议所有电子邮件软件都支持 UTF-8 编码。</p>
+</blockquote>
+<p><strong>UTF-8 编码的优点</strong></p>
+<ul>
+<li>ASCII 是 UTF-8 的一个子集。因为一个纯 ASCII 字符串也是一个合法的 UTF-8 字符串，所以现存的 ASCII 文本不需要转换。为传统的扩展 ASCII 字符集设计的软件通常可以不经修改或很少修改就能与 UTF-8 一起使用。</li>
+<li>字节 0xFE 和 0xFF 在 UTF-8 编码中从未用到，同时，UTF-8 以字节为编码单元，它的字节顺序在所有系统中都是一样的，没有字节序的问题，也因此它实际上并不需要 BOM。</li>
+<li>UTF-8 和 UTF-16 都是可扩展标记语言文档的标准编码。所有其它编码都必须通过显式或文本声明来指定。</li>
+<li>任何面向字节的字符串搜索算法都可以用于 UTF-8 的数据（只要输入仅由完整的 UTF-8 字符组成）。但是，对于包含字符记数的正则表达式或其它结构必须小心。</li>
+<li>UTF-8 字符串可以由一个简单的算法可靠地识别出来。即一个字符串在任何其它编码中表现为合法的 UTF-8 的可能性很低，并随字符串长度增长而减小。举例说，字符值 C0,C1,F5 至 FF 从来没有出现。为了更好的可靠性，可以使用正则表达式来统计非法过长和替代值。</li>
+<li>与 UCS-2 的比较：ASCII 转换成 UCS-2，在编码前插入一个 0x0。用这些编码，会包含一些控制符，这在 UNIX 和一些 C 函数中，将会产生严重错误。因此可以肯定，UCS-2 不适合作为 Unicode 的外部编码，也因此诞生了 UTF-8。</li>
+</ul>
+<p><strong>UTF-16 字符编码</strong><br>UTF-16 是 Unicode 字符编码五层次模型的第三层：字符编码表（Character Encoding Form，也称为”storage format”）的一种实现方式。即把 Unicode 字符集的抽象码位映射为 16 位长的整数（即码元）的序列，用于数据存储或传递。Unicode 字符的码位，需要 1 个或者 2 个 16 位长的码元来表示，因此这是一个<strong>变长</strong>表示。</p>
+<p>Unicode 的编码空间从<code>U+0000</code>到<code>U+10FFFF</code>，共有 1,112,064 个码位（code point）可用来映射字符。Unicode 的编码空间可以划分为 17 个平面（plane），每个平面包含 2^16（65,536）个码位。17 个平面的码位可表示为从<code>U+xx0000</code>到<code>U+xxFFFF</code>，其中<code>xx</code>表示十六进制值从<code>0x00</code>到<code>0x10</code>，共计 17 个平面。第一个平面称为基本多语言平面（Basic Multilingual Plane, BMP），或称第零平面（Plane 0）。其他平面称为辅助平面（Supplementary Planes）。<strong>基本多语言平面内，从<code>U+D800</code>到<code>U+DFFF</code>之间的码位区块是永久保留不映射到 Unicode 字符。UTF-16 就利用保留下来的 0xD800-0xDFFF 区段的码位来对辅助平面的字符的码位进行编码</strong>。</p>
+<p><strong>基本平面的编码方式</strong><br>第一个 Unicode 平面（码位从<code>U+0000</code>至<code>U+FFFF</code>）包含了最常用的字符。该平面被称为基本多语言平面，缩写为 BMP（Basic Multilingual Plane, BMP）。<strong>UTF-16 与 UCS-2 编码这个范围内的码位为 16 比特长的单个码元，数值等价于对应的码位（code point）</strong>。BMP 中的这些码位是仅有的可以在 UCS-2 中表示的码位。</p>
+<p><strong>辅助平面的编码方式</strong><br>辅助平面（Supplementary Planes）中的码位，在 UTF-16 中被编码为一对 16 比特长的码元（即 32 位，4 字节），称作<code>代理对（surrogate pair）</code>，具体方法是：</p>
+<ul>
+<li>码位减去 0x10000，得到的值的范围为 20 比特长的 0x0 - 0xFFFFF；</li>
+<li>高位的 10 比特的值（值的范围为 0..0x3FF）被加上 0xD800 得到第一个码元或称作<code>高位代理（high surrogate）</code>，值的范围是 0xD800..0xDBFF。由于高位代理比低位代理的值要小，所以为了避免混淆使用，Unicode 标准现在称高位代理为<code>前导代理（lead surrogates）</code>；</li>
+<li>低位的 10 比特的值（值的范围为 0..0x3FF）被加上 0xDC00 得到第二个码元或称作<code>低位代理（low surrogate）</code>，现在值的范围是 0xDC00..0xDFFF。由于低位代理比高位代理的值要大，所以为了避免混淆使用，Unicode 标准现在称低位代理为<code>后尾代理（trail surrogates）</code>。</li>
+</ul>
+<p><strong>UTF-16 编码 - 示例</strong><br><img src="/images/unicode-utf16.png" alt="UTF-16 编码 - 示例"></p>
+<p><strong>UTF-16 的 BOM 字节序标记</strong><br>UTF-16的大端序（UTF-16BE）和小端序（UTF-16LE）存储形式都在用。一般来说，Mac 使用 UTF-16BE，Windows 和 Linux 使用 UTF-16LE。（<strong>Java 使用 UTF-16BE 作为字符的内码</strong>）<br>为了不会混淆 UTF-16 文件的大小端字节序，在 UTF-16 文件的开首，都会放置一个<code>U+FEFF</code>字符作为<code>Byte Order Mark</code>（UTF-16LE 以<code>FF FE</code>代表，UTF-16BE 以<code>FE FF</code>代表），以表示这个文本文件是以 UTF-16 编码，其中<code>U+FEFF</code>字符在 UNICODE 中代表的意义是<code>ZERO WIDTH NO-BREAK SPACE</code>，顾名思义，它是个没有宽度也没有断字的空白。</p>
+<p><strong>UTF-16 与 UCS-2 的关系</strong><br><strong>UTF-16 可看成是 UCS-2 的父集</strong>。在没有辅助平面字符（surrogate code points）前，UTF-16 与 UCS-2 所指的是同一的意思。但当引入辅助平面字符后，就称为 UTF-16 了。现在若有软件声称自己支持 UCS-2 编码，那其实是暗指它不能支持在 UTF-16 中超过 2 字节的字集。</p>
+<p><strong>UTF-8、UTF-16、UCS-2、UTF-32、UCS-4 对比</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">编码方案</th>
+<th style="text-align:center">UTF-8</th>
+<th style="text-align:center">UTF-16</th>
+<th style="text-align:center">UCS-2</th>
+<th style="text-align:center">UTF-32</th>
+<th style="text-align:center">UCS-4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">编码空间</td>
+<td style="text-align:center">U+0000 - U+10FFFF</td>
+<td style="text-align:center">U+0000 - U+10FFFF</td>
+<td style="text-align:center">U+0000 - U+FFFF</td>
+<td style="text-align:center">U+0000 - U+10FFFF</td>
+<td style="text-align:center">U+0000 - U+7FFFFFFF</td>
+</tr>
+<tr>
+<td style="text-align:center">最少字节数</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">最多字节数</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">依赖字节序</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>字节顺序标记（英语：byte-order mark，BOM）</code>，用来标识 Unicode 文本文件中的字节序是大端序还是小端序；<br>BOM 只适用于<code>UTF-16/UCS-2</code>、<code>UTF-32/UCS-4</code>，UTF-8 不需要所谓的 BOM 标识，UTF-8 没有所谓的字节序问题。</p>
+</blockquote>
+<p><strong>Java 中的 Unicode 支持</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 编码、解码 */
+编码："加密"，char[] -> byte[]
+解码："解密"，byte[] -> char[]
+
+/* 内码（internal encoding）、外码（external encoding）*/
+内码：程序内部使用的字符编码，特别是某种语言实现其 char 或 String 类型在"内存"中用的内部编码；
+外码：程序与外部"交互"时使用的字符编码。
+
+Java 使用 "UTF-16" 作为字符的内码，并且是 "UTF-16BE" big-endian 大端序
+
+/* 码点（code point）、码元（code unit）*/
+字符集中一个完整的字符就是一个 "code point" 码点
+一个 "code point" 对应 1 到 2 个 "code unit" 码元（UTF-16）
+一个 "code unit" 是固定的 2 字节，即一个 char 类型（Java）
+
+/* Java 中的 char 类型 */
+char 即 "code unit"，固定为 2 个字节，是一个 2 字节的"无符号整型"
+只有只需 1 个 "code unit" 的 "code point" 才可以完整的存在一个 char 中，
+所以 char 类型不一定能表示一个完整的 UTF-16 字符（需要使用代理对来表示）
+
+/* String.length() 方法 */
+String.length() 只是单纯地计算字符数组 char[] 的长度，即"code unit"的个数；
+
+/* 例子 */
+char u = '\u4E2D'; // 中
+String u2 = "\uD801\uDC0F"; // 一个特殊字符, length 2
+
+/* 代理对（surrogate pair）*/
+对于一个 "code unit" 可表示的 "code point" 来说，使用一个 char 即可；
+对于需要两个 "code unit" 才能表示的 "code point" 来说，必须使用代理对来表示，即两个 char，四个字节
+
+/* 内码转换为外码 */
+String.getBytes() 用于将 String 的内码转换为指定的外码：
+1. 无参数版使用平台的默认编码作为外码，"环境变量"
+2. 有参数版使用参数指定的编码作为外码，"指定编码"
+getBytes() 方法将 String 字符序列用外码编码后，结果放在一个新 byte[] 并返回
+
+/* 大小端 BOM */
+UTF-16LE：0xFF 0xFE
+UTF-16BE：0xFE 0xFF
+
+String str = "z中";
+System.out.println(str.length()); // 2
+
+String str1 = "z中\uD852\uDF62"; // 输出 3 个字符，后面两个 char 组成一个 Unicode 字符
+System.out.println(str1);
+System.out.println(str1.length()); // 4
+
+// 默认UTF-8, ASCII 使用 1 个字节
+System.out.println("z".getBytes().length);
+// 默认UTF-8, 中文使用 3 个字节
+System.out.println("中".getBytes().length);
+
+// 虽然两个字符都是在 UTF-16 的两个字节表示范围内，但是 UTF-16 默认会加上 BOM 信息
+System.out.println("z".getBytes("UTF-16").length); // 4
+System.out.println("中".getBytes("UTF-16").length); // 4
+
+// 指定 BOM 顺序后，不会再输出 BOM 信息
+System.out.println("z".getBytes("UTF-16BE").length); // 2
+System.out.println("中".getBytes("UTF-16BE").length); // 2
+</script></code></pre>
+<h3 id="CharSequence-接口"><a href="#CharSequence-接口" class="headerlink" title="CharSequence 接口"></a>CharSequence 接口</h3><p>JDK1.4 开始提供的字符序列接口，提供了对不同字符序列实现类的只读访问，如 String、StringBuilder、StringBuffer。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface CharSequence {
+    int length(); // 字符序列的长度，即 code-unit 的数量
+    char charAt(int index); // 返回数组指定 index 处的字符/code-unit
+    CharSequence subSequence(int start, int end); // 返回索引范围 [start, end) 的子序列
+    String toString(); // 继承自 Object 的方法，返回一个 String 对象
+
+    /* JDK1.8 */
+    default IntStream chars(); // 返回 code-unit 组成的 IntStream 流对象
+    default IntStream codePoints(); // 返回 code-point 组成的 IntStream 流对象
+}
+</script></code></pre>
+<h3 id="String-类"><a href="#String-类" class="headerlink" title="String 类"></a>String 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public final class String
+    implements java.io.Serializable, Comparable<String>, CharSequence
+{
+    /* 成员变量 */
+    private final char value[]; // 存储字符序列的字符数组
+    private int hash; // Default to 0，存储字符序列的 hash 值
+
+    /* 静态成员 */
+    public static final Comparator<String> CASE_INSENSITIVE_ORDER; // 忽略大小写的比较器
+
+    /* 构造函数 */
+    public String(); // 空串，多余的构造函数
+    public String(String original); // 拷贝构造，尽量少用，因为存在两个一样的 String 对象
+    public String(StringBuffer buffer); // 拷贝构造
+    public String(StringBuilder builder); // 拷贝构造
+
+    public String(char[] value); // 拷贝字符数组
+    public String(char[] value, int offset, int count); // 拷贝字符数组，指定偏移量以及长度
+    public String(int[] codePoints, int offset, int count); // 拷贝码点数组，指定偏移量以及长度
+
+    public String(byte[] bytes, // 字节数组
+                  int offset, // 偏移量
+                  int length, // 长度
+                  String charsetName) // 字符编码名称 java.nio.charset.Charset
+       throws UnsupportedEncodingException; // 检查异常
+
+    public String(byte[] bytes, // 字节数组
+                  int offset, // 偏移量
+                  int length, // 长度
+                  Charset charset); // 字符编码对象 java.nio.charset.Charset
+
+    public String(byte[] bytes, // 字节数组
+                  String charsetName) // 字符编码名称
+       throws UnsupportedEncodingException; // 检查异常
+
+    public String(byte[] bytes, // 字节数组
+                  Charset charset); // 字符编码对象
+
+    public String(byte[] bytes, // 系统默认编码
+                  int offset,
+                  int length);
+
+    public String(byte[] bytes); // 系统默认编码
+
+    /* 静态方法 */
+    public static String valueOf(boolean b);
+    public static String valueOf(char c);
+    public static String valueOf(int i);
+    public static String valueOf(long l);
+    public static String valueOf(float f);
+    public static String valueOf(double d);
+    public static String valueOf(Object obj);
+
+    public static String valueOf(char[] data); // new String(data)
+    public static String valueOf(char[] data, int offset, int count); // new String(data, offset, count)
+    public static String copyValueOf(char[] data); // new String(data) 
+    public static String copyValueOf(char[] data, int offset, int count); // new String(data, offset, count)
+
+    // 字符串格式化
+    public static String format(String format, Object... args); // Locale.getDefault()
+    public static String format(Locale l, String format, Object... args);
+
+    // JDK1.8
+    /**
+     * 使用给定分隔符连接给定的元素.
+     * @param delimiter 分隔符(副本)
+     * @param elements  元素(副本)
+     * @return 返回拼接后的 String 对象
+     * 比如，String.join(",", "123", "456", "789")
+     * 将返回 "123,456,789"
+     */
+    public static String join(CharSequence delimiter, CharSequence... elements);
+    public static String join(CharSequence delimiter, Iterable<? extends CharSequence> elements);
+
+    /* 实例方法 */
+    public int length(); // 内部字符数组的长度
+    public boolean isEmpty(); // return value.length == 0;
+    public char charAt(int index); // return value[index];
+
+    // 若 index 处 code-unit 为某代理对的"前导代理"，则返回其 code-point，否则返回 code-unit
+    public int codePointAt(int index);
+    // 若 index 处前两个 code-unit 为代理对，则返回其 code-point，否则返回 index-1 处的 code-unit
+    public int codePointBefore(int index);
+    // 统计给定范围内的 code-point 数目，即 Unicode 字符数
+    public int codePointCount(int beginIndex, int endIndex);
+    // 查询第 codePointOffset(从 0 开始) 个 Unicode 字符（即 code-point）距 index 的偏移量
+    // 最常见的就是，将 index 设为 0，然后查询第 n 个完整的 Unicode 字符的 char[] 数组索引
+    public int offsetByCodePoints(int index, int codePointOffset);
+
+    // 拷贝给定范围内的 char 至目的 char[] 数组的起始索引处
+    public void getChars(int srcBegin,
+                         int srcEnd,
+                         char[] dst,
+                         int dstBegin);
+
+    // char[] -> byte[] (encoding)
+    public byte[] getBytes(String charsetName) throws UnsupportedEncodingException;
+    public byte[] getBytes(Charset charset); // 同上
+    public byte[] getBytes(); // 使用系统当前默认编码
+
+    // 检查两个字符串是否相同
+    public int hashCode(); // hashCode 值
+    public boolean equals(Object anObject); // 判等
+    public boolean contentEquals(StringBuffer sb); // 判等
+    public boolean contentEquals(CharSequence cs); // 判等
+    public boolean equalsIgnoreCase(String anotherString); // 忽略大小写，判等
+
+    // 比较两个字符串的大小（Unicode 码点）
+    // 如果 this-string 按照字典顺序排在 other-string 前面，则返回负数
+    // 如果 this-string 按照字典顺序排在 other-string 后面，则返回正数
+    // 如果 this-string 与 other-string 在字典顺序上相同，则返回 0
+    public int compareTo(String anotherString);
+    public int compareToIgnoreCase(String str); // 同上，忽略大小写
+
+    // 检查当前字符串与给定字符串的给定范围是否完全匹配
+    public boolean regionMatches(int toffset, // this-offset
+                                 String other, // other-string
+                                 int ooffset, // other-offset
+                                 int len); // length
+    public boolean regionMatches(boolean ignoreCase, // 是否忽略大小写
+                                 int toffset,
+                                 String other,
+                                 int ooffset,
+                                 int len);
+
+    // 检查从给索引处的字符串是否与给定前缀相匹配
+    public boolean startsWith(String prefix, int toffset);
+    public boolean startsWith(String prefix); // toffset = 0
+    // 检查当前字符串的后缀是否与给定后缀相匹配
+    public boolean endsWith(String suffix);
+
+    // 查找方法
+    public int indexOf(int ch); // 查找给定字符的第一个索引值，找不到则返回 -1
+    public int indexOf(int ch, int fromIndex); // 从给定索引处开始搜索
+    public int lastIndexOf(int ch); // 查找给定字符的最后一个索引值，找不到则返回 -1
+    public int lastIndexOf(int ch, int fromIndex); // 从给定索引处开始搜索
+
+    public int indexOf(String str);
+    public int indexOf(String str, int fromIndex);
+    public int lastIndexOf(String str);
+    public int lastIndexOf(String str, int fromIndex);
+
+    public boolean contains(CharSequence s); // 是否包含给定字符序列
+
+    // 提取子串
+    public String substring(int beginIndex); // [beg, length)
+    public String substring(int beginIndex, int endIndex); // [beg, end)
+    public CharSequence subSequence(int beginIndex, int endIndex); // [beg, end)
+
+    // 拼接两个字符串
+    public String concat(String str);
+
+    // 非 regex 正则替换
+    public String replace(char oldChar, char newChar); // replaceAll
+    public String replace(CharSequence target, CharSequence replacement); // replaceAll
+
+    // regex 正则匹配、替换、分割
+    public boolean matches(String regex); // Pattern.matches(regex, this)
+    public String replaceFirst(String regex, String replacement);
+    public String replaceAll(String regex, String replacement);
+    public String[] split(String regex, int limit);
+    public String[] split(String regex); // limit = 0
+
+    // 大小写转换
+    public String toLowerCase(Locale locale);
+    public String toLowerCase(); // Locale.getDefault()
+    public String toUpperCase(Locale locale);
+    public String toUpperCase(); // Locale.getDefault()
+
+    // 删除前导/后尾空白，如空格、制表
+    public String trim();
+
+    /* Object 方法 */
+    public String toString(); // return this;
+    public char[] toCharArray(); // 返回字符数组(copy)
+
+    /* 字符串常量池 */
+    // 如果 constant pool 中存在和当前字符串相同的字符串（使用 equals(Object obj) 判断）
+    // 则返回 constant pool 中的相同字符串引用
+    // 如果 constant pool 中没有和当前字符串相同的字符串（使用 equals(Object obj) 判断）
+    // 则将当前字符串放入 constant pool（运行时常量池）中，并返回当前字符串(this)的引用
+    public String intern();
+}
+</script></code></pre>
+<h3 id="StringBuilder-类"><a href="#StringBuilder-类" class="headerlink" title="StringBuilder 类"></a>StringBuilder 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public final class StringBuilder
+    extends AbstractStringBuilder
+    implements java.io.Serializable, CharSequence
+{
+    /* 构造函数 */
+    public StringBuilder(int capacity);
+    public StringBuilder(); // capacity = 16
+    public StringBuilder(String str); // capacity = str.length() + 16
+    public StringBuilder(CharSequence seq); // capacity = seq.length() + 16
+
+    /* 长度 */
+    public int length();
+    public void setLength(int newLength); // 调整字符序列长度，按照需要填充'\0'或截断
+
+    /* 容量 */
+    public int capacity();
+    public void ensureCapacity(int minimumCapacity); // 如果当前 capacity 小于给定容量则进行扩容
+    public void trimToSize(); // 回收未被使用的剩余容量
+
+    /* charAt */
+    public char charAt(int index); // 返回指定索引处的 char 字符
+    public void setCharAt(int index, char ch); // 替换指定索引处的 char 字符
+
+    public void getChars(int srcBegin,
+                         int srcEnd,
+                         char[] dst,
+                         int dstBegin);
+
+    /* code-point */
+    public int codePointAt(int index); // 返回指定索引处的 code-point 码点（当位于"前导代理"处时）
+    public int codePointBefore(int index); // 返回指定索引处之前的 code-point 码点
+    public int codePointCount(int beginIndex, int endIndex); // 统计有多少个 Unicode 码点/字符
+    public int offsetByCodePoints(int index, int codePointOffset); // 查询第 n 个码点的索引位置
+
+    /* substring */
+    public String substring(int start);
+    public String substring(int start, int end);
+    public CharSequence subSequence(int start, int end);
+
+    /* 追加 */
+    public StringBuilder append(Object obj);
+    public StringBuilder append(String str);
+    public StringBuilder append(StringBuffer sb);
+    public StringBuilder append(CharSequence s);
+    public StringBuilder append(CharSequence s, int start, int end);
+    public StringBuilder append(char[] str);
+    public StringBuilder append(char[] str, int offset, int len);
+    public StringBuilder append(boolean b);
+    public StringBuilder append(char c);
+    public StringBuilder append(int i);
+    public StringBuilder append(long lng);
+    public StringBuilder append(float f);
+    public StringBuilder append(double d);
+    public StringBuilder appendCodePoint(int codePoint);
+
+    /* 删除 */
+    public StringBuilder delete(int start, int end);
+    public StringBuilder deleteCharAt(int index); // code-unit
+
+    /* 替换 */
+    public StringBuilder replace(int start, int end, String str);
+
+    /* 插入 */
+    public StringBuilder insert(int offset, CharSequence s);
+    public StringBuilder insert(int offset, CharSequence s, int start, int end);
+    public StringBuilder insert(int offset, char[] str);
+    public StringBuilder insert(int offset, char[] str, int offset, int len);
+
+    public StringBuilder insert(int offset, Object obj);
+    public StringBuilder insert(int offset, String str);
+    public StringBuilder insert(int offset, boolean b);
+    public StringBuilder insert(int offset, char c);
+    public StringBuilder insert(int offset, int i);
+    public StringBuilder insert(int offset, long l);
+    public StringBuilder insert(int offset, float f);
+    public StringBuilder insert(int offset, double d);
+
+    /* 查询 */
+    public int indexOf(String str);
+    public int indexOf(String str, int fromIndex);
+    public int lastIndexOf(String str);
+    public int lastIndexOf(String str, int fromIndex);
+
+    /* 反转 */
+    public StringBuilder reverse(); // 反向排列
+
+    /* Object */
+    public String toString();
+}
+</script></code></pre>
+<h3 id="StringBuffer-类"><a href="#StringBuffer-类" class="headerlink" title="StringBuffer 类"></a>StringBuffer 类</h3><pre><code class="language-java line-numbers"><script type="text/plain">public final class StringBuffer
+    extends AbstractStringBuilder
+    implements java.io.Serializable, CharSequence
+{
+    /* 构造方法 */
+    public StringBuffer(int capacity);
+    public StringBuffer(); // capacity = 16
+    public StringBuffer(String str); // str.length() + 16
+    public StringBuffer(CharSequence seq); // seq.length() + 16
+
+    /* 长度 */
+    public int length();
+    public void setLength(int newLength);
+
+    /* 容量 */
+    public int capacity();
+    public void ensureCapacity(int minimumCapacity);
+    public void trimToSize();
+
+    /* charAt */
+    public char charAt(int index);
+    public void setCharAt(int index, char ch);
+
+    public void getChars(int srcBegin,
+                         int srcEnd,
+                         char[] dst,
+                         int dstBegin);
+
+    /* code-point */
+    public int codePointAt(int index);
+    public int codePointBefore(int index);
+    public int codePointCount(int beginIndex, int endIndex);
+    public int offsetByCodePoints(int index, int codePointOffset);
+
+    /* substring */
+    public String substring(int start);
+    public String substring(int start, int end);
+    public CharSequence subSequence(int start, int end);
+
+    /* 追加 */
+    public StringBuffer append(Object obj);
+    public StringBuffer append(String str);
+    public StringBuffer append(StringBuffer sb);
+    public StringBuffer append(CharSequence s);
+    public StringBuffer append(CharSequence s, int start, int end);
+    public StringBuffer append(char[] str);
+    public StringBuffer append(char[] str, int offset, int len);
+    public StringBuffer append(boolean b);
+    public StringBuffer append(char c);
+    public StringBuffer append(int i);
+    public StringBuffer append(long lng);
+    public StringBuffer append(float f);
+    public StringBuffer append(double d);
+    public StringBuffer appendCodePoint(int codePoint);
+
+    /* 删除 */
+    public StringBuffer delete(int start, int end);
+    public StringBuffer deleteCharAt(int index);
+
+    /* 替换 */
+    public StringBuffer replace(int start, int end, String str);
+
+    /* 插入 */
+    public StringBuffer insert(int dstOffset, CharSequence s);
+    public StringBuffer insert(int dstOffset, CharSequence s, int start, int end);
+    public StringBuffer insert(int offset, char[] str);
+    public StringBuffer insert(int index, char[] str, int offset, int len);
+
+    public StringBuffer insert(int offset, Object obj);
+    public StringBuffer insert(int offset, String str);
+    public StringBuffer insert(int offset, boolean b);
+    public StringBuffer insert(int offset, char c);
+    public StringBuffer insert(int offset, int i);
+    public StringBuffer insert(int offset, long l);
+    public StringBuffer insert(int offset, float f);
+    public StringBuffer insert(int offset, double d);
+
+    /* 查询 */
+    public int indexOf(String str);
+    public int indexOf(String str, int fromIndex);
+    public int lastIndexOf(String str);
+    public int lastIndexOf(String str, int fromIndex);
+
+    /* 反转 */
+    public StringBuffer reverse();
+
+    /* Object */
+    public String toString();
+}
+</script></code></pre>
+<h2 id="基本类型包装类"><a href="#基本类型包装类" class="headerlink" title="基本类型包装类"></a>基本类型包装类</h2><p>基本类型（值类型）：<code>byte</code>、<code>short</code>、<code>int</code>、<code>long</code>、<code>float</code>、<code>double</code>、<code>boolean</code>、<code>char</code>、<code>void</code><br>包装类（引用类型）：<code>Byte</code>、<code>Short</code>、<code>Integer</code>、<code>Long</code>、<code>Float</code>、<code>Double</code>、<code>Boolean</code>、<code>Character</code>、<code>Void</code></p>
+<p><strong>值类型</strong> -&gt; <strong>引用类型</strong>，称为<code>装箱</code>；<br><strong>引用类型</strong> -&gt; <strong>值类型</strong>，称为<code>拆箱</code>。</p>
+<p>在 jdk1.5 之前，装箱、拆箱需要程序员手动来完成，称为<strong>手动装箱</strong>、<strong>手动拆箱</strong>；<br>在 jdk1.5 之后，装箱、拆箱可以由编译器自动完成，称为<strong>自动装箱</strong>、<strong>自动拆箱</strong>。</p>
+<p>除了 Boolean、Character、Void 类型直接继承 Object 类，Byte、Short、Integer、Long、Float、Double 都是继承自 Number 类。</p>
+<blockquote>
+<p>Void 仅仅起到一个占位的作用，它的默认构造函数被声明为了 private，因此无法创建 Void 类的实例。</p>
+</blockquote>
+<p><strong>包装类对象一经创建，所封装的基本类型值不会再改变；因为被 final 给修饰了</strong>。不过依旧可以通过反射进行修改，因为 final 只是限制语法上的不可修改，这点和 C/C++ 使用指针修改 const 常量的值是一样的。</p>
+<p><strong>常量池</strong><br>常量池有两种：<br>1) <code>class文件常量池</code>：或称为”静态常量池”，用于存放编译器生成的各种<code>字面量</code>、<code>符号引用</code>，在类加载之后会放到方法区的<strong>运行时常量池</strong>中；<br>2) <code>运行时常量池</code>：或称为”动态常量池”，与静态常量池不同的是，它具有<strong>动态性</strong>，即可以在运行期间动态的将新的常量放入池中。</p>
+<blockquote>
+<p>常量池的运用可以有效地减少相同常量的多次存储，减少不必要的存储空间浪费。</p>
+</blockquote>
+<p>而动态常量池在开发中运用的最多的就是 String 的 intern() 成员方法；<br>并且基本类型包装类也存在运行时常量池，它们的作用和 String 是相似的。</p>
+<p>八大基本类型的包装类中，除了<code>浮点型</code>的包装类（<strong>Float</strong>、<strong>Double</strong>）外，其他所有的包装类都存在常量池机制。</p>
+<p>当一个 String 实例调用 intern() 方法时，首先会去查找 String 运行时常量池中是否有相同的字符串常量；<br>如果有，则返回常量池中该字符串的引用；如果没有，将当前对象的加入到常量池中，并返回其在常量池中的引用。</p>
+<p><strong>String 的两种创建方式</strong><br>1) <code>String s = &quot;www.zfl9.com&quot;;</code><br>第一步，将字面量”www.zfl9.com”存放在 Class 文件的常量池中；<br>第二步，执行<code>String s</code>，新建一个 String 引用变量 s（String 类型的指针）；<br>第三步，将字面量”www.zfl9.com”的地址赋给引用变量 s。</p>
+<blockquote>
+<p>在这种方式中，只创建了一个对象，即”www.zfl9.com”常量；</p>
+</blockquote>
+<p>2) <code>String s = new String(&quot;www.zfl9.com&quot;);</code><br>第一步，将字面量”www.zfl9.com”存放在 Class 文件的常量池中；<br>第二步，执行<code>new String()</code>，在堆中创建一个 String 对象，并使用常量”www.zfl9.com”进行初始化（拷贝构造）；<br>第三步，执行<code>String s</code>，新建一个 String 引用变量 s（String 类型的指针）；<br>第四步，将刚刚在堆中创建的匿名对象的指针赋给引用变量 s。</p>
+<blockquote>
+<p>在这种方式中，创建了两个对象，一个在常量池中，一个在堆中；</p>
+</blockquote>
+<p>因此，不建议使用第二种形式，会造成内存空间的浪费！</p>
+<p>String.intern() 的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.out;
+
+public class Main {
+    public static void main(String[] args) {
+        String s1 = "www.zfl9.com";
+        String s2 = "www.zfl9.com";
+        String s3 = new String("www.zfl9.com");
+        String s4 = new String(s3);
+
+        out.printf("s1 == s2 -> %b\n", s1 == s2); // true
+        out.printf("s1 == s3 -> %b\n", s1 == s3); // false
+        out.printf("s3 == s4 -> %b\n", s3 == s4); // false
+
+        out.printf("s1.equals(s3) -> %b\n", s1.equals(s3)); // true
+        out.printf("s3.equals(s4) -> %b\n", s3.equals(s4)); // true
+
+        out.printf("s1 == s3.intern() == s4.intern() -> %b\n",
+                   s1 == s3.intern() && s1 == s4.intern()); // true
+        out.printf("s1.intern() == s3.intern() -> %b\n", s1.intern() == s3.intern()); // true
+        out.printf("s3.intern() == s4.intern() -> %b\n", s3.intern() == s4.intern()); // true
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:12:43]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:12:56]
+$ java Main
+s1 == s2 -> true
+s1 == s3 -> false
+s3 == s4 -> false
+s1.equals(s3) -> true
+s3.equals(s4) -> true
+s1 == s3.intern() == s4.intern() -> true
+s1.intern() == s3.intern() -> true
+s3.intern() == s4.intern() -> true
+</script></code></pre>
+<p>好吧，有些扯远了，我们回到包装类中来，包装类有一些共同方法，以 Integer 为例：<br><strong>手动装箱</strong><br><code>public Integer(int value)</code><br><code>public Integer(String s) throws NumberFormatException</code>：解析字符串中的 int（RT 异常）<br><strong>自动装箱</strong><br><code>public static Integer valueOf(int i)</code>：基本类型的值在区间<code>[-128, 127]</code>的对象将入池。<br><code>public static Integer valueOf(String s) throws NumberFormatException</code>：同上。<br><code>public static Integer valueOf(String s, int radix) throws NumberFormatException</code>：同上。<br><strong>手动/自动拆箱</strong><br><code>public int intValue()</code>：返回所包装的基本类型的值；<br><strong>静态方法 解析字符串</strong><br><code>public static int parseInt(String s) throws NumberFormatException</code>：解析字符串中的数字；<br><code>public static int parseInt(String s, int radix) throws NumberFormatException</code>：同上。</p>
+<p>手动装箱因为每次都是使用<code>new</code>创建，所以每次创建的对象都是不同的，它们生死于堆上；<br>而自动装箱则有点不同，它不使用<code>new</code>创建，而是使用其静态方法<code>valueOf()</code>，<code>valueOf()</code>内部维护了一个常量池；</p>
+<ul>
+<li>初始时，该 cache 池为空，没有任何包装类对象；</li>
+<li>当调用<code>valueOf(10)</code>方法自动装箱时，发现 cache 池中没有值等于 10 的对象，于是新建一个对象并丢入 cache 池中；</li>
+<li>当再次调用<code>valueOf(10)</code>方法自动装箱时，发现 cache 池中已有值相同的对象，于是不再创建新对象，而是将已有对象返回；</li>
+<li>但是 cache 池并不是无限大的，是有一定范围的，在 Integer 中，它被限制为只缓存区间<code>[-128, 127]</code>的对象，即一个字节表示的整数；</li>
+<li>如果传入 valueOf() 的参数不在该范围中，那么等同于手动装箱，即每次都会 new 一个新的对象出来。</li>
+</ul>
+<p>除了 Integer 有所谓的 cache 池，Boolean、Byte、Short、Long、Character 也有 cache，如下：</p>
+<ul>
+<li>Short、Long 和 Integer 一样，区间都是 [-128, 127]；</li>
+<li>Boolean、Byte 因为它们占用的内存长度都在 1 字节之内，因此全部取值范围都被缓存；</li>
+<li>而 Character 相当于无符号的 Short 整型，因此在区间 [0, 127] 的对象也将被缓存；</li>
+<li>Float、Double 不会被缓存，不管它们的取值范围是多少，因为浮点数无法精确的枚举出来。</li>
+</ul>
+<p>还有一点要注意：<br>1) 当<code>==</code>运算符的两个操作数都是<code>引用类型</code>（包装类）时，比较引用的值，不触发自动拆箱；<br>2) 如果其中有一个操作数是<code>算数表达式/数值</code>则触发<code>自动拆箱</code>，这时比较的是<code>基本类型的值</code>。</p>
+<p>例子一：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.out;
+
+public class Main {
+    public static void main(String[] args) {
+        Integer a1 = 40;
+        Integer a2 = 40;
+        Integer a3 = 0;
+        Integer b1 = new Integer(40);
+        Integer b2 = new Integer(40);
+        Integer b3 = new Integer(0);
+
+        out.printf("a1 == a2 -> %b\n", a1 == a2); // true
+        out.printf("a1 == a2 + a3 -> %b\n", a1 == a2 + a3); // true
+        out.printf("b1 == b2 -> %b\n", b1 == b2); // false
+        out.printf("b1 == b2 + b3 -> %b\n", b1 == b2 + b3); // true
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:58:27]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:58:42]
+$ java Main
+a1 == a2 -> true
+a1 == a2 + a3 -> true
+b1 == b2 -> false
+b1 == b2 + b3 -> true
+</script></code></pre>
+<p>如果你理解了前面的内容，那么这个例子就很容易理解了：<br>1) <code>a1 == a2</code>：a1、a2 自动装箱，值在区间 [-128, 127]，因此它们都引用同一个对象，而<code>==</code>两边的操作数都是引用类型，比较他们的引用的值，因为是同一个对象，所以返回 true；<br>2) <code>a1 == a2 + a3</code>：a1、a2、a3 都是自动装箱，a1 和 a2 都引用自池中的同一对象，<code>==</code>的右操作数是一个表达式，触发 a2、a3 的自动拆箱，变为<code>40 + 0</code>，即右操作数为 40，因为有一个操作数是值类型，所以触发 a1 的自动拆箱，最终比较的是<code>40 == 40</code>，返回 true；<br>3) <code>b1 == b2</code>：因为 b1、b2 都是手动装箱，所以他们引用的是不同的对象，因此返回 false；<br>4) <code>b1 == b2 + b3</code>：右操作数是一个表达式，触发自动拆箱，结果为 40，而 b1 也被触发自动拆箱，结果为 40，因此返回 true。</p>
+<p>再来一个例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.out;
+
+public class Main {
+    public static void main(String[] args) {
+        Integer a1 = 1;
+        Integer a2 = 2;
+        Integer a3 = 3;
+        Integer a4 = 3;
+
+        Integer a5 = 200;
+        Integer a6 = 200;
+
+        Long b1 = 3L;
+        Long b2 = 2L;
+
+        out.printf("a3 == a4 -> %b\n", a3 == a4); // true
+        out.printf("a5 == a6 -> %b\n", a5 == a6); // false
+        out.printf("a3 == a1 + a2 -> %b\n", a3 == a1 + a2); // true
+        out.printf("a3.equals(a1 + a2) -> %b\n", a3.equals(a1 + a2)); // true
+        out.printf("b1 == a1 + a2 -> %b\n", b1 == a1 + a2); // true
+        out.printf("b1.equals(a1 + a2) -> %b\n", b1.equals(a1 + a2)); // false
+        out.printf("b1.equals(a1 + b2) -> %b\n", b1.equals(a1 + b2)); // true
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:19:29]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [17:19:43]
+$ java Main
+a3 == a4 -> true
+a5 == a6 -> false
+a3 == a1 + a2 -> true
+a3.equals(a1 + a2) -> true
+b1 == a1 + a2 -> true
+b1.equals(a1 + a2) -> false
+b1.equals(a1 + b2) -> true
+</script></code></pre>
+<p>1) <code>a3 == a4</code>：自动装箱，比较的是引用，因为在区间 [-128, 127]，true；<br>2) <code>a5 == a6</code>：自动装箱，比较的是引用，因为不在区间 [-128, 127]，false；<br>3) <code>a3 == a1 + a2</code>：触发自动拆箱，比较的是数值，true；<br>4) <code>a3.equals(a1 + a2)</code>：计算<code>a1 + a2</code>时触发自动拆箱，然后再次自动装箱，因此返回 true；<br>5) <code>b1 == a1 + a2</code>：计算<code>a1 + a2</code>时触发自动拆箱，结果为 int 类型的值 3，b1 也因此自动拆箱，是 long 类型的值 3；然后 int -&gt; long 自动类型转换，因此返回 true；<br>6) <code>b1.equals(a1 + a2)</code>：计算<code>a1 + a2</code>时触发自动拆箱，结果为 int 类型的值 3，然后再次装箱为 Integer 引用类型，因为比较的两个对象的类型不同，所以返回 false；<br>7) <code>b1.equals(a1 + b2)</code>：计算<code>a1 + b2</code>时触发自动拆箱，并且发生自动类型转换 int -&gt; long，然后装箱为 Long 引用类型，因此返回 true。</p>
+<p><strong>Integer 相关方法</strong>（其它数值包装类与之类似）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态属性 */
+public static final int MIN_VALUE = 0x80000000; // 最小值
+public static final int MAX_VALUE = 0x7fffffff; // 最大值
+public static final int SIZE = 32; // 占有 32 bit 长度
+public static final int BYTES = SIZE / Byte.SIZE; // 占用 4 byte 长度
+public static final Class<Integer>  TYPE = (Class<Integer>) Class.getPrimitiveClass("int");
+
+/* 静态方法 */
+public static int compare(int x, int y); // 比较 x 和 y
+public static int hashCode(int value); // 计算 value 的 hash
+
+public static int max(int a, int b); // 较大值，Math.max()
+public static int min(int a, int b); // 较小值，Math.min()
+public static int sum(int a, int b); // 求和
+
+public static int parseInt(String s) throws NumberFormatException; // 十进制，RT 异常
+public static int parseInt(String s, int radix) throws NumberFormatException; // 给定进制
+
+public static String toString(int i); // 10 进制
+public static String toString(int i, int radix); // radix 进制
+public static String toBinaryString(int i); // 2 进制
+public static String toOctalString(int i); // 8 进制
+public static String toHexString(int i); // 16 进制
+
+public static Integer valueOf(int i); // 自动装箱
+public static Integer valueOf(String s) throws NumberFormatException;
+public static Integer valueOf(String s, int radix) throws NumberFormatException;
+
+/* 构造函数 */
+public Integer(int value); // 手动装箱
+public Integer(String s) throws NumberFormatException;
+
+/* 实例方法 */
+public byte byteValue(); // 内部使用强制类型转换
+public short shortValue();
+public int intValue(); // 自动/手动拆箱
+public long longValue();
+public float floatValue();
+public double doubleValue();
+
+/* Object */
+public int hashCode();
+public boolean equals(Object obj);
+public int compareTo(Integer anotherInteger);
+public String toString();
+</script></code></pre>
+<p><strong>Character 相关方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造方法 */
+public Character(char value); // 手动装箱
+
+/* 实例方法 */
+public char charValue(); // 返回所包装的值
+public int hashCode(); // 等价于 charValue()
+public boolean equals(Object obj); // 判等
+public int compareTo(Character anotherCharacter); // 比较两个字符
+public String toString(); // 长度为 1 的字符串
+
+/* 静态字段 */
+public static final int MIN_RADIX; // 最小基数 = 2
+public static final int MAX_RADIX; // 最大基数 = 36
+
+public static final char MIN_VALUE; // 最小值 '\u0000'
+public static final char MAX_VALUE; // 最大值 '\uFFFF'
+
+public static final Class<Character> TYPE; // char.class
+
+// Unicode 规范
+public static final byte UNASSIGNED; // 常规类别 "Cn"
+public static final byte UPPERCASE_LETTER; // 常规类别 "Lu"
+public static final byte LOWERCASE_LETTER; // 常规类别 "Ll"
+public static final byte TITLECASE_LETTER; // 常规类别 "Lt"
+public static final byte MODIFIER_LETTER; // 常规类别 "Lm"
+public static final byte OTHER_LETTER; // 常规类别 "Lo"
+public static final byte NON_SPACING_MARK; // 常规类别 "Mn"
+public static final byte ENCLOSING_MARK; // 常规类别 "Me"
+public static final byte COMBINING_SPACING_MARK; // 常规类别 "Mc"
+public static final byte DECIMAL_DIGIT_NUMBER; // 常规类别 "Nd"
+public static final byte LETTER_NUMBER; // 常规类别 "Nl"
+public static final byte OTHER_NUMBER; // 常规类别 "No"
+public static final byte SPACE_SEPARATOR; // 常规类别 "Zs"
+public static final byte LINE_SEPARATOR; // 常规类别 "Zl"
+public static final byte PARAGRAPH_SEPARATOR; // 常规类别 "Zp"
+public static final byte CONTROL; // 常规类别 "Cc"
+public static final byte FORMAT; // 常规类别 "Cf"
+public static final byte PRIVATE_USE; // 常规类别 "Co"
+public static final byte SURROGATE; // 常规类别 "Cs"
+public static final byte DASH_PUNCTUATION; // 常规类别 "Pd"
+public static final byte START_PUNCTUATION; // 常规类别 "Ps"
+public static final byte END_PUNCTUATION; // 常规类别 "Pe"
+public static final byte CONNECTOR_PUNCTUATION; // 常规类别 "Pc"
+public static final byte OTHER_PUNCTUATION; // 常规类别 "Po"
+public static final byte MATH_SYMBOL; // 常规类别 "Sm"
+public static final byte CURRENCY_SYMBOL; // 常规类别 "Sc"
+public static final byte MODIFIER_SYMBOL; // 常规类别 "Sk"
+public static final byte OTHER_SYMBOL; // 常规类别 "So"
+public static final byte INITIAL_QUOTE_PUNCTUATION; // 常规类别 "Pi"
+public static final byte FINAL_QUOTE_PUNCTUATION; // 常规类别 "Pf"
+
+public static final byte DIRECTIONALITY_UNDEFINED; // 未定义的双向字符类型
+
+public static final byte DIRECTIONALITY_LEFT_TO_RIGHT; // 强双向字符类型 "L"
+public static final byte DIRECTIONALITY_RIGHT_TO_LEFT; // 强双向字符类型 "R"
+public static final byte DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC; // 强双向字符类型 "AL"
+public static final byte DIRECTIONALITY_LEFT_TO_RIGHT_EMBEDDING; // 强双向字符类型 "LRE"
+public static final byte DIRECTIONALITY_LEFT_TO_RIGHT_OVERRIDE; // 强双向字符类型 "LRO"
+public static final byte DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING; // 强双向字符类型 "RLE"
+public static final byte DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE; // 强双向字符类型 "RLO"
+
+public static final byte DIRECTIONALITY_EUROPEAN_NUMBER; // 弱双向字符类型 "EN"
+public static final byte DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR; // 弱双向字符类型 "ES"
+public static final byte DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR; // 弱双向字符类型 "ET"
+public static final byte DIRECTIONALITY_ARABIC_NUMBER; // 弱双向字符类型 "AN"
+public static final byte DIRECTIONALITY_COMMON_NUMBER_SEPARATOR; // 弱双向字符类型 "CS"
+public static final byte DIRECTIONALITY_NONSPACING_MARK; // 弱双向字符类型 "NSM"
+public static final byte DIRECTIONALITY_BOUNDARY_NEUTRAL; // 弱双向字符类型 "BN"
+public static final byte DIRECTIONALITY_POP_DIRECTIONAL_FORMAT; // 弱双向字符类型 "PDF"
+
+public static final byte DIRECTIONALITY_PARAGRAPH_SEPARATOR; // 中性双向字符类型 "B"
+public static final byte DIRECTIONALITY_SEGMENT_SEPARATOR; // 中性双向字符类型 "S"
+public static final byte DIRECTIONALITY_WHITESPACE; // 中性双向字符类型 "WS"
+public static final byte DIRECTIONALITY_OTHER_NEUTRALS; // 中性双向字符类型 "ON"
+
+// 代理对
+public static final char MIN_HIGH_SURROGATE; // "前导代理/高位代理"的最小值 = '\uD800'
+public static final char MAX_HIGH_SURROGATE; // "前导代理/高位代理"的最大值 = '\uDBFF'
+
+public static final char MIN_LOW_SURROGATE; // "后尾代理/低位代理"的最小值 = '\uDC00'
+public static final char MAX_LOW_SURROGATE; // "后尾代理/低位代理"的最大值 = '\uDFFF'
+
+public static final char MIN_SURROGATE; // BMP 保留码点的最小值 = '\uD800'
+public static final char MAX_SURROGATE; // BMP 保留码点的最大值 = '\uDFFF'
+
+public static final int MIN_CODE_POINT; // 最小码点 = U+0000
+public static final int MAX_CODE_POINT; // 最大码点 = U+10FFFF
+public static final int MIN_SUPPLEMENTARY_CODE_POINT; // 辅助平面的最小值 = U+10000
+
+// 常规属性
+public static final int SIZE; // 16-bit 长度
+public static final int BYTES; // 2-byte 长度
+
+/* 静态方法 */
+public static Character valueOf(char c); // 自动装箱
+public static int hashCode(char value); // hash 值
+public static int compare(char x, char y); // 比较两个字符
+public static String toString(char c); // 长度为 1 的字符串
+
+public static boolean isValidCodePoint(int codePoint); // 是否为有效的码点
+public static int charCount(int codePoint); // 查询给定码点需要的码元数目，并不检查码点的有效性
+
+public static boolean isBmpCodePoint(int codePoint); // 是否为基本平面的码点（BMP）
+public static boolean isSupplementaryCodePoint(int codePoint); // 是否为辅助平面的码点
+
+public static boolean isHighSurrogate(char ch); // 是否为前导代理的码元
+public static boolean isLowSurrogate(char ch); // 是否为后尾代理的码元
+
+public static char highSurrogate(int codePoint); // 获取给定码点的前导代理
+public static char lowSurrogate(int codePoint); // 获取给定码点的后尾代理
+
+public static boolean isSurrogate(char ch); // MIN_SURROGATE <= ch <= MAX_SURROGATE
+public static boolean isSurrogatePair(char high, char low); // 是否为有效代理对
+
+public static int toCodePoint(char high, char low); // 代理对 - 码点
+public static int toChars(int codePoint, char[] dst, int dstIndex); // 转换给定码点至字符数组
+public static char[] toChars(int codePoint); // 转换给定码点为 UTF-16BE 表示的码元数组
+
+public static boolean isLowerCase(char ch); // 是否为小写字符
+public static boolean isLowerCase(int codePoint); // 是否为小写字符
+public static boolean isUpperCase(char ch); // 是否为大写字符
+public static boolean isUpperCase(int codePoint); // 是否为大写字符
+public static boolean isTitleCase(char ch); // 是否为标题字符
+public static boolean isTitleCase(int codePoint); // 是否为标题字符
+public static boolean isDigit(char ch); // 是否为数字
+public static boolean isDigit(int codePoint); // 是否为数字
+public static boolean isDefined(char ch); // 是否为已定义字符
+public static boolean isDefined(int codePoint); // 是否为已定义字符
+public static boolean isLetter(char ch); // 是否为字母
+public static boolean isLetter(int codePoint); // 是否为字母
+public static boolean isLetterOrDigit(char ch); // 是否为字母数字
+public static boolean isLetterOrDigit(int codePoint); // 是否为字母数字
+public static boolean isAlphabetic(int codePoint); // 是否为字母表
+public static boolean isIdeographic(int codePoint); // 是否为 CJKV/中日韩越 表意文字
+public static boolean isJavaIdentifierStart(char ch); // 是否为有效的 Java 标识符（首）
+public static boolean isJavaIdentifierStart(int codePoint); // 是否为有效的 Java 标识符（首）
+public static boolean isJavaIdentifierPart(char ch); // 是否为有效的 Java 标识符（体）
+public static boolean isJavaIdentifierPart(int codePoint); // 是否为有效的 Java 标识符（体）
+public static boolean isUnicodeIdentifierStart(char ch); // 是否为有效的 Unicode 标识符（首）
+public static boolean isUnicodeIdentifierStart(int codePoint); // 是否为有效的 Unicode 标识符（首）
+public static boolean isUnicodeIdentifierPart(char ch); // 是否为有效的 Unicode 标识符（体）
+public static boolean isUnicodeIdentifierPart(int codePoint); // 是否为有效的 Unicode 标识符（体）
+public static boolean isIdentifierIgnorable(char ch); // 是否为 Java/Unicode 可忽略字符
+public static boolean isIdentifierIgnorable(int codePoint); // 是否为 Java/Unicode 可忽略字符
+public static boolean isSpaceChar(char ch); // 是否为空格符 SPACE_SEPARATOR|LINE_SEPARATOR|PARAGRAPH_SEPARATOR
+public static boolean isSpaceChar(int codePoint); // 是否为空格符
+public static boolean isWhitespace(char ch); // 是否为空白符
+public static boolean isWhitespace(int codePoint); // 是否为空白符
+public static boolean isISOControl(char ch); // 是否为 ISO 控制字符
+public static boolean isISOControl(int codePoint); // 是否为 ISO 控制字符
+public static boolean isMirrored(char ch); // 查询给定字符是否为镜像字符，如()[]{}
+public static boolean isMirrored(int codePoint); // 查询给定字符是否为镜像字符，如()[]{}
+
+public static char toLowerCase(char ch); // 转换为小写字符
+public static int toLowerCase(int codePoint); // 转换为小写字符
+public static char toUpperCase(char ch); // 转换为大写字符
+public static int toUpperCase(int codePoint); // 转换为大写字符
+public static char toTitleCase(char ch); // 转换为标题字符
+public static int toTitleCase(int codePoint); // 转换为标题字符
+
+public static int codePointAt(CharSequence seq, int index); // 获取给定位置的码点
+public static int codePointAt(char[] a, int index); // 获取给定位置的码点
+public static int codePointAt(char[] a, int index, int limit); // limit 为限制的结束索引位置 + 1
+
+public static int codePointBefore(CharSequence seq, int index); // 获取给定位置前面的码点
+public static int codePointBefore(char[] a, int index); // 获取给定位置前面的码点
+public static int codePointBefore(char[] a, int index, int start); // start 为限制的起始索引位置
+
+public static int codePointCount(CharSequence seq, int beginIndex, int endIndex); // 统计码点数量
+public static int codePointCount(char[] a, int offset, int count); // 统计码点数量
+
+// 从 index 处查找指定的第 N 个码点（从 0 开始）的索引值（相对字符序列）
+public static int offsetByCodePoints(CharSequence seq, int index, int codePointOffset);
+// 从 index 处查找指定的第 N 个码点（从 0 开始）的索引值（相对字符数组）
+public static int offsetByCodePoints(char[] a, int start, int count, int index, int codePointOffset);
+
+public static int digit(char ch, int radix); // 解析 ch 所表示的数字
+public static int digit(int codePoint, int radix); // 解析 cp 所表示的数字
+
+public static int getNumericValue(char ch); // 解析 ch 所表示的数字
+public static int getNumericValue(int codePoint); // 解析 cp 所表示的数字
+
+public static char forDigit(int digit, int radix); // 获取给定数字的 char 形式值
+
+public static String getName(int codePoint); // 获取给定字符的名称
+
+public static int getType(char ch); // 查询给定字符的 Unicode 类别
+public static int getType(int codePoint); // 查询给定字符的 Unicode 类别
+
+public static byte getDirectionality(char ch); // 查询给定字符的 Unicode 方向性
+public static byte getDirectionality(int codePoint); // 查询给定字符的 Unicode 方向性
+
+public static char reverseBytes(char ch); // 翻转字节顺序
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-jvm.html" rel="next" title="Java 深入理解 JVM 虚拟机">
+                <i class="fa fa-chevron-left"></i> Java 深入理解 JVM 虚拟机
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-io.html" rel="prev" title="Java IO流">
+                Java IO流 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Random-随机数"><span class="nav-number">1.</span> <span class="nav-text">Random 随机数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Random"><span class="nav-number">1.1.</span> <span class="nav-text">Random</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocalRandom"><span class="nav-number">1.2.</span> <span class="nav-text">ThreadLocalRandom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SecureRandom"><span class="nav-number">1.3.</span> <span class="nav-text">SecureRandom</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Date-日期时间"><span class="nav-number">2.</span> <span class="nav-text">Date 日期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Locale-区域"><span class="nav-number">3.</span> <span class="nav-text">Locale 区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regex-正则"><span class="nav-number">4.</span> <span class="nav-text">regex 正则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正则语法"><span class="nav-number">4.1.</span> <span class="nav-text">正则语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展知识"><span class="nav-number">4.2.</span> <span class="nav-text">扩展知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pattern-类"><span class="nav-number">4.3.</span> <span class="nav-text">Pattern 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Matcher-类"><span class="nav-number">4.4.</span> <span class="nav-text">Matcher 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则例子"><span class="nav-number">4.5.</span> <span class="nav-text">正则例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进阶例子"><span class="nav-number">4.6.</span> <span class="nav-text">进阶例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Math-算数类"><span class="nav-number">5.</span> <span class="nav-text">Math 算数类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Arrays-工具类"><span class="nav-number">6.</span> <span class="nav-text">Arrays 工具类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String-字符串"><span class="nav-number">7.</span> <span class="nav-text">String 字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode-和-UTF-16"><span class="nav-number">7.1.</span> <span class="nav-text">Unicode 和 UTF-16</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CharSequence-接口"><span class="nav-number">7.2.</span> <span class="nav-text">CharSequence 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String-类"><span class="nav-number">7.3.</span> <span class="nav-text">String 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuilder-类"><span class="nav-number">7.4.</span> <span class="nav-text">StringBuilder 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuffer-类"><span class="nav-number">7.5.</span> <span class="nav-text">StringBuffer 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型包装类"><span class="nav-number">8.</span> <span class="nav-text">基本类型包装类</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-lang-util.html';
+          this.page.identifier = 'java-lang-util.html';
+          this.page.title = 'Java Random、regex正则、Math类、String字符串';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

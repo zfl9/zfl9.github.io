@@ -1,0 +1,692 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="tcpdump">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="通俗的说，tcpdump 是一个抓包工具，用于抓取互联网上传输的数据包。形象的说，tcpdump 是国家海关，驻扎在出入境的咽喉要道，凡是要入境和出境的集装箱，海关人员总要打开箱子，看看里面都装了点啥。学术的说，tcpdump 是一种嗅探器（sniffer），利用以太网的特性，通过将网卡适配器（NIC）置于混杂模式（promiscuous）来获取传输在网络中的信息包。">
+<meta name="keywords" content="linux,tcpdump">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tcpdump 详解">
+<meta property="og:url" content="https://www.zfl9.com/tcpdump.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="通俗的说，tcpdump 是一个抓包工具，用于抓取互联网上传输的数据包。形象的说，tcpdump 是国家海关，驻扎在出入境的咽喉要道，凡是要入境和出境的集装箱，海关人员总要打开箱子，看看里面都装了点啥。学术的说，tcpdump 是一种嗅探器（sniffer），利用以太网的特性，通过将网卡适配器（NIC）置于混杂模式（promiscuous）来获取传输在网络中的信息包。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.406Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tcpdump 详解">
+<meta name="twitter:description" content="通俗的说，tcpdump 是一个抓包工具，用于抓取互联网上传输的数据包。形象的说，tcpdump 是国家海关，驻扎在出入境的咽喉要道，凡是要入境和出境的集装箱，海关人员总要打开箱子，看看里面都装了点啥。学术的说，tcpdump 是一种嗅探器（sniffer），利用以太网的特性，通过将网卡适配器（NIC）置于混杂模式（promiscuous）来获取传输在网络中的信息包。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/tcpdump.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>tcpdump 详解 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/tcpdump.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                tcpdump 详解
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-08T13:58:00+08:00">
+                2016-12-08
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/tcpdump/" itemprop="url" rel="index">
+                    <span itemprop="name">tcpdump</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/tcpdump.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tcpdump.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/tcpdump.html" class="leancloud_visitors" data-flag-title="tcpdump 详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>通俗的说，tcpdump 是一个抓包工具，用于抓取互联网上传输的数据包。形象的说，tcpdump 是国家海关，驻扎在出入境的咽喉要道，凡是要入境和出境的集装箱，海关人员总要打开箱子，看看里面都装了点啥。学术的说，tcpdump 是一种嗅探器（sniffer），利用以太网的特性，通过将网卡适配器（NIC）置于混杂模式（promiscuous）来获取传输在网络中的信息包。</p>
+<a id="more"></a>
+<h2 id="tcpdump-详解"><a href="#tcpdump-详解" class="headerlink" title="tcpdump 详解"></a>tcpdump 详解</h2><p>tcpdump 是基于 libpcap 开发的命令行抓包工具，tcpdump 还可以将抓的包保存为 .pcap 文件供日后分析；<br>而大家比较熟悉的 Wireshark 也是基于 libpcap 的，Wireshark 的出色不在于抓包，而是在于数据包分析；<br>因此我们完全可以使用 tcpdump 抓包（使用 -w 参数保存为文件），然后使用 Wireshark 进行数据包分析。</p>
+<p><strong>安装 tcpdump</strong><br><code>yum -y install tcpdump</code>（CentOS）、<code>pacman -S --need tcpdump</code>（ArchLinux）；</p>
+<p><strong>抓人生中的第一个包</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~ [9:27:02] C:130
+$ tcpdump --help
+tcpdump version 4.9.2
+libpcap version 1.8.1
+OpenSSL 1.1.0g  2 Nov 2017
+Usage: tcpdump [-aAbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ]
+        [ -C file_size ] [ -E algo:secret ] [ -F file ] [ -G seconds ]
+        [ -i interface ] [ -j tstamptype ] [ -M secret ] [ --number ]
+        [ -Q in|out|inout ]
+        [ -r file ] [ -s snaplen ] [ --time-stamp-precision precision ]
+        [ --immediate-mode ] [ -T type ] [ --version ] [ -V file ]
+        [ -w file ] [ -W filecount ] [ -y datalinktype ] [ -z postrotate-command ]
+        [ -Z user ] [ expression ]
+
+# root @ arch in ~ [9:27:05]
+$ tcpdump -i ens33 -nnvvv 'udp port 53'
+tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+09:27:32.087366 IP (tos 0x0, ttl 64, id 31266, offset 0, flags [none], proto UDP (17), length 82)
+    192.168.255.120.46871 > 114.114.114.114.53: [bad udp cksum 0xa555 -> 0xedb8!] 14004+ [1au] A? www.baidu.com. ar: . OPT UDPsize=4096 (54)
+09:27:32.114713 IP (tos 0x0, ttl 128, id 3038, offset 0, flags [none], proto UDP (17), length 141)
+    114.114.114.114.53 > 192.168.255.120.46871: [udp sum ok] 14004 q: A? www.baidu.com. 3/0/1 www.baidu.com. [18m7s] CNAME www.a.shifen.com., www.a.shifen.com. [31s] A 14.215.177.39, www.a.shifen.com. [31s] A 14.215.177.38 ar: . OPT UDPsize=4096 (113)
+^C
+2 packets captured
+2 packets received by filter
+0 packets dropped by kernel
+</script></code></pre>
+<p>从 –help 信息中可以看到 libpcap 版本、openssl 版本、tcpdump 版本；<br>不过 tcpdump 的帮助信息中实在是看不出什么东西，只能去查看 man 文档；</p>
+<p><code>tcpdump -i ens33 -nnvvv &#39;udp port 53&#39;</code>参数解释：</p>
+<ul>
+<li><code>-i ens33</code>，用来指定监听哪张网卡，我这里是 ens33；</li>
+<li><code>-nn</code>，不解析主机名或端口名称，而是以数字的形式显示；</li>
+<li><code>-vvv</code>，显示最详细的信息（还有<code>-v</code>、<code>-vv</code>选项）；</li>
+<li><code>&#39;udp port 53&#39;</code>，过滤模式，只有匹配成功的数据包才会被 tcpdump 处理；</li>
+</ul>
+<p>启用 tcpdump 后，另起一个终端，使用<code>dig @114.114.114.114 www.baidu.com</code>解析 DNS；<br>从 tcpdump 打印的数据包信息中也可以看到 www.baidu.com 字样，因为 dns 是明文的；</p>
+<p>最后，使用 CTRL + C 关闭 tcpdump，tcpdump 会输出抓包统计信息，意义如下：</p>
+<ul>
+<li><code>2 packets captured</code>：表示有 2 个数据包被 tcpdump 处理了；</li>
+<li><code>2 packets received by filter</code>：表示有 2 个数据包符合过滤条件；</li>
+<li><code>0 packets dropped by kernel</code>：表示有 0 个数据包被内核丢弃了；</li>
+</ul>
+<p>我们只需关心前两个，理想情况下，符合条件的数据包和被 tcpdump 处理的数据包数量应该是一样的；<br>有时会因为 tcpdump 处理不及时（或其他原因），导致<code>captured</code>数小于<code>received by filter</code>的数；</p>
+<p><strong>tcp 标志位</strong></p>
+<ul>
+<li><code>SYN</code>，显示为<code>S</code>，同步标志位，用于建立会话连接，同步序列号；</li>
+<li><code>ACK</code>，显示为<code>.</code>，确认标志位，对已接收的数据包进行确认；</li>
+<li><code>FIN</code>，显示为<code>F</code>，完成标志位，表示我已经没有数据要发送了，即将关闭连接；</li>
+<li><code>RESET</code>，显示为<code>R</code>，重置标志位，用于连接复位、拒绝错误和非法的数据包；</li>
+<li><code>PUSH</code>，显示为<code>P</code>，推送标志位，表示该数据包被对方接收后应立即交给上层应用，而不在缓冲区排队；</li>
+<li><code>URGENT</code>，显示为<code>U</code>，紧急标志位，表示数据包的紧急指针域有效，用来保证连接不被阻断，并督促中间设备尽快处理；</li>
+</ul>
+<p><strong>命令行选项</strong></p>
+<ul>
+<li><code>-i INTERFACE</code>，指定监听的网卡，如果要监听所有网卡，可以使用 any；</li>
+<li><code>-D</code>，打印当前可用于 tcpdump 监听的网卡；</li>
+<li><code>-n</code>，不解析主机名，而是显示 IP 地址；</li>
+<li><code>-nn</code>，不解析主机名或端口对应的服务名，而是显示 IP 地址和端口号；</li>
+<li><code>-q</code>，显示更少的协议信息；</li>
+<li><code>-v</code>，详细输出，如 TTL、总长度、IP 包选项、IP/ICMP 报头校验和、使用 -w 写入文件时每隔 10 秒显示捕获的数据包数量等；</li>
+<li><code>-vv</code>，更详细的输出，如打印 NFS 附加字段、完全解码 SMB 数据包等；</li>
+<li><code>-vvv</code>，更详细的输出，如打印 telnet SB … SE 选项、以 16 进制打印 telnet 选项等；</li>
+<li><code>-t</code>，不显示任何时间戳；</li>
+<li><code>-tt</code>，显示自 1970-01-01 00:00:00 UTC 起的秒数；</li>
+<li><code>-ttt</code>，显示两个数据包之间的时间差（微秒）；</li>
+<li><code>-tttt</code>，显示年月日、时分秒；</li>
+<li><code>-ttttt</code>，显示相对第一个数据包的时间差（微秒）；</li>
+<li><code>-A</code>，以 ASCII 显示数据包（不包括链路层头部信息）；</li>
+<li><code>-X</code>，以 ASCII 和 Hex 显示数据包（不包括链路层头部信息）；</li>
+<li><code>-XX</code>，以 ASCII 和 Hex 显示数据包（包括链路层头部信息）；</li>
+<li><code>-e</code>，打印链路层头部（比如 MAC 地址信息）；</li>
+<li><code>-c N</code>，只捕获 N 个数据包，捕获完成后自动退出；</li>
+<li><code>-s SIZE</code>，定义捕获的数据包大小（字节为单位）；</li>
+<li><code>-S</code>，打印绝对序列号而不是相对序列号（TCP）；</li>
+<li><code>-l</code>，打印时使用行缓冲，这在使用管道时非常方便；</li>
+<li><code>-w</code>，将捕获到的数据包保存至 pcap 文件中；</li>
+<li><code>-r</code>，从 pcap 文件中读取数据包并进行分析；</li>
+</ul>
+<p><strong>过滤表达式</strong></p>
+<ul>
+<li><strong><code>type</code>类型</strong>：<code>host</code>主机、<code>net</code>地址段、<code>port</code>端口号、<code>portrange</code>端口范围，默认为<code>host</code>；<ul>
+<li><code>host</code>，可以为主机名，也可以为 IP 地址；</li>
+<li><code>net</code>，<code>net 172.16.0.0 mask 255.240.0.0</code>或<code>net 172.16.0.0/12</code>；</li>
+<li><code>port</code>，可以为端口号，也可以为对应的服务名（/etc/services）；</li>
+<li><code>portrange</code>，使用减号表示一个端口范围<code>portrange 100-200</code>；</li>
+</ul>
+</li>
+<li><strong><code>dir</code>方向</strong>：<code>src</code>来源、<code>dst</code>目的、<code>src or dst</code>来源或目的、<code>src and dst</code>来源和目的，默认为<code>src or dst</code>；</li>
+<li><strong><code>proto</code>协议</strong>：<code>ip</code>、<code>ip6</code>、<code>arp</code>、<code>rarp</code>、<code>tcp</code>、<code>udp</code>，默认为对应的所有可用协议；</li>
+</ul>
+<p>注意顺序：最前面是 proto，然后是 dir、最后是 type；同时也可以使用<code>and</code>、<code>or</code>、<code>not</code>逻辑连接符；如：</p>
+<ul>
+<li><code>host 1.2.3.4 and not port 80 and not port 8080</code>；</li>
+<li><code>tcp dst port 20 or 21 or 22</code>等价于<code>tcp dst port 20 or tcp dst port 21 or tcp dst port 22</code>；</li>
+<li>也可以使用大家熟知的<code>&amp;&amp;</code>、<code>||</code>、<code>!</code>，不过需要使用单引号或双引号扩起来，防止 shell 误解析；</li>
+<li>另外需要注意它们的优先级（从高到低）：<code>not</code>、<code>and</code>、<code>or</code>，如果对它们不清楚，请使用<code>()</code>括起来。</li>
+</ul>
+<blockquote>
+<p>更多 tcpdump 参数请查阅<code>man tcpdump</code>帮助文档；<br>更多 expression 语法请查阅<code>man pcap-filter</code>帮助文档。</p>
+</blockquote>
+<h2 id="tcpdump-分析"><a href="#tcpdump-分析" class="headerlink" title="tcpdump 分析"></a>tcpdump 分析</h2><p>以最简单的 HTTP 为例，<code>curl http://main.zfl9.com/</code>，抓到了 11 个数据包：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~ [13:24:43]
+$ tcpdump -i ens33 -Snnvvv 'tcp port 80'
+tcpdump: listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:24:51.477917 IP (tos 0x0, ttl 64, id 28547, offset 0, flags [DF], proto TCP (6), length 60)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [S], cksum 0x06be (incorrect -> 0x4162), seq 1028579349, win 29200, options [mss 1460,sackOK,TS val 162328649 ecr 0,nop,wscale 9], length 0
+13:24:51.615864 IP (tos 0x0, ttl 128, id 3530, offset 0, flags [none], proto TCP (6), length 44)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [S.], cksum 0xa13b (correct), seq 729495000, ack 1028579350, win 64240, options [mss 1460], length 0
+13:24:51.615996 IP (tos 0x0, ttl 64, id 28548, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [.], cksum 0x06aa (incorrect -> 0x41d9), seq 1028579350, ack 729495001, win 29200, length 0
+13:24:51.616212 IP (tos 0x0, ttl 64, id 28549, offset 0, flags [DF], proto TCP (6), length 117)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [P.], cksum 0x06f7 (incorrect -> 0x9844), seq 1028579350:1028579427, ack 729495001, win 29200, length 77: HTTP, length: 77
+    GET / HTTP/1.1
+    Host: main.zfl9.com
+    User-Agent: curl/7.56.1
+    Accept: */*
+
+13:24:51.616513 IP (tos 0x0, ttl 128, id 3531, offset 0, flags [none], proto TCP (6), length 40)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [.], cksum 0xb8ab (correct), seq 729495001, ack 1028579427, win 64240, length 0
+13:24:51.755453 IP (tos 0x0, ttl 128, id 3532, offset 0, flags [none], proto TCP (6), length 352)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [P.], cksum 0xa7a7 (correct), seq 729495001:729495313, ack 1028579427, win 64240, length 312: HTTP, length: 312
+    HTTP/1.1 200 OK
+    Server: nginx
+    Date: Tue, 21 Nov 2017 05:24:51 GMT
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 23
+    Last-Modified: Mon, 13 Nov 2017 07:25:26 GMT
+    Connection: keep-alive
+    ETag: "5a0948e6-17"
+    Strict-Transport-Security: max-age=31536000
+    Accept-Ranges: bytes
+
+    <h1>main.zfl9.com</h1>
+13:24:51.755529 IP (tos 0x0, ttl 64, id 28550, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [.], cksum 0x06aa (incorrect -> 0x3d24), seq 1028579427, ack 729495313, win 30016, length 0
+13:24:51.755940 IP (tos 0x0, ttl 64, id 28551, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [F.], cksum 0x06aa (incorrect -> 0x3d23), seq 1028579427, ack 729495313, win 30016, length 0
+13:24:51.756427 IP (tos 0x0, ttl 128, id 3533, offset 0, flags [none], proto TCP (6), length 40)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [.], cksum 0xb773 (correct), seq 729495313, ack 1028579428, win 64239, length 0
+13:24:51.891453 IP (tos 0x0, ttl 128, id 3534, offset 0, flags [none], proto TCP (6), length 40)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [FP.], cksum 0xb76a (correct), seq 729495313, ack 1028579428, win 64239, length 0
+13:24:51.891512 IP (tos 0x0, ttl 64, id 1860, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [.], cksum 0x3d22 (correct), seq 1028579428, ack 729495314, win 30016, length 0
+^C
+11 packets captured
+11 packets received by filter
+0 packets dropped by kernel
+</script></code></pre>
+<p><strong>TCP 三次握手</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">## 第一次握手 [SYN]
+13:24:51.477917 IP (tos 0x0, ttl 64, id 28547, offset 0, flags [DF], proto TCP (6), length 60)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [S], cksum 0x06be (incorrect -> 0x4162), seq 1028579349, win 29200, options [mss 1460,sackOK,TS val 162328649 ecr 0,nop,wscale 9], length 0
+
+## 第二次握手 [SYN + ACK]
+13:24:51.615864 IP (tos 0x0, ttl 128, id 3530, offset 0, flags [none], proto TCP (6), length 44)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [S.], cksum 0xa13b (correct), seq 729495000, ack 1028579350, win 64240, options [mss 1460], length 0
+
+## 第三次握手 [ACK]
+13:24:51.615996 IP (tos 0x0, ttl 64, id 28548, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [.], cksum 0x06aa (incorrect -> 0x41d9), seq 1028579350, ack 729495001, win 29200, length 0
+</script></code></pre>
+<ol>
+<li>Client 发送连接请求（SYN; seq: 1028579349），进入<code>SYN-SENT</code>状态；</li>
+<li>Server 响应连接请求（SYN+ACK; seq: 729495000; ack: 1028579350），进入<code>SYN-RCVD</code>状态；</li>
+<li>Client 确认 ack 值，进入<code>ESTABLISHED</code>状态，同时发送确认包（ACK; seq: 1028579350; ack: 729495001）；Server 确认 ack 值，进入<code>ESTABLISHED</code>状态；</li>
+</ol>
+<p><strong>数据传输</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">## Client 发送请求 [PUSH]
+13:24:51.616212 IP (tos 0x0, ttl 64, id 28549, offset 0, flags [DF], proto TCP (6), length 117)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [P.], cksum 0x06f7 (incorrect -> 0x9844), seq 1028579350:1028579427, ack 729495001, win 29200, length 77: HTTP, length: 77
+    GET / HTTP/1.1
+    Host: main.zfl9.com
+    User-Agent: curl/7.56.1
+    Accept: */*
+
+## Server 确认请求 [ACK]
+13:24:51.616513 IP (tos 0x0, ttl 128, id 3531, offset 0, flags [none], proto TCP (6), length 40)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [.], cksum 0xb8ab (correct), seq 729495001, ack 1028579427, win 64240, length 0
+
+## Server 响应请求 [PUSH]
+13:24:51.755453 IP (tos 0x0, ttl 128, id 3532, offset 0, flags [none], proto TCP (6), length 352)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [P.], cksum 0xa7a7 (correct), seq 729495001:729495313, ack 1028579427, win 64240, length 312: HTTP, length: 312
+    HTTP/1.1 200 OK
+    Server: nginx
+    Date: Tue, 21 Nov 2017 05:24:51 GMT
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 23
+    Last-Modified: Mon, 13 Nov 2017 07:25:26 GMT
+    Connection: keep-alive
+    ETag: "5a0948e6-17"
+    Strict-Transport-Security: max-age=31536000
+    Accept-Ranges: bytes
+
+    <h1>main.zfl9.com</h1>
+
+## Client 确认响应 [ACK]
+13:24:51.755529 IP (tos 0x0, ttl 64, id 28550, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [.], cksum 0x06aa (incorrect -> 0x3d24), seq 1028579427, ack 729495313, win 30016, length 0
+</script></code></pre>
+<p><strong>TCP 四次挥手</strong></p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">## Client 告诉 Server，我已经没有数据要发送了 [FIN]
+13:24:51.755940 IP (tos 0x0, ttl 64, id 28551, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [F.], cksum 0x06aa (incorrect -> 0x3d23), seq 1028579427, ack 729495313, win 30016, length 0
+
+## Server 收到后，告诉 Client，你再等会 [ACK]
+13:24:51.756427 IP (tos 0x0, ttl 128, id 3533, offset 0, flags [none], proto TCP (6), length 40)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [.], cksum 0xb773 (correct), seq 729495313, ack 1028579428, win 64239, length 0
+
+## Server 告诉 Client，我也没数据要发送了 [FIN + PUSH]
+13:24:51.891453 IP (tos 0x0, ttl 128, id 3534, offset 0, flags [none], proto TCP (6), length 40)
+    45.77.25.33.80 > 192.168.255.120.30290: Flags [FP.], cksum 0xb76a (correct), seq 729495313, ack 1028579428, win 64239, length 0
+
+## Client 收到后，告诉 Server，好的 [ACK]
+13:24:51.891512 IP (tos 0x0, ttl 64, id 1860, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.255.120.30290 > 45.77.25.33.80: Flags [.], cksum 0x3d22 (correct), seq 1028579428, ack 729495314, win 30016, length 0
+</script></code></pre>
+<ol>
+<li>Client 发送 FIN 包，告诉 Server：我已经没有数据要发送了，我们关闭连接吧；进入<code>FIN-WAIT-1</code>状态；</li>
+<li>Server 收到 FIN 包后，知道 Client 要准备关闭连接了，于是回复 ACK 包，告诉 Client：我知道了；进入<code>CLOSE-WAIT</code>状态；Client 收到 ACK 包后，知道 Server 还有些事要准备（如将未发送的数据发送完），于是继续等待，进入<code>FIN-WAIT-2</code>状态；</li>
+<li>Server 准备完毕后，也发送 FIN 包，告诉 Client，我也没有数据要发送了，即将关闭连接了哦，进入<code>LAST-ACK</code>状态；</li>
+<li>Client 收到 FIN 包后，知道 Server 已经准备完毕并且即将关闭连接，于是发送 ACK 包，告诉 Server 已收到，进入<code>TIME-WAIT</code>状态；Server 收到 ACK 包后，进入<code>CLOSED</code>状态；Client 等待 2MSL 时间后，没有再次收到 Server 的 FIN 包，因此确认 Server 已经收到了 ACK 包并已关闭，于是 Client 也进入<code>CLOSED</code>状态；</li>
+</ol>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/tcpdump/" rel="tag"># tcpdump</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/nginx-rewrite.html" rel="next" title="nginx rewrite 详解">
+                <i class="fa fa-chevron-left"></i> nginx rewrite 详解
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/expect.html" rel="prev" title="expect 自动交互">
+                expect 自动交互 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tcpdump-详解"><span class="nav-number">1.</span> <span class="nav-text">tcpdump 详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcpdump-分析"><span class="nav-number">2.</span> <span class="nav-text">tcpdump 分析</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/tcpdump.html';
+          this.page.identifier = 'tcpdump.html';
+          this.page.title = 'tcpdump 详解';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

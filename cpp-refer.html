@@ -1,0 +1,865 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C++ 引用 reference 指针">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="C++ 引用，什么是引用，引用的本质是什么，和指针有什么区别？">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 引用">
+<meta property="og:url" content="https://www.zfl9.com/cpp-refer.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="C++ 引用，什么是引用，引用的本质是什么，和指针有什么区别？">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 引用">
+<meta name="twitter:description" content="C++ 引用，什么是引用，引用的本质是什么，和指针有什么区别？">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/cpp-refer.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>C++ 引用 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/cpp-refer.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                C++ 引用
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T07:07:00+08:00">
+                2017-08-25
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/cpp-refer.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cpp-refer.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/cpp-refer.html" class="leancloud_visitors" data-flag-title="C++ 引用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>C++ 引用，什么是引用，引用的本质是什么，和指针有什么区别？</p>
+<a id="more"></a>
+<h2 id="引用的概念"><a href="#引用的概念" class="headerlink" title="引用的概念"></a>引用的概念</h2><p>参数的传递本质上是一次赋值的过程，赋值就是对内存进行拷贝；所谓内存拷贝，是指将一块内存上的数据复制到另一块内存上；</p>
+<p>对于像 char、bool、int、float 等基本类型的数据，它们占用的内存往往只有几个字节，对它们进行内存拷贝非常快速；<br>而数组、结构体、对象是一系列数据的集合，数据的数量没有限制，可能很少，也可能成千上万，对它们进行频繁的内存拷贝可能会消耗很多时间，拖慢程序的执行效率；</p>
+<p>C/C++禁止在函数调用时直接传递数组的内容，而是强制传递数组指针；而对于结构体和对象没有这种限制，调用函数时既可以传递指针，也可以直接传递内容；为了提高效率，我们一般都是传递指针；</p>
+<p>但是在 C++ 中，我们有了一种比指针更加便捷的传递聚合类型数据的方式，那就是<code>引用（Reference）</code>；</p>
+<blockquote>
+<p>在 C/C++ 中，我们将 char、int、float 等由语言本身支持的类型称为<strong>基本类型</strong>，将<code>数组</code>、<code>结构体</code>、<code>类（对象）</code>等由基本类型组合而成的类型称为<strong>聚合类型</strong>；</p>
+</blockquote>
+<p><strong>引用（Reference）是 C++ 相对于C语言的又一个扩充；引用可以看做是数据的一个别名，通过这个别名和原来的名字都能够找到这份数据</strong></p>
+<p>引用的定义方式：<code>datatype &amp;ref_name = origin_name;</code><br><code>datatype</code>是被引用的数据的类型，<code>ref_name</code>是引用的名称（新名称），<code>origin_name</code>是被引用的数据（原来的名称）；</p>
+<p><strong>引用必须在定义的同时初始化，并且以后也要从一而终，不能再引用其它数据，这有点类似于常量（const 变量）</strong></p>
+<p>引用的实例：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+int main() {
+    int a = 10;
+    int &b = a;
+    printf("a: %d, b: %d, &a: %p, &b: %p\n", a, b, &a, &b);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [8:03:13]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [8:03:15]
+$ ./a.out
+a: 10, b: 10, &a: 0x7fff3e3083ec, &b: 0x7fff3e3083ec
+</script></code></pre>
+<p>可以发现，a 和 b 的地址是一样的，访问该内存上的数据使用哪个名字都行；<br>注意，在定义引用的时候需要加<code>&amp;</code>，在使用的时候不用<code>&amp;</code>，如果使用时加<code>&amp;</code>表示取地址；</p>
+<p>由于引用 b 和原始变量 a 都是指向同一地址，所以通过引用也可以修改原始变量中所存储的数据；<br>如果不希望通过引用来修改原来的数据，可以在定义的时候添加<code>const</code>进行限制：<code>const int &amp;b = a;</code>，称为<code>常引用</code>；</p>
+<p><strong>引用作为函数参数</strong><br>在定义或声明函数时，我们可以将函数的形参指定为引用的形式，这样在调用函数时就会将实参和形参绑定在一起，让它们都指代同一份数据；如此一来，如果在函数体中修改了形参的数据，那么实参的数据也会被修改，从而拥有“在函数内部影响函数外部数据”的效果；</p>
+<p>先来看一个交换值的例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+void swap1(int a, int b) {
+    int tmp = a;
+    a = b;
+    b = tmp;
+}
+
+void swap2(int *a, int *b) {
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+void swap3(int &a, int &b) {
+    int tmp = a;
+    a = b;
+    b = tmp;
+}
+
+int main() {
+    int x, y;
+
+    x = 1; y = 2;
+    printf("swap1_before: x = %d, y = %d\n", x, y);
+    swap1(x, y);
+    printf("swap1_after: x = %d, y = %d\n\n", x, y);
+
+    x = 1; y = 2;
+    printf("swap2_before: x = %d, y = %d\n", x, y);
+    swap2(&x, &y);
+    printf("swap2_after: x = %d, y = %d\n\n", x, y);
+
+    x = 1; y = 2;
+    printf("swap3_before: x = %d, y = %d\n", x, y);
+    swap3(x, y);
+    printf("swap3_after: x = %d, y = %d\n", x, y);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [8:18:09]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [8:18:11]
+$ ./a.out
+swap1_before: x = 1, y = 2
+swap1_after: x = 1, y = 2
+
+swap2_before: x = 1, y = 2
+swap2_after: x = 2, y = 1
+
+swap3_before: x = 1, y = 2
+swap3_after: x = 2, y = 1
+</script></code></pre>
+<p><code>swap1(int, int)</code>值传递：由于形参a、b的作用范围仅限于函数内部，它们拥有独立的内存，和x、y互不影响；<br><code>swap2(int*, int*)</code>指针传递：调用函数的时候分别将x、y的地址传递给形参a、b，这样就能在函数内部通过指针间接交换两个数值；<br><code>swap3(int&amp;, int&amp;)</code>引用传递：调用函数的时候分别将形参a、b绑定到x、y指定的数据，这样就能在函数内部交换两个数值了；</p>
+<p>从以上代码的编写中可以发现，按引用传参在使用形式上比指针更加直观；鼓励大量使用引用，一般可以代替指针，当然指针在 C++ 中也是不可或缺，这两者应结合使用；</p>
+<p><strong>引用作为函数返回值</strong><br>引用除了可以作为函数形参，还可以作为函数返回值：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+int & func(int &n) {
+    n += 10;
+    return n;
+}
+
+int main() {
+    int a = 10;
+    int &b = func(a);   // 传递a的引用给b
+    printf("a = %d, b = %d, &a = %p, &b = %p\n", a, b, &a, &b);
+    b++;
+    printf("a = %d, b = %d\n", a, b);
+
+    int x = 10;
+    int y = func(x);    // 用y接收func()的返回值
+    printf("x = %d, y = %d, &x = %p, &y = %p\n", x, y, &x, &y);
+    y++;
+    printf("x = %d, y = %d\n", x, y);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [8:38:12]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [8:38:26]
+$ ./a.out
+a = 20, b = 20, &a = 0x7fff159e9214, &b = 0x7fff159e9214
+a = 21, b = 21
+x = 20, y = 20, &x = 0x7fff159e9218, &y = 0x7fff159e921c
+x = 20, y = 21
+</script></code></pre>
+<p>将引用作为函数返回值时应该注意一个小问题，就是不能返回局部数据（例如局部变量、局部对象、局部数组等）的引用，因为当函数调用完成后局部数据就会被销毁，有可能在下次使用时数据就不存在了，C++ 编译器检测到该行为时也会给出警告；</p>
+<h2 id="引用的本质"><a href="#引用的本质" class="headerlink" title="引用的本质"></a>引用的本质</h2><p>虽然通过前面的内容我们知道了怎么使用引用，但又感觉糊里糊涂，不明白它到底是什么，它和指针有点相似，但又不是一个东西；</p>
+<p>先来看一下前面的这个例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+int main() {
+    int a = 10;
+    int &b = a;
+    printf("a = %d, b = %d, &a = %p, &b = %p\n", a, b, &a, &b);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [8:43:08]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [8:43:09]
+$ ./a.out
+a = 10, b = 10, &a = 0x7ffc296ecc0c, &b = 0x7ffc296ecc0c
+</script></code></pre>
+<p>我们知道，变量是要占用内存的，虽然我们称 b 为变量，但是通过<code>&amp;b</code>获取到的却不是 b 的地址，而是 a 的地址，这会让我们觉得 b 这个变量不占用独立的内存，它和 a 指代的是同一份内存；但是实际上并不是这样，我们来看这个例子：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+int flag = 10;
+
+class A {
+public:
+    A() : m_a(0), m_b(flag) {}
+private:
+    int m_a;
+    int &m_b;
+};
+
+int main() {
+    A *a = new A;
+    printf("sizeof(A): %lu\n", sizeof(A));
+
+    // 通过指针获取a的两个private成员
+    printf("m_a: %d, m_b: %#lx, *m_b: %d, &flag: %p, flag: %d\n",
+            *(int *)a,
+            *(unsigned long *)((unsigned long)a + 8),
+            *(int *)*(unsigned long *)((unsigned long)a + 8),
+            &flag,
+            flag);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:11:37]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [9:12:20]
+$ ./a.out
+sizeof(A): 16
+m_a: 0, m_b: 0x9b3f5a6038, *m_b: 10, &flag: 0x9b3f5a6038, flag: 10
+</script></code></pre>
+<blockquote>
+<p>成员变量是 private 属性的，不能直接通过对象来访问，但是借助强大的指针和类型转换，我们依然可以得到它的内容，只不过这种方法有点蹩脚；</p>
+</blockquote>
+<p>从运行结果可以看出：</p>
+<ul>
+<li>成员变量 m_b 是占用内存的，如果不占用的话，sizeof(A)的结果应该为 4；</li>
+<li>m_b 存储的内容是 0x9b3f5a6038，也即变量 flag 的地址；</li>
+</ul>
+<p>这里注意一下，因为笔者使用的是64位的Linux系统，所以一个指针变量的长度为64位，即8字节长；<br>并且，类和结构体都遵循内存对齐规则，如果你不熟悉内存对齐，请戳 <a href="https://www.zfl9.com/c-struct.html">C语言 struct内存对齐</a>；</p>
+<p>这说明 m_b 的实现和指针非常类似；如果将 m_b 定义为<code>int *</code>类型的指针，并在构造函数中让它指向 flag，那么 m_b 占用的内存也是 8 个字节，存储的内容也是 flag 的地址；</p>
+<p>其实引用只是对指针进行了简单的封装，它的底层依然是通过指针实现的，引用占用的内存和指针占用的内存长度一样，在 32 位环境下是 4 个字节，在 64 位环境下是 8 个字节，之所以不能获取引用的地址，是因为编译器进行了内部转换；</p>
+<p>以下面的语句为例：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+int main() {
+    int a = 10;
+    int &b = a;
+    printf("a = %d, b = %d, &a = %p, &b = %p\n", a, b, &a, &b);
+
+    /* 在编译的某个时候，被转换为如下形式：
+    int a = 10;
+    int *b = &a;
+    printf("a = %d, b = %d, &a = %p, &b = %p\n", a, *b, &a, *&b);
+    */
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:28:56]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [9:28:58]
+$ ./a.out
+a = 10, b = 10, &a = 0x7fffdaa16bcc, &b = 0x7fffdaa16bcc
+</script></code></pre>
+<p>使用<code>&amp;b</code>取地址时，编译器会对代码进行隐式的转换，使得代码输出的是 a 的地址，而不是 b 的地址，这就是为什么获取不到引用变量的地址的原因；<br>也就是说，不是变量 b 不占用内存，而是编译器不让获取它的地址；</p>
+<p>当引用作为函数参数时，也会有类似的转换，这里就不再重复演示了；</p>
+<p>引用虽然是基于指针实现的，但它比指针更加易用，从上面的例子也可以看出来，通过指针获取数据时需要加<code>*</code>，书写麻烦，而引用不需要，它和普通变量的使用方式一样；<br>C++ 的发明人 Bjarne Stroustrup 也说过，他在 C++ 中引入引用的直接目的是为了让代码的书写更加漂亮，尤其是在运算符重载中，不借助引用有时候会使得运算符的使用很麻烦；</p>
+<p><strong>引用和指针的其他区别</strong><br>1) 引用必须在定义时初始化，并且以后也要从一而终，不能再指向其他数据；而指针没有这个限制，指针在定义时不必赋值，以后也能指向任意数据；</p>
+<p>2) 可以有 const 指针，但是没有 const 引用；也就是说，引用变量不能定义为下面的形式：<br><code>int a = 10;</code><br><code>int &amp;const b = a;</code><br>因为 b 本来就不能改变指向，加上 const 多此一举；</p>
+<p>3) 指针可以有多级，但是引用只能有一级；例如，<code>int **p</code>是合法的，而<code>int &amp;&amp;r</code>是不合法的；<br>如果希望定义一个引用变量来指代另外一个引用变量，那么也只需要加一个&amp;，如下所示：<br><code>int a = 10;</code><br><code>int &amp;r = a;</code><br><code>int &amp;rr = r;</code></p>
+<p>4) 指针和引用的自增、自减运算意义不一样；对指针使用<code>++</code>表示指向下一份数据，对引用使用<code>++</code>表示它所指代的数据本身加1；自减（<code>--</code>）也是类似的道理；</p>
+<h2 id="引用不能绑定到临时数据"><a href="#引用不能绑定到临时数据" class="headerlink" title="引用不能绑定到临时数据"></a>引用不能绑定到临时数据</h2><p>我们知道，指针就是数据或代码在内存中的地址，指针变量指向的就是内存中的数据或代码；<br>这里有一个关键词需要强调，就是<strong>内存</strong>，<strong>指针只能指向内存，不能指向寄存器或者硬盘，因为寄存器和硬盘没法寻址</strong></p>
+<p>其实 C++ 代码中的大部分内容都是放在内存中的，例如<em>定义的变量</em>、<em>创建的对象</em>、<em>字符串常量</em>、<em>函数形参</em>、<em>函数体本身</em>、<em>new</em>或<em>malloc()</em>分配的内存等，这些内容都可以用&amp;来获取地址，进而用指针指向它们；<br>除此之外，还有一些我们平时不太留意的临时数据，例如<em>表达式的结果</em>、<em>函数的返回值</em>等，它们可能会放在内存中，也可能会放在寄存器中。一旦它们被放到了寄存器中，就没法用&amp;获取它们的地址了，也就没法用指针指向它们了；</p>
+<p>下面的代码演示了表达式所产生的临时结果：<br><code>int n = 100, m = 200;</code><br><code>int *p1 = &amp;(m + n);</code>：<code>m + n</code>的结果为 300<br><code>int *p2 = &amp;(n + 100);</code>：<code>n + 100</code>的结果为 200<br><code>bool *p4 = &amp;(m &lt; n);</code>：<code>m &lt; n</code>的结果为 false<br>这些表达式的结果都会被放到<em>寄存器</em>中，尝试用&amp;获取它们的地址都是错误的；</p>
+<p>下面的代码演示了函数返回值所产生的临时结果：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">int func() {
+    int n = 100;
+    return n;
+}
+int *p = &(func());
+</script></code></pre>
+<p>func() 的返回值 100 也会被放到寄存器中，也没法用&amp;获取它的地址；</p>
+<p><strong>什么样的临时数据会放到寄存器中</strong><br>寄存器离 CPU 近，并且速度比内存快，将临时数据放到寄存器是为了加快程序运行；<br>但是寄存器的数量是非常有限的，容纳不下较大的数据，所以只能将较小的临时数据放在寄存器中；<br>int、double、bool、char 等基本类型的数据往往不超过 8 个字节，用一两个寄存器就能存储，所以这些类型的临时数据通常会放到寄存器中；<br>而对象、结构体变量是自定义类型的数据，大小不可预测，所以这些类型的临时数据通常会放到内存中；</p>
+<p><strong>关于常量表达式</strong><br>诸如<code>100</code>、<code>200+34</code>、<code>34.5*23</code>、<code>3+7/3</code>等不包含变量的表达式称为<em>常量表达式（Constant expression）</em>；<br>常量表达式由于不包含变量，没有不稳定因素，所以在编译阶段就能求值；编译器不会分配单独的内存来存储常量表达式的值，而是将常量表达式的值和代码合并到一起，放到虚拟地址空间中的代码区；从汇编的角度看，常量表达式的值就是一个立即数，会被“硬编码”到指令中，不能寻址；</p>
+<p>总起来说，常量表达式的值虽然在内存中，但是没有办法寻址，所以也不能使用&amp;来获取它的地址，更不能用指针指向它；</p>
+<p><strong>引用也不能指代临时数据</strong><br>引用和指针在本质上是一样的，引用仅仅是对指针进行了简单的封装；<br>引用和指针都不能绑定到无法寻址的临时数据，并且 C++ 对引用的要求更加严格，在某些编译器下甚至连放在内存中的临时数据都不能指代；</p>
+<p>下面的代码中，我们将引用绑定到了临时数据：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">typedef struct{
+    int a;
+    int b;
+} S;
+
+int func_int(){
+    int n = 100;
+    return n;
+}
+
+S func_s(){
+    S a;
+    a.a = 100;
+    a.b = 200;
+    return a;
+}
+
+S operator+(const S &A, const S &B){
+    S C;
+    C.a = A.a + B.a;
+    C.b = A.b + B.b;
+    return C;
+}
+
+int main(){
+    //下面的代码在GCC和Visual C++下都是错误的
+    int m = 100, n = 36;
+    int &r1 = m + n;
+    int &r2 = m + 28;
+    int &r3 = 12 * 3;
+    int &r4 = 50;
+    int &r5 = func_int();
+
+    //下面的代码在GCC下是错误的，在Visual C++下是正确的
+    S s1 = {23, 45};
+    S s2 = {90, 75};
+    S &r6 = func_s();
+    S &r7 = s1 + s2;
+
+    return 0;
+}
+</script></code></pre>
+<blockquote>
+<p>在 GCC 下，引用不能指代任何临时数据，不管它保存到哪里；<br>在 Visual C++ 下，引用只能指代位于内存中（非代码区）的临时数据，不能指代寄存器中的临时数据；</p>
+</blockquote>
+<p><strong>引用作为函数参数</strong><br>当引用作为函数参数时，有时候很容易给它传递临时数据：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">bool isOdd(int &n) {
+    if (n/2 == 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+int main(){
+    int a = 100;
+    isOdd(a);  //正确
+    isOdd(a + 9);  //错误
+    isOdd(27);  //错误
+    isOdd(23 + 55);  //错误
+    return 0;
+}
+</script></code></pre>
+<p>isOdd()函数用来判断一个数是否为奇数，它的参数是引用类型，只能传递变量，不能传递常量或者表达式；但用来判断奇数的函数不能接受一个数字又让人感觉很奇怪，所以类似这样的函数应该坚持使用值传递，而不是引用传递；</p>
+<h2 id="const引用和临时变量"><a href="#const引用和临时变量" class="headerlink" title="const引用和临时变量"></a>const引用和临时变量</h2><p>引用不能绑定到临时数据，这在大多数情况下是正确的，但是当使用 const 关键字对引用加以限定后，引用就可以绑定到临时数据了；</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">typedef struct{
+    int a;
+    int b;
+} S;
+
+int func_int(){
+    int n = 100;
+    return n;
+}
+
+S func_s(){
+    S a;
+    a.a = 100;
+    a.b = 200;
+    return a;
+}
+
+S operator+(const S &A, const S &B){
+    S C;
+    C.a = A.a + B.a;
+    C.b = A.b + B.b;
+    return C;
+}
+
+int main(){
+    int m = 100, n = 36;
+    const int &r1 = m + n;
+    const int &r2 = m + 28;
+    const int &r3 = 12 * 3;
+    const int &r4 = 50;
+    const int &r5 = func_int();
+
+    S s1 = {23, 45};
+    S s2 = {90, 75};
+    const S &r6 = func_s();
+    const S &r7 = s1 + s2;
+
+    return 0;
+}
+</script></code></pre>
+<p>这段代码在 GCC 和 Visual C++ 下都能够编译通过，这是因为将常引用绑定到临时数据时，编译器采取了一种妥协机制：编译器会为临时数据创建一个新的、无名的临时变量，并将临时数据放入该临时变量中，然后再将引用绑定到该临时变量；注意，临时变量也是变量，所有的变量都会被分配内存；</p>
+<p><strong>为什么编译器为常引用创建临时变量是合理的，而为普通引用创建临时变量就不合理呢？</strong><br>1) 我们知道，将引用绑定到一份数据后，就可以通过引用对这份数据进行操作了，包括读取和写入（修改）；尤其是写入操作，会改变数据的值。而临时数据往往无法寻址，是不能写入的，即使为临时数据创建了一个临时变量，那么修改的也仅仅是临时变量里面的数据，不会影响原来的数据，这样就使得引用所绑定到的数据和原来的数据不能同步更新，最终产生了两份不同的数据，失去了引用的意义；</p>
+<p>2) const 引用和普通引用不一样，我们只能通过 const 引用读取数据的值，而不能修改它的值，所以不用考虑同步更新的问题，也不会产生两份不同的数据，为 const 引用创建临时变量反而会使得引用更加灵活和通用；</p>
+<p>以上节的 isOdd() 函数为例：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">bool isOdd(const int &n){  //改为常引用
+    if(n/2 == 0){
+        return false;
+    }else{
+        return true;
+    }
+}
+</script></code></pre>
+<p>由于在函数体中不会修改 n 的值，所以可以用 const 限制 n，这样一来，下面的函数调用就都是正确的了：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">int a = 100;
+isOdd(a);  //正确
+isOdd(a + 9);  //正确
+isOdd(27);  //正确
+isOdd(23 + 55);  //正确
+</script></code></pre>
+<p>对于第 2 行代码，编译器不会创建临时变量，会直接绑定到变量 a；<br>对于第 3~5 行代码，编译器会创建临时变量来存储临时数据；也就是说，编译器只有在必要时才会创建临时变量；</p>
+<h2 id="const引用与类型转换"><a href="#const引用与类型转换" class="headerlink" title="const引用与类型转换"></a>const引用与类型转换</h2><p>不同类型的数据占用的内存数量不一样，处理方式也不一样，指针的类型要与它指向的数据的类型严格对应；</p>
+<p><strong>类型转换的本质</strong><br>我们知道，数据是放在内存中的，变量（以及指针、引用）是给这块内存起的名字，有了变量就可以找到并使用这份数据；但问题是，该如何使用呢？</p>
+<p>诸如数字、文字、符号、图形、音频、视频等数据都是以二进制形式存储在内存中的，它们并没有本质上的区别，那么，00010000 该理解为数字 16 呢，还是图像中某个像素的颜色呢，还是要发出某个声音呢？如果没有特别指明，我们并不知道；</p>
+<p>也就是说，内存中的数据有多种解释方式，使用之前必须要确定；这种「确定数据的解释方式」的工作就是由<strong>数据类型（Data Type）</strong>来完成的；</p>
+<p>例如<code>int a;</code>，表明，a 这份数据是整数，不能理解为像素、声音、视频等；</p>
+<p>顾名思义，数据类型用来说明数据的类型，确定了数据的解释方式，让计算机和程序员不会产生歧义；<br>C/C++ 支持多种数据类型，包括内置类型（例如 int、double、bool 等）和自定义类型（结构体类型和类类型）；</p>
+<p><strong>所谓数据类型转换，就是对数据所占用的二进制位做出重新解释</strong>；<br><strong>如果有必要，在重新解释的同时还会修改数据，改变它的二进制位</strong>；</p>
+<p>对于<em>隐式类型转换</em>，编译器可以根据已知的转换规则来决定是否需要修改数据的二进制位；而对于<em>强制类型转换</em>，由于没有对应的转换规则，所以能做的事情仅仅是重新解释数据的二进制位，但无法对数据的二进制位做出修正；这就是隐式类型转换和强制类型转换最根本的区别；</p>
+<p>比如，<code>int</code>和<code>float</code>类型的指针，是不能随便互相指向对方的数据的，因为整数和浮点数在内存中的存储是大不一样的：</p>
+<ul>
+<li>对于 int，程序把最高 1 位作为符号位，把剩下的 31 位作为数值位；</li>
+<li>对于 float，程序把最高 1 位作为符号位，把最低的 23 位作为尾数位，把中间的 8 位作为指数位；</li>
+</ul>
+<p>让指针指向「相关的（相近的）但不是严格对应的」类型的数据，表面上看起来是合理的，但是细思极恐，这样会给程序留下很多意想不到的、难以发现的 Bug，所以编译器禁止这样做是非常合理的；<br>当然，如果你想通过强制类型转换达到这个目的，那编译器也会放任不管，给你自由发挥的余地；</p>
+<p>引用（Reference）和指针（Pointer）在本质上是一样的，引用仅仅是对指针进行了简单的封装，「类型严格一致」这条规则同样也适用于引用；</p>
+<p><strong>const 引用与类型转换</strong><br>「类型严格一致」是为了防止发生让人匪夷所思的操作，但是这条规则仅仅适用于普通引用，当对引用添加 const 限定后，情况就又发生了变化，编译器允许引用绑定到类型不一致的数据；请看下面的代码：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">int n = 100;
+int &r1 = n;  //正确
+const float &r2 = n;  //正确
+
+char c = '@';
+char &r3 = c;  //正确
+const int &r4 = c;  //正确
+</script></code></pre>
+<p>当引用的类型和数据的类型不一致时，如果它们的类型是相近的，并且遵守「数据类型的自动转换」规则，那么编译器就会创建一个临时变量，并将数据赋值给这个临时变量（这时候会发生自动类型转换），然后再将引用绑定到这个临时的变量，这与「将 const 引用绑定到临时数据时」采用的方案是一样的；</p>
+<p>注意，临时变量的类型和引用的类型是一样的，在将数据赋值给临时变量时会发生自动类型转换；<br>当引用的类型和数据的类型不遵守「数据类型的自动转换」规则，那么编译器将报错，绑定失败；</p>
+<p>结合上节讲到的知识，总结起来说，给引用添加 const 限定后，不但可以将引用绑定到临时数据，还可以将引用绑定到类型相近的数据，这使得引用更加灵活和通用，它们背后的机制都是临时变量；</p>
+<p><strong>引用类型的函数形参请尽可能的使用 const</strong><br>当引用作为函数参数时，如果在函数体内部不会修改引用所绑定的数据，那么请尽量为该引用添加 const 限制；</p>
+<p>概括起来说，将引用类型的形参添加 const 限制的理由有三个：</p>
+<ul>
+<li>使用 const 可以避免无意中修改数据的编程错误；</li>
+<li>使用 const 能让函数接收 const 和非 const 类型的实参，否则将只能接收非 const 类型的实参；</li>
+<li>使用 const 引用能够让函数正确生成并使用临时变量；</li>
+</ul>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/cpp-inheritance.html" rel="next" title="C++ 继承与派生">
+                <i class="fa fa-chevron-left"></i> C++ 继承与派生
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/cpp-class.html" rel="prev" title="C++ 类和对象">
+                C++ 类和对象 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引用的概念"><span class="nav-number">1.</span> <span class="nav-text">引用的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用的本质"><span class="nav-number">2.</span> <span class="nav-text">引用的本质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用不能绑定到临时数据"><span class="nav-number">3.</span> <span class="nav-text">引用不能绑定到临时数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#const引用和临时变量"><span class="nav-number">4.</span> <span class="nav-text">const引用和临时变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#const引用与类型转换"><span class="nav-number">5.</span> <span class="nav-text">const引用与类型转换</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/cpp-refer.html';
+          this.page.identifier = 'cpp-refer.html';
+          this.page.title = 'C++ 引用';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

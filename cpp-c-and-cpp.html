@@ -1,0 +1,821 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c++ c C++入门初步 c++与c语言">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="C++ 入门初步，C语言与C++的区别与联系，C++类和对象、命名空间等">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 入门初步">
+<meta property="og:url" content="https://www.zfl9.com/cpp-c-and-cpp.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="C++ 入门初步，C语言与C++的区别与联系，C++类和对象、命名空间等">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 入门初步">
+<meta name="twitter:description" content="C++ 入门初步，C语言与C++的区别与联系，C++类和对象、命名空间等">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/cpp-c-and-cpp.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>C++ 入门初步 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/cpp-c-and-cpp.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                C++ 入门初步
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-23T16:07:00+08:00">
+                2017-08-23
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/cpp-c-and-cpp.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cpp-c-and-cpp.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/cpp-c-and-cpp.html" class="leancloud_visitors" data-flag-title="C++ 入门初步">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>C++ 入门初步，C语言与C++的区别与联系，C++类和对象、命名空间等</p>
+<a id="more"></a>
+<h2 id="C-类和对象"><a href="#C-类和对象" class="headerlink" title="C++类和对象"></a>C++类和对象</h2><p>C++是一门<code>面向对象</code>的编程语言，理解C++，首先要理解<code>类</code>（Class）和<code>对象</code>（Object）这两个概念；</p>
+<p><code>C++中的类（Class）可以看做C语言中结构体（Struct）的升级版</code>；</p>
+<p>C语言的结构体是一种构造类型，可以包含若干成员变量，每个成员变量的类型可以不同；可以通过结构体来定义结构体变量，每个变量拥有相同的性质；<br>C++中的类也是一种构造类型，但是进行了一些扩展，类的成员不但可以是变量，还可以是函数；通过类定义出来的变量也有特定的称呼，叫做“对象”；</p>
+<p>c语言中的结构：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student {
+    const char *name;
+    int age;
+    float score;
+};
+
+void print(struct Student stu) {
+    printf("name: %s, age: %d, score: %.1f\n", stu.name, stu.age, stu.score);
+}
+
+int main() {
+    struct Student stu = {"Otokaze", 18, 135.5};
+    print(stu);
+    return 0;
+}
+</script></code></pre>
+<p>c++中的类：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+
+using namespace std;
+
+class Student {
+    public:
+        Student(const char *name, int age, float score) : m_name(name), m_age(age), m_score(score) {}
+        void print() const;
+    private:
+        const char *m_name;
+        int m_age;
+        float m_score;
+};
+
+void Student::print() const {
+    cout << "name: " << m_name << ", age: " << m_age << ", score: " << m_score << endl;
+}
+
+int main() {
+    Student stu("Otokaze", 18, 135.5);
+    stu.print();
+    return 0;
+}
+</script></code></pre>
+<blockquote>
+<p>C语言中的 struct 只能包含变量，而C++中的 class 除了可以包含变量，还可以包含函数；<br>print() 是用来处理成员变量的函数，在C语言中，我们将它放在了 struct Student 外面，它和成员变量是分离的；<br>而在C++中，我们将它放在了 class Student 内部，使它和成员变量聚集在一起，看起来更像一个整体；</p>
+</blockquote>
+<p>结构体和类都可以看做一种由用户自己定义的复杂数据类型，在C语言中可以通过结构体名来定义变量，在C++中可以通过类名来定义变量；<br>不同的是，通过结构体定义出来的变量还是叫变量，而通过类定义出来的变量有了新的名称，叫做<code>对象</code>（Object）；</p>
+<p>类只是一张图纸，起到说明的作用，不占用内存空间；对象才是具体的零件，要有地方来存放，才会占用内存空间；<br>在C++中，通过类名就可以创建对象，即将图纸生产成零件，这个过程叫做<code>类的实例化</code>，因此也称对象是类的一个<code>实例</code>（Instance）<br>有些资料也将类的<code>成员变量</code>称为<code>属性</code>（Property），将类的<code>成员函数</code>称为<code>方法</code>（Method）；</p>
+<blockquote>
+<p>面向对象编程在代码执行效率上绝对没有任何优势，它的主要目的是方便程序员组织和管理代码，快速梳理编程思路，带来编程思想上的革新；</p>
+</blockquote>
+<p>面向对象编程是针对开发中大规模的程序而提出来的，目的是提高软件开发的效率；不要把面向对象和面向过程对立起来，面向对象和面向过程不是矛盾的，而是各有用途、互为补充的；</p>
+<h2 id="运行C-程序"><a href="#运行C-程序" class="headerlink" title="运行C++程序"></a>运行C++程序</h2><p>c++和c语言类似，都要经过<code>预处理</code>、<code>编译</code>、<code>汇编</code>、<code>链接</code>四个阶段，程序才能运行；</p>
+<p>GNU编译器套件（GCC），提供了<code>gcc</code>、<code>g++</code>两个命令来分别编译c、c++程序，<code>g++</code>命令的用法及参数基本同<code>gcc</code>；</p>
+<p>c语言源文件的后缀为<code>.c</code>，而c++源文件的后缀通常为<code>.cpp</code>；</p>
+<h2 id="C-命名空间"><a href="#C-命名空间" class="headerlink" title="C++命名空间"></a>C++命名空间</h2><p>一个中大型软件往往由多名程序员共同开发，会使用大量的变量和函数，不可避免地会出现变量或函数的命名冲突；当所有人的代码都测试通过，没有问题时，将它们结合到一起就有可能会出现命名冲突；</p>
+<p>例如小李和小韩都参与了一个文件管理系统的开发，它们都定义了一个全局变量fp，用来指明当前打开的文件，将他们的代码整合在一起编译时，很明显编译器会提示 fp 重复定义（Redefinition）错误；</p>
+<p>为了解决合作开发时的命名冲突问题，C++引入了<code>命名空间（Namespace）</code>的概念：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">namespace ns1 {
+    FILE *fp = nullptr;
+}
+
+namespace ns2 {
+    FILE *fp = nullptr;
+}
+</script></code></pre>
+<p>小李与小韩各自定义了自己的命名空间，此时再将他们的 fp 变量放在一起编译就不会有任何问题；</p>
+<p><code>namespace</code>是C++中的关键字，用来定义一个命名空间，语法：<code>namespace ns_name { ... }</code>；<br><code>ns_name</code>是命名空间的<code>名字</code>，它里面可以包含<code>变量</code>、<code>函数</code>、<code>类</code>、<code>typedef</code>、<code>#define</code>、<code>命名空间</code>等，最后由<code>{}</code>包围；</p>
+<p>使用命名空间的成员时，需要指明使用的命名空间，如：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">// 1. 直接指定
+ns1::fp = fopen("a.file", "r");
+ns2::fp = fopen("b.file", "w");
+
+// 2. 使用using ns1::fp
+using ns1::fp;
+fp = fopen("a.file", "r");
+ns2::fp = fopen("b.file", "w");
+
+// 3. 使用using namespace ns1
+using namespace ns1;
+fp = fopen("a.file", "r");
+ns2::fp = fopen("b.file", "w");
+</script></code></pre>
+<p><code>::</code>是一个新符号，称为<code>域解析操作符</code>，在C++中用来指明要使用的命名空间；</p>
+<h2 id="标准命名空间std"><a href="#标准命名空间std" class="headerlink" title="标准命名空间std"></a>标准命名空间std</h2><p>C++是在C语言的基础上开发的，早期的 C++ 还不完善，不支持命名空间，没有自己的编译器，而是将 C++ 代码翻译成C代码，再通过C编译器完成编译；<br>这个时候的 C++ 仍然在使用C语言的库，stdio.h、stdlib.h、string.h 等头文件依然有效；此外 C++ 也开发了一些新的库，增加了自己的头文件，和C语言一样，C++ 头文件仍然以<code>.h</code>为后缀，它们所包含的类、函数、宏等都是全局范围的；</p>
+<p>后来 C++ 引入了命名空间的概念，计划重新编写库，将类、函数、宏等都统一纳入一个命名空间，这个命名空间的名字就是<code>std</code>；std 是 standard 的缩写，意思是“标准命名空间”；</p>
+<p>但是这时已经有很多用老式 C++ 开发的程序了，它们的代码中并没有使用命名空间，直接修改原来的库会带来一个很严重的后果：程序员会因为不愿花费大量时间修改老式代码而极力反抗，拒绝使用新标准的 C++ 代码；</p>
+<p>C++ 开发人员想了一个好办法，保留原来的库和头文件，它们在 C++ 中可以继续使用，然后再把原来的库复制一份，在此基础上稍加修改，把类、函数、宏等纳入命名空间 std 下，就成了新版 C++ 标准库；<br>这样共存在了两份功能相似的库，使用了老式 C++ 的程序可以继续使用原来的库，新开发的程序可以使用新版的 C++ 库；</p>
+<p>为了避免头文件重名，<code>新版 C++ 库也对头文件的命名做了调整，去掉了后缀.h</code>：<br>所以老式 C++ 的<code>iostream.h</code>变成了<code>iostream</code>，<code>fstream.h</code>变成了<code>fstream</code>；<br>而对于原来C语言的头文件，也采用同样的方法，但在每个名字前还要添加一个<code>c</code>字母，所以C语言的<code>stdio.h</code>变成了<code>cstdio</code>，<code>stdlib.h</code>变成了<code>cstdlib</code>；</p>
+<p>需要注意的是，<strong>旧的 C++ 头文件是官方所反对使用的，已明确提出不再支持</strong>；<strong>旧的C头文件仍然可以使用，以保持对C的兼容性</strong>；<br>实际上，编译器开发商不会停止对客户现有软件提供支持，可以预计，旧的 C++ 头文件在未来数年内还是会被支持；</p>
+<p><strong>总结的 C++ 头文件的现状</strong><br>1) <code>旧 C++ 头文件</code>：如 iostream.h、fstream.h 等将会继续被支持，尽管它们不在官方标准中。这些头文件的内容<code>不在命名空间std中</code>；<br>2) <code>新 C++ 头文件</code>：如 iostream、fstream 等包含的基本功能和对应的旧版头文件相似，但头文件的内容<code>在命名空间std中</code>；<br>3) <code>C 头文件</code>：如 stdio.h、stdlib.h 等继续被支持。头文件的内容<code>不在命名空间std中</code>；<br>4) <code>C++版 C头文件</code>：如 cstdio、cstdlib 这样的名字。它们提供的内容和相应的旧的C头文件相同，只是内容<code>在命名空间std中</code>；</p>
+<p><strong>对于不带.h的头文件，所有的符号都位于命名空间 std 中，使用时需要声明<code>命名空间std</code></strong>；<br><strong>对于带.h的头文件，没有使用任何命名空间，所有符号都位于<code>全局作用域</code></strong>；</p>
+<p><strong>std命名空间</strong><br>打印HelloWorld：<br>第一种方式：<code>std::cout &lt;&lt; &quot;Hello, World!&quot; &lt;&lt; std::endl;</code><br>第二种方式：<code>using std::cout; using std::endl;</code>，<code>cout &lt;&lt; &quot;Hello, World!&quot; &lt;&lt; endl;</code><br>第三种方式：<code>using namespace std;</code>，<code>cout &lt;&lt; &quot;Hello, World&quot; &lt;&lt; endl;</code></p>
+<p>很显然，第三种方式最方便，但是这样也就违背了C++引入命名空间的初衷；<br>因为C++的标准库都在命名空间<code>std</code>中，C++的标准库是非常庞大的，极易导致命名冲突；</p>
+<p><strong>推荐使用<code>std::cout</code>或<code>using std::cout;</code>形式，不推荐使用<code>using namespace std;</code></strong></p>
+<h2 id="C-标准输入输出"><a href="#C-标准输入输出" class="headerlink" title="C++标准输入输出"></a>C++标准输入输出</h2><p>在C语言中，我们通常使用<code>scanf/printf</code>系列函数进行数据的输入输出操作；<br>在C++中，这套函数依旧能够使用，不过C++又增加了一套新的、容易使用的输入输出库；</p>
+<p>头文件：<code>iostream</code>，标准输入<code>cin</code>、标准输出<code>cout</code>、标准错误<code>cerr</code>：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+int main() {
+    int n;
+    char str[128];
+
+    // C style
+    printf("n, str: ");
+    scanf("%d %s", &n, str);
+    printf("n = %d, str = %s\n", n, str);
+
+    // C++ style
+    cout << "n, str: ";
+    cin >> n >> str;
+    cout << "n = " << n << ", str = " << str << endl;
+
+    return 0;
+}
+</script></code></pre>
+<p><code>cout</code>和<code>cin</code>都是 C++ 的<code>内置对象</code>，而不是关键字；<br>C++ 库定义了大量的类（Class），程序员可以使用它们来创建对象，<strong>cout 和 cin 就分别是 ostream 和 istream 类的对象</strong>；只不过它们是由标准库的开发者提前创建好的，可以直接拿来使用。这种在 C++ 中提前创建好的对象称为<code>内置对象</code>；</p>
+<p>使用<code>cout</code>进行输出时需要紧跟<code>&lt;&lt;</code>运算符，使用<code>cin</code>进行输入时需要紧跟<code>&gt;&gt;</code>运算符；<br>这两个运算符可以自行分析所处理的数据类型，因此无需像使用 scanf 和 printf 那样给出格式控制字符串；</p>
+<blockquote>
+<p><code>&gt;&gt;</code>、<code>&lt;&lt;</code>分别是左移、右移运算符，属于<code>位运算符</code>，之所以能够用于<code>cin</code>、<code>cout</code>的输入输出，是因为<code>cin</code>和<code>cout</code>对这两个运算符进行了重载（<code>运算符重载</code>）</p>
+</blockquote>
+<p><code>endl</code>和<code>\n</code>很相似，但是<code>endl</code>除了换行之外，还会刷新输出缓冲区，而<code>\n</code>则不会；endl实际上是一个函数模板；</p>
+<p><strong>scanf/printf、cin/cout的取舍</strong><br>对于一般数据，如果不需要进行格式控制，那么推荐使用<code>cin/cout</code>方式进行输入输出，因为可以自动判断数据类型，并且可以通过<code>运算符重载</code>输出自定义的类，结构体等聚合类型；<br>对于需要大量控制输入输出格式的数据，那么我还是选择<code>scanf/printf</code>函数，因为<code>cin/cout</code>的格式化输入输出太麻烦了，我实在接受不了；</p>
+<p>应用举例：<br>如同基本类型(int, char, float, char *等)一样，输入/输出自定义的类型：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Student {
+    public:
+        Student(string name = "", int age = 0, float score = 0.0f) : m_name(name), m_age(age), m_score(score) {}
+    public:
+        friend istream & operator>>(istream &in, Student &stu);
+        friend ostream & operator<<(ostream &out, const Student &stu);
+    private:
+        string m_name;
+        int m_age;
+        float m_score;
+};
+
+istream & operator>>(istream &in, Student &stu) {
+    in >> stu.m_name >> stu.m_age >> stu.m_score;
+    return in;
+}
+
+ostream & operator<<(ostream &out, const Student &stu) {
+    out << "name: " << stu.m_name << ", age: " << stu.m_age << ", score: " << stu.m_score << endl;
+    return out;
+}
+
+int main() {
+    Student stu1, stu2;
+    cin >> stu1 >> stu2;
+    cout << stu1 << stu2;
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:16:33]
+$ ./a.out
+ZhangSan 16 145.5
+WangWu 15 143
+name: ZhangSan, age: 16, score: 145.5
+name: WangWu, age: 15, score: 143
+</script></code></pre>
+<p>打印一个九九乘法表：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <cstdio>
+
+using namespace std;
+
+int main() {
+    for (int i=1; i<=9; i++) {
+        for (int j=1; j<=9; j++) {
+            if (j <= i) {
+                printf("%dx%d=%2d   ", i, j, i*j);
+            } else {
+                break;
+            }
+        }
+        printf("\n");
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:28:02]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [20:28:04]
+$ ./a.out
+1x1= 1
+2x1= 2   2x2= 4
+3x1= 3   3x2= 6   3x3= 9
+4x1= 4   4x2= 8   4x3=12   4x4=16
+5x1= 5   5x2=10   5x3=15   5x4=20   5x5=25
+6x1= 6   6x2=12   6x3=18   6x4=24   6x5=30   6x6=36
+7x1= 7   7x2=14   7x3=21   7x4=28   7x5=35   7x6=42   7x7=49
+8x1= 8   8x2=16   8x3=24   8x4=32   8x5=40   8x6=48   8x7=56   8x8=64
+9x1= 9   9x2=18   9x3=27   9x4=36   9x5=45   9x6=54   9x7=63   9x8=72   9x9=81
+</script></code></pre>
+<h2 id="C-相比C改进的细节"><a href="#C-相比C改进的细节" class="headerlink" title="C++相比C改进的细节"></a>C++相比C改进的细节</h2><p>C++ 是在C语言的基础上改进的，C语言的很多语法在 C++ 中依然广泛使用，例如：</p>
+<ul>
+<li>C++ 仍然使用 char、short、int、long、float、double 等基本数据类型；</li>
+<li>C++ 仍然使用 if…else、while、for、switch、break 等分支或循环结构；</li>
+<li>C++ 仍然使用 +、-、*、/、% 等运算符；</li>
+<li>C++ 仍然使用 typedef、#define、enum、struct 等；</li>
+<li>C++ 仍然使用C语言中经典的指针（Pointer），并且使用范围有增无减，甚至不可或缺；</li>
+</ul>
+<p>C++ 改进的细节：</p>
+<ul>
+<li><code>变量定义位置</code><br>ANSI C 规定，所有局部变量都必须定义在函数开头，在定义好变量之前不能有其他的执行语句；<br>C99 标准取消这这条限制，但是 VC/VS 对 C99 的支持很不积极，仍然要求变量定义在函数开头；<br>C++ 则取消了这条限制，变量只要在使用之前定义就好了，不需要在开头就全部定义；</li>
+<li><code>布尔类型bool</code><br>在C语言中，关系运算和逻辑运算的结果有两种，真和假：0 表示假，非 0 表示真；<br>C语言并没有彻底从语法上支持“真”和“假”，只是用 1 和 0 来代表；这点在 C++ 中得到了改善，C++ 新增了<code>bool</code>类型，它一般占用<code>1</code>个字节长度。bool 类型只有两个取值，<code>true</code>和<code>false</code>：true 表示“真”，false 表示“假”；<br><code>true</code>、<code>false</code>是C++中的两个关键字，用<code>%d</code>输出它们，依旧是<code>1</code>、<code>0</code>数值；</li>
+<li><code>空指针nullptr</code><br><code>nullptr</code>是 C++11 标准用来表示<code>空指针的常量值</code>；<br>在C语言中，空指针的值表示为<code>#define NULL (void *)0</code>；<br>在C++中，由于对语法的类型检查更为严格，因而空指针的值就不能表示为<code>(void *)0</code>；<br>所以至少自 C++98 开始<code>#define NULL 0</code>；但这会在函数重载时遇到新的困难，所以加入了<code>nullptr</code>来表示空指针；</li>
+<li><code>函数参数void</code><br>对于C语言来说，如果一个函数不接受任何参数，那么应该将其形参定义为<code>void</code>，这样在编译期间就会检查相应的错误；<br>但是对于C++来说，这个<code>void</code>可有可无，没有<code>void</code>作为形参，如<code>void func();</code>那么也不能传递任何参数，当然有<code>void</code>也是这样；</li>
+<li><code>函数占位参数</code><br>占位参数只有形参的类型声明，没有参数名，如<code>void func(int x, int y, int = 0);</code>在函数内部也无法使用该参数；</li>
+</ul>
+<h2 id="C-中const的变化"><a href="#C-中const的变化" class="headerlink" title="C++中const的变化"></a>C++中const的变化</h2><p>在C语言中，const用来限制一个变量，表示这个变量不能被修改，我们通常称这样的变量为常量；<br>在C++中，const的含义并没有改变，只是对细节进行了一些调整，以下是最主要的两点：</p>
+<p><strong>C++中的 const 更像编译阶段的 #define</strong><br>先来看下面的两条语句：<br><code>const int m = 10;</code><br><code>int n = m;</code></p>
+<p>我们知道，变量是要占用内存的，即使被 const 修饰也不例外。m、n 两个变量占用不同的内存，int n = m;表示将 m 的值赋给 n，这个赋值的过程在C和C++中是有区别的：<br>在C语言中，编译器会先到 m 所在的内存取出一份数据，再将这份数据赋给 n；<br>而在C++中，编译器会直接将 10 赋给 n，没有读取内存的过程，和int n = 10;的效果一样；<br>C++ 中的常量更类似于#define命令，是一个值替换的过程，只不过#define是在预处理阶段替换，而常量是在编译阶段替换；</p>
+<p>C++ 对 const 的处理少了读取内存的过程，优点是提高了程序执行效率，缺点是不能反映内存的变化，一旦 const 变量被修改，C++ 就不能取得最新的值，这很好理解，因为 C++ 的 const 基本上可以等同于 #define 宏替换；</p>
+<p>上面这两条语句基本等同于c语言中的：<br><code>#define m 10</code><br><code>int n = m;</code></p>
+<p>实际上，对于 const 修饰的常量，并不意味着真的就不能修改它的值了，只不过是在语义层面上不能修改而已：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main() {
+    const int a = 10;
+    int *p = (int *)&a;
+    *p = 20;
+    printf("%d\n", a);
+    return 0;
+}
+</script></code></pre>
+<p>以C语言方式编译（gcc）：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:18:16]
+$ gcc a.c
+
+# root @ arch in ~/work on git:master x [9:19:22]
+$ ./a.out
+20
+</script></code></pre>
+<p>以C++方式编译（g++）：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:19:23]
+$ g++ a.c
+
+# root @ arch in ~/work on git:master x [9:19:57]
+$ ./a.out
+10
+</script></code></pre>
+<p>为什么结果会不一样？<br>前面说了，在C++中，const常量基本可以看作是一个宏定义，在汇编阶段之前，也就是在编译的时候，a就被替换为了10；<br>那么如何才能看到修改后的结果呢？只需要把printf中的 a 换成 *p 就行了：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main() {
+    const int a = 10;
+    int *p = (int *)&a;
+    *p = 20;
+    printf("%d\n", *p);
+    return 0;
+}
+</script></code></pre>
+<p>以C++方式编译：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:23:36]
+$ g++ a.c
+
+# root @ arch in ~/work on git:master x [9:24:03]
+$ ./a.out
+20
+</script></code></pre>
+<p><strong>C++中全局 const 变量的可见范围是当前文件</strong><br>在C/C++中，<strong>普通全局变量的作用域是当前文件，可见范围是整个工程中的所有文件</strong>，使用extern声明后就可以使用；</p>
+<p>在C语言中，const 变量和普通变量一样，在其他源文件中也是可见的；const 变量在多文件编程时的表现和普通变量一样，除了不能修改，没有其他区别；</p>
+<p>但是 C++ 对 const 的特性做了调整，C++ 规定，<strong>全局 const 变量的作用域仍然是当前文件，可见范围也是当前文件，在其他文件中不可见</strong>，这和添加了static关键字的效果类似；</p>
+<p>由于 C++ 中全局 const 变量的可见范围仅限于当前源文件，所以可以将它放在头文件中，这样即使头文件被包含多次也不会出错；</p>
+<p>C和C++中全局 const 变量的作用域相同，都是当前文件，不同的是它们的可见范围：<br>C语言中 const 全局变量的可见范围是整个程序，在其他文件中使用 extern 声明后就可以使用；<br>而C++中 const 全局变量的可见范围仅限于当前文件，在其他文件中不可见，所以它可以定义在头文件中，多次引入后也不会出错；</p>
+<p>如果你使用的是 GCC，那么可以通过添加 extern 关键字来增大 C++ 全局 const 变量的可见范围，如：<code>extern const int n = 10;</code><br>这样 n 的可见范围就变成了整个程序，在其他文件中使用 extern 声明后就可以使用了；不过这种方式只适用于 GCC，不适用于 VS；</p>
+<p><strong>从这两点来看，C++似乎想用 const 基本替代 #define 宏的作用，官方的态度也是不建议大量的使用 #define 宏</strong>！</p>
+<h2 id="inline内联函数"><a href="#inline内联函数" class="headerlink" title="inline内联函数"></a>inline内联函数</h2><p>我们知道，函数调用是有时间和空间开销的。程序在执行一个函数之前需要做一些准备工作，要将实参、局部变量、返回地址以及若干寄存器都压入栈中，然后才能执行函数体中的代码；函数体中的代码执行完毕后还要清理现场，将之前压入栈中的数据都出栈，才能接着执行函数调用位置以后的代码；</p>
+<p>如果函数体代码比较多，需要较长的执行时间，那么函数调用机制占用的时间可以忽略；如果函数只有一两条语句，那么大部分的时间都会花费在函数调用机制上，这种时间开销就就不容忽视。</p>
+<p>为了消除函数调用的时空开销，C++提供一种提高效率的方法，即在编译时将函数调用处用函数体替换，类似于C语言中的宏展开。这种在函数调用处直接嵌入函数体的函数称为内联函数（Inline Function），又称内嵌函数或者内置函数；</p>
+<p>指定内联函数的方法很简单，只需要在<strong>函数定义处增加<code>inline</code>关键字进行修饰</strong>；</p>
+<p>当函数比较复杂时，函数调用的时空开销可以忽略，大部分的CPU时间都会花费在执行函数体代码上，所以我们<strong>一般是将非常短小的函数声明为内联函数</strong>；</p>
+<p>由于内联函数比较短小，我们<strong>通常的做法是省略函数原型，将整个函数定义（包括函数头和函数体）放在本应该提供函数原型的地方</strong>；</p>
+<p>使用内联函数的缺点也是非常明显的，编译后的程序会存在多份相同的函数拷贝，如果被声明为内联函数的函数体非常大，那么编译后的程序体积也将会变得很大，所以再次强调，一般只将那些短小的、频繁调用的函数声明为内联函数；</p>
+<p>最后需要说明的是，对函数作 inline 声明只是程序员对编译器提出的一个建议，而不是强制性的，并非一经指定为 inline 编译器就必须这样做。编译器有自己的判断能力，它会根据具体情况决定是否这样做；</p>
+<p><strong>inline内联函数、#define宏展开</strong><br>C++中，<code>内联函数</code>和前面所说的<code>const常量</code>很相似，都可以理解为<code>编译阶段的宏</code>；<br><code>const常量</code>：基本等同于C中的宏定义，如<code>#define NULL ((void *)0)</code>；<br><code>inline内联函数</code>：基本等同于C中的带参数的宏定义，如<code>#define AND(x, y) ((x) + (y))</code>；</p>
+<p>这更加肯定了前面的观点：C++试图通过<code>const常量</code>、<code>inline内联函数</code>来完全替代C中的<code>#define</code>；</p>
+<p>所以在编写C++代码时推荐使用内联函数来替换带参数的宏；<br>和宏一样，内联函数可以定义在头文件中（不用加 static 关键字），并且头文件被多次#include后也不会引发重复定义错误；<br>这一点和非内联函数不同，非内联函数是禁止定义在头文件中的，它所在的头文件被多次#include后会引发重复定义错误；</p>
+<p>内联函数在编译时会将函数调用处用函数体替换，编译完成后函数就不存在了，所以在链接时不会引发重复定义错误；</p>
+<p><strong>使用内联函数需要注意的地方</strong><br>如果你熟悉C中的模块化多文件编程，那么我们通常会将函数的声明放在头文件中，而将函数的定义（实现）放在源文件中；<br>在C++中，这条规则依旧适用，不过对于内联函数来说，我们一般都是将内联函数的声明和定义都放在头文件中，而不是分开存放；</p>
+<p>并且，内联函数的本意是替代预处理期间的宏，编译器在编译期间需要知道函数体的全部代码，才能进行类似宏一样的展开操作；<br>所以，一般不建议将内联函数分为声明和定义两个部分，这个完全是吃力不讨好，违反了其本意；应直接定义整个函数，不要出现声明；</p>
+<p><code>inline关键字只在函数定义处添加</code>，在函数声明处添加 inline 关键字是无效的，编译器会忽略函数声明处的 inline 关键字；<br>也就是说，<strong>inline是一种<code>用于实现的关键字</code>，而不是一种<code>用于声明的关键字</code></strong>；</p>
+<blockquote>
+<p>内联函数虽然叫做函数，在定义和声明的语法上也和普通函数一样，但它已经失去了函数的本质。函数是一段可以重复使用的代码，它位于虚拟地址空间中的代码区，也占用可执行文件的体积，而内联函数的代码在编译后就被消除了，不存在于虚拟地址空间中，没法重复使用；</p>
+</blockquote>
+<h2 id="函数的默认参数"><a href="#函数的默认参数" class="headerlink" title="函数的默认参数"></a>函数的默认参数</h2><p>在C++中，定义函数时可以给形参指定一个默认的值，这样调用函数时如果没有给这个形参赋值（没有对应的实参），那么就使用这个默认的值；<br>所谓默认参数，指的是当函数调用中省略了实参时自动使用的一个值，这个值就是给形参指定的默认值；</p>
+<p><strong>C++规定，默认参数只能放在形参列表的最后，而且一旦为某个形参指定了默认值，那么它后面的所有形参都必须有默认值</strong>；</p>
+<p>如：<code>void func(int n = 20);</code>、<code>void func(int x, int y = 10, int z = 30);</code></p>
+<p>还有一点要注意，<strong>C++规定，在同一个作用域中只能指定一次默认参数</strong><br>C/C++有这四种作用域：<code>函数原型作用域</code>、<code>局部作用域（函数作用域）</code>、<code>块作用域</code>、<code>文件作用域（全局作用域）</code>；</p>
+<p>所以一般的做法是在头文件的函数声明中指定默认参数，在源文件中不要指定默认参数，一般就没什么问题了；</p>
+<p>注意，这种方式的函数声明也是正确的，不过不是很推荐，有点多此一举的感觉：<br><code>void func(int a = 10, int b);</code><br><code>void func(int a, int b = 20);</code></p>
+<h2 id="函数重载overload"><a href="#函数重载overload" class="headerlink" title="函数重载overload"></a>函数重载overload</h2><p>在实际开发中，有时候我们需要实现几个功能类似的函数，只是有些细节不同；<br>例如希望交换两个变量的值，这两个变量有多种类型，可以是 int、float、char、bool 等，我们需要通过参数把变量的地址传入函数内部；<br>在C语言中，程序员往往需要分别设计出三个不同名的函数，如：<br><code>void swap1(int *a, int *b);</code>：交换两个 int 类型的变量；<br><code>void swap2(float *a, float *b);</code>：交换两个 float 类型的变量；<br><code>void swap3(char *a, char *b);</code>：交换两个 char 类型的变量；<br><code>void swap4(bool *a, bool *b);</code>：交换两个 bool 类型的变量；</p>
+<p>但在C++中，这完全没有必要，C++ 允许多个函数拥有相同的名字，只要它们的参数列表不同就可以，这就是<code>函数的重载（Function Overloading）</code>；借助重载，一个函数名可以有多种用途；</p>
+<p><strong><code>参数列表</code>又叫<code>参数签名</code>，包括<code>参数的类型</code>、<code>参数的个数</code>和<code>参数的顺序</code>，只要有一个不同就叫做参数列表不同</strong></p>
+<p>所以，我们可以将上面的几个命名毫无意义的函数都这样写：<br><code>void swap(int *a, int *b);</code>：交换两个 int 类型的变量；<br><code>void swap(float *a, float *b);</code>：交换两个 float 类型的变量；<br><code>void swap(char *a, char *b);</code>：交换两个 char 类型的变量；<br><code>void swap(bool *a, bool *b);</code>：交换两个 bool 类型的变量；</p>
+<p>这四个函数之间互相构成了重载关系，在调用的时候，C++会逐个的去匹配合适的函数，进而调用对应的swap交换函数；</p>
+<p>注意，这里仅仅是演示C++中的函数重载，在C++标准库中，已经有了swap系列函数，并且名字就叫做<code>swap</code>；</p>
+<p>重载就是在一个作用范围内（同一个类、同一个命名空间等）有多个名称相同但参数不同的函数；<br>重载的结果是让一个函数名拥有了多种用途，使得命名更加方便，调用更加灵活；</p>
+<p><strong>注意，参数列表不同包括参数的个数不同、类型不同或顺序不同，仅仅参数名称不同是不可以的，函数返回值也不能作为重载的依据</strong></p>
+<p><strong>构成重载的规则、要素</strong></p>
+<ul>
+<li>函数名称必须相同</li>
+<li>参数列表必须不同（个数不同、类型不同、参数排列顺序不同）</li>
+<li>函数的返回类型可以相同也可以不相同</li>
+<li>仅仅返回类型不同不足以成为函数的重载</li>
+</ul>
+<p><strong>C++是如何做到函数重载的</strong><br>C++代码在编译时会根据参数列表对函数进行重命名，例如<code>void swap(int a, int b)</code>会被重命名为<code>_swap_int_int</code>，<code>void swap(float a, float b)</code>会被重命名为<code>_swap_float_float</code>；<br>当发生函数调用时，编译器会根据传入的实参去逐个匹配，以选择对应的函数，如果匹配失败，编译器就会报错，这叫做<code>重载决议（Overload Resolution）</code>；</p>
+<p>不同的编译器有不同的重命名方式，这里仅仅举例说明，实际情况可能并非如此；</p>
+<blockquote>
+<p>从这个角度讲，函数重载仅仅是语法层面的，本质上它们还是不同的函数，占用不同的内存，入口地址也不一样；</p>
+</blockquote>
+<p><strong>函数重载过程中的二义性及类型转换</strong><br>上节我们讲到，发生函数调用时编译器会根据传入的实参的个数、类型、顺序等信息去匹配要调用的函数，这在大部分情况下都能够精确匹配；<br>但当实参的类型和形参的类型不一致时情况就会变得稍微复杂，例如函数形参的类型是int，调用函数时却将short类型的数据交给了它，编译器就需要先将short类型转换为int类型才能匹配成功；</p>
+<p>C++ 标准规定，在进行重载决议时编译器应该按照下面的优先级顺序来处理实参的类型：</p>
+<ul>
+<li><strong>精确匹配</strong><ul>
+<li>不做类型转换，<code>直接匹配</code></li>
+<li>只是做<code>微不足道的转换</code>，如：从数组名到数组指针、从函数名到指向函数的指针、从非 const 类型到 const 类型；</li>
+</ul>
+</li>
+<li><strong>类型提升后匹配</strong><ul>
+<li><code>整型提升</code>，如：从 bool、char、short 提升为 int，或者从 char16_t、char32_t、wchar_t 提升为 int、long、long long；</li>
+<li><code>小数提升</code>，如：从 float 提升为 double；</li>
+</ul>
+</li>
+<li>使用<strong>自动类型转换后匹配</strong><ul>
+<li><code>整型转换</code>，如：从 char 到 long、short 到 long、int 到 short、long 到 char；</li>
+<li><code>小数转换</code>，如：从 double 到 float；</li>
+<li><code>整数和小数转换</code>，如：从 int 到 double、short 到 float、float 到 int、double 到 long；</li>
+<li><code>指针转换</code>，如：从<code>int *</code>到<code>void *</code>；</li>
+</ul>
+</li>
+</ul>
+<p>C++标准还规定，编译器应该按照<strong>从高到低的顺序</strong>来搜索重载函数：首先是<code>精确匹配</code>，然后是<code>类型提升</code>，最后才是<code>类型转换</code>；<br><strong>一旦在某个优先级中找到唯一的一个重载函数就匹配成功，不再继续往下搜索</strong></p>
+<p>如果在一个优先级中找到多个（两个以及以上）合适的重载函数，编译器就会陷入两难境地，不知道如何抉择，编译器会将这种模棱两可的函数调用视为一种错误，因为这些合适的重载函数同等“优秀”，没有一个脱颖而出，调用谁都一样。这就是函数重载过程中的<code>二义性错误</code>；</p>
+<p>注意，类型提升和类型转换不是一码事！类型提升是积极的，是为了更加高效地利用计算机硬件，不会导致数据丢失或精度降低；而类型转换是不得已而为之，不能保证数据的正确性，也不能保证应有的精度。类型提升只有上表中列出的几种情况，其他情况都是类型转换；</p>
+<p>当重载函数有多个参数时也会产生二义性，而且情况更加复杂；<br>C++ 标准规定，如果有且只有一个函数满足下列条件，则匹配成功：</p>
+<ul>
+<li>该函数对每个实参的匹配都不劣于其他函数；</li>
+<li>至少有一个实参的匹配优于其他函数；</li>
+</ul>
+<p><strong>总结</strong><br>在设计重载函数时，参数类型过少或者过多都容易引起二义性错误，因为这些类型相近，彼此之间会相互转换；</p>
+<h2 id="new、delete操作符"><a href="#new、delete操作符" class="headerlink" title="new、delete操作符"></a>new、delete操作符</h2><p>在C语言中，动态<code>分配内存</code>用<code>malloc()</code>函数，<code>释放内存</code>用<code>free()</code>函数；<br>在C++中，这两个函数仍然可以使用，但是C++又新增了两个关键字，<code>new</code>和<code>delete</code>：new用来动态分配内存，delete用来释放内存；</p>
+<p>用 <code>malloc/free</code> 分配、释放内存：<br><code>int *p = (int *)malloc(sizeof(int) * 10);</code>：分配10个int型的内存空间；<br><code>free(p);</code>：释放内存；</p>
+<p>用 <code>new/delete</code> 分配、释放内存：<br><code>int *p = new int;</code>：分配1个int型的内存空间；<br><code>delete p;</code>：释放内存；</p>
+<p>用 <code>new[]/delete[]</code> 分配、释放一组连续的数据：<br><code>int *p = new int[10];</code>：分配10个int型的内存空间；<br><code>delete[] p;</code>：释放内存；</p>
+<p>和 malloc() 一样，new 也是在堆区分配内存，必须手动释放，否则只能等到程序运行结束由操作系统回收；<br>为了避免内存泄露，通常 new 和 delete、new[] 和 delete[] 操作符应该成对出现，并且不要和C语言中 malloc()、free() 一起混用；</p>
+<p>在C++中，建议使用 new 和 delete 来管理内存，它们可以使用C++的一些新特性，最明显的是可以自动调用构造函数和析构函数；</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/cpp-class.html" rel="next" title="C++ 类和对象">
+                <i class="fa fa-chevron-left"></i> C++ 类和对象
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-pthread.html" rel="prev" title="c语言 - 多线程编程">
+                c语言 - 多线程编程 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-类和对象"><span class="nav-number">1.</span> <span class="nav-text">C++类和对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行C-程序"><span class="nav-number">2.</span> <span class="nav-text">运行C++程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-命名空间"><span class="nav-number">3.</span> <span class="nav-text">C++命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准命名空间std"><span class="nav-number">4.</span> <span class="nav-text">标准命名空间std</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-标准输入输出"><span class="nav-number">5.</span> <span class="nav-text">C++标准输入输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-相比C改进的细节"><span class="nav-number">6.</span> <span class="nav-text">C++相比C改进的细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-中const的变化"><span class="nav-number">7.</span> <span class="nav-text">C++中const的变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inline内联函数"><span class="nav-number">8.</span> <span class="nav-text">inline内联函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数的默认参数"><span class="nav-number">9.</span> <span class="nav-text">函数的默认参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数重载overload"><span class="nav-number">10.</span> <span class="nav-text">函数重载overload</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#new、delete操作符"><span class="nav-number">11.</span> <span class="nav-text">new、delete操作符</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/cpp-c-and-cpp.html';
+          this.page.identifier = 'cpp-c-and-cpp.html';
+          this.page.title = 'C++ 入门初步';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,718 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 正则表达式 regex.h pcre.h">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 正则表达式，regex.h、pcre.h。前者为 POSIX 正则（BRE、ERE），后者为 PCRE 正则。">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 正则表达式">
+<meta property="og:url" content="https://www.zfl9.com/c-regex-pcre.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 正则表达式，regex.h、pcre.h。前者为 POSIX 正则（BRE、ERE），后者为 PCRE 正则。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 正则表达式">
+<meta name="twitter:description" content="c语言 - 正则表达式，regex.h、pcre.h。前者为 POSIX 正则（BRE、ERE），后者为 PCRE 正则。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-regex-pcre.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 正则表达式 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-regex-pcre.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 正则表达式
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-31T13:12:00+08:00">
+                2017-07-31
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-regex-pcre.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-regex-pcre.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-regex-pcre.html" class="leancloud_visitors" data-flag-title="c语言 - 正则表达式">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 正则表达式，<code>regex.h</code>、<code>pcre.h</code>。前者为 POSIX 正则（BRE、ERE），后者为 PCRE 正则。</p>
+<a id="more"></a>
+<h2 id="BRE-ERE"><a href="#BRE-ERE" class="headerlink" title="BRE/ERE"></a>BRE/ERE</h2><blockquote>
+<p><code>regex.h</code>是Linux中的一个正则头文件，提供的常用函数有<code>regcomp()</code>、<code>regexec()</code>、<code>regfree()</code>和<code>regerror()</code></p>
+</blockquote>
+<p><strong>C语言中使用正则表达式一般分为三步</strong>：</p>
+<ul>
+<li>编译正则表达式 <code>regcomp()</code></li>
+<li>匹配正则表达式 <code>regexec()</code></li>
+<li>释放正则表达式 <code>regfree()</code></li>
+</ul>
+<p><strong>函数原型</strong><br><code>int regcomp(regex_t *compiled, const char *pattern, int cflags);</code></p>
+<ul>
+<li><code>compiled</code>：输出参数，保存编译好的 regex 模式；</li>
+<li><code>pattern</code>：输入参数，regex 模式；</li>
+<li><code>cflags</code>：输入参数，编译选项；<ul>
+<li><code>REG_EXTENDED</code>扩展正则</li>
+<li><code>REG_ICASE</code>忽略大小写</li>
+<li><code>REG_NEWLINE</code>多行模式</li>
+<li><code>REG_NOSUB</code>不存储匹配结果</li>
+</ul>
+</li>
+<li>返回值：编译成功，返回 0。</li>
+</ul>
+<p><code>regcomp()</code>默认是<code>单行模式</code>，即<code>.</code>匹配所有字符，<code>^</code>、<code>$</code>匹配输入序列开始、结束位置；<br><code>REG_NEWLINE</code>是<code>多行模式</code>，即<code>.</code>匹配除<code>\n</code>外的任意字符，<code>^</code>、<code>$</code>匹配行头、行尾位置。</p>
+<blockquote>
+<p>对于模式<code>^.*$\n^.*$</code>，字符串<code>www.zfl9.com\nwww.google.com</code><br>POSIX 正则的多行模式无法匹配，而 PCRE 正则的多行模式正常匹配。</p>
+</blockquote>
+<p><code>int regexec(regex_t *compiled, char *string, size_t nmatch, regmatch_t matchptr[], int eflags);</code></p>
+<ul>
+<li><code>compiled</code>：输入参数，已编译的regex模式</li>
+<li><code>string</code>：输入参数，需要匹配的文本</li>
+<li><code>nmatch</code>：输入参数，matchptr的长度</li>
+<li><code>matchptr</code>：输出参数，保存匹配到的regmatch_t对象</li>
+<li><code>eflags</code>：输入参数，编译选项</li>
+<li>返回值：匹配成功，返回0</li>
+</ul>
+<p>结构体<code>regmatch_t</code>：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">typedef int regoff_t;
+
+typedef struct
+{
+  regoff_t rm_so;  /* Byte offset from string's start to substring's start.  */
+  regoff_t rm_eo;  /* Byte offset from string's start to substring's end.  */
+} regmatch_t;
+</script></code></pre>
+<p><code>void regfree(regex_t *compiled);</code></p>
+<ul>
+<li><code>compiled</code>：输入参数，不需要使用的regex模式</li>
+</ul>
+<p><code>size_t regerror(int errcode, regex_t *compiled, char *buffer, size_t length);</code></p>
+<ul>
+<li>当执行regcomp()或者regexec()产生错误的时候，调用这个函数可以返回一个包含错误信息的字符串</li>
+<li><code>errcode</code>：输入参数，regcomp()、regexec()返回的错误代号</li>
+<li><code>compiled</code>：输入参数，已编译好的regex模式，可以为NULL</li>
+<li><code>buffer</code>：输出参数，保存相关错误信息的字符串描述</li>
+<li><code>length</code>：输入参数，指明buffer的长度</li>
+<li>返回值：返回错误描述信息的长度</li>
+</ul>
+<p><strong>re_posix.c</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <regex.h>
+
+#define RMSIZE 20
+
+int main(int argc, char *argv[]){
+    if(argc != 3){
+        printf("usage: %s <pattern> <str>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    const char *pattern = argv[1];
+    const char *str = argv[2];
+    regmatch_t regmatch[RMSIZE];
+
+    regex_t re;
+    int cflags = REG_EXTENDED;
+    //int cflags = REG_EXTENDED + REG_NEWLINE;
+
+    regcomp(&re, pattern, cflags);
+
+    int status = regexec(&re, str, RMSIZE, regmatch, 0);
+
+    printf("pattern: \"%s\"\nstr: \"%s\"\n", pattern, str);
+
+    if(status == REG_NOMATCH){
+        printf("no match!\n");
+    }else if(status == 0){
+        printf("match_str: \"%.*s\"\n", regmatch[0].rm_eo-regmatch[0].rm_so, str+regmatch[0].rm_so);
+
+        int subc = 0;
+        for(int i=0; i<(signed int)strlen(pattern); i++){
+            if(pattern[i] == '('){
+                subc++;
+            }
+        }
+
+        for(int i=1; i<=subc; i++){
+            printf("sub%d_str: \"%.*s\"\n", i, regmatch[i].rm_eo-regmatch[i].rm_so, str+regmatch[i].rm_so);
+        }
+    }
+
+    regfree(&re);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/work [14:05:56]
+$ gcc re_posix.c
+
+# root @ localhost in ~/work [14:06:14]
+$ ./a.out
+usage: ./a.out <pattern> <str>
+
+# root @ localhost in ~/work [14:06:18] C:1
+$ ./a.out '(\w+?)\.(\w+?)\.(\w+)$' https://www.zfl9.com
+pattern: "(\w+?)\.(\w+?)\.(\w+)$"
+str: "https://www.zfl9.com"
+match_str: "www.zfl9.com"
+sub1_str: "www"
+sub2_str: "zfl9"
+sub3_str: "com"
+
+# root @ localhost in ~/work [14:09:11]
+$ ./a.out '.*' https://www.zfl9.com$'\n'https://www.google.com.hk
+pattern: ".*"
+str: "https://www.zfl9.com
+https://www.google.com.hk"
+match_str: "https://www.zfl9.com
+https://www.google.com.hk"
+
+# root @ localhost in ~/work [14:16:29] C:1
+$ ./a.out '<.*>' '<h1>hello</h1>'
+pattern: "<.*>"
+str: "<h1>hello</h1>"
+match_str: "<h1>hello</h1>"
+
+# root @ localhost in ~/work [14:16:32]
+$ ./a.out '<.*?>' '<h1>hello</h1>'
+pattern: "<.*?>"
+str: "<h1>hello</h1>"
+match_str: "<h1>hello</h1>"
+</script></code></pre>
+<blockquote>
+<p>最后一个例子可以发现，POSIX 的正则并不支持非贪婪匹配！</p>
+</blockquote>
+<h2 id="PCRE"><a href="#PCRE" class="headerlink" title="PCRE"></a>PCRE</h2><blockquote>
+<p><code>PCRE(Perl Compatible Regular Expressions)</code>即 Perl 兼容正则表达式，它提供与 Perl5 相同的正则语法和语义，简单、灵活、强大是 Perl5 正则的特点。</p>
+</blockquote>
+<p><strong>安装 pcre 库</strong></p>
+<ul>
+<li>CentOS/RHEL：<code>yum -y install pcre-devel</code></li>
+<li>ArchLinux：<code>pacman -S --need pcre</code></li>
+</ul>
+<p><code>re_pcre.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pcre.h>
+
+#define RMSIZE 20
+
+int main(int argc, char *argv[]){
+    if(argc != 3){
+        printf("usage: %s <pattern> <str>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    const char *pattern = argv[1];
+    const char *str = argv[2];
+    const char *errmsg = NULL;
+    int erroffset = -1;
+    int rmoffsets[RMSIZE] = {0};
+
+    pcre *re = NULL;
+    int cflags = PCRE_EXTENDED + PCRE_MULTILINE;
+    //int cflags = PCRE_EXTENDED + PCRE_DOTALL;
+    /*
+     * PCRE_EXTENDED    扩展正则表达式
+     * PCRE_MULTILINE   多行模式
+     * PCRE_DOTALL      单行模式
+     * PCRE_CASELESS    忽略大小写
+     * PCRE_UTF8        utf-8
+    */
+
+    re = pcre_compile(pattern, cflags, &errmsg, &erroffset, NULL);
+
+    if(re == NULL){
+        printf("erroffset: %d, errmsg: %s\n", erroffset, errmsg);
+        exit(EXIT_FAILURE);
+    }
+
+    int status = pcre_exec(re, NULL, str, strlen(str), 0, 0, rmoffsets, RMSIZE);
+
+    printf("pattern: \"%s\"\nstr: \"%s\"\n", pattern, str);
+
+    if(status < 0){
+        printf("no match!\n");
+    }else if(status > 0){
+        printf("match_str: \"%.*s\"\n", rmoffsets[1]-rmoffsets[0], str+rmoffsets[0]);
+
+        int subc = 0;
+        for(int i=0; i<(signed int)strlen(pattern); i++){
+            if(pattern[i] == '('){
+                subc++;
+            }
+        }
+
+        for(int i=1; i<=subc; i++){
+            printf("sub%d_str: \"%.*s\"\n", i, rmoffsets[i*2+1]-rmoffsets[i*2], str+rmoffsets[i*2]);
+        }
+    }
+
+    pcre_free(re);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/work [14:30:44]
+$ gcc -lpcre re_pcre.c
+
+# root @ localhost in ~/work [14:30:49]
+$ ./a.out '<.*>' '<h1>hello</h1>'
+pattern: "<.*>"
+str: "<h1>hello</h1>"
+match_str: "<h1>hello</h1>"
+
+# root @ localhost in ~/work [14:31:13]
+$ ./a.out '<.*?>' '<h1>hello</h1>'
+pattern: "<.*?>"
+str: "<h1>hello</h1>"
+match_str: "<h1>"
+
+# root @ localhost in ~/work [14:31:17]
+$ ./a.out '^(.*)$\n^(.*)$' www.zfl9.com$'\n'www.google.com
+pattern: "^(.*)$\n^(.*)$"
+str: "www.zfl9.com
+www.google.com"
+match_str: "www.zfl9.com
+www.google.com"
+sub1_str: "www.zfl9.com"
+sub2_str: "www.google.com"
+</script></code></pre>
+<h2 id="小提示"><a href="#小提示" class="headerlink" title="小提示"></a>小提示</h2><p><strong>默认模式、单行模式、多行模式</strong></p>
+<ul>
+<li>默认模式：<code>^</code>、<code>$</code>匹配输入序列的边界位置，<code>.</code>匹配除行结束符外的任意字符；</li>
+<li>单行模式：<code>^</code>、<code>$</code>匹配输入序列的边界位置，<code>.</code>匹配任意字符；</li>
+<li>多行模式：<code>^</code>、<code>$</code>匹配任意一行的边界位置，<code>.</code>匹配除行结束符外的任意字符。</li>
+</ul>
+<p>简单的说：<strong>单行模式改变<code>.</code>的意义，多行模式改变<code>^</code>、<code>$</code>的意义</strong>。</p>
+<p><strong>BRE、ERE、PCRE 对比</strong></p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended" rel="external nofollow noopener noreferrer" target="_blank">BRE（Basic Regular Expressions）</a>：POSIX 基本正则，grep、sed 等都属于 BRE；</li>
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression#POSIX_extended" rel="external nofollow noopener noreferrer" target="_blank">ERE（Extended Regular Expressions）</a>：POSIX 扩展正则，egrep、awk 等都属于 ERE；</li>
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression#Perl" rel="external nofollow noopener noreferrer" target="_blank">PCRE（Perl Compatible Regular Expressions）</a>：Perl 兼容正则，Perl、Python、Java 等都属于 PCRE。</li>
+</ul>
+<p>一般来说，我们使用 PCRE 正则比较多，比如 nginx 的 rewrite 模块就是使用的 PCRE 库。<br>如果需要了解更多关于 PCRE 正则的知识，请前往 - <a href="/java-lang-util.html#regex-%E6%AD%A3%E5%88%99">Java - 正则库</a>，与 Perl5 正则较接近。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-getopt.html" rel="next" title="c语言 - 解析命令行参数">
+                <i class="fa fa-chevron-left"></i> c语言 - 解析命令行参数
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-gdb-cgdb.html" rel="prev" title="c语言 - gdb、cgdb调试器">
+                c语言 - gdb、cgdb调试器 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BRE-ERE"><span class="nav-number">1.</span> <span class="nav-text">BRE/ERE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCRE"><span class="nav-number">2.</span> <span class="nav-text">PCRE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小提示"><span class="nav-number">3.</span> <span class="nav-text">小提示</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-regex-pcre.html';
+          this.page.identifier = 'c-regex-pcre.html';
+          this.page.title = 'c语言 - 正则表达式';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

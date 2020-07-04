@@ -1,0 +1,1673 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java Socket编程">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java Socket编程，URI/URL/URN、InetAddress、InetSocketAddress、TCP_Socket、UDP_Socket">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Socket编程">
+<meta property="og:url" content="https://www.zfl9.com/java-socket.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java Socket编程，URI/URL/URN、InetAddress、InetSocketAddress、TCP_Socket、UDP_Socket">
+<meta property="og:image" content="https://www.zfl9.com/images/java-uri.png">
+<meta property="og:updated_time" content="2019-02-18T12:46:39.900Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Socket编程">
+<meta name="twitter:description" content="Java Socket编程，URI/URL/URN、InetAddress、InetSocketAddress、TCP_Socket、UDP_Socket">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-uri.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-socket.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java Socket编程 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-socket.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java Socket编程
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-10T15:23:00+08:00">
+                2017-10-10
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-socket.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-socket.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-socket.html" class="leancloud_visitors" data-flag-title="Java Socket编程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java Socket编程，<code>URI/URL/URN</code>、<code>InetAddress</code>、<code>InetSocketAddress</code>、TCP_Socket、UDP_Socket</p>
+<a id="more"></a>
+<h2 id="URI、URL、URN"><a href="#URI、URL、URN" class="headerlink" title="URI、URL、URN"></a>URI、URL、URN</h2><p><strong>URI、URL、URN，这三者有什么区别</strong>？<br>首先我们来看一下它们的全称：<br>1) <code>URI</code>，<code>Uniform Resource Identifier</code>，中文：<strong>统一资源标识符</strong><br>2) <code>URL</code>，<code>Uniform Resource Locator</code>，中文：<strong>统一资源定位符</strong><br>3) <code>URN</code>，<code>Uniform Resource Name</code>，中文：<strong>统一资源名称</strong></p>
+<p>其实从名字上就很容易看得出区别：<br><code>URI</code>：强调<strong>标识</strong>，用于<strong>唯一<code>标识</code>一个网络资源</strong>；<br><code>URL</code>：强调<strong>定位</strong>，用于<strong>唯一<code>定位</code>一个网络资源</strong>；<br><code>URN</code>：强调<strong>名称</strong>，为资源<strong>提供<code>持久的</code>、<code>位置无关</code>的名称</strong>；</p>
+<p>举个浅显的例子：<br>URI 就是一个人的<strong>个人信息</strong>，包括姓名、年龄、性别、住址、手机号等；<br>URL 就是特指这个人的<strong>住址</strong>；有了住址，我们就能够找到这个人；<br>URN 就是特指这个人的<strong>姓名</strong>；有了姓名，我们就能够讨论这个人；</p>
+<p>从这个例子中可以看出，URL、URN 都是 URI 的子集，实际上也是这样的。如下图所示：<br><img src="/images/java-uri.png" alt="URI、URL、URN 区别"></p>
+<p><strong>URL</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public URL(String protocol, String host, int port, String file, URLStreamHandler handler) throws MalformedURLException;
+public URL(String protocol, String host, int port, String file) throws MalformedURLException;
+public URL(String protocol, String host, String file) throws MalformedURLException;
+public URL(URL context, String spec, URLStreamHandler handler) throws MalformedURLException;
+public URL(URL context, String spec) throws MalformedURLException;
+public URL(String spec) throws MalformedURLException; // 常用
+
+/* 相关字段的解析 */
+public String getProtocol(); // 获取协议
+public String getHost(); // 获取主机名
+public int getPort(); // 获取端口，未指定则返回 -1
+public int getDefaultPort(); // 获取默认端口
+
+public String getFile(); // 获取文件名(含查询参数)
+public String getPath(); // 获取文件路径
+public String getQuery(); // 获取查询参数
+public String getRef(); // 获取fragment
+
+public String getAuthority(); // 获取认证信息
+public String getUserInfo(); // 获取用户信息
+
+public URI toURI() throws URISyntaxException; // 转换为 URI
+
+/* 获取 URL 连接对象 (HttpURLConnection, JarURLConnection) */
+public URLConnection openConnection() throws IOException;
+public URLConnection openConnection(Proxy proxy) throws IOException; // 使用代理
+public final InputStream openStream() throws IOException; // 调用 openConnection().getInputStream()
+</script></code></pre>
+<p>例子，<code>&quot;https://www.zfl9.com/ss-redir.html?language=zh_CN#shadowsocks-libev&quot;</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.URL;
+import java.net.MalformedURLException;
+
+public class URLDemo {
+    public static void main(String[] args) {
+        try {
+            URL url = new URL("https://www.zfl9.com/ss-redir.html?language=zh_CN#shadowsocks-libev");
+            System.out.println(url);
+            System.out.println(url.getProtocol()); // https
+            System.out.println(url.getHost()); // www.zfl9.com
+            System.out.println(url.getPort()); // -1
+            System.out.println(url.getDefaultPort()); // 443
+            System.out.println(url.getFile()); // 包含参数
+            System.out.println(url.getPath()); // 文件路径
+            System.out.println(url.getQuery()); // 查询参数
+            System.out.println(url.getRef()); // 获取定位位置
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/java_net_learn/inet_and_url on git:master o [15:55:58]
+$ javac URLDemo.java
+
+# root @ arch in ~/work/java_net_learn/inet_and_url on git:master o [15:56:13]
+$ java URLDemo
+https://www.zfl9.com/ss-redir.html?language=zh_CN#shadowsocks-libev
+https
+www.zfl9.com
+-1
+443
+/ss-redir.html?language=zh_CN
+/ss-redir.html
+language=zh_CN
+shadowsocks-libev
+</script></code></pre>
+<p><strong>URLConnection</strong><br><code>java.net.URLConnection</code> 是抽象类，它有两个子类，分别是：</p>
+<ul>
+<li><code>java.net.HttpURLConnection</code>：HTTP 连接，常用</li>
+<li><code>java.net.JarURLConnection</code>：Jar 连接（Jar 实际为 Zip 文件）</li>
+</ul>
+<p>调用 java.net.URL 对象的 openConnection() 方法可以获取一个对应的 java.net.URLConnection 对象（可以多次调用 openConnection() 方法，每次返回的都是不同的连接对象，在多线程下载时，它很有用）。要注意的是，url.openConnection() 方法并不会打开一个实际的 url 连接，它只是创建了一个 URLConnection 对象而已，只有调用 URLConnection.connect() 方法后才开始建立实际的连接。对于 HttpURLConnection，建议使用 disconnect() 方法关闭连接（其它 url 连接可以使用 inputStream 的 close() 方法来关闭连接，当然 http 连接也可以）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public URL getURL(); // 获取当前 URL 对象
+
+public int getConnectTimeout(); // 获取连接超时时间(ms毫秒)
+public void setConnectTimeout(int timeout); // 设置连接超时时间(ms毫秒)
+
+public int getReadTimeout(); // 获取读取超时时间(ms毫秒)
+public void setReadTimeout(int timeout); // 设置读取超时时间(ms毫秒)
+
+public boolean getDoInput(); // 是否用于输入，默认为 true
+public void setDoInput(boolean doinput); // 是否用于输入，默认为 true
+public boolean getDoOutput(); // 是否用于输出，默认为 false
+public void setDoOutput(boolean dooutput); // 是否用于输出，默认为 false
+
+public void setRequestProperty(String key, String value); // 设置请求头（覆盖）
+public void addRequestProperty(String key, String value); // 添加请求头
+public String getRequestProperty(String key); // 获取指定请求头
+public Map<String, List<String>> getRequestProperties(); // 获取所有请求头
+
+public abstract void connect() throws IOException; // 建立连接
+
+public int getContentLength(); // Content-Length 响应头 int
+public long getContentLengthLong(); // Content-Length 响应头 long
+public String getContentType(); // Content-Type 响应头
+public String getContentEncoding(); // Content-Encoding 响应头
+public long getDate(); // Date 响应头，自 1970-01-01 00:00:00 UTC 起的毫秒数
+public long getExpiration(); // Expires 响应头，自 1970-01-01 00:00:00 UTF 起的毫秒数
+public long getLastModified(); // Last-Modified 响应头
+public long getIfModifiedSince(); // If-Modified-Since 响应头
+
+public String getHeaderField(String name); // 获取响应头或 null，多个则返回最后一个
+public int getHeaderFieldInt(String name, int default); // 返回响应头或 default 值
+public long getHeaderFieldLong(String name, long default); // 返回响应头或 default 值
+public long getHeaderFieldDate(String name, long default); // 返回响应头或 default 值
+public Map<String, List<String>> getHeaderFields(); // 获取所有响应头
+
+public InputStream getInputStream() throws IOException; // 获取响应体
+public OutputStream getOutputStream() throws IOException; // 写入通道（POST 请求）
+</script></code></pre>
+<p><strong>HttpURLConnection</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public static boolean getFollowRedirects(); // 是否跟随 3xx 重定向（全局）
+public static void setFollowRedirects(boolean set); // 是否跟随 3xx 重定向（全局），默认 true
+
+public boolean getInstanceFollowRedirects(); // 是否跟随 3xx 重定向（实例）
+public void setInstanceFollowRedirects(boolean followRedirects); // 是否跟随 3xx 重定向（实例），默认同全局
+
+public String getRequestMethod(); // 获取请求方法
+public void setRequestMethod(String method) throws ProtocolException; // 设置请求方法，如 GET/POST/HEAD
+
+public int getResponseCode() throws IOException; // 服务器的响应状态码，如 200
+public String getResponseMessage() throws IOException; // 服务器的响应描述文本，如 OK
+
+// 获取 HTTP 错误流，如果没有则返回 null
+// 如：当访问一个不存在的资源时，服务器会发送 404 状态码，同时连接会抛出 FileNotFoundException 异常
+// 但通常情况下，服务器还会返回一个有用的 404 页面，帮助我们找到新的资源，利用此方法可以读取 404 页面
+public InputStream getErrorStream();
+
+public abstract void disconnect(); // 关闭 http 连接
+</script></code></pre>
+<p>简单例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
+public class HttpConnDemo {
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.err.println("missing running parameters!");
+            System.exit(1);
+        }
+
+        URL url = new URL(args[0]);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.connect();
+        InputStream input = null;
+        try {
+            input = conn.getInputStream();
+        } catch (IOException e) {
+            input = conn.getErrorStream();
+        }
+
+        int ndata = 0;
+        byte[] data = new byte[4096];
+        while ((ndata = input.read(data)) != -1) {
+            System.out.print(new String(data, 0, ndata));
+        }
+
+        input.close();
+        conn.disconnect();
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ java HttpConnDemo http://main.zfl9.com/index.html
+<h1>main.zfl9.com</h1>
+
+# root @ arch in ~/workspace [18:41:18]
+$ java HttpConnDemo http://main.zfl9.com/nosuch.html
+<html>
+<head><title>404 Not Found</title></head>
+<body bgcolor="white">
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+</script></code></pre>
+<p><strong>多线程下载</strong></p>
+<blockquote>
+<p>多线程下载实现不难，只要理解了思路就行。这里提供的例子只支持最基本的多线程下载功能，不支持断点续传！</p>
+</blockquote>
+<p>在讲多线程下载前，需要了解几个 HTTP 头部：</p>
+<ul>
+<li><code>Content-Length: &lt;length&gt;</code>：响应头，表示响应内容的长度，单位为 byte；</li>
+<li><code>Content-Disposition: &lt;disposition&gt;</code>：响应头，请求资源的描述信息，如文件名；</li>
+<li><code>Range: bytes=&lt;start&gt;-&lt;end&gt;</code>：请求头，表示客户端想获取指定范围的数据，多线程下载的关键；</li>
+</ul>
+<p>默认情况下，服务器会返回整个文件内容（假设请求的是一个文件），这对于多线程下载实现是不利的。而添加 Range 请求头后，如果服务器支持，则返回 <code>206 Partial Content</code> 响应行，响应体为指定范围的数据，如果服务器不支持，则正常返回 <code>200 OK</code>，响应体为整个文件数据，因此在进行多线程下载前，务必检测响应状态码是否为 206！</p>
+<p>那如何解决多线程同时写入文件呢？最简单的方式就是使用 <code>java.io.RandomAccessFile</code> 类，RandomAccessFile 支持随机存取文件，在多线程下载中，每个线程只需将获取到的数据写入到预创建的文件的给定范围内就可以了。</p>
+<p><code>Range: bytes=&lt;start&gt;-&lt;end&gt;</code> 中的 bytes 表示使用的单位为 byte，start、end 则为请求的数据范围。注意，start、end 是从 0 开始的，怎么理解呢？假如把整个要下载的文件存储在一个超大的字节数组中，那么 start、end 实际上就是该字节数组的某个下标，服务器则从 start 下标（含）开始，读取文件数据，直到 end 下标（含），最后将读取到的数据作为响应体，发送给客户端。因此，start 的最小值为 0，end 的最大值为 <code>Content-Length</code> - 1。当然也可以省略 end，如 <code>Range: bytes=100-</code> 表示获取从下标 100 到文件末尾的数据。</p>
+<p>在进行多线程下载时，一般先在本地利用 RandomAccessFile 创建一个同大小的空文件。这个步骤一般只需发送 HEAD 请求，表示只获取响应头（因为我们只需要读取 Content-Length、Content-Disposition 头部），响应体没有意义。</p>
+<p>然后根据文件大小、线程数量，计算每个线程需要下载的大小，当然，一般情况下很难整除，这时需要采取一个策略，即让最后一个线程多累一点，把剩下的也给下载了。我们把每个线程平均需要下载的大小叫做块大小，块大小通过 <code>blockSize = totalSize / nthread</code> 计算得到，totalSize 表示整个文件的大小，nthread 表示线程的数量。前 nthread - 1 个线程需要下载的大小都等于块大小，最后一个线程则需要下载剩余的全部数据。</p>
+<p>那么该如何计算每个线程的 Range 范围呢？假设线程的编号从 0 开始，则线程 n 的 start 为 <code>n * blockSize</code>，线程 n（最后一个线程除外）的 end 为 <code>n * blockSize + blockSize - 1</code>，最后一个线程的 end 为 <code>totalSize - 1</code>。怎么算得？很简单，因为除最后一个线程外的线程需要下载的大小都是 blockSize，因此它们的 end 就是 start + blockSize - 1，而最后一个线程的 end 就是 totalSize - 1 了。</p>
+<p>OK，实现思路已经很清晰了，现在开始写代码，实现一个简陋的多线程下载（简陋到基本输出都没写）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.net.URLDecoder;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.io.IOException;
+
+public class MultiThreadDownloader {
+    public static void main(String[] args) throws IOException {
+        // java MultiThreadDownloader <url> <nthread>
+        if (args.length < 2) {
+            System.err.println("missing running parameter!");
+            System.exit(1);
+        }
+
+        // 解析命令行参数
+        URL url = new URL(args[0]);
+        int nthread = Integer.parseInt(args[1]);
+
+        // 获取并打开连接
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestMethod("HEAD"); // HEAD 请求
+        httpConn.connect();
+
+        // 总大小、块大小
+        int totalSize = httpConn.getContentLength();
+        int blockSize = totalSize / nthread;
+
+        // 获取文件名
+        String filename = null;
+        String contentDisp = httpConn.getHeaderField("Content-Disposition");
+        // 如果存在 Content-Disposition 头
+        if (contentDisp != null) {
+            String[] contentDispSplit = contentDisp.split(";");
+            for (int i = 0; i < contentDispSplit.length; i++) {
+                String part = contentDispSplit[i].trim();
+                if (part.startsWith("filename=")) {
+                    // URL 解码
+                    filename = URLDecoder.decode(part.substring(9), "UTF-8");
+                    break;
+                }
+            }
+        }
+        // 如果不存在 Content-Disposition 头或解析失败
+        if (filename == null) {
+            // 直接从 url 中获取
+            String[] filenameSplit = url.getPath().split("/");
+            filename = filenameSplit[filenameSplit.length - 1];
+        }
+
+        // 预创建同大小的空文件
+        RandomAccessFile saveFile = new RandomAccessFile(filename, "rw");
+        saveFile.setLength(totalSize);
+        saveFile.close();
+
+        // 关闭 http 连接
+        httpConn.disconnect();
+
+        // 前 nthread - 1 个线程
+        for (int i = 0; i < nthread - 1; i++) {
+            downloadFile(url, filename, i * blockSize, i * blockSize + blockSize - 1);
+        }
+        // 第 nthread 个线程
+        downloadFile(url, filename, (nthread - 1) * blockSize, totalSize - 1);
+    }
+
+    /**
+     * 分段下载文件（多线程）.
+     * @param url           要下载的 url
+     * @param filename      保存的文件名
+     * @param begPos        从哪个位置开始
+     * @param endPos        到哪个位置结束
+     */
+    private static void downloadFile(URL url, String filename, int begPos, int endPos) {
+        new Thread(() -> {
+            try {
+                // 打开 http 连接
+                HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+                // 设置 Range 头部
+                httpConn.setRequestProperty("Range", "bytes=" + begPos + "-" + endPos);
+                // 连接 http 服务器
+                httpConn.connect();
+                // 获取输入流
+                InputStream input = httpConn.getInputStream();
+                // 打开输出流
+                RandomAccessFile output = new RandomAccessFile(filename, "rw");
+                // 移动文件指针
+                output.seek(begPos);
+                // 下载保存文件
+                int ndata = 0;
+                byte data[] = new byte[1024 * 4];
+                while ((ndata = input.read(data)) != -1) {
+                    output.write(data, 0, ndata);
+                }
+                // 关闭释放资源
+                input.close();
+                output.close();
+                httpConn.disconnect();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<p>实现虽然简陋，但是核心功能还是没有问题的，使用：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# 文件大小：278.75MB
+# 单线程速度：约为 5MB/s
+# 多线程速度：约为 12MB/s
+$ java MultiThreadDownloader "https://sm.myapp.com/original/Development/Dreamweaver_12_LS3.exe" 10
+</script></code></pre>
+<h2 id="InetAddress、InetSocketAddress"><a href="#InetAddress、InetSocketAddress" class="headerlink" title="InetAddress、InetSocketAddress"></a>InetAddress、InetSocketAddress</h2><p><code>InetAddress</code>：表示一个 32bit/128bit 的 IP 地址，有两个子类：<code>Inet4Address</code>、<code>Inet6Address</code>；<br><code>InetSocketAddress</code>：除了包含 IP 地址外，还有 Port 端口号，用于 Socket 通信，是<code>SocketAddress</code>的子类；</p>
+<p><strong>InetAddress</strong><br>因为构造方法的访问权限为<code>包权限</code>，因此不能直接在外部构造一个 InetAddress 对象，只能通过其 static 方法。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态方法，返回InetAddress对象 */
+public static InetAddress getByName(String host) throws UnknownHostException; // 通过域名(获取某个)，[0]
+public static InetAddress[] getAllByName(String host) throws UnknownHostException; // 通过域名(获取所有)
+public static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException; // 通过IP
+public static InetAddress getByAddress(byte[] addr) throws UnknownHostException; // 通过IP，host=null
+
+/* 本地主机localhost */
+public static InetAddress getLocalHost() throws UnknownHostException; // 获取本地主机名
+public static InetAddress getLoopbackAddress(); // 获取环回地址
+
+/* 地址类型判断 */
+public boolean isLoopbackAddress(); // 是否为环回地址
+public boolean isAnyLocalAddress(); // 是否为通配符地址
+public boolean isMulticastAddress(); // 是否为多播地址
+
+/* 是否可达，icmp，ms毫秒 */
+public boolean isReachable(int timeout) throws IOException;
+public boolean isReachable(NetworkInterface netif, int ttl, int timeout) throws IOException;
+
+/*
+ * getHostName() 如果在构造时传入了主机名，那么不会进行 dns 查找；
+ * getCanonicalHostName() 始终进行 dns 查找
+ */
+public String getHostName(); // 获取主机名，反向解析
+public String getCanonicalHostName(); // 获取主机名，反向解析
+
+public byte[] getAddress(); // 获取IP地址(网络字节序)
+public String getHostAddress(); // 获取IP地址(字符串形式)
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.io.IOException;
+
+public class InetAddrDemo {
+    public static void main(String[] args) {
+        try {
+            System.out.println("---------------- localhost -----------------");
+            System.out.println("hostname: " + InetAddress.getLocalHost().getHostName());
+            System.out.println("---------------- inet_addr -----------------");
+            InetAddress[] iaddrs = InetAddress.getAllByName(args.length == 0 ? "www.zfl9.com" : args[0]);
+            for (InetAddress iaddr : iaddrs) {
+                System.out.println(iaddr + ", host: " + iaddr.getHostName() + ", addr: " + iaddr.getHostAddress() + ", OK: " + iaddr.isReachable(1000));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_net_learn/inet_and_url on git:master o [16:35:09]
+$ javac InetAddrDemo.java
+
+# root @ arch in ~/work/java_net_learn/inet_and_url on git:master o [16:35:13]
+$ java InetAddrDemo
+---------------- localhost -----------------
+hostname: arch
+---------------- inet_addr -----------------
+www.zfl9.com/111.77.251.202, host: www.zfl9.com, addr: 111.77.251.202, OK: true
+
+# root @ arch in ~/work/java_net_learn/inet_and_url on git:master o [16:35:15]
+$ java InetAddrDemo www.baidu.com
+---------------- localhost -----------------
+hostname: arch
+---------------- inet_addr -----------------
+www.baidu.com/14.215.177.38, host: www.baidu.com, addr: 14.215.177.38, OK: true
+www.baidu.com/14.215.177.39, host: www.baidu.com, addr: 14.215.177.39, OK: true
+
+# root @ arch in ~/work/java_net_learn/inet_and_url on git:master o [16:35:22]
+$ java InetAddrDemo ip.cn
+---------------- localhost -----------------
+hostname: arch
+---------------- inet_addr -----------------
+ip.cn/118.184.180.46, host: ip.cn, addr: 118.184.180.46, OK: true
+</script></code></pre>
+<p><strong>SocketAddress</strong><br><code>SocketAddress</code>是一个抽象类，并且类体为空，它的实现类是<code>InetSocketAddress</code>；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public InetSocketAddress(int port); // 0.0.0.0:port
+public InetSocketAddress(String hostname, int port); // 尝试resolv主机名
+public InetSocketAddress(InetAddress addr, int port); // addr:port
+
+/* 静态方法 */
+public static InetSocketAddress createUnresolved(String host, int port); // 创建一个未解析的InetSocketAddress
+
+/* 相关属性 */
+public final InetAddress getAddress(); // 获取 inet_addr
+public final int getPort(); // 获取 port
+
+public final String getHostName(); // 获取 hostname
+public final String getHostString(); // 获取 hostname
+
+public final boolean isUnresolved(); // 是否为未解析的addr
+</script></code></pre>
+<h2 id="TCP-Socket"><a href="#TCP-Socket" class="headerlink" title="TCP Socket"></a>TCP Socket</h2><p>主要有两大类：<code>ServerSocket</code>服务端、<code>Socket</code>客户端</p>
+<p><strong>ServerSocket</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/**
+ * @bindAddr 监听地址，如果为null则监听所有网卡
+ * @port     监听端口，如果为0则使用>=1024随机端口
+ * @backlog  等待队列，最多允许多少个client等待，超过则拒绝连接
+ * @throws IOException
+ */
+public ServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException;
+public ServerSocket(int port, int backlog) throws IOException; // bindAddr = null
+public ServerSocket(int port) throws IOException; // backlog = 50
+public ServerSocket() throws IOException; // 空，稍后设置
+
+/* bind() */
+public void bind(SocketAddress endpoint, int backlog) throws IOException;
+public void bind(SocketAddress endpoint) throws IOException; // backlog = 50
+
+/* accept() */
+public Socket accept() throws IOException; // 阻塞
+
+/* close() */
+public void close() throws IOException;
+
+/* 获取相关信息 */
+public InetAddress getInetAddress(); // 获取监听地址
+public int getLocalPort(); // 获取监听端口
+public SocketAddress getLocalSocketAddress(); // 获取监听地址+端口
+
+public boolean isBound(); // 是否已绑定addr
+public boolean isClosed(); // 是否已关闭socket
+
+/* socket 属性设置 */
+
+/* 超时设置 ms毫秒 accpet() */
+public synchronized void setSoTimeout(int timeout) throws SocketException;
+public synchronized int getSoTimeout() throws IOException;
+
+/* 重用 time-wait 端口 */
+public void setReuseAddress(boolean on) throws SocketException;
+public boolean getReuseAddress() throws SocketException;
+
+/*
+ * recv 缓冲区大小
+ * 如果大于64K，必须使用无参构造函数，在绑定地址之前设置缓冲区大小，最后再bind()；否则缓冲区大小将不会大于64K
+ */
+public synchronized void setReceiveBufferSize(int size) throws SocketException;
+public synchronized int getReceiveBufferSize() throws SocketException;
+</script></code></pre>
+<p><strong>Socket</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public Socket();
+public Socket(Proxy proxy); // 代理
+// 创建 socket 并 connect
+public Socket(String host, int port) throws IOException; // host=null -> 127.0.0.1
+public Socket(InetAddress address, int port) throws IOException;
+// 指定local addr:port
+public Socket(String host, int port, InetAddress localAddr, int localPort) throws IOException; // host=null -> 127.0.0.1
+public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) throws IOException;
+
+/* bind() local_addr:local_port */
+public void bind(SocketAddress bindpoint) throws IOException;
+
+/* connect() 建立连接 */
+public void connect(SocketAddress endpoint, int timeout) throws IOException;
+public void connect(SocketAddress endpoint) throws IOException; // timeout=0
+
+/* 获取InputStream/OutputStream IO流 */
+public InputStream getInputStream() throws IOException;
+public OutputStream getOutputStream() throws IOException;
+
+/* close() */
+public synchronized void close() throws IOException; // 关闭input/output、socket
+public void shutdownInput() throws IOException; // 关闭input
+public void shutdownOutput() throws IOException; // 关闭output
+
+/* 获取相关信息 */
+public InetAddress getInetAddress(); // remote inet_addr
+public InetAddress getLocalAddress(); // local inet_addr
+public int getPort(); // remote_port
+public int getLocalPort(); // local_port
+public SocketAddress getRemoteSocketAddress(); // remote sock_addr
+public SocketAddress getLocalSocketAddress(); // local sock_addr
+
+/* 状态查询 */
+public boolean isBound(); // 是否已绑定本地地址
+public boolean isConnected(); // 是否已建立连接
+public boolean isInputShutdown(); // input是否已关闭
+public boolean isOutputShutdown(); // output是否已关闭
+public boolean isClosed(); // socket是否已关闭
+
+/* socket 属性设置 */
+
+/* 超时设置 read() */
+public synchronized void setSoTimeout(int timeout) throws SocketException;
+public synchronized int getSoTimeout() throws SocketException;
+
+/* socket缓冲区大小 */
+/*
+ * 对于 ServerSocket.accept() 的新套接字：
+ *   必须在 ServerSocket.setReceiveBufferSize() 设置，并且如果大于 64K 必须在绑定地址前设置
+ * 对于 Socket.connect() 客户端套接字：
+ *   如果大于 64K 则必须在建立连接之前设置
+ */
+public synchronized void setReceiveBufferSize(int size) throws SocketException;
+public synchronized int getReceiveBufferSize() throws SocketException;
+public synchronized void setSendBufferSize(int size) throws SocketException;
+public synchronized int getSendBufferSize() throws SocketException;
+
+/* 禁用 Nagle 算法(合并多个小段，提高网络利用率)，推荐禁用该算法 */
+public void setTcpNoDelay(boolean on) throws SocketException; // 默认为false
+public boolean getTcpNoDelay() throws SocketException;
+
+/* close()之后的等待时间(等待发送剩余数据)，单位为s秒 */
+public void setSoLinger(boolean on, int linger) throws SocketException;
+public int getSoLinger() throws SocketException;
+
+/* 紧急数据 */
+// 发送1个字节的紧急数据
+public void sendUrgentData(int data) throws IOException;
+// 接收紧急数据，默认为false
+public void setOOBInline(boolean on) throws SocketException;
+public boolean getOOBInline() throws SocketException;
+
+/* TCP keepalive长连接 */
+public void setKeepAlive(boolean on) throws SocketException;
+public boolean getKeepAlive() throws SocketException;
+
+/* reuseAddr 重用time-wait端口 */
+public void setReuseAddress(boolean on) throws SocketException;
+public boolean getReuseAddress() throws SocketException;
+</script></code></pre>
+<p>例子：<br><strong>单线程文件下载</strong><br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Random;
+
+public class Server {
+    public static void main(String[] args) throws IOException {
+        ServerSocket listenfd = new ServerSocket(8080, 128);
+        listenfd.setReuseAddress(true);
+
+        System.out.printf("----- listen: %s:%d -----\n",
+                          listenfd.getInetAddress().getHostAddress(),
+                          listenfd.getLocalPort());
+
+        Socket connfd = null;
+        while (true) {
+            connfd = listenfd.accept();
+            service(connfd);
+        }
+    }
+
+    private static void service(Socket connfd) throws IOException {
+        System.out.printf("newConnect: %s:%d\n", connfd.getInetAddress().getHostAddress(), connfd.getPort());
+
+        int ndata = 0;
+        byte[] data = new byte[1024 * 4];
+
+        InputStream connInput = connfd.getInputStream();
+        OutputStream connOutput = connfd.getOutputStream();
+
+        String dir = "sources/";
+        File file = null;
+
+        ndata = connInput.read(data);
+        String request = new String(data, 0, ndata);
+        if (!request.startsWith("GET ")) {
+            connfd.close();
+            return;
+        }
+
+        request = request.split("\\s+")[1];
+        file = new File(dir, request);
+        if (!file.exists()) {
+            connfd.close();
+            return;
+        } else if (!file.isFile()) {
+            connfd.close();
+            return;
+        }
+
+        FileInputStream fileInput = new FileInputStream(file);
+        Random rand = new Random();
+
+        while ((ndata = fileInput.read(data)) != -1) {
+            connOutput.write(data, 0, ndata);
+            try { Thread.sleep(rand.nextInt(15)); } catch (InterruptedException e) {}
+        }
+
+        fileInput.close();
+        connfd.close();
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.Socket;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class Client {
+    private static final String ADDR = "127.0.0.1";
+    private static final int PORT = 8080;
+
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.err.println("Usage: Client <file...>");
+            System.exit(1);
+        }
+
+        for (String s : args) {
+            download(s);
+        }
+    }
+
+    private static void download(String file) throws IOException {
+        int ndata = 0;
+        byte[] data = new byte[1024 * 4];
+
+        Socket sockfd = new Socket(ADDR, PORT);
+        InputStream sockInput = sockfd.getInputStream();
+        OutputStream sockOutput = sockfd.getOutputStream();
+        FileOutputStream fileOutput = new FileOutputStream("targets/" + file);
+
+        String request = "GET " + file;
+        System.out.print(request + " ...");
+        sockOutput.write(request.getBytes());
+
+        while ((ndata = sockInput.read(data)) != -1) {
+            fileOutput.write(data, 0, ndata);
+        }
+
+        fileOutput.close();
+        sockfd.close();
+
+        System.out.println(" done");
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:39:52]
+$ javac *.java
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:45:18]
+$ ls
+Client.class  Client.java  Server.class  Server.java  sources  targets
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:45:21]
+$ ls sources
+apache.rpm  archlinux.iso  centos-6.iso  centos-7.iso  nginx.rpm
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:45:24]
+$ rm -fr targets/*
+zsh: sure you want to delete all the files in /root/work/java_net_learn/single_thread/targets [yn]? y
+zsh: no matches found: targets/*
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:45:35] C:1
+$ ls targets
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:45:41]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+newConnect: 127.0.0.1:20710
+newConnect: 127.0.0.1:20712
+newConnect: 127.0.0.1:20714
+newConnect: 127.0.0.1:20716
+newConnect: 127.0.0.1:20718
+^C#
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master o [19:46:14]
+$ java Client centos-6.iso centos-7.iso archlinux.iso apache.rpm nginx.rpm
+GET centos-6.iso ... done
+GET centos-7.iso ... done
+GET archlinux.iso ... done
+GET apache.rpm ... done
+GET nginx.rpm ... done
+
+# root @ arch in ~/work/java_net_learn/single_thread on git:master x [19:48:00]
+$ ls targets/
+apache.rpm  archlinux.iso  centos-6.iso  centos-7.iso  nginx.rpm
+</script></code></pre>
+<p><strong>多线程文件下载</strong><br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Random;
+
+public class Server {
+    public static void main(String[] args) throws IOException {
+        ServerSocket listenfd = new ServerSocket(8080, 128);
+        listenfd.setReuseAddress(true);
+
+        System.out.printf("----- listen: %s:%d -----\n",
+                          listenfd.getInetAddress().getHostAddress(),
+                          listenfd.getLocalPort());
+
+        Socket connfd = null;
+        while (true) {
+            connfd = listenfd.accept();
+            service(connfd);
+        }
+    }
+
+    private static void service(Socket connfd) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    System.out.printf("newConnect: %s:%d\n", connfd.getInetAddress().getHostAddress(), connfd.getPort());
+
+                    int ndata = 0;
+                    byte[] data = new byte[1024 * 4];
+
+                    InputStream connInput = connfd.getInputStream();
+                    OutputStream connOutput = connfd.getOutputStream();
+
+                    String dir = "sources/";
+                    File file = null;
+
+                    ndata = connInput.read(data);
+                    String request = new String(data, 0, ndata);
+                    if (!request.startsWith("GET ")) {
+                        connfd.close();
+                        return;
+                    }
+
+                    request = request.split("\\s+")[1];
+                    file = new File(dir, request);
+                    if (!file.exists()) {
+                        connfd.close();
+                        return;
+                    } else if (!file.isFile()) {
+                        connfd.close();
+                        return;
+                    }
+
+                    FileInputStream fileInput = new FileInputStream(file);
+                    Random rand = new Random();
+
+                    while ((ndata = fileInput.read(data)) != -1) {
+                        connOutput.write(data, 0, ndata);
+                        try { Thread.sleep(rand.nextInt(15)); } catch (InterruptedException e) {}
+                    }
+
+                    fileInput.close();
+                    connfd.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.Socket;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class Client {
+    private static final String ADDR = "127.0.0.1";
+    private static final int PORT = 8080;
+
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.err.println("Usage: Client <file...>");
+            System.exit(1);
+        }
+
+        for (String s : args) {
+            download(s);
+        }
+    }
+
+    private static void download(String file) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int ndata = 0;
+                    byte[] data = new byte[1024 * 4];
+
+                    Socket sockfd = new Socket(ADDR, PORT);
+                    InputStream sockInput = sockfd.getInputStream();
+                    OutputStream sockOutput = sockfd.getOutputStream();
+                    FileOutputStream fileOutput = new FileOutputStream("targets/" + file);
+
+                    String request = "GET " + file;
+                    System.out.println(request + " ...");
+                    sockOutput.write(request.getBytes());
+
+                    while ((ndata = sockInput.read(data)) != -1) {
+                        fileOutput.write(data, 0, ndata);
+                    }
+
+                    fileOutput.close();
+                    sockfd.close();
+
+                    System.out.println(request + " ... done");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:52:22] C:127
+$ javac *.java
+
+# root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:52:26]
+$ ls
+'Client$1.class'   Client.class   Client.java  'Server$1.class'   Server.class   Server.java   sources   targets
+
+# root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:52:27]
+$ ls sources
+apache.rpm  archlinux.iso  centos-6.iso  centos-7.iso  nginx.rpm
+
+# root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:52:31]
+$ ls targets
+
+# root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:52:33]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+newConnect: 127.0.0.1:20722
+newConnect: 127.0.0.1:20724
+newConnect: 127.0.0.1:20726
+newConnect: 127.0.0.1:20720
+newConnect: 127.0.0.1:20728
+^C#
+
+# root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:51:44]
+$ java Client centos-6.iso centos-7.iso archlinux.iso apache.rpm nginx.rpm
+GET centos-6.iso ...
+GET archlinux.iso ...
+GET centos-7.iso ...
+GET nginx.rpm ...
+GET apache.rpm ...
+GET nginx.rpm ... done
+GET archlinux.iso ... done
+GET apache.rpm ... done
+GET centos-6.iso ... done
+GET centos-7.iso ... done
+</script></code></pre>
+<p><strong>线程池文件下载</strong><br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+public class Server {
+    public static void main(String[] args) throws IOException {
+        ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                                  Runtime.getRuntime().availableProcessors() * 2);
+        pool.prestartAllCoreThreads();
+
+        ServerSocket listenfd = new ServerSocket(8080, 128);
+        listenfd.setReuseAddress(true);
+
+        System.out.printf("----- listen: %s:%d -----\n",
+                          listenfd.getInetAddress().getHostAddress(),
+                          listenfd.getLocalPort());
+
+        Socket connfd = null;
+        while (true) {
+            connfd = listenfd.accept();
+            pool.execute(new Task(connfd));
+        }
+    }
+
+    private static class Task implements Runnable {
+        private Socket connfd;
+        public Task(Socket connfd) { this.connfd = connfd; }
+        @Override
+        public void run() {
+            try {
+                System.out.printf("newConnect: %s:%d\n", connfd.getInetAddress().getHostAddress(), connfd.getPort());
+
+                int ndata = 0;
+                byte[] data = new byte[1024 * 4];
+
+                InputStream connInput = connfd.getInputStream();
+                OutputStream connOutput = connfd.getOutputStream();
+
+                String dir = "sources/";
+                File file = null;
+
+                ndata = connInput.read(data);
+                String request = new String(data, 0, ndata);
+                if (!request.startsWith("GET ")) {
+                    connfd.close();
+                    return;
+                }
+
+                request = request.split("\\s+")[1];
+                file = new File(dir, request);
+                if (!file.exists()) {
+                    connfd.close();
+                    return;
+                } else if (!file.isFile()) {
+                    connfd.close();
+                    return;
+                }
+
+                FileInputStream fileInput = new FileInputStream(file);
+                Random rand = new Random();
+
+                while ((ndata = fileInput.read(data)) != -1) {
+                    connOutput.write(data, 0, ndata);
+                    try { Thread.sleep(rand.nextInt(15)); } catch (InterruptedException e) {}
+                }
+
+                fileInput.close();
+                connfd.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.Socket;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+
+public class Client {
+    private static final String ADDR = "127.0.0.1";
+    private static final int PORT = 8080;
+
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.err.println("Usage: Client <file...>");
+            System.exit(1);
+        }
+
+        ExecutorService pool = Executors.newCachedThreadPool();
+
+        for (String s : args) {
+            pool.execute(new Task(s));
+        }
+
+        pool.shutdown();
+    }
+
+    private static class Task implements Runnable {
+        private String file;
+        public Task(String file) { this.file = file; }
+        @Override
+        public void run() {
+            try {
+                int ndata = 0;
+                byte[] data = new byte[1024 * 4];
+
+                Socket sockfd = new Socket(ADDR, PORT);
+                InputStream sockInput = sockfd.getInputStream();
+                OutputStream sockOutput = sockfd.getOutputStream();
+                FileOutputStream fileOutput = new FileOutputStream("targets/" + file);
+
+                String request = "GET " + file;
+                System.out.println(request + " ...");
+                sockOutput.write(request.getBytes());
+
+                while ((ndata = sockInput.read(data)) != -1) {
+                    fileOutput.write(data, 0, ndata);
+                }
+
+                fileOutput.close();
+                sockfd.close();
+
+                System.out.println(request + " ... done");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_net_learn/thread_pool on git:master x [20:20:31]
+$ javac *.java
+
+# root @ arch in ~/work/java_net_learn/thread_pool on git:master x [20:20:34]
+$ ls sources
+apache.rpm  archlinux.iso  centos-6.iso  centos-7.iso  nginx.rpm
+
+# root @ arch in ~/work/java_net_learn/thread_pool on git:master x [20:20:38]
+$ ls targets
+
+# root @ arch in ~/work/java_net_learn/thread_pool on git:master x [20:20:43]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+newConnect: 127.0.0.1:20732
+newConnect: 127.0.0.1:20736
+newConnect: 127.0.0.1:20730
+newConnect: 127.0.0.1:20734
+newConnect: 127.0.0.1:20738
+^C#
+
+# root @ arch in ~/work/java_net_learn/multi_thread on git:master x [19:57:19]
+$ java Client centos-6.iso centos-7.iso archlinux.iso apache.rpm nginx.rpm
+GET archlinux.iso ...
+GET centos-7.iso ...
+GET apache.rpm ...
+GET nginx.rpm ...
+GET centos-6.iso ...
+GET nginx.rpm ... done
+GET archlinux.iso ... done
+GET apache.rpm ... done
+GET centos-6.iso ... done
+GET centos-7.iso ... done
+</script></code></pre>
+<h2 id="UDP-Socket"><a href="#UDP-Socket" class="headerlink" title="UDP Socket"></a>UDP Socket</h2><p>主要用到两个类：<code>DatagramSocket</code>UDP Socket、<code>DatagramPacket</code>UDP 包；</p>
+<p><strong>DatagramSocket</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public DatagramSocket(SocketAddress bindaddr) throws SocketException; // 若为null则创建未绑定的socket
+public DatagramSocket(int port, InetAddress laddr) throws SocketException; // addr:port
+public DatagramSocket(int port) throws SocketException; // 0.0.0.0:port
+public DatagramSocket() throws SocketException; // 0.0.0.0:随机端口
+
+/* bind() */
+public synchronized void bind(SocketAddress addr) throws SocketException; // 若为null则绑定随机端口
+
+/*
+ * 建立连接(不同于TCP连接)，应理解为偏函数，默认不建立连接
+ * 当建立连接后，该Socket只能用于指定ip:port之间通信
+ */
+public void connect(InetAddress address, int port);
+public void connect(SocketAddress addr) throws SocketException;
+public void disconnect(); // 取消connect()
+
+/* send、recv */
+public void send(DatagramPacket p) throws IOException;
+public synchronized void receive(DatagramPacket p) throws IOException;
+
+/* close() */
+public void close();
+
+/* 状态查询 */
+public boolean isBound(); // 是否绑定地址
+public boolean isClosed(); // 是否已关闭
+public boolean isConnected(); // 是否建立connect()
+
+public InetAddress getInetAddress(); // remote_ip
+public InetAddress getLocalAddress(); // local_ip
+public int getPort(); // remote_port
+public int getLocalPort(); // local_port
+public SocketAddress getRemoteSocketAddress(); // remote_sockaddr
+public SocketAddress getLocalSocketAddress(); // local_sockaddr
+
+/* socket 属性设置 */
+
+/*
+ * socket timeout超时设置，对于recvive()有效
+ * 单位为 ms 毫秒，若为 0，则无限等待
+ */
+public synchronized void setSoTimeout(int timeout) throws SocketException;
+public synchronized int getSoTimeout() throws SocketException;
+
+/* 缓冲区大小 */
+public synchronized void setReceiveBufferSize(int size) throws SocketException;
+public synchronized int getReceiveBufferSize() throws SocketException;
+public synchronized void setSendBufferSize(int size) throws SocketException;
+public synchronized int getSendBufferSize() throws SocketException;
+
+/* 端口重用 */
+public synchronized void setReuseAddress(boolean on) throws SocketException;
+public synchronized boolean getReuseAddress() throws SocketException;
+
+/* 广播包 */
+public synchronized void setBroadcast(boolean on) throws SocketException;
+public synchronized boolean getBroadcast() throws SocketException;
+</script></code></pre>
+<p><strong>DatagramPacket</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+// 注意，如果 buf[] 不够大，会造成溢出，溢出部分直接被丢弃
+public DatagramPacket(byte buf[], int offset, int length);
+public DatagramPacket(byte buf[], int length);
+public DatagramPacket(byte buf[], int offset, int length, InetAddress address, int port);
+public DatagramPacket(byte buf[], int length, InetAddress address, int port);
+public DatagramPacket(byte buf[], int offset, int length, SocketAddress address);
+public DatagramPacket(byte buf[], int length, SocketAddress address);
+
+/* 属性相关 */
+public synchronized void setData(byte[] buf, int offset, int length);
+public synchronized void setData(byte[] buf);
+public synchronized byte[] getData();
+
+public synchronized int getOffset();
+
+public synchronized void setLength(int length);
+public synchronized int getLength();
+
+public synchronized void setAddress(InetAddress iaddr);
+public synchronized InetAddress getAddress();
+
+public synchronized void setPort(int iport);
+public synchronized int getPort();
+
+public synchronized void setSocketAddress(SocketAddress address);
+public synchronized SocketAddress getSocketAddress();
+</script></code></pre>
+<p>例子：<br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.io.IOException;
+
+public class Server {
+    public static void main(String[] args) throws IOException {
+        DatagramSocket sockfd = new DatagramSocket(8080);
+        sockfd.setReuseAddress(true);
+
+        System.out.printf("----- bind: %s:%d -----\n",
+                          sockfd.getLocalAddress().getHostAddress(),
+                          sockfd.getLocalPort());
+
+        DatagramPacket pack = new DatagramPacket(new byte[1024 * 4], 1024 * 4);
+        while (true) {
+            sockfd.receive(pack);
+            System.out.printf("from: %s:%d, msg: %s\n",
+                              pack.getAddress().getHostAddress(),
+                              pack.getPort(),
+                              new String(pack.getData(), pack.getOffset(), pack.getLength()));
+            sockfd.send(pack);
+        }
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.net.InetAddress;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.io.IOException;
+
+public class Client {
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.err.println("Usage: Client <msg>");
+            System.exit(1);
+        }
+
+        DatagramSocket sockfd = new DatagramSocket();
+        sockfd.setReuseAddress(true);
+
+        DatagramPacket pack = new DatagramPacket(args[0].getBytes(),
+                                                 args[0].length(),
+                                                 InetAddress.getByName("127.0.0.1"),
+                                                 8080);
+
+        sockfd.send(pack);
+        sockfd.receive(pack);
+        System.out.printf("from: %s:%d, msg: %s\n",
+                          pack.getAddress().getHostAddress(),
+                          pack.getPort(),
+                          new String(pack.getData(), pack.getOffset(), pack.getLength()));
+
+        sockfd.close();
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_net_learn/udp_socket on git:master x [21:09:03]
+$ javac *.java
+
+# root @ arch in ~/work/java_net_learn/udp_socket on git:master x [21:09:09]
+$ java Server
+----- bind: 0.0.0.0:8080 -----
+from: 127.0.0.1:55604, msg: www.zfl9.com
+^C#
+
+# root @ arch in ~/work/java_net_learn/udp_socket on git:master x [21:09:25]
+$ java Client www.zfl9.com
+from: 127.0.0.1:8080, msg: www.zfl9.com
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-nio.html" rel="next" title="Java NIO">
+                <i class="fa fa-chevron-left"></i> Java NIO
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-ref.html" rel="prev" title="Java 4种引用类型">
+                Java 4种引用类型 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#URI、URL、URN"><span class="nav-number">1.</span> <span class="nav-text">URI、URL、URN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InetAddress、InetSocketAddress"><span class="nav-number">2.</span> <span class="nav-text">InetAddress、InetSocketAddress</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Socket"><span class="nav-number">3.</span> <span class="nav-text">TCP Socket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP-Socket"><span class="nav-number">4.</span> <span class="nav-text">UDP Socket</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-socket.html';
+          this.page.identifier = 'java-socket.html';
+          this.page.title = 'Java Socket编程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2138 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java 多线程编程">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 多线程编程">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 多线程编程">
+<meta property="og:url" content="https://www.zfl9.com/java-multi-thread.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 多线程编程">
+<meta property="og:image" content="https://www.zfl9.com/images/java-multi-thread.png">
+<meta property="og:image" content="https://www.zfl9.com/images/pthread_cond_wait.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-threadlocal.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-memory.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-jmm-machine.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-jmm-virtual-machine.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-jmm-model.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-jmm-comm.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-jmm-v.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-jmm-race.jpg">
+<meta property="og:updated_time" content="2019-02-21T01:36:24.535Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 多线程编程">
+<meta name="twitter:description" content="Java 多线程编程">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-multi-thread.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-multi-thread.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 多线程编程 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-multi-thread.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 多线程编程
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-11T18:57:00+08:00">
+                2017-09-11
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-multi-thread.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-multi-thread.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-multi-thread.html" class="leancloud_visitors" data-flag-title="Java 多线程编程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 多线程编程</p>
+<a id="more"></a>
+<h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><p><code>进程是程序执行时的一个实例，是程序已经执行到何种程度的数据结构的汇集</code>；从内核的观点看，进程的目的就是担当分配系统资源（CPU时间、内存等）的基本单位；</p>
+<p><code>线程是进程的一个执行流，是CPU调度和分派的基本单位，是比进程更小的能独立运行的基本单位</code>；一个进程由几个线程组成（拥有很多相对独立的执行流的用户程序共享应用程序的大部分数据结构），线程与同属一个进程的其他的线程共享进程所拥有的全部资源；</p>
+<p><code>&quot;进程——资源分配的最小单位，线程——程序执行的最小单位&quot;</code></p>
+<p>进程有独立的地址空间，一个进程崩溃后，在保护模式下不会对其它进程产生影响；<br>线程只是一个进程中的不同执行路径，线程有自己的堆栈和局部变量，但线程没有单独的地址空间，一个线程死掉就等于整个进程死掉；<br>所以多进程的程序要比多线程的程序健壮，但在进程切换时，耗费资源较大，效率要差一些，但对于一些要求同时进行并且又要共享某些变量的并发操作，只能用线程，不能用进程；</p>
+<p>以上内容均来自网络，下面说说我的个人理解（并不准确，我只是为了便于自己理解和记忆）：<br><strong>进程</strong>：系统进行资源分配和调度的一个独立单位，是担当资源分配的最小单位；<br><strong>线程</strong>：一个线程就是一个独立的栈结构，每个进程至少有一个线程，它是 main() 所在的栈；</p>
+<p>事实上，对于只有一个 CPU 的计算机，在同一时刻只能有一个线程在运行，之所以看起来是同时运行的，是因为操作系统会将 CPU 的时间分片（称为时间片），每个线程都是轮着执行，因为这个时间很短（Linux 下只有 5ms - 800ms），因此我们感觉不到。</p>
+<p>在 Java 中，每当我们调用 Thread.start()，JVM 就会分配一个新的栈结构，用于执行新线程的主方法 run()，它和主线程的主方法 main() 是一样的，没有任何实际区别，它们一样可以调用别的函数，也可以调用自己。</p>
+<p>如果我们不调用 Thread.start() 方法来创建新线程，而是直接在 main 线程中执行它的 run() 方法，那么这就是一个非常普通的函数调用，仅此而已。</p>
+<p><strong>Java 中的多线程</strong><br>和 C/C++ 不同，Java 内置支持多线程编程，不需要类似 pthread 这样的第三方库；Java 运行系统在很多方面依赖于线程，所有的类库设计都考虑到多线程；</p>
+<p><strong>线程的 5 种状态</strong><br><img src="/images/java-multi-thread.png" alt="Java 中线程的五种状态"></p>
+<p>1) <code>New</code>新建状态：<br>当程序使用 new 关键字创建了一个线程后，该线程就处于新建状态，此时线程还未启动（此时还是一个普通的对象）；</p>
+<p>2) <code>Runnable</code>就绪状态：<br>一个新创建的线程并不自动开始运行，要执行线程，必须调用线程的 start() 方法（这时才是一个真正的线程而不是普通对象）；<br>当线程对象调用 start() 方法即启动了线程，start() 方法创建线程运行的系统资源，并调度线程运行 run() 方法；当 start() 方法返回后，线程就处于就绪状态；处于就绪状态的线程并不一定立即运行 run() 方法，线程还必须同其它线程竞争 CPU 时间，只有获得 CPU 时间才可以运行线程；<br>因为在单 CPU 的计算机系统中，不可能同时运行多个线程，一个时刻仅有一个线程处于运行状态；因此此时可能有多个线程处于就绪状态；对多个处于就绪状态的线程是由 Java 运行时系统的线程调度程序来调度的；</p>
+<p>3) <code>Running</code>运行状态：<br>当线程获得 CPU 时间后，它才进入运行状态，真正开始执行 run() 方法（此时线程获得 CPU 时间片，真正开始运行）；</p>
+<p>4) <code>Block</code>阻塞状态：<br>线程运行过程中，可能由于各种原因进入阻塞（等待）状态：</p>
+<ul>
+<li>线程通过调用 sleep() 方法进入睡眠状态；</li>
+<li>线程通过调用 suspend() 方法而被挂起；</li>
+<li>线程调用一个在 I/O 上被阻塞的操作；</li>
+<li>线程试图得到一个锁，而该锁正被其它线程持有；</li>
+<li>线程在等待某个触发条件（条件变量）；</li>
+</ul>
+<blockquote>
+<p>所谓阻塞状态是正在运行的线程没有运行结束，暂时让出 CPU，这时其它处于就绪状态的线程就可以获得 CPU 时间，进入运行状态；</p>
+</blockquote>
+<p>5) <code>Dead</code>死亡状态：<br>有两个原因会导致线程死亡：</p>
+<ul>
+<li>run() 方法正常退出而自然死亡；</li>
+<li>一个未捕获的异常终止了 run() 方法而使线程猝死；</li>
+</ul>
+<p>为了确定线程在当前是否存活着（就是要么是可运行的，要么是被阻塞了），需要使用 isAlive() 方法，如果还存活则返回 true；<br>如果试图对一个已经死亡的线程调用 start() 方法，那么在程序运行期间将会抛出 IllegalThreadStateException 运行时异常。</p>
+<p><strong>睡眠、挂起、阻塞</strong>（个人理解）</p>
+<ul>
+<li><code>睡眠</code>，即调用线程的 sleep() 方法，<strong>主动</strong>行为，不过因为睡眠有一个时长，时间到了就会自动苏醒；</li>
+<li><code>挂起</code>，可以是<strong>主动</strong>（调用线程的 suspend() 方法）也可以是<strong>被动</strong>（被线程调度程序挂起），手动挂起需要手动恢复（调用线程的 resume() 方法）；</li>
+<li><code>阻塞</code>，<strong>被动</strong>，是线程在等待某种事件或者资源（如等待对象锁、等待条件变量、等待 I/O 操作完成）的表现，一旦获得所需资源或者事件信息就自动回到就绪态。</li>
+</ul>
+<blockquote>
+<p><code>睡眠</code>和<code>挂起</code>是两种<strong>行为</strong>，<code>阻塞</code>则是一种<strong>状态</strong>；<code>睡眠</code>和<code>挂起</code>的结果就是变成<code>阻塞</code>状态（在 Java 中来说）。</p>
+</blockquote>
+<p><strong>线程优先级</strong><br>Java 中的线程优先级的范围是 1～10，默认的优先级是 5；“高优先级线程”会优先于“低优先级线程”执行；</p>
+<p>JVM 线程调度程序是基于优先级的抢先调度机制；在大多数情况下，当前运行的线程优先级将大于或等于线程池中任何线程的优先级；但这仅仅是大多数情况；</p>
+<blockquote>
+<p>注意：当设计多线程应用程序的时候，一定不要依赖于线程的优先级；因为线程调度优先级操作是没有保障的，只能把线程优先级作用作为一种提高程序效率的方法，但是要保证程序不依赖这种操作；</p>
+</blockquote>
+<p>当线程池中线程都具有相同的优先级，调度程序的 JVM 实现自由选择它喜欢的线程；这时候调度程序的操作有两种可能：一是选择一个线程运行，直到它阻塞或者运行完成为止；二是时间分片，为池内的每个线程提供均等的运行机会；</p>
+<p>设置线程的优先级：线程默认的优先级是创建它的执行线程的优先级（相当于继承）；<br>可以通过<code>setPriority(int newPriority)</code>更改线程的优先级；通过<code>getPriority()</code>获取线程实例的优先级；</p>
+<p>线程优先级为 1~10 之间的正整数，JVM 从不会改变一个线程的优先级；<br>然而，1~10 之间的值是没有保证的；一些 JVM 可能不能识别 10 个不同的值，而将这些优先级进行每两个或多个合并，变成少于 10 个的优先级，则两个或多个优先级的线程可能被映射为一个优先级；</p>
+<p>线程默认优先级是 5，Thread 类中有三个常量，定义线程优先级范围：<code>MAX_PRIORITY</code>最高优先级、<code>MIN_PRIORITY</code>最低优先级、<code>NORM_PRIORITY</code>默认优先级；</p>
+<p><strong>线程同步机制</strong><br>对于 C/C++，线程之间的同步也是需要借助 pthread 库的，需要预先创建一个同步锁，用于同步，比如互斥锁；<br>一个线程必须先调用 lock() 获得互斥锁之后才能进入临界区，同时执行完毕后还需要调用 unlock() 释放互斥锁；</p>
+<p>但是对于 Java 来说，没有所谓的锁变量；相反，每个对象都拥有自己的隐式锁，当对象的同步方法被调用时调用线程自动获得该对象的锁；<br>一旦该对象的锁被某个线程持有，那么其他线程都不能再调用该对象的其他非静态 synchronized 方法，除非持有锁的线程退出同步方法或同步代码块；</p>
+<p>这种隐式的对象锁使得我们可以编写非常清晰和简洁的多线程代码，因为线程同步支持是 Java 语言内置的；</p>
+<h2 id="主线程"><a href="#主线程" class="headerlink" title="主线程"></a>主线程</h2><p>当一个 Java 程序启动时，一个线程立刻运行，该线程通常叫做程序的<code>主线程（main thread）</code>，因为它是程序开始时就执行的；主线程的重要性体现在两方面：<br>1) 主线程是产生其它新线程的线程；<br>2) 主线程通常最后退出，因为需要进行收场工作（但非必须，这点与 C/C++ 不同）。</p>
+<p>无论是 C/C++ 还是 Java，程序的执行都是从 main() 函数开始的；而 main() 函数所在的线程就称之为主线程；主线程和由主线程创建的新线程一样，没有所谓的父子之分，都是<code>平级关系</code>，即线程都是一样的，退出了一个并不会影响其他线程的运行；</p>
+<p>在 C/C++ 中，main 线程退出时会隐式的调用 exit()，exit() 就是结束当前进程，因此其它未结束的线程将会猝死。<br>在 Java 中，main 线程退出时并不会调用 System.exit()，因此 JVM 会等待所有非守护线程（即用户线程）执行完成后再退出。</p>
+<blockquote>
+<p>当然，在 C/C++ 中，也有办法让 main 线程退出时不调用 exit()，那就是使用 pthread_exit() 函数来结束 main 线程。</p>
+</blockquote>
+<p><strong>获取当前线程的 Thread 对象引用</strong><br>尽管主线程在程序启动时自动创建，但它可以由一个 Thread 对象控制；<br>为此，你必须调用方法 currentThread() 获得它的一个引用，currentThread() 是 Thread 类的公有的静态成员；<br>它的通常形式如下：<code>static Thread currentThread()</code>，该方法返回一个调用它的线程的引用；一旦你获得主线程的引用，你就可以像控制其他线程那样控制主线程；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t = Thread.currentThread();  // 获取当前线程的 Thread 引用
+
+        out.printf("currentThread_name: %s\n", t.getName()); // 获取线程名称
+        out.printf("currentThread_Priority: %d\n", t.getPriority()); // 获取线程优先级
+        out.printf("currentThread: %s\n", t.toString()); // 获取线程描述字符串
+
+        out.printf("sleep ... \n");
+        try {
+            t.sleep(2000); // ms毫秒
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("sleep ... done\n");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:18:43]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:18:52]
+$ java Main
+currentThread_name: main
+currentThread_Priority: 5
+currentThread: Thread[main,5,main]
+sleep ...
+sleep ... done
+</script></code></pre>
+<p>线程类 Thread 的 toString() 方法默认返回的格式为：<code>Thread[线程名, 线程优先级, 线程组]</code><br>从本例中可以得知，main 线程的名字默认为 main，并且线程优先级默认为 5，main 线程所在的线程组是 main；</p>
+<p>这里解释一下线程组：<br>一个线程总是属于某个线程组；默认情况下，如果没有指定线程组，那么自动归到当前线程所属的线程组中；<br>Java 程序中的线程组由 java.lang.ThreadGroup 类的一个对象表示；Thread 类中的 getThreadGroup() 方法返回一个线程的 ThreadGroup 的引用；</p>
+<p>您还可以创建线程组，并在该线程组中放置一个新线程；<br>要在你的线程组中放置一个新线程，我们必须使用 Thread 类的一个构造函数来接受一个 ThreadGroup 对象作为参数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">ThreadGroup myGroup = new ThreadGroup("My Thread Group");
+Thread t = new Thread(myGroup, "myThreadName");
+</script></code></pre>
+<p>线程组以树状结构布置；线程组可以包含另一个线程组；<br>ThreadGroup 类中的 getParent() 方法返回线程组的父线程组；顶层线程组的父级为 null；</p>
+<p>ThreadGroup 类中的某些方法，可以对线程组中的线程产生作用；<br>例如，setMaxPriority() 方法可以设定线程组中的所有线程拥有最大的优先权；</p>
+<p>在创建之初，线程被限制到一个组里，而且不能改变到一个不同的组；每个应用都至少有一个线程从属于系统线程组；若创建多个线程而不指定一个组，它们就会自动归属于系统线程组；</p>
+<p>之所以要提出“线程组”的概念，一般认为，是由于“安全”或者“保密”方面的理由；根据 Arnold 和 Gosling 的说法：“线程组中的线程可以修改组内的其他线程，包括那些位于分层结构最深处的；一个线程不能修改位于自己所在组或者下属组之外的任何线程”</p>
+<p><strong>创建线程组</strong><br><code>public ThreadGroup(String name)</code>、<code>public ThreadGroup(ThreadGroup parent, String name)</code></p>
+<p><strong>获取线程组信息</strong><br><code>public int activeCount()</code>：获得当前线程组中线程数目，包括可运行和不可运行的<br><code>public int activeGroupCount()</code>：获得当前线程组中活动的子线程组的数目<br><code>public int enumerate(Thread list[])</code>：列举当前线程组中的线程<br><code>public int enumerate(ThreadGroup list[])</code>：列举当前线程组中的子线程组<br><code>public final int getMaxPriority()</code>：获得当前线程组中最大优先级<br><code>public final String getName()</code>：获得当前线程组的名字<br><code>public final ThreadGroup getParent()</code>：获得当前线程组的父线程组<br><code>public boolean parentOf(ThreadGroup g)</code>：判断当前线程组是否为指定线程组的父线程组<br><code>public boolean isDaemon()</code>：判断当前线程组中是否有守护线程<br><code>public void list()</code>：列出当前线程组中所有线程和子线程名</p>
+<p><strong>操作线程组</strong><br><code>public final void setMaxPriority(int pri)</code>：设置当前线程组允许的最大优先级<br><code>public final void setDaemon(boolean daemon)</code>：指定一个线程为当前线程组的守护线程<br><code>public final void suspend()</code>：挂起当前线程组中所有线程<br><code>public final void resume()</code>：使被挂起的当前组内的线程恢复到可运行状态<br><code>public final void stop()</code>：终止当前线程组中所有线程<br><code>public String toString()</code>：将当前线程组转换为 String 类的对象</p>
+<p><strong>Thread.sleep() 方法</strong><br><code>public static native void sleep(long millis) throws InterruptedException</code>：毫秒为单位<br><code>public static void sleep(long millis, int nanos) throws InterruptedException</code>：毫秒为基本单位，精确到纳秒；</p>
+<blockquote>
+<p>1秒(s) = 1000毫秒(ms)、1秒(s) = 1000,000微秒(μs)、1秒 = 1000,000,000纳秒(ns)</p>
+</blockquote>
+<h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>大多数情况，通过实例化一个 Thread 对象来创建一个线程；Java 定义了两种方式：<br>1) 实现 Runnable 接口（通常情况）；<br>2) 继承 Thread 类（除非需要重写 Thread 类的某些方法）；</p>
+<h3 id="Runnable-接口"><a href="#Runnable-接口" class="headerlink" title="Runnable 接口"></a>Runnable 接口</h3><p>先看一下 Runnable 接口的定义，很简单，就一个 void run() 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Runnable {
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see     java.lang.Thread#run()
+     */
+    public abstract void run();
+}
+</script></code></pre>
+<p>因此我们仅需要实现 run() 方法，注意，run() 方法和其他的方法没有任何区别，本质都是一个函数，可以被任意调用；<br>只不过 Thread 类中的 start() 方法会默认将 run() 方法作为新线程的入口函数，仅此而已；</p>
+<p>如果你的类实现了 Runnable 接口的 run() 方法，却不作为 Thread 的参数去创建线程，那么这个 run() 方法就和普通的成员函数一样；比如这个例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread t = new MyThread();
+        t.run();
+    }
+}
+
+class MyThread implements Runnable {
+    @Override
+    public void run() {
+        out.printf("这并不是一个新线程，而是一个普通的成员函数！\n");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [8:43:23]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [8:43:31]
+$ java Main
+这并不是一个新线程，而是一个普通的成员函数！
+</script></code></pre>
+<p>当一个类实现了 Runnable 接口后，就可以使用 Thread 类的构造函数创建一个线程实例了，构造函数有：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">private void init(ThreadGroup g, Runnable target, String name,
+                  long stackSize, AccessControlContext acc,
+                  boolean inheritThreadLocals)
+
+public Thread() {
+    init(null, null, "Thread-" + nextThreadNum(), 0);
+}
+
+/**
+ * @param target    Runnable 对象
+ */
+public Thread(Runnable target) {
+    init(null, target, "Thread-" + nextThreadNum(), 0);
+}
+
+/**
+ * @param group     线程组
+ * @param target    Runnable 对象
+ */
+public Thread(ThreadGroup group, Runnable target) {
+    init(group, target, "Thread-" + nextThreadNum(), 0);
+}
+
+/**
+ * @param name      线程名称
+ */
+public Thread(String name) {
+    init(null, null, name, 0);
+}
+
+/**
+ * @param group     线程组
+ * @param name      线程名称
+ */
+public Thread(ThreadGroup group, String name) {
+    init(group, null, name, 0);
+}
+
+/**
+ * @param target    Runnable 对象
+ * @param name      线程名称
+ */
+public Thread(Runnable target, String name) {
+    init(null, target, name, 0);
+}
+
+/**
+ * @param group     线程组
+ * @param target    Runnable 对象
+ * @param name      线程名称
+ */
+public Thread(ThreadGroup group, Runnable target, String name) {
+    init(group, target, name, 0);
+}
+
+/**
+ * @param group     线程组
+ * @param target    Runnable 对象
+ * @param name      线程名称
+ * @param stackSize 栈大小
+ */
+public Thread(ThreadGroup group, Runnable target, String name,
+              long stackSize) {
+    init(group, target, name, stackSize);
+}
+</script></code></pre>
+<p>实现 Runnable 接口，例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new Task("A"));
+        Thread t2 = new Thread(new Task("B"));
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Task implements Runnable {
+    private String m_s;
+
+    public Task(String s) {
+        m_s = s;
+    }
+
+    @Override
+    public void run() {
+        for (int i=1; i<=5; i++) {
+            out.printf("[%s] -> %d\n", m_s, i);
+            for (long j=0; j<500000000L; j++);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:23:46]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [9:24:07]
+$ java Main
+[A] -> 1
+[B] -> 1
+[A] -> 2
+[B] -> 2
+[A] -> 3
+[B] -> 3
+[A] -> 4
+[B] -> 4
+[A] -> 5
+[B] -> 5
+</script></code></pre>
+<p>因为默认的线程优先级为 5，所以 A、B 的执行顺序貌似一样，现在我们改变一下优先级：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new Task("A"));
+        Thread t2 = new Thread(new Task("B"));
+
+        // 改变优先级
+        t1.setPriority(10);
+        t2.setPriority(1);
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Task implements Runnable {
+    private String m_s;
+
+    public Task(String s) {
+        m_s = s;
+    }
+
+    @Override
+    public void run() {
+        for (int i=1; i<=5; i++) {
+            out.printf("[%s] -> %d\n", m_s, i);
+            for (long j=0; j<500000000L; j++);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:29:56]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [9:29:58]
+$ java Main
+[A] -> 1
+[B] -> 1
+[B] -> 2
+[A] -> 2
+[B] -> 3
+[A] -> 3
+[B] -> 4
+[A] -> 4
+[B] -> 5
+[A] -> 5
+</script></code></pre>
+<p>可以发现，A、B 两个线程还是轮询执行的，有平等的权利获取 CPU 时间片，所以说线程优先级并不能决定线程的真正运行顺序；</p>
+<h3 id="Thread-类"><a href="#Thread-类" class="headerlink" title="Thread 类"></a>Thread 类</h3><p>继承 Thread 基类，例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Task t1 = new Task("A");
+        Task t2 = new Task("B");
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Task extends Thread {
+    private String m_s;
+
+    public Task(String s) {
+        super();
+        m_s = s;
+    }
+
+    @Override
+    public void run() {
+        for (int i=1; i<=5; i++) {
+            out.printf("[%s] -> %d\n", m_s, i);
+            for (long j=0; j<500000000L; j++);
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [9:44:26] C:1
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [9:44:29]
+$ java Main
+[A] -> 1
+[B] -> 1
+[B] -> 2
+[A] -> 2
+[B] -> 3
+[A] -> 3
+[B] -> 4
+[A] -> 4
+[B] -> 5
+[A] -> 5
+</script></code></pre>
+<p><strong>Thread 类常用方法</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 获取当前线程的 Thread 类的引用
+public static native Thread currentThread();
+
+/**
+ * 线程让步，让当前线程由 Running 状态进入 Runnable 状态，让具有相同优先级的其他线程获得执行机会
+ * 但是 yield() 并不保证其他线程一定能够获得执行权，也有可能当前线程再次进入 Running 状态
+ */
+public static native void yield();
+
+/**
+ * 启动线程，由 New 新建状态进入 Runnable 就绪状态
+ */
+public synchronized void start();
+
+/**
+ * [不建议使用]
+ * 强行停止线程
+ */
+public final void stop();
+public final synchronized void stop(Throwable obj);
+
+/**
+ * [不建议使用]
+ * 销毁线程
+ */
+public void destroy();
+
+/**
+ * [不建议使用]
+ * 挂起/恢复线程
+ */
+public final void suspend();
+public final void resume();
+
+/**
+ * 线程中断 Interrupt
+ * 每个 Java 线程都有一个标志位，即中断状态 interrupt status，中断状态有两个值，true、false
+ * 默认情况下，interrupt status 值为 false，即本线程没有任何中断
+ * 线程收到中断时，通常表示应该停止当前的工作
+ * 比如退出循环、停止监听、从 wait/sleep 状态立即结束等
+ * 具体处理方式完全由程序自己决定
+ * 1. interrupt()方法，给目标线程发送中断信号，即设置中断标志位为 true
+ * 2. isInterrupted()方法，获取当前中断标志位的值，但是并不清除中断标志位
+ * 3. interrupted()方法，获取当前中断标志位的值，同时清除中断标志位为 false (static 方法)
+ */
+public void interrupt();
+public boolean isInterrupted();
+public static boolean interrupted();
+
+/**
+ * 判断线程是否处于 Active 状态
+ */
+public final native boolean isAlive();
+
+/**
+ * 线程优先级 [1, 10]
+ * 值越大优先级越高，但是不能依赖线程优先级
+ */
+public final void setPriority(int newPriority);
+public final int getPriority();
+
+/**
+ * 线程名称
+ */
+public final synchronized void setName(String name);
+public final String getName();
+
+/**
+ * 线程组
+ */
+public final ThreadGroup getThreadGroup();
+
+/**
+ * t.join() 方法阻塞调用此方法的线程，直到线程 t 完成，此线程再继续运行
+ * 通常用于在 main() 主线程内，等待其它线程完成再结束 main() 主线程
+ */
+public final synchronized void join(long millis) throws InterruptedException;
+public final synchronized void join(long millis, int nanos) throws InterruptedException;
+public final void join() throws InterruptedException;
+
+/**
+ * 守护线程，Java 中有两种线程：用户线程、守护线程
+ * 守护线程和守护进程是差不多的概念，都是用来提供某种后台服务的进程/线程
+ * 守护线程使用的情况较少，但并非无用，举例来说，JVM 的垃圾回收、内存管理等线程都是守护线程
+ * 但是有一个问题需要注意：
+ * JVM 判断一个 Java 程序是否执行完毕的依据是：所有的用户线程执行完毕
+ * 当所有的用户线程执行完毕，JVM 自动退出，而程序的守护线程将挂掉！
+ * 但是如果在主线程中使用 join() 等待某个守护线程，那么程序将等到该守护线程执行完毕再结束
+ */
+public final void setDaemon(boolean on);
+public final boolean isDaemon();
+
+/**
+ * 获取 tid，即线程 ID
+ */
+public long getId();
+
+/**
+ * 获取线程状态
+ * public enum State {
+ *      NEW,        新建状态
+ *      RUNNABLE,   就绪状态
+ *      BLOCKED,    阻塞状态
+ *      WAITING,    等待状态
+ *      TIMED_WAITING, 等待状态(超时)
+ *      TERMINATED; 终止状态
+ * }
+ */
+public State getState();
+</script></code></pre>
+<p><strong>关于线程中断</strong><br>1、一个正常运行的线程，收到中断后，不会有任何问题，可以不需要做任何处理，当然程序可以通过显示的判断，来决定下一步动作，比如：<code>while (!Thread.currentThread().isInterrupted()) { statements }</code>；</p>
+<p>2、当线程被 wait()、join()、sleep() 阻塞期间，如果收到中断请求，则会抛出 InterruptedException 异常并清除中断标志；这是中断非常有用的一点，可以提前从阻塞状态返回；</p>
+<p>3、做为一种约定，Java API 里任何声明为抛出 InterruptedException 的方法，在抛出异常之前，都会先清除掉中断标志；</p>
+<p>4、一般说来，当可能阻塞的方法声明中有抛出 InterruptedException 则暗示该方法是可中断的；</p>
+<p>例一：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new Task("A", 10));
+        Thread t2 = new Thread(new Task("B", 20));
+
+        t1.start();
+        t2.start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        out.printf("sendto t1: interrupt\n");
+        t1.interrupt();
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        out.printf("sendto t2: interrupt\n");
+        t2.interrupt();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Task implements Runnable {
+    private String m_s;
+    private int m_i;
+
+    public Task(String s, int i) {
+        m_s = s;
+        m_i = i;
+    }
+
+    @Override
+    public void run() {
+        for (int i=1; i<=m_i; i++) {
+            if (Thread.interrupted()) {
+                break;
+            }
+
+            out.printf("[%s] -> %d\n", m_s, i);
+            for (long j=0; j<1000000000L; j++);
+        }
+
+        out.printf("[%s] -> interrupted\n", m_s);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [12:29:21]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [12:29:32]
+$ java Main
+[A] -> 1
+[B] -> 1
+[A] -> 2
+[B] -> 2
+[B] -> 3
+[A] -> 3
+sendto t1: interrupt
+[B] -> 4
+[A] -> interrupted
+[B] -> 5
+[B] -> 6
+[B] -> 7
+[B] -> 8
+[B] -> 9
+[B] -> 10
+[B] -> 11
+[B] -> 12
+[B] -> 13
+[B] -> 14
+sendto t2: interrupt
+[B] -> interrupted
+</script></code></pre>
+<p>例二：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new Task("A", 3000));
+        t1.start();
+
+        Thread t2 = new Thread(new Task("B", 10000));
+        t2.start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        t2.interrupt(); // 发送中断请求
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Task implements Runnable {
+    private String m_s;
+    private int m_millis;
+
+    public Task(String s, int millis) {
+        m_s = s;
+        m_millis = millis;
+    }
+
+    @Override
+    public void run() {
+        out.printf("[%s] -> will sleep %d ms >>> [%3$tT.%3$tL]\n", m_s, m_millis, new Date());
+        try {
+            Thread.sleep(m_millis);
+            out.printf("[%s] -> sleep timeout >>> [%2$tT.%2$tL]\n", m_s, new Date());
+        } catch (InterruptedException e) {
+            out.printf("[%s] -> receive interrupt >>> [%2$tT.%2$tL]\n", m_s, new Date());
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [12:51:24]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [12:51:38]
+$ java Main
+[B] -> will sleep 10000 ms >>> [12:51:39.814]
+[A] -> will sleep 3000 ms >>> [12:51:39.814]
+[A] -> sleep timeout >>> [12:51:42.842]
+[B] -> receive interrupt >>> [12:51:44.815]
+</script></code></pre>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h2><p>我们先来看不同步的例子，在 main 线程中启动 3 个新线程，分别打印一个字符串：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args)
+        throws InterruptedException
+    {
+        Thread t1 = new Thread(new Task("www.zfl9.com\n"));
+        Thread t2 = new Thread(new Task("www.baidu.com\n"));
+        Thread t3 = new Thread(new Task("www.google.com\n"));
+        t1.start();
+        t2.start();
+        t3.start();
+        t1.join();
+        t2.join();
+        t3.join();
+    }
+}
+
+class Task implements Runnable {
+    private String data;
+    public Task(String data) { this.data = data; }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < data.length(); i++) {
+            System.out.print(data.charAt(i));
+            try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace(); }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work [19:51:08]
+$ javac Main.java
+
+# root @ arch in ~/work [19:51:10]
+$ java Main
+wwwwwwwww...zgbfoaloi9dg.luce.o.cocmo
+mm
+
+
+# root @ arch in ~/work [19:51:30]
+$ java Main
+wwwwwwwww...bzgaofoligd9u.l.cec.oomcmo
+m
+</script></code></pre>
+<p>从运行结果中也可以看到，没有同步的线程之间打印的都是乱的，完全没有按我们的预期来运行；</p>
+<p>现在我们再来看一下加了同步的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args)
+        throws InterruptedException
+    {
+        Object lock = new Object();
+        Thread t1 = new Thread(new Task(lock, "www.zfl9.com\n"));
+        Thread t2 = new Thread(new Task(lock, "www.baidu.com\n"));
+        Thread t3 = new Thread(new Task(lock, "www.google.com\n"));
+        t1.start();
+        t2.start();
+        t3.start();
+        t1.join();
+        t2.join();
+        t3.join();
+    }
+}
+
+class Task implements Runnable {
+    private Object lock;
+    private String data;
+    public Task(Object lock, String data) {
+        this.lock = lock;
+        this.data = data;
+    }
+
+    @Override
+    public void run() {
+        synchronized (lock) {
+            for (int i = 0; i < data.length(); i++) {
+                System.out.print(data.charAt(i));
+                try { Thread.sleep(10); } catch (InterruptedException e) { e.printStackTrace(); }
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work [19:54:01]
+$ javac Main.java
+
+# root @ arch in ~/work [19:54:03]
+$ java Main
+www.zfl9.com
+www.google.com
+www.baidu.com
+
+# root @ arch in ~/work [19:54:04]
+$ java Main
+www.zfl9.com
+www.google.com
+www.baidu.com
+</script></code></pre>
+<p><strong>对象锁、类锁</strong><br>首先，需要明确的一点是，Java 语言默认为每个类和每个对象内置了一个互斥锁；<br>注意是每个类、每个对象，也就是说，互斥锁分为类级别、对象级别；</p>
+<p>类锁：作用于<code>静态</code>同步方法；<br>对象锁：作用于<code>非静态</code>同步方法；</p>
+<p>1) 如果一个线程成功进入了一个对象的非静态同步方法，那么该线程将获得该对象锁，在锁未释放期间，其他任何线程将不能再访问该对象的其他非静态同步方法；<br>2) 如果一个线程成功进入了一个类的静态同步方法，那么该线程将获得该类锁，在锁未释放期间，其他任何线程将不能再访问该类的其他静态同步方法；</p>
+<p>有一点需要强调，C/C++ 中需要显式的调用 mutex.lock()、mutex.unlock() 方法来获得、释放互斥锁；<br>但是在 Java 中，这些操作都是隐含的，当一个线程进入一个 synchronized 方法/块，那么它将自动获得互斥锁，当线程离开 synchronized 方法/块，则自动释放互斥锁，这一切都是由 Java 自动完成的；</p>
+<p><strong>synchronized 关键字</strong><br>1) synchronized 方法：将 synchronized 关键字放在方法的返回值类型之前，表示该方法是 synchronized 的；<br>2) synchronized 代码块：<code>synchronized (obj) { statements }</code>获取对象 obj 的对象锁，<code>synchronized (xxx.class) { statements }</code>获取类 xxx 的类锁；</p>
+<blockquote>
+<p>对于 synchronized 方法：<code>synchronized void func() { statements }</code>，等同于：<code>void func() { synchronized (this) { statements } }</code></p>
+</blockquote>
+<p>关于同步锁，需要注意的几点：</p>
+<p>1) 如果线程不能获得锁会怎么样？<br>如果线程试图进入同步方法，而其锁已经被占用，则线程在该对象上被阻塞，对于类锁也是一样的；<br>实质上，线程进入该对象（或类）的<code>锁池</code>中，必须在那里等待，直到其锁再次被释放，在锁池中的线程将再次竞争锁，竞争成功的线程进入同步方法，锁池中其他线程将继续等待锁的再次释放，然后一直持续这样的过程；</p>
+<p>2) 当考虑阻塞时，一定要注意哪个对象正被用于锁定：<br>1、调用同一个对象中非静态同步方法的线程将彼此阻塞；如果是不同对象，则每个线程有自己的对象的锁，线程间彼此互不干预；<br>2、调用同一个类中的静态同步方法的线程将彼此阻塞；它们都是锁定在相同的 Class 对象上；<br>3、静态同步方法和非静态同步方法将永远不会彼此阻塞，因为静态方法锁定在 Class 对象上，非静态方法锁定在该类的对象上；<br>4、对于同步代码块，要看清楚什么对象已经用于锁定（synchronized 后面括号的内容）；在同一个对象上进行同步的线程将彼此阻塞，在不同对象上锁定的线程将永远不会彼此阻塞；</p>
+<p><strong>类锁的本质，和对象锁有什么区别？</strong><br>请仔细观察类锁和对象锁的 synchronized 块定义：<br>1) <code>synchronized (obj) { statements }</code>：对象锁<br>2) <code>synchronized (xxx.class) { statements }</code>：类锁</p>
+<p>除去相同的部分，就剩下了<code>obj</code>、<code>xxx.class</code>（xxx为具体的类名）<br>还记得之前说的<a href="https://www.zfl9.com/java-inheritance-polymorphism.html#Object类">Object.getClass() 方法</a>吗？<br>没错，其实无论是<code>obj</code>还是<code>xxx.class</code>，本质都是一个对象，也就是它们都是属于某个具体类的一个实例：<br>1) 对于<code>obj</code>：很明显，是属于某个类的一个实例；<br>2) 对于<code>xxx.class</code>：每个类都有一个静态属性<code>class</code>，该属性是 java.lang.Class 类的一个实例，该对象中保存了类的信息；也就是说，<code>xxx.class</code>是类 Class 的一个实例；</p>
+<p>总结起来说，synchronized 代码块的括号中只能接收一个对象，没有所谓的类锁、对象锁之分，本质都是对象锁；</p>
+<h2 id="线程交互"><a href="#线程交互" class="headerlink" title="线程交互"></a>线程交互</h2><p>线程的交互可以理解为线程之间的通信，通过 Object 类的 wait()、notify()、notifyAll() 方法进行线程通信；</p>
+<p>wait() 方法原型：<br><code>public final void wait() throws InterruptedException;</code>：无超时等待，进入该对象的等待池，等待来自该对象的 notify/notifyAll 通知<br><code>public final native void wait(long timeout) throws InterruptedException;</code>：超时等待，毫秒ms为单位，同上<br><code>public final void wait(long timeout, int nanos) throws InterruptedException;</code>：超时等待，毫秒ms为基本单位，精确到纳秒ns，同上</p>
+<p>notify() 方法原型：<br><code>public final native void notify();</code>：唤醒在该对象的等待池中的某个线程，该线程将进入对象的锁池，竞争对象锁<br><code>public final native void notifyAll();</code>：唤醒在该对象的等待池中的所有线程，唤醒的线程将进入对象的锁池，竞争对象锁</p>
+<p>需要注意的是，notify/notifyAll 是实时信号，因此在 notify/notifyAll 之后的 wait 将不会收到唤醒信号，直到下一个 notify/notifyAll 信号的到来；<br>也就是说，使用 wait/notify 机制的时候，需要注意他们的时间顺序，不然会造成后面的 wait 线程持续等待；</p>
+<p>还有非常重要的一点，wait/notify/notifyAll 必须在 synchronized 的保护下进行，因为 Java 的 wait/notify 机制和 C/C++ 中的条件变量很相似，所以这里就拿 C/C++ 的条件变量的图做解释：<br><img src="/images/pthread_cond_wait.jpg" alt="Java wait/notify 机制"></p>
+<blockquote>
+<p>忽略图中的 pthread_cond_wait、pthread_cond_signal，并将它们替换为 Java 中的 wait()、notify()/notifyAll()</p>
+</blockquote>
+<p>pthread 中的原话：</p>
+<blockquote>
+<p>传入给 pthread_cond_wait 的 mutex 应为一把已经获取的互斥锁；<br>pthread_cond_wait 调用相当复杂，它是如下执行序列的一个组合：<br>1）释放互斥锁 并且 将线程挂起（这两个操作是一个原子操作）；<br>2）线程获得信号，尝试获得互斥锁后被唤醒；</p>
+</blockquote>
+<p>放在 Java 中：<br>调用对象的 wait() 方法之后，将执行的操作是：<br>1) 释放已获取的对象锁，并且将线程移至对象的等待池；<br>2) 线程获得 notify/notifyAll 信号，从对象的等待池移至对象的锁池，尝试获得对象锁；</p>
+<p>所以，调用对象的 wait() 方法的前提是已经获得对象的锁，也就是 wait 必须在 synchronized 中；<br>而 notify/notifyAll 方法通常伴随着条件（共享的变量）的改变，因此也必须在 synchronized 中（仅仅是 Java 语言层面的要求，理论上可以不用锁的保护）。</p>
+<p>注意，wait、notify/notifyAll 必须在 synchronized 的保护下调用不仅仅是逻辑上的要求，也是 Java 语言本身的要求，否则在运行期间将会抛出 java.lang.IllegalMonitorStateException 异常；</p>
+<p>wait/notify 机制的应用例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args)
+        throws InterruptedException
+    {
+        Thread t1 = new Thread(new Task("<", true));    // 先打印 <
+        Thread t2 = new Thread(new Task(">", false));   // 后打印 >
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+    }
+}
+
+class Task implements Runnable {
+    private String string;      // 要打印的字符
+    private boolean isFirst;    // 是否为先打印
+
+    private static Object lock = new Object();  // 同步锁(互斥)，注意是 static
+    private static volatile boolean firstIsRun = false; // 标识先打印的线程是否已运行，static && volatile
+
+    public Task(String string, boolean isFirst) {
+        this.string = string;
+        this.isFirst = isFirst;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            synchronized(lock) {
+                // 如果是后打印线程先运行，则调用 lock.wait() 等待
+                while (!isFirst && !firstIsRun)
+                    try { lock.wait(); } catch (InterruptedException e) { e.printStackTrace(); }
+
+                System.out.print(string);
+                if (isFirst && !firstIsRun) firstIsRun = true;
+                lock.notifyAll();
+
+                // 如果后打印线程打印到了最后一个字符，则跳出循环并打印换行符
+                if (!isFirst && i == 9) {
+                    System.out.println();
+                    break;
+                }
+
+                try { lock.wait(); } catch (InterruptedException e) { e.printStackTrace(); }
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~ [20:02:27]
+$ javac Main.java
+
+# root @ arch in ~ [20:02:29]
+$ java Main
+<><><><><><><><><><>
+
+# root @ arch in ~ [20:02:30]
+$ java Main
+<><><><><><><><><><>
+
+# root @ arch in ~ [20:02:31]
+$ java Main
+<><><><><><><><><><>
+</script></code></pre>
+<p><strong>竞态条件和临界区</strong><br>在同一程序中运行多个线程本身不会导致问题，问题在于多个线程访问了相同的资源；<br>如，同一内存区（变量，数组，或对象）、系统（数据库，web services 等）或文件；<br>实际上，这些问题只有在一或多个线程向这些资源做了<code>写</code>操作时才有可能发生，只要资源没有发生变化，多个线程读取相同的资源就是安全的；</p>
+<p>多线程同时执行下面的代码可能会出错：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Counter {
+    protected long count = 0;
+    public void add(long value) {
+        this.count = this.count + value;
+    }
+}
+</script></code></pre>
+<p>想象下线程 A 和 B 同时执行同一个 Counter 对象的 add()方法，我们无法知道操作系统何时会在两个线程之间切换；<br>JVM 并不是将这段代码视为单条指令来执行的，而是按照下面的顺序：<br>1) 从内存获取 this.count 的值放到寄存器；<br>2) 将寄存器中的值增加 value；<br>3) 将寄存器中的值写回内存；</p>
+<p>观察线程 A 和 B 交错执行会发生什么：</p>
+<blockquote>
+<p>this.count = 0;<br>A: 读取 this.count 到一个寄存器 (0)<br>B: 读取 this.count 到一个寄存器 (0)<br>B: 将寄存器的值加 2<br>B: 回写寄存器值(2)到内存. this.count 现在等于 2<br>A: 将寄存器的值加 3<br>A: 回写寄存器值(3)到内存. this.count 现在等于 3</p>
+</blockquote>
+<p>两个线程分别加了 2 和 3 到 count 变量上，两个线程执行结束后 count 变量的值应该等于 5；<br>然而由于两个线程是交叉执行的，两个线程从内存中读出的初始值都是 0；然后各自加了 2 和 3，并分别写回内存；最终的值并不是期望的 5，而是最后写回内存的那个线程的值，上面例子中最后写回内存的是线程 A，但实际中也可能是线程 B；如果没有采用合适的同步机制，线程间的交叉执行情况就无法预料；</p>
+<p><code>竞态条件 &amp; 临界区</code><br>当两个线程竞争同一资源时，如果<strong>对资源的访问顺序敏感</strong>，就称存在<code>竞态条件</code>；导致竞态条件发生的代码区称作<code>临界区</code>；</p>
+<p>上例中 add() 方法就是一个临界区，它会产生竞态条件；在临界区中使用适当的同步就可以避免竞态条件；</p>
+<p><strong>生产者消费者 - 简单例子</strong><br>对于多线程程序来说，不管任何编程语言，生产者和消费者模型都是最经典的；就像学习每一门编程语言一样，Hello World！都是最经典的例子；</p>
+<p>实际上，准确说应该是“生产者-消费者-仓储”模型，离开了仓储，生产者消费者模型就显得没有说服力了；</p>
+<p>对于此模型，应该明确一下几点：<br>1、生产者在仓储未满时生产，仓满时停止生产；<br>2、消费者在仓储有产品时消费，仓空则等待；<br>3、当消费者发现仓储没产品可消费时通知生产者生产；<br>4、生产者在生产出可消费产品时，应通知等待的消费者去消费；</p>
+<p>此模型将要结合 java.lang.Object 的 wait 与 notify、notifyAll 方法来实现以上的需求：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Godown godown = new Godown(40);
+
+        Thread c1 = new Thread(new Consumer(20, godown));
+        Thread c2 = new Thread(new Consumer(30, godown));
+        Thread c3 = new Thread(new Consumer(15, godown));
+        Thread c4 = new Thread(new Consumer(10, godown));
+        Thread c5 = new Thread(new Consumer(20, godown));
+
+        Thread p1 = new Thread(new Producer(40, godown));
+        Thread p2 = new Thread(new Producer(40, godown));
+        Thread p3 = new Thread(new Producer(50, godown));
+
+        p1.start();
+        p2.start();
+        c1.start();
+        c2.start();
+        c3.start();
+        p3.start();
+        c4.start();
+        c5.start();
+
+        try {
+            c1.join();
+            c2.join();
+            c3.join();
+            c4.join();
+            c5.join();
+            p1.join();
+            p2.join();
+            p3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+// 货仓
+class Godown {
+    private final int MAX_SIZE = 100; // 仓库容量
+    private volatile int m_currnum;   // 当前库存
+
+    public Godown() {}
+    public Godown(int currnum) {
+        if (currnum > MAX_SIZE) {
+            out.printf("预留库存(%d)大于仓库容量(%d)!\n", currnum, MAX_SIZE);
+            exit(1);
+        }
+        m_currnum = currnum;
+    }
+
+    // 生产
+    public synchronized void produce(int recvnum) {
+        while (recvnum + m_currnum > MAX_SIZE) {
+            out.printf("厂家发货过多(发货量: %d, 剩余空间: %d) -> [暂停进货]\n", recvnum, MAX_SIZE - m_currnum);
+            notifyAll(); // 通知消费者购买
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        m_currnum += recvnum; // 进货
+        out.printf("厂家已发货(发货量: %d, 当前库存: %d)\n", recvnum, m_currnum);
+        notifyAll(); // 通知消费者购买
+    }
+
+    // 消费
+    public synchronized void consume(int neednum) {
+        while (neednum > m_currnum) {
+            out.printf("当前库存不足(需求量: %d, 剩余库存: %d) -> [暂停售货]\n", neednum, m_currnum);
+            notifyAll(); // 通知卖家进货
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        m_currnum -= neednum; // 购买
+        out.printf("消费者购买(购买量: %d, 剩余库存: %d)\n", neednum, m_currnum);
+        notifyAll(); // 通知卖家进货
+    }
+}
+
+// 生产者
+class Producer implements Runnable {
+    private Godown m_godown;
+    private int m_num;
+
+    public Producer(int num, Godown godown) {
+        m_num = num;
+        m_godown = godown;
+    }
+
+    @Override
+    public void run() {
+        m_godown.produce(m_num);
+    }
+}
+
+// 消费者
+class Consumer implements Runnable {
+    private Godown m_godown;
+    private int m_num;
+
+    public Consumer(int num, Godown godown) {
+        m_num = num;
+        m_godown = godown;
+    }
+
+    @Override
+    public void run() {
+        m_godown.consume(m_num);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [11:14:58]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [11:15:13]
+$ java Main
+厂家已发货(发货量: 40, 当前库存: 80)
+厂家发货过多(发货量: 50, 剩余空间: 20) -> [暂停进货]
+消费者购买(购买量: 15, 剩余库存: 65)
+消费者购买(购买量: 10, 剩余库存: 55)
+厂家已发货(发货量: 40, 当前库存: 95)
+消费者购买(购买量: 30, 剩余库存: 65)
+消费者购买(购买量: 20, 剩余库存: 45)
+厂家已发货(发货量: 50, 当前库存: 95)
+消费者购买(购买量: 20, 剩余库存: 75)
+
+# root @ arch in ~/work on git:master x [11:15:14]
+$ java Main
+厂家已发货(发货量: 40, 当前库存: 80)
+消费者购买(购买量: 20, 剩余库存: 60)
+消费者购买(购买量: 15, 剩余库存: 45)
+消费者购买(购买量: 10, 剩余库存: 35)
+厂家已发货(发货量: 50, 当前库存: 85)
+消费者购买(购买量: 30, 剩余库存: 55)
+消费者购买(购买量: 20, 剩余库存: 35)
+厂家已发货(发货量: 40, 当前库存: 75)
+
+# root @ arch in ~/work on git:master x [11:15:15]
+$ java Main
+厂家已发货(发货量: 40, 当前库存: 80)
+厂家发货过多(发货量: 50, 剩余空间: 20) -> [暂停进货]
+消费者购买(购买量: 10, 剩余库存: 70)
+消费者购买(购买量: 20, 剩余库存: 50)
+厂家已发货(发货量: 40, 当前库存: 90)
+厂家发货过多(发货量: 50, 剩余空间: 10) -> [暂停进货]
+消费者购买(购买量: 15, 剩余库存: 75)
+消费者购买(购买量: 30, 剩余库存: 45)
+消费者购买(购买量: 20, 剩余库存: 25)
+厂家已发货(发货量: 50, 当前库存: 75)
+</script></code></pre>
+<p>本例仅仅是”生产者消费者模型”中最简单的一种表示；<br>本例中，如果消费者的需求达不到满足，而又没有生产者，则程序会一直处于等待状态；<br>同样，如果生产者送来的货物数量过多，而又没有消费者，则程序会一直处于等待状态；这些都是需要改进的地方！</p>
+<h2 id="线程死锁"><a href="#线程死锁" class="headerlink" title="线程死锁"></a>线程死锁</h2><p>所谓死锁，是指多个线程在运行过程中因争夺资源而造成的一种<code>僵局(DeadlyEmbreace)</code>，即互相等待的现象，当线程处于这种僵持状态时，若无外力作用，它们都将无法向前推进；</p>
+<p>典型的例子：线程 A 获得了锁 1，线程 B 获得了锁 2；这时线程 A 调用 lock 试图获得锁 2，结果是需要挂起等待线程 B 释放锁 2，而这时线程 B 也调用 lock 试图获得锁 1，结果是需要挂起等待线程 A 释放锁 1，于是线程 A 和 B 都永远处于挂起状态了；</p>
+<p>话不多说，我们来模拟一下这种情况：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Lock lock1 = new Lock("lock1");
+        Lock lock2 = new Lock("lock2");
+        Thread t1 = new Thread(new Deadlock(lock1, lock2));
+        Thread t2 = new Thread(new Deadlock(lock2, lock1));
+        t1.start();
+        t2.start();
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Lock {
+    private String m_name;
+    public Lock(String name) {
+        m_name = name;
+    }
+    @Override
+    public String toString() {
+        return m_name;
+    }
+}
+
+class Deadlock implements Runnable {
+    private Lock m_lock1;
+    private Lock m_lock2;
+    public Deadlock(Lock lock1, Lock lock2) {
+        m_lock1 = lock1;
+        m_lock2 = lock2;
+    }
+    @Override
+    public void run() {
+        synchronized (m_lock1) {
+            out.printf("[%s] -> entry synchronized(%s)\n", Thread.currentThread().getName(), m_lock1.toString());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            out.printf("[%s] -> try entry synchronized(%s)\n", Thread.currentThread().getName(), m_lock2.toString());
+            synchronized (m_lock2) {
+                out.printf("[%s] -> entry synchronized(%s)\n", Thread.currentThread().getName(), m_lock2.toString());
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [12:15:25] C:130
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [12:15:27]
+$ java Main
+[Thread-0] -> entry synchronized(lock1)
+[Thread-1] -> entry synchronized(lock2)
+[Thread-0] -> try entry synchronized(lock2)
+[Thread-1] -> try entry synchronized(lock1)
+^C#
+
+# root @ arch in ~/work on git:master x [12:15:33] C:130
+$ java Main
+[Thread-1] -> entry synchronized(lock2)
+[Thread-0] -> entry synchronized(lock1)
+[Thread-1] -> try entry synchronized(lock1)
+[Thread-0] -> try entry synchronized(lock2)
+^C#
+</script></code></pre>
+<p><strong>产生死锁的必要条件</strong><br>虽然线程在运行过程中可能发生死锁，但死锁的发生也必须具备一定的条件：<br>1) <code>互斥条件</code>：指线程对所分配的资源进行排它性使用，即在一段时间内某资源只由一个线程占用；如果此时还有其它线程请求该资源，则请求者只能等待，直至占有该资源的线程释放；<br>2) <code>请求和保持条件</code>：指线程已经保持了至少一个资源，但又提出了新的资源请求，而该资源又被其它线程占有，或者已经拥有了该资源却又再次请求，此时请求线程阻塞，但又对自己已获得的资源保持不放；<br>3) <code>不剥夺条件</code>：指线程在已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放；<br>4) <code>环路等待条件</code>：指在发生死锁时，必然存在一个 线程–资源 的<code>环形链</code>，即线程集合<code>{P0, P1, P2, ... Pn}</code>中的 P0 正在等待 P1 占用的资源；P1 正在等待 P2 占用的资源，……，Pn 正在等待已被 P0 占用的资源；</p>
+<p><strong>处理死锁的基本方法</strong><br>为保证系统中诸线程的正常运行，应事先采取必要的措施，来预防发生死锁；在系统中已经出现死锁后，则应及时检测到死锁的发生，并应采取适当的措施来解除死锁；目前，处理死锁的方法可归结为以下四种：</p>
+<p>1) <code>预防死锁</code>：这是一种较简单和直观的方法；该方法是通过设置某些限制条件，去破坏产生死锁的四个必要条件中的一个或几个，来预防发生死锁；但由于所施加的限制条件往往太严格，因而会导致系统资源利用率和系统吞吐量低；</p>
+<p>2) <code>避免死锁</code>：该方法同样是属于事先预防的策略，但它并不须事先采取各种限制措施去破坏产生死锁的四个必要条件，而是在资源的动态分配过程中，用某种方法去防止系统进入不安全状态，从而避免发生死锁；这种方法只需事先施加较弱的限制条件，便可获得较高的资源利用率及系统吞吐量，但在事实上有一定的难度；目前在较完善的系统中常用此方法来避免发生死锁；</p>
+<p>3) <code>检测死锁</code>：这种方法并不须事先采取任何限制性措施，也不必检查系统是否已经进入不安全区，而是允许系统在运行过程中发生死锁；但可通过系统所设置的检测机构，及时的检测出死锁的发生，并精确地确定与死锁有关的线程和资源；然后采取适当措施，从系统中将已发生的死锁清除掉；</p>
+<p>4) <code>解除死锁</code>：这是与检测死锁相配套的一种措施；当检测到系统中已发生死锁时，须将线程从死锁状态中解脱出来；常用的实施方法是撤销或挂起一些线程，以便回收一些资源，再将这些资源分配给已处于阻塞状态的线程，是之转为就绪状态，以继续运行；死锁的检测和解除措施有可能使系统获得较好的资源利用率和吞吐量，但在实现上难度也最大；</p>
+<h2 id="控制线程"><a href="#控制线程" class="headerlink" title="控制线程"></a>控制线程</h2><p>suspend() 挂起、resume() 恢复、stop() 终止，这些线程控制方法在 Java 2 和早期版本中有所不同；<br>尽管现在大多数时候都是使用 Java 2 来编写多线程程序，但是我们仍然需要了解 Java 2 为什么会有这样的变化，其原因是什么？</p>
+<p><strong>Java 1.1 及更早版本的线程挂起、恢复、终止</strong><br><code>public final void suspend();</code>：挂起线程<br><code>public final void resume();</code>：恢复线程<br><code>public final void stop();</code>：终止线程</p>
+<blockquote>
+<p>这些方法已经被官方标记为<code>@Deprecated</code>，也就是<code>弃用的</code>方法，不应该去使用这些方法；</p>
+</blockquote>
+<p>这几个 API 的使用非常简单，并且命名非常直观，看例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t = new Thread(new Task());
+        t.start();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("call suspend()\n");
+        t.suspend();
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("call resume()\n");
+        t.resume();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("call stop()\n");
+        t.stop();
+    }
+}
+
+class Task implements Runnable {
+    @Override
+    public void run() {
+        for (int i=0; ; i++) {
+            out.println(i);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [14:05:33]
+$ javac Main.java
+Note: Main.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+# root @ arch in ~/work on git:master x [14:05:47]
+$ java Main
+0
+1
+2
+call suspend()
+call resume()
+3
+4
+5
+call stop()
+</script></code></pre>
+<p>从这个例子中，貌似看不出有什么问题，并且也没有出现什么不安全的情况；<br>是的，因为这是一个非常简单的多线程例子，根本看不出任何问题！</p>
+<p><strong>为什么 stop() 是不安全的</strong>？<br>首先我们需要明确的一点是：<br>调用 Thread.stop() 方法是不安全的，这是因为当调用 Thread.stop() 方法时，会发生下面两件事：<br>1) 即刻抛出 ThreadDeath 错误，在线程的 run() 方法内，任何一处都有可能抛出 ThreadDeath Error，包括在 catch 或 finally 语句中；<br>2) 释放该线程所持有的所有的锁；</p>
+<p><strong>难道我不能通过捕获 ThreadDeath 错误来修正受损对象吗</strong>？<br>理论上，也许可以，但书写正确的多线程代码的任务将极其复杂，由于两方面的原因，这一任务的将几乎不可能完成：<br>1) 线程可以在几乎任何地方抛出 ThreadDeath 错误；由于这一点，所有的同步方法和同步块将必须被考虑得事无巨细；<br>2) 线程在清理第一个 ThreadDeath 错误的时候（在 catch 或 finally 语句中），可能会抛出第二个；清理工作将不得不重复直到到其成功；保障这一点的代码将会很复杂；</p>
+<p>综上所述，试图通过捕获 ThreadDeath 错误进行正常的 stop 线程是不符合实际的；</p>
+<p>那么第二点呢？<br>调用 stop 方法会抛出 ThreadDeath 来终止线程，而 stop 方法的不安全性在于该方法会释放线程所持有的锁，导致被<code>污染的数据</code>暴露给其他线程；<br>简单来说，就是 stop 方法会“突然”停止线程并释放锁而来不及做“善后”工作（如回滚操作），从而使结果变得不可预期；</p>
+<p>此外，当线程持有本身（this）的锁时，stop 方法是无法起效的，需等到线程释放自身的锁才能终止该线程；这是由于 stop() 会调用 stop(Throwable obj) 方法，而该方法是一个同步方法；</p>
+<p><strong>如何正确的停止一个线程</strong>？<br>对于 stop 的不安全性，Sun 的文档中也给出了推荐的做法：<br>1) 给定一个终止线程的<code>标记位</code>，当需要终止线程的时候设置这个标记位，而线程本身应当定期检查这个标记位，当检测到终止标记时，“优雅”地结束自己；<br>2) 对于阻塞的线程，应当使用 interrupt() 方法来终止等待；实际上 interrupt() 方法也是通过设置中断标志位来实现”结束”线程的；</p>
+<p><strong>为什么 suspend()/resume() 方法也是不安全的</strong>？<br><code>suspend()</code>：这个方法本质上有死锁的倾向；如果目标线程拥有一个锁，该锁保护一个临界区；当该线程暂停时，其它线程不能访问该资源，直到目标线程被继续进行(resume)；如果一个线程试图获取该监视器的锁，而不是调用 resume() 方法，死锁将会发生；此类死锁通常表现为<code>&quot;冻结&quot;进程</code>；</p>
+<p>resume() 方法是和 suspend() 配对使用的，显然它不能独立于 suspend() 工作！</p>
+<p><strong>如何正确的挂起/恢复一个线程</strong>？<br>最简单的方法：使用 Object 继承过来的 wait()、notify()/notifyAll() 机制；</p>
+<p><strong>Java 2 中实现安全的线程挂起、恢复、终止</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Task task = new Task();
+        Thread t = new Thread(task);
+        t.start();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("call suspend()\n");
+        task.suspend();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("call resume()\n");
+        task.resume();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.printf("call interrupt()\n");
+        t.interrupt();
+
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Task implements Runnable {
+    private volatile boolean suspend = false;
+
+    @Override
+    public void run() {
+        for (int i=0; !Thread.interrupted(); i++) {
+            synchronized (this) {
+                while (suspend) {
+                    try { wait(); } catch (InterruptedException e) {}
+                }
+            }
+
+            out.printf("Running -> %d\n", i);
+            for (long j=0; j<3000000000L; j++);
+        }
+    }
+
+    public synchronized void suspend() {
+        suspend = true;
+    }
+
+    public synchronized void resume() {
+        suspend = false;
+        notify();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:10:23]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:10:38]
+$ java Main
+Running -> 0
+Running -> 1
+Running -> 2
+call suspend()
+call resume()
+Running -> 3
+Running -> 4
+Running -> 5
+call interrupt()
+</script></code></pre>
+<h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p>ThreadLocal 是一个泛型类，位于 java.lang 包。<code>ThreadLocal</code>，看名字就知道，”线程本地变量”、”线程局部变量”。</p>
+<p><strong>ThreadLocal 的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度</strong>。</p>
+<p><strong>synchronized</strong>：<code>以时间换空间</code>，只提供一份变量，让不同的线程排队访问；<br><strong>ThreadLocal</strong>：<code>以空间换时间</code>，为每个线程都创建一个变量副本，因此可以同时访问而互不影响。</p>
+<blockquote>
+<p>synchronized 用于线程间的数据共享，而 ThreadLocal 则用于线程间的数据隔离。</p>
+</blockquote>
+<p>ThreadLocal 类的几个方法：<br>1) <code>public ThreadLocal() {}</code>：无参构造函数，并且函数体为空；<br>2) <code>public T get()</code>：获取当前线程的 value；<br>3) <code>public void set(T value)</code>：更新当前线程的 value；<br>4) <code>public void remove()</code>：删除当前线程的 value，提前回收内存；<br>5) <code>protected T initialValue()</code>：protected 方法，一般在子类中要覆盖该方法，提供一个 init 初始值，默认为 null。</p>
+<p>ThreadLocal 的 API 很简单，就 5 个函数；我们来感受一下 ThreadLocal，看看这究竟是个什么东西：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    private static final    // ThreadLocal 通常为 static 变量
+        ThreadLocal<Boolean> threadLocal = new ThreadLocal<>();
+
+    public static void main(String[] args) {
+        Main.threadLocal.set(true); // 在 Main 线程中修改值为 true
+        System.out.printf("[Thread-Main]\tthreadLocal: %s\n", Main.threadLocal.get());
+
+        new Thread(() -> {
+            Main.threadLocal.set(false);    // 在 A 线程中修改值为 false
+            System.out.printf("[Thread-A]\tthreadLocal: %s\n", Main.threadLocal.get());
+        }).start();
+
+        new Thread(() -> {
+            // ThreadLocal 默认 value 为 null，可通过 initialValue() 设置默认值
+            System.out.printf("[Thread-B]\tthreadLocal: %s\n", Main.threadLocal.get());
+        }).start();
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:17:07]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [16:17:37]
+$ java Main
+[Thread-Main]    threadLocal: true
+[Thread-A]    threadLocal: false
+[Thread-B]    threadLocal: null
+</script></code></pre>
+<p>从运行结果中确实可以看出<code>Thread local variables</code>的意思，每个线程对值的修改并不会影响其它线程中的值。</p>
+<p><strong>ThreadLocal 实现原理</strong><br>具体的源码分析过程这里就不贴出来了，我简略的概括一下：</p>
+<ul>
+<li>每个 Thread 对象中都有一个<code>ThreadLocal.ThreadLocalMap threadLocals = null</code>成员，ThreadLocalMap 就是一个普通的 Map，Key 为 ThreadLocal 类，Value 则为 Object 类；因此每个线程可以同时维护多个 ThreadLocal - Object 键值对。</li>
+<li>ThreadLocalMap 的 Key 是<strong>弱引用对象</strong>（如果一个对象只存在弱引用，那么它随时都会被 GC）；而 Value 则是强引用的；为了避免内存泄漏，在<code>get()</code>、<code>set()</code>、<code>remove()</code>方法内部会自动清理所有 Key 为 null 的 Value；当然还是建议使用 remove() 来显式的释放。</li>
+</ul>
+<p><strong>ThreadLocal 引用图解</strong><br><img src="/images/java-threadlocal.jpg" alt="ThreadLocal 强弱引用图解"></p>
+<p><strong>ThreadLocal 内存泄漏问题</strong><br>ThreadLocalMap 使用 ThreadLocal 的弱引用作为 key，如果一个 ThreadLocal 没有外部强引用来引用它，那么 GC 的时候，这个 ThreadLocal 势必会被回收，这样一来，ThreadLocalMap 中就会出现 key 为 null 的 Entry，就没有办法访问这些 key 为 null 的 Entry 的 value，如果当前线程再迟迟不结束的话，这些 key 为 null 的 Entry 的 value 就会一直存在一条强引用链：<code>Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value</code>，永远无法回收 value，从而造成内存泄漏。</p>
+<p>其实，ThreadLocalMap 的设计中已经考虑到这种情况，也加上了一些防护措施：调用 ThreadLocal 的 get()、set()、remove() 方法时都会清除线程 ThreadLocalMap 里所有 key 为 null 的 value。</p>
+<p>但是这些被动的预防措施并不能保证不会内存泄漏：</p>
+<ul>
+<li>使用静态的 ThreadLocal，延长了 ThreadLocal 的生命周期，可能会导致内存泄漏。</li>
+<li>设置 value 之后，却不再调用 get()、set()、remove() 方法，可能会导致内存泄漏。</li>
+</ul>
+<p>如何避免 ThreadLocal 内存泄漏？<br><strong>每次使用完 ThreadLocal，都手动的调用 remove() 方法，将 value 引用置 null，提前回收内存</strong>。</p>
+<p><strong>ThreadLocal 应用场景</strong><br>ThreadLocal 使用场合主要解决多线程中数据因并发产生不一致问题；ThreadLocal 为每个线程的中并发访问的数据提供一个副本，通过访问副本来运行业务，这样的结果是耗费了内存，但大大减少了线程同步所带来性能消耗，也减少了线程并发控制的复杂度。</p>
+<p>ThreadLocal 的使用比 Synchronized 要简单得多。ThreadLocal 和 Synchonized 都用于解决多线程并发访问。但是 ThreadLocal 与 Synchronized 有本质的区别：<br>Synchronized 是利用锁的机制，使变量或代码块在某一时该只能被一个线程访问；而 ThreadLocal 为每一个线程都提供了变量的副本，使得每个线程在某一时间访问到的并不是同一个对象，这样就隔离了多个线程对数据的数据共享。</p>
+<p>当然 ThreadLocal 并不能替代 Synchronized，它们处理不同的问题域；Synchronized 用于实现同步机制，比 ThreadLocal 更加复杂。</p>
+<p>总之，ThreadLocal 不是用来解决对象共享访问问题的，而主要是提供了保持对象的方法和避免参数传递的方便的对象访问方式。归纳为两点：</p>
+<ol>
+<li>每个线程中都有一个自己的 ThreadLocalMap 类对象，可以将线程自己的对象保持到其中，各管各的，线程可以正确的访问到自己的对象；</li>
+<li>将一个共用的 ThreadLocal 静态实例作为 key，将不同对象的引用保存到不同线程的 ThreadLocalMap 中，然后在线程执行的各处通过这个静态 ThreadLocal 实例的 get() 方法取得自己线程保存的那个对象，避免了将这个对象作为参数传递的麻烦。</li>
+</ol>
+<p><strong>ThreadLocal 使用建议</strong></p>
+<ol>
+<li>ThreadLocal 应定义为<strong>静态成员变量</strong>；</li>
+<li>能通过传值传递的参数，不要通过 ThreadLocal 存储，以免造成 ThreadLocal 的滥用；</li>
+<li>在使用线程池的情况下，当业务周期处理完成时，最好显式的调用 remove() 方法，清空旧值。</li>
+</ol>
+<h2 id="并发编程知识"><a href="#并发编程知识" class="headerlink" title="并发编程知识"></a>并发编程知识</h2><p>编写 Java 多线程程序一直以来都是一件十分困难的事，多线程程序的 bug 很难测试，DCL（Double Check Lock）就是一个典型，因此对多线程安全的理论分析就显得十分重要，当然这决不是说对多线程程序的测试就是不必要的。</p>
+<p>传统上，对多线程程序的分析是通过分析操作之间可能的执行先后顺序，然而程序执行顺序十分复杂，它与硬件系统架构，编译器，缓存以及虚拟机的实现都有着很大的关系。仅仅为了分析多线程程序就需要了解这么多底层知识确实不值得；虽然 99% 的 Java 程序员都知道 DCL 不对，但是如果让他们回答一些问题，DCL 为什么不对？有什么修正方法？这个修正方法是正确的吗？如果不正确，为什么不正确？对于此类问题，他们一脸茫然，或者回答也许吧，或者很自信但其实并没有抓住根本。</p>
+<p>幸好现在还有另一条路可走，我们只需要利用几个基本的 happens-before 规则就能从理论上分析 Java 多线程程序的正确性，而且不需要涉及到硬件和编译器的知识。接下来的部分，我会首先说明一下 happens-before 规则，然后使用 happens-before 规则来分析 DCL，最后我以我自己的例子来说明 DCL 的问题其实很常见，只是因为对 DCL 的过度关注反而忽略其问题本身，当然其忽略是有原因的，因为很多人并不知道 DCL 的问题到底出在哪里。</p>
+<p><strong>happens-before 概念</strong><br>定义：<strong>如果操作 A happens-before 操作 B，那么在发生操作 B 之前，操作 A 产生的影响能够被操作 B 观测到</strong>。</p>
+<blockquote>
+<p>所谓<code>产生的影响</code>大多是指对共享变量的修改（当然还有其它的），<code>被观测到</code>是指当读取这个变量时能够得到刚才写入的值（如果中间没有发生其它的写入）。</p>
+</blockquote>
+<p>举个例子说明一下。线程 A 执行了操作 a：<code>x = 3</code>，线程 B 执行了操作 b：<code>y = x</code>。如果操作 a happens-before 操作 b，那么 y 一定为 3。这是可以肯定的。那么如果操作 a、b 之间还有对 x 的写入会怎么样呢？假设线程 C 在操作 a、b 之间执行了操作 c：<code>x = 5</code>，并且操作 c 和操作 b 之间没有 happens-before 关系，那么执行操作 b 后 y 的值会是多少呢？3 还是 5？答案是都有可能，因为操作 b 不一定能够观测到操作 c 带来的影响。如果操作 b 读取到了 3，那么我们就说它读到了<strong>陈旧数据</strong>。</p>
+<p>正是多种可能性导致了多线程的不确定性和复杂性，但是要分析多线程的安全性，我们只能分析确定性部分，这就要求找出 happens-before 关系，又得利用 happens-before 规则。</p>
+<p><strong>happens-before 规则</strong>（JMM，Java 内存模型）<br>下面是 Java 内存模型中的八条可保证 happens-before 的规则，它们无需任何同步器协助就已经存在，可以在编码中直接使用。如果两个操作之间的关系不在此列，并且无法从下列规则推导出来的话，它们就没有顺序性保障，虚拟机可以对它们进行随机的重排序。</p>
+<ol>
+<li><strong>单线程规则</strong>：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作；</li>
+<li><strong>锁定规则</strong>：一个 unlock 操作先行发生于后面对同一个锁的 lock 操作；</li>
+<li><strong>volatile规则</strong>：对 volatile 变量的写操作先行发生于后面对这个 volatile 变量的读操作；</li>
+<li><strong>传递规则</strong>：如果操作 A 先行发生于操作 B，而操作 B 又先行发生于操作 C，则可以得出操作 A 先行发生于操作 C；</li>
+<li><strong>线程启动规则</strong>：Thread 对象的 start() 方法先行发生于此线程的每一个动作；</li>
+<li><strong>线程中断规则</strong>：对线程 interrupt() 方法的调用先行发生于被中断线程的代码检测到中断事件的发生；</li>
+<li><strong>线程终结规则</strong>：线程中所有的操作都先行发生于线程的终止检测，我们可以通过 Thread.join() 方法结束、Thread.isAlive() 的返回值手段检测到线程已经终止执行；</li>
+<li><strong>对象终结规则</strong>：一个对象的初始化完成先行发生于它的 finalize() 方法的开始；</li>
+</ol>
+<p>其中用的比较多的就是前四条，接下来的几个例子中，我会详细讲解如何利用 happens-before 规则分析多线程程序；<br>为了方便说明（少打字），我将使用 HB 规则代表 happens-before 规则，并且使用<code>a -&gt; b</code>描述 HB 关系（a HB b）。</p>
+<p>很多人有一个疑惑，如果操作 a 时间上先于操作 b 发生，那么是否意味着：操作 a -&gt; 操作 b？不一定，请看例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">private int value;
+
+public void set(int value) {
+    this.value = value; // 操作 a
+}
+
+public int get() {
+    return this.value;  // 操作 b
+}
+</script></code></pre>
+<p>我们先来看只有一个线程的情况；main 线程先（编码上的先）执行操作 a：<code>set(3)</code>，然后再（编码上的后）执行操作 b：<code>get()</code>；根据第一条，单线程规则，我们可以肯定操作 a -&gt; 操作 b。也就是说，操作 b 获取到的值一定为 3。</p>
+<p>再来看一下多线程的情况，为了简单，我们假设只有两个线程：线程 A、线程 B；线程 A 先（时间上）执行操作 a：<code>set(3)</code>，线程 B 后（时间上）执行操作 b：<code>get()</code>；那么我们就可以肯定操作 b 得到的值一定是 3 吗？我们来逐条分析。第一条，单线程规则，很显然不适用，因为这是两个不同的线程；第二条，锁定规则，也不适用，<code>set(int)</code>和<code>get()</code>方法都没有使用 synchronized 同步；第三条，因为 value 变量并未被 volatile 修饰，因此也不适用；第四条就更不用说了。因此我们得出结论，操作 a 与操作 b 之间不存在任何 HB 关系，也就是说，操作 b 获取到的值不一定为 3，也有可能是默认值 0。</p>
+<p>那么我们要如何让操作 a -&gt; 操作 b 呢（针对多线程）？<br>有一个最简单的方法，就是将 value 声明为 volatile 变量；因为根据 volatile 规则，对 volatile 变量的写操作 HB 后面对 volatile 变量的读操作。因此操作 b 获取到的值一定为 3。<br>还有一个方法就是给这两个方法加上 synchronized；根据单线程规则，操作 a -&gt; this.unlock()、this.lock() -&gt; 操作 b；而根据锁定规则，this.unlock() -&gt; this.lock()；再根据传递规则，操作 a -&gt; this.unlock() -&gt; this.lock() -&gt; 操作 b；因此操作 a -&gt; 操作 b；也就可以确定操作 b 获取到的值一定为 3。</p>
+<p>结论：<strong>操作 a 时间上先发生于操作 b，并不代表操作 a happens-before 操作 b</strong>。</p>
+<p>那么，如果操作 a -&gt; 操作 b，是否就意味着操作 a 在时间上先发生于操作 b 呢？也不一定，请看例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">int x = 1;  // 操作 a
+int y = 2;  // 操作 b
+</script></code></pre>
+<p>同一个线程执行上面的操作 a、操作 b；根据单线程规则，操作 a -&gt; 操作 b，但是操作 a 在时间上不一定先于操作 b 发生，这是因为编译器、处理器的指令重排序等原因，导致有可能操作 b 在时间上先于操作 a 发生。这个例子也说明了，分析操作上的先后顺序是多么的不靠谱，它可能完全违反直观感觉。</p>
+<p>不过，有一点我们可以肯定，<strong>如果操作 a -&gt; 操作 b，并且操作 a 产生的影响与操作 b 有关，那么操作 a 必定在时间上先于操作 b 发生</strong>。</p>
+<p>因为这个例子中，虽然操作 a 与操作 b 存在 HB 关系，但是这两个操作之间并没有任何关联，谁先执行都一样，完全不影响执行结果。</p>
+<p>结论：<strong>操作 a happens-before 操作 b，并不代表操作 a 时间上先发生于操作 b</strong>。</p>
+<p><strong>利用 happens-before 规则分析 DCL</strong><br>下面是一个典型的使用 DCL 的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class LazySingleton {
+    private static LazySingleton instance;
+    private int someField;
+
+    private LazySingleton() {
+        this.someField = new Random().nextInt(200) + 1; // (1)
+    }
+
+    public static LazySingleton getInstance() {
+        if (instance == null) {                         // (2)
+            synchronized (LazySingleton.class) {        // (3)
+                if (instance == null) {                 // (4)
+                    instance = new LazySingleton();     // (5)
+                }
+            }
+        }
+        return instance;                                // (6)
+    }
+
+    public int getSomeField() {
+        return this.someField;                          // (7)
+    }
+}
+</script></code></pre>
+<p>首先，我们先来陈述一下上面这个程序运行时的几个事实：</p>
+<ol>
+<li>语句 (5) 只会执行一次，也就是说 LazySingleton 只会存在一个实例，这是由于它和语句 (4) 被放在同步块中执行的缘故，如果去掉语句 (3) 处的同步语句，那么这个假设就不存在了。</li>
+<li>instance 只有两种可能的取值，要么是默认值 null，要么是执行语句 (5) 后的对象引用。这个结论根据事实 1 很容易推出来。</li>
+<li>getInstance() 方法总是返回非 null 值，并且每次调用都会返回相同的引用。如果 getInstance() 是初次调用，它会执行语句 (5) 构造一个 LazySingleton 实例并返回；如果 getInstance() 不是初次调用，如果不能在语句 (2) 出检测到 null 值，那么必定会在语句 (4) 处检测到 null 值。</li>
+</ol>
+<p>那么，既然根据这三条事实 getInstance() 总是会返回正确的引用，为什么还说 DCL 有问题呢？问题的关键不是在单例本身，这个例子获取单例是没有任何问题的，问题在于：<code>尽管得到了 LazySingleton 的正确引用，却仍有可能访问到其成员变量的不正确值</code>。具体来说，LazySingleton.getInstance().getSomeField() 可能返回默认值 0。</p>
+<p>假设存在两个线程：线程 A 先执行操作 a：<code>LazySingleton.getInstance()</code>、线程 B 后执行操作 b：<code>LazySingleton.getInstance().getSomeField()</code>。</p>
+<p>如果操作 b 在执行语句 (2) 时<strong>未观察到</strong>操作 a 在语句 (5) 中对 instance 的写入，那么操作 b 将进入同步块，执行语句 (4)，那么现在操作 b 还可能读取到 instance 的 null 值吗？不可能。利用 happens-before 规则来分析一下：根据单线程规则，操作 a 的语句 (5) -&gt; LazySingleton.class.unlock()，LazySingleton.class.lock() -&gt; 操作 b 的语句 (4)，根据锁定规则，LazySingleton.class.unlock() -&gt; LazySingleton.class.lock()，再根据传递规则，操作 a 的语句 (5) -&gt; 操作 b 的语句 (4)，因此操作 b 在执行语句 (4) 时一定可以读取到操作 a 在语句 (5) 中的写入。因此操作 b 会接着执行语句 (6)、语句 (7)，而又因为操作 a 的语句 (5) 中包含语句 (1)，因此根据传递规则，操作 a 的语句 (1) -&gt; 操作 b 的语句 (7)，因此线程 B 可以获得其成员变量的正确值。</p>
+<p>还没有出现问题，是吧，那么如果操作 b 在执行语句 (2) 时<strong>已经观察到</strong>了操作 a 在语句 (5) 的写入，那么操作 b 将不会进入同步块，而是直接执行语句 (6)，然后接着执行语句 (7)，这两个过程都是未同步的。因此我们无法根据锁定规则推导出操作 a 的语句 (1) -&gt; 操作 b 的语句 (7)，这就意味着操作 b 在执行语句 (7) 时完全有可能观测不到操作 a 在语句 (1) 的写入，这就是 DCL 的问题所在。很荒谬，是吧？DCL 原本是为了逃避同步，它达到了这个目的，也正是因为如此，它最终受到惩罚，这样的程序存在严重的 bug，虽然这种 bug 被发现的概率绝对比中彩票的概率还要低得多，而且是转瞬即逝，更可怕的是，即使发生了你也不会想到是 DCL 所引起的。</p>
+<p>对 DCL 的分析也告诉我们一条经验原则：<strong>对引用（包括对象引用和数组引用）的非同步访问，即使得到该引用的最新值，却并不能保证也能得到其成员变量（对数组而言就是每个数组元素）的最新值</strong>。</p>
+<p>既然理解了 DCL 的根本原因，或许我们就可以修正它。</p>
+<p>1、其中最简单的方法就是将 instance 声明为 volatile 变量，我们主要分析第二种情况，也就是假设操作 b 的语句 (2) 观察到了操作 a 的语句 (5) 的写入。根据 volatile 原则，操作 a 的语句 (5)/(1) -&gt; 操作 b 的语句 (2)，根据单线程规则，操作 b 的语句 (2) -&gt; 操作 b 的语句 (6) -&gt; 操作 b 的语句 (7)，然后根据传递规则，可以得出操作 a 的语句 (1) -&gt; 操作 b 的语句 (7)；因此可行；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class LazySingleton {
+    private static volatile LazySingleton instance;
+    private int someField;
+
+    private LazySingleton() {
+        this.someField = new Random().nextInt(200) + 1; // (1)
+    }
+
+    public static LazySingleton getInstance() {
+        if (instance == null) {                         // (2)
+            synchronized (LazySingleton.class) {        // (3)
+                if (instance == null) {                 // (4)
+                    instance = new LazySingleton();     // (5)
+                }
+            }
+        }
+        return instance;                                // (6)
+    }
+
+    public int getSomeField() {
+        return this.someField;                          // (7)
+    }
+}
+</script></code></pre>
+<p>2、当然，还有一个简单且安全的方法就是使用 static 内部类的思想：一个类直到被使用时才被初始化，而类初始化的过程是非并行的，这些都有 JLS（Java 语言规范）保证；</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class LazySingleton {
+    private int someField;
+
+    private LazySingleton() {
+        this.someField = new Random().nextInt(200) + 1;
+    }
+
+    private static class InstanceHolder {
+        private static final LazySingleton instance = new LazySingleton();
+    }
+
+    public LazySingleton getInstance() {
+        return InstanceHolder.instance;
+    }
+
+    public int getSomeField() {
+        return InstanceHolder.instance.someField;
+    }
+}
+</script></code></pre>
+<p>3、在 Java 5 之前对 final 字段的同步语义和其它变量没有什么区别，在 Java 5 中，final 变量一旦在构造函数中设置完成（前提是在构造函数中没有泄露 this 引用)，其它线程必定会看到在构造函数中设置的值。而 DCL 的问题正好在于看到对象的成员变量的默认值，因此我们可以将 LazySingleton 的 someField 变量设置成 final，这样在 Java 5 中就能够正确运行了。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class LazySingleton {
+    private static LazySingleton instance;
+    private final int someField;
+
+    private LazySingleton() {
+        this.someField = new Random().nextInt(200) + 1; // (1)
+    }
+
+    public static LazySingleton getInstance() {
+        if (instance == null) {                         // (2)
+            synchronized (LazySingleton.class) {        // (3)
+                if (instance == null) {                 // (4)
+                    instance = new LazySingleton();     // (5)
+                }
+            }
+        }
+        return instance;                                // (6)
+    }
+
+    public int getSomeField() {
+        return this.someField;                          // (7)
+    }
+}
+</script></code></pre>
+<p><strong>Java 内存模型 - JMM</strong><br>注意，我们讨论的是 - <strong><code>Java Memory Model</code>（Java 内存模型，简称 JMM）</strong>，不要与 Java 内存区域概念混淆了；</p>
+<p><strong>Java 内存区域</strong>，Java 内存区域相关的知识请到 - <a href="/java-jvm.html">深入理解 JVM 虚拟机</a>。<br><img src="/images/java-memory.png" alt="Java 内存区域划分"></p>
+<blockquote>
+<p>这里之所以简要说明这部分内容，注意是为了区别 Java 内存模型与 Java 内存区域的划分，毕竟这两种划分是属于不同层次的概念。</p>
+</blockquote>
+<p>JMM，作为 Java 语言规范的一部分（主要在 JLS 的第 17 章节介绍），其定义了多线程之间如何通过内存进行交互，在旧的 JMM 中，存在一些不够明确和过于限制的问题，比如对<code>final</code>，<code>volatile</code>等关键字的语义约束问题，例如，有可能出现<code>final</code>字段的值会发生变化，或者阻止编译器的优化操作，还有比较熟知的<code>double-checked</code>问题，于是在新的 JMM 中，针对这一系列问题作出了修订，最终在 JSR133 中进行了详细描述（Java 5）。</p>
+<p><strong>什么是 Java 内存模型</strong><br>在多核系统中，处理器通常会有<strong>一层或多层缓存</strong>，通过这些缓存可以<strong>加快数据访问</strong>（缓存数据距处理器更近）和<strong>降低共享内存总线上的通讯</strong>（因为本地缓存能够满足大多数内存操作）来提高 CPU 性能。缓存能够大大提升性能，但这同时也带来了许多挑战。例如，当两个 CPU 同时检查相同的内存地址时会发生什么？在什么样的条件下它们会看到相同的值？</p>
+<p>在处理器层面上，JMM 定义了一个充要条件：<strong>让当前的处理器可以看到其它处理器写入到内存的数据以及其它处理器可以看到当前处理器写入到内存的数据</strong>。有些处理器具有<strong>强一致性内存模型</strong>，能够让所有的处理器在任何时候任何指定的内存地址上都可以看到完全相同的值。而另外一些处理器则具有<strong>弱一致性内存模型</strong>，在这种处理器中，必须使用<strong>内存屏障（一种特殊的硬件级别指令）</strong>来刷新本地处理器缓存并使本地处理器缓存无效，目的是为了让当前处理器能够看到其它处理器的写操作或者让其它处理器能看到当前处理器的写操作。这些<strong>内存屏障</strong>通常在机器指令中的<code>lock</code>和<code>unlock</code>操作的时候完成。内存屏障在高级语言中对程序员是不可见的。</p>
+<p>JMM 描述了在多线程中<strong>哪些行为是合法的</strong>，以及<strong>线程间如何通过内存进行交互</strong>。它描述了<strong>程序中的变量</strong>和<strong>从内存或者寄存器加载或存储它们的底层细节之间的关系</strong>，并通过使用各种硬件和编译器的优化（如<strong>重排序</strong>，<strong>高速缓存</strong>，<strong>机器指令交错执行</strong>等）来正确实现以上事情。比如从 Java 语言层面上，我们可以通过<code>volatile</code>、<code>final</code>以及<code>synchronized</code>关键字，<code>happens-before</code>关系等保证同步的 Java 程序在所有的处理器架构下面都能正确的运行。</p>
+<p>JMM 规定了 JVM 必须遵循一组<strong>最小保证</strong>，这组保证规定了<strong>对变量的写入操作在何时将对于其它线程可见</strong>。JMM 在设计时就在<strong>可预测性和程序的易于开发性之间进行了权衡</strong>，从而在各种主流的处理器体系架构上能实现高性能的 JMM。</p>
+<p><strong>为什么需要 JMM</strong>？<br>JVM 可以通过 JMM 来屏蔽各个硬件平台和操作系统的内存访问差异，以实现让 Java 程序在各种平台下都能达到一致的内存访问效果（并发效果）。</p>
+<p><strong>物理内存模型</strong><br><img src="/images/java-jmm-machine.jpg" alt="物理内存模型"><br>其中，在 CPU 中还有一个重要组件（图中未描述） - <a href="https://zh.wikipedia.org/wiki/%E5%AF%84%E5%AD%98%E5%99%A8" rel="external nofollow noopener noreferrer" target="_blank">寄存器</a>，寄存器（Register），是中央处理器内的其中组成部分。寄存器是有限存贮容量的高速存贮部件，它们可用来暂存指令、数据和地址。在中央处理器的控制部件中，包含的寄存器有指令寄存器（IR）和程序计数器（PC）。在中央处理器的算术及逻辑部件中，包含的寄存器有累加器（Accumulator）。<strong>寄存器是内存层次结构中的最顶端，也是系统操作数据的最快速途径</strong>。</p>
+<p>除了寄存器，就是 <a href="https://zh.wikipedia.org/wiki/CPU%E7%BC%93%E5%AD%98" rel="external nofollow noopener noreferrer" target="_blank">CPU 高速缓存</a>（CPU Cache）。在计算机系统中，CPU 高速缓存是用于减少处理器访问内存所需平均时间的部件。在金字塔式存储体系中它位于自顶向下的第二层，仅次于 CPU 寄存器。其容量远小于内存，但速度却可以接近处理器的频率。</p>
+<p><a href="https://zh.wikipedia.org/wiki/MSI%E5%8D%8F%E8%AE%AE" rel="external nofollow noopener noreferrer" target="_blank">缓存一致性</a>，又译为缓存连贯性、缓存同调，是指保留在高速缓存中的共享资源，保持数据一致性的机制。在一个系统中，当许多不同的设备共享一个共同内存资源，在高速缓存中的数据不一致，就会产生问题。这个问题在有数个 CPU 的多处理机系统中特别容易出现。解决的办法就是 MESI 协议（MESI 是在 MSI 协议的基础上改进的，增加了一个互斥独占状态 E），它的方法是在 CPU 缓存中保存一个标记位，这个标记位有四种状态：</p>
+<ul>
+<li>M：Modify，修改缓存，当前 CPU 的缓存已经被修改了，即与内存中数据已经不一致了；</li>
+<li>E：Exclusive，独占缓存，当前 CPU 的缓存和内存中数据保持一致，而且其它处理器并没有可使用的缓存数据；</li>
+<li>S：Share，共享缓存，和内存保持一致的一份拷贝，多组缓存可以同时拥有针对同一内存地址的共享缓存段；</li>
+<li>I：Invalid，无效缓存，这个说明 CPU 中的缓存已经不能使用了。</li>
+</ul>
+<p>CPU 的读取遵循下面几点：</p>
+<ul>
+<li>如果缓存状态是 I，那么就从内存中读取，否则就从缓存中直接读取；</li>
+<li>如果缓存状态处于 M 或 E 的 CPU 读取到其它 CPU 有读操作，就把自己的缓存写入到内存中，并将自己的状态设置为 S；</li>
+<li>只有缓存状态是 M 或 E 的时候，CPU 才可以修改缓存中的数据，修改后，缓存状态变为 M；</li>
+</ul>
+<p>每个 CPU 都遵循上面的方式，CPU 的效率就提高上来了。</p>
+<p><strong>Java 内存模型</strong><br><img src="/images/java-jmm-virtual-machine.jpg" alt="Java 内存模型"><br><img src="/images/java-jmm-model.png" alt="Java 内存模型"></p>
+<ul>
+<li>主内存：相当于物理机的 RAM 内存，线程共享，用于存储数据；</li>
+<li>工作内存，相当于物理机的寄存器/高速缓存，线程私有，用于提高效率；</li>
+</ul>
+<blockquote>
+<p>Java 内存模型只是抽象出来的，一种数据结构而已，与物理内存的对应关系在实际运行中，主内存和工作内存可能都处于物理机的主存中！</p>
+</blockquote>
+<p><strong>JMM 下的线程间通信</strong><br>我们将<strong>线程之间以何种机制来交换信息</strong>称为<strong>线程间通信</strong>，JMM 规定，线程间通信必须要经过主内存。如果线程 A 与线程 B 之间要通信的话，必须要经历下面 2 个步骤：</p>
+<ol>
+<li>线程 A 把本地内存 A 中更新过的共享变量 x 刷新到主内存；</li>
+<li>线程 B 从主内存读取共享变量 x 的最新值到本地内存 B 中。</li>
+</ol>
+<p><img src="/images/java-jmm-comm.jpg" alt="Java 线程间通信"></p>
+<p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步到主内存之间的实现细节，Java 内存模型定义了以下八种操作来完成：</p>
+<ol>
+<li>lock（锁定）：作用于主内存的变量，把一个变量标识为一条线程独占状态；</li>
+<li>unlock（解锁）：作用于主内存变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其它线程锁定；</li>
+<li>read（读取）：作用于主内存变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的 load 动作使用；</li>
+<li>load（载入）：作用于工作内存的变量，它把 read 操作从主内存中得到的变量值放入工作内存的变量副本中；</li>
+<li>use（使用）：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎，每当虚拟机遇到一个需要使用变量的值的字节码指令时将会执行这个操作；</li>
+<li>assign（赋值）：作用于工作内存的变量，它把一个从执行引擎接收到的值赋值给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作；</li>
+<li>store（存储）：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的 write 操作；</li>
+<li>write（写入）：作用于主内存的变量，它把 store 操作从工作内存中一个变量的值传送到主内存的变量中。</li>
+</ol>
+<p>Java 内存模型还规定了在执行上述八种基本操作时，必须满足如下规则：</p>
+<ul>
+<li>如果要把一个变量从主内存中复制到工作内存，就需要按顺序地执行 read 和 load 操作，如果把变量从工作内存中同步回主内存中，就要按顺序地执行 store 和 write 操作。但 JMM 只要求上述操作必须按顺序执行，而没有保证必须是连续执行；</li>
+<li>不允许 read 和 load、store 和 write 操作之一单独出现；</li>
+<li>不允许一个线程丢弃它的最近 assign 的操作，即变量在工作内存中改变了之后必须同步到主内存中；</li>
+<li>不允许一个线程无原因地（没有发生过任何 assign 操作）把数据从工作内存同步回主内存中；</li>
+<li>一个新的变量只能在主内存中诞生，不允许在工作内存中直接使用一个未被初始化（load 或 assign）的变量。即就是对一个变量实施 use 和 store 操作之前，必须先执行过了 assign 和 load 操作；</li>
+<li>一个变量在同一时刻只允许一条线程对其进行 lock 操作，但 lock 操作可以被同一条线程重复执行多次，多次执行 lock 后，只有执行相同次数的 unlock 操作，变量才会被解锁。即 lock 和 unlock 必须成对出现；</li>
+<li>如果对一个变量执行 lock 操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前需要重新执行 load 或 assign 操作初始化变量的值；</li>
+<li>如果一个变量事先没有被 lock 操作锁定，则不允许对它执行 unlock 操作；也不允许去 unlock 一个被其他线程锁定的变量；</li>
+<li>对一个变量执行 unlock 操作之前，必须先把此变量同步到主内存中（执行 store 和 write 操作）。</li>
+</ul>
+<p><strong>JMM 解决的问题</strong><br>当对象和变量被存放在计算机中各种不同的内存区域中时，就可能会出现一些具体的问题：在多线程并发过程中，如何处理多线程<strong>读同步问题与可见性</strong>（多线程缓存与指令重排序）、多线程<strong>写同步问题与原子性</strong>（race condition 竞态条件）。</p>
+<blockquote>
+<p>当多个线程竞争同一资源时，如果<strong>对资源的访问顺序敏感</strong>，就称存在<code>竞态条件</code>。<strong>导致竞态条件发生的代码区称作<code>临界区</code></strong>。<strong>在临界区中使用适当的<code>同步</code>就可以避免竞态条件</strong>。</p>
+</blockquote>
+<p>1、<strong>多线程<code>读同步</code>与<code>可见性</code></strong><br><strong>可见性（共享对象可见性）</strong>：线程对共享变量修改的可见性。当一个线程修改了共享变量的值，其它线程能够立刻感知到这个修改。</p>
+<p><strong>线程缓存导致的可见性问题</strong>：<br>如果两个或者更多的线程在没有正确的使用<code>volatile</code>声明或者<code>同步</code>的情况下共享一个对象，一个线程更新这个共享对象可能对其它线程来说是不可见的；共享对象被初始化在主存中；跑在 CPU 上的一个线程将这个共享对象读到 CPU 缓存中，然后修改了这个对象。只要 CPU 缓存没有被刷新会主存，对象修改后的版本对跑在其它 CPU 上的线程都是不可见的。这种方式可能导致每个线程拥有这个共享对象的私有拷贝，每个拷贝停留在不同的 CPU 缓存中。</p>
+<p>下图示意了这种情形。跑在左边 CPU 的线程拷贝这个共享对象到它的 CPU 缓存中，然后将 count 变量的值修改为 2。这个修改对跑在右边 CPU 上的其它线程是不可见的，因为修改后的 count 的值还没有被刷新回主存中去。<br><img src="/images/java-jmm-v.jpg" alt="内存可见性问题"></p>
+<p>解决内存可见性问题你可以使用：</p>
+<ul>
+<li>Java 中的<code>volatile</code>关键字：volatile 关键字可以保证直接从主存中读取一个变量，如果这个变量被修改后，总是会被写回到主存中去。Java 内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值这种依赖主内存作为传递媒介的方式来实现可见性的，无论是普通变量还是 volatile 变量都是如此，普通变量与 volatile 变量的区别是：volatile 的特殊规则保证了新值能立即同步到主内存，以及每个线程在每次使用 volatile 变量前都立即从主内存刷新。因此我们可以说 volatile 保证了多线程操作时变量的可见性，而普通变量则不能保证这一点；</li>
+<li>Java 中的<code>synchronized</code>关键字：同步快的可见性是由“如果对一个变量执行 lock 操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前需要重新执行 load 或 assign 操作初始化变量的值”、“对一个变量执行 unlock 操作之前，必须先把此变量同步回主内存中（执行 store 和 write 操作）”这两条规则获得的；</li>
+<li>Java中的<code>final</code>关键字：final 关键字的可见性是指，被 final 修饰的字段在构造器中一旦被初始化完成，并且构造器没有把“this”的引用传递出去（this 引用逃逸是一件很危险的事情，其它线程有可能通过这个引用访问到“初始化了一半”的对象），那么在其它线程就能看见 final 字段的值（无须同步）；</li>
+</ul>
+<p><code>this引用逃逸</code>（”this” escape）是指<strong>对象还没有构造完成，它的 this 引用就被发布出去了</strong>。这是危及到线程安全的，因为其它线程有可能通过这个逸出的 this 引用访问到“初始化了一半”的对象（partially-constructed object）。这样就会出现某些线程中看到该对象的状态是没初始化完的状态，而在另外一些线程看到的却是已经初始化完的状态，这种不一致性是不确定的，程序也会因此而产生一些无法预知的并发错误。</p>
+<p>我们先看看一个对象是如何产生 this 引用逸出的，下面是一个很容易理解的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    private StringBuilder sb; // 26 个大写字母
+
+    public Main() {
+        // 先启动一个线程，成员式内部类
+        new Thread(new Task()).start();
+
+        this.sb = new StringBuilder();
+
+        for (char i = 65; i <= 90; i++) {
+            sb.append(i);
+            // 模拟耗时操作
+            for (long l = 0L; l < 50000000; l++);
+        }
+    }
+
+    private class Task implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("Main.Task.run(): " + Main.this.sb);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Main.main(): " + new Main().sb);
+    }
+}
+</script></code></pre>
+<p>运行结果：很显然，在 run() 方法中拿到的 this 引用是不完整的（对象未构造完毕）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [15:00:15]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [15:00:33]
+$ java Main
+Main.Task.run(): A
+Main.main(): ABCDEFGHIJKLMNOPQRSTUVWXYZ
+</script></code></pre>
+<p>好了，回到正题（扯远了）。</p>
+<p><strong>重排序导致的可见性问题</strong>：<br>Java 程序中天然的有序性可以总结为一句话：<strong>如果在本地线程内观察，所有操作都是有序的（“线程内表现为串行”（Within-Thread As-If-Serial Semantics））；如果在一个线程中观察另一个线程，所有操作都是无序的（“指令重排序”现象和“线程工作内存与主内存同步延迟”现象）</strong>。</p>
+<p>Java 语言提供了<code>volatile</code>和<code>synchronized</code>两个关键字来保证线程之间操作的有序性：</p>
+<ul>
+<li>volatile 关键字本身就包含了<strong>禁止指令重排序的语义</strong>；</li>
+<li>synchronized 则是由“一个变量在同一个时刻只允许一条线程对其进行 lock 操作”这条规则获得的，这个规则决定了持有同一个锁的两个同步块只能串行地进入。</li>
+</ul>
+<p><strong>指令序列的重排序</strong>：</p>
+<ul>
+<li>编译器优化的重排序：编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序；</li>
+<li>指令级并行的重排序：现代处理器采用了指令级并行技术（Instruction-LevelParallelism，ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序；</li>
+<li>内存系统的重排序：由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。</li>
+</ul>
+<p><strong>as-if-serial 语义</strong>：<br><strong>不管怎么重排序，（单线程）程序的执行结果不能被改变</strong>。编译器、Runtime、处理器都必须遵守<code>as-if-serial语义</code>。</p>
+<p><strong>happens-before 规则</strong>（前面已重点讲解）：<br>从 JDK 1.5 开始，Java 使用新的 JSR-133 内存模型，JSR-133 使用<code>happens-before</code>的概念来阐述操作之间的内存可见性：在 JMM 中，<strong>如果一个操作执行的结果需要对另一个操作可见（两个操作既可以是在一个线程之内，也可以是在不同线程之间），那么这两个操作之间必须要存在 happens-before 关系</strong>；主要的四条为：</p>
+<ul>
+<li>程序顺序规则：一个线程中的每个操作，happens-before 于该线程中的任意后续操作；</li>
+<li>监视器锁规则：对一个锁的 unlock() 操作，happens-before 于随后对这个锁的 lock() 操作；</li>
+<li>volatile变量规则：对一个 volatile 域的写，happens-before 于任意后续对这个 volatile 域的读；</li>
+<li>传递性规则：如果 A happens-before B，且 B happens-before C，那么 A happens-before C。</li>
+</ul>
+<p>2、<strong>多线程<code>写同步</code>与<code>原子性</code></strong><br>想象一下，如果线程 A 读一个共享对象的变量 count 到它的 CPU 缓存中。再想象一下，线程 B 也做了同样的事情，读取到了它的 CPU 缓存中。现在线程 A 将 count 加 1，线程 B 也做了同样的事情。现在 count 已经被增加了两次，每个 CPU 缓存中一次。如果这些增加操作被顺序的执行，变量 count 应该被增加两次，然后原值 + 2 被写回到主存中去。然而，两次增加都是在没有适当的同步下并发执行的。无论是线程 A 还是线程 B 将 count 修改后的版本写回到主存中去，修改后的值仅会被原值大 1，尽管增加了两次；如下图所示：<br><img src="/images/java-jmm-race.jpg" alt="竞态条件 - 问题"></p>
+<p>解决这个问题可以使用 Java 同步块。一个同步块可以保证在同一时刻仅有一个线程可以进入代码的临界区。同步块还可以保证代码块中所有被访问的变量将会从主存中读入，当线程退出同步代码块时，所有被更新的变量都会被刷新回主存中去。</p>
+<p><strong>使用原子性保证多线程写同步问题</strong>：<br>原子性：指一个操作是按原子的方式执行的。要么该操作不被执行；要么以原子方式执行，即执行过程中不会被其它线程中断。</p>
+<ul>
+<li>除了<code>long</code>、<code>double</code>外的所有类型（基本类型、引用类型），读取和写入操作都是原子的；</li>
+<li>对于声明为<code>volatile</code>的所有变量（包括<code>long</code>、<code>double</code>），读取和写入操作都是原子的。</li>
+</ul>
+<p><strong><code>long</code>和<code>double</code>的非原子性协定</strong>：<br>对于 64 位的数据，如 long 和 double，Java 内存模型规范允许虚拟机将没有被 volatile 修饰的 64 位数据的读写操作划分为两次 32 位的操作来进行，即允许虚拟机实现选择可以不保证 64 位数据类型的 load、store、read 和 write 这四个操作的原子性；即如果有多个线程共享一个并未声明为 volatile 的 long 或 double 类型的变量，并且同时对它们进行读取和修改操作，那么某些线程可能会读取到一个既非原值，也不是其他线程修改值的代表了“半个变量”的数值。</p>
+<p><strong>但由于目前各种平台下的商用虚拟机几乎都选择把 64 位数据的读写操作作为原子操作来对待，因此在编写代码时一般也不需要将用到的 long 和 double 变量专门声明为 volatile</strong>。</p>
+<p>因此我们可以认为所有类型的变量（基本类型、引用类型）的读写操作都是原子的；但类似于<code>i++</code>、<code>volatile_var++</code>这种复合操作并不具备原子性。</p>
+<p><strong>CAS 原子操作</strong><br><code>比较并交换（compare and swap，CAS）</code>，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。该操作<strong>通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值</strong>。</p>
+<p>这里强调一下，<strong>CAS 是一个 CPU 指令，CAS 不是锁</strong>，它的作用很简单，就是<strong>原子性的比较并交换数据</strong>；在应用中 CAS 可以用于实现<strong>无锁数据结构</strong>，常见的有无锁队列（先入先出）以及无锁堆（先入后出）。</p>
+<p>在 Java5 之前，我们只能使用 synchronized 关键字来进行原子性操作，synchronized 属于<strong>独占锁</strong>，独占锁是一种<strong>悲观锁</strong>。它假设最坏的情况，并且只有在确保其它线程不会造成干扰的情况下执行，会导致其它所有需要锁的线程挂起，等待持有锁的线程释放锁。但是，<strong>上下文切换并不廉价</strong>，因此在线程挂起和恢复执行过程中存在着很大的开销。当一个线程正在等待锁时，它不能做任何事，所以悲观锁有很大的缺点。举个例子，如果一个线程需要某个资源，但是这个资源的占用时间很短，当线程第一次抢占这个资源时，可能这个资源被占用，如果此时挂起这个线程，可能立刻就发现资源可用，然后又需要花费很长的时间重新抢占锁，时间代价就会非常的高。</p>
+<p>所以就有了<strong>乐观锁</strong>的概念，它的核心思路就是，每次不加锁而是假设没有冲突而去完成某项操作，如果因为冲突失败就重试，直到成功为止。在上面的例子中，某个线程可以不让出 CPU，而是一直 while 循环（称为自旋），如果失败就重试，直到成功为止。所以，当数据争用不严重时，乐观锁效果更好。比如 CAS 就是一种乐观锁思想的应用。</p>
+<p><strong>Java 中 CAS 的实现</strong><br>大部分 CPU 都直接支持 CAS 指令。但是直到 JDK 1.5，才公开了基本类型和引用类型的 CAS 操作；当多个线程尝试使用 CAS 同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。</p>
+<p>CAS 有 3 个操作数：当前<code>内存值V</code>、提供的<code>预期值O</code>、要替换的<code>新值N</code>。<strong>当且仅当<code>V == O</code>时，执行<code>V = N</code>，否则什么也不做</strong>。</p>
+<p>JDK 1.5 中引入了底层的 CAS 支持，在 int、long 和对象的引用等类型上都公开了 CAS 的操作；在 java.util.concurrent.atomic 包下面的所有的原子变量类型中，比如 AtomicInteger，都使用了这些底层的 JVM 支持为数字类型的引用类型提供一种高效的 CAS 操作。</p>
+<p><strong>并发编程的三个特性</strong></p>
+<ul>
+<li><strong>原子性</strong>（Atomicity）：一个或一组操作，要么全部执行并且执行过程不会被任何因素打断，要么就都不执行；</li>
+<li><strong>可见性</strong>（Visibility）：当多个线程访问同一个变量时，一个线程修改了变量值，其它线程能立即看到新的值；</li>
+<li><strong>有序性</strong>（Orderly）：程序执行的顺序按照代码的先后顺序执行，在单线程（串行）中代码的执行总是有序的。</li>
+</ul>
+<p>所有类型的变量读写操作都是原子的；对于复合操作，可以利用锁和 CAS 来达到原子性；<br>而对于可见性，我们可以利用 JMM 提供的八条 happens-before 规则保证程序的可见性；<br>若在本线程内观察，所有操作都是有序的；若在一个线程中观察另一个线程，所有操作都是无序的。</p>
+<p><strong>synchronized、volatile 区别</strong><br>最后总结一下 synchronized、volatile 的作用及区别：</p>
+<ul>
+<li>synchronized：保证<strong>原子性</strong>、<strong>可见性</strong>、<strong>有序性</strong>；</li>
+<li>volatile：保证<strong>可见性</strong>、<strong>有序性</strong>；</li>
+</ul>
+<p><strong>happens-before 分析经验</strong><br>另外，利用 happens-before 规则分析可见性问题时，只需记住如下两条经验：</p>
+<ol>
+<li>如果是单线程程序，那么根据单线程规则，就可以很容易得推导出 happens-before 关系；</li>
+<li>如果是多线程程序，如果没有锁或 volatile，那么很有可能不存在 happens-before 关系。</li>
+</ol>
+<p><strong>几个常见概念</strong><br><code>并行(parallelism)</code>：并行是指两个或多个事件在<strong>同一时刻</strong>发生；并行是在<strong>物理层面</strong>上的同时工作；<br><code>并发(concurrency)</code>：并发是指两个或多个事件在<strong>同一时间间隔内</strong>发生；并发是在<strong>逻辑层面</strong>上的同时工作。</p>
+<p><code>竞态条件</code>：当多个线程<strong>竞争同一资源</strong>时，如果<strong>对资源的访问顺序敏感</strong>，就称存在竞态条件；<br><code>临界区</code>：<strong>导致竞态条件发生的代码区</strong>称作临界区。</p>
+<p><code>线程安全</code>的定义（不同版本）：</p>
+<ul>
+<li>当多个线程访问同一个对象时，如果不用考虑这些线程在运行时环境下的调度和交替运行，也不需要进行额外的同步，或者在调用方进行任何其它的协调操作，调用这个对象的行为都可以获取正确的结果，那这个对象是线程安全的；</li>
+<li>一个不论运行时（Runtime）如何调度线程都不需要调用方提供额外的同步和协调机制还能正确地运行的类是线程安全的；</li>
+<li>代码本身封装了所有必要的正确性保障手段（如互斥同步等），令调用者无须关心多线程的问题，更无须自己采取任何措施来保证多线程的正确调用。</li>
+</ul>
+<p><strong>线程安全类型</strong><br>为了更加深入地理解线程安全，我们将 Java 语言中各种操作共享的数据分为以下 5 类：<strong>不可变</strong>、<strong>绝对线程安全</strong>、<strong>相对线程安全</strong>、<strong>线程兼容</strong>和<strong>线程对立</strong>。</p>
+<ul>
+<li>不可变：一定是线程安全的，包括 final 修饰的基本数据类型，以及不可变对象。例如 java.lang.String 类对象，对象的行为不会对其状态产生任何影响；</li>
+<li>绝对线程安全：绝对线程安全通常需要付出很大的甚至是不切实际的代价，所以一般难以实现；</li>
+<li>相对线程安全：通常意义上的线程安全，在调用的时候不需要做额外的保障措施，但是对于一些特定顺序的连续调用，就可能需要在调用端使用额外的同步手段来保证调用的正确性；</li>
+<li>线程兼容：指的是对象本身并不是线程安全的，但是可以通过在调用端正确地使用同步手段来保证对象在并发环境中可以安全地使用；</li>
+<li>线程对立：无论调用端是否采用了同步措施，都无法在多线程环境中并发使用的代码，由于 Java 语言天生具备多线程特性，这种排斥多线程的代码很少出现。</li>
+</ul>
+<p>本节内容的参考文献，再次感谢作者的热心分享：<br><a href="http://www.iteye.com/topic/260515" rel="external nofollow noopener noreferrer" target="_blank">用 happens-before 规则重新审视 DCL</a><br><a href="https://zhuanlan.zhihu.com/p/29881777" rel="external nofollow noopener noreferrer" target="_blank">Java 内存模型（JMM）总结</a><br><a href="https://t.hao0.me/java/2016/01/10/java-memory-model.html" rel="external nofollow noopener noreferrer" target="_blank">理解 Java 内存模型</a><br><a href="http://blog.csdn.net/javazejian/article/details/72772461" rel="external nofollow noopener noreferrer" target="_blank">全面理解 Java 内存模型（JMM）及 volatile 关键字</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-juc-framework.html" rel="next" title="Java J.U.C 包入门">
+                <i class="fa fa-chevron-left"></i> Java J.U.C 包入门
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-exception.html" rel="prev" title="Java 异常处理">
+                Java 异常处理 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程与线程"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主线程"><span class="nav-number">2.</span> <span class="nav-text">主线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建线程"><span class="nav-number">3.</span> <span class="nav-text">创建线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Runnable-接口"><span class="nav-number">3.1.</span> <span class="nav-text">Runnable 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-类"><span class="nav-number">3.2.</span> <span class="nav-text">Thread 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程同步"><span class="nav-number">4.</span> <span class="nav-text">线程同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程交互"><span class="nav-number">5.</span> <span class="nav-text">线程交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程死锁"><span class="nav-number">6.</span> <span class="nav-text">线程死锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制线程"><span class="nav-number">7.</span> <span class="nav-text">控制线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal"><span class="nav-number">8.</span> <span class="nav-text">ThreadLocal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发编程知识"><span class="nav-number">9.</span> <span class="nav-text">并发编程知识</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-multi-thread.html';
+          this.page.identifier = 'java-multi-thread.html';
+          this.page.title = 'Java 多线程编程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1200 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java JSP 笔记">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JavaServer Pages（JSP）是一种帮助软件开发人员基于 HTML、XML 或其它文档类型创建动态生成的网页的技术。在结构上，JSP 可以被看作是一个高层次抽象的 Java Servlet。JSP 在运行时被转换成 Servlet，因此 JSP 是一个 Servlet；每个 JSP Servlet 都被缓存并重新使用，直到原始 JSP 被修改。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JSP 笔记">
+<meta property="og:url" content="https://www.zfl9.com/java-jsp.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JavaServer Pages（JSP）是一种帮助软件开发人员基于 HTML、XML 或其它文档类型创建动态生成的网页的技术。在结构上，JSP 可以被看作是一个高层次抽象的 Java Servlet。JSP 在运行时被转换成 Servlet，因此 JSP 是一个 Servlet；每个 JSP Servlet 都被缓存并重新使用，直到原始 JSP 被修改。">
+<meta property="og:image" content="https://www.zfl9.com/images/jsp-element.png">
+<meta property="og:image" content="https://www.zfl9.com/images/jsp-javabean.gif">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.343Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JSP 笔记">
+<meta name="twitter:description" content="JavaServer Pages（JSP）是一种帮助软件开发人员基于 HTML、XML 或其它文档类型创建动态生成的网页的技术。在结构上，JSP 可以被看作是一个高层次抽象的 Java Servlet。JSP 在运行时被转换成 Servlet，因此 JSP 是一个 Servlet；每个 JSP Servlet 都被缓存并重新使用，直到原始 JSP 被修改。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/jsp-element.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-jsp.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java JSP 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-jsp.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java JSP 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-13T08:37:00+08:00">
+                2018-06-13
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-jsp.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-jsp.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-jsp.html" class="leancloud_visitors" data-flag-title="Java JSP 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JavaServer Pages（JSP）是一种帮助软件开发人员基于 HTML、XML 或其它文档类型创建动态生成的网页的技术。在结构上，JSP 可以被看作是一个高层次抽象的 Java Servlet。JSP 在运行时被转换成 Servlet，因此 JSP 是一个 Servlet；每个 JSP Servlet 都被缓存并重新使用，直到原始 JSP 被修改。</p>
+<a id="more"></a>
+<h2 id="默认编码-UTF-8"><a href="#默认编码-UTF-8" class="headerlink" title="默认编码 UTF-8"></a>默认编码 UTF-8</h2><p>为确保 Servlet 和 JSP 都不会出现乱码，强烈建议先创建 CharsetFilter 过滤器将 request 和 response 的字符编码设置为 UTF-8（可参考 <a href="https://www.zfl9.com/java-servlet.html#Servlet-%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81">Servlet 设置 UTF-8 为默认字符编码</a>），然后再来配置 JSP 的字符编码。设置 JSP 默认编码为 UTF-8 的方法有两种，如下： </p>
+<p><strong>方法一</strong><br>修改 <code>web.xml</code> 部署描述符文件，添加：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<jsp-config>
+   <jsp-property-group>
+     <url-pattern>*.jsp</url-pattern>
+     <url-pattern>*.jspx</url-pattern>
+     <page-encoding>UTF-8</page-encoding>
+   </jsp-property-group>
+</jsp-config>
+</script></code></pre>
+<p><strong>方法二</strong><br>在每个 JSP 文件开头添加 pageEncoding 声明：</p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+</script></code></pre>
+<p>注意，如果使用方法一，请不要在 jsp 文件中设置 pageEncoding，会导致 500 错误，提示 pageEncoding 不一致。</p>
+<h2 id="JSP-与-Servlet"><a href="#JSP-与-Servlet" class="headerlink" title="JSP 与 Servlet"></a>JSP 与 Servlet</h2><p>JSP 是一个高层次抽象的 Servlet，为什么这么说呢？因为 JSP 在运行时会被容器转换为一个对应名称的 Servlet（JSP 编译器将 <code>*.jsp</code> 文本文件转换为 <code>*.java</code> servlet 源文件，然后再将其转换为 <code>*.class</code> servlet 类文件），因此实际运行时，是不存在 JSP 的，在 Tomcat 眼里只有 Servlet，包括静态资源。</p>
+<p>在 $CATALINA_HOME/conf/web.xml 中，可以看到两个预定义的 servlet（default、jsp）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- 默认 Servlet，处理静态资源 -->
+<servlet>
+    <servlet-name>default</servlet-name>
+    <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+    <init-param>
+        <param-name>debug</param-name>
+        <param-value>0</param-value>
+    </init-param>
+    <init-param>
+        <param-name>listings</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<!-- JSP Servlet，处理 JSP 文件 -->
+<servlet>
+    <servlet-name>jsp</servlet-name>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+        <param-name>fork</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>xpoweredBy</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+</servlet>
+
+<!-- default: "/" -->
+<servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/</url-pattern>
+</servlet-mapping>
+
+<!-- jsp: "*.jsp|*.jspx" -->
+<servlet-mapping>
+    <servlet-name>jsp</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
+    <url-pattern>*.jspx</url-pattern>
+</servlet-mapping>
+</script></code></pre>
+<ul>
+<li>当客户端访问 index.html 时，默认会被 default 这个 servlet 命中，default-servlet 做的事情很简单，就是去磁盘中读取这个 index.html 文件，然后添加适当的响应头部，发送给客户端就行了。</li>
+<li>当客户端访问 index.jsp 时，默认会被 jsp 这个 servlet 命中，jsp-servlet 做的事情也很简单，也是先去磁盘中读取 index.jsp 文件，然后根据预定义的规则将其转换为 servlet 源文件（当然与平常的 servlet 类有点不同），接着将其编译为 servlet 类文件，最后，如果是第一次执行那么先创建该 servlet 类的实例，执行它的 init 方法，然后执行 service 方法（基本步骤和 servlet 类似）；客户端再次访问时，jsp-servlet 会检查 jsp 文件是否修改（对比它与对应的 servlet 源文件的时间戳），如果修改了，那么重复上面的转换、编译步骤，如果没有修改，那么直接执行这个 servlet 实例的 service 方法，当容器即将关闭时，jsp 对应的 servlet 对象被回收（调用 destroy 方法、回收内存）。</li>
+<li>当客户端访问 index.do 时，会根据 app/WEB-INF/web.xml 以及对应的 <code>Web*</code> 注解，匹配到对应 Servlet 类，如果是第一次访问，那么先创建实例，执行 init 方法，再执行 service 方法，下次访问时，直接执行 service 方法，当容器即将关闭时，对应的 servlet 对象被容器回收（调用 destroy 方法、回收内存）。</li>
+</ul>
+<p>之所以使用 JSP 是因为在 Servlet 中编写 HTML 太繁琐了，总是需要键入 <code>out.println()</code>，经常需要转义。如果能像 PHP 那样在 HTML 文档中插入 PHP 代码就好了（Servlet 是典型的 Java 代码中插入 HTML 文档），JSP 就是在这样的背景下产生的。JSP 和 PHP 有很多类似的地方，但是 JSP 明显更复杂一点（语法更复杂些，JSP 有许多特殊的标签，而 PHP 只有一个）。但是有一点不同，PHP 页面每次被访问时都是要重新编译的（PHP-FPM），而 JSP 会在第一次访问时转换并编译为 Servlet 类，运行时与原始的 JSP 文件无关，如果 JSP 文件被修改，那么 Java 容器默认会重新转换并编译为 Servlet 类，然后释放并回收过期的 Servlet 实例（调用 destroy 方法），创建新的 Servlet 实例，执行 init 方法、service 方法。因此实质上，JSP 还是一个 Servlet，而不是一门新的脚本语言，所以除了第一次访问（以及修改后的第一次访问），其它时候 JSP 的性能与原始 Servlet 是一样的，为了提高客户端第一次访问时的体验（减少加载时间），通常会在 Tomcat 启动前对 JSP 文件进行预编译（并且禁止在运行期间修改 JSP 文件），这样一来和原始的 Servlet 就没有多大的区别了。</p>
+<p>在 Tomcat 中，由 JSP 产生的源文件和类文件位于 <code>$CATALINA_HOME/work/&lt;engine&gt;/&lt;vhost&gt;/&lt;context&gt;/org/apache/jsp</code> 目录下，如果 jsp 文件名为 index.jsp，那么对应的 java 源文件就是 index_jsp.java，对应的 java 类文件就是 index_jsp.class。这个目录下的文件默认不会被自动删除，如果 jsp 文件没有被修改，那么 Tomcat 重启后，第一次访问 jsp 页面会很快，因为没有了转换、编译过程。不建议手动删除这些源文件和类文件，Tomcat 自己会管理（除非对应的 jsp 文件被删除或者被重命名了，为了减少空间的占用，可以考虑手动删除它们）。</p>
+<p><code>index.jsp</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>index.jsp</title>
+  </head>
+  <body>
+    <% out.print("<h1>index.jsp</h1>"); %>
+  </body>
+</html>
+</script></code></pre>
+<p><code>index_jsp.java</code>（简化后）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package org.apache.jsp;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+
+public final class index_jsp
+    extends org.apache.jasper.runtime.HttpJspBase
+    implements org.apache.jasper.runtime.JspSourceDependent,
+               org.apache.jasper.runtime.JspSourceImports
+{
+
+    public void _jspInit() {}
+
+    public void _jspDestroy() {}
+
+    public void _jspService(final javax.servlet.http.HttpServletRequest request,
+                            final javax.servlet.http.HttpServletResponse response)
+        throws java.io.IOException, javax.servlet.ServletException
+    {
+        final javax.servlet.jsp.PageContext pageContext =
+            _jspxFactory.getPageContext(this, request, response, null, true, 8192, true);
+
+        final javax.servlet.ServletContext application = pageContext.getServletContext();
+        final javax.servlet.ServletConfig config = pageContext.getServletConfig();
+        javax.servlet.http.HttpSession session = pageContext.getSession();
+        javax.servlet.jsp.JspWriter out = pageContext.getOut();
+        final java.lang.Object page = this;
+
+        response.setContentType("text/html;charset=UTF-8");
+        out.write("<!DOCTYPE html>\n");
+        out.write("<html>\n");
+        out.write("  <head>\n");
+        out.write("    <meta charset=\"UTF-8\">\n");
+        out.write("    <title>index.jsp</title>\n");
+        out.write("  </head>\n");
+        out.write("  <body>\n");
+        out.write("    ");
+        out.print("<h1>index.jsp</h1>");
+        out.write("\n");
+        out.write("  </body>\n");
+        out.write("</html>\n");
+    }
+}
+</script></code></pre>
+<p>index_jsp.java 中有 3 个主要的方法：<br><code>void _jspInit()</code>：一般情况下方法体是空的，JSP 中不允许定义签名相同的方法（最好也不要重名）<br><code>void _jspDestroy()</code>：一般情况下方法体是空的，JSP 中不允许定义签名相同的方法（最好也不要重名）<br><code>void _jspService(request, response)</code>：方法内的代码其实就是 JSP 中 <code>&lt;% %&gt;</code>、<code>&lt;%= %&gt;</code> 标签的内容</p>
+<p><code>_jspInit()</code>、<code>_jspDestroy()</code> 是预留给 JSP 编译器用的（比如一些隐藏的初始化、回收代码），如果要定义自己的初始化方法，可以在 <code>&lt;%! %&gt;</code> 标签中定义 <code>jspInit()</code>、<code>jspDestroy()</code> 方法，<code>_jspService()</code> 方法不能在 <code>&lt;%! %&gt;</code> 中显示定义，否则 JSP 编译器在编译时会提示方法重复定义，例子：</p>
+<p><code>test.jsp</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<%@ page import="java.io.PrintWriter" %>
+
+<%!
+  private int initialCount = 0;
+  private int serviceCount = 0;
+  private int destroyCount = 0;
+
+  @Override
+  public void jspInit() {
+    System.out.printf("test.jsp initial count: %d\n", ++initialCount);
+  }
+
+  @Override
+  public void jspDestroy() {
+    System.out.printf("test.jsp destroy count: %d\n", ++destroyCount);
+  }
+%>
+
+<%
+  PrintWriter content = new PrintWriter(out);
+  content.println("<pre>");
+  content.printf("test.jsp initial count: %d\n", initialCount);
+  content.printf("test.jsp service count: %d\n", ++serviceCount);
+  content.printf("test.jsp destroy count: %d\n", destroyCount);
+  content.println("</pre>");
+%>
+</script></code></pre>
+<p><code>test_jsp.java</code>（简化后）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package org.apache.jsp;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+import java.io.PrintWriter;
+
+public final class test_jsp
+    extends org.apache.jasper.runtime.HttpJspBase
+    implements org.apache.jasper.runtime.JspSourceDependent,
+               org.apache.jasper.runtime.JspSourceImports
+{
+    private int initialCount = 0;
+    private int serviceCount = 0;
+    private int destroyCount = 0;
+
+    @Override
+    public void jspInit() {
+        System.out.printf("test.jsp initial count: %d\n", ++initialCount);
+    }
+
+    @Override
+    public void jspDestroy() {
+        System.out.printf("test.jsp destroy count: %d\n", ++destroyCount);
+    }
+
+    public void _jspInit() {}
+
+    public void _jspDestroy() {}
+
+    public void _jspService(final javax.servlet.http.HttpServletRequest request,
+                            final javax.servlet.http.HttpServletResponse response)
+        throws java.io.IOException, javax.servlet.ServletException
+    {
+        final javax.servlet.jsp.PageContext pageContext =
+            _jspxFactory.getPageContext(this, request, response, null, true, 8192, true);
+
+        final javax.servlet.ServletContext application = pageContext.getServletContext();
+        final javax.servlet.ServletConfig config = pageContext.getServletConfig();
+        javax.servlet.http.HttpSession session = pageContext.getSession();
+        javax.servlet.jsp.JspWriter out = pageContext.getOut();
+        final java.lang.Object page = this;
+
+        response.setContentType("text/html;charset=UTF-8");
+        out.write('\n');
+        out.write('\n');
+        out.write('\n');
+        out.write('\n');
+        PrintWriter content = new PrintWriter(out);
+        content.println("<pre>");
+        content.printf("test.jsp initial count: %d\n", initialCount);
+        content.printf("test.jsp service count: %d\n", ++serviceCount);
+        content.printf("test.jsp destroy count: %d\n", destroyCount);
+        content.println("</pre>");
+        out.write('\n');
+    }
+}
+</script></code></pre>
+<p>通过两个由 JSP 编译器生成的 <code>*.java</code> 文件可以得知，JSP 的 <code>_jspService()</code> 方法中预定义了 8 个对象：</p>
+<ul>
+<li><code>request</code>，<code>javax.servlet.http.HttpServletRequest</code>：HTTP 请求对象</li>
+<li><code>response</code>，<code>javax.servlet.http.HttpServletResponse</code>：HTTP 响应对象</li>
+<li><code>config</code>，<code>javax.servlet.ServletConfig</code>：Servlet 初始化参数对象</li>
+<li><code>application</code>，<code>javax.servlet.ServletContext</code>：Servlet 所在的上下文对象</li>
+<li><code>pageContext</code>，<code>javax.servlet.jsp.PageContext</code>：JSP 页面的上下文对象</li>
+<li><code>session</code>，<code>javax.servlet.http.HttpSession</code>：Session 会话对象</li>
+<li><code>out</code>，<code>javax.servlet.jsp.JspWriter</code>：响应体的输出对象</li>
+<li><code>page</code>，<code>java.lang.Object</code>：指向当前对象（<code>this</code>）</li>
+</ul>
+<blockquote>
+<p>如果当前 JSP 页面为错误处理页（即在文件中声明了 <code>&lt;%@ page isErrorPage=&quot;true&quot; %&gt;</code>，isErrorPage 的值默认为 false），那么还有一个内置对象 <code>java.lang.Throwable exception</code>，它表示接受到的异常对象（如果是直接访问这个页面，那么 exception 内置对象的值为 null）。</p>
+</blockquote>
+<p>整个 JSP 文件大致可分为两类：普通数据、JSP 数据（特殊标签），对于普通数据（比如 HTML 文档），JSP 编译器只是简单的将它们通过 out.write() 方法输出，因此你可以将普通数据看作是 out.write() 语句，而对于 JSP 数据，则会根据预定义的规则将其转换为特定的 Java 语句，比如 <code>&lt;% %&gt;</code> 标签的内容会被原模原样包含在 <code>_jspService()</code> 方法体中，<code>&lt;%! %&gt;</code> 标签的内容则为生成的类文件的其它主体（比如方法定义、变量声明）。</p>
+<p>由 JSP 编译器生成的类默认导入了 3 个包：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+</script></code></pre>
+<p>JSP 文件第一次被编译为 Java 源文件、Java 类文件是在 JSP 页面第一次被访问时进行的，此时 JSP 文件、Java 源文件、Java 类文件的 Modify 时间戳是一样的（Java 源文件、Java 类文件的时间戳会被刻意修改为一样的数值）；第二次访问 JSP 页面时，JSP 引擎会检查 JSP 文件与 Java 文件的时间戳，如果发现 JSP 被改过，那么会调用 JSP 编译器将其编译为 Java 源文件，然后再调用 Java 编译器将其编译为 Java 类文件，回收老的 Servlet 实例，实例化新的 Servlet 类，最后才会调用 <code>_jspService()</code> 方法为客户端提供服务；如果 JSP 没有被改，那么直接调用 <code>_jspService()</code> 方法为客户端提供服务。</p>
+<p>JSP 的性能瓶颈主要出现在第一次访问、修改后的第一次访问，因为需要使用 JSP 编译器将 JSP 源文件编译为 Java 源文件，然后又要调用 Java 编译器将 Java 源文件编译为 Java 类文件，最后还要进行实例化、初始化，才会执行真正有用的 <code>_jspService()</code> 方法。导致的结果就是访问时非常慢，经常需要 2 秒以上的时间，再加上网络的延迟，用户会感到非常不耐烦，会认为这个网站很垃圾，打开页面都这么慢（无辜躺枪）！</p>
+<p>第二个问题其实很好办，因为我可以不修改它嘛，生产环境中基本都不会动的。但即使不修改，JSP 引擎也会在每次访问时检查它们的时间戳是否相同，以便重新编译。不过我们可以通过给 jsp 引擎传递 <code>development=false</code> 启动参数，来禁用这个检测，默认情况下这个值为 true。当然，在开发环境中不建议关闭 development 模式，因为经常需要修改 jsp 文件。打开 conf/web.xml 文件，修改为：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<servlet>
+    <servlet-name>jsp</servlet-name>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+        <param-name>fork</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>xpoweredBy</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <!-- 关闭开发模式，禁用时间戳检测 -->
+    <init-param>
+        <param-name>development</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+</servlet>
+</script></code></pre>
+<p>如果想消除第一次访问时的延迟，可以考虑在 Tomcat 启动前进行 JSP 的预编译，即将 JSP 转换为 Servlet 类，转换后就不需要 JSP 文件的存在了，可以放心的删除，不过这个方法感觉很麻烦，而且我试了很多次都没有成功，所以暂且不研究如何预编译 JSP 了，以后再说吧（也有一个土方法，那就是使用脚本一个个访问这些 JSP 页面，但 JSP 文件太多的话也很难应付）。</p>
+<h2 id="JSP-特殊标签"><a href="#JSP-特殊标签" class="headerlink" title="JSP 特殊标签"></a>JSP 特殊标签</h2><p><strong>脚本程序</strong><br>脚本程序其实就是 <code>_jspService()</code> 的方法体，使用 <code>&lt;% statements %&gt;</code> 表示，或者使用等价的 XML 语句 <code>&lt;jsp:scriptlet&gt; statements &lt;/jsp:scriptlet&gt;</code>。</p>
+<p><strong>JSP 声明</strong><br>声明语句是当前 JSP 类的其它主体，比如类的方法定义、变量定义，使用 <code>&lt;%! statements %&gt;</code> 表示，或者使用等价的 XML 语句 <code>&lt;jsp:declaration&gt; statements &lt;/jsp:declaration&gt;</code>。</p>
+<p><strong>JSP 表达式</strong><br>JSP 表达式可以是任何符合 Java 语言规范的表达式，但不能以分号结尾，JSP 表达式被作为 out.print() 的参数输出，使用 <code>&lt;%= expression %&gt;</code> 表示，或者使用等价的 XML 语句 <code>&lt;jsp:expression&gt; expression &lt;/jsp:expression&gt;</code>。</p>
+<p><strong>JSP 注释</strong><br>JSP 注释相当于 Java 注释，注释不会出现在编译后的文件中（在 JSP 中就是 Servlet 源文件咯），使用 <code>&lt;%-- comments --%&gt;</code> 表示，注意不要与 HTML 注释搞混了，HTML 注释是文档的一部分，而 JSP 注释不是，最明显的区别是 JSP 注释不会出现在响应体中，而 HTML 注释会（查看网页源码可以看到）。</p>
+<p><strong>JSP 指令</strong><br>JSP 指令用来设置 JSP 页面相关的属性，语法为 <code>&lt;%@ directive attr=&quot;value&quot; %&gt;</code>，directive 主要有 3 个：</p>
+<ul>
+<li><code>&lt;%@ page ... %&gt;</code>：定义页面属性，比如页面编码</li>
+<li><code>&lt;%@ taglib ... %&gt;</code>：引入标签库的定义，如自定义标签</li>
+<li><code>&lt;%@ include ... %&gt;</code>：静态文件包含，类似 C 语言的头文件包含</li>
+</ul>
+<p>page 指令常用的属性：</p>
+<ul>
+<li><code>pageEncoding</code>：指定页面的编码，如 <code>pageEncoding=&quot;UTF-8&quot;</code></li>
+<li><code>contentType</code>：指定文档的类型，如 <code>contentType=&quot;text/html; charset=UTF-8&quot;</code></li>
+<li><code>errorPage</code>：发生异常时要跳转的错误处理 JSP 页面，如 <code>errorPage=&quot;URL of other JSP file&quot;</code></li>
+<li><code>isErrorPage</code>：设置当前页面是否可以作为错误处理页面，值为布尔值，如 <code>isErrorPage=&quot;true&quot;</code></li>
+<li><code>import</code>：指定当前 JSP 页面要导入的 Java 类，多个逗号隔开，如 <code>import=&quot;java.io.*, java.net.*&quot;</code></li>
+<li><code>session</code>：是否在当前页面中启用 HTTP Session，默认为 true，可设置为 false 来关闭，如 <code>session=&quot;false&quot;</code></li>
+<li><code>buffer</code>：设置 out 对象的输出缓冲区大小，单位为 kb，none 表示关闭缓冲区，如设置为 8kb <code>buffer=&quot;8kb&quot;</code></li>
+<li><code>autoFlush</code>：设置 out 对象的输出缓冲区是否自动刷新，默认为 true，如果为 false，且缓冲区已满则触发异常</li>
+<li><code>extends</code>：告诉 JSP 编译器，生成的 Servlet 类应该继承 extends 属性指定的父类（属性值为全限定类名）</li>
+<li><code>info</code>：设置当前 JSP 页面的描述信息，如 <code>info=&quot;This JSP Page Written By ZARA&quot;</code></li>
+<li><code>language</code>：设置当前 JSP 页面的脚本语言，默认为 Java，也即 <code>language=&quot;java&quot;</code></li>
+<li><code>isThreadSafe</code>：当前页面是否为线程安全的，默认为 true，表示可以多线程同时访问，false 则同时只有一个线程访问</li>
+<li><code>isELIgnored</code>：是否忽略 EL 表达式，默认为 false，即启用 EL 表达式支持，如果设置为 true，则原样输出 EL 表达式</li>
+<li><code>isScriptingEnabled</code>：是否启用 JSP 脚本/声明/表达式，默认为 true，如果为 false，且使用了它们则会触发编译错误</li>
+</ul>
+<p>taglib 指令用来引入自定义的标签库，比如 JSTL 标签库，语法：<br><code>&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;</code><br>prefix 用来指定标签库的前缀，uri 则用来唯一定位一个标签库，它并不代表一个真实存在的网址。</p>
+<p>include 指令则用来静态包含文件，所谓静态包含也就是在 JSP 被编译之前进行文件包含，与 C 语言的头文件包含类似。<br>语法：<code>&lt;%@ include file=&quot;文件相对 url 地址&quot; %&gt;</code>，注意是相对 APP，如果没有以 / 开头则在当前目录下查找包含的文件。</p>
+<p><strong>JSP 行为</strong><br>行为标签一般用来控制 Servlet 引擎，如动态文件包含、url 重写、重用 JavaBean 组件，语法：<code>&lt;jsp:action attr=&quot;value&quot;/&gt;</code>。行为标签基本上是一些预定义好的函数，下表是一些常用的 JSP 行为标签：</p>
+<ul>
+<li><code>jsp:include</code>：RequestDispatcher.include() 页面包含</li>
+<li><code>jsp:forward</code>：RequestDispatcher.forward() 页面转发</li>
+<li><code>jsp:element</code>：代表一个动态创建的 HTML 元素</li>
+<li><code>jsp:attribute</code>：代表一个动态创建的 HTML 元素属性</li>
+<li><code>jsp:body</code>：代表一个动态创建的 HTML 元素内容</li>
+<li><code>jsp:useBean</code>：创建一个 JavaBean 组件</li>
+<li><code>jsp:setProperty</code>：设置 JavaBean 组件的值</li>
+<li><code>jsp:getProperty</code>：获取 JavaBean 组件的值</li>
+</ul>
+<p>JSP 行为标签也称为 JSP 动作标签、动作元素，一般来说，JSP 指令元素是在编译之前进行的（静态的），而 JSP 动作元素一般是在运行时进行的（动态的）。动作标签使用 XML 元素表示，动作标签可以理解为 JSP 的内置标签，它们都以 jsp 前缀（prefix）开头。</p>
+<p>jsp:useBean 动作元素有两个属性：id 属性和 scope 属性。</p>
+<ul>
+<li>id 属性：id 属性是动作元素的唯一标识，可以在 JSP 页面中引用。动作元素创建的 id 值可以通过 PageContext 来调用。</li>
+<li>scope 属性：scope 属性用于声明动作元素的生命周期。id 属性和 scope 属性有直接关系，scope 属性定义了相关联 id 对象的寿命。<ul>
+<li><code>page</code>：生命周期为当前页面，关闭、重新打开、刷新后变量或对象被重置。这是默认 scope 值。</li>
+<li><code>request</code>：生命周期为当前请求，因此 forward 跳转的几个页面内都有效，但是 sendRedirect 跳转的无效，因为是不同的两个请求。</li>
+<li><code>session</code>：生命周期为当前会话。</li>
+<li><code>application</code>：生命周期为当前应用。</li>
+</ul>
+</li>
+</ul>
+<p>如何理解 scope 属性呢？scope 的四个作用域其实都分别代表一个对象：</p>
+<ul>
+<li>page -&gt; javax.servlet.jsp.PageContext</li>
+<li>request -&gt; javax.servlet.http.HttpServletRequest</li>
+<li>session -&gt; javax.servlet.http.HttpSession</li>
+<li>application -&gt; javax.servlet.ServletContext</li>
+</ul>
+<p>这几个类都有 getAttribute()、setAttribute() 方法，类似关联数组，使用 key 来获取对应的 value。而绑定到对应 scope 的对象其实都是调用的 setAttribute() 方法进行存储的，所以它们的生命周期其实也就是对应的实例的生命周期，从 <code>_jspService()</code> 方法中看得出，pageContext 实例是一个 final 变量，也就是它是栈变量，每次调用都会是不同的值；其它 3 个就比较好理解了，不再复述。</p>
+<p>jsp:include 动作用来动态的包含页面内容，它与 <code>&lt;%@ include ... %&gt;</code> 的区别后面会详细说明，这里提一下它的语法：<br><code>&lt;jsp:include page=&quot;相对 URL 地址&quot; flush=&quot;true&quot;/&gt;</code><br>page 属性用来指定要包含的页面 url，如果以 / 开头，则为绝对路径（相对于 APP），如果不以 / 开头，则为相对路径（相对于当前路径）。<br>flush 属性表示在 include 之前是否先刷新当前 out 对象的输出缓冲区，这个不是很重要，缓冲区满了默认会自动刷新的，默认值为 false。</p>
+<p>既然提到了输出缓冲区刷新，就来深入的研究一下刷新后有什么效果，又会有什么影响，默认情况下，输出缓冲区只会在缓冲区满时、service() 方法结束时被自动刷新。这是用来测试的 Servlet 类，建议使用 curl、telnet、netcat 来测试，方便观察停顿时间，停顿前后都输出了什么。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/test.do")
+public class Test extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        PrintWriter content = response.getWriter();
+        response.addHeader("Before-Flush-1", "Value-1");
+        response.addHeader("Before-Flush-2", "Value-2");
+        response.addHeader("Before-Flush-3", "Value-3");
+        content.println("Before-Flush-1");
+        content.println("Before-Flush-2");
+        content.println("Before-Flush-3");
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+        response.flushBuffer();
+        //content.flush(); 作用相同，内部也会调用 response.flushBuffer()
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+        response.addHeader("After-Flush-1", "Value-1");
+        response.addHeader("After-Flush-2", "Value-2");
+        response.addHeader("After-Flush-3", "Value-3");
+        content.println("After-Flush-1");
+        content.println("After-Flush-2");
+        content.println("After-Flush-3");
+    }
+}
+</script></code></pre>
+<p>测试结果（双横线是我自己打上去的，用来分辨两次 <code>sleep()</code>）</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 127.0.0.1/test.do -i
+====================
+HTTP/1.1 200 
+Before-Flush-1: Value-1
+Before-Flush-2: Value-2
+Before-Flush-3: Value-3
+Transfer-Encoding: chunked
+Date: Mon, 02 Jul 2018 07:38:43 GMT
+
+Before-Flush-1
+Before-Flush-2
+Before-Flush-3
+====================
+After-Flush-1
+After-Flush-2
+After-Flush-3
+</script></code></pre>
+<p>从结果中看得出，在刷新之前，设置的响应头、写入的响应体都没有被发送到客户端，它们都还存在于缓冲区中；在刷新之后，缓冲区中的数据（响应头、响应体）被发送到客户端，此后尝试添加响应头是不奏效的，其实这很好理解，因为客户端从接受的数据中就已经认为响应头结束了（因为已经接到了部分响应体），服务端是不可能往客户端的响应头中插入新的响应头了。顺便说明一下，Servlet 的输出缓冲区一般为 8192 字节，貌似手动 setBufferSize() 的值如果小于 8192 会没有任何效果，会被容器给忽略。</p>
+<p>jsp:forward 动作其实就是 apache/nginx 中的 rewrite 功能，rewrite 与 redirect 的区别是，前者不会改变浏览器地址栏，因为这是一次 HTTP 访问，后者会改变浏览器地址栏，因为这是两次 HTTP 访问。forward 意味着当前页面将控制权转交给了新页面，因此 forward 之后的语句都是无效的，因为控制权已经不在当前页面上了。<br>语法：<code>&lt;jsp:forward page=&quot;相对 URL 地址&quot;/&gt;</code>，page 属性的格式以及意义同 jsp:include 中的 page 属性。</p>
+<p><strong><code>&lt;%@ include ... %&gt;</code> 与 <code>&lt;jsp:include ... /&gt;</code> 区别</strong></p>
+<ul>
+<li><code>&lt;%@ include ... %&gt;</code> 是静态包含，类似于 C 语言的头文件包含，JSP 编译器会直接用对应的文件内容替换该语句，然后再进行编译。</li>
+<li><code>&lt;jsp:include ... /&gt;</code> 是动态包含，即运行时动态的包含指定 url 页面的内容，实际上它是调用 RequestDispatcher.include() 方法。</li>
+</ul>
+<p><code>include.jsp</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<%@ include file="/part-1.txt" %>
+----------------------------------
+<%@ include file="/part-2.txt" %>
+==================================
+<jsp:include page="/part-1.txt"/>
+----------------------------------
+<jsp:include page="/part-2.txt"/>
+</script></code></pre>
+<p><code>part-1.txt</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+hello, world!
+</script></code></pre>
+<p><code>part-2.txt</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<%= new java.util.Date() %>
+</script></code></pre>
+<p>访问 /include.jsp</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 127.0.0.1/include.jsp
+hello, world!
+----------------------------------
+Sun Jul 01 14:20:24 CST 2018
+==================================
+hello, world!
+----------------------------------
+<%= new java.util.Date() %>
+</script></code></pre>
+<p>include_jsp.java 文件</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+out.write("hello, world!");
+out.write("\n");
+out.write("----------------------------------\n");
+out.print( new java.util.Date() );
+out.write("\n");
+out.write("==================================\n");
+org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, "/part-1.txt", out, false);
+out.write("\n");
+out.write("----------------------------------\n");
+org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, "/part-2.txt", out, false);
+out.write('\n');
+</script></code></pre>
+<p><strong>动态创建 HTML 元素</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<jsp:element name="h1">
+  <jsp:attribute name="style">
+    color: red;
+    text-align: center;
+  </jsp:attribute>
+  <jsp:body>
+    一级标题，红色文本，居中对齐
+  </jsp:body>
+</jsp:element>
+</script></code></pre>
+<p><img src="/images/jsp-element.png" alt="JSP 动态创建 HTML 元素"></p>
+<p><strong>JavaBean 是什么？</strong><br>JavaBean 是符合一定规范的 Java 类，所谓规范也就是约定，只要符合这 3 条约定的 Java 类就可以称为 JavaBean：</p>
+<ol>
+<li>所有属性都是私有的（提供 getter/setter 方法）</li>
+<li>拥有一个 public 的默认无参构造函数</li>
+<li>实现了 java.io.Serializable 接口</li>
+</ol>
+<p>对于非布尔类型的属性 xxx，使用 getXxx()、setXxx() 方法；<br>而对于布尔类型的属性 xxx，可使用 isXxx()、setXxx() 方法。</p>
+<p>比如 <code>StudentBean</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.bean;
+
+// 实现 Serializable 接口
+public class StudentBean implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+
+    // 私有属性
+    private String name;
+    private int age;
+    private float score;
+
+    // 无参构造函数
+    public StudentBean() {
+        this.name = "undefined";
+        this.age = -1;
+        this.score = -1.00F;
+    }
+
+    // getter/setter for 'name'
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // getter/setter for 'age'
+    public int getAge() {
+        return this.age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    // getter/setter for 'score'
+    public float getScore() {
+        return this.score;
+    }
+    public void setScore(float score) {
+        this.score = score;
+    }
+}
+</script></code></pre>
+<p>符合 JavaBean 规范的类具体有什么用途呢？</p>
+<blockquote>
+<p>参考来源：<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513115&amp;idx=1&amp;sn=da30cf3d3f163d478748fcdf721b6414#rd" rel="external nofollow noopener noreferrer" target="_blank">Java 帝国之 Java bean (上）</a>、<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513118&amp;idx=1&amp;sn=487fefb8fa7efd59de6f37043eb21799#rd" rel="external nofollow noopener noreferrer" target="_blank">Java 帝国之 Java bean（下）</a></p>
+</blockquote>
+<p>我一手创立的 Java 帝国刚刚成立不久，便受到巨大的打击，我派出去占领桌面开发的部队几乎全军覆没。情报说微软的 Visual Basic 和 Borland 的 Delphi 最近在宣传什么组件化开发，难道就是这东西把我们搞垮了？</p>
+<p>我赶紧买了一个 Visual Basic 过来研究，果然，这个家伙确实是方便，最让我惊叹的是：它有一个可视化编辑器！我只需要把一个组件（例如按钮）拖拽到一个表单上，设置一下属性（颜色，字体），再添加一个事件（onClick），最后在 onClick 中写点代码就搞定了！</p>
+<p>不仅如此，我还可以把我的代码按规范包装成一个组件，发布出去让别人使用。我看着手下给我买来的《程序员大本营》光盘，里边竟然包含了好几千个这样的组件，有数据库浏览组件，计时器组件，颜色选取组件，甚至还有收发邮件的组件……</p>
+<p>天哪，这以后开发桌面程序岂不太简单了！怪不得我的 Java 被打得满地找牙！我赶紧打电话给我的干将小码哥：小码啊，你赶紧看看这个 Visual Basic 和 Delphi，给你 7 天时间，我们 Java 也得赶紧搞一套这样的东西出来。</p>
+<p>小码毫不含糊，三天就给我搞了一个东西出来：Java Bean API 规范。我翻开一看，哇塞，长达 114 页，于是问他：“这是什么东西？我要的可视化编辑器呢？Visual Java 呢？”</p>
+<p>他说：“老大，我们是个开源的社区，得充分利用大家的力量，所以我没有去做像 VB 和 Delphi 那样的东西，相反，我定义了一套规范，只要大家按照这个规范做，谁都可以用 Java 做出像 VB 那样的可视化开发工具出来。”</p>
+<p>“那你说说这个 java bean 到底是什么规范？”我问。</p>
+<p>“首先，一个 java bean 其实就是一个普通的 java 类，但我们对这个类有些要求：”</p>
+<ol>
+<li>这个类需要是 public 的，然后需要有个无参数的构造函数。</li>
+<li>这个类的属性应该是 private 的，通过 setXxx() 和 getXxx() 来访问。</li>
+<li>这个类需要能支持“事件”，例如 addXxxListener(XxxEvent e)，可以是 click 事件，keyboard 事件等。</li>
+<li>我们得提供一个所谓的自省/反射机制，这样能在运行时查看 java bean 的各种信息。</li>
+<li>这个类应该是可以序列化的，即可以把 java bean 的状态保存的硬盘上，以便后来恢复。</li>
+</ol>
+<p>“这些要求看起来也没啥啊，对程序员来说，不就是个普通的 java 类吗？到底该怎么用？”</p>
+<p>“我们幻想一下，假设我们的 Java bean 大行其道了，有个用户在用一个 Visual Java Builder 这样的可视化开发工具，当他用这个工具创建应用的时候，可以选择一个叫 JButton 的组件，加到一个表单上，此时 Visual Java Builder 就需要把这 JButton 的类通过反射给 new 出来，所以就需要一个无参数的构造函数了。”</p>
+<p>“如果用户想去设置一下这个 JButton 的属性，Visual Java Builder 就需要先用自省/反射来获取这个 JButton 有哪些属性（通过 getter/setter），拿到以后就可以给用户显示一个属性清单了，例如背景色，字体等等。用户看到后就可以设置背景色和字体了，此时 Visual Java Builder 在内部就需要调用这个 Bean 的 setBackgroundCorlor()、setFont() 等方法，这就是所谓的 setXxx()方法。”</p>
+<p>“如果用户想对这个 JButton 编程， Visual Java Builder 还是通过自省/反射来获取这个 JButton 有哪些事件，给用户展示一个事件清单，例如 click、keyboardPressed 用户可以选取一个，然后就可以写程序对这个事件编程了。”</p>
+<p>“可是那个序列化有什么用呢？”</p>
+<p>“这是因为用户设计完了以后，可能关掉 Visual Java Builder 啊，如果不通过序列化把设计好的 JButton 保存起来，下次再打开 Visual Java Builder，可就什么都没有了”</p>
+<p>我想了想， 小码哥设计的不错，仅仅用了一个简单的规范就满足了可视化编辑器的所有要求。</p>
+<p>“那我们就发布这个规范吧，咱们自己先做一个可视化编辑器，给别人做个榜样，名称我都想好了，叫 NetBean 吧。”</p>
+<p>果然不出我们所料，Java bean 发布以后，有力的带动了 Java 的 IDE 市场，开发 Delphi 的 Borland 公司也来插了一脚，搞出了一个 JBuilder，风靡一时。IBM 搞了一个 Visual Age for Java，后来摇身一变，成了一个叫 Eclipse 的开放平台，超级受大家欢迎，它反过头来把我们的 NetBean 和 JBuilder 逼的快没有活路了。</p>
+<p>虽然我们玩的很欢，但是程序员根本不买账，Java 在桌面开发市场还是没有起色，使用 Java bean 创建桌面程序的程序员少之又少，只有部分像金融、ERP 这样的领地还在坚持。看来是无药可救了。但是 Java bean 何去何从？丢弃掉太可惜了，我和小码哥商量了一下，我们觉得：既然我们 Java 统治了服务器端的编程，还是在那里想想办法吧……</p>
+<p><strong>JSP 中使用 JavaBean</strong><br>jsp:useBean 语法：<code>&lt;jsp:useBean id=&quot;beanName&quot; class=&quot;package.className&quot; scope=&quot;page&quot;/&gt;</code></p>
+<ul>
+<li>id：javabean 对象的标识符，可以在其他地方引用。</li>
+<li>class：javabean 对象的全限定类名，如 org.java.bean.TestBean。</li>
+<li>scope：javabean 对象的生命周期，取值有 page（默认）、request、session、application。</li>
+<li>注意，如果对应的 bean 已经存在，那么 jsp:useBean 不会创建新的 bean，而是返回已存在的 bean。</li>
+</ul>
+<p>jsp:setProperty 语法：<code>&lt;jsp:setProperty name=&quot;beanName&quot; property=&quot;propName&quot; value=&quot;propValue&quot;/param=&quot;paramValueAsPropValue&quot;/&gt;</code></p>
+<ul>
+<li>name：javabean 对象的标识符，该标识符需要与某个 jsp:useBean 的 id 属性对应。</li>
+<li>property：指定要设置的属性名称，如果设置为 <code>*</code>，则表示用请求参数填充同名的属性。</li>
+<li>value：手动为 property 属性指定一个值，该属性是可选的，但注意不要与 param 一起使用。</li>
+<li>param：将请求参数 param 的值作为 property 属性的值，该属性是可选的，不可与 value 同用。</li>
+<li>如果 value 和 param 属性都没有提供，则表示将请求参数中的同名 param 的值赋给 property 属性。</li>
+</ul>
+<p>jsp:getProperty 语法：<code>&lt;jsp:getProperty name=&quot;beanName&quot; property=&quot;propName&quot;/&gt;</code></p>
+<ul>
+<li>name：javabean 对象的标识符。</li>
+<li>property：要获取的 bean 属性名称。</li>
+<li>jsp:getProperty 元素获取的值会被作为 out.write() 的参数输出。</li>
+</ul>
+<p>例子：<br><code>login.html</code></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>login.html</title>
+  </head>
+  <body>
+    <form action="/receive.jsp" method="post">
+      用户：<input type="text" name="user"><br>
+      密码：<input type="password" name="pass"><br>
+      <input type="submit" value="登录">
+    </form>
+  </body>
+</html>
+</script></code></pre>
+<p><code>receive.jsp</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>receive.jsp</title>
+  </head>
+  <body>
+    <jsp:useBean id="snr" class="com.zfl9.ValidateBean"/>
+    <jsp:setProperty name="snr" property="user"/>
+    <jsp:setProperty name="snr" property="pass"/>
+    You entered user name is <jsp:getProperty name="snr" property="user"/><br>
+    You entered user pass is <jsp:getProperty name="snr" property="pass"/><br>
+    You are a <%= snr.validate("Rao", "java") %> user.<br>
+  </body>
+</html>
+</script></code></pre>
+<p><code>ValidateBean.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class ValidateBean implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String user;
+    private String pass;
+
+    public ValidateBean() {}
+
+    public String getUser() {
+        return this.user;
+    }
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPass() {
+        return this.pass;
+    }
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String validate(String user, String pass) {
+        if (this.user.equals(user) && this.pass.equals(pass)) {
+            return "VALID";
+        } else {
+            return "INVALID";
+        }
+    }
+}
+</script></code></pre>
+<p><img src="/images/jsp-javabean.gif" alt="JSP 中使用 JavaBean"></p>
+<p><strong>JSP 中的流程控制语句</strong><br>前面说了 JSP 中的普通数据其实就是 out.write() 语句，因此我们可以将流程控制语句穿插在 <code>&lt;% statements %&gt;</code> 与 <code>html elements</code> 之间，例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<% int day = Integer.parseInt(request.getParameter("day")); %>
+<% if (day == 0 || day == 6) { %>
+  <p>今天是周末</p>
+<% } else { %>
+  <p>今天是工作日</p>
+<% } %>
+
+<% for (int i = 0; i < Integer.parseInt(request.getParameter("count")); ++i) { %>
+  <p>百度一下，你就知道</p>
+<% } %>
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 'http://127.0.0.1/test.jsp?day=3&count=5'
+<p>今天是工作日</p>
+<p>百度一下，你就知道</p>
+<p>百度一下，你就知道</p>
+<p>百度一下，你就知道</p>
+<p>百度一下，你就知道</p>
+<p>百度一下，你就知道</p>
+</script></code></pre>
+<h2 id="JSTL-标准标签库"><a href="#JSTL-标准标签库" class="headerlink" title="JSTL 标准标签库"></a>JSTL 标准标签库</h2><p>JSP 标准标签库（JSTL）是一个 JSP 标签集合，它封装了 JSP 应用的通用核心功能。JSTL 支持通用的、结构化的任务，比如迭代，条件判断，XML 文档操作，国际化标签，SQL 标签。除了这些，它还提供了一个框架来使用集成 JSTL 的自定义标签。根据 JSTL 标签所提供的功能，可以将其分为 5 个类别：</p>
+<ul>
+<li>核心标签</li>
+<li>格式化标签</li>
+<li>SQL 标签</li>
+<li>XML 标签</li>
+<li>JSTL 函数</li>
+</ul>
+<p>在 Tomcat 中使用 JSTL 需要导入 jstl-1.2.jar 包，下载地址：<a href="http://repo2.maven.org/maven2/javax/servlet/jstl/1.2/jstl-1.2.jar" rel="external nofollow noopener noreferrer" target="_blank">jstl-1.2.jar</a>，将下载到的 jstl.jar 包放在项目的 WEB-INF/lib 目录下即可，如果想要让所有 APP 都可以使用 JSTL，请将 jstl.jar 放到 $CATALINA_HOME/lib 目录下（建议这么做）。</p>
+<p>因为 JSTL 不属于 JSP 核心标签，所以在 JSP 文件中使用 JSTL 需要先使用 <code>&lt;taglib ... /&gt;</code> 来导入它们，有 4 个常用的 JSTL 库：</p>
+<ul>
+<li>core：核心标签库，<code>&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jstl/core&quot; %&gt;</code>。</li>
+<li>fmt：格式化标签库，<code>&lt;%@ taglib prefix=&quot;fmt&quot; uri=&quot;http://java.sun.com/jsp/jstl/fmt&quot; %&gt;</code>。</li>
+<li>sql：数据库标签库，<code>&lt;%@ taglib prefix=&quot;sql&quot; uri=&quot;http://java.sun.com/jsp/jstl/sql&quot; %&gt;</code>。</li>
+<li>xml：xml 标签库，<code>&lt;%@ taglib prefix=&quot;x&quot; uri=&quot;http://java.sun.com/jsp/jstl/xml&quot; %&gt;</code>。</li>
+</ul>
+<p>prefix 不需要与上面的一样，你可以使用任意你喜欢的 prefix，但是按照惯例来总是好的。其中用的最多的是 core 库，fmt 偶尔用下，sql 和 xml 库基本没人用了，过时了。JSTL 标签参考：<a href="http://www.runoob.com/jsp/jsp-jstl.html" rel="external nofollow noopener noreferrer" target="_blank">JSP 标准标签库（JSTL）- 菜鸟教程</a>、<a href="https://blog.csdn.net/qq_25827845/article/details/53311722" rel="external nofollow noopener noreferrer" target="_blank">JSTL 标签大全详解 - CSDN 博客</a></p>
+<p><strong>自定义标签</strong><br><a href="http://www.runoob.com/jsp/jsp-custom-tags.html" rel="external nofollow noopener noreferrer" target="_blank">JSP 自定义标签</a></p>
+<h2 id="EL-表达式语言"><a href="#EL-表达式语言" class="headerlink" title="EL 表达式语言"></a>EL 表达式语言</h2><p>JSP 表达式语言（EL）使得访问存储在 JavaBean 中的数据变得非常简单，EL 既可以用来创建算术表达式也可以用来创建逻辑表达式，在 EL 表达式内可以使用 <strong>整数</strong>、<strong>浮点数</strong>、<strong>字符串字面量</strong>（单引号或双引号包围）、<strong>true/false</strong> 以及 <strong>null</strong>。EL 不局限于 JavaBean 标签，实际上它可以用在任意非 <code>&lt;% %&gt;</code>、<code>&lt;%= %&gt;</code>、<code>&lt;%! %&gt;</code>、<code>&lt;%@ %&gt;</code> 元素中（这些都属于静态元素，还轮不到 EL 表达式的计算）。</p>
+<p>EL 表达式的语法：<code>${expression}</code>，其中的 expression 就是表达式的内容，和 shell 的变量引用有点类似。先看一个简单的例子：<br><code>test.jsp</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+name: ${param.name}
+mail: ${param['mail']}
+site: ${param["site"]}
+</script></code></pre>
+<p>curl 访问</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 'http://127.0.0.1/test.jsp?name=Otokaze&mail=zfl9.com@gmail.com&site=https://www.zfl9.com'
+name: Otokaze
+mail: zfl9.com@gmail.com
+site: https://www.zfl9.com
+</script></code></pre>
+<p>EL 提供了两种方式来访问对象的属性：<code>object.property</code>、<code>object[&#39;property&#39;]</code> 或 <code>object[&quot;property&quot;]</code>（单引号和双引号没有区别）。其中，object.property 的 property 必须符合 Java 标识符规范（以字母、下划线、美元符开头，后可接字母、数字、下划线、美元符）；而 object[‘property’]、object[“property”] 的 property 则没有要求，可以是任意有效的字符串。补充一点，如果要进行动态取值（也就是 property 是动态确定的），那么只能使用后者，这和 JavaScript 是一样的。例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+name: ${param[param.key]}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 'http://127.0.0.1/test.jsp?key=myname&myname=Otokaze'
+name: Otokaze
+</script></code></pre>
+<p>表达式的意思是，从 key 这个请求参数中获取 name 的请求参数名称，因为是动态确定的，所以只能使用 [] 访问符。</p>
+<p>EL 表达式有 11 个隐含对象：</p>
+<ul>
+<li><code>pageScope</code>：page 作用域</li>
+<li><code>requestScope</code>：request 作用域</li>
+<li><code>sessionScope</code>：session 作用域</li>
+<li><code>applicationScope</code>：application 作用域</li>
+<li><code>param</code>：请求参数（单个），字符串</li>
+<li><code>paramValues</code>：请求参数（多个），字符串数组</li>
+<li><code>header</code>：请求头部（单个），字符串</li>
+<li><code>headerValues</code>：请求头部（多个），字符串数组</li>
+<li><code>cookie</code>：请求的 Cookie</li>
+<li><code>initParam</code>：context 初始化参数</li>
+<li><code>pageContext</code>：当前页面的 pageContext</li>
+</ul>
+<p>访问数组只能使用 [] 操作符，因为索引值不是合法的 Java 标识符。比如 <code>${paramValues.name[0]}</code> 获取第一个 name 请求参数的值。如果 expression 中出现了变量，如 ${username}、${age + 10}，那么 EL 解释器会依次从 pageScope、requestScope、sessionScope、applicationScope 中尝试获取它们的值，只要找到了同名变量，就返回，如果都没找到则返回空字符串。</p>
+<p>pageContext 对象的常用属性：</p>
+<ul>
+<li><code>${pageContext.request.method}</code>：请求方法</li>
+<li><code>${pageContext.request.protocol}</code>：HTTP 协议</li>
+<li><code>${pageContext.request.remoteAddr}</code>：客户端 IP</li>
+<li><code>${pageContext.request.remotePort}</code>：客户端 Port</li>
+<li><code>${pageContext.request.requestURL}</code>：请求的 URL，不包括查询字符串</li>
+<li><code>${pageContext.request.queryString}</code>：请求的查询字符串</li>
+<li><code>${pageContext.request.contextPath}</code>：当前上下文路径（项目名称）</li>
+<li><code>${pageContext.session.id}</code>：session ID</li>
+<li><code>${pageContext.session.new}</code>：是否为新会话</li>
+</ul>
+<p>EL 表达式支持的运算符：</p>
+<ul>
+<li><code>.</code>：属性访问符（静态）</li>
+<li><code>[]</code>：属性访问符（动态）</li>
+<li><code>()</code>：子表达式，改变优先级</li>
+<li><code>+</code>：加</li>
+<li><code>-</code>：减</li>
+<li><code>*</code>：乘</li>
+<li><code>/</code>或<code>div</code>：除</li>
+<li><code>%</code>或<code>mod</code>：取余</li>
+<li><code>==</code>或<code>eq</code>：是否相等</li>
+<li><code>!=</code>或<code>ne</code>：是否不等</li>
+<li><code>&lt;</code>或<code>lt</code>：是否小于</li>
+<li><code>&lt;=</code>或<code>le</code>：是否小于等于</li>
+<li><code>&gt;</code>或<code>gt</code>：是否大于</li>
+<li><code>&gt;=</code>或<code>ge</code>：是否大于等于</li>
+<li><code>&amp;&amp;</code>或<code>and</code>：逻辑与</li>
+<li><code>||</code>或<code>or</code>：逻辑或</li>
+<li><code>!</code>或<code>not</code>：逻辑非</li>
+<li><code>empty</code>：是否为空值</li>
+</ul>
+<blockquote>
+<p>EL 的逻辑表达式返回 true 或 false 字符串，如 <code>${4 &gt; 3 and 5 &lt; 6}</code> 返回 true。</p>
+</blockquote>
+<p><strong>JSTL 与 EL 的联系与区别</strong><br>JSTL 是 JSP 标准标签库，使用 JSTL 需要引入 jstl.jar 包；而 EL 是表达式语言（实际上只能称为表达式），使用 EL 不需要引入额外的 jar 包，符合 JSP 2.0 规范的容器默认启用 EL 表达式的支持。通常，JSTL 标签库用于逻辑控制，EL 表达式用于数据显示。其实 JSTL 和 EL 完全可以使用 Java 代码取代（实际上，熟悉 Java 的人很难接受 JSTL 的怪异语法），那为什么 JSP 还要费这么大劲搞 JSTL 和 EL 表达式呢？目的还是为了减少 JSP 页面中 Java 代码的使用，因为现在都提倡 MVC 分层架构，JSP 在这里面的角色仅仅是页面的显示（View 层），所以 JSP 页面的编写和维护基本都是前端人员在做，这种情况下，与其让他们学习 Java，还不如学习 JSTL 标签库 和 EL 表达式，因为更简单也更容易接受。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-digest.html" rel="next" title="Java MessageDigest 类">
+                <i class="fa fa-chevron-left"></i> Java MessageDigest 类
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-commons-cli.html" rel="prev" title="Java Commons-CLI 命令行参数解析">
+                Java Commons-CLI 命令行参数解析 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#默认编码-UTF-8"><span class="nav-number">1.</span> <span class="nav-text">默认编码 UTF-8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSP-与-Servlet"><span class="nav-number">2.</span> <span class="nav-text">JSP 与 Servlet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSP-特殊标签"><span class="nav-number">3.</span> <span class="nav-text">JSP 特殊标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSTL-标准标签库"><span class="nav-number">4.</span> <span class="nav-text">JSTL 标准标签库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EL-表达式语言"><span class="nav-number">5.</span> <span class="nav-text">EL 表达式语言</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-jsp.html';
+          this.page.identifier = 'java-jsp.html';
+          this.page.title = 'Java JSP 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

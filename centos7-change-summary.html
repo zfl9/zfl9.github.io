@@ -1,0 +1,763 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="CentOS/RHEL7, 变化汇总">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="CentOS/RHEL7 带来了很多系统配置和管理上的变化，虽然有些不习惯，但大家还是应该去适应它们，而不是因循守旧，因为变化总是有原因的，它们大致都代表了未来的趋势，你不可能一直停留在原地踏步。">
+<meta name="keywords" content="linux,centos7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS/RHEL7 变化汇总">
+<meta property="og:url" content="https://www.zfl9.com/centos7-change-summary.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="CentOS/RHEL7 带来了很多系统配置和管理上的变化，虽然有些不习惯，但大家还是应该去适应它们，而不是因循守旧，因为变化总是有原因的，它们大致都代表了未来的趋势，你不可能一直停留在原地踏步。">
+<meta property="og:image" content="https://www.zfl9.com/images/grub2-runlevel0-1.png">
+<meta property="og:image" content="https://www.zfl9.com/images/grub2-runlevel0-2.png">
+<meta property="og:image" content="https://www.zfl9.com/images/grub2-runlevel0-3.png">
+<meta property="og:image" content="https://www.zfl9.com/images/grub2-systemd-1.png">
+<meta property="og:image" content="https://www.zfl9.com/images/grub2-systemd-2.png">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS/RHEL7 变化汇总">
+<meta name="twitter:description" content="CentOS/RHEL7 带来了很多系统配置和管理上的变化，虽然有些不习惯，但大家还是应该去适应它们，而不是因循守旧，因为变化总是有原因的，它们大致都代表了未来的趋势，你不可能一直停留在原地踏步。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/grub2-runlevel0-1.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/centos7-change-summary.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>CentOS/RHEL7 变化汇总 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/centos7-change-summary.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                CentOS/RHEL7 变化汇总
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-23T13:50:11+08:00">
+                2016-10-23
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/centos7/" itemprop="url" rel="index">
+                    <span itemprop="name">centos7</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/centos7-change-summary.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="centos7-change-summary.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/centos7-change-summary.html" class="leancloud_visitors" data-flag-title="CentOS/RHEL7 变化汇总">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>CentOS/RHEL7 带来了很多系统配置和管理上的变化，虽然有些不习惯，但大家还是应该去适应它们，而不是因循守旧，因为变化总是有原因的，它们大致都代表了未来的趋势，你不可能一直停留在原地踏步。</p>
+<a id="more"></a>
+<h2 id="tab补全参数"><a href="#tab补全参数" class="headerlink" title="tab补全参数"></a>tab补全参数</h2><pre><code class="language-bash line-numbers"># 最小化安装默认没有安装 bash-completion
+yum -y install bash-completion # 安装完后重启
+</code></pre>
+<h2 id="grub升级至2-0"><a href="#grub升级至2-0" class="headerlink" title="grub升级至2.0"></a>grub升级至2.0</h2><p>bootloader 的配置文件也调整至 <code>/boot/grub2/grub.cfg</code></p>
+<p><strong>开机修改 root 密码</strong><br>以 ArchLinux 为例，CentOS 7.x 类似，只需注意：<br>1) 将<code>ro</code>改为<code>rw</code>；<br>2) 将<code>init=/bin/bash</code>改为<code>init=/sysroot/bin/sh</code>；<br>3) 启动后，使用<code>chroot /sysroot/</code>切换根目录；</p>
+<p>第一步，按上下方向键，选择内核：<br><img src="/images/grub2-runlevel0-1.png" alt="第一步，选择内核"></p>
+<p>第二步，按 E 键，进入编辑界面：<br><img src="/images/grub2-runlevel0-2.png" alt="第二步，编辑参数"></p>
+<p>第三步，按 Ctrl+X 启动系统，修改密码：<br><img src="/images/grub2-runlevel0-3.png" alt="第三步，修改密码"></p>
+<p><strong>开机进入指定 target</strong>（systemd）<br><img src="/images/grub2-systemd-1.png" alt="编辑内核参数"><br><img src="/images/grub2-systemd-2.png" alt="输入密码即可"></p>
+<h2 id="etc-inittab"><a href="#etc-inittab" class="headerlink" title="/etc/inittab"></a>/etc/inittab</h2><p>在 CentOS6 中，我们可以通过修改<code>/etc/inittab</code>文件来修改运行级别；<br>但是在 CentOS7 中，这个文件已经没用了，修改运行级别需要使用 systemctl。</p>
+<p><code>cat /etc/inittab</code>可以看到以下说明：</p>
+<pre><code class="language-bash line-numbers"># systemd uses 'targets' instead of runlevels. By default, there are two main targets: 
+# 
+# multi-user.target: analogous to runlevel 3 
+# graphical.target: analogous to runlevel 5 
+# 
+# To view current default target, run: 
+# systemctl get-default 
+# 
+# To set a default target, run: 
+# systemctl set-default TARGET.target
+</code></pre>
+<p>因此，我们需要使用下面的方法来修改运行级别：</p>
+<pre><code class="language-bash line-numbers"># 查看默认运行级别
+systemctl get-default
+
+# 可设置的运行级别
+runlevel0.target -> poweroff.target
+runlevel1.target -> rescue.target
+runlevel2.target -> multi-user.target
+runlevel3.target -> multi-user.target
+runlevel4.target -> multi-user.target
+runlevel5.target -> graphical.target
+runlevel6.target -> reboot.target
+
+# 设置默认运行级别
+systemctl set-default runlevelN.target
+</code></pre>
+<h2 id="etc-hostname"><a href="#etc-hostname" class="headerlink" title="/etc/hostname"></a>/etc/hostname</h2><p>在 CentOS6 中，修改主机名需要修改<code>/etc/sysconfig/network</code>文件；<br>在 CentOS7 中，修改主机名只需修改<code>/etc/hostname</code>文件，更简单了。</p>
+<h2 id="systemd取代sysvinit"><a href="#systemd取代sysvinit" class="headerlink" title="systemd取代sysvinit"></a>systemd取代sysvinit</h2><p>在 CentOS6 中，使用<code>chkconfig</code>管理自启服务，使用<code>service</code>运行/停止服务；<br>在 CentOS7 中，这两个命令都被<code>systemctl</code>给替代了，使用 systemd 管理系统。</p>
+<pre><code class="language-bash line-numbers"># systemd 将系统资源统称为 unit 单元
+service.service         # 系统服务
+socket.socket           # 进程间通信的套接字
+device.device           # 系统设备
+mount.mount             # 挂载点
+automount.automount     # 自动挂载点
+swap.swap               # 交换分区
+target.target           # 启动目标，类似运行级别的概念
+path.path               # 文件路径
+timer.timer             # 定时任务
+slice.slice             # 进程控制组
+scope.scope             # D-Bus创建的单元
+
+# 查看 unit 单元
+systemctl                               # 查看所有已运行的单元      (active)
+systemctl list-units                    # 查看所有已运行的单元      (active)
+systemctl list-units -t service         # 查看所有已运行的服务      (active && service)
+systemctl list-units -t timer           # 查看所有已运行的定时任务  (active && timer)
+systemctl list-units --failed           # 查看所有运行失败的单元    (loaded && failed)
+systemctl list-units -a                 # 查看所有已加载的单元      (loaded)
+systemctl list-unit-files               # 查看所有已安装的单元      (installed)
+systemctl list-unit-files -t service    # 查看所有已安装的服务      (installed && service)
+systemctl list-unit-files -t timer      # 查看所有已安装的定时任务  (installed && timer)
+systemctl list-unit-files -t service | grep enabled     # 查看所有自启动的服务
+systemctl list-unit-files -t service | grep disabled    # 查看所有非自启的服务
+
+# 管理后台服务
+systemctl start nginx.service       # 启动 nginx
+systemctl stop nginx.service        # 关闭 nginx
+systemctl restart nginx.service     # 重启 nginx
+systemctl reload nginx.service      # 重载 nginx 配置文件
+systemctl status nginx.service      # 查看 nginx 运行状态
+systemctl -l status nginx.service   # 查看 nginx 运行状态（全）
+
+# 管理开机自启服务
+systemctl enable nginx.service      # 设置 nginx 开机自启
+systemctl disable nginx.service     # 取消 nginx 开机自启
+systemctl is-enabled nginx.service  # 查看 nginx 是否自启
+systemctl list-unit-files -t service | grep enabled # 查看所有开机自启的服务
+
+# 关机、重启、睡眠
+systemctl halt      # 关闭系统，但不断开电源
+systemctl poweroff  # 关闭系统，并且断开电源
+systemctl reboot    # 重启系统
+systemctl suspend   # 挂起系统
+
+# 运行级别相关
+systemctl get-default                   # 查看默认运行级别
+systemctl set-default runlevelN.target  # 设置默认运行级别
+systemctl isolate graphical.target      # 切换当前运行级别
+systemctl rescue    # 进入单用户模式
+systemctl emergency # 进入紧急救援模式
+
+# 重新扫描新的或有变动的 unit 单元
+systemctl daemon-reload
+
+# 查看系统日志信息
+journalctl          # 查看所有已记录的日志
+journalctl -b       # 查看本次系统启动日志
+journalctl -k       # 查看内核日志，dmesg
+journalctl -n       # 查看最新的 10 条日志
+journalctl -n20     # 查看最新的 20 条日志
+journalctl -f       # 实时滚动查看最新日志
+journalctl -u nginx.service     # 查看 nginx 服务的相关日志
+journalctl -fu nginx.service    # 追踪 nginx 服务的最新日志
+
+# 查看当前日期和时间
+timedatectl                     # 查看系统时间
+timedatectl status              # 查看系统时间，同上
+timedatectl set-ntp true        # 开启网络时间同步
+timedatectl list-timezones      # 列出所有可用时区
+timedatectl set-timezone Asia/Shanghai # 设置系统时区
+
+# 设置系统的主机名
+hostnamectl                     # 查看主机名信息
+hostnamectl status              # 查看主机名信息，同上
+hostnamectl set-hostname NAME   # 永久修改主机名
+
+# locale 本地化设置
+localectl                       # 查看本地化信息
+localectl status                # 查看本地化信息，同上
+localectl list-locales          # 列出可用 locales
+localectl set-locale LOCALE...  # 设置系统 locales
+
+# login 登录信息
+loginctl                # 列出当前 session 会话
+loginctl list-sessions  # 列出当前 session 会话，同上
+loginctl list-users     # 列出当前登录用户
+loginctl show-user root # 显示指定用户信息
+
+# 查看启动耗时
+systemd-analyze         # 获取开机时间信息
+systemd-analyze blame   # 自启服务的启动耗时
+</code></pre>
+<h2 id="etc-rc-local"><a href="#etc-rc-local" class="headerlink" title="/etc/rc.local"></a>/etc/rc.local</h2><p><code>/etc/rc.local</code>已经不存在了，如果需要请创建 rc-local 服务；</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># 在 /etc/systemd/system/ 新建 rc-local.service
+cd /etc/systemd/system/
+vim rc-local.service
+
+# rc-local.service 文件内容
+[Unit]
+Description=/etc/rc.local shell script
+ConditionFileIsExecutable=/etc/rc.local
+Requires=network.target network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/etc/rc.local start
+ExecStop=/etc/rc.local stop
+
+[Install]
+WantedBy=multi-user.target graphical.target
+
+# 创建 /etc/rc.local 并设置权限
+touch /etc/rc.local
+chmod +x /etc/rc.local
+
+# 编辑 /etc/rc.local 脚本
+vim /etc/rc.local
+
+# /etc/rc.local 脚本内容
+#!/bin/bash
+echo "I have already run. [$(date "+%F %T")]"
+
+# 保存退出，将其设为自启服务
+systemctl daemon-reload
+systemctl enable rc-local.service
+
+# 重启系统试试有没有成功
+systemctl reboot
+</script></code></pre>
+<h2 id="etc-sysctl-conf"><a href="#etc-sysctl-conf" class="headerlink" title="/etc/sysctl.conf"></a>/etc/sysctl.conf</h2><p><code>/etc/sysctl.conf</code>中的默认配置移至<code>/usr/lib/sysctl.d/00-system.conf</code>；<br>我们可以在<code>/etc/sysctl.d/</code>目录下创建自定义的 conf 文件，来覆盖默认配置；<br>如需立即生效，不能直接使用<code>sysctl -p</code>，须执行<code>sysctl -p /etc/sysctl.d/*.conf</code>。</p>
+<h2 id="新的网卡名称"><a href="#新的网卡名称" class="headerlink" title="新的网卡名称"></a>新的网卡名称</h2><p>在 CentOS6 中，以太网卡的名称一般为 ethN；<br>在 CentOS7 中，以太网卡的名称一般为 ensN；</p>
+<p>网卡命名规则如下：</p>
+<ul>
+<li><code>en</code>，for Ethernet，以太网；</li>
+<li><code>wl</code>，for wireless LAN (WLAN)，无线局域网；</li>
+<li><code>ww</code>，for wireless wide area network (WWAN)，无线广域网；</li>
+</ul>
+<h2 id="70-persistent-net-rules"><a href="#70-persistent-net-rules" class="headerlink" title="70-persistent-net.rules"></a>70-persistent-net.rules</h2><p><code>/etc/udev/rules.d/70-persistent-net.rules</code>在 CentOS7 中已经不存在了；<br>使用虚拟机的朋友可能对其有印象，每次克隆虚拟机时都要修改这个文件，修改完还必须重启。<br>好在现在不需要了，如果对虚拟机进行了克隆，我们只需要修改网卡配置文件。</p>
+<h2 id="iproute2取代net-tools"><a href="#iproute2取代net-tools" class="headerlink" title="iproute2取代net-tools"></a>iproute2取代net-tools</h2><pre><code class="language-bash line-numbers"># 安装 iproute（一般不需要，已经默认安装了）
+yum -y install iproute
+
+# ip 命令
+ip addr show                        # 查看所有网卡地址信息
+ip addr show dev ens33              # 查看 ens33 网卡信息
+ip addr add 10.0.0.1/32 dev ens33   # 给网卡添加一个新的 IP
+ip -c addr show                     # 显示颜色，高亮（新版本）
+ip -d addr show                     # 显示细节信息
+ip -s addr show                     # 统计网卡信息
+ip -s -h addr show                  # 统计网卡信息，易读
+
+ip link set dev ens37 up    # 激活网卡 ens37
+ip link set dev ens37 down  # 取消激活 ens37
+
+ip route list                               # 查看 main 主路由表
+ip route list table main                    # 查看 main 主路由表，同上
+ip route list table default                 # 查看 default 默认路由表
+ip route list table local                   # 查看 local 路由表（不可修改）
+ip route add 0/0 via 192.168.1.1 dev ens33  # 在 main 路由表添加默认路由
+
+ip rule list                                    # 查看当前路由策略
+ip rule add fwmark 0x1/0x1 pref 100 table 100   # 添加一条路由策略
+ip rule del pref 100                            # 删除一条路由策略
+
+# ss 命令
+ss -s       # 打印 socket 统计信息
+ss -anp     # all sockets
+ss -anp4    # ipv4 sockets
+ss -anp6    # ipv6 sockets
+ss -anpt    # tcp sockets
+ss -anpu    # udp sockets
+ss -anpx    # unix sockets
+ss -anpw    # raw sockets
+ss -lnp     # all listening-sockets
+ss -lnp4    # ipv4 listening-sockets
+ss -lnp6    # ipv6 listening-sockets
+ss -lnpt    # tcp listening-sockets
+ss -lnpu    # udp listening-sockets
+ss -lnpx    # unix listening-sockets
+ss -lnpw    # raw listening-sockets
+</code></pre>
+<h2 id="NetworkManager"><a href="#NetworkManager" class="headerlink" title="NetworkManager"></a>NetworkManager</h2><p>从 CentOS7 开始，网络由<code>NetworkManager</code>服务负责管理，之前的 network 脚本只是为了兼容。<br>NetworkManager 有两个主要配置工具：nmtui（文本用户界面）、nmcli（命令行工具）。</p>
+<p><strong>nmtui</strong><br>nmtui 类似 CentOS6 的 setup（在 CentOS7 中 setup 已经没啥用了）工具，提供一个文本图形界面；<br>可以用来简单的配置连接、启用/禁用连接、更改主机名；系统初装之后可以第一时间用 nmtui 配置网络，挺方便的。</p>
+<p><strong>nmcli</strong><br>nmcli 是 NetworkManager 的主要配置工具，因此，需要熟练掌握：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">$ nmcli help
+Usage: nmcli [OPTIONS] OBJECT { COMMAND | help }
+
+OPTIONS
+  -t[erse]                                   terse output
+  -p[retty]                                  pretty output
+  -m[ode] tabular|multiline                  output mode
+  -c[olors] auto|yes|no                      whether to use colors in output
+  -f[ields] <field1,field2,...>|all|common   specify fields to output
+  -e[scape] yes|no                           escape columns separators in values
+  -a[sk]                                     ask for missing parameters
+  -s[how-secrets]                            allow displaying passwords
+  -w[ait] <seconds>                          set timeout waiting for finishing operations
+  -v[ersion]                                 show program version
+  -h[elp]                                    print this help
+
+OBJECT
+  g[eneral]       NetworkManager's general status and operations
+  n[etworking]    overall networking control
+  r[adio]         NetworkManager radio switches
+  c[onnection]    NetworkManager's connections
+  d[evice]        devices managed by NetworkManager
+  a[gent]         NetworkManager secret agent or polkit agent
+  m[onitor]       monitor NetworkManager changes
+
+OBJECT 和 COMMAND 可以用全称也可以用简称，最少可以只用一个字母，建议用头三个字母；
+OBJECT 里面我们平时用的最多的就是 connection 和 device，这里需要简单区分一下 conn 和 dev:
+    device 叫网络接口，是物理设备；
+    connection 是网络连接，偏重于逻辑设置；
+在 NetworkManager 中，多个 conn 可以应用到同一个 dev，但同一时间只能启用其中一个 conn；
+
+这样的好处是针对一个 dev，我们可以设置多个 conn，比如静态IP和动态IP，再根据需要 up 相应的 conn；
+
+# 查看相关状态
+nmcli gen status    # 打印网络总体状态
+nmcli dev status    # 打印所有网络设备
+nmcli con show      # 打印所有连接
+nmcli con show -a   # 打印活动连接
+
+# 网络配置相关
+nmcli con add type eth con-name test_static ifname ens33 ip4 192.168.255.100 gw4 192.168.255.254 ipv4.dns '192.168.255.254 114.114.114.114 8.8.8.8' # 添加 Static 连接
+nmcli con add type eth con-name test_dhcp ifname ens33  # 添加 DHCP 连接
+nmcli con mod ens33 +ipv4.address '192.168.1.1/24'  # 添加 IP 地址
+nmcli con mod ens33 -ipv4.address '192.168.2.1/24'  # 移除 IP 地址
+
+# 重载配置文件，针对手动修改配置文件的情况
+nmcli con reload
+nmcli dev con ens33
+</script></code></pre>
+<p>添加多 IP：<br><code>ip addr add</code>，用于临时添加 IP，重启失效；<br><code>ifcfg-eth0:x</code>，这种方式已经失效，不能使用；<br>如需添加多 IP，请使用 nmcli 工具，或者手动修改配置文件，添加字段<code>IPADDRx/PREFIXx/GATEWAYx</code>。</p>
+<p>DNS 设置：<br><code>/etc/resolv.conf</code>不能直接手动修改，要修改 DNS 请使用 nmcli，或在配置文件中添加字段<code>DNS1/DNS2/DNS3</code>，重载网卡配置文件后自动覆盖<code>/etc/resolv.conf</code>；</p>
+<p>hostname 设置：<br><code>/etc/hostname</code>文本文件用来保存主机名，永久修改使用<code>hostnamectl set-hostname NAME</code>；</p>
+<p>全局默认网关：<br><code>/etc/sysconfig/network</code>可用于配置全局网关（默认空文件）</p>
+<p>静态路由配置：<br><code>ip route list</code>，查看当前路由表（main）<br><code>ip route add 192.168.1.0/24 via 192.168.2.254</code>，添加静态路由条目（重启失效）<br><code>ip route add 172.16.0.0/16 dev eth0</code>，添加静态路由条目（重启失效）<br><code>ip route del 10.0.0.0/8</code>，删除静态路由条目（重启失效）</p>
+<p>永久静态路由配置：<br>经测试，在 CentOS7 中，<code>/etc/sysconfig/static-routes</code>已不再使用！<br>需要新建<code>/etc/sysconfig/network-scripts/route-INTERFACE</code>（INTERFACE 为对应网卡名称）<br>然后根据需要，在配置文件中添加以下配置，重启可生效，如需立即生效，可使用 nmcli 重载配置文件：<br>192.168.2.0/24 via 10.0.0.254<br>192.168.1.0/24 dev eth0</p>
+<h2 id="firewalld取代iptables"><a href="#firewalld取代iptables" class="headerlink" title="firewalld取代iptables"></a>firewalld取代iptables</h2><p>在 CentOS7 中，防火墙用户空间配置工具被替换为了<code>firewalld</code>，特点是引入了 zone 的概念，支持动态管理；<br>但是内核空间还是用的 netfilter 模块，因为感觉 zone 很麻烦、不直观，因此我还是喜欢<code>iptables</code>配置工具。</p>
+<p>如想了解关于 netfilter/iptables 的知识，可以参考我之前的这篇博客 - <a href="/iptables.html">iptables 详解</a>。</p>
+<p>禁用 firewalld，并安装 iptables-service：</p>
+<pre><code class="language-bash line-numbers">yum -y install iptables-services
+systemctl disable firewalld
+systemctl enable iptables
+</code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/centos7/" rel="tag"># centos7</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/server-speeder.html" rel="next" title="锐速破解版（91yun）">
+                <i class="fa fa-chevron-left"></i> 锐速破解版（91yun）
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/regex.html" rel="prev" title="正则表达式">
+                正则表达式 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tab补全参数"><span class="nav-number">1.</span> <span class="nav-text">tab补全参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grub升级至2-0"><span class="nav-number">2.</span> <span class="nav-text">grub升级至2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-inittab"><span class="nav-number">3.</span> <span class="nav-text">/etc/inittab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-hostname"><span class="nav-number">4.</span> <span class="nav-text">/etc/hostname</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemd取代sysvinit"><span class="nav-number">5.</span> <span class="nav-text">systemd取代sysvinit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-rc-local"><span class="nav-number">6.</span> <span class="nav-text">/etc/rc.local</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-sysctl-conf"><span class="nav-number">7.</span> <span class="nav-text">/etc/sysctl.conf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新的网卡名称"><span class="nav-number">8.</span> <span class="nav-text">新的网卡名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#70-persistent-net-rules"><span class="nav-number">9.</span> <span class="nav-text">70-persistent-net.rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iproute2取代net-tools"><span class="nav-number">10.</span> <span class="nav-text">iproute2取代net-tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NetworkManager"><span class="nav-number">11.</span> <span class="nav-text">NetworkManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#firewalld取代iptables"><span class="nav-number">12.</span> <span class="nav-text">firewalld取代iptables</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/centos7-change-summary.html';
+          this.page.identifier = 'centos7-change-summary.html';
+          this.page.title = 'CentOS/RHEL7 变化汇总';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

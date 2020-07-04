@@ -1,0 +1,719 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="数据源，简单理解为数据源头，提供了应用程序所需要数据的位置。数据源保证了应用程序与目标数据之间交互的规范和协议，它可以是数据库，文件系统等等。其中数据源定义了位置信息，用户验证信息和交互时所需的一些特性的配置，同时它封装了如何建立与数据源的连接，向外暴露获取连接的接口。应用程序连接数据库无需关注其底层是如何如何建立的，也就是说应用业务逻辑与连接数据库操作是松耦合的。 以下只讨论当数据源为数据库的情">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java DataSource">
+<meta property="og:url" content="https://www.zfl9.com/java-datasource.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="数据源，简单理解为数据源头，提供了应用程序所需要数据的位置。数据源保证了应用程序与目标数据之间交互的规范和协议，它可以是数据库，文件系统等等。其中数据源定义了位置信息，用户验证信息和交互时所需的一些特性的配置，同时它封装了如何建立与数据源的连接，向外暴露获取连接的接口。应用程序连接数据库无需关注其底层是如何如何建立的，也就是说应用业务逻辑与连接数据库操作是松耦合的。 以下只讨论当数据源为数据库的情">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.193Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java DataSource">
+<meta name="twitter:description" content="数据源，简单理解为数据源头，提供了应用程序所需要数据的位置。数据源保证了应用程序与目标数据之间交互的规范和协议，它可以是数据库，文件系统等等。其中数据源定义了位置信息，用户验证信息和交互时所需的一些特性的配置，同时它封装了如何建立与数据源的连接，向外暴露获取连接的接口。应用程序连接数据库无需关注其底层是如何如何建立的，也就是说应用业务逻辑与连接数据库操作是松耦合的。 以下只讨论当数据源为数据库的情">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-datasource.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java DataSource | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-datasource.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java DataSource
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-15T08:00:00+08:00">
+                2018-12-15
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-datasource.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-datasource.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-datasource.html" class="leancloud_visitors" data-flag-title="Java DataSource">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>数据源，简单理解为数据源头，提供了应用程序所需要数据的位置。数据源保证了应用程序与目标数据之间交互的规范和协议，它可以是数据库，文件系统等等。其中数据源定义了位置信息，用户验证信息和交互时所需的一些特性的配置，同时它封装了如何建立与数据源的连接，向外暴露获取连接的接口。应用程序连接数据库无需关注其底层是如何如何建立的，也就是说应用业务逻辑与连接数据库操作是松耦合的。 以下只讨论当数据源为数据库的情况，且为 Java 环境下 JDBC 规范下的如何建立与数据库的连接，其它情况类似。</p>
+<a id="more"></a>
+<h2 id="DriverManager-vs-DataSource"><a href="#DriverManager-vs-DataSource" class="headerlink" title="DriverManager vs DataSource"></a>DriverManager vs DataSource</h2><ul>
+<li>DriverManager 是 JDBC 2.0 之前用来获取数据库连接的唯一方法。</li>
+<li>DataSource 是 JDBC 2.0 之后（含）用来获取数据库连接的首选方法。</li>
+</ul>
+<p>使用 DriverManager 获取数据库连接：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+Connection connection = DriverManager.getConnection(url, user, pass)
+</script></code></pre>
+<p>使用 DataSource 获取数据库连接：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+DataSource dataSource = new DataSourceImpl();
+// set some property for dataSource instance ...
+Connection connection = dataSource.getConnection();
+</script></code></pre>
+<p>我们知道 JDBC 的核心原理是 java.sql.Driver 驱动接口和各个数据库厂商提供的 java.sql.Driver 接口实现类，比如 MySQL 实现类为 com.mysql.jdbc.Driver。通过 DriverManager 获取数据库连接的一般步骤为：</p>
+<ol>
+<li><code>Class.forName(&quot;com.mysql.jdbc.Driver&quot;)</code>，注册数据库厂商的 JDBC 驱动（static 初始化块）。</li>
+<li><code>DriverManager.getConnection(url, user, pass)</code>，根据 url、user、pass 信息获取数据库连接。</li>
+</ol>
+<p>url 的格式与具体的数据库厂商有关，而 user 是用来认证的用户名，pass 则是用来认证的用户名密码。</p>
+<p>DataSource 只是一个接口，DataSource 是数据源的意思，我更喜欢将 DataSource 理解为数据库的抽象表示，我们可以从这个 DataSource 中获取数据库连接，这和数据库系统很相似。因为 DataSource 是数据库的抽象表示（其本身也是一个接口），所以我们需要一个 DataSource 实现类才能使用 DataSource 来获取数据库连接，那么这个实现类由谁提供呢？当然是数据库厂商了（MySQL、Oracle 等）。</p>
+<p>DataSource 是 DriverManager 的更高层次的抽象。一个 DataSource 实例就表示一个数据库，我们可以从一个 DataSource 对象中获取数据库连接，即 dataSource.getConnection()。因为 DataSource 实现类是由数据库厂商提供的，所以数据库厂商可以自由的在实现类中加入数据库连接池、分布式事务等功能，而我们使用者只需要简单的调用 dataSource.getConnection() 来获取数据库连接，也因为如此，DataSource 的性能要比 DriverManager.getConnection() 获取数据库连接的方式好得多，因为 DataSource 实现类内部完全可以加入自己的数据库连接池逻辑，但这一点都不影响 dataSource 实例的使用方法。</p>
+<p>DataSource 实现类必须提供一个无参构造函数，这么规定的原因是为了可以方便的与 JNDI 一起使用，因为通常情况下，我们都会在 JNDI 容器中注册对应的 DataSource 实现类，这样我们在程序中只需要像获取 Spring IoC 容器中的 bean 实例一样简单，如 <code>DataSource dataSource = context.lookup(&quot;name&quot;)</code>，是不是感觉和 IoC 容器差不多？当然将 dataSource 放到 JNDI 中的目的和使用 IoC 容器的目的也是一样的，就是为了降低不同对象之间的耦合度。使用 JNDI 后，我们如果要更换 DataSource 实现，只需要修改容器的配置文件，然后重启容器就行了，不用更改任何代码（Tomcat 容器就有 JNDI 功能，这个以后再了解）。</p>
+<p>javax.sql.DataSource 接口的定义：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+Connection getConnection() throws SQLException
+Connection getConnection(String username, String password) throws SQLException
+</script></code></pre>
+<p>有必要声明一点，DataSource 并不能取代 DriverManager，它只是 DriverManager 的封装，底层可能仍然是使用 DriverManager 来获取连接的。之所以要封装是因为 DriverManager 获取连接的方式太直接、太底层了，无法透明的实现数据库连接池，因为每次调用 DriverManager.getConnection() 返回的数据库连接都是新创建的，不能复用。而 DataSource 就不一样了，DataSource 只是一个抽象接口，该接口暴露的 API 为 dataSource.getConnection()，当我们调用 dataSource.getConnection() 获取数据库连接时，实现类内部完全可以进行别的操作，比如实现数据库连接池，又比如分布式事务支持等。</p>
+<p>还有一点就是，DataSource 实现类不一定要数据库厂商支持才能做，我们自己也是能够实现 DataSource 接口的，并且还能够在里面实现数据库连接池等，同理，DataSource 也有很多开源实现，比如 Apache 的 DBCP、号称性能无敌的 HikariCP、功能全面的 druid（阿里巴巴开发）。DBCP 目前分为两个版本，1.x 和 2.x（有没有感觉和 Log4J 很相似，1.x 和 2.x），DBCP 1.x 性能听说不行，是单线程同步模型。而 DBCP 2.x 推出比较晚，当它推出时，很多项目早就转为了其他数据库连接池实现了。而 druid 是阿里开源的一个数据库连接池实现，听说性能和 HikariCP 不相上下，不过因为 druid 很多功能是为了方便运维而开发的，所以目前使用比较普遍的数据库连接池实现是 HikariCP。</p>
+<p>注意，DataSource 实现类并不都是带有数据库连接池功能的，请不要混淆了。Spring JDBC 框架里面也有一个 DriverManagerDataSource 实现，不带有数据库连接池功能，它只是 DriverManager 的简单封装而已。</p>
+<p>最后说下 JNDI，JNDI 全称为 Java Naming and Directory Interface，中文为“Java 命名和目录接口”。千万不要以为这是个什么很高级很复杂的协议/接口，你完全可以将它看作是 Spring IoC 容器的“JDK 官方版本”，本质上，它们都是一个“容器”，都是存储对象的容器，而且都支持在 xml 配置文件中配置“对象”，然后在程序中可以使用对应的 name 来获取对应的对象，仅此而已。常见的 Tomcat 容器就支持 JNDI 功能。</p>
+<h2 id="MySQL-DriverManager-例子"><a href="#MySQL-DriverManager-例子" class="headerlink" title="MySQL DriverManager 例子"></a>MySQL DriverManager 例子</h2><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DriverManagerMain {
+    public static void main(String[] args) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/test?serverTimezone=UTC", "root", "123456");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select id, name, site from test0");
+            System.out.printf("id\tname\tsite\n");
+            while (resultSet.next()) {
+                System.out.printf("%d\t%s\t\t%s\n",
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+</script></code></pre>
+<h2 id="MySQL-DataSource-例子"><a href="#MySQL-DataSource-例子" class="headerlink" title="MySQL DataSource 例子"></a>MySQL DataSource 例子</h2><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import com.mysql.cj.jdbc.MysqlDataSource;
+
+public class DataSourceMain {
+    public static void main(String[] args) {
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setServerName("localhost");
+        dataSource.setDatabaseName("test");
+        try { dataSource.setServerTimezone("UTC"); } catch (SQLException e) { e.printStackTrace(); }
+        dataSource.setUser("root");
+        dataSource.setPassword("123456");
+
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select id, name, site from test0");
+            System.out.printf("id\tname\tsite\n");
+            while (resultSet.next()) {
+                System.out.printf("%d\t%s\t\t%s\n",
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+</script></code></pre>
+<h2 id="MySQL-Spring-JDBC-DataSource-例子"><a href="#MySQL-Spring-JDBC-DataSource-例子" class="headerlink" title="MySQL Spring-JDBC-DataSource 例子"></a>MySQL Spring-JDBC-DataSource 例子</h2><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+public class SpringJdbcDataSourceMain {
+    public static void main(String[] args) {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost/test?serverTimezone=UTC");
+        dataSource.setUsername("root");
+        dataSource.setPassword("123456");
+
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select id, name, site from test0");
+            System.out.printf("id\tname\tsite\n");
+            while (resultSet.next()) {
+                System.out.printf("%d\t%s\t\t%s\n",
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+</script></code></pre>
+<h2 id="DataSource-总结"><a href="#DataSource-总结" class="headerlink" title="DataSource 总结"></a>DataSource 总结</h2><p>其实通过上面三个 MySQL 的例子，可以知道，使用数据库厂商提供的 DataSource 实现的耦合度其实并没有降低，反而有点增高了，而使用开源实现的通用 DataSource 实现（上面的 DriverManagerDataSource 是 spring-jdbc 模块自带的一个简单 DriverManager 封装实现）的耦合度其实是最低的，而且通常这些 DataSource 实现都有连接池功能，建议大家使用开源的 DataSource 实现，如 DBCP、HikariCP、druid。注意，Spring-JDBC 模块里面的 DriverManager 仅仅是 DriverManager 接口的封装而已，并没有实现数据库连接池，每次调用 getConnection() 方法获取的数据库连接也都是新创建的。</p>
+<h2 id="HikariCP-使用"><a href="#HikariCP-使用" class="headerlink" title="HikariCP 使用"></a>HikariCP 使用</h2><p><em>pom.xml</em></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+    <groupId>com.zaxxer</groupId>
+    <artifactId>HikariCP</artifactId>
+    <version>3.3.0</version>
+</dependency>
+</script></code></pre>
+<p>HikariCP 是第二代数据库连接池，并且号称是最快的 Java 数据库连接池，其中 Hikari 的中文意思是“光”，寓意就是这个连接池很快，像光速一样。这里主要讲解如何在 spring.xml 中配置 HikariCP 的 datasource 数据源 bean，常见配置如下：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+    <!-- 基本配置，driverClass、jdbcUrl、username、password -->
+    <property name="driverClassName" value="${jdbc.driver}"/>
+    <property name="jdbcUrl" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+
+    <!-- 从池中获取一个连接的最大等待时间，默认为 30s -->
+    <property name="connectionTimeout" value="10000"/>
+
+    <!-- 连接的最大生命时长，超时将被释放，默认为 30m，建议比 mysql 的 wait_timeout 少几秒，mysql 默认是 8h -->
+    <property name="maxLifetime" value="7200000"/>
+
+    <!-- 连接池中允许的最大连接数，默认为 10 -->
+    <property name="maximumPoolSize" value="30"/>
+</bean>
+</script></code></pre>
+<p>上述配置的意思如下：HikariCP 在启动后，会立即与数据库建立 30 个连接，如果一个连接的总生命时长超过 2 小时，则被释放（使用中的连接会等使用者用完之后才会被释放），当连接池中的 30 个连接都被客户端占用之后，新的客户端请求新的连接将会等待 10 秒，如果 10 秒之内其它客户端释放了一个连接，那么当前客户端将获取这个连接并返回，如果 10 秒之后仍然没有获取到可用的连接，则 HikariCP 会抛出 SqlException 异常。所以可以知道，默认情况下 HikariCP 是一个固定大小的连接池，大小就是 maximumPoolSize 指定的值，默认为 10。</p>
+<p>注意，有些人会设置一个 idleTimeout 空闲连接的超时时间，但是注意，如果要让 idleTimeout 设置生效，还必须指定 minimumIdle 的值，且 minimumIdle 的值需要小于 maximumPoolSize 才能让这个 idleTimeout 生效，而默认情况下，minimumIdle 与 maximumPoolSize 的值是相同的。minimumIdle 表示连接池中需要至少有多少个空闲连接，如果空闲连接数小于此值且池中总连接数小于 maximumPoolSize，那么 HikariCP 将会建立新的连接，直到空闲连接达到 minimumIdle 指定的值。但是官方文档也明确指出了，不建议设置这个值，如果不设置，那么默认值和 maximumPoolSize 相同，此时 idleTimeout 设置实际上并不会生效，也就是说，官方建议按照我上面的那个配置例子这样用，即作为一个固定大小的连接池来用。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/spring.html" rel="next" title="Spring 笔记">
+                <i class="fa fa-chevron-left"></i> Spring 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-annotation.html" rel="prev" title="Java 注解原理">
+                Java 注解原理 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DriverManager-vs-DataSource"><span class="nav-number">1.</span> <span class="nav-text">DriverManager vs DataSource</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-DriverManager-例子"><span class="nav-number">2.</span> <span class="nav-text">MySQL DriverManager 例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-DataSource-例子"><span class="nav-number">3.</span> <span class="nav-text">MySQL DataSource 例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-Spring-JDBC-DataSource-例子"><span class="nav-number">4.</span> <span class="nav-text">MySQL Spring-JDBC-DataSource 例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DataSource-总结"><span class="nav-number">5.</span> <span class="nav-text">DataSource 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HikariCP-使用"><span class="nav-number">6.</span> <span class="nav-text">HikariCP 使用</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-datasource.html';
+          this.page.identifier = 'java-datasource.html';
+          this.page.title = 'Java DataSource';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

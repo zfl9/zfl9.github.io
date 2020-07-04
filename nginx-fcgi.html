@@ -1,0 +1,548 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="nginx, spawn-fcgi, fcgiwrap, fcgi">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="nginx 本身不能执行外部程序，nginx 处理 PHP 是通过 PHP 的 fastcgi 管理器（php-fpm）进行处理，然后 nginx 再将结果返回给用户；所以如果我们需要通过 cgi 程序（shell、perl、c/c++ 等）来编写网站后台的话，就需要 fcgiwrap 这个通用的 fastcgi 进程管理器来帮助 nginx 处理 cgi。">
+<meta name="keywords" content="linux,nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx fastcgi 配置">
+<meta property="og:url" content="https://www.zfl9.com/nginx-fcgi.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="nginx 本身不能执行外部程序，nginx 处理 PHP 是通过 PHP 的 fastcgi 管理器（php-fpm）进行处理，然后 nginx 再将结果返回给用户；所以如果我们需要通过 cgi 程序（shell、perl、c/c++ 等）来编写网站后台的话，就需要 fcgiwrap 这个通用的 fastcgi 进程管理器来帮助 nginx 处理 cgi。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx fastcgi 配置">
+<meta name="twitter:description" content="nginx 本身不能执行外部程序，nginx 处理 PHP 是通过 PHP 的 fastcgi 管理器（php-fpm）进行处理，然后 nginx 再将结果返回给用户；所以如果我们需要通过 cgi 程序（shell、perl、c/c++ 等）来编写网站后台的话，就需要 fcgiwrap 这个通用的 fastcgi 进程管理器来帮助 nginx 处理 cgi。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/nginx-fcgi.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>nginx fastcgi 配置 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/nginx-fcgi.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                nginx fastcgi 配置
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-03T12:16:00+08:00">
+                2016-12-03
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/nginx-fcgi.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="nginx-fcgi.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/nginx-fcgi.html" class="leancloud_visitors" data-flag-title="nginx fastcgi 配置">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>nginx 本身不能执行外部程序，nginx 处理 PHP 是通过 PHP 的 fastcgi 管理器（php-fpm）进行处理，然后 nginx 再将结果返回给用户；所以如果我们需要通过 cgi 程序（shell、perl、c/c++ 等）来编写网站后台的话，就需要 fcgiwrap 这个通用的 fastcgi 进程管理器来帮助 nginx 处理 cgi。</p>
+<a id="more"></a>
+<h2 id="CGI、FastCGI"><a href="#CGI、FastCGI" class="headerlink" title="CGI、FastCGI"></a>CGI、FastCGI</h2><p>CGI（通用网关接口）和 FastCGI（快速通用网关接口）都是语言无关的协议，FastCGI（简称 FCGI）是 CGI 的增强版本，FCGI 可以简单的理解为 CGI + 多进程模型。FCGI 的工作模式有点类似于 Nginx，一个 Master 进程和多个 Worker 进程。Master 进程主要用来监控 Worker 进程的运行情况，当某个 Worker 进程意外退出时，Master 进程会随即启动一个新的 Worker 进程；Worker 进程则是真正干活的进程，用来执行 CGI 程序（传递环境变量、标准输入），获取 CGI 程序的标准输出，再将其返回为 Web 服务器（如 Apache、Nginx）。Worker 进程处理完请求后不会结束运行，而是继续等待下一个请求的到来，直到我们手动关闭它们。</p>
+<ul>
+<li>对于 PHP：只建议使用 PHP-FPM，因为这是官方的解决方案，性能和稳定性肯定是最好的。</li>
+<li>对于其它 CGI 程序：如 Shell、Perl、C/C++，使用 fcgiwrap，这是一个通用的 FCGI 管理器。</li>
+</ul>
+<p>写这篇博客的主要目的也是为了让 Nginx 执行 Shell、Perl、C/C++ 程序，因为树莓派的资源有限，不想使用 PHP。</p>
+<p><strong>关于 spawn-fcgi</strong><br>之前一直以为 Nginx 执行 CGI 程序需要 spawn-fcgi 和 fcgiwrap 两个东西（网上很多文档都是抄来抄去，搞得我也一头雾水，只好照做），但是实际上只需要 fcgiwrap，spawn-fcgi 的作用仅仅是启动 fcgiwrap，这个工作完全可以由 fcgiwrap 自己来完成，没有必要安装 spawn-fcgi。</p>
+<h2 id="安装-fcgiwrap"><a href="#安装-fcgiwrap" class="headerlink" title="安装 fcgiwrap"></a>安装 fcgiwrap</h2><pre><code class="language-bash line-numbers"><script type="text/plain">
+# 安装 epel 源
+yum -y install epel-release
+
+# 安装 fcgi 依赖
+yum -y install fcgi fcgi-devel
+
+# 编译 fcgiwrap
+git clone https://github.com/gnosek/fcgiwrap
+cd fcgiwrap
+autoreconf -i
+./configure
+make
+make install
+</script></code></pre>
+<h2 id="运行-fcgiwrap"><a href="#运行-fcgiwrap" class="headerlink" title="运行 fcgiwrap"></a>运行 fcgiwrap</h2><p><code>fcgiwrap -h</code>，查看帮助</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ fcgiwrap -h
+Usage: fcgiwrap [OPTION]
+Invokes CGI scripts as FCGI.
+
+fcgiwrap version 1.1.0
+
+Options are:
+  -f            Send CGI's stderr over FastCGI
+  -c <number>        Number of processes to prefork
+  -s <socket_url>    Socket to bind to (say -s help for help)
+  -h            Show this help message and exit
+
+Report bugs to Grzegorz Nosek <root@localdomain.pl>.
+fcgiwrap home page: <http://nginx.localdomain.pl/wiki/FcgiWrap>
+</script></code></pre>
+<p>运行 fcgiwrap（root）</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# 启动 4 个 worker 进程
+nohup fcgiwrap -f -c 4 -s unix:/run/fcgiwrap.socket </dev/null &>/dev/null &
+
+# 修改 socket 文件的 owner
+chown nginx:nginx /run/fcgiwrap.socket
+</script></code></pre>
+<p>配置 nginx，内容：</p>
+<pre><code class="language-nginx line-numbers"><script type="text/plain">
+server {
+    listen      80;
+    server_name www.test.org;
+    root        /srv/http/www.test.org;
+    index       index.html index.cgi;
+
+    location ~* \.cgi$ {
+        fastcgi_pass    unix:/run/fcgiwrap.socket;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include         fastcgi_params;
+    }
+}
+</script></code></pre>
+<p>然后重载 nginx：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+nginx -t  # check nginx config
+systemctl reload nginx.service
+systemctl status nginx.service
+</script></code></pre>
+<h2 id="测试-fcgiwrap"><a href="#测试-fcgiwrap" class="headerlink" title="测试 fcgiwrap"></a>测试 fcgiwrap</h2><p>进入 /srv/http/www.test.org 目录，创建 index.cgi，这里使用 shell 脚本，内容如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+#!/bin/bash
+printf "Content-Type: text/plain; charset=utf-8\r\n"
+printf "\r\n"
+printf "hello, world!\n"
+</script></code></pre>
+<p>添加可执行权限，修改所属用户及所属组：<code>chmod +x *.cgi</code>、<code>chown nginx:nginx *.cgi</code>。测试：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 127.0.0.1      
+hello, world!
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/ntp.html" rel="next" title="ntp 时间同步">
+                <i class="fa fa-chevron-left"></i> ntp 时间同步
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/keepalived-nginx.html" rel="prev" title="keepalived + nginx 高可用配置">
+                keepalived + nginx 高可用配置 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CGI、FastCGI"><span class="nav-number">1.</span> <span class="nav-text">CGI、FastCGI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-fcgiwrap"><span class="nav-number">2.</span> <span class="nav-text">安装 fcgiwrap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行-fcgiwrap"><span class="nav-number">3.</span> <span class="nav-text">运行 fcgiwrap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试-fcgiwrap"><span class="nav-number">4.</span> <span class="nav-text">测试 fcgiwrap</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/nginx-fcgi.html';
+          this.page.identifier = 'nginx-fcgi.html';
+          this.page.title = 'nginx fastcgi 配置';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

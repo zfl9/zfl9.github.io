@@ -1,0 +1,995 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java System、Runtime类">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java System类、Runtime类">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java System类、Runtime类">
+<meta property="og:url" content="https://www.zfl9.com/java-system-runtime.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java System类、Runtime类">
+<meta property="og:updated_time" content="2019-02-18T12:46:25.232Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java System类、Runtime类">
+<meta name="twitter:description" content="Java System类、Runtime类">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-system-runtime.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java System类、Runtime类 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-system-runtime.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java System类、Runtime类
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T15:22:00+08:00">
+                2017-10-17
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-system-runtime.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-system-runtime.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-system-runtime.html" class="leancloud_visitors" data-flag-title="Java System类、Runtime类">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java System类、Runtime类</p>
+<a id="more"></a>
+<h2 id="System"><a href="#System" class="headerlink" title="System"></a>System</h2><blockquote>
+<p><code>java.lang.System</code>类，默认构造函数被声明为<code>private</code>，因此无法创建该类的实例。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 标准输入输出文件 */
+public final static InputStream in; // STDIN
+public final static PrintStream out; // STDOUT
+public final static PrintStream err; // STDERR
+
+/* 重定向输入输出 */
+public static void setIn(InputStream in); // new STDIN
+public static void setOut(PrintStream out); // new STDOUT
+public static void setErr(PrintStream err); // new STDERR
+
+/* Console、Channel */
+public static Console console(); // 获取Console对象
+public static Channel inheritedChannel() throws IOException; // 获取继承的Channel
+
+/* SecurityManager */
+public static void setSecurityManager(final SecurityManager s);
+public static SecurityManager getSecurityManager();
+
+/* time相关 */
+public static native long currentTimeMillis(); // [绝对时间] 自1970-01-01 00:00:00起的毫秒数
+public static native long nanoTime(); // [相对时间] 纳秒为单位
+
+/* array相关 */
+public static native void arraycopy(Object src,  int  srcPos,
+                                    Object dest, int destPos,
+                                    int length); // 拷贝数组
+
+/* Object.hashCode() */
+public static native int identityHashCode(Object x); // 始终调用 Object 类的默认 hashCode() 方法
+
+/* 系统属性 */
+public static Properties getProperties(); // return: java.util.Properties
+public static void setProperties(Properties props);
+public static String getProperty(String key);
+public static String getProperty(String key, String def);
+public static String setProperty(String key, String value);
+public static String clearProperty(String key);
+
+/* 系统环境变量 */
+public static String getenv(String name); // 环境变量
+public static java.util.Map<String,String> getenv();
+
+/* 平台相关的换行符 */
+public static String lineSeparator(); // 换行符
+
+/* 退出当前进程(JVM) */
+public static void exit(int status); // 退出JVM虚拟机
+
+/* 垃圾回收器相关 */
+public static void gc(); // 建议进行 Full GC [非强制]
+public static void runFinalization(); // Object.finalize()
+
+/* JNI 本地库 */
+public static void load(String filename); // load本地库(全路径名)
+public static void loadLibrary(String libname); // load本地库
+</script></code></pre>
+<p><strong>Properties</strong></p>
+<blockquote>
+<p><code>java.util.Properties</code>类</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 构造函数 */
+public Properties();
+public Properties(Properties defaults);
+
+/* setter、getter */
+public synchronized Object setProperty(String key, String value);
+public String getProperty(String key);
+public String getProperty(String key, String defaultValue);
+
+/* load、store */
+public synchronized void load(Reader reader) throws IOException;
+public synchronized void load(InputStream inStream) throws IOException;
+public void store(Writer writer, String comments)
+    throws IOException;
+public void store(OutputStream out, String comments)
+    throws IOException;
+
+public synchronized void loadFromXML(InputStream in)
+    throws IOException, InvalidPropertiesFormatException;
+public void storeToXML(OutputStream os, String comment)
+    throws IOException;
+public void storeToXML(OutputStream os, String comment, String encoding)
+    throws IOException;
+
+/* keys */
+public Enumeration<?> propertyNames(); // return: all-key
+public Set<String> stringPropertyNames(); // return: all-key
+
+/* list */
+public void list(PrintStream out); // 打印至指定输出流
+public void list(PrintWriter out); // 打印至指定输出流
+</script></code></pre>
+<p>例1，重定向输入输出：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        final InputStream STDIN = new FileInputStream("stdin");
+        final PrintStream STDOUT = new PrintStream(new FileOutputStream("stdout"));
+        final PrintStream STDERR = new PrintStream(new FileOutputStream("stderr"));
+
+        System.setIn(STDIN);
+        System.setOut(STDOUT);
+        System.setErr(STDERR);
+
+        Scanner scan = new Scanner(System.in);
+        System.out.println(scan.nextLine());
+        System.out.println(scan.nextLine());
+        System.out.println(scan.nextLine());
+        System.out.println(scan.nextLine());
+        System.out.println(scan.nextLine());
+
+        System.err.println(scan.nextLine());
+        System.err.println(scan.nextLine());
+        System.err.println(scan.nextLine());
+        System.err.println(scan.nextLine());
+        System.err.println(scan.nextLine());
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/redirect_test on git:master o [15:33:16]
+$ javac Main.java
+
+# root @ arch in ~/work/redirect_test on git:master o [15:33:21]
+$ ls
+Main.class  Main.java  stderr  stdin  stdout
+
+# root @ arch in ~/work/redirect_test on git:master o [15:33:23]
+$ rm -fr stderr stdout
+
+# root @ arch in ~/work/redirect_test on git:master x [15:33:37]
+$ ls
+Main.class  Main.java  stdin
+
+# root @ arch in ~/work/redirect_test on git:master x [15:33:38]
+$ cat stdin
+stdout - 1
+stdout - 2
+stdout - 3
+stdout - 4
+stdout - 5
+stderr - 1
+stderr - 2
+stderr - 3
+stderr - 4
+stderr - 5
+
+# root @ arch in ~/work/redirect_test on git:master x [15:33:40]
+$ java Main
+
+# root @ arch in ~/work/redirect_test on git:master o [15:33:50]
+$ ls
+Main.class  Main.java  stderr  stdin  stdout
+
+# root @ arch in ~/work/redirect_test on git:master o [15:33:51]
+$ cat stdout
+stdout - 1
+stdout - 2
+stdout - 3
+stdout - 4
+stdout - 5
+
+# root @ arch in ~/work/redirect_test on git:master o [15:34:00]
+$ cat stderr
+stderr - 1
+stderr - 2
+stderr - 3
+stderr - 4
+stderr - 5
+</script></code></pre>
+<p>例2，System.identityHashCode() 和 obj.hashCode() 的异同：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        A a = new A();
+        B b = new B();
+        System.out.println("a.hashCode() = " + a.hashCode());
+        System.out.println("a.identityHashCode() = " + System.identityHashCode(a));
+        System.out.println("b.hashCode() = " + b.hashCode());
+        System.out.println("b.identityHashCode() = " + System.identityHashCode(b));
+    }
+
+    private static class A {}
+    private static class B {
+        @Override
+        public int hashCode() {
+            return super.hashCode() + 1;
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:40:30]
+$ javac Main.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [11:40:45]
+$ java Main
+a.hashCode() = 366712642
+a.identityHashCode() = 366712642
+b.hashCode() = 1829164701
+b.identityHashCode() = 1829164700
+</script></code></pre>
+<p>例3，打印系统属性（被截断）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        System.getProperties().list(System.out);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/system_properties on git:master x [15:36:48]
+$ javac *.java
+
+# root @ arch in ~/work/system_properties on git:master x [15:37:15]
+$ java Main
+-- listing properties --
+java.runtime.name=Java(TM) SE Runtime Environment
+sun.boot.library.path=/opt/jdk1.8.0/jre/lib/amd64
+java.vm.version=25.144-b01
+java.vm.vendor=Oracle Corporation
+java.vendor.url=http://java.oracle.com/
+path.separator=:
+java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg=sun.io
+user.country=US
+sun.java.launcher=SUN_STANDARD
+sun.os.patch.level=unknown
+java.vm.specification.name=Java Virtual Machine Specification
+user.dir=/root/work/system_properties
+java.runtime.version=1.8.0_144-b01
+java.awt.graphicsenv=sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs=/opt/jdk1.8.0/jre/lib/endorsed
+os.arch=amd64
+java.io.tmpdir=/tmp
+line.separator=
+
+java.vm.specification.vendor=Oracle Corporation
+os.name=Linux
+sun.jnu.encoding=UTF-8
+java.library.path=/usr/java/packages/lib/amd64:/usr/lib...
+java.specification.name=Java Platform API Specification
+java.class.version=52.0
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+os.version=4.12.5-1-ARCH
+user.home=/root
+user.timezone=
+java.awt.printerjob=sun.print.PSPrinterJob
+file.encoding=UTF-8
+java.specification.version=1.8
+user.name=root
+java.class.path=.
+java.vm.specification.version=1.8
+sun.arch.data.model=64
+java.home=/opt/jdk1.8.0/jre
+sun.java.command=Main
+java.specification.vendor=Oracle Corporation
+user.language=en
+awt.toolkit=sun.awt.X11.XToolkit
+java.vm.info=mixed mode
+java.version=1.8.0_144
+java.ext.dirs=/opt/jdk1.8.0/jre/lib/ext:/usr/java/p...
+sun.boot.class.path=/opt/jdk1.8.0/jre/lib/resources.jar:/...
+java.vendor=Oracle Corporation
+file.separator=/
+java.vendor.url.bug=http://bugreport.sun.com/bugreport/
+sun.cpu.endian=little
+sun.io.unicode.encoding=UnicodeLittle
+sun.cpu.isalist=
+</script></code></pre>
+<p>打印系统属性（自然排序）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.property;
+
+import java.util.Properties;
+import java.util.TreeSet;
+
+public class SystemProperty {
+    public static void main(String[] args) {
+        Properties properties = System.getProperties();
+        TreeSet<String> keys = new TreeSet<>(properties.stringPropertyNames());
+        for (String key : keys)
+            System.out.printf("\033[37m%s\033[0m = \"%s\"\n",
+                              key, properties.getProperty(key));
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9/property on git:master x [11:42:58]
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/property on git:master x [11:43:11]
+$ java com.zfl9.property.SystemProperty
+awt.toolkit = "sun.awt.X11.XToolkit"
+file.encoding = "UTF-8"
+file.encoding.pkg = "sun.io"
+file.separator = "/"
+java.awt.graphicsenv = "sun.awt.X11GraphicsEnvironment"
+java.awt.printerjob = "sun.print.PSPrinterJob"
+java.class.path = ".:/root/java8-learn"
+java.class.version = "52.0"
+java.endorsed.dirs = "/usr/local/jdk/jdk1.8.0_151/jre/lib/endorsed"
+java.ext.dirs = "/usr/local/jdk/jdk1.8.0_151/jre/lib/ext:/usr/java/packages/lib/ext"
+java.home = "/usr/local/jdk/jdk1.8.0_151/jre"
+java.io.tmpdir = "/tmp"
+java.library.path = "/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"
+java.runtime.name = "Java(TM) SE Runtime Environment"
+java.runtime.version = "1.8.0_151-b12"
+java.specification.name = "Java Platform API Specification"
+java.specification.vendor = "Oracle Corporation"
+java.specification.version = "1.8"
+java.vendor = "Oracle Corporation"
+java.vendor.url = "http://java.oracle.com/"
+java.vendor.url.bug = "http://bugreport.sun.com/bugreport/"
+java.version = "1.8.0_151"
+java.vm.info = "mixed mode"
+java.vm.name = "Java HotSpot(TM) 64-Bit Server VM"
+java.vm.specification.name = "Java Virtual Machine Specification"
+java.vm.specification.vendor = "Oracle Corporation"
+java.vm.specification.version = "1.8"
+java.vm.vendor = "Oracle Corporation"
+java.vm.version = "25.151-b12"
+line.separator = "
+"
+os.arch = "amd64"
+os.name = "Linux"
+os.version = "4.14.8-1-ARCH"
+path.separator = ":"
+sun.arch.data.model = "64"
+sun.boot.class.path = "/usr/local/jdk/jdk1.8.0_151/jre/lib/resources.jar:/usr/local/jdk/jdk1.8.0_151/jre/lib/rt.jar:/usr/local/jdk/jdk1.8.0_151/jre/lib/sunrsasign.jar:/usr/local/jdk/jdk1.8.0_151/jre/lib/jsse.jar:/usr/local/jdk/jdk1.8.0_151/jre/lib/jce.jar:/usr/local/jdk/jdk1.8.0_151/jre/lib/charsets.jar:/usr/local/jdk/jdk1.8.0_151/jre/lib/jfr.jar:/usr/local/jdk/jdk1.8.0_151/jre/classes"
+sun.boot.library.path = "/usr/local/jdk/jdk1.8.0_151/jre/lib/amd64"
+sun.cpu.endian = "little"
+sun.cpu.isalist = ""
+sun.io.unicode.encoding = "UnicodeLittle"
+sun.java.command = "com.zfl9.property.SystemProperty"
+sun.java.launcher = "SUN_STANDARD"
+sun.jnu.encoding = "UTF-8"
+sun.management.compiler = "HotSpot 64-Bit Tiered Compilers"
+sun.os.patch.level = "unknown"
+user.country = "US"
+user.dir = "/root/java8-learn/com/zfl9/property"
+user.home = "/root"
+user.language = "en"
+user.name = "root"
+user.timezone = ""
+</script></code></pre>
+<p>例4，系统环境变量：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+        for (Map.Entry<String, String> entry : System.getenv().entrySet())
+            System.out.println(entry.getKey() + "=" + entry.getValue());
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/system_envp on git:master x [15:38:22]
+$ javac *.java
+
+# root @ arch in ~/work/system_envp on git:master x [15:39:11]
+$ java Main
+PATH=/opt/jdk1.8.0/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+HISTCONTROL=ignoredups
+CPLUS_INCLUDE_PATH=/root/jni_include:/root/jni_include/linux
+https_proxy=http://127.0.0.1:8118
+HISTSIZE=10000
+JAVA_HOME=/opt/jdk1.8.0
+TERM=xterm-256color
+XFILESEARCHPATH=/usr/dt/app-defaults/%L/Dt
+LANG=en_US.UTF-8
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/0/bus
+XDG_SESSION_ID=c22
+MAIL=/var/spool/mail/root
+LOGNAME=root
+PWD=/root/work/system_envp
+_=/opt/jdk1.8.0/bin/java
+no_proxy=localhost
+http_proxy=http://127.0.0.1:8118
+SVNEDITOR=vim
+SHELL=/bin/zsh
+PAGER=less
+LSCOLORS=Gxfxcxdxbxegedabagacad
+SSH_TTY=/dev/pts/0
+SSH_CLIENT=192.168.255.253 62804 2333
+OLDPWD=/root/work
+USER=root
+ZSH=/root/.oh-my-zsh
+EDITOR=vim
+SSH_CONNECTION=192.168.255.253 62804 192.168.255.120 2333
+NLSPATH=/usr/dt/lib/nls/msg/%L/%N.cat
+LESS=-R
+LC_CTYPE=en_US.UTF-8
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+XDG_RUNTIME_DIR=/run/user/0
+SHLVL=1
+HOME=/root
+</script></code></pre>
+<h2 id="Runtime"><a href="#Runtime" class="headerlink" title="Runtime"></a>Runtime</h2><blockquote>
+<p><code>java.lang.Runtime</code>类，每个 Java 程序都有一个 Runtime 对象，可以理解为”进程对象”，因为每个 JVM 进程有且仅有一个 Runtime 对象。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* static方法，获取运行时对象 */
+public static Runtime getRuntime();
+
+/* exit当前进程 */
+public void exit(int status); // 正常退出JVM
+
+/* shutdown hook(同时运行) */
+public void addShutdownHook(Thread hook); // 注册hook
+public boolean removeShutdownHook(Thread hook); // 取消注册hook
+
+/* halt强制结束JVM */
+public void halt(int status); // [谨慎使用] 不会运行hook
+
+/* exec系列方法 */
+// cmdarray: 命令+参数 | command 命令(无参数)
+// envp: 环境变量，null -> 继承父进程的envp
+// dir: 工作目录，null -> 继承父进程的dir
+public Process exec(String[] cmdarray, String[] envp, File dir) throws IOException;
+public Process exec(String[] cmdarray, String[] envp) throws IOException;
+public Process exec(String[] cmdarray) throws IOException;
+public Process exec(String command, String[] envp, File dir) throws IOException;
+public Process exec(String command, String[] envp) throws IOException;
+public Process exec(String command) throws IOException;
+
+/* 获取JVM可用的CPU数 */
+public native int availableProcessors();
+
+/* 内存使用相关 */
+public native long freeMemory(); // [VM] 可用内存
+public native long totalMemory(); // [VM] 总内存
+public native long maxMemory(); // [VM] 可能为Long.MAX_VALUE
+
+/* gc垃圾收集器 */
+public native void gc(); // [不建议使用]
+public void runFinalization(); // Object.finalize()
+
+/* trace跟踪 */
+public native void traceInstructions(boolean on); // 指令
+public native void traceMethodCalls(boolean on); // 方法调用
+
+/* load-JNI 本地库 */
+public void load(String filename);
+public void loadLibrary(String libname);
+</script></code></pre>
+<p><strong>Process</strong></p>
+<blockquote>
+<p><code>java.lang.Process</code>类，用于管理子进程(主要为exec出来的子进程)，子进程没有单独的输入输出流。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 获取子进程的stdin、stdout、stderr流 */
+public abstract OutputStream getOutputStream(); // 获取输出流, 输出数据到子进程的STDIN文件
+public abstract InputStream getInputStream(); // 获取输入流, 数据来自子进程的STDOUT文件
+public abstract InputStream getErrorStream(); // 获取输入流, 数据来自子进程的STDERR文件
+
+/* 子进程的状态 */
+public boolean isAlive();
+
+/* 等待子进程的结束 */
+public abstract int waitFor() throws InterruptedException; // 返回exitValue
+public boolean waitFor(long timeout, TimeUnit unit) throws InterruptedException; // [超时等待]
+
+/* 获取子进程的退出status */
+public abstract int exitValue(); // 如果子进程处于运行状态则抛出IllegalThreadStateException
+
+/* kill子进程 */
+public abstract void destroy(); // 是否强制kill依赖实现
+public Process destroyForcibly(); // 强制kill子进程
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class Main {
+    private static final int BUF_SIZE = 1024 * 4;
+
+    public static void main(String[] args)
+        throws IOException, InterruptedException
+    {
+        if (args.length == 0) {
+            System.err.println("Usage: Main <Command> [Argument...]");
+            System.exit(1);
+        }
+
+        Process subProc = Runtime.getRuntime().exec(args);
+        InputStream fromOut = subProc.getInputStream(); // 获取子进程的stdout流
+        InputStream fromErr = subProc.getErrorStream(); // 获取子进程的stderr流
+
+        int nbuf = 0;
+        byte[] buf = new byte[BUF_SIZE];
+        while ((nbuf = fromOut.read(buf)) != -1) {
+            System.out.write(buf, 0, nbuf);
+        }
+        while ((nbuf = fromErr.read(buf)) != -1) {
+            System.err.write(buf, 0, nbuf);
+        }
+
+        int status = subProc.waitFor();
+        if (status == 0)
+            System.out.println("\033[0;37m[exit code: " + "\033[1;32m" + status + "\033[0;37m]\033[0m");
+        else
+            System.out.println("\033[0;37m[exit code: " + "\033[1;31m" + status + "\033[0;37m]\033[0m");
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/exec_subproc on git:master x [15:50:15]
+$ javac *.java
+
+# root @ arch in ~/work/exec_subproc on git:master x [15:50:25]
+$ java Main cat /etc/fstab
+#
+# /etc/fstab: static file system information
+#
+# <file system>    <dir>    <type>    <options>    <dump>    <pass>
+# /dev/sda2
+UUID=4b3d0a12-a032-46ae-86b7-3b4543fb3b0c    /             ext4          rw,relatime,data=ordered    0 1
+
+# /dev/sda1
+UUID=c29c2004-3b01-4bf2-b904-68e842dbee65    /boot         ext4          rw,relatime,data=ordered    0 2
+
+[exit code: 0]
+
+# root @ arch in ~/work/exec_subproc on git:master x [15:50:40]
+$ java Main ping -c2 www.baidu.com
+PING www.a.shifen.com (14.215.177.38) 56(84) bytes of data.
+64 bytes from 14.215.177.38 (14.215.177.38): icmp_seq=1 ttl=128 time=34.0 ms
+64 bytes from 14.215.177.38 (14.215.177.38): icmp_seq=2 ttl=128 time=33.7 ms
+
+--- www.a.shifen.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 33.740/33.878/34.016/0.138 ms
+[exit code: 0]
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-jni.html" rel="next" title="Java JNI入门">
+                <i class="fa fa-chevron-left"></i> Java JNI入门
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-nio.html" rel="prev" title="Java NIO">
+                Java NIO <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#System"><span class="nav-number">1.</span> <span class="nav-text">System</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Runtime"><span class="nav-number">2.</span> <span class="nav-text">Runtime</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-system-runtime.html';
+          this.page.identifier = 'java-system-runtime.html';
+          this.page.title = 'Java System类、Runtime类';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

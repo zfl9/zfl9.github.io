@@ -1,0 +1,780 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C++ 输入与输出">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="C++ 输入与输出">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 输入与输出">
+<meta property="og:url" content="https://www.zfl9.com/cpp-io.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="C++ 输入与输出">
+<meta property="og:image" content="https://www.zfl9.com/images/cpp-io-class.png">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 输入与输出">
+<meta name="twitter:description" content="C++ 输入与输出">
+<meta name="twitter:image" content="https://www.zfl9.com/images/cpp-io-class.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/cpp-io.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>C++ 输入与输出 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/cpp-io.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                C++ 输入与输出
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-29T18:01:00+08:00">
+                2017-08-29
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/cpp-io.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="cpp-io.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/cpp-io.html" class="leancloud_visitors" data-flag-title="C++ 输入与输出">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>C++ 输入与输出</p>
+<a id="more"></a>
+<h2 id="输入和输出的概念"><a href="#输入和输出的概念" class="headerlink" title="输入和输出的概念"></a>输入和输出的概念</h2><p><strong>IO的分类</strong><br>C++ 输入输出包含以下三个方面的内容：</p>
+<ul>
+<li>对系统指定的<code>标准设备</code>的输入和输出：即从键盘输入数据，输出到显示器屏幕；这种输入输出称为<code>标准输入输出</code>，简称<code>标准I/O</code>；</li>
+<li>以外存磁盘<code>文件</code>为对象进行输入和输出，即从磁盘文件输入数据，数据输出到磁盘文件；以外存文件为对象的输入输出称为<code>文件输入输出</code>，简称<code>文件I/O</code>；</li>
+<li>对内存中指定的空间进行输入和输出；通常指定一个<code>字符数组</code>作为存储空间(实际上可以利用该空间存储任何信息)；这种输入和输出称为<code>字符串输入输出</code>，简称<code>串I/O</code>；</li>
+</ul>
+<p><strong>类型安全和可扩展性</strong><br>在 C 语言中，用 printf 和 scanf 进行输入输出，往往不能保证所输入输出的数据是可靠的、安全的；</p>
+<p>C++ 为了与 C 兼容，保留了用 printf 和 scanf 进行输出和输入的方法，以便使过去所编写的大量的 C 程序仍然可以在 C++ 的环境下运行，但是希望读者在编写新的 C++ 程序时不要用 C 的输入输出机制，而要用 C++ 自己特有的输入输出方法；</p>
+<p>在 C++ 的输入输出中，编译系统对数据类型进行严格的检查，凡是类型不正确的数据都不可能通过编译；因此 C++ 的<code>I/O操作</code>是<code>类型安全(type safe)</code>的；</p>
+<p>此外，用 printf 和 scanf 可以输出和输入标准类型的数据(如int、float、double、char)，但无法输出用户自己声明的类型（如数组、结构体、类）的数据；</p>
+<p>在 C++ 中，会经常遇到对类对象的输入输出，显然无法使用 printf 和 scanf 来处理；</p>
+<p>C++ 的 I/O 操作是可扩展的，不仅可以用来输入输出标准类型的数据，也可以用于用户自定义类型的数据；<br>C++ 对标准类型的数据和对用户声明类型数据的输入输出，采用同样的方法处理；<br>显然，在用户声明了一个新类后，是无法用 scanf 和 printf 函数直接输入和输出这个类的对象的；</p>
+<p>可扩展性是 C++ 输入输出的重要特点之一，它能提高软件的重用性，加快软件的开发过程；</p>
+<p>C++ 通过 I/O 类库来实现丰富的 I/O 功能；这样使 C++ 的输入输出明显地优于 C 语言中的 printf 和 scanf ，但是也为之付出了代价；<br>C++ 的 I/O 系统变得比较复杂，要掌握许多细节；在本章中只能介绍其基本的概念和基本的操作，有些具体的细节可在日后实际深入应用时再进一步掌握；</p>
+<h2 id="相关的类及对象"><a href="#相关的类及对象" class="headerlink" title="相关的类及对象"></a>相关的类及对象</h2><p>输入和输出是数据传送的过程，数据如流水一样从一处流向另一处；C++ 形象地将此过程称为<code>流(Stream)</code>；<br>C++ 的输入输出流是指由若干字节组成的宇节序列，这些宇节中的数据按顺序从一个对象传送到另一对象；</p>
+<p>实际上，C++ 会在内存中为每一个数据流开辟一个内存缓冲区，用来存放流中的数据；</p>
+<p>当用 cout 和插入运算符<code>&lt;&lt;</code>向显示器输出数据时，先将这些数据送到程序中的输出缓冲区保存，直到缓冲区满了或遇到<code>endl</code>，就将缓冲区中的全部数据送到显示器显示出来；<br>在输入时，从键盘输入的数据先放在键盘的缓冲区中，当按回车键时，键盘缓冲区中的数据输入到程序中的输入缓冲区，形成 cin 流，然后用提取运算符<code>&gt;&gt;</code>从输入缓冲区中提取数据送给程序中的有关变量；</p>
+<p>总之，流是与内存缓冲区相对应的，或者说，缓冲区中的数据就是流；</p>
+<p>在 C++ 中，输入输出流被定义为类；C++ 的 I/O 库中的类称为<code>流类(stream class)</code>；用流类定义的对象称为<code>流对象</code>；</p>
+<p>cout 和 cin 并不是 C++ 语言中提供的语句，它们是 iostream 类的对象；</p>
+<p>C++ 提供了用于输入输出的 iostream 类库；<br>iostream 这个单词是由3个部分组成的，即 i-o-stream，意为输入输出流；</p>
+<p>在 iostream 类库中包含许多用于输入输出的类，如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">头文件</th>
+<th style="text-align:center">类名</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">iostream</td>
+<td style="text-align:center">ios</td>
+<td style="text-align:center">抽象基类</td>
+</tr>
+<tr>
+<td style="text-align:center">iostream</td>
+<td style="text-align:center">istream</td>
+<td style="text-align:center">通用输入流和其他输入流的基类</td>
+</tr>
+<tr>
+<td style="text-align:center">iostream</td>
+<td style="text-align:center">ostream</td>
+<td style="text-align:center">通用输出流和其他输出流的基类</td>
+</tr>
+<tr>
+<td style="text-align:center">iostream</td>
+<td style="text-align:center">iostream</td>
+<td style="text-align:center">通用输入输出流和其他输入输出流的基类</td>
+</tr>
+<tr>
+<td style="text-align:center">fstream</td>
+<td style="text-align:center">ifstream</td>
+<td style="text-align:center">输入文件流类</td>
+</tr>
+<tr>
+<td style="text-align:center">fstream</td>
+<td style="text-align:center">ofstream</td>
+<td style="text-align:center">输出文件流类</td>
+</tr>
+<tr>
+<td style="text-align:center">fstream</td>
+<td style="text-align:center">fstream</td>
+<td style="text-align:center">输入输出文件流类</td>
+</tr>
+<tr>
+<td style="text-align:center">strstream</td>
+<td style="text-align:center">istrstream</td>
+<td style="text-align:center">输入字符串流类</td>
+</tr>
+<tr>
+<td style="text-align:center">strstream</td>
+<td style="text-align:center">ostrstream</td>
+<td style="text-align:center">输出字符串流类</td>
+</tr>
+<tr>
+<td style="text-align:center">strstream</td>
+<td style="text-align:center">strstream</td>
+<td style="text-align:center">输入输出字符串流类</td>
+</tr>
+</tbody>
+</table>
+<p>ios 是<code>抽象基类</code>，由它派生出 istream 类和 ostream 类；<br>istream 类支持输入操作，ostream 类支持输出操作，iostream 类支持输入输出操作；<br>iostream 类是从 istream 类和 ostream 类通过多重继承而派生的类；</p>
+<p>文件的输入输出需要用 ifstream 和 ofstream 类；<br>ifstream 支持对文件的输入操作，ofstream 支持对文件的输出操作；<br>类 ifstream 继承了类 istream ，类 ofstream 继承了类 ostream ，类 fstream 继承了类 iostream；</p>
+<p>它们的继承关系如下图：<br><img src="/images/cpp-io-class.png" alt="C++ IO类的继承关系图"></p>
+<p>与 IO 有关的头文件：</p>
+<ul>
+<li><code>iostream</code>：标准 IO，stdin、stdout、stderr；</li>
+<li><code>fstream</code>：文件 IO；</li>
+<li><code>strstream</code>：串 IO；</li>
+<li><code>stdiostream</code>：混合 C 和 C++ 的 IO；</li>
+<li><code>iomanip</code>：格式化 IO；</li>
+</ul>
+<p><strong>iostream头文件中定义的流对象</strong><br>分别为：cin、cout、cerr、clog；</p>
+<p>cin、cout 我们已经很熟悉了，这里简单说一下 cerr、clog：</p>
+<ul>
+<li>cerr：标准错误流，默认输出至屏幕，无缓冲区；</li>
+<li>clog：标准错误流，默认输出至屏幕，有缓冲区；</li>
+</ul>
+<p><strong>iostream头文件中重载的运算符</strong><br><code>&lt;&lt;</code>和<code>&gt;&gt;</code>本来在 C++ 中是被定义为<code>左位移运算符</code>和<code>右位移运算符</code>的；<br>由于在 iostream 头文件中对它们进行了重载，使它们能用作标准类型数据的输入和输出运算符；</p>
+<p>在 istream 和 ostream 类中分别有一组成员函数对位移运算符<code>&lt;&lt;</code>和<code>&gt;&gt;</code>进行重载，以便能用它输入或输出各种标准数据类型的数据；<br>对于不同的标准数据类型要分别进行重载，如：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">ostream & operator<<(int);      // 用于向输出流插入一个 int 数据
+ostream & operator<<(float);    // 用于向输出流插入一个 float 数据
+ostream & operator<<(char);     // 用于向输出流插入一个 char 数据
+ostream & operator<<(char *);   // 用于向输出流插入一个 字符串 数据
+</script></code></pre>
+<p>如果在程序中有表达式<code>cout &lt;&lt; &quot;C++&quot;;</code>；实际上相当于<code>cout.operator&lt;&lt;(&quot;C++&quot;);</code>；</p>
+<p>如果想将<code>&lt;&lt;</code>和<code>&gt;&gt;</code>用于自己声明的类型的数据，就不能简单地采用包含 iostream 头文件来解决，必须自己对<code>&lt;&lt;</code>和<code>&gt;&gt;</code>进行重载；</p>
+<h2 id="标准输出流"><a href="#标准输出流" class="headerlink" title="标准输出流"></a>标准输出流</h2><p><strong>使用控制符控制输出格式</strong></p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    cout << "oct: " << oct << 100 << endl;  // 八进制输出
+    cout << "dec: " << dec << 100 << endl;  // 十进制输出
+    cout << "hex: " << hex << 100 << endl;  // 十六进制输出
+    cout << setw(2) << setfill('0') << 4 << ":" << setw(2) << setfill('0') << 34 << endl;   // 时间格式
+    cout << setw(10) << setfill('*') << " C++" << endl; // 填充
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-cpp line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:15:31]
+$ g++ a.cpp
+
+# root @ arch in ~/work on git:master x [19:15:47]
+$ ./a.out
+oct: 144
+dec: 100
+hex: 64
+04:22
+****** C++
+</script></code></pre>
+<p><strong>用流对象的成员函数控制输出格式</strong><br>除了可以用控制符来控制输出格式外，还可以通过调用流对象cout中用于控制输出格式的成员函数来控制输出格式；</p>
+<p><strong>总结</strong><br>对输出格式的控制，既可以用控制符，也可以用cout流的有关成员函数，二者的作用是相同的；</p>
+<p>控制符是在头文件 iomanip 中定义的，因此用控制符时，必须包含 iomanip 头文件；<br>cout 流的成员函数是在头文件 iostream 中定义的，因此只需包含头文件 iostream，不必包含 iomanip；</p>
+<p>许多程序人员感到使用控制符方便简单，可以在一个cout输出语句中连续使用多种控制符；</p>
+<blockquote>
+<p>个人还是偏向使用 scanf/printf 风格的格式化输入输出；</p>
+</blockquote>
+<p><strong>流成员函数put输出单个字符</strong><br>ostream 类除了提供上面介绍过的用于格式控制的成员函数外，还提供了专用于输出单个字符的成员函数 put()；</p>
+<p>如：<code>cout.put(&#39;a&#39;);</code>，调用该函数的结果是在屏幕上显示一个字符 a；</p>
+<p>可以在一个语句中连续调用put函数；如：<code>cout.put(71).put(79).put(79).put(68).put(&#39;\n&#39;);</code>，在屏幕上显示 GOOD；</p>
+<p>除了使用 cout.put() 函数输出一个字符外，还可以用 putchar() 函数输出一个字符；<br>putchar() 函数是 C 语言中使用的，在 stdio.h 头文件中定义；C++ 保留了这个函数，在 iostream 头文件中定义，用法同 C 语言的 putchar()</p>
+<h2 id="标准输入流"><a href="#标准输入流" class="headerlink" title="标准输入流"></a>标准输入流</h2><p>cin 是 istream 类的对象，它从标准输入设备(键盘)获取数据，程序中的变量通过流提取符<code>&gt;&gt;</code>从流中提取数据；<br>流提取符<code>&gt;&gt;</code>从流中提取数据时通常跳过输入流中的<code>空格</code>、<code>tab键</code>、<code>换行符</code>等<strong>空白字符</strong>；</p>
+<p><strong>cin的返回值判断</strong><br>当遇到无效字符或遇到文件结束符时，输入流 cin 就处于出错状态，即无法正常提取数据；此时对 cin 流的所有提取操作将终止；</p>
+<p>当输入流 cin 处于出错状态时，如果测试 cin 的值，可以发现它的值为 false，即 cin 为 0 值；<br>如果输入流在正常状态，cin 的值为 true，即 cin 为一个非 0 值；</p>
+<p>可以通过测试 cin 的值，判断流对象是否处于正常状态和提取操作是否成功；</p>
+<p><strong>get()函数读入一个字符</strong><br>get() 函数是 cin 输入流对象的成员函数，它有 3 种形式：无参数的，有 1 个参数的，有 3 个参数的；</p>
+<p>1) <strong>不带参数的get函数</strong><br>其调用形式为：<code>cin.get()</code><br>用来从指定的输入流中提取一个字符（包括空白字符），函数的返回值就是读入的字符；<br>若遇到输入流中的文件结束符，则函数值返回文件结束标志 EOF(End Of File)，一般以 -1 代表 EOF；</p>
+<p>C语言中的 getchar() 函数与流成员函数 cin.get() 的功能相同，C++ 保留了 C 的这种用法；</p>
+<p>2) <strong>有1个参数的get函数</strong><br>其调用形式为：<code>cin.get(ch)</code><br>其作用是从输入流中读取一个字符，赋给字符变量 ch；如果读取成功则函数返回 true，如失败(遇文件结束符)则函数返回 false；</p>
+<p>3) <strong>有3个参数的get函数</strong><br>其调用形式为：<code>cin.get(字符数组/指针, 数组/指针长度n, 终止字符)</code><br>其作用是从输入流中读取 n-1 个字符，赋给指定的字符数组(或字符指针指向的数组)；<br>如果在读取 n-1 个字符之前遇到指定的终止字符，则提前结束读取；<br>如果读取成功则函数返回 true，如失败(遇文件结束符)则函数返回 false；</p>
+<p><strong>getline()函数读入一行字符</strong><br>getline() 函数的作用是从输入流中读取一行字符，其用法与带 3 个参数的 get() 函数类似；<br>即<code>cin.getline(字符数组/指针, 数组/指针长度n, 终止标志字符)</code></p>
+<p><strong>相关的istream类成员函数</strong><br>eof() 函数：EOF 表示“文件结束”；从输入流读取数据，如果到达文件末尾(遇文件结束符)，eof()函数值为真，否则为假；</p>
+<p>peek() 函数：peek 是“观察”的意思，peek() 函数的作用是观测下一个字符；其调用形式为：<code>c = cin.peek();</code><br>函数的返回值是指针指向的当前字符，但它只是观测，指针仍停留在当前位置，并不后移；如果要访问的字符是文件结束符，则函数值是 EOF；</p>
+<p>以上介绍的各个成员函数，不仅可以用 cin 流对象来调用，而且也可以用 istream 类的其他流对象调用；</p>
+<h2 id="文件流"><a href="#文件流" class="headerlink" title="文件流"></a>文件流</h2><p>C++ 提供了<code>低级的I/O功能</code>和<code>高级的I/O功能</code>；</p>
+<p><strong>高级的I/O功能</strong><br>把若干个字节组合为一个有意义的单位，然后以 ASCII 字符形式输入和输出；<br>例如将数据从内存送到显示器输出，就属于高级I/O功能，先将内存中的数据转换为 ASCII 字符，然后分别按整数、单精度数、双精度数等形式输出；<br>这种面向类型的输入输出在程序中用得很普遍，用户感到方便；但在传输大容量的文件时由于数据格式转换，速度较慢，效率不高；</p>
+<p><strong>低级的I/O功能</strong><br>以字节为单位输入和输出的，在输入和输出时不进行数据格式的转换；这种输入输出是以二进制形式进行的；<br>通常用来在内存和设备之间传输一批字节；这种输入输出速度快、效率高，一般大容量的文件传输用无格式转换的I/O；但使用时会感到不大方便；</p>
+<p><strong>文件流类与文件流对象</strong><br>在 C++ 的I/O类库中定义了几种文件类，专门用于对磁盘文件的输入输出操作；<br>除了标准输入输出流类 istream、ostream 和 iostream 类外，还有 3 个用于文件操作的文件类：</p>
+<ul>
+<li>ifstream类：它是从istream类派生的，用来支持从磁盘文件的输入</li>
+<li>ofstream类：它是从ostream类派生的，用来支持向磁盘文件的输出</li>
+<li>fstream类：它是从iostream类派生的，用来支持对磁盘文件的输入输出</li>
+</ul>
+<p>要以磁盘文件为对象进行输入输出，必须定义一个文件流类的对象，通过文件流对象将数据从内存输出到磁盘文件，或者通过文件流对象从磁盘文件将数据输入到内存；</p>
+<p>创建文件流对象：<br><code>ifstream fin;</code>：输入流对象；<br><code>ofstream fout;</code>：输出流对象；</p>
+<p><strong>文件的打开与关闭</strong></p>
+<p>打开文件：<br>1) <strong>调用文件流的成员函数open</strong><br><code>ofstream outfile;</code>：定义 ofstream 类(输出文件流类)对象 outfile；<br><code>outfile.open(&quot;f1.dat&quot;, ios::out);</code>：使文件流与 f1.dat 文件建立关联；</p>
+<p>2) <strong>定义文件流对象时指定参数</strong><br>在声明文件流类时定义了带参数的构造函数，其中包含了打开磁盘文件的功能；<br>因此，可以在定义文件流对象时指定参数，调用文件流类的构造函数来实现打开文件的功能；<br>如<code>ofstream outfile(&quot;f1.dat&quot;, ios::out);</code>，一般多用此形式，比较方便；作用与 open() 函数相同；</p>
+<p>输入输出方式是在 ios 类中定义的，它们是枚举常量，有多种选择，见下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方 式</th>
+<th style="text-align:center">作 用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ios::in</td>
+<td style="text-align:center">以输入方式打开文件</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::out</td>
+<td style="text-align:center">以输出方式打开文件（这是默认方式），如果已有此名字的文件，则将其原有内容全部清除</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::app</td>
+<td style="text-align:center">以输出方式打开文件，写入的数据添加在文件末尾</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::ate</td>
+<td style="text-align:center">打开一个已有的文件，文件指针指向文件末尾</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::trunc</td>
+<td style="text-align:center">打开一个文件，如果文件已存在，则删除其中全部数据，如文件不存在，则建立新文件</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::binary</td>
+<td style="text-align:center">以二进制方式打开一个文件，如不指定此方式则默认为 ASCII 方式</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::nocreate</td>
+<td style="text-align:center">打开一个已有的文件，如文件不存在，则打开失败</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::noreplace</td>
+<td style="text-align:center">如果文件不存在则建立新文件，如果文件已存在则操作失败</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::in │ ios::out</td>
+<td style="text-align:center">以输入和输出方式打开文件，文件可读可写</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::in │ ios::binary</td>
+<td style="text-align:center">以二进制方式打开一个输入文件</td>
+</tr>
+<tr>
+<td style="text-align:center">ios::out │ ios::binary</td>
+<td style="text-align:center">以二进制方式打开一个输出文件</td>
+</tr>
+</tbody>
+</table>
+<p>几点说明：<br>1) 新版本的I/O类库中不提供 ios::nocreate 和 ios::noreplace；</p>
+<p>2) 每一个打开的文件都有一个文件指针，该指针的初始位置由I/O方式指定，每次读写都从文件指针的当前位置开始；<br>每读入一个字节，指针就后移一个字节；当文件指针移到最后，就会遇到文件结束 EOF（文件结束符也占一个字节，其值为 -1），此时流对象的成员函数 eof() 的值为非 0 值，表示文件结束了；</p>
+<p>3) 可以用按位或运算符<code>|</code>对输入输出方式进行组合，比如下面一些例子：</p>
+<ul>
+<li><code>ios::in | ios::noreplace</code>：打开一个输入文件，若文件不存在则返回打开失败的信息</li>
+<li><code>ios::app | ios::nocreate</code>：打开一个输出文件，在文件尾接着写数据，若文件不存在，则返回打开失败的信息</li>
+<li><code>ios::out | ios::noreplace</code>：打开一个新文件作为输出文件，如果文件已存在则返回打开失败的信息</li>
+<li><code>ios::in | ios::out | ios::binary</code>：打开一个二进制文件，可读可写</li>
+</ul>
+<p>但不能组合互相排斥的方式，如<code>ios::nocreate | ios::noreplace</code></p>
+<p>4) 如果打开操作失败，open() 函数的返回值为 0，如果是用调用构造函数的方式打开文件的，则流对象的值为 0；</p>
+<p><strong>关闭磁盘文件</strong><br>关闭文件用成员函数 close()；如<code>outfile.close();</code>；</p>
+<h2 id="ASCII文件的读写操作"><a href="#ASCII文件的读写操作" class="headerlink" title="ASCII文件的读写操作"></a>ASCII文件的读写操作</h2><p>对 ASCII 文件的读写操作可以用以下两种方法：<br>1) 用流插入运算符<code>&lt;&lt;</code>和流提取运算符<code>&gt;&gt;</code>输入输出标准类型的数据；<br><code>&lt;&lt;</code>和<code>&gt;&gt;</code>都已在 iostream 中被重载为能用于 ostream 和 istream 类对象的标准类型的输入输出；<br>由于 ifstream 和 ofstream 分别是 istream 和 ostream 类的派生类；因此它们从 istream 和 ostream 类继承了公用的重载函数，所以在对磁盘文件的操作中，可以通过它们实现对磁盘文件的读写，如同用 cin、cout 和<code>&lt;&lt;</code>、<code>&gt;&gt;</code>对标准设备进行读写一样；</p>
+<p>2) 用文件流的 put()、get()、getline() 等成员函数进行字符的输入输出；</p>
+<h2 id="二进制文件的读写操作"><a href="#二进制文件的读写操作" class="headerlink" title="二进制文件的读写操作"></a>二进制文件的读写操作</h2><p>二进制文件不是以 ASCII 代码存放数据的，它将内存中数据存储形式不加转换地传送到磁盘文件，因此它又称为<code>内存数据映像文件</code>；<br>因为文件中的信息不是字符数据，而是字节中的二进制形式的信息，因此它又称为<code>字节文件</code>；</p>
+<p>对二进制文件的操作也需要先打开文件，用完后要关闭文件；<br>在打开时要用<code>ios::binary</code>指定为以二进制形式传送和存储；<br>二进制文件除了可以作为输入文件或输出文件外，还可以是既能输入又能输出的文件；这是和 ASCII 文件不同的地方；</p>
+<p><strong>用成员函数read和write读写二进制文件</strong><br><code>istream &amp; read(char *buffer, int len);</code><br><code>ostream &amp; write(const char *buffer, int len);</code></p>
+<p><strong>与文件指针有关的流成员函数</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">成员函数</th>
+<th style="text-align:center">作 用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">gcount()</td>
+<td style="text-align:center">返回最后一次输入所读入的字节数</td>
+</tr>
+<tr>
+<td style="text-align:center">tellg()</td>
+<td style="text-align:center">返回输入文件指针的当前位置</td>
+</tr>
+<tr>
+<td style="text-align:center">seekg(文件中的位置)</td>
+<td style="text-align:center">将输入文件中指针移到指定的位置</td>
+</tr>
+<tr>
+<td style="text-align:center">seekg(位移量, 参照位置)</td>
+<td style="text-align:center">以参照位置为基础移动若干字节</td>
+</tr>
+<tr>
+<td style="text-align:center">tellp()</td>
+<td style="text-align:center">返回输出文件指针当前的位置</td>
+</tr>
+<tr>
+<td style="text-align:center">seekp(文件中的位置)</td>
+<td style="text-align:center">将输出文件中指针移到指定的位置</td>
+</tr>
+<tr>
+<td style="text-align:center">seekp(位移量, 参照位置)</td>
+<td style="text-align:center">以参照位置为基础移动若干字节</td>
+</tr>
+</tbody>
+</table>
+<p>几点说明：<br>1) 这些函数名的第一个字母或最后一个字母不是 g 就是 p；<br>带 g 的是用于输入的函数（g 是 get 的第一个字母，以 g 作为输入的标识）；<br>带 p 的是用于输出的函数（p 是 put 的第一个字母，以 p 作为输出的标识）；</p>
+<p>如果是既可输入又可输出的文件，则任意用 seekg 或 seekp；</p>
+<p>2) 函数参数中的“文件中的位置”和“位移量”已被指定为 long 型整数，以字节为单位；“参照位置”可以是下面三者之一：</p>
+<ul>
+<li><code>ios::beg</code>：文件开头，这是默认值</li>
+<li><code>ios::cur</code>：指针当前的位置</li>
+<li><code>ios::end</code>：文件末尾</li>
+</ul>
+<p>它们是在 ios 类中定义的枚举常量；举例如下：</p>
+<ul>
+<li><code>infile.seekg(100);</code>：输入文件中的指针向前移到第 100 字节位置</li>
+<li><code>infile.seekg(50, ios::cur);</code>：输入文件中的指针从当前位置后移 50 字节</li>
+<li><code>outfile.seekp(-75, ios::end);</code>：输出文件中的指针从文件末尾前移 75 字节</li>
+</ul>
+<p>请注意，不能用 ifstream 或 ofstream 类定义输入输出的<code>二进制文件流对象</code>，而应当用 fstream 类；</p>
+<h2 id="字符串流"><a href="#字符串流" class="headerlink" title="字符串流"></a>字符串流</h2><p>文件流是以外存文件为输入输出对象的数据流，字符串流不是以外存文件为输入输出的对象，而以内存中用户定义的字符数组(字符串)为输入输出的对象，即将数据输出到内存中的字符数组，或者从字符数组(字符串)将数据读入；字符串流也称为内存流；</p>
+<p>字符串流也有相应的缓冲区，开始时流缓冲区是空的；<br>如果向字符数组存入数据，随着向流插入数据，流缓冲区中的数据不断增加，待缓冲区满了(或遇换行符)，一起存入字符数组；<br>如果是从字符数组读数据，先将字符数组中的数据送到流缓冲区，然后从缓冲区中提取数据赋给有关变量；</p>
+<p>在字符数组中可以存放字符，也可以存放整数、浮点数以及其他类型的数据；<br>在向字符数组存入数据之前，要先将数据从二进制形式转换为 ASCII 代码，然后存放在缓冲区，再从缓冲区送到字符数组；<br>从字符数组读数据时，先将字符数组中的数据送到缓冲区，在赋给变量前要先将 ASCII 代码转换为二进制形式；</p>
+<p>总之，流缓冲区中的数据格式与字符数组相同；</p>
+<p>这种情况与以标准设备（键盘和显示器）为对象的输入输出是类似的：<br>键盘和显示器都是按字符形式输入输出的设备，内存中的数据在输出到显示器之前，先要转换为 ASCII 码形式，并送到输出缓冲区中；<br>从键盘输入的数据以 ASCII 码形式输入到输入缓冲区，在赋给变量前转换为相应变量类型的二进制形式，然后赋给变量；</p>
+<p>对于字符串流的输入输出的情况，如不清楚，可以从对标准设备的输入输出中得到启发；</p>
+<p>文件流类有 ifstream、ofstream 和 fstream，而字符串流类有 istrstream、ostrstream 和 strstream；<br>文件流类和字符串流类都是 ostream、istream 和 iostream类的派生类；因此对它们的操作方法是基本相同的；</p>
+<p>向内存中的一个字符数组写数据就如同向文件写数据一样，但有 3 点不同：</p>
+<ul>
+<li>输出时数据不是流向外存文件，而是流向内存中的一个存储空间；输入时从内存中的存储空间读取数据；<br>在严格的意义上说，这不属于输入输出，称为读写比较合适；因为输入输出一般指的是在计算机内存与计算机外的文件（外部设备也视为文件）之间的数据传送；但由于 C++ 的字符串流采用了 C++ 的流输入输出机制，因此往往也用输入和输出来表述读写操作；</li>
+<li>字符串流对象关联的不是文件，而是内存中的一个字符数组，因此不需要打开和关闭文件；</li>
+<li>每个文件的最后都有一个文件结束符，表示文件的结束；而字符串流所关联的字符数组中没有相应的结束标志；用户要指定一个特殊字符作为结束符，在向字符数组写入全部数据后要写入此字符；</li>
+</ul>
+<p>字符串流类没有 open() 成员函数，因此要在建立字符串流对象时通过给定参数来确立字符串流与字符数组的关联；<br>即通过调用构造函数来解决此问题；建立字符串流对象的方法与含义如下：</p>
+<p><strong>建立输出字符串流对象</strong><br>ostrstream 类提供的构造函数的原型为：<code>ostrstream::ostrstream(char *buffer, int n, int mode = ios::out);</code><br>buffer 是指向字符数组首元素的指针，n 为指定的流缓冲区的大小，第 3 个参数是可选的，默认为 ios::out 方式；</p>
+<p><strong>建立输入字符串流对象</strong><br>istrstream 类提供了两个带参的构造函数，原型为：<br><code>istrstream::istrstream(char *buffer);</code><br><code>istrstream::istrstream(char *buffer, int n);</code><br>buffer 是指向字符数组首元素的指针，用它来初始化流对象（使流对象与字符数组建立关联）；</p>
+<p><strong>建立输入输出字符串流对象</strong><br>strstream 类提供的构造函数的原型为：<br><code>strstream::strstream(char *buffer, int n, int mode);</code></p>
+<p>以上个字符串流类是在头文件 strstream 中定义的，因此程序中在用到 istrstream、ostrstream 和 strstream 类时应包含头文件 strstream；</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/cpp-cpp11.html" rel="next" title="C++11 新特性">
+                <i class="fa fa-chevron-left"></i> C++11 新特性
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/cpp-oop.html" rel="prev" title="C++ 面向对象进阶">
+                C++ 面向对象进阶 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入和输出的概念"><span class="nav-number">1.</span> <span class="nav-text">输入和输出的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关的类及对象"><span class="nav-number">2.</span> <span class="nav-text">相关的类及对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准输出流"><span class="nav-number">3.</span> <span class="nav-text">标准输出流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准输入流"><span class="nav-number">4.</span> <span class="nav-text">标准输入流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件流"><span class="nav-number">5.</span> <span class="nav-text">文件流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCII文件的读写操作"><span class="nav-number">6.</span> <span class="nav-text">ASCII文件的读写操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二进制文件的读写操作"><span class="nav-number">7.</span> <span class="nav-text">二进制文件的读写操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串流"><span class="nav-number">8.</span> <span class="nav-text">字符串流</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/cpp-io.html';
+          this.page.identifier = 'cpp-io.html';
+          this.page.title = 'C++ 输入与输出';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3605 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Spring 是一个开源框架，Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，由 Rod Johnson 在其著作 Expert One-On-One J2EE Development and Design 中阐述的部分理念和原型衍生而来。它是为了解决企业应用开发的复杂性而创建的。框架的主要优势之一就是其分层架构，分层架构允许使用者选择使用哪一个组件，同时为 J2EE 应用">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 笔记">
+<meta property="og:url" content="https://www.zfl9.com/spring.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Spring 是一个开源框架，Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，由 Rod Johnson 在其著作 Expert One-On-One J2EE Development and Design 中阐述的部分理念和原型衍生而来。它是为了解决企业应用开发的复杂性而创建的。框架的主要优势之一就是其分层架构，分层架构允许使用者选择使用哪一个组件，同时为 J2EE 应用">
+<meta property="og:image" content="https://www.zfl9.com/images/spring-maven.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring 笔记">
+<meta name="twitter:description" content="Spring 是一个开源框架，Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，由 Rod Johnson 在其著作 Expert One-On-One J2EE Development and Design 中阐述的部分理念和原型衍生而来。它是为了解决企业应用开发的复杂性而创建的。框架的主要优势之一就是其分层架构，分层架构允许使用者选择使用哪一个组件，同时为 J2EE 应用">
+<meta name="twitter:image" content="https://www.zfl9.com/images/spring-maven.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/spring.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Spring 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/spring.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Spring 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-16T08:00:00+08:00">
+                2018-12-16
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/spring.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="spring.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/spring.html" class="leancloud_visitors" data-flag-title="Spring 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Spring 是一个开源框架，Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，由 Rod Johnson 在其著作 <code>Expert One-On-One J2EE Development and Design</code> 中阐述的部分理念和原型衍生而来。它是为了解决企业应用开发的复杂性而创建的。框架的主要优势之一就是其分层架构，分层架构允许使用者选择使用哪一个组件，同时为 J2EE 应用程序开发提供集成的框架。Spring 使用基本的 JavaBean 来完成以前只可能由 EJB 完成的事情。然而，Spring 的用途不仅限于服务器端的开发。从简单性、可测试性和松耦合的角度而言，任何 Java 应用都可以从 Spring 中受益。Spring 的核心是 <strong>控制反转（IoC）</strong>和 <strong>面向切面（AOP）</strong>。简单来说，Spring 是一个分层的 JavaSE/EE full-stack（一站式）轻量级开源框架。</p>
+<a id="more"></a>
+<h2 id="Spring-简介"><a href="#Spring-简介" class="headerlink" title="Spring 简介"></a>Spring 简介</h2><p>Spring 框架的七大模块：</p>
+<ul>
+<li><strong>Spring Core</strong>：Spring 核心包。</li>
+<li><strong>Spring Context</strong>：Spring IoC。</li>
+<li><strong>Spring AOP</strong>：AOP 面向切面编程。</li>
+<li><strong>Spring Web</strong>：与 Web 框架相关的包。</li>
+<li><strong>Spring Web MVC</strong>：Spring MVC 相关的包。</li>
+<li><strong>Spring JDBC</strong>：JDBC 模板相关的 API（DAO）。</li>
+<li><strong>Spring ORM</strong>：ORM 框架相关的包（如 Hibernate）。</li>
+</ul>
+<blockquote>
+<p>Spring Web 包是用来与其它 Web 框架集成用的，如 Struts2；而 Spring Web MVC 包是 Spring 提供的一个 MVC 框架，别搞混了，使用 Spring MVC 只需导入 spring-webmvc。</p>
+</blockquote>
+<p>Spring 最核心的两个概念就是 IoC 和 AOP，IoC 是控制反转的英文缩写，AOP 是面向切面编程的英文缩写。</p>
+<p>最基本的 spring 应用程序需要导入的包为：<code>spring-core</code>、<code>spring-context</code>。建议使用 maven 等自动构建工具来管理你的项目，因为这些自动构建工具通常都自带完善的 java 依赖包解决方案，本文使用 maven。</p>
+<blockquote>
+<p>更新：对于基本的 spring 应用程序（IoC 容器），只需引入 <code>spring-context</code> 依赖就行，因为 spring-context 依赖于 spring-core，所以不需要显式引入 spring-core。</p>
+</blockquote>
+<ul>
+<li>如果需要使用 IoC 容器，则添加：spring-context</li>
+<li>如果需要使用 AOP 编程，则添加：spring-aop</li>
+<li>如果需要使用 MVC 框架，则添加：spring-webmvc</li>
+</ul>
+<p><img src="/images/spring-maven.png" alt="Spring Maven 依赖表"></p>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p>编辑 pom.xml，引入 spring-core 和 spring-context 依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.zfl9</groupId>
+  <artifactId>JavaSE_HelloWorld</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <spring.version>4.3.20.RELEASE</spring.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<p>创建 <code>HelloWorld.java</code> 类（Bean）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class HelloWorld {
+    private String message;
+
+    public HelloWorld() {
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("message: %s", this.message);
+    }
+}
+</script></code></pre>
+<p>HelloWorld 类是一个标准的 Java Bean（或者说 POJO），即无参构造函数、私有属性的 getter 与 setter 方法。但因为 HelloWorld 类并没有实现序列化接口，所以我更喜欢称它为 POJO（即：普通 Java 类）。</p>
+<p>创建 <code>MainApp.java</code> 类（运行的主类）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainApp {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld helloworld = (HelloWorld) context.getBean("helloworld");
+        System.out.println(helloworld);
+    }
+}
+</script></code></pre>
+<p>MainApp 类是一个 Main 可运行类，ApplicationContext 是一个 bean 容器（也就是 IoC 容器，其实你完全可以将 IoC 容器理解为一个 Map 对象，key 就是 bean 对象的 ID，value 就是 bean 对象的引用）。ApplicationContext 是一个接口，用 Spring 里面的术语叫做 Bean 容器/工厂，而 ClassPathXmlApplicationContext 是 ApplicationContext 接口的一个实现类，构造参数 <code>beans.xml</code> 表示 IoC 容器的配置文件名（很容易知道，beans.xml 应该能够在应用程序的 CLASSPATH 路径中找到）。</p>
+<p>当我们调用 context 的 getBean 方法时，需要提供 bean 对象对应的 ID（见 beans.xml 文件内容），调用后，context 内部会返回对应的 bean 对象的引用给我们（返回的类型为 Object），需进行强制类型转换。</p>
+<p><code>beans.xml</code> Spring 配置文件内容：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="helloworld" class="com.zfl9.HelloWorld">
+    <property name="message" value="Hello, Spring!"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>根元素为 <code>beans</code>，主要元素为 <code>bean</code>，bean 元素有两个基本属性：<code>id</code> 和 <code>class</code>，id 为 bean 对象的所属 ID，class 为 bean 对象的所属类名（全限定类名），当 Spring 实例化 bean 对象时，会执行类似 <code>Object obj = new com.zfl9.HelloWorld()</code> 的语句，即调用对应类的无参构造函数，这也是为什么我们的 bean 类需要一个无参构造函数（好吧，其实也不是必须，但是通常是这样的，毕竟 spring 允许我们传递构造参数给 bean 类）。而 bean 元素中的 property 元素则对应 setter 方法，比如上面的配置，就是调用对应的 setMessage() 方法，将 value 值传递给 bean 实例。</p>
+<p>运行我们的 hello world 程序，将得到如下输出：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+message: Hello, Spring!
+</script></code></pre>
+<h2 id="IoC-容器"><a href="#IoC-容器" class="headerlink" title="IoC 容器"></a>IoC 容器</h2><p>Spring 容器是 Spring Framework 的核心。容器将创建对象，将它们连接在一起，配置它们，并管理从创建到销毁的整个生命周期。Spring 容器使用 DI 来管理组成应用程序的组件。这些对象称为 Spring Beans。容器通过读取提供的配置元数据获取有关要实例化，配置和组装的对象的指令。配置元数据可以由 XML，Java 注释或 Java 代码表示。</p>
+<p>Spring 提供两种常用的 Bean 容器：</p>
+<ul>
+<li><strong>Spring BeanFactory Container</strong>：最基本的 Bean 容器，提供了最简单的 IoC 支持。</li>
+<li><strong>Spring ApplicationContext Container</strong>：在 BeanFactory 的基础上添加了更多的功能。</li>
+</ul>
+<p>我们上面的 HelloWorld 程序用的就是第二种，通常我们也是使用第二种容器，因为他提供许多有用的功能，但是也并不是说第一种 BeanFactory 就一无是处了，在资源有限的条件下，BeanFactory 的速度更快。注意，ApplicationContext 属于 spring-context 包，而 BeanFactory 属于 spring-core 包，ApplicationContext 是 BeanFactory 的子接口。</p>
+<p>除非有充分的理由（比如资源有限，如手机、applet），你才应该考虑使用 BeanFactory。一般情况下，建议使用 ApplicationContext，因为后者提供更多功能，ApplicationContext 是 BeanFactory 的子接口。</p>
+<p>最常用的 ApplicationContext 实现类：</p>
+<ul>
+<li><strong>FileSystemXmlApplicationContext</strong>：xml 文件的绝对路径（文件系统）。</li>
+<li><strong>ClassPathXmlApplicationContext</strong>：xml 文件的相对路径（ClassPath）。</li>
+<li><strong>WebXmlApplicationContext</strong>：使用 web 程序中的所有 bean 定义（见后）。</li>
+</ul>
+<h2 id="Bean-定义"><a href="#Bean-定义" class="headerlink" title="Bean 定义"></a>Bean 定义</h2><p>构成应用程序主干并由 Spring IoC 容器管理的对象称为 bean。bean 是一个由 Spring IoC 容器实例化，组装和管理的对象。这些 bean 是使用您提供给容器的配置元数据创建的。例如，以前面章节中已经看到的 XML <code>&lt;bean/&gt;</code> 定义的形式。</p>
+<p>Bean 定义包含称为 <strong>配置元数据</strong> 的信息，容器需要知道以下内容</p>
+<ul>
+<li>Bean 的创建细节</li>
+<li>Bean 的生命周期</li>
+<li>Bean 的依赖关系</li>
+</ul>
+<p>这些配置元数据通常都可以使用以下属性表示：</p>
+<ul>
+<li><strong>class</strong>：必须属性，指定 bean 对应的类（通常这个类名为全限定类名）。</li>
+<li><strong>name</strong>：bean 的唯一标识符，可以使用 id 或 name 属性来指定这个标识。</li>
+<li><strong>scope</strong>：指定对应 bean 的范围（应当理解为作用范围，默认为单例模式）。</li>
+<li><strong>constructor-arg</strong>：构造函数所需的参数，用于注入依赖项，后续章节讨论。</li>
+<li><strong>properties</strong>：bean 对象 setter 属性值，用于注入依赖项，后续章节讨论。</li>
+<li><strong>autowiring mode</strong>：意思为自动装配的模式，用于注入依赖项，后续章节讨论。</li>
+<li><strong>lazy-initialization mode</strong>：懒加载模式，只在首次使用 bean 时进行实例化。</li>
+<li><strong>initialization method</strong>：bean 对象的初始化方法（回调函数），后续章节讨论。</li>
+<li><strong>destruction method</strong>：bean 对象的销毁方法（回调函数，同上），后续章节讨论。</li>
+</ul>
+<p><strong>配置 bean 元数据的方法</strong></p>
+<ul>
+<li>XML-based configuration file</li>
+<li>Annotation-based configuration</li>
+<li>Java-based configuration（不推荐）</li>
+</ul>
+<p>Spring 3 开始，支持 JavaConfig 形式的配置，可以没有 xml 文件，不过就目前来说，spring.xml 形式仍然是主流形式，不过我们最好还是来熟悉一下 JavaConfig 的配置形式，免得以后看到这种配置而一脸懵逼。</p>
+<p>XML 配置形式：<br><code>spring.xml</code></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="helloBean" class="com.mkyong.hello.impl.HelloWorldImpl">
+
+</beans>
+</script></code></pre>
+<p>JavaConfig 配置形式</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.mkyong.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import com.mkyong.hello.HelloWorld;
+import com.mkyong.hello.impl.HelloWorldImpl;
+
+@Configuration
+public class AppConfig {
+
+    @Bean(name="helloBean")
+    public HelloWorld helloWorld() {
+        return new HelloWorldImpl();
+    }
+
+}
+</script></code></pre>
+<p>XML 形式的容器初始化：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+</script></code></pre>
+<p>JavaConfig 形式的容器初始化：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+</script></code></pre>
+<p>注意，JavaConfig 形式又称为 Java-Based 形式，都是一个意思，另外，Spring MVC 上如果要使用 Java-Based 配置形式，需要弄什么 WebApplicationInitializer，总之我感觉不如直接配置 web.xml 和 mvc.xml 来的直接。</p>
+<p>最常用的是 XML 配置文件与 Java 注解形式，目前先介绍 XML 文件形式。注解形式后面会详细介绍，但在这之前，我们还是需要先了解基本配置方法以及其他一些重要的基础知识。XML 的常用配置（结合上面的信息）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- A simple bean definition -->
+   <bean id="..." class="...">
+      <!-- collaborators and configuration for this bean go here -->
+   </bean>
+
+   <!-- A bean definition with lazy init set on -->
+   <bean id="..." class="..." lazy-init="true">
+      <!-- collaborators and configuration for this bean go here -->
+   </bean>
+
+   <!-- A bean definition with initialization method -->
+   <bean id="..." class="..." init-method="...">
+      <!-- collaborators and configuration for this bean go here -->
+   </bean>
+
+   <!-- A bean definition with destruction method -->
+   <bean id="..." class="..." destroy-method="...">
+      <!-- collaborators and configuration for this bean go here -->
+   </bean>
+</beans>
+</script></code></pre>
+<h2 id="Bean-作用域"><a href="#Bean-作用域" class="headerlink" title="Bean 作用域"></a>Bean 作用域</h2><p>作用域就是前面提到的 scope 属性，所谓作用域其实就是 bean 对象的生命周期，是的，叫做生命周期通常更好理解。默认支持以下五种生命周期，其中前两种是所有 spring 容器都可用，后三种只在支持 web 的 application context 中可用（比如 spring mvc 中可以使用后三种作用域，前两种是通用的）：</p>
+<ul>
+<li><code>singleton</code>：单例（默认），单个 IoC 容器中只存在一个 bean 实例。</li>
+<li><code>prototype</code>：原型，每次获取 bean 对象时，都强制生成新的 bean 实例。</li>
+<li><code>request</code>：请求，bean 实例只存活于同一个 request 对象，仅用于 web。</li>
+<li><code>session</code>：会话，bean 实例只存活于同一个 session 对象，仅用于 web。</li>
+<li><code>global-session</code>：全局会话，对 portlet 有特殊作用，其余同 session。</li>
+</ul>
+<p>通常 <code>global-session</code> 不会被用到，所以我们可以说 spring 里面的 bean 作用域有四个，分别是 <strong>单例模式</strong>、<strong>原型模式</strong>、<strong>请求范围</strong>、<strong>会话范围</strong>。后两个用于 web，比较好理解，单例模式是指同一时间，同一个 IoC 容器中只存在同一个 bean 类的实例，这是默认作用范围，而原型则是每次 <code>getBean()</code> 返回的对象都不相同。</p>
+<h2 id="Bean-回调"><a href="#Bean-回调" class="headerlink" title="Bean 回调"></a>Bean 回调</h2><p>在某些时候，我们可能需要在构造 bean 时执行一些初始化操作，然后在销毁 bean 时执行一些资源释放操作，spring 允许我们这么做，我们只需使用 <code>init-method</code>、<code>destroy-method</code> 属性告诉 spring，对应的 init 方法名和 destroy 方法名（init、destroy 方法签名不应该接收任何参数，返回任何值）。</p>
+<p>需要注意的是，如果在非 web 环境中使用 spring 的 IoC 容器，且注册了 destroy-method 回调，请记得对 IoC 容器对象调用 <code>context.registerShutdownHook()</code> 方法，来向 JVM 注册 shutdown hook 钩子，不然 destroy hook 是不会被执行的。之所以 web 环境中不需要这么做是因为 web 容器会确保 Spring 的 IoC 容器正常 shutdown。 </p>
+<p><code>HelloWorld</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class HelloWorld {
+    private String message;
+
+    public HelloWorld() {
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("message: %s", this.message);
+    }
+
+    public void init() {
+        System.out.println("init bean");
+    }
+
+    public void destroy() {
+        System.out.println("destroy bean");
+    }
+}
+</script></code></pre>
+<p><code>MainApp</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainApp {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        ((AbstractApplicationContext) context).registerShutdownHook();
+        HelloWorld helloworld = (HelloWorld) context.getBean("helloworld");
+        System.out.println(helloworld);
+    }
+}
+</script></code></pre>
+<p><code>beans.xml</code> 配置：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="helloworld" class="com.zfl9.HelloWorld" init-method="init" destroy-method="destroy">
+    <property name="message" value="Hello, Spring!"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+init bean
+message: Hello, Spring!
+destroy bean
+</script></code></pre>
+<p>如果你有太多的 bean 具有相同名称的初始化或销毁方法，则不需要在每个单独的 bean 上声明 init-method 和 destroy-method。相反，框架提供了使用 <code>&lt;beans&gt;</code> 元素上的 <code>default-init-method</code> 和 <code>default-destroy-method</code> 属性配置此类情况的灵活性，如下所示 ：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-init-method="init" 
+       default-destroy-method="destroy">
+
+   <bean id="..." class="...">
+      <!-- collaborators and configuration for this bean go here -->
+   </bean>
+</beans>
+</script></code></pre>
+<h2 id="Bean-处理器"><a href="#Bean-处理器" class="headerlink" title="Bean 处理器"></a>Bean 处理器</h2><p><strong>BeanPostProcessor</strong> 是用来扩展默认的 Spring IoC 容器的初始化逻辑，即在 spring 创建 bean 对象前调用某些方法，在 spring 创建 bean 对象之后调用某些方法，我们来看一下这个简单的例子。</p>
+<p>HelloWorld 类不变，我们添加一个新的类，为 HelloWorld bean 添加 post 处理器，<code>InitHelloWorld</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
+public class InitHelloWorld implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String name) throws BeansException {
+        System.out.println("<pre-init> beanName: " + name);
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String name) throws BeansException {
+        System.out.println("<post-init> beanName: " + name);
+        return bean;
+    }
+}
+</script></code></pre>
+<p>然后修改 beans.xml 文件，注册一个新的 bean，class 为 InitHelloWorld，可以有多个 post 处理器：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="helloworld" class="com.zfl9.HelloWorld" init-method="init" destroy-method="destroy">
+    <property name="message" value="Hello, Spring!"/>
+  </bean>
+
+  <bean class="com.zfl9.InitHelloWorld"/>
+
+</beans>
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+<pre-init> beanName: helloworld
+init bean
+<post-init> beanName: helloworld
+message: Hello, Spring!
+destroy bean
+</script></code></pre>
+<p>注意，这个 BeanPostProcessor 是针对所有 bean 都有效的。</p>
+<h2 id="Bean-继承"><a href="#Bean-继承" class="headerlink" title="Bean 继承"></a>Bean 继承</h2><p>子 bean 将从父 bean 中继承配置数据，当然子 bean 中可以覆盖父 bean 中定义的值也可以添加新的值，这与 Java 的继承概念很相似，虽然 Bean 的继承与 Java 的继承没有什么关系，但是它们的概念以及作用都是相同的，提取公共的部分。在 XML 文件中，可以在子 bean 中使用 <code>parent</code> 属性指定当前 Bean 的父 Bean（注意 parent 的值时其父 bean 的 ID，不是全限定类名）。</p>
+<p>还有一点需要说明的是，父 bean 与子 bean 的 class 之间是没有什么关系的，不存在继承关系，你应该将 bean 之间的继承理解为 bean 的 property 数据的继承，请看下面的例子，HelloWorld 和 HelloChina。</p>
+<p><code>HelloWorld</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class HelloWorld {
+    private String message1;
+    private String message2;
+
+    public HelloWorld() {
+    }
+
+    public String getMessage1() {
+        return message1;
+    }
+
+    public void setMessage1(String message1) {
+        this.message1 = message1;
+    }
+
+    public String getMessage2() {
+        return message2;
+    }
+
+    public void setMessage2(String message2) {
+        this.message2 = message2;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("HelloWorld { message1: '%s', message2: '%s' }", this.message1, this.message2);
+    }
+}
+</script></code></pre>
+<p><code>HelloChina</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class HelloChina {
+    private String message1;
+    private String message2;
+    private String message3;
+
+    public HelloChina() {
+    }
+
+    public String getMessage1() {
+        return message1;
+    }
+
+    public void setMessage1(String message1) {
+        this.message1 = message1;
+    }
+
+    public String getMessage2() {
+        return message2;
+    }
+
+    public void setMessage2(String message2) {
+        this.message2 = message2;
+    }
+
+    public String getMessage3() {
+        return message3;
+    }
+
+    public void setMessage3(String message3) {
+        this.message3 = message3;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("HelloChina { message1: '%s', message2: '%s', message3: '%s' }", this.message1, this.message2, this.message3);
+    }
+}
+</script></code></pre>
+<p><code>IocMain</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        System.out.println(helloWorld);
+
+        HelloChina helloChina = (HelloChina) context.getBean("helloChina");
+        System.out.println(helloChina);
+    }
+}
+</script></code></pre>
+<p><code>beans.xml</code> 文件：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="helloWorld" class="com.zfl9.HelloWorld">
+    <property name="message1" value="Hello"/>
+    <property name="message2" value="World"/>
+  </bean>
+
+  <bean id="helloChina" class="com.zfl9.HelloChina" parent="helloWorld">
+    <property name="message2" value="江西"/>
+    <property name="message3" value="赣州"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+HelloWorld { message1: 'Hello', message2: 'World' }
+HelloChina { message1: 'Hello', message2: '江西', message3: '赣州' }
+</script></code></pre>
+<p><strong>bean 模板</strong><br>bean 模板与 bean 继承很相似，只是父 bean 没有所谓 class 属性，它只是一个单纯的数据载体（模板）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <bean id="beanTeamplate" abstract="true">
+      <property name="message1" value="Hello World!"/>
+      <property name="message2" value="Hello Second World!"/>
+      <property name="message3" value="Namaste India!"/>
+   </bean>
+
+   <bean id="helloIndia" class="com.tutorialspoint.HelloIndia" parent="beanTeamplate">
+      <propery name="message1" alue="Hello India!"/>
+      <propery name="message3" alue="Namaste India!"/>
+   </bean>
+
+</beans>
+</script></code></pre>
+<p>注意 beanTemplate 的 abstract 属性，true 表示这是模板，没有对应的 class，IoC 容器不会实例化它。</p>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><p>所谓依赖注入就是一个对象获取它所依赖对象的方式是被动的，而不是主动的，因为这个控制权反转了，所以也被称为控制反转。所谓主动获取依赖就是自己 new 出依赖对象，而被动获取则是通过 <strong>构造函数</strong>、<strong>setter 方法</strong> 来将依赖对象传递给自己，这个传递依赖对象的过程有个专业名词 - <strong>依赖注入</strong>。</p>
+<p>您可以混合使用基于 <strong>构造函数</strong> 和基于 <strong>Setter 方法</strong> 的依赖注入，但是一个好的经验法则是：对于 <strong>必选依赖项</strong>，建议使用 <strong>构造函数</strong> 来注入，对于 <strong>可选依赖项</strong>，建议使用 <strong>setter 方法</strong> 来注入。</p>
+<p><strong>基于构造函数参数的依赖注入</strong><br><code>TextEditor</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class TextEditor {
+    private SpellChecker spellChecker;
+
+    public TextEditor(SpellChecker spellChecker) {
+        System.out.println("Inside TextEditor constructor.");
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        this.spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p><code>SpellChecker</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class SpellChecker {
+    public SpellChecker() {
+        System.out.println("Inside SpellChecker Constructor.");
+    }
+
+    public void checkSpelling() {
+        System.out.println("Inside SpellChecker checkSpelling.");
+    }
+}
+</script></code></pre>
+<p><code>IocMain</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+    }
+}
+</script></code></pre>
+<p><code>beans.xml</code>：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="spellChecker" class="com.zfl9.SpellChecker"/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor">
+    <constructor-arg ref="spellChecker"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Inside SpellChecker Constructor.
+Inside TextEditor constructor.
+Inside SpellChecker checkSpelling.
+</script></code></pre>
+<p>我们知道 Java 中有两大数据类型：<strong>基本类型</strong>、<strong>引用类型</strong>。基本类型共有八种，分别为 <code>short</code>、<code>int</code>、<code>long</code>、<code>float</code>、<code>double</code>、<code>boolean</code>、<code>byte</code>、<code>char</code>，这八种基本类型都可以使用字面值表示，所以在 beans.xml 文件中，使用 <code>value</code> 属性来存储它们的值（前面已经演示很多次了），而对于引用类型，比如上面的 SpellChecker 参数，就是一个引用类型，我们不能通过 value 字面值来表示它，所以我们需要先使用 bean 元素在 IoC 容器中注册 spellChecker 对象，然后在 textEditor 对象的构造函数参数中使用 <code>ref</code> 来引用对应的参数的 bean ID。当然，String 对象是可以使用 <code>value</code> 字面量表示的。</p>
+<p>问题来了，如果构造器有多个参数需要注入，那么该怎么做呢？有三种方式：</p>
+<ul>
+<li>按照参数顺序，提供 <code>&lt;constructor-arg&gt;</code>。</li>
+<li>根据参数类型，提供 <code>&lt;constructor-arg&gt;</code>。</li>
+<li>根据参数位置，提供 <code>&lt;constructor-arg&gt;</code>。</li>
+</ul>
+<p><strong>方法一，按顺序</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package x.y;
+
+public class Foo {
+   public Foo(Bar bar, Baz baz) {
+      // ...
+   }
+}
+</script></code></pre>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans>
+   <bean id="foo" class="x.y.Foo">
+      <constructor-arg ref="bar"/>
+      <constructor-arg ref="baz"/>
+   </bean>
+
+   <bean id="bar" class="x.y.Bar"/>
+   <bean id="baz" class="x.y.Baz"/>
+</beans>
+</script></code></pre>
+<p><strong>方法二，按类型</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package x.y;
+
+public class Foo {
+   public Foo(int year, String name) {
+      // ...
+   }
+}
+</script></code></pre>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans>
+   <bean id="exampleBean" class="examples.ExampleBean">
+      <constructor-arg type="int" value="2001"/>
+      <constructor-arg type="java.lang.String" value="Zara"/>
+   </bean>
+</beans>
+</script></code></pre>
+<p><strong>方法三，按索引</strong>（推荐）<br>注意索引值是从 0 开始的，大家应该很熟悉吧。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans>
+   <bean id="exampleBean" class="examples.ExampleBean">
+      <constructor-arg index="0" value="2001"/>
+      <constructor-arg index="1" value="Zara"/>
+   </bean>
+</beans>
+</script></code></pre>
+<p>第二种方法不是很好，如果参数类型都相同就很尴尬了，第一种可读性稍微差点，所以第三种方式最好。例子：</p>
+<p>Container.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+public class Container {
+    private IOException ioException;
+    private SQLException sqlException;
+    private RuntimeException runtimeException;
+
+    public Container(IOException ioException, SQLException sqlException, RuntimeException runtimeException) {
+        this.ioException = ioException;
+        this.sqlException = sqlException;
+        this.runtimeException = runtimeException;
+    }
+
+    public IOException getIoException() {
+        return ioException;
+    }
+
+    public void setIoException(IOException ioException) {
+        this.ioException = ioException;
+    }
+
+    public SQLException getSqlException() {
+        return sqlException;
+    }
+
+    public void setSqlException(SQLException sqlException) {
+        this.sqlException = sqlException;
+    }
+
+    public RuntimeException getRuntimeException() {
+        return runtimeException;
+    }
+
+    public void setRuntimeException(RuntimeException runtimeException) {
+        this.runtimeException = runtimeException;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Container {\n\tIOException: %s\n\tSQLException: %s\n\tRuntimeException: %s\n}", this.ioException, this.sqlException, this.runtimeException);
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+
+        Container container = (Container) context.getBean("container");
+        System.out.println(container);
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="spellChecker" class="com.zfl9.SpellChecker"/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor">
+    <constructor-arg ref="spellChecker"/>
+  </bean>
+
+  <bean id="ioException" class="java.io.IOException"/>
+  <bean id="sqlException" class="java.sql.SQLException"/>
+  <bean id="runtimeException" class="java.lang.RuntimeException"/>
+
+  <bean id="container" class="com.zfl9.Container">
+    <constructor-arg index="0" ref="ioException"/>
+    <constructor-arg index="1" ref="sqlException"/>
+    <constructor-arg index="2" ref="runtimeException"/>
+  </bean>
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Inside SpellChecker Constructor.
+Inside TextEditor constructor.
+Inside SpellChecker checkSpelling.
+Container {
+    IOException: java.io.IOException
+    SQLException: java.sql.SQLException
+    RuntimeException: java.lang.RuntimeException
+}
+</script></code></pre>
+<p><strong>基于 Setter 方法的依赖注入</strong><br>基于 setter 的方式其实我们前面已经用了很多次了，就是 <code>property</code> 元素的运用而已，再次强调一点，<code>constructor-arg</code> 是用来指定构造器参数的（构造函数 DI），而 <code>property</code> 是用来指定对象属性的（setter 方法 DI），我们继续以上面的 TextEditor 为例，演示如何使用 settter 方式进行 DI。</p>
+<p>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class TextEditor {
+    private SpellChecker spellChecker;
+
+    public TextEditor() {
+    }
+
+    public SpellChecker getSpellChecker() {
+        return spellChecker;
+    }
+
+    public void setSpellChecker(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        this.spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>SpellChecker.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class SpellChecker {
+    public SpellChecker() {
+        System.out.println("Inside SpellChecker Constructor.");
+    }
+
+    public void checkSpelling() {
+        System.out.println("Inside SpellChecker checkSpelling.");
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="spellChecker" class="com.zfl9.SpellChecker"/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor">
+    <property name="spellChecker" ref="spellChecker"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Inside SpellChecker Constructor.
+Inside SpellChecker checkSpelling.
+</script></code></pre>
+<p><strong>使用 <code>p-namespace</code> 设置 property 属性</strong><br>传统方式：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <bean id="john-classic" class="com.example.Person">
+      <property name="name" value="John Doe"/>
+      <property name="spouse" ref="jane"/>
+   </bean>
+
+   <bean id="jane" class="com.example.Person">
+      <property name="name" value="John Doe"/>
+   </bean>
+</beans>
+</script></code></pre>
+<p>改进方式：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <bean id="john-classic"
+         class="com.example.Person"
+         p:name="John Doe"
+         p:spouse-ref="jane"/>
+
+   <bean i="jane"
+         class="com.example.Person"
+         p:name="John Doe"/>
+</beans>
+</script></code></pre>
+<p>在这里，您应该注意使用 p-namespace 指定原始值和对象引用的区别。该 <code>-ref</code> 部分表示这是另一个 bean 的引用，而非 property 名称，因为 java 标识符规范规定 <code>-</code> 不是一个有效字符，所以可以这么做。</p>
+<h2 id="内部-Bean"><a href="#内部-Bean" class="headerlink" title="内部 Bean"></a>内部 Bean</h2><p>内部 Bean 和 Java 内部类很相似，我们之所以要使用 Java 内部类，是为了体现外部类和内部类的一个层级关系，比如 <code>Map</code> 和 <code>Map.Entry</code>，它们是一个归属关系，这也是为什么使用内部类比使用外部类更有说明力的理由。在 spring ioc 容器中，我们也可以定义内部 bean，比如之前的构造函数注入、setter 方法注入中，我们会使用 <code>ref</code> 来引用 ioc 容器中的其它 bean 实例，但这些 bean 的作用仅仅是作为参数、属性值，所以我们可以将它们定义在需要它们的 bean 的内部，这样更加整洁，也能避免对全局命名空间进行污染。</p>
+<p>还是以前面的 setter 方法注入为例子，我们可以这样写 beans.xml：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Definition for textEditor bean using inner bean -->
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor">
+      <property name="spellChecker">
+         <bean class="com.tutorialspoint.SpellChecker"/>
+      </property>
+   </bean>
+</beans>
+</script></code></pre>
+<h2 id="注入集合"><a href="#注入集合" class="headerlink" title="注入集合"></a>注入集合</h2><p>前面我们都是注入的标量值，这一节我们来看看如何注入集合类型的值。spring ioc 容器支持以下 4 种集合类型的注入：</p>
+<ul>
+<li><code>&lt;list&gt;</code>：<code>java.util.List</code>，列表，允许重复。</li>
+<li><code>&lt;set&gt;</code>：<code>java.util.Set</code>，集合，不保留任何重复元素。</li>
+<li><code>&lt;map&gt;</code>：<code>java.util.Map</code>，键值对，key、value 可以是任意类型。</li>
+<li><code>&lt;props&gt;</code>：<code>java.util.Properties</code>，键值对，key、value 为字符串。</li>
+</ul>
+<p>例子，JavaCollection.java：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+public class JavaCollection {
+    private List list;
+    private Set set;
+    private Map map;
+    private Properties props;
+
+    public JavaCollection() {
+    }
+
+    public List getList() {
+        System.out.println(list);
+        return list;
+    }
+
+    public void setList(List list) {
+        this.list = list;
+    }
+
+    public Set getSet() {
+        System.out.println(set);
+        return set;
+    }
+
+    public void setSet(Set set) {
+        this.set = set;
+    }
+
+    public Map getMap() {
+        System.out.println(map);
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+    public Properties getProps() {
+        System.out.println(props);
+        return props;
+    }
+
+    public void setProps(Properties props) {
+        this.props = props;
+    }
+}
+</script></code></pre>
+<p>IocMain.java：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        JavaCollection javaCollection = (JavaCollection) context.getBean("javaCollection");
+        javaCollection.getList();
+        javaCollection.getSet();
+        javaCollection.getMap();
+        javaCollection.getProps();
+    }
+}
+</script></code></pre>
+<p>beans.xml：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="javaCollection" class="com.zfl9.JavaCollection">
+    <property name="list">
+      <list>
+        <value>www.zfl9.com</value>
+        <value>www.zfl9.com</value>
+        <value>www.baidu.com</value>
+        <value>www.google.com</value>
+      </list>
+    </property>
+
+    <property name="set">
+      <set>
+        <value>www.zfl9.com</value>
+        <value>www.zfl9.com</value>
+        <value>www.baidu.com</value>
+        <value>www.google.com</value>
+      </set>
+    </property>
+
+    <property name="map">
+      <map>
+        <entry key="1" value="zfl9"/>
+        <entry key="2" value="baidu"/>
+        <entry key="3" value="google"/>
+      </map>
+    </property>
+
+    <property name="props">
+      <props>
+        <prop key="1">zfl9</prop>
+        <prop key="2">baidu</prop>
+        <prop key="3">google</prop>
+      </props>
+    </property>
+  </bean>
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[www.zfl9.com, www.zfl9.com, www.baidu.com, www.google.com]
+[www.zfl9.com, www.baidu.com, www.google.com]
+{1=zfl9, 2=baidu, 3=google}
+{3=google, 2=baidu, 1=zfl9}
+</script></code></pre>
+<p><strong>引用其它 bean</strong><br>除了上面这种字面量提供的方式的外，我们也可以引用其他 bean 来提供数据，如下：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- Bean Definition to handle references and values -->
+   <bean id="..." class="...">
+
+      <!-- Passing bean reference  for java.util.List -->
+      <property name="addressList">
+         <list>
+            <ref bean="address1"/>
+            <ref bean="address2"/>
+            <value>Pakistan</value>
+         </list>
+      </property>
+
+      <!-- Passing bean reference  for java.util.Set -->
+      <property name="addressSet">
+         <set>
+            <ref bean="address1"/>
+            <ref bean="address2"/>
+            <value>Pakistan</value>
+         </set>
+      </property>
+
+      <!-- Passing bean reference  for java.util.Map -->
+      <property name="addressMap">
+         <map>
+            <entry key="one" value="INDIA"/>
+            <entry key="two" value-ref="address1"/>
+            <entry key="three" value-ref="address2"/>
+         </map>
+      </property>
+   </bean>
+</beans>
+</script></code></pre>
+<p><strong>注入空字符串</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="..." class="exampleBean">
+   <property name="email" value=""/>
+</bean>
+</script></code></pre>
+<p><strong>注入 null 值</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="..." class="exampleBean">
+   <property name="email"><null/></property>
+</bean>
+</script></code></pre>
+<h2 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h2><p>所谓自动装配就是 Spring 自动查找 property 或 constructor-arg 的 reference，我们之前的所有配置都是手动装配的，因为所有的 property 或 constructor-arg 都是手动配置的，现在来学习“自动装配”。</p>
+<blockquote>
+<p>Spring 自动在 IoC 容器中查找“符合条件”的 bean，然后装配到 bean 上的行为就叫做“自动装配”。</p>
+</blockquote>
+<p><strong>no</strong><br>这是默认值，表示不是自动装配，也就是说这是“手动装配”。</p>
+<p><strong>byName</strong><br>所谓 byName 自动装配模式，就是 Spring 自动在 IoC 容器中查找与 property name 相同的 bean，然后装配到当前 bean，一句话就是：<strong>查找与属性名称相同的 bean，然后进行装配</strong>。</p>
+<p>例子：<br>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class TextEditor {
+    private SpellChecker spellChecker;
+
+    public TextEditor() {
+    }
+
+    public SpellChecker getSpellChecker() {
+        return spellChecker;
+    }
+
+    public void setSpellChecker(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>SpellChecker.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class SpellChecker {
+    public SpellChecker() {
+        System.out.println("SpellChecker.constructor()");
+    }
+
+    public void checkSpelling() {
+        System.out.println("SpellChecker.checkSpelling()");
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="spellChecker" class="com.zfl9.SpellChecker"/>
+  <bean id="textEditor" class="com.zfl9.TextEditor" autowire="byName"/>
+</beans>
+</script></code></pre>
+<p>注意原先我们是怎么写的：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="spellChecker" class="com.zfl9.SpellChecker"/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor">
+    <property name="spellChecker" ref="spellChecker"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>注意，使用自动装配时我们仍然可以手动指定一些属性，这没有任何影响，比如：</p>
+<p>全部都手动装配：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans>
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor">
+      <property name="spellChecker" ref="spellChecker" />
+      <property name="name" value="Generic Text Editor" />
+   </bean>
+
+   <bean id="spellChecker" class="com.tutorialspoint.SpellChecker"></bean>
+</beans>
+</script></code></pre>
+<p>自动装配与手动装配混合：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<beans>
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor" autowire="byName">
+      <property name="name" value="Generic Text Editor" />
+   </bean>
+
+   <bean id="spellChecker" class="com.tutorialspoint.SpellChecker"></bean>
+</beans>
+</script></code></pre>
+<p><strong>byType</strong><br>和 byName 差不多，byType 是查找与属性类型相匹配的 bean，然后自动装配上去。</p>
+<p>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class TextEditor {
+    private String name;
+    private SpellChecker spellChecker;
+
+    public TextEditor() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SpellChecker getSpellChecker() {
+        return spellChecker;
+    }
+
+    public void setSpellChecker(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>SpellChecker.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class SpellChecker {
+    public SpellChecker() {
+        System.out.println("SpellChecker.constructor()");
+    }
+
+    public void checkSpelling() {
+        System.out.println("SpellChecker.checkSpelling()");
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+
+        SpellChecker spellChecker = (SpellChecker) context.getBean("com.zfl9.SpellChecker");
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="com.zfl9.SpellChecker"/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor" autowire="byType">
+    <property name="name" value="Otokaze"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SpellChecker.constructor()
+SpellChecker.checkSpelling()
+SpellChecker.checkSpelling()
+</script></code></pre>
+<p>注意，因为 bean 定义中，只有 class 属性时必选的，其他属性都是可以省略的，上面我们省略了 com.zfl9.SpellChecker 类的 bean ID，而默认的 ID 就是 class 的全限定类名，所以我们可以在 IocMain.java 中使用这个 ID 找到这个 Bean。其他的什么与 byName 一样，不再解释。</p>
+<blockquote>
+<p>更新：如果 bean 定义没有提供 id 或 name 属性，那么我们仍然可以通过 bean 的全限定类名来访问它。</p>
+</blockquote>
+<p><strong>constructor</strong><br>这种类型的自动装配其实与 byType 非常相似，都是按照类型进行匹配，但是 constructor 装配模式适用于构造器参数的自动装配，而 byType 则适用于对象属性的自动装配（setter 方法），我们来看例子：</p>
+<p>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class TextEditor {
+    private String name;
+    private SpellChecker spellChecker;
+
+    public TextEditor(String name, SpellChecker spellChecker) {
+        this.name = name;
+        this.spellChecker = spellChecker;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SpellChecker getSpellChecker() {
+        return spellChecker;
+    }
+
+    public void setSpellChecker(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="com.zfl9.SpellChecker"/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor" autowire="constructor">
+    <constructor-arg name="name" value="Otokaze"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SpellChecker.constructor()
+SpellChecker.checkSpelling()
+</script></code></pre>
+<p><strong>autodetect</strong><br>自动选择模式，即首先尝试使用 <code>constructor</code> 模式，如果不行，就使用 <code>byType</code> 模式。</p>
+<p><strong>自动装配的缺点</strong><br>虽然使用自动装配可以减少 XML 文件的配置，但是除非大家都使用自动装配，否则这种只写一部分 property、constructor-arg 的方式可能会让人感到疑惑，导致 XML 文件的可读性降低，甚至带来混淆。</p>
+<ol>
+<li>自动装配的实例属性/构造器参数仍然可以通过 <code>&lt;property&gt;</code>、<code>&lt;constructor-arg&gt;</code> 元素覆盖。</li>
+<li>对于某些特殊数据类型，无法使用自动装配，比如基本数据类型、String 字符串、Class 类。</li>
+<li>令人感到疑惑，可读性不好，所以除非有充分的理由，否则不是很建议使用自动装配。</li>
+</ol>
+<h2 id="注解装配"><a href="#注解装配" class="headerlink" title="注解装配"></a>注解装配</h2><p>从 Spring 2.5 版本开始，支持使用 Java 注解对依赖注入进行配置（之前是全部通过 XML 文件进行配置，现在我们可以使用 Java 注解类进行辅助配置，甚至完全使用 Java 注解进行 DI 配置也是可行的）。Spring 默认没有开启注解装配的支持，所以我们需要在 beans.xml 文件中加入 <code>&lt;context:annotation-config/&gt;</code>，具体的：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+</beans>
+</script></code></pre>
+<p>稍微解释一下 context:annotation-config 的作用，配置该元素后，Spring 会自动扫描 application context 中的 bean 上面配置的 Java 注解，并且激活它们。也就是说，添加这行后，Spring 会自动应用 IoC 容器中的 bean 的对应类上面的 Java 注解，这下应该理解了吧。</p>
+<p>也就是说，只有位于 application context 容器中的 bean 上面的注解才会被 Spring 扫描并激活。</p>
+<p>那么 context:annotaion-config 设置后，Spring 会扫描 bean 上面的哪些注解呢：</p>
+<ul>
+<li><code>@Required</code>：用在 setter 方法上，表示对应的 property 必须被提供，否则运行会发生异常。</li>
+<li><code>@Autowired</code>：用在成员方法、构造方法、方法参数、实例属性上，实现 byType 按类型自动装配。</li>
+<li><code>@Qualifier</code>：与 <code>@Autowired</code> 一起使用，指定自动装配的条件，以消除 bean 名字相同的歧义。</li>
+<li><code>@Resource</code>：JSR-250 注解，可以理解为 byName 模式的自动装配，<code>@Autowired</code> 属于 byType。</li>
+<li><code>@PostConstruct</code>：JSR-250 注解，可以用来替代 init-method 属性指定的回调函数（后面详解）。</li>
+<li><code>@PreDestroy</code>：JSR-250 注解，可以用来替代 destroy-method 属性指定的回调函数（后面详解）。</li>
+</ul>
+<p><strong><code>@Required</code></strong><br>该 @Required 注解适用于 bean 属性的 setter 方法，并表示受影响的 bean 属性必须在 XML 配置文件在配置时进行填充。否则，容器抛出 BeanInitializationException异常。以下示例显示@Required注释的使用。</p>
+<p>Student.java<br>我们给 name 和 age 属性对应的 setter 方法标注了 <code>@Required</code>，表示他们是必选属性。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Required;
+
+public class Student {
+    private String name;
+    private Integer age;
+
+    public Student() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Required
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    @Required
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Student: [ name = '%s', age = %d ]", name, age);
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        Student student = (Student) context.getBean("student");
+        System.out.println(student);
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean id="student" class="com.zfl9.Student">
+    <property name="name" value="Otokaze"/>
+    <property name="age" value="120"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Student: [ name = 'Otokaze', age = 120 ]
+</script></code></pre>
+<p>如果我们将某个或者两个 property 都注释掉，那么就会报错，提示 name/age 参数是必选的。</p>
+<p><strong><code>@Autowired</code></strong><br>自动装配的注解，默认是先按照 byType 模式在 IoC 容器中查找匹配的 bean，然后装配上去，当然也可以与 <code>@Qualifier</code> 注解搭配使用，来指明使用哪个 ID 的 bean，此时可以理解为变成了 byName 的装配模式。</p>
+<p>@Autowired 注解可以用在任何成员方法上面（构造方法、普通方法、setter 方法），也可以用在对应的成员属性上面（private 访问性也行，Spring 会使用反射 API 自动写入依赖对象的引用值，不要感到奇怪，这是反射 API 应该做的，我记得学习 Java 反射的时候就演示过这个功能，修改 String 对象的私有字符数组）。注意，@Autowird 还能够用在方法参数上，并且可以和 @Qualifier 注解一起使用，变为 byName 形式。</p>
+<p>使用 <code>@Autowired</code> 允许我们更自由的实现依赖注入，因为普通的 XML 方式只能对 setter 方法和构造函数参数进行依赖注入，而 <code>@Autowired</code> 注解允许使用在任何方法上，Spring 会自动在 IoC 容器中查找符合条件（默认 byType，使用 <code>@Qualifier</code> 变成 byName 模式）的 bean，然后注入到合适的位置。</p>
+<p><strong>基于 setter 方法的自动装配</strong><br>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class TextEditor {
+    private SpellChecker spellChecker;
+
+    public TextEditor() {
+    }
+
+    public SpellChecker getSpellChecker() {
+        return spellChecker;
+    }
+
+    @Autowired
+    public void setSpellChecker(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>SpellChecker.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class SpellChecker {
+    public SpellChecker() {
+        System.out.println("SpellChecker.constructor()");
+    }
+
+    public void checkSpelling() {
+        System.out.println("SpellChecker.checkSpelling()");
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        TextEditor textEditor = (TextEditor) context.getBean("textEditor");
+        textEditor.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean id="textEditor" class="com.zfl9.TextEditor"/>
+
+  <bean id="spellChecker" class="com.zfl9.SpellChecker"/>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SpellChecker.constructor()
+SpellChecker.checkSpelling()
+</script></code></pre>
+<p><strong>基于成员属性的自动装配</strong><br>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class TextEditor {
+    @Autowired
+    private SpellChecker spellChecker;
+
+    public TextEditor() {
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SpellChecker.constructor()
+SpellChecker.checkSpelling()
+</script></code></pre>
+<p><strong>基于构造函数的自动装配</strong><br>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class TextEditor {
+    private SpellChecker spellChecker;
+
+    @Autowired
+    public TextEditor(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SpellChecker.constructor()
+SpellChecker.checkSpelling()
+</script></code></pre>
+<p><strong>基于普通方法的自动装配</strong><br>TextEditor.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class TextEditor {
+    @Autowired
+    private SpellChecker spellChecker;
+
+    public TextEditor() {
+    }
+
+    public void checkSpelling() {
+        spellChecker.checkSpelling();
+    }
+
+    @Autowired
+    public void showStatus(TextEditor textEditor, SpellChecker spellChecker) {
+        System.out.println(textEditor);
+        System.out.println(spellChecker);
+        System.out.println(this.spellChecker);
+    }
+}
+</script></code></pre>
+<p>注意，这里我们同时使用了成员变量的自动装配和普通方法的自动装配，都是没有问题的，其实你只要将 application context 看作是一个资源池就行，装配的对象都是从这个资源池中挑选的，这是执行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SpellChecker.constructor()
+com.zfl9.TextEditor@167fdd33
+com.zfl9.SpellChecker@1e965684
+com.zfl9.SpellChecker@1e965684
+SpellChecker.checkSpelling()
+</script></code></pre>
+<p><strong>@Autowired 的 required 选项</strong><br>默认情况下，如果标注了 <code>@Autowired</code> 的变量没有找到合适的注入对象，那么 Spring 将会抛出异常，但是我们可以通过 <code>@Autowired</code> 注解的 <code>required</code> 布尔属性来改变这一行为，默认值为 true，表示对应的依赖时必须的，我们将它设为 false 就表示这个依赖对象是可选的。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.tutorialspoint;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class Student {
+   private Integer age;
+   private String name;
+
+   @Autowired(required=false)
+   public void setAge(Integer age) {
+      this.age = age;
+   }
+   public Integer getAge() {
+      return age;
+   }
+
+   @Autowired
+   public void setName(String name) {
+      this.name = name;
+   }
+   public String getName() {
+      return name;
+   }
+}
+</script></code></pre>
+<p><strong>@Qualifier</strong><br>当您创建多个相同类型的 bean 并且只想使用属性关联其中一个 bean 时，可能会出现这种情况。在这种情况下，您可以使用 <code>@Qualifier</code> 注解和 <code>@Autowired</code> 通过指定要关联的确切 bean 来消除混淆（歧义）。</p>
+<p>Student.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class Student {
+    private String name;
+    private int age;
+
+    public Student() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Student { name = %s, age = %d }", name, age);
+    }
+}
+</script></code></pre>
+<p>Profile.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+public class Profile {
+    @Autowired
+    @Qualifier("student1")
+    private Student student;
+
+    public Profile() {
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Profile { student: %s }", student);
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        Profile profile = (Profile) context.getBean("profile");
+        System.out.println(profile);
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean id="profile" class="com.zfl9.Profile"/>
+
+  <bean id="student1" class="com.zfl9.Student">
+    <property name="name" value="Otokaze"/>
+    <property name="age" value="110"/>
+  </bean>
+
+  <bean id="student2" class="com.zfl9.Student">
+    <property name="name" value="Google"/>
+    <property name="age" value="120"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>注意，因为 @Autowired 是按照 Type 查找对应的 bean 依赖对象的，所以如果 context 中有多个类型相同的 bean，就会产生歧义，Spring 不知道该使用哪个，所以运行时会抛出异常，我们需要使用 <code>@Qualifier(&quot;beanName&quot;)</code> 来告诉 Autowired 究竟使用哪个 bean 对象，运行结果如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Profile { student: Student { name = Otokaze, age = 110 } }
+</script></code></pre>
+<p><strong>@PostConstructor 和 @PreDestroy 注解</strong><br>在之前，我们如果需要定义 init 和 destroy 方法，需要在 bean 元素中添加属性 init-method 和 destroy-method，里面指明对应的 <code>public void METHOD() {}</code> 签名的方法，不过，有了注解之后，我们可以直接在对应的 init 和 destroy 方法上标注 <code>@PostConstructor</code> 和 <code>@PreDestroy</code> 注解即可，例子：</p>
+<p>HelloWorld.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+public class HelloWorld {
+    @PostConstruct
+    public void init() {
+        System.out.println("Hello World!");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("Goodbye World!");
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        ((ClassPathXmlApplicationContext) context).registerShutdownHook();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean id="helloworld" class="com.zfl9.HelloWorld"/>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Hello World!
+Goodbye World!
+</script></code></pre>
+<p><strong>@Resource 注解</strong><br>@Resource 注解与 @Autowired 注解的作用很相似，只不过，@Resource 是 byName 形式的自动装配，而 @Autowired 是 byType 形式的自动装配（配合 <code>@Qualifier</code> 注解当然也是可以将其转换为 byName 的）。</p>
+<p>@Resource 的常用参数是 <code>name</code>，用来指明要匹配的 bean 名称，如果省略，则默认以变量名称来查找对应的 bean，如果按照名称找不到对应的 bean，则 @Resource 会尝试通过按照 Type 来查找对应的 bean，如果还招不到就只有抛出异常了。注意，如果显示指定了 name 参数，那么就只会按照 bean ID 进行查找，找不到就抛出异常，所以一般不需要也不建议指定 name 参数，省略这个参数有更多的回退空间。</p>
+<p>@Autowired 和 @Resource 注解的用法和可标注的位置是相同的，不同的是 Autowired 是由 Spring 提供的，而 Resource 注解是由 Java 提供的（JSR），虽然许多人建议使用 @Resource，但其实没有什么区别。</p>
+<p><strong>更正</strong>：@Resource 不能用于构造函数。@Resource 只能用在成员变量、成员变量对应的 setter 方法上！！！</p>
+<p>成员变量：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.sql.SQLException;
+import javax.annotation.Resource;
+import org.xml.sax.SAXException;
+
+public class HelloWorld {
+    @Resource
+    private SAXException saxException;
+    @Resource
+    private SQLException sqlException;
+    @Resource
+    private RuntimeException sslException;
+
+    @Override
+    public String toString() {
+        return saxException + "\n" + sqlException + "\n" + sslException;
+    }
+}
+</script></code></pre>
+<p>Setter 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.sql.SQLException;
+import javax.annotation.Resource;
+import org.xml.sax.SAXException;
+
+public class HelloWorld {
+    private SAXException saxException;
+    private SQLException sqlException;
+    private RuntimeException sslException;
+
+    @Resource
+    public void setSaxException(SAXException saxException) {
+        this.saxException = saxException;
+    }
+
+    @Resource
+    public void setSqlException(SQLException sqlException) {
+        this.sqlException = sqlException;
+    }
+
+    @Resource
+    public void setSslException(RuntimeException sslException) {
+        this.sslException = sslException;
+    }
+
+    @Override
+    public String toString() {
+        return saxException + "\n" + sqlException + "\n" + sslException;
+    }
+}
+</script></code></pre>
+<p>所以，实际上，还是 @Autowired 用的多一点，反正我们都是使用 Spring 的框架，还怕什么依赖呀。</p>
+<h2 id="事件回调"><a href="#事件回调" class="headerlink" title="事件回调"></a>事件回调</h2><p>您已经在所有章节中看到 Spring 的核心是 ApplicationContext，它管理 bean 的完整生命周期。</p>
+<p>ApplicationContext 在加载 bean 时会发布某些类型的事件。例如，bean 容器启动时会发布 ContextStartedEvent 事件，当 bean 容器停止时会发布 ContextStoppedEvent 事件。</p>
+<p>ApplicationContext 的事件处理是通过 <code>ApplicationEvent</code> 事件类和 <code>ApplicationListener</code> 监听器接口实现的。因此，如果 bean 实现了 ApplicationListener 接口，那么 ApplicationContext 在发生相关 ApplicationEvent 时，都会通知这个 bean。</p>
+<p><strong>Spring ApplicationContext 提供以下标准事件</strong></p>
+<ul>
+<li>ContextRefreshedEvent：Context 刷新时将发生此事件。</li>
+<li>ContextStartedEvent：Context 启动时将发生此事件。</li>
+<li>ContextStoppedEvent：Context 停止时将发生此事件。</li>
+<li>ContextClosedEvent：Context 关闭时将发生此事件。</li>
+<li>RequestHandledEvent：Context 处理后将发生此事件（WEB）。</li>
+</ul>
+<p>Spring 的事件回调机制是单线程的，所以不要在 bean 监听器的回调方法上执行阻塞操作。</p>
+<p><strong>创建 bean 事件监听器的步骤</strong><br>要监听上下文事件，bean 应该实现 ApplicationListener 接口，该接口只有一个 onApplicationEvent() 方法。因此，让我们编写一个示例来查看事件如何传播以及如何使代码根据特定事件执行所需任务。</p>
+<p>HelloWorld.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class HelloWorld {
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return message;
+    }
+}
+</script></code></pre>
+<p>ContextStartListener.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextStartedEvent;
+
+public class ContextStartListener implements ApplicationListener<ContextStartedEvent> {
+    @Override
+    public void onApplicationEvent(ContextStartedEvent contextStartedEvent) {
+        System.out.println("context started.");
+    }
+}
+</script></code></pre>
+<p>ContextStopListener.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextStoppedEvent;
+
+public class ContextStopListener implements ApplicationListener<ContextStoppedEvent> {
+    @Override
+    public void onApplicationEvent(ContextStoppedEvent contextStoppedEvent) {
+        System.out.println("context stopped.");
+    }
+}
+</script></code></pre>
+<p>IocMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class IocMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        ((ClassPathXmlApplicationContext) context).start();
+
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloworld");
+        System.out.println(helloWorld);
+
+        ((ClassPathXmlApplicationContext) context).stop();
+    }
+}
+</script></code></pre>
+<p>beans.xml</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean id="helloworld" class="com.zfl9.HelloWorld">
+    <property name="message" value="Hello, World"/>
+  </bean>
+
+  <bean id="contextStartListener" class="com.zfl9.ContextStartListener"/>
+
+  <bean id="contextStopListener" class="com.zfl9.ContextStopListener"/>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+context started.
+Hello, World
+context stopped.
+</script></code></pre>
+<h2 id="AOP-FAQ-1"><a href="#AOP-FAQ-1" class="headerlink" title="AOP FAQ 1"></a>AOP FAQ 1</h2><p><strong>AOP 是 Spring 独有的概念吗？</strong><br>不是，除了 <code>Spring AOP</code> 外，常见的 AOP 实现还有：</p>
+<ul>
+<li>AspectJ</li>
+<li>Jboss AOP</li>
+<li>Guice AOP</li>
+</ul>
+<p><strong>AOP Alliance 是什么, 为什么 Spring AOP 需要 aopalliance.jar？</strong><br>AOP Alliance 是 AOP 的接口标准，定义了 AOP 中的基础概念（Advice、CutPoint、Advisor 等），目的是为各种 AOP 实现提供统一的接口，本身并不是一种 AOP 的实现（如同 JDBC API 和 JDBC 驱动的关系）。Spring AOP、Guice AOP 等都采用了 AOP Alliance 中定义的接口，因而这些 lib 都需要依赖 aopalliance.jar。注：Spring 4.3 后内置了 AOP Alliance 接口，不再需要单独的 aopalliance.jar。</p>
+<p><strong>Spring AOP 和 AspectJ 的区别？</strong><br>Spring AOP 采用 <strong>动态代理</strong> 的方式（首选 JDK 动态代理，备选 CGLIB 动态代理），在运行期间动态生成代理类来实现 AOP，不修改原类的实现；AspectJ 使用编译期 <strong>字节码织入</strong>（weave）的方式，在编译的时候，直接修改类的字节码，把所定义的切面代码逻辑插入到目标类中。注: AspectJ 除了编译期静态织入的方式之外，也支持加载时动态织入修改类的字节码。</p>
+<p><strong>Spring AOP 如何生成代理类？</strong><br>Spring AOP 使用 JDK 动态代理机制或者 CGLIB 动态代理机制生成。对于实现了接口的类使用 JDK Proxy，对于没有实现接口的类使用 CGLIB 实现。指定 proxy-target-class 为 true 可强制使用 CGLIB：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<aop:aspectj-autoproxy proxy-target-class="true"/>
+</script></code></pre>
+<p><strong>JDK Proxy 和 CGLIB 代理有什么区别？</strong><br>JDK Proxy 只适用于类实现了接口的情况，cglib 则是生成原来的子类，对于没有实现接口的情况也适用。cglib 采用字节码生成的方式来在代理类中调用原类方法, JDK Proxy 则是使用反射调用，由于反射存在额外 security check 的开销，而 jvm jit 对反射的内联支持不够好，所以 JDK Proxy 在性能上弱于 cglib。</p>
+<p><strong>spring-aspects 又是什么鬼</strong><br>因为 Spring AOP XML 配置文件定义的方式太繁琐遭到吐槽，所以 spring 从 AspectJ 中吸收了其定义 AOP 的方式，包括 AspectJ Annotation 和 AspectJ-XML 配置。<strong>然而其实现依然是动态代理的方式</strong>，与 aspectj 字节码织入的方式不同。</p>
+<p><strong>为什么 spring-aspects 还需要 aspectjweaver.jar 才能工作</strong><br>spring-aspects 实现 XML 配置解析和 Aspectj 注解方式的时候，借用了 aspectjweaver.jar 中定义的 annotation 和 class，所以需要依赖 aspectj-weaver.jar 包，但是这仅仅是 API 层面的借鉴，在实现 AOP 的原理上，Spring AOP 依然是通过动态代理机制实现的。Spring 3.2 之前，spring-aspects 对 aspectjweaver 的依赖还是 optional 的，需要自己去添加依赖；Sprint 3.2 之后，spring-aspects 已经包含了 aspectjweaver 依赖，所以不再需要手动配置这个依赖项。</p>
+<p><strong>Spring AOP 与 AspectJ 的区别和联系</strong><br>AOP 是 Spring 框架的重要组成部分。目前我所接触的 AOP 实现框架有 Spring AOP 还有就是 AspectJ (还有另外几种我没有接触过)。我们先来说说他们的区别：</p>
+<p>AspectJ 是一个比较牛逼的 AOP 框架，他可以对类的成员变量，方法进行拦截。由于 AspectJ 是 Java 语言语法和语义的扩展，所以它提供了自己的一套处理方面的关键字（AspectJ 有自己的语法，为了处理这些语法，AspectJ 还有专门的编译器）。除了包含字段和方法之外，AspectJ 的方面声明还包含切入点和通知成员。AspectJ 提供了一个完整的 AOP 面向切面编程解决方案，有多种实现 AOP 的方式，一种是编译期间织入，一种是编译后织入，一种是运行期间织入。</p>
+<p>Spring AOP 依赖的是 Spring 框架方便的、最小化的运行时配置，所以不需要独立的启动器。但是，使用这个技术，<strong>只能通知从 Spring 框架检索出的对象</strong>（即 Spring AOP 只能用来处理 IoC 容器中的对象）。Spring 的 AOP 技术只能是<strong>对方法进行拦截</strong>。</p>
+<p>在 Spring AOP 中我们同样也可以使用类似 AspectJ 的注解来实现 AOP 功能，但是这里要注意一下，使 AspectJ 的注解时，AOP 的实现方式还是 Spring AOP。Spring 缺省使用 JDK 动态代理来作为 AOP 的实现，这样任何接口都可以被代理，Spring 也可以使用 CGLIB 代理，对于需要代理类而不是代理接口的时候 CGLIB 是很有必要的。如果一个业务对象没有实现接口，默认就会使用 CGLIB 代理。</p>
+<p>Spring AOP 和 AscpectJ 之间的关系：Spring 使用了和 AspectJ 一样的注解，并使用 AspectJ 来做切入点解析和匹配（AspectJ 5 让第三方使用 AspectJ 的切入点解析和匹配引擎的工具 API)。但是 Spring AOP 运行时仍旧是纯的 Spring AOP，并不依赖于 AspectJ 的编译器或者织入器。</p>
+<p>Spring AOP 的运行没有依托 AspectJ 的运行，但是在概念和表达式语法层面使用了 AspectJ 的风格。AspectJ 是一套独立的 AOP 面向切面编程的解决方案，和 Spring AOP 没什么关系。AspectJ 是由 Eclipse 基金会开发的。</p>
+<p><strong>Spring AOP 与 AspectJ 的区别 2</strong><br>AOP（Aspect Orient Programming），作为面向对象编程的一种补充，广泛应用于处理一些具有横切性质的系统级服务，如事务管理、安全检查、缓存、对象池管理等。AOP 实现的关键就在于 AOP 框架自动创建的 AOP 代理，AOP 代理则可分为静态代理和动态代理两大类，其中静态代理是指使用 AOP 框架提供的命令进行编译，从而在编译阶段就可生成 AOP 代理类，因此也称为 <strong>编译时增强</strong>（典型代表：AspectJ）；而动态代理则在运行时借助于 JDK 动态代理、CGLIB 等在内存中“临时”生成 AOP 动态代理类，因此也被称为 <strong>运行时增强</strong>（典型代表 Spring AOP）。</p>
+<p><strong>先说说 AspectJ</strong><br>之前，我还以为 AspectJ 是 Spring 的一部分，因为我们谈到 Spring AOP 一般都会提到 AspectJ。但实际上，AspectJ 是一套独立的面向切面编程的解决方案，和 Spring AOP 没任何关系，硬要说有什么关系，只能说 Spring AOP 借鉴了 AspectJ 的语法和注解和配置（但运行时，Spring AOP 与 AspectJ 没任何关系）。下面我们抛开 Spring，单纯的看看 AspectJ。</p>
+<p><strong>AspectJ 安装</strong><br>AspectJ 下载地址：<a href="http://www.eclipse.org/aspectj/downloads.php" rel="external nofollow noopener noreferrer" target="_blank">http://www.eclipse.org/aspectj/downloads.php</a>。下载 AspectJ jar 包，然后双击安装。安装好的目录结构为：</p>
+<ul>
+<li>bin：存放了 aj、aj5、ajc、ajdoc、ajbrowser 等命令，其中 ajc 命令最常用，作用类似于 javac</li>
+<li>doc：存放了 AspectJ 的使用说明、参考手册、API 文档等文档</li>
+<li>lib：该路径下的 4 个 JAR 文件是 AspectJ 的核心类库</li>
+</ul>
+<p><strong>AspectJ HelloWorld 实现</strong><br>服务类，方法很简单，就是打印 Hello, AspectJ 到 STDOU。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.ywsc.fenfenzhong.aspectj.learn;
+
+public class SayHelloService {
+    public void say() {
+        System.out.println("Hello, AspectJ");
+    }
+} 
+</script></code></pre>
+<p>调用 say() 方法之后，需要记录日志。通过 AspectJ 的后置增强来实现。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.ywsc.fenfenzhong.aspectj.learn;
+
+public aspect LogAspect {
+    pointcut logPointcut():execution(void SayHelloService.say());
+    after():logPointcut() {
+         System.out.println("记录日志 ..."); 
+    }
+}
+</script></code></pre>
+<p>编译、运行：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# 编译SayHelloService
+# 生成 SayHelloService.class
+ajc SayHelloService.java LogAspect.java
+
+# 运行 SayHelloService
+# 输出 Hello, AspectJ、记录日志
+java SayHelloService
+</script></code></pre>
+<p>ajc.exe 可以理解为 javac.exe 命令，都用于编译 Java 程序，区别是 ajc.exe 命令可识别 AspectJ 的语法；我们可以将 ajc.exe 看为一个增强版的 javac.exe 命令（普通 javac + 支持 AspectJ 语法的编译器）。执行 ajc 命令后生成的 SayHelloService.class 文件是由 SayHelloService.java 和 LogAspect.java 共同生成的，这个 class 文件是一个正常的普通的 class 文件，所以无需其他额外的处理，可以直接运行。这表明 AspectJ 在编译时“自动”编译得到了一个新类，这个新类增强了原有的 SayHelloService.java 类的功能，因此 AspectJ 通常被称为 <strong>编译时增强的 AOP 框架</strong>。</p>
+<p>与 AspectJ 相对的还有另外一种 AOP 框架（Spring AOP），它不需要在编译时对目标类进行增强，而是运行时生成目标类的代理类，该代理类要么与目标类实现相同的接口，要么是目标类的子类。总之，代理类的实例可作为目标类的实例来使用。一般来说，<strong>编译时增强的 AOP 框架在性能上更有优势</strong>，因为运行时动态增强的 AOP 框架需要每次运行时都进行动态增强（不过也只是第一次调用时有点开销，在这之后一般都会被缓存起来，所以性能都差不多，不必在意）。</p>
+<p><strong>再谈 Spring AOP</strong><br>Spring AOP 也是对目标类增强，生成代理类。但是与 AspectJ 的最大区别在于：<strong>Spring AOP 的运行时增强，而 AspectJ 是编译时增强</strong>。另一个区别是，AspectJ 的 AOP 显然比 Spring AOP 更强大，因为 Spring AOP 只支持方法级别的增强，而 AspectJ 支持方法、字段等级别的增强。不过其实一般情况下，方法级别的增强就够了，毕竟 Spring AOP 的初衷就不是提供像 AspectJ 那样完善、强大、复杂的 AOP 支持，而是为了解决企业开发中常见的日志记录、事务管理、权限控制等代码带来的问题。</p>
+<p>曾经以为 AspectJ 是 Spring AOP 一部分，因为 Spring AOP 使用了 AspectJ 的 Annotation，使用了 AspectJ 注解来定义切面，使用 Pointcut 来定义切入点，使用 Advice 来定义增强处理。虽然使用了 Aspect 的 Annotation，但是并没有使用它的编译器和织入器。其实现原理是 JDK 动态代理，在运行时生成代理类（为了处理没有实现任何接口的类的 AOP 支持，Spring AOP 会对它们使用 CGLIB 动态代理）。</p>
+<p>为了启用 Spring AOP 对 AspectJ 注解方面的配置支持，并保证 Spring IoC 容器中的目标 Bean 被一个或多个切面自动增强，必须在 Spring XML 配置文件中添加如下配置（加入后，需要依赖 aspectj 的注解包）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<aop:aspectj-autoproxy/>
+</script></code></pre>
+<p>当启用 AspectJ 支持后，Spring 会自动识别出 IoC 容器中被 @Aspect 标注的 Bean，并将该 Bean 作为切面 Bean 来处理。切面 Bean 与普通 Bean 没有任何区别，一样使用 <code>&lt;bean.../&gt;</code> 元素进行配置，一样支持使用依赖注入来配置属性值。</p>
+<p><strong>使用 Spring AOP 改写 Hello World 的例子</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.ywsc.fenfenzhong.aspectj.learn;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class SayHelloService {
+    public void say() {
+        System.out.print("Hello, AspectJ");
+    }
+} 
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.ywsc.fenfenzhong.aspectj.learn;
+
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class LogAspect {
+     @After("execution(* com.ywsc.fenfenzhong.aspectj.learn.SayHelloService.*(..))")
+     public void log() {
+         System.out.println("记录日志 ...");
+     }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.ywsc.fenfenzhong.mongodb;
+
+import com.ywsc.fenfenzhong.aspectj.learn.SayHelloService;
+
+public class TestCase {
+    public static void main(String[] args) {
+        SayHelloService sayHelloService = ApplicationUtil.getContext().getBean(SayHelloService.class);
+        sayHelloService.say();
+    }
+}
+</script></code></pre>
+<p>输出结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+Hello  AspectJ
+记录日志...
+</script></code></pre>
+<p><strong>AOP 的总结</strong></p>
+<blockquote>
+<p>AOP 代理 = 原有业务类 + 增强处理类。</p>
+</blockquote>
+<p><strong>最后说说 CGLIB</strong><br>CGLIB（Code Generation Library）是一个代码生成类库。可以在运行时动态的生成某个类的子类。CGLIB 动态代理弥补了 JDK 动态代理的一个不足之处，JDK 动态代理只能针对接口进行动态代理，如果委托类没有实现任何接口，那么 JDK 动态代理将无能为力，而 CGLIB 动态代理则是通过生成委托类的子类来实现动态代理的，所以只要委托类不是 final 类，或者委托类的方法不是 final 方法，就都能够被动态代理。</p>
+<p>要想 Spring AOP 强制使用 CGLIB 生成代理类，只需要在 Spring 的配置文件引入：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<aop:aspectj-autoproxy proxy-target-class="true"/>
+</script></code></pre>
+<p>proxy-target-class 属性的默认值为 false，表示优先使用 JDK 动态代理，只有当无法使用 JDK 动态代理时，Spring AOP 才会考虑使用 CGLIB 动态代理，一般我们不需要修改这个属性，让 Spring 自己决定最好。</p>
+<h2 id="AOP-FAQ-2"><a href="#AOP-FAQ-2" class="headerlink" title="AOP FAQ 2"></a>AOP FAQ 2</h2><p><strong>Spring AOP 与 AspectJ</strong><br>前两天看了一些关于 Spring AOP 和 AspectJ 的文章，但是总是感觉非常的乱，有的说 Spring AOP 跟 AspectJ 相互独立，有的说 Spring AOP 依赖于 AspectJ，有的甚至直接把两者混为一谈。现在我告诉大家：Spring AOP 和 AspectJ 之间没有任何关系，它们是不同公司的不同 AOP 产品，AspectJ 提供一个完整的 AOP 实现，当然 Spring AOP 也提供一个完整的 AOP 实现。但是 AspectJ 提供的 AOP 支持更完整且更强大，而 Spring AOP 提供的 AOP 支持不如 AspectJ 这么强大，应该说“轻量”，但对我们来说足够用了。</p>
+<p>那为什么我们使用 Spring AOP 的时候会用到 AspectJ 的注解呢？其实 Spring AOP 以前只支持 XML 文件的 AOP 配置，但是由于 XML 文件的配置方式太繁琐，所以 Spring AOP 机智的引进了 AspectJ 的注解配置方式，并且为了减少开发人员的学习成本，直接将 AspectJ 的注解全部照搬了过来，因为是“照搬”的，所以使用当你在 Spring AOP 中使用 AspectJ 注解配置语法时，通常还需要导入 AspectJ 的某些依赖包。</p>
+<p>有必要强调一点，Spring AOP 引入 AspectJ 注解的目的是为了取代 XML 这种繁琐的 AOP 配置，Spring AOP 的底层实现是没有任何改变的，依旧是通过动态代理机制（首选 JDK 动态代理，备选 CGLIB 动态代理），这一点不要搞混了。而 AspectJ 的实现方式与动态代理没有任何关系，AspectJ 有两种实现方式：一种是编译期间织入，这种方式是开销最小的，编译出来的就是普通的 class 文件，所以 jvm 能直接运行，不需要做任何特殊操作。另一种是通过 java-agent 代理，在类加载期间操作 class 文件，织入对应的切面。</p>
+<p><strong>AspectJ 的切面描述方法</strong><br>AspectJ 提供了两套对切面的描述方法，一种就是我们常见的 <strong>基于 Java 注解</strong> 切面描述的方法，这种方法兼容 java 语法，写起来十分方便，不需要 IDE 的额外语法检测支持；另外一种是 <strong>基于 aspect 文件</strong> 的切面描述方法，这种语法本身并不是 java 语法，因此写的时候需要 IDE 的插件支持才能进行语法检查。所以，实际使用中，<strong>用的最多的还是基于 Java 注解的方式</strong>来描述切面，因为不需要额外的语法插件支持，学习成本也低。</p>
+<p><strong>AspectJ 相关 jar 包</strong><br>AspectJ 是 Eclipse 基金会的一个项目，官网就在 Eclipse 官网里。官网里提供了一个 aspectJ.jar 的下载链接，但其实这个链接只是一个安装包，把安装包里的东西解压后就是一个 <strong>文档 + 脚本 + jar包</strong> 的程序包，其中比较重要的是如下部分：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+myths@pc:~/aspectj1.8$ tree bin/ lib/
+bin/
+├── aj
+├── aj5
+├── ajbrowser
+├── ajc
+└── ajdoc
+lib/
+├── aspectjrt.jar
+├── aspectjtools.jar
+├── aspectjweaver.jar
+└── org.aspectj.matcher.jar
+</script></code></pre>
+<p>这些 jar 包并不总是需要从官网下载，很多情况下在 maven 等中心库中直接找会更方便。<br>其中重要的文件是前三个 jar 包，bin 文件夹中的脚本其实都是调用这些 jar 包的命令。</p>
+<ul>
+<li><strong>aspectjrt.jar</strong>：提供运行时的一些注解、静态方法等，通常我们使用 AspectJ 时都会用到这个包。</li>
+<li><strong>aspectjtools.jar</strong>：提供 ajc 编译器（可理解为 javac 的增强版/包装版），可在编译期将 java 文件或者 class 文件或 aspect 文件定义的切面织入到业务代码中。通常 ajc 会被封装为 IDE 插件。</li>
+<li><strong>aspectjweaverjar</strong>：提供了一个 java agent，用于在类加载期间织入切面(Load time weaving)。并且提供了对切面语法的相关处理等基础方法，供 ajc 使用或者供第三方开发使用。这个包一般我们不需要显式引用，除非需要使用 LTW（类加载器间动态织入）。</li>
+</ul>
+<p><strong>AspectJ 的几种使用方法</strong>：</p>
+<ul>
+<li><strong>编译时织入</strong>：利用 ajc 编译器替代 javac 编译器，编译 java 源文件和 aspect 源文件。</li>
+<li><strong>编译后织入</strong>：利用 ajc 编译器向 javac 编译期编译后的 class 文件或 jar 文件织入切面代码。</li>
+<li><strong>加载时织入</strong>：不使用 ajc 编译器，利用 aspectjweaver.jar，使用 java-agent 在类加载期间织入。</li>
+</ul>
+<p>其实说到底就是两种织入方式：<strong>编译时织入</strong>（ajc 编译器）、<strong>运行时织入</strong>（java agent 代理）。</p>
+<p>说到这里，我又想说说 AOP 的三个织入时机了：</p>
+<ol>
+<li>编译期间织入：AspectJ 实现方式。需要特殊的 Java 编译器（如 ajc 编译器）。</li>
+<li>装载期间织入：AspectJ 实现方式。需要特殊的类加载器或通过 java-agent 代理。</li>
+<li>运行期间织入：Spring AOP 实现方式。实现原理是动态代理（JDK/CGLIB 动态代理）。</li>
+</ol>
+<p>所以从性能上讲，AspectJ 可能比 Spring AOP 好，特别是编译期间织入，这可能是性能最好的一种，因为没有任何运行时开销。不过 Spring AOP 的性能也不能说低，在实际运用中，不用太过担心 AOP 带来的性能开销，如果真的有性能问题，你最应该检查的是你的代码，而不是怪 AOP。</p>
+<p><strong>为什么能推断出 Spring AOP 依旧使用动态代理来实现 AOP？</strong><br>根据 AspectJ 的使用方式，我们知道，如果要向代码织入切面，<strong>要么使用 ajc 编译</strong>，<strong>要么使用 aspectjweaver 的 agent 代理</strong>。但是 Spring AOP 既没有依赖任何 aspectjtools 的相关 jar 包（ajc 编译器相关），虽然依赖了 aspectjweaver 这个包（agent 代理相关），但是并没有使用 agent 代理（只是复用了里面的一些类，避免重复造轮子而已）。所以，Spring AOP 依旧使用动态代理实现 AOP，而不是使用 AspectJ 的编译时织入或者加载时织入。</p>
+<p>AspectJ 提供两种<strong>切面描述方式</strong>：<strong>java注解描述方式</strong>、<strong>aspect文件描述方式</strong>；AspectJ 提供两种<strong>切面织入方式</strong>：<strong>ajc编译器，编译期间织入</strong>、<strong>agent代理，加载期间织入</strong>，请不要搞混了这四个东西，它们可以任意搭配。</p>
+<p><strong>基于 aspect 源文件的描述方式</strong><br>业务类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public class App {
+    public void say() {
+        System.out.println("App say");
+    }
+
+    public static void main(String[] args) {
+        App app = new App();
+        app.say();
+    }
+}
+</script></code></pre>
+<p>切面类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public aspect AjAspect {
+    pointcut say(): execution(* App.say(..));
+
+    before(): say() {
+        System.out.println("AjAspect before say");
+    }
+
+    after(): say() {
+        System.out.println("AjAspect after say");
+    }
+}
+</script></code></pre>
+<p><strong>基于 annotation 注解的描述方式</strong><br>业务类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.mythsman.test;
+
+public class App {
+    public void say() {
+        System.out.println("App say");
+    }
+
+    public static void main(String[] args) {
+        App app = new App();
+        app.say();
+    }
+}
+</script></code></pre>
+<p>切面类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.mythsman.test;
+
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+
+@Aspect
+public class AnnoAspect {
+    @Pointcut("execution(* com.mythsman.test.App.say(..))")
+    public void jointPoint() {
+    }
+
+    @Before("jointPoint()")
+    public void before() {
+        System.out.println("AnnoAspect before say");
+    }
+
+    @After("jointPoint()")
+    public void after() {
+        System.out.println("AnnoAspect after say");
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+AnnoAspect before say
+App say
+AnnoAspect after say
+</script></code></pre>
+<p><strong>Spring AOP 和 aspectjweaver.jar 关系</strong><br>Spring 2.0 以后，引入了 @AspectJ 和 Schema-based 的两种配置方式（Java注解、XML配置）。注意，@AspectJ 和 AspectJ 没多大关系，并不是说基于 AspectJ 实现的，而仅仅是使用了 AspectJ 中的概念，包括使用的注解也是直接来自于 AspectJ 的包。所以我们在使用 Spring AOP 时，需要引入 aspectjweaver.jar 这个依赖包，这个包来自于 AspectJ，使用 maven 引入这个依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.8.11</version>
+</dependency>
+</script></code></pre>
+<p>如果是使用 Spring Boot 的话，添加以下依赖即可：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+</script></code></pre>
+<p>在 @AspectJ 的配置方式中，之所以要引入 aspectjweaver.jar 并不是因为我们需要使用 AspectJ 的处理功能，而是因为 Spring 使用了 AspectJ 提供的一些注解，实际上还是纯的 Spring AOP 代码。说了这么多，明确一点，@AspectJ 采用注解的方式来配置使用 Spring AOP。</p>
+<p>首先，我们需要开启 @AspectJ 的注解配置方式，在 Spring 配置文件中加入：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<aop:aspectj-autoproxy/>
+</script></code></pre>
+<p>一旦开启了上面的配置，那么所有使用 @Aspect 注解的 bean 都会被 Spring 当做用来实现 AOP 的配置类，我们称之为一个 Aspect。注意了，@Aspect 注解要作用在 bean 上面，不管是使用 @Component 等注解方式，还是在 xml 中配置 bean，首先它需要是一个 bean。比如下面这个 bean，它的类名上使用了 @Aspect，它就会被当做 Spring AOP 的配置。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="myAspect" class="org.xyz.NotVeryUsefulAspect">
+    <!-- configure properties of aspect here as normal -->
+</bean>
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package org.xyz;
+
+import org.aspectj.lang.annotation.Aspect;
+
+@Aspect
+public class NotVeryUsefulAspect {
+    // TODO
+}
+</script></code></pre>
+<h2 id="AOP-核心概念"><a href="#AOP-核心概念" class="headerlink" title="AOP 核心概念"></a>AOP 核心概念</h2><p><strong>Aspect 切面</strong>：切面由 <code>pointcut</code> 和 <code>advice</code> 组成，pointcut 和 advice 是相辅相成的，advice 为增强代码（方法），pointcut 为切入位置（表达式）。可以简单地认为，被 <code>@Aspect</code> 标注的 Class 就是切面。</p>
+<p><strong>Advice 增强</strong>：所谓增强就是一段代码（在 Java 中就是一个方法），有人喜欢将 Advice 直译为“通知”，这种翻译其实一点都不好，我觉得翻译为“增强”更好一点，比如日志记录就是一个增强，权限检查也是一个增强。</p>
+<p><strong>PointCut 切点</strong>：切点是一个表达式，用来告诉 advice 应该给哪些 join point 增强，join point 即连接点，所谓连接点就是可以被增强的实体，在 AspectJ 中，join point 可以是方法、字段等，而在 Spring AOP 中，join point 只能是方法（因为动态代理是基于方法的，所以存在这个限制）。</p>
+<p><strong>JoinPoint 连接点</strong>：连接点是可以被 Advice 增强的实体，在 AspectJ 中，join point 可以是方法也可以是字段；在 Spring AOP 中，join point 始终是方法。注意：join point 是实体，pointcut 是表达式。</p>
+<p><strong>Weaving 织入</strong>：所谓织入就是将切面类和业务类合并在一起的动作，Spring AOP 使用动态代理进行切面织入。</p>
+<p>关于 AOP 的四个核心概念，上面的解释已经很清楚了，如果你还不懂，再来看一下这个通俗易懂的例子：</p>
+<ul>
+<li><strong>join point</strong>：爪哇的小县城里的百姓: 因为根据定义, join point 是所有可能被织入 advice 的候选的点, 在 Spring AOP中, 则可以认为所有方法执行点都是 join point. 而在我们上面的例子中, 命案发生在小县城中, 按理说在此县城中的所有人都有可能是嫌疑人.</li>
+<li><strong>point cut</strong>：男性, 身高约七尺五寸: 我们知道, 所有的方法(joint point) 都可以织入 advice, 但是我们并不希望在所有方法上都织入 advice, 而 pointcut 的作用就是提供一组规则来匹配joinpoint, 给满足规则的 joinpoint 添加 advice. 同理, 对于县令来说, 他再昏庸, 也知道不能把县城中的所有百姓都抓起来审问, 而是根据凶手是个男性, 身高约七尺五寸, 把符合条件的人抓起来. 在这里 凶手是个男性, 身高约七尺五寸 就是一个修饰谓语, 它限定了凶手的范围, 满足此修饰规则的百姓都是嫌疑人, 都需要抓起来审问.</li>
+<li><strong>advice</strong>：抓过来审问, advice 是一个动作, 即一段 Java 代码, 这段 Java 代码是作用于 point cut 所限定的那些 join point 上的. 同理, 对比到我们的例子中, 抓过来审问 这个动作就是对作用于那些满足 男性, 身高约七尺五寸 的爪哇的小县城里的百姓.</li>
+<li><strong>aspect</strong>：aspect 是 point cut 与 advice 的组合, 因此在这里我们就可以类比: “根据老王的线索, 凡是发现有身高七尺五寸的男性, 都要抓过来审问” 这一整个动作可以被认为是一个 aspect.</li>
+</ul>
+<p><strong>Java注解方式、XML配置方式</strong><br>Spring AOP 支持两种 AOP 配置方法：一种是基于 Java 注解（常用），一种是基于 XML 文件（较繁琐）。因为基于 XML 文件的配置方式很麻烦，所以大部分人都是使用注解方式来进行 AOP 配置的，因为 Spring AOP 的注解配置方式完全是从 AspectJ 那里照搬过来的，所以需要在 maven 中引入 aspectjweaver.jar 依赖，然后修改 Spring 配置文件，添加下面这行配置，来启用 @AspectJ 注解风格的配置方式：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- 优先考虑 JDK 动态代理，不行在考虑 CGLIB 动态代理 -->
+<aop:aspectj-autoproxy/>
+
+<!-- 告诉 Spring AOP，不使用 JDK 动态代理，只用 CGLIB -->
+<aop:aspectj-autoproxy proxy-target-class="true"/>
+</script></code></pre>
+<p><strong>声明 Aspect 切面</strong><br>声明一个 Aspect 切面很简单，只需给 bean 类加上 @Aspect 注解就行：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package org.xyz;
+
+import org.aspectj.lang.annotation.Aspect;
+
+@Aspect
+public class AspectModule {
+
+}
+</script></code></pre>
+<p>前面说了，Spring AOP 只作用于 IoC 容器中的 bean，所以需要注册为 bean：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<bean id="myAspect" class="org.xyz.AspectModule">
+   <!-- configure properties of aspect here as normal -->
+</bean>
+</script></code></pre>
+<p><strong>声明 PointCut 切点</strong><br>声明一个 PointCut 切点：我们知道 Aspect 切面由两个部分组成，一个是 Advice 增强，一个是 PointCut 切点，因为是使用注解来声明切点，所以我们需要在一个空方法上面标注 @PointCut 注解，被 @PointCut 注解标注的方法应该是空的，因为它没有实际的作用，它的作用仅仅是承载 @PointCut 注解而已，并且便于 Advice 引用它。承载切点的方法签名一般为 <code>private void MethodName() {}</code>（方法体为空），例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import org.aspectj.lang.annotation.PointCut;
+
+@PointCut("execution(* com.xyz.myapp.service.*.*(..))")
+private void businessService() {}
+</script></code></pre>
+<p>我们实际关心的是 @PointCut 里面的 value 元素值，这是一个 String 类型的表达式，用来匹配要被增强的方法，比如上面这个例子，将匹配 com.xyz.myapp.service 包下所有类中的所有方法。被 @PointCut 注解的方法的名称就是连接点的名称，我们可以在 Advice 增强注解上面引用它。</p>
+<p>再来看一个例子，它将匹配 com.tutorialspoint 包下的 Student 类的所有 getName() 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@PointCut("execution(* com.tutorialspoint.Student.getName(..))") 
+private void getName() {}
+</script></code></pre>
+<p><strong>声明 Advice 增强</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Before("businessService()")
+public void doBeforeTask(){
+    // TODO
+}
+
+@After("businessService()")
+public void doAfterTask(){
+    // TODO
+}
+
+@AfterReturning(PointCut = "businessService()", returning = "retVal")
+public void doAfterReturnningTask(Object retVal){
+    // TODO
+}
+
+@AfterThrowing(PointCut = "businessService()", throwing = "ex")
+public void doAfterThrowingTask(Exception ex){
+    // TODO
+}
+
+@Around("businessService()")
+public void doAroundTask(){
+    // TODO
+}
+</script></code></pre>
+<p>当然，Aspect 切面中可以没有 PointCut，因为我们可以在 Advice 上面内联对应的 PointCut 表达式：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Before("execution(* com.xyz.myapp.service.*.*(..))")
+public doBeforeTask(){
+    // TODO
+}
+</script></code></pre>
+<p>注意到没？我们可以直接在 Advice 中内联 PointCut 表达式，写法与在 @PointCut 上面的表达式一样，一个最佳实践是，如果一个 PointCut 表达式在多处地方都被引用了，那么就不建议使用内联方式了，因为这会导致重复代码，如果后期要修改表达式的内容，就意味着要同时修改多个地方的表达式，不利于维护。这个时候应该使用原始方法来定义，即在一个空方法上定义 PointCut 表达式，然后在 Advice 上使用 <code>MethodName()</code> 来引用对应的 PointCut 表达式内容，如上所示。有必要说明一点，Spring AOP 只能增强 public 方法。</p>
+<p>关于 PointCut 表达式的语法，这里简单的说一下，最常见的就是下面这种了：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@PointCut("execution(* com.tutorialspoint.Student.getName(..))") 
+</script></code></pre>
+<p>最常见的描述符就是 execution，其具体的语法可以用下面这个表达式来概括：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+execution([modifiers-pattern] returnType-pattern name-pattern(param-pattern) [throws-pattern])
+</script></code></pre>
+<p>其实就是一个普通的 Java 方法定义而已，只不过可以使用某些特殊的通配符来进行匹配，就这么简单。其中用方括号标识的部分是可以省略的，还有一个需要注意的地方就是这个 name-pattern 是全限定方法名，所谓全限定方法名就是包含其对应的全限定类名的方法名，也比较好理解。有这么一些特殊的关键字：</p>
+<ul>
+<li>在各个 pattern 中，可以使用 <code>*</code> 来表示匹配所有（类似 Shell 通配符）。</li>
+<li>在 name-pattern 中，<code>..</code> 模式将匹配当前包下的所有子包（递归，类似 Shell 通配符）。</li>
+<li>在 param-pattern 中，可以指定具体的参数类型，参数间用 <code>,</code> 隔开，可使用 <code>*</code> 来表示匹配任意类型的参数，如 <code>(String)</code> 匹配只有一个 String 参数的方法；<code>(*, String)</code> 匹配有两个参数的方法，第一个参数是任意类型，第二个参数是 String 类型。param-pattern 还有一个特殊模式，即 <code>(..)</code>，它用来匹配有任意个参数的方法（零个参数或者多个参数都可以，并且不限定类型，即数量和类型上的通配）。</li>
+</ul>
+<p>上面的描述有些不太准确，我们来看另一个文档的描述，关于 pattern 中的通配符：</p>
+<ul>
+<li><code>*</code>：匹配任何数量字符；</li>
+<li><code>..</code>：匹配任何数量字符的重复；</li>
+<li><code>+</code>：匹配指定类型的子类型（作缀）；</li>
+</ul>
+<p><strong>5 种 Advice 类型</strong></p>
+<ul>
+<li>@Before：前置通知，在调用目标方法之前，执行通知定义的任务</li>
+<li>@After：后置通知，在目标方法执行结束后，无论结果如何都执行通知定义的任务</li>
+<li>@AfterThrowing：异常通知，如果目标方法执行过程中抛出异常，则执行通知定义的任务</li>
+<li>@AfterReturning：后置通知，在目标方法执行结束后，如果执行成功，则执行通知定义的任务</li>
+<li>@Around：环绕通知，即 Before + After，在目标方法执行前和执行后，都需要执行通知定义的任务</li>
+</ul>
+<h2 id="AOP-HelloWorld"><a href="#AOP-HelloWorld" class="headerlink" title="AOP HelloWorld"></a>AOP HelloWorld</h2><p>配置 pom.xml，引入 spring-context、spring-aop、aspectjweaver 依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-context</artifactId>
+  <version>${spring.version}</version>
+</dependency>
+
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-aop</artifactId>
+  <version>${spring.version}</version>
+</dependency>
+
+<dependency>
+  <groupId>org.aspectj</groupId>
+  <artifactId>aspectjweaver</artifactId>
+  <version>1.9.2</version>
+</dependency>
+</script></code></pre>
+<p>编写业务类，HelloWorld.java，包含一个简单的 hello() 方法，打印一行字符串：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class HelloWorld {
+    public void hello() {
+        System.out.println("Hello, World!");
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        helloWorld.hello();
+    }
+}
+</script></code></pre>
+<p>编写切面类，HelloAspect.java，定义了一个 hello() 切点，以及 Before 增强和 After 增强：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+
+@Aspect
+public class HelloAspect {
+    @Pointcut("execution(void com.zfl9.HelloWorld.hello())")
+    private void hello() {}
+
+    @Before("hello()")
+    public void beforeHello() {
+        System.out.println("before hello()");
+    }
+
+    @After("hello()")
+    public void afterHello() {
+        System.out.println("after hello()");
+    }
+}
+</script></code></pre>
+<p>编写 beans.xml（Spring 配置文件，因为需要从 ClassPath 中获取，所以放到 resources 目录）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+  <aop:aspectj-autoproxy/>
+
+  <bean id="helloWorld" class="com.zfl9.HelloWorld"/>
+
+  <bean id="helloAspect" class="com.zfl9.HelloAspect"/>
+
+</beans>
+</script></code></pre>
+<p>然后运行，输出结果如下，可以发现 AOP 织入正常，没有问题：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+before hello()
+Hello, World!
+after hello()
+</script></code></pre>
+<h2 id="Before-增强"><a href="#Before-增强" class="headerlink" title="Before 增强"></a>Before 增强</h2><p>所谓 Before 增强就是在执行目标方法之前，先执行我们的增强代码，再执行目标方法。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@PointCut("execution(* com.tutorialspoint.Student.getName(..))")
+private void selectGetName(){}
+
+@Before("selectGetName()")
+public void beforeAdvice(){
+   System.out.println("Going to setup student profile.");
+} 
+</script></code></pre>
+<h2 id="After-增强"><a href="#After-增强" class="headerlink" title="After 增强"></a>After 增强</h2><p>所谓 After 增强就是在执行目标方法之后（无论执行成功还是失败），执行我们的增强代码。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@PointCut("execution(* com.tutorialspoint.Student.getAge(..))")
+private void selectGetName(){}
+
+@After("selectGetAge()")
+public void afterAdvice(){
+   System.out.println("Student profile setup completed.");
+} 
+</script></code></pre>
+<h2 id="AfterReturning-增强"><a href="#AfterReturning-增强" class="headerlink" title="AfterReturning 增强"></a>AfterReturning 增强</h2><p>AfterReturning 增强属于 After 细分的一种，即只有方法执行成功后才会执行此增强，例子：</p>
+<p>业务类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class HelloWorld {
+    public String hello() {
+        System.out.println("hello, world!");
+        return "return: hello, world";
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        helloWorld.hello();
+    }
+}
+</script></code></pre>
+<p>切面类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+
+@Aspect
+public class HelloAspect {
+    @Pointcut("execution(* com.zfl9.HelloWorld.hello())")
+    private void hello() {}
+
+    @AfterReturning(pointcut = "hello()", returning = "returnValue")
+    public void afterReturning(JoinPoint joinPoint, Object returnValue) {
+        System.out.println(joinPoint.getSignature()); // method sign
+        System.out.println(returnValue.toString());   // return value
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+hello, world!
+String com.zfl9.HelloWorld.hello()
+return: hello, world
+</script></code></pre>
+<h2 id="AfterThrowing-增强"><a href="#AfterThrowing-增强" class="headerlink" title="AfterThrowing 增强"></a>AfterThrowing 增强</h2><p>AfterThrowing 增强也是 After 细分的一种，当目标方法在执行过程中抛出异常后，才会执行此增强，例子：</p>
+<p>业务类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class HelloWorld {
+    public void hello() {
+        System.out.println("hello, world!");
+        throw new RuntimeException("runtime exception");
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        helloWorld.hello();
+    }
+}
+</script></code></pre>
+<p>切面类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+
+@Aspect
+public class HelloAspect {
+    @Pointcut("execution(void com.zfl9.HelloWorld.hello())")
+    private void hello() {}
+
+    @AfterThrowing(pointcut = "hello()", throwing = "exception")
+    public void afterReturning(JoinPoint joinPoint, Exception exception) {
+        System.out.println(joinPoint.getSignature()); // method sign
+        System.out.println(exception.getMessage());   // exception obj
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+hello, world!
+Exception in thread "main" java.lang.RuntimeException: runtime exception
+void com.zfl9.HelloWorld.hello()
+runtime exception
+</script></code></pre>
+<h2 id="Around-增强"><a href="#Around-增强" class="headerlink" title="Around 增强"></a>Around 增强</h2><p>Around 增强其实就是 Before 增强和 After 增强的结合版，我们来看下面这个简单的例子：</p>
+<p>业务类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class HelloWorld {
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        System.out.println("10 + 20 = " + helloWorld.add(10, 20));
+    }
+}
+</script></code></pre>
+<p>切面类：注意，Around 增强需要返回目标方法的执行结果，执行结果的类型使用 Object 类就行了。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.util.Arrays;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+
+@Aspect
+public class HelloAspect {
+    @Pointcut("execution(int com.zfl9.HelloWorld.add(int, int))")
+    private void add() {}
+
+    @Around("add()")
+    public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("method: " + joinPoint.getSignature().getName());
+        System.out.println("argument: " + Arrays.toString(joinPoint.getArgs()));
+
+        System.out.println("before add()");
+        Object result = joinPoint.proceed();
+        System.out.println("return value: " + result);
+        System.out.println("after add()");
+
+        return result;
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+method: add
+argument: [10, 20]
+before add()
+return value: 30
+after add()
+10 + 20 = 30
+</script></code></pre>
+<p>注意，JoinPoint 和 ProceedingJoinPoint 都是 Interface，后者是前者的子接口，后者增加了一个 proceed() 方法，这个方法的作用就是用来执行目标方法的，它有两个重载版本，一个是不带参数的（如上所示），这种方法调用不会改变目标方法的参数，即使用原有参数；另一个是带有 <code>Object[] args</code> 参数的，这个 args 数组就是表示目标方法的参数（不包括 this 指针）。定义如下（JoinPoint 是目标方法的抽象）：</p>
+<p>JoinPoint.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public interface JoinPoint {  
+    String getKind();                   // 返回连接点的类型
+    StaticPart getStaticPart();         // 返回连接点的静态部分
+    String toString();                  // 连接点所在位置的相关信息  
+    String toShortString();             // 连接点所在位置的简短信息  
+    String toLongString();              // 连接点所在位置的详细信息  
+    Object getThis();                   // AOP 代理对象，代理类对象
+    Object getTarget();                 // 返回目标对象，委托类对象
+    Object[] getArgs();                 // 返回被增强方法的参数列表
+    Signature getSignature();           // 返回当前连接点的方法签名  
+    SourceLocation getSourceLocation(); // 返回连接点的源文件的位置
+} 
+</script></code></pre>
+<p>ProceedingJoinPoint.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public interface ProceedingJoinPoint extends JoinPoint {  
+    public Object proceed() throws Throwable;  
+    public Object proceed(Object[] args) throws Throwable;  
+}
+</script></code></pre>
+<p>在 Around 增强中，第一个参数为 ProceedingJoinPoint，因为 Around 增强要返回目标方法的执行结果。<br>除了 Around 增强外，其他四个增强方法的参数都可以为空，当然第一个参数也可以都为 JoinPoint。例子：</p>
+<p><strong>参数都为空</strong><br>业务类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class HelloWorld {
+    public void testForBeforeAdvice() {
+        System.out.println("testForBeforeAdvice()");
+    }
+
+    public void testForAfterAdvice() {
+        System.out.println("testForAfterAdvice()");
+    }
+
+    public String testForAfterReturningAdvice() {
+        System.out.println("testForAfterReturningAdvice()");
+        return "testForAfterReturningAdvice-result";
+    }
+
+    public void testForAfterThrowingAdvice() {
+        System.out.println("testForAfterThrowingAdvice()");
+        throw new RuntimeException("test-runtime-exception");
+    }
+
+    public String testForAroundAdvice() {
+        System.out.println("testForAroundAdvice()");
+        return "testForAroundAdvice-result";
+    }
+
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        helloWorld.testForBeforeAdvice();
+        helloWorld.testForAfterAdvice();
+        helloWorld.testForAfterReturningAdvice();
+        try {
+            helloWorld.testForAfterThrowingAdvice();
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+        helloWorld.testForAroundAdvice();
+    }
+}
+</script></code></pre>
+<p>切面类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+
+@Aspect
+public class HelloAspect {
+    @Before("execution(* com.zfl9.HelloWorld.testForBeforeAdvice(..))")
+    public void beforeAdvice() {
+        System.out.println("inside before advice");
+    }
+
+    @After("execution(* com.zfl9.HelloWorld.testForAfterAdvice(..))")
+    public void afterAdvice() {
+        System.out.println("inside after advice");
+    }
+
+    @AfterReturning(pointcut = "execution(* com.zfl9.HelloWorld.testForAfterReturningAdvice(..))")
+    public void afterReturningAdvice() {
+        System.out.println("inside afterReturning advice");
+    }
+
+    @AfterThrowing(pointcut = "execution(* com.zfl9.HelloWorld.testForAfterThrowingAdvice(..))")
+    public void afterThrowingAdvice() {
+        System.out.println("inside afterThrowing advice");
+    }
+
+    @Around(value = "execution(* com.zfl9.HelloWorld.testForAroundAdvice(..))")
+    public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("inside around advice");
+        return joinPoint.proceed();
+    }
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+inside before advice
+testForBeforeAdvice()
+testForAfterAdvice()
+inside after advice
+testForAfterReturningAdvice()
+inside afterReturning advice
+testForAfterThrowingAdvice()
+inside afterThrowing advice
+test-runtime-exception
+inside around advice
+testForAroundAdvice()
+</script></code></pre>
+<p><strong>参数都不为空</strong><br>切面类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+
+@Aspect
+public class HelloAspect {
+    @Before("execution(* com.zfl9.HelloWorld.testForBeforeAdvice(..))")
+    public void beforeAdvice(JoinPoint joinPoint) {
+        System.out.println("inside before advice");
+        System.out.println("joinPoint: " + joinPoint);
+    }
+
+    @After("execution(* com.zfl9.HelloWorld.testForAfterAdvice(..))")
+    public void afterAdvice(JoinPoint joinPoint) {
+        System.out.println("inside after advice");
+        System.out.println("joinPoint: " + joinPoint);
+    }
+
+    @AfterReturning(pointcut = "execution(* com.zfl9.HelloWorld.testForAfterReturningAdvice(..))")
+    public void afterReturningAdvice(JoinPoint joinPoint) {
+        System.out.println("inside afterReturning advice");
+        System.out.println("joinPoint: " + joinPoint);
+    }
+
+    @AfterThrowing(pointcut = "execution(* com.zfl9.HelloWorld.testForAfterThrowingAdvice(..))")
+    public void afterThrowingAdvice(JoinPoint joinPoint) {
+        System.out.println("inside afterThrowing advice");
+        System.out.println("joinPoint: " + joinPoint);
+    }
+
+    @Around(value = "execution(* com.zfl9.HelloWorld.testForAroundAdvice(..))")
+    public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("inside around advice");
+        System.out.println("joinPoint: " + joinPoint);
+        return joinPoint.proceed();
+    }
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+inside before advice
+joinPoint: execution(void com.zfl9.HelloWorld.testForBeforeAdvice())
+testForBeforeAdvice()
+testForAfterAdvice()
+inside after advice
+joinPoint: execution(void com.zfl9.HelloWorld.testForAfterAdvice())
+testForAfterReturningAdvice()
+inside afterReturning advice
+joinPoint: execution(String com.zfl9.HelloWorld.testForAfterReturningAdvice())
+testForAfterThrowingAdvice()
+inside afterThrowing advice
+joinPoint: execution(void com.zfl9.HelloWorld.testForAfterThrowingAdvice())
+test-runtime-exception
+inside around advice
+joinPoint: execution(String com.zfl9.HelloWorld.testForAroundAdvice())
+testForAroundAdvice()
+</script></code></pre>
+<p><strong>AfterReturning 和 AfterThrowing 的第二个参数</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+
+@Aspect
+public class HelloAspect {
+    @Before("execution(* com.zfl9.HelloWorld.testForBeforeAdvice(..))")
+    public void beforeAdvice(JoinPoint joinPoint) {
+        System.out.println("inside before advice");
+        System.out.println("joinPoint: " + joinPoint);
+    }
+
+    @After("execution(* com.zfl9.HelloWorld.testForAfterAdvice(..))")
+    public void afterAdvice(JoinPoint joinPoint) {
+        System.out.println("inside after advice");
+        System.out.println("joinPoint: " + joinPoint);
+    }
+
+    @AfterReturning(pointcut = "execution(* com.zfl9.HelloWorld.testForAfterReturningAdvice(..))", returning = "result")
+    public void afterReturningAdvice(JoinPoint joinPoint, Object result) {
+        System.out.println("inside afterReturning advice");
+        System.out.println("joinPoint: " + joinPoint);
+        System.out.println("result: " + result);
+    }
+
+    @AfterThrowing(pointcut = "execution(* com.zfl9.HelloWorld.testForAfterThrowingAdvice(..))", throwing = "throwable")
+    public void afterThrowingAdvice(JoinPoint joinPoint, Throwable throwable) {
+        System.out.println("inside afterThrowing advice");
+        System.out.println("joinPoint: " + joinPoint);
+        System.out.println("throwable: " + throwable);
+    }
+
+    @Around(value = "execution(* com.zfl9.HelloWorld.testForAroundAdvice(..))")
+    public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("inside around advice");
+        System.out.println("joinPoint: " + joinPoint);
+        return joinPoint.proceed();
+    }
+}
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+inside before advice
+joinPoint: execution(void com.zfl9.HelloWorld.testForBeforeAdvice())
+testForBeforeAdvice()
+testForAfterAdvice()
+inside after advice
+joinPoint: execution(void com.zfl9.HelloWorld.testForAfterAdvice())
+testForAfterReturningAdvice()
+inside afterReturning advice
+joinPoint: execution(String com.zfl9.HelloWorld.testForAfterReturningAdvice())
+result: testForAfterReturningAdvice-result
+testForAfterThrowingAdvice()
+inside afterThrowing advice
+joinPoint: execution(void com.zfl9.HelloWorld.testForAfterThrowingAdvice())
+throwable: java.lang.RuntimeException: test-runtime-exception
+test-runtime-exception
+inside around advice
+joinPoint: execution(String com.zfl9.HelloWorld.testForAroundAdvice())
+testForAroundAdvice()
+</script></code></pre>
+<h2 id="几个特殊的配置"><a href="#几个特殊的配置" class="headerlink" title="几个特殊的配置"></a>几个特殊的配置</h2><p><strong><code>&lt;context:annotation-config/&gt;</code></strong><br>激活 context 中所有 bean 上面的注解（如 @Autowired 注解）。</p>
+<p><strong><code>&lt;context:component-scan base-package=&quot;com.zfl9&quot;/&gt;</code></strong><br>扫描指定包（含所有子包，递归扫描）下的所有 bean 定义注解，并注册到 context 中，并激活 context 中所有 bean 上面的注解，所以如果定义了此元素，就不再需要定义 <code>&lt;context:annotation-config/&gt;</code> 元素。</p>
+<p><strong><code>&lt;mvc:annotation-driven/&gt;</code></strong><br>用在 Spring MVC 中，虽然不定义这个元素 Web 程序一般也能运行，但最好还是加上该元素。此元素将注册将 <code>@Controller</code> 所需的 <code>HandlerMapping</code> 和 <code>HandlerAdapter</code> bean。此外，该元素还会设置一些默认值。</p>
+<p>mvc:annotation-driven 的作用已经详细介绍了，你只要记住，使用 Spring MVC 时，在 Spring 配置文件上加上这行准没错。而 context:annotation-config 其实在最开头的 IoC 容器中就学习了，它的作用是用来激活已经在 bean 容器中的 bean 上面的注解（@Autowired、@Resource、@Require 等），这里有一个关键点，那就是在 IoC 容器中的 bean，所以我们还是需要先在 beans.xml 中注册对应的 bean，Spring 才会扫描 bean 上面的注解。而 context:component-scan 的作用是递归扫描指定 package 下面的 Class 文件，如果发现被 @Component 标注的类（包括 @Component 的子注解），那么 Spring 就会把他们当作一个 bean，然后注册到 bean 容器中（实例化它们的实例），并且还会激活 IoC 容器中的所有 bean 上面的注解（@Autowired、@Resource、@Require 等），所以如果配置了 component-scan 元素，就不需要配置 annotation-config 元素了，因为没有这个必要了。一般为了方便，我们都会在 beans.xml 中加上 context:component-scan 配置，这样就不需要在 beans.xml 中定义 <code>&lt;bean&gt;</code> 元素来手动注册 bean 了。</p>
+<p>总结：</p>
+<ul>
+<li>如果使用 Spring IoC，则添加 <code>&lt;context:component-scan base-package=&quot;x.y.z&quot;/&gt;</code>。</li>
+<li>如果使用 Spring MVC，则添加 <code>&lt;mvc:annotation-driven/&gt;</code>。</li>
+<li>如果使用 Spring AOP，则添加 <code>&lt;aop:aspectj-autoproxy/&gt;</code>。</li>
+</ul>
+<p><strong>@Component、@Controller、@Service、@Repository 注解</strong></p>
+<ul>
+<li>@Component：组件，最普通的 bean，当 bean 不好归类时使用可以使用这个注解；</li>
+<li>@Controller：控制器，一般用在传统 Web 应用的控制层，是 @Component 的子注解；</li>
+<li>@Service：代表业务组件，一般用在传统 Web 应用的业务层，是 @Component 的子注解；</li>
+<li>@Repository：代表持久化组件，一般用在传统 Web 应用的持久层，是 @Component 的子注解。</li>
+</ul>
+<p>当然你完全可以全部组件都使用 @Component 注解，但是为了符合语义，非常不建议这么做，而且 Spring 分出三个子注解肯定是有原因的，而且可能对不同的子注解还有不同的处理，最好按照约定做事，不要自找麻烦。</p>
+<p>这四个注解都有一个 value 属性，表示 bean 的名称，默认情况下，bean 名称为对应的类名（首字母小写，注意不是全限定类名，比如 com.zfl9.service.MyService 对应的 bean 名称就是 myService）。不过我觉得如果想要使用 bean 名称来引用对应的 bean 的话，最好还是给这些注解设置 value 属性，免得发生歧义。</p>
+<p>注意，我们使用 context.getBean() 来获取 Bean 对象时，除了可以使用 bean 名称外，还可以使用 bean 对应的 java.lang.Class 对象实例，比如 <code>context.getBean(com.zfl9.service.MyService.class)</code>。</p>
+<p><strong>context:component-scan 扫描多个包</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<context:component-scan base-package="x.y.service, x.y.controller, x.y.dao"/>
+</script></code></pre>
+<h2 id="JDBC-模板"><a href="#JDBC-模板" class="headerlink" title="JDBC 模板"></a>JDBC 模板</h2><p>配置 pom.xml，引入 spring-jdbc、mysql-jdbc-driver 依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.zfl9</groupId>
+  <artifactId>JavaSE_HelloWorld</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <spring.version>4.3.20.RELEASE</spring.version>
+    <mysqlDriver.version>8.0.13</mysqlDriver.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysqlDriver.version}</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<p>JdbcTemplate 和 DbUtils 都是轻量级的 JDBC 帮助库，之所以被称为“轻量级 Helper”，是因为他们仅仅是 JDBC API 的简单封装，目的是为了简化 JDBC API 繁琐的操作，让我们专心编写 SQL 语句。这两个类库都非常优秀，关于 DbUtils，在之前的 jdbc 学习中我已经详细介绍了，现在我们来学习一下 JdbcTemplate。</p>
+<p>和 DbUtils 一样，JdbcTemplate 的基本操作也是 query()、update()、batchUpdate()、execute()。如果想要了解 JdbcTemplate 的全部 API，请移步 <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html" rel="external nofollow noopener noreferrer" target="_blank">JavaDoc</a>，这里我们列举一些常用的 JdbcTemplate 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/* queryForObject() 单行单列 */
+<T> T queryForObject(String sql, Class<T> requiredType)
+<T> T queryForObject(String sql, Class<T> requiredType, Object... args)
+
+/* queryForObject() 单行多列 */
+<T> T queryForObject(String sql, RowMapper<T> rowMapper)
+<T> T queryForObject(String sql, RowMapper<T> rowMapper, Object... args)
+
+/* queryForMap() 单行查询 */
+Map<String, Object>    queryForMap(String sql)
+Map<String, Object>    queryForMap(String sql, Object... args)
+
+/* queryForList() 多行查询 */
+List<Map<String, Object>> queryForList(String sql)
+List<Map<String, Object>> queryForList(String sql, Object... args)
+<T> List<T>    queryForList(String sql, Class<T> elementType)
+<T> List<T>    queryForList(String sql, Class<T> elementType, Object... args)
+
+/* query() 多行查询 */
+<T> List<T> query(String sql, RowMapper<T> rowMapper)
+<T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args)
+
+/* update() */
+int update(String sql)
+int update(String sql, Object... args)
+
+/* batchUpdate() */
+int[] batchUpdate(String... sql)
+int[] batchUpdate(String sql, List<Object[]> args)
+
+/* execute() */
+void execute(String sql)
+</script></code></pre>
+<p>创建 Student 表：</p>
+<pre><code class="language-sql line-numbers"><script type="text/plain">
+CREATE TABLE `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `age` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+</script></code></pre>
+<p>创建 Student.java：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class Student {
+    private int id;
+    private String name;
+    private int age;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[id = %d, name = %s, age = %d]", id, name, age);
+    }
+}
+</script></code></pre>
+<p>创建 StudentMapper.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
+
+public class StudentMapper implements RowMapper<Student> {
+    @Override
+    public Student mapRow(ResultSet resultSet, int i) throws SQLException {
+        Student student = new Student();
+        student.setId(resultSet.getInt("id"));
+        student.setName(resultSet.getString("name"));
+        student.setAge(resultSet.getInt("age"));
+        return student;
+    }
+}
+</script></code></pre>
+<p>创建 StudentDao.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.util.List;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+public class StudentDao {
+    private JdbcTemplate jdbcTemplate;
+
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    public Student select(int id) {
+        String sql = "select * from Student where id = ?";
+        return jdbcTemplate.queryForObject(sql, new StudentMapper(), id);
+    }
+
+    public List<Student> selectAll() {
+        String sql = "select * from Student";
+        return jdbcTemplate.query(sql, new StudentMapper());
+    }
+
+    public void create(String name, int age) {
+        String sql = "insert into Student (name, age) values (?, ?)";
+        jdbcTemplate.update(sql, name, age);
+    }
+
+    public void update(int id, int age) {
+        String sql = "update Student set age = ? where id = ?";
+        jdbcTemplate.update(sql, age, id);
+    }
+
+    public void delete(int id) {
+        String sql = "delete from Student where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAll() {
+        String sql = "truncate table Student";
+        jdbcTemplate.update(sql);
+    }
+}
+</script></code></pre>
+<p>创建 StudentMain.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class StudentMain {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        StudentDao studentDao = context.getBean("studentDao", StudentDao.class);
+
+        /* create student */
+        studentDao.create("小明", 15);
+        studentDao.create("小红", 14);
+        studentDao.create("小刚", 15);
+
+        /* select student */
+        for (Student student : studentDao.selectAll()) {
+            System.out.println(student);
+        }
+
+        /* update student */
+        studentDao.update(1, 13);
+
+        /* select student */
+        for (Student student : studentDao.selectAll()) {
+            System.out.println(student);
+        }
+
+        /* delete student */
+        studentDao.deleteAll();
+
+        /* select student */
+        for (Student student : studentDao.selectAll()) {
+            System.out.println(student);
+        }
+    }
+}
+</script></code></pre>
+<p>配置 spring.xml</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost/test?serverTimezone=UTC"/>
+    <property name="username" value="root"/>
+    <property name="password" value="123456"/>
+  </bean>
+
+  <bean id="studentDao" class="com.zfl9.StudentDao">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+</beans>
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[id = 1, name = 小明, age = 15]
+[id = 2, name = 小红, age = 14]
+[id = 3, name = 小刚, age = 15]
+[id = 1, name = 小明, age = 13]
+[id = 2, name = 小红, age = 14]
+[id = 3, name = 小刚, age = 15]
+</script></code></pre>
+<h2 id="组合注解"><a href="#组合注解" class="headerlink" title="组合注解"></a>组合注解</h2><p>注解其实就是接口，注解的关键字为 <code>@interface</code>，接口的关键字为 <code>interface</code>，官方都这么明显的暗示了。注解和 xml 的作用基本是一样的，即：提供元数据。xml 将元数据存放到外部的 xml 文档中，而注解则将元数据存储到 java 的 class 文件中（运行时注解）；那么开发者要怎么获取注解提供的元数据呢？xml 解析非常简单，有很多优秀且好用的解析框架，如 dom4j；但是 java 注解如何解析呢？很简单，我们说了，注解就是接口（所有的注解都是 <code>java.lang.annotation.Annotation</code> 的子接口），很明显，我们需要通过注解的实例来获取对应的元数据，而注解我们知道，它的属性其实就是接口中的方法，所以我们只需要调用注解实例的对应方法就可以获取到元数据了，而获取元数据的原理是通过读取 class 文件的常量池来实现的（java 已经帮我们实现了，无需关心，我们只需要使用注解 api 来获取对应注解的 instance 对象，然后调用对应的方法来获取元数据即可）。之所以可以通过读取 class 文件常量池来读取元数据，是因为 java 注解已经规定了，能用的数据类型都是可以常量化的，所以才可以这么做。</p>
+<p>OK，那么“组合注解”又是什么东西呢？我们知道有“元注解”，所谓元注解就是标注在注解类型上的注解，类似数据和元数据的区别。而组合注解则是 Spring 框架提供的一个实用功能，你可以将“组合注解”理解为“注解的别名”，比如我们最先接触的 <code>@Component</code> 注解，这个注解的意思是，当前类是一个 bean 类，Spring 会自动调用其无参构造函数实例化它的对象并注册到 bean 容器中进行管理，而我们知道，我们也可以使用该注解的其它几个衍生注解：<code>@Controller</code>、<code>@Service</code>、<code>@Repository</code>，这些注解同样可以实现 bean 自动注册功能，并且还具有其它的语义化操作。</p>
+<p>其实你去观察这 3 个注解的声明就会发现，它们都被 <code>@Component</code> 注解给标注了，所以当你使用这 3 个注解时，就相当于你使用了 <code>@Component</code> 注解，也就是 @Component 注解的别名，这就是所谓的组合注解。Spring 扫描到这 3 个注解时，就会将它们当作 @Component 注解来看待，并且还可以根据其具体的语义来进行其它特殊的操作（如 @Controller 标注的控制器可能会被做一些特殊操作，而使用 @Component 标注的控制器则不会）。</p>
+<p>当然这 3 个注解仅仅创建了 @Component 一个注解的别名，其实 Spring 可以将多个注解组合在一起，创建它们的别名，举个例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@SubAnnotationA
+@SubAnnotationB
+@SubAnnotationC
+public @interface MyAnnotation {
+    ...
+}
+</script></code></pre>
+<p>这时候你如果使用 <code>@MyAnnotation</code> 标注一个类，那么就相当于在这个类上同时使用了上面的三个子注解，也就是这样（它们是等价的）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@MyAnnotation
+public class MyClass {
+    ...
+}
+
+@SubAnnotationA
+@SubAnnotationB
+@SubAnnotationC
+public class MyClass {
+    ...
+}
+</script></code></pre>
+<p>当然有必要声明的是，这个功能不是 java 语言本身提供的，而是 Spring 提供的增强功能，特别注意哦，在 Spring 以外的地方使用是没有这个作用的。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/spring-mvc.html" rel="next" title="Spring MVC 笔记">
+                <i class="fa fa-chevron-left"></i> Spring MVC 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-datasource.html" rel="prev" title="Java DataSource">
+                Java DataSource <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-简介"><span class="nav-number">1.</span> <span class="nav-text">Spring 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-World"><span class="nav-number">2.</span> <span class="nav-text">Hello World</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IoC-容器"><span class="nav-number">3.</span> <span class="nav-text">IoC 容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean-定义"><span class="nav-number">4.</span> <span class="nav-text">Bean 定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean-作用域"><span class="nav-number">5.</span> <span class="nav-text">Bean 作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean-回调"><span class="nav-number">6.</span> <span class="nav-text">Bean 回调</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean-处理器"><span class="nav-number">7.</span> <span class="nav-text">Bean 处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean-继承"><span class="nav-number">8.</span> <span class="nav-text">Bean 继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖注入"><span class="nav-number">9.</span> <span class="nav-text">依赖注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部-Bean"><span class="nav-number">10.</span> <span class="nav-text">内部 Bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注入集合"><span class="nav-number">11.</span> <span class="nav-text">注入集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动装配"><span class="nav-number">12.</span> <span class="nav-text">自动装配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解装配"><span class="nav-number">13.</span> <span class="nav-text">注解装配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件回调"><span class="nav-number">14.</span> <span class="nav-text">事件回调</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP-FAQ-1"><span class="nav-number">15.</span> <span class="nav-text">AOP FAQ 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP-FAQ-2"><span class="nav-number">16.</span> <span class="nav-text">AOP FAQ 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP-核心概念"><span class="nav-number">17.</span> <span class="nav-text">AOP 核心概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP-HelloWorld"><span class="nav-number">18.</span> <span class="nav-text">AOP HelloWorld</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Before-增强"><span class="nav-number">19.</span> <span class="nav-text">Before 增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#After-增强"><span class="nav-number">20.</span> <span class="nav-text">After 增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AfterReturning-增强"><span class="nav-number">21.</span> <span class="nav-text">AfterReturning 增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AfterThrowing-增强"><span class="nav-number">22.</span> <span class="nav-text">AfterThrowing 增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Around-增强"><span class="nav-number">23.</span> <span class="nav-text">Around 增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个特殊的配置"><span class="nav-number">24.</span> <span class="nav-text">几个特殊的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC-模板"><span class="nav-number">25.</span> <span class="nav-text">JDBC 模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合注解"><span class="nav-number">26.</span> <span class="nav-text">组合注解</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/spring.html';
+          this.page.identifier = 'spring.html';
+          this.page.title = 'Spring 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

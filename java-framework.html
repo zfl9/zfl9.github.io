@@ -1,0 +1,1320 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="JavaEE 框架预备知识 SSH SSM MVC IoC AOP">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JavaEE 框架预备知识：JavaBean 与 POJO、Model1 与 Model2、SSH 与 SSM 框架、配置文件与注解、类库与框架。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaEE 框架预备知识">
+<meta property="og:url" content="https://www.zfl9.com/java-framework.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JavaEE 框架预备知识：JavaBean 与 POJO、Model1 与 Model2、SSH 与 SSM 框架、配置文件与注解、类库与框架。">
+<meta property="og:image" content="https://www.zfl9.com/images/javaweb-model1.gif">
+<meta property="og:image" content="https://www.zfl9.com/images/javaweb-model2.gif">
+<meta property="og:image" content="https://www.zfl9.com/images/jdk-dynamic-proxy.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaEE 框架预备知识">
+<meta name="twitter:description" content="JavaEE 框架预备知识：JavaBean 与 POJO、Model1 与 Model2、SSH 与 SSM 框架、配置文件与注解、类库与框架。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/javaweb-model1.gif">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-framework.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>JavaEE 框架预备知识 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-framework.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                JavaEE 框架预备知识
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T10:40:00+08:00">
+                2018-10-16
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-framework.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-framework.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-framework.html" class="leancloud_visitors" data-flag-title="JavaEE 框架预备知识">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JavaEE 框架预备知识：JavaBean 与 POJO、Model1 与 Model2、SSH 与 SSM 框架、配置文件与注解、类库与框架。</p>
+<a id="more"></a>
+<h2 id="JavaBean-与-POJO"><a href="#JavaBean-与-POJO" class="headerlink" title="JavaBean 与 POJO"></a>JavaBean 与 POJO</h2><p><strong>JavaBean 是什么？</strong><br>JavaBean 是符合一定规范的 Java 类，所谓规范也就是约定，只要符合这 3 条约定的 Java 类就可以称为 JavaBean：</p>
+<ul>
+<li>所有属性都是私有的（提供 getter/setter 方法）</li>
+<li>拥有一个 public 的默认无参构造函数</li>
+<li>实现了 java.io.Serializable 接口</li>
+</ul>
+<p>对于非布尔类型的属性 xxx，使用 <code>getXxx()</code>、<code>setXxx()</code> 方法；<br>而对于布尔类型的属性 xxx，可使用 <code>isXxx()</code>、<code>setXxx()</code> 方法。</p>
+<p>比如，下面这个 <code>StudentBean</code> 类就是一个 JavaBean：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.bean;
+
+// 实现 Serializable 接口
+public class StudentBean implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+
+    // 私有属性
+    private String name;
+    private int    age;
+    private float  score;
+
+    // 无参构造函数
+    public StudentBean() {
+        this.name  = "undefined";
+        this.age   = -1;
+        this.score = -1.00F;
+    }
+
+    // getter/setter for 'name'
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // getter/setter for 'age'
+    public int getAge() {
+        return this.age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    // getter/setter for 'score'
+    public float getScore() {
+        return this.score;
+    }
+    public void setScore(float score) {
+        this.score = score;
+    }
+}
+</script></code></pre>
+<p>那么 JavaBean 有什么用呢？想详细了解的可以参考这两篇文章：<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513115&amp;idx=1&amp;sn=da30cf3d3f163d478748fcdf721b6414#rd" rel="external nofollow noopener noreferrer" target="_blank">Java 帝国之 Java bean (上）</a>、<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513118&amp;idx=1&amp;sn=487fefb8fa7efd59de6f37043eb21799#rd" rel="external nofollow noopener noreferrer" target="_blank">Java 帝国之 Java bean（下）</a>。</p>
+<p>说说我自己的理解：JavaBean 最开始是 GUI 开发中提出的一个概念，Bean 的含义是“组件”，每个 JavaBean 都是一个独立的可重用的 Java 类（组件）。当我们添加某个组件时，IDE 就可以利用 JavaBean 的默认无参构造函数来创建它的实例；当我们想设置这个组件的相关属性时，IDE 可以通过反射 API 来获取这个 Bean 的所有方法的名称，然后找出符合 <code>setXxx()</code>、<code>getXxx()</code> 命名格式的方法，这样 IDE 就能提供一个属性清单给我们选择（只有对应的 <code>getXxx()</code> 方法 IDE 会认为这是只读属性，只有对应的 <code>setXxx()</code> 方法 IDE 会认为这是只写属性，如果二者都有，那么它就是可读写的属性）；而序列化接口的作用，是为了避免在关闭 IDE 之后丢失了之前设置的属性，也就是说，实现序列化接口的目的是为了在关闭之后仍然能够保持 Bean 对象的状态。</p>
+<p>但是因为 Java 开发的桌面程序需要 JRE 运行时环境才能正常使用，而 Windows 系统并没有内置 JRE，这意味着用户如果需要使用你的程序，必须先安装好 JRE、配置好相关的环境变量才行，这显然是不太实际的事情。所以 Java 在桌面程序开发领域并不起色，那么有没有办法将 JavaBean 运用到 Java EE 开发中呢？毕竟 Java 差不多统治了服务器后端开发的半壁江山。聪明的开发者首先想到了 JSP，于是乎我们经常在 JSP 中看到如下代码：</p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>receive.jsp</title>
+  </head>
+  <body>
+    <!-- 实例化指定的 JavaBean -->
+    <jsp:useBean id="snr" class="com.zfl9.ValidateBean"/>
+    <!-- 设置 Bean 对象相关的属性 -->
+    <jsp:setProperty name="snr" property="user"/>
+    <jsp:setProperty name="snr" property="pass"/>
+    <!-- 获取 Bean 对象相关的属性 -->
+    You entered user name is <jsp:getProperty name="snr" property="user"/><br>
+    You entered user pass is <jsp:getProperty name="snr" property="pass"/><br>
+    You are a <%= snr.validate("Rao", "java") %> user.<br>
+  </body>
+</html>
+</script></code></pre>
+<p>稍微思考一下就知道，JSP 中使用的 JavaBean 其实不需要实现序列化接口，我们可以简单的将 JSP 中的 JavaBean 看作为一个纯粹的数据对象（这其实与后面的 POJO 有点类似）。</p>
+<p><strong>POJO 是什么？</strong><br>POJO 是 <strong>Plain Old Java Object</strong> 的缩写，即 <strong>普通的 Java 对象</strong>。来看一下 wikipedia 对 POJO 的描述：</p>
+<blockquote>
+<p>我们疑惑为什么人们不喜欢在他们的系统中使用普通的对象，我们得到的结论是：普通的对象缺少一个响亮的名字，因此我们给它们起了一个，并且取得了很好的效果。——Martin Fowler</p>
+</blockquote>
+<p>理想情况下，POJO 是一个除了受到 Java 语言规范的限制外，不受其他任何约束的 Java 对象，即：</p>
+<ol>
+<li>POJO 不应该继承预先指定的类；</li>
+<li>POJO 不应该实现预先指定的接口；</li>
+<li>POJO 不应该包含预先指定的注解。</li>
+</ol>
+<p>我喜欢将 POJO 理解为没有实现 <code>java.io.Serializable</code> 接口的 JavaBean，也就是说，POJO 是一个纯粹的“数据”对象（C 语言中的结构体）。而 JSP 中使用的 JavaBean 其实就可以看作为一个 POJO 对象，因为我们根本没有必要去实现 java.io.Serializable 接口。对于上面的 <code>StudentBean</code> 类，我们可以这样写一个对应的 <code>StudentPojo</code> 类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.pojo;
+
+public class StudentPojo {
+    private String name;
+    private int    age;
+    private float  score;
+
+    public StudentPojo() {
+        this.name  = "undefined";
+        this.age   = 0;
+        this.score = 0.00F;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public float getScore() {
+        return this.score;
+    }
+    public void setScore(float score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[name: %s, age: %d, score: %.2f]", this.name, this.age, this.score);
+    }
+}
+</script></code></pre>
+<h2 id="Model1-与-Model2"><a href="#Model1-与-Model2" class="headerlink" title="Model1 与 Model2"></a>Model1 与 Model2</h2><p>Model1 和 Model2 是 Java Web 开发领域的两种架构模式，Model1 是 Web 早期开发中常用的一种模式，而 Model2 则是 Model1 的改良版，因为 Model2 完整的实现了 MVC 架构模式，所以我们也经常将 Model2 称为 Model2/MVC。</p>
+<p><strong>Model1 是什么？</strong><br>Model1 的中心是 JSP 页面，每个 JSP 页面都是互相独立的，当用户请求一个 JSP 时，JSP 会收集好对应的请求参数，然后调用处理业务逻辑的 JavaBean，JavaBean 处理完之后，JSP 从中提取响应数据，然后渲染结果页面，最后返回给用户。</p>
+<p><img src="/images/javaweb-model1.gif" alt="Java Web 之 Model1"></p>
+<ul>
+<li>Model1 的优点：实现简单，可以快速开发，适合小规模项目开发。</li>
+<li>Model1 的缺点：JSP 中混杂着很多 Java 代码，不利于分工和维护。</li>
+</ul>
+<p><strong>Model2 是什么？</strong><br>Model2 是基于 MVC 模式的一种架构模式，MVC 是指 Model/View/Controller，即模型、视图、控制器。<strong>Model</strong> 是应用的业务逻辑（通过 JavaBean、EJB 等组件实现），<strong>View</strong> 是应用的表示页面（一般是 JSP、HTML 页面），<strong>Controller</strong> 则用于控制应用的处理过程（一般是 Servlet、Filter），通过这种设计模型把 <strong>应用逻辑</strong>，<strong>处理过程</strong> 和 <strong>显示逻辑</strong> 分成不同的组件实现，使得这些组件可以进行交互和重用，从而弥补了 Model1 的不足。从结构上将，Model2 其实是在 Model1 的基础上又抽象了一个控制层（Controller）。</p>
+<p><img src="/images/javaweb-model2.gif" alt="Java Web 之 Model2"></p>
+<ul>
+<li>Model2 的优点：因为采用了 MVC 分层思想，更容易实现对大规模系统的开发和管理，职责划分清晰，可以做到分工明确。</li>
+<li>Model2 的缺点：对于小型项目，使用 Model2 有点杀鸡用牛刀的感觉，大材小用，所以 Model2 不太适合用来做快速开发。</li>
+</ul>
+<p><strong>总结</strong>：Model1 和 Model2 最根本的区别是，Model1 是 JSP + JavaBean 开发模式，Model2 是 JSP + Servlet + JavaBean 开发模式，两者都是 MVC 模式的应用，但是应用程度不同。Model1 因为简单，所以适合小项目的快速开发，而 Model2 因为是完整的 MVC 思想的实现，所以更适合做中大型项目，人员的分工很明确，各干各的，互不影响，而且后期维护也容易。</p>
+<p><strong>Model1 的例子</strong><br>以最常见的用户登录为例子，首先我们要创建一个登录页面，这个用 HTML 写个表单就行；然后是一个处理表单请求的 JSP 页面，它的逻辑很简单，如果用户名和密码没问题，则显示登录成功，否则显示登录失败；为了表示一个用户，我们需要创建一个 User 类（JavaBean）。结构如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ tree
+.
+├── login.html
+├── login.jsp
+└── WEB-INF
+    ├── classes
+    │   └── com
+    │       └── zfl9
+    │           └── bean
+    │               └── UserBean.class
+    └── sources
+        └── com
+            └── zfl9
+                └── bean
+                    └── UserBean.java
+</script></code></pre>
+<p><code>login.html</code></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>login.html</title>
+  </head>
+  <body>
+    <form action="/login.jsp" method="post">
+      用户：<input type="text"     name="username"><br>
+      密码：<input type="password" name="password"><br>
+      <input type="submit" value="登录">
+    </form>
+  </body>
+</html>
+</script></code></pre>
+<p><code>login.jsp</code></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>login.jsp</title>
+  </head>
+  <body>
+    <%-- 创建一个 UserBean 对象的实例 --%>
+    <jsp:useBean id="user" class="com.zfl9.bean.UserBean"/>
+
+    <%-- 从同名的请求参数中获取属性值 --%>
+    <jsp:setProperty name="user" property="username"/>
+    <%-- 从同名的请求参数中获取属性值 --%>
+    <jsp:setProperty name="user" property="password"/>
+
+    <%-- 获取 UserBean 的相关属性的值 --%>
+    <strong>username</strong>: <code><jsp:getProperty name="user" property="username"/></code><br>
+    <strong>password</strong>: <code><jsp:getProperty name="user" property="password"/></code><br>
+    <strong>validUser</strong>: <code><jsp:getProperty name="user" property="validUser"/></code>
+  </body>
+</html>
+</script></code></pre>
+<p><code>UserBean.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.bean;
+
+import java.util.Map;
+import java.util.HashMap;
+
+public class UserBean {
+    private static Map<String, String> database;
+
+    static {
+        database = new HashMap<String, String>();
+        database.put("root", "123456");
+        database.put("http", "123456");
+        database.put("mail", "123456");
+    }
+
+    private String username;
+    private String password;
+
+    public UserBean() {}
+
+    public UserBean(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isValidUser() {
+        for (Map.Entry<String, String> userEntry : database.entrySet()) {
+            if (userEntry.getKey().equals(this.username) && userEntry.getValue().equals(this.password)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+</script></code></pre>
+<p><strong>Model2 的例子</strong><br>还是上面那个用户登录的例子，我们用 Model2/MVC 模式来重新实现它。首先，我们还是需要一个 login.html 登录表单页面；然后，我们需要写一个处理表单请求的 Servlet，这个 Servlet 内部会调用 UserBean 来验证用户是否合法，如果是合法用户，则将请求 forward 到登录成功的 jsp 页面，如果不是合法用户，则将请求 forward 到登录失败的 jsp 页面。结构如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ tree
+.
+├── login.html
+└── WEB-INF
+    ├── classes
+    │   └── com
+    │       └── zfl9
+    │           ├── bean
+    │           │   └── UserBean.class
+    │           └── servlet
+    │               └── LoginServlet.class
+    ├── jsp
+    │   ├── login-failure.jsp
+    │   └── login-success.jsp
+    └── src
+        └── com
+            └── zfl9
+                ├── bean
+                │   └── UserBean.java
+                └── servlet
+                    └── LoginServlet.java
+</script></code></pre>
+<p><code>login.html</code></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>login.html</title>
+  </head>
+  <body>
+    <form action="/login.do" method="post">
+      用户：<input type="text"     name="username"><br>
+      密码：<input type="password" name="password"><br>
+      <input type="submit" value="登录">
+    </form>
+  </body>
+</html>
+</script></code></pre>
+<p><code>LoginServlet.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.servlet;
+
+import com.zfl9.bean.UserBean;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/login.do")
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws javax.servlet.ServletException, java.io.IOException
+    {
+        UserBean user = new UserBean(request.getParameter("username"), request.getParameter("password"));
+        request.setAttribute("user", user);
+
+        if (user.isValidUser())
+            request.getRequestDispatcher("/WEB-INF/jsp/login-success.jsp").forward(request, response);
+        else
+            request.getRequestDispatcher("/WEB-INF/jsp/login-failure.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws javax.servlet.ServletException, java.io.IOException
+    {
+        doGet(request, response);
+    }
+}
+</script></code></pre>
+<p><code>UserBean.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.bean;
+
+import java.util.Map;
+import java.util.HashMap;
+
+public class UserBean {
+    private static Map<String, String> database;
+
+    static {
+        database = new HashMap<String, String>();
+        database.put("root", "123456");
+        database.put("http", "123456");
+        database.put("mail", "123456");
+    }
+
+    private String username;
+    private String password;
+
+    public UserBean() {}
+
+    public UserBean(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isValidUser() {
+        for (Map.Entry<String, String> userEntry : database.entrySet()) {
+            if (userEntry.getKey().equals(this.username) && userEntry.getValue().equals(this.password)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+</script></code></pre>
+<p><code>login-success.jsp</code></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>welcome ${user.username}</title>
+  </head>
+  <body>
+    <h1>welcome ${user.username}</h1>
+  </body>
+</html>
+</script></code></pre>
+<p><code>login-failure.jsp</code></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>sorry ${user.username}</title>
+  </head>
+  <body>
+    <h1>sorry ${user.username}</h1>
+  </body>
+</html>
+</script></code></pre>
+<h2 id="SSH-与-SSM-框架"><a href="#SSH-与-SSM-框架" class="headerlink" title="SSH 与 SSM 框架"></a>SSH 与 SSM 框架</h2><ul>
+<li>SSH 三大框架（旧）：<code>Spring</code> + <code>Struts2</code> + <code>Hibernate</code></li>
+<li>SSM 三大框架（新）：<code>Spring</code> + <code>SpringMVC</code> + <code>MyBatis</code></li>
+</ul>
+<p><strong>MVC 框架</strong><br><code>Struts2</code> 和 <code>SpringMVC</code> 都是 MVC 框架，MVC 的概念在 Model2 架构模式中提过了，它是一个分层思想，将 Web 开发分为 3 个不同的部分：<strong>业务逻辑</strong>（M）、<strong>显示逻辑</strong>（V）、<strong>流程控制</strong>（C）。这么做的目的是为了将 Web 开发中的不同关注点进行分离，M 只需要关心如何处理业务逻辑（Java 程序员、DBA 数据库管理员等），V 只需关心如何渲染页面（前端开发人员），C 只需关心如何处理用户的请求，然后根据需要调用不同的 M，最后将结果传递给对应的 V 即可（Java 后端程序员）。这样项目的每个部分都可以由最擅长该领域的开发人员来做，而不是一个开发人员同时充当前端、后端、DBA，这样太累，而且效率也低。同时，MVC 也使得项目更加容易维护，代码的可重用性也提高了，还降低了不同组件之间的耦合度。</p>
+<p>Struts2 曾经是最流行的 MVC 框架，但是由于安全漏洞太多（万年漏洞王），现在越来越多的开发团队选择了 SpringMVC，因为 SpringMVC 是 Spring Framework 家族中的一个，相比较 Struts2，SpringMVC 更容易与 Spring 框架相契合，上手难度也低于 Struts2，最关键的是没有重大的安全漏洞。但由于各种历史原因，现在还是有很多老项目在使用 Struts2，所以学习一下（稍微了解就行）Struts2 框架还是有必要的。</p>
+<p><strong>ORM 框架</strong><br>ORM 是 <strong>Object Relational Mapping</strong> 的缩写，即 <strong>对象关系映射</strong>，<code>Hibernate</code> 和 <code>MyBatis</code> 都是所谓的 ORM 框架。那么 ORM 到底是什么呢？最简单的理解：ORM 就是用面向对象的方式来访问关系型数据库。没有 ORM 之前，在 Java 中如果需要访问数据库，必须通过 JDBC API 来完成，JDBC 复杂倒是不复杂，就是挺繁琐的，稍不注意就可能导致资源泄漏（比如忘记关闭数据库连接），而且 JDBC 并没有提供数据库连接池的 API，基本上所有事情都要自己做。但是有了 ORM 后，我们完全可以用 OO 的方式来访问数据库（ORM 框架会将数据表映射为一个 POJO 对象，这样我们就只需关心这个 POJO 对象，不用操心底层的数据库），而其他的什么数据库连接池、缓存功能，通通帮我们实现了，我们只管用就行，非常方便。所以我们也可以说，ORM 其实是对 JDBC API 的一种封装。</p>
+<p>虽然 Hibernate 和 MyBatis 都是 ORM 框架，但是它们对 JDBC API 的封装程度其实是不一样的，一句话总结就是：Hibernate 是全自动 ORM 映射工具，而 MyBatis 则是半自动 ORM 映射工具。Hibernate 之所以称为“全自动”，是因为 Hibernate 完全可以通过对象关系模型来实现对数据库的操作（屏蔽了底层的 SQL 语句）；而 MyBatis 仅有基本的字段映射，对象数据以及对象实际关系仍然需要通过手写 SQL 来实现和管理。也因为这个原因，在 SQL 语句优化上，MyBatis 要比 Hibernate 方便和简单许多。不过 Hibernate 的优点是完全屏蔽了底层数据库的细节差异，所以可移植性比 MyBatis 好很多，毕竟 MyBatis 需要手写 SQL，而不同数据库的 SQL 方言基本是不同的。</p>
+<p>简单一句话总结：</p>
+<ul>
+<li>MyBatis：小巧、方便、高效、简单、直接、半自动</li>
+<li>Hibernate：强大、方便、高效、复杂、绕弯子、全自动</li>
+</ul>
+<p><strong>Spring 是什么</strong><br>从官网文档看：</p>
+<blockquote>
+<p>The Spring Framework is a lightweight solution and a potential one-stop-shop for building your enterprise-ready applications. However, Spring is modular, allowing you to use only those parts that you need, without having to bring in the rest. You can use the IoC container, with any web framework on top, but you can also use only theHibernate integration code or the JDBC abstraction layer. The Spring Framework supports declarative transaction management, remote access to your logic through RMI or web services, and various options for persisting your data. It offers a full-featured MVC framework, and enables you to integrate AOP transparently into your software.</p>
+<p>Spring is designed to be non-intrusive, meaning that your domain logic code generally has no dependencies on the framework itself. In your integration layer (such as the data access layer), some dependencies on the data access technology and the Spring libraries will exist. However, it should be easy to isolate these dependencies from the rest of your code base.</p>
+</blockquote>
+<p>一句话，Spring 是一个开发应用框架，什么样的框架呢，有这么几个标签：<strong>轻量级</strong>、<strong>非侵入式</strong>、<strong>一站式</strong>、<strong>模块化</strong>，其目的是用于简化企业级应用程序的开发。我们知道应用程序是由一组相互协作的对象组成，所以开发一个应用除了要开发业务逻辑之外，最多的是关注如何使这些对象协作来完成所需功能，而且要 <strong>低耦合、高内聚</strong>。业务逻辑开发是不可避免的，那如果有个框架出来帮我们来创建对象及管理这些对象之间的依赖关系，我们只需要专心业务逻辑，是不是省心很多，同时这个叫 Spring 的干的又专业又稳定，何乐而不为呢。</p>
+<p>从这里我们可以认为 Spring 是一个超级粘合平台，除了自己提供功能外，还提供粘合其他技术和框架的能力，从而使我们可以更自由的选择到底使用什么技术进行开发。</p>
+<p><strong>Spring 带来了什么</strong><br>Spring 虽然不能帮我们写业务逻辑，却能帮助我们简化开发，有以下几点：</p>
+<ul>
+<li>Spring IoC 能帮我们根据配置文件创建及组装对象之间的依赖关系。</li>
+<li>Spring AOP 能帮助我们无耦合的实现日志记录，性能统计，权限控制。</li>
+<li>Spring 提供与第三方数据访问框架（如 Hibernate、JPA）的无缝集成，而且自己也提供了一套 JDBC 访问模板，来方便数据库访问。</li>
+<li>Spring 提供与第三方 Web 开发框架（如 Struts2、JSF）的无缝集成，而且自己也提供了一套 Spring MVC 框架，来方便 Web 层开发。</li>
+<li>Spring 能方便的与 Java EE（如 Java Mail、任务调度）进行整合，与更多技术整合（比如缓存框架）。</li>
+</ul>
+<p><strong>Spring 有什么好处</strong><br>在看 Spring 的好处之前，先来理解以下几个专业名词：</p>
+<ul>
+<li>应用程序：是能完成我们所需要功能的成品，比如购物网站、OA 系统、ERP 系统。</li>
+<li>框架：是能完成一定功能的半成品，比如我们可以使用框架进行购物网站开发；框架做一部分功能，我们自己做一部分功能，这样应用程序就创建出来了。而且框架规定了你在开发应用程序时的整体架构，提供了一些基础功能，还规定了类和对象的如何创建、如何协作等，从而简化我们开发，让我们专注于业务逻辑开发。</li>
+<li>非侵入式设计：从框架角度可以这样理解，无需继承框架提供的类，这种设计就可以看作是非侵入式设计，如果继承了这些框架类，就是侵入设计，如果以后想更换框架之前写过的代码几乎无法重用，如果非侵入式设计则之前写过的代码仍然可以继续使用。</li>
+<li>轻量级＆重量级：轻量级是相对于重量级而言的，轻量级一般就是非入侵性的、所依赖的东西非常少、资源占用非常少、部署简单等等，其实就是比较容易使用，而重量级正好相反。</li>
+<li>POJO：POJO（Plain Old Java Objects）是简单的 Java 对象，它可以包含业务逻辑或持久化逻辑，但不担当任何特殊角色且不继承或不实现任何其它 Java 框架的类或接口。</li>
+<li>容器：在日常生活中容器就是一种盛放东西的器具，从程序设计角度看就是装对象的的对象，因为存在放入、拿出等操作，所以容器还要管理对象的生命周期。</li>
+<li>控制反转：即 Inversion of Control，缩写为 IoC，就是由容器控制程序之间的关系，而非传统实现中，由程序代码直接操控。</li>
+<li>Bean：一般指容器管理对象，在 Spring 中指 Spring IoC 容器管理对象。</li>
+</ul>
+<p>那么用 Spring 框架到底有什么好处呢？好处如下：</p>
+<ul>
+<li>非常轻量级的容器：以集中的、自动化的方式进行应用程序对象创建和装配，负责对象创建和装配，管理对象生命周期，能组合成复杂的应用程序。Spring 容器是非侵入式的（不需要依赖任何 Spring 特定类），而且完全采用 POJOs 进行开发，使应用程序更容易测试、更容易管理。而且核心 JAR 包非常小，Spring 3.0.5 不到 1M，而且不需要依赖任何应用服务器，可以部署在任何环境（Java SE 或 Java EE）。</li>
+<li>AOP：AOP 是 Aspect Oriented Programming 的缩写，意思是面向切面编程，提供从另一个角度来考虑程序结构以完善面向对象编程（相对于 OOP），即可以通过在编译期间、装载期间或运行期间实现在不修改源代码的情况下给程序动态添加功能的一种技术。通俗点说就是把可重用的功能提取出来，然后将这些通用功能在合适的时候织入到应用程序中；比如权限控制，日志记录，这些都是通用的功能，我们可以把它们提取出来，然后在程序执行的合适地方织入这些代码并执行它们，从而完成需要的功能并复用了这些功能。</li>
+<li>简单的数据库事务管理：在使用数据库的应用程序当中，自己管理数据库事务是一项很让人头疼的事，而且很容易出现错误，Spring 支持可插入的事务管理支持，而且无需 JavaEE 环境支持，通过 Spring 管理事务可以把我们从事务管理中解放出来来专注业务逻辑。</li>
+<li>JDBC 抽象及 ORM 框架支持：Spring 使 JDBC 更加容易使用；提供 DAO（数据访问对象）支持，非常方便集成第三方 ORM 框架，比如 Hibernate 等；并且完全支持 Spring 事务和使用 Spring 提供的一致的异常体系。</li>
+<li>灵活的 Web 层支持：Spring 本身提供一套非常强大的 MVC 框架，而且可以非常容易的与第三方 MVC 框架集成，比如 Struts2 等。</li>
+<li>简化各种技术集成：提供对 Java Mail、任务调度、JMX、JMS、JNDI、EJB、动态语言、远程访问、Web Service 等的集成。</li>
+</ul>
+<blockquote>
+<p>以上关于 Spring 的介绍均摘自 <a href="https://www.jianshu.com/p/7b6a070119c7" rel="external nofollow noopener noreferrer" target="_blank">「Java学习」Spring 框架简介</a>。</p>
+</blockquote>
+<p>总结：<code>Spring</code> 是一个 Java Web 一站式的集成（粘合）框架，Spring 的核心概念是 IoC（控制反转）和 AOP（面向切面编程）。</p>
+<p><strong>IoC 控制反转</strong><br>IoC 全称：<code>Inversion of Control</code>，即控制反转。先来看看它的字面解释：<strong>当一个对象创建时，它所依赖的对象由外部传递给它，而非自己去创建所依赖的对象</strong>。也就是说：一个对象在如何获取它所依赖的对象这件事情上，控制权被反转了。这也就不难理解“控制反转”这个名字的由来了。</p>
+<p>那么 IoC 有什么好处呢？我们先来看一个简单的例子：孩子吃东西。</p>
+<p>首先我们定义一个 Eatable 接口，表示一个可以吃的东西：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public interface Eatable {
+    void eat();
+}
+</script></code></pre>
+<p>然后，我们创建两个 Eatable 接口的实现类，如苹果和橘子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Apple implements Eatable {
+    @Override
+    public void eat() {
+        System.out.println("吃苹果");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Orange implements Eatable {
+    @Override
+    public void eat() {
+        System.out.println("吃橘子");
+    }
+}
+</script></code></pre>
+<p>创建一个 Child 类，表示孩子，这里我们假设它现在想吃苹果：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Child {
+    public void wantToEat() {
+        Eatable eatable = new Apple();
+        eatable.eat();
+    }
+}
+</script></code></pre>
+<p>最后，我们创建一个 Main 类，运行我们的程序：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Main {
+    public static void main(String[] args) {
+        Child child = new Child();
+        child.wantToEat();
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/ioc on git:master x [11:20:11] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/ioc on git:master x [11:20:12] 
+$ java com.zfl9.ioc.Main
+吃苹果
+</script></code></pre>
+<p>OK，没问题。那么，如果现在 Child 想吃 Orange 怎么办？必须修改 Child 类的代码：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Child {
+    public void wantToEat() {
+        //Eatable eatable = new Apple();
+        Eatable eatable = new Orange();
+        eatable.eat();
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/ioc on git:master x [11:24:05] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/ioc on git:master x [11:24:07] 
+$ java com.zfl9.ioc.Main
+吃橘子
+</script></code></pre>
+<p>也没问题。但是如果 Child 现在又想吃 Apple 了，你还得改回去（你是不是想打死它？！）</p>
+<p>为了应付这个熊孩子，我们必须修改 Child 的代码，怎么改呢？使用上面提到的“控制反转”。<br>修改之前，Child 想吃什么就吃什么；修改之后那就由不得他了，只能吃粑粑麻麻给的 eatable。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Child {
+    private Eatable eatable;
+
+    public Child(Eatable eatable) {
+        this.eatable = eatable;
+    }
+
+    public void wantToEat() {
+        this.eatable.eat();
+    }
+}
+</script></code></pre>
+<p>然后，我们还需要改动一下 Main 类，如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Main {
+    public static void main(String[] args) {
+        Child child = new Child(new Apple());
+        child.wantToEat();
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/ioc on git:master x [11:30:40] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/ioc on git:master x [11:31:08] 
+$ java com.zfl9.ioc.Main
+吃苹果
+</script></code></pre>
+<p>现在，如果 Child 想换过一个口味，那么我们只需要修改 Main 类就行了。你又要问了，你这不是还要修改代码吗？是的，没错，我现在还是需要修改 Main.java 这个类的代码。但是，我们可以将需要吃什么东西的代码提取出来，放到配置文件中（或者使用 Java 注解，好的框架一般都是注解和配置文件搭配着用），然后在 Main 类中读取配置文件或者注解中的值（全限定类名），接着使用 Java 反射 API，new 一个可以吃的东西出来，最后传递给 Child 类的构造函数。这样如果我们要改变 Eatable 的实现类，就只需要修改配置文件或者注解了，一行代码都不用改。这就是 IoC 的好处。</p>
+<p>上面的例子中，Child 吃的 eatable 并不是它自己创建的，而是由 Main（粑粑麻麻）创建并传递给它的，所以我们把这个 Main 称之为 <strong>IoC 容器</strong>。容器的意思很简单，它就是一个生产指定对象所依赖的对象的地方（装对象的地方，也就叫容器）。</p>
+<p>而 Main 传递 eatable 给 Child 的方式是构造函数传参，传参也就是赋值，但是在这里我们有一个新的术语来描述这个赋值的过程：<strong>依赖注入</strong>（Dependency Injection，简称 DI）。也就是说，Child 所依赖的对象（Eatable）是由 IoC 容器（Main 类）注入的。注入的方式有很多种，常见的有两个：一是通过构造函数（如上）；二是通过 setter 方法（如下）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.ioc;
+
+public class Child {
+    private Eatable eatable;
+
+    // 构造函数注入
+    public Child(Eatable eatable) {
+        this.eatable = eatable;
+    }
+
+    public Eatable getEatable() {
+        return this.eatable;
+    }
+    // setter 方法注入
+    public void setEatable(Eatable eatable) {
+        this.eatable = eatable;
+    }
+
+    public void wantToEat() {
+        this.eatable.eat();
+    }
+}
+</script></code></pre>
+<p>IoC（控制反转）和 DI（依赖注入）其实是看待同一件事情的两种不同角度，也可以说 DI 是 IoC 的一种实现方式。IoC 的关注点是反转对象获取其所依赖的对象的方式；而 DI 的关注点是如何将对象所依赖的对象注入进去。换句话说：IoC 是目的，DI 是手段，我们可以通过 DI 这个手段来达到 IoC 这个目的。但实现 IoC 除了 DI（依赖注入）之外，还有一种方式：DL（依赖查找，Dependency Lookup），依赖查找比依赖注入更加主动，依赖查找会在需要的时候通过调用框架提供的方法来获取对象，获取时需要提供相关的配置文件路径、key 等信息来确定获取对象的状态（其实就是调用工厂方法，获取指定对象的实例）。也就是说，DI 是被动的（IoC 容器将依赖亲自送到它手中），DL 是主动的（自己向 IoC 容器索要它依赖的对象）。</p>
+<blockquote>
+<p>IoC 和 DI/DL 其实是包含与被包含的关系，DI 和 DL 是 IoC 的两种实现方式，DI（依赖注入，被动接受）、DL（依赖查找，主动查找）。</p>
+</blockquote>
+<p>那么 Spring 是如何实现 IoC 的呢？其实也差不多：</p>
+<ol>
+<li>读取注解或配置文件，拿到对象所依赖的对象的类名</li>
+<li>使用 Java 反射 API，基于类名实例化对应的对象实例</li>
+<li>通过构造函数、setter 等方法将依赖对象传递给指定对象</li>
+</ol>
+<p>最后总结一下 IoC 的好处：资源不再由使用资源的双方管理，而是由不使用资源的第三方管理（IoC 容器），这样可以带来很多好处。第一，<strong>资源集中管理</strong>，实现资源的可配置和易管理。第二，<strong>降低了使用资源双方的依赖程度</strong>，也就是我们说的耦合度。我们可以将 IoC 看作是工厂模式的一种升级，IoC 很好的体现了面向对象设计法则之一：好莱坞法则：“<strong>别找我们，我们找你</strong>”，总之，IoC 使得软件更加 <strong>高内聚，低耦合</strong>（严于律己，宽以待人）。</p>
+<p><strong>AOP 面向切面编程</strong><br>AOP（Aspect Oriented Programming），即面向切面编程，是 OOP（Object Oriented Programming，面向对象编程）的补充和完善。OOP 引入了封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。但 OOP 只允许开发者定义纵向的关系，并不能定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它所在对象的核心功能毫无关系。对于其它类型的代码，如权限控制、异常处理和性能统计也都是如此，这种散布在各处的无关的代码被称为横切（cross cutting），在 OOP 设计中，它导致了大量代码的重复，而不利于各个模块的重用。</p>
+<p>AOP 技术恰恰相反，它利用一种称为”横切”的技术，剖解开封装的对象内部，并将那些影响了多个类的公共行为封装到一个可重用模块，并将其命名为 <strong>Aspect</strong>，即切面。所谓”切面”，简单说就是那些与业务无关，却为业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块之间的耦合度，并有利于未来的可操作性和可维护性。</p>
+<p>使用”横切”技术，AOP 把软件系统分为两个部分：<strong>核心关注点</strong> 和 <strong>横切关注点</strong>。业务处理的主要流程是核心关注点，与之关系不大的部分是横切关注点。横切关注点的一个特点是，它们经常发生在核心关注点的多处，而各处基本相似，比如权限认证、日志、事务。AOP 的作用在于分离系统中的各种关注点，将核心关注点和横切关注点分离开来。</p>
+<p>OOP 中的基本单元是 <strong>Class</strong>（类），而 AOP 中的基本单元是 <strong>Aspect</strong>（切面）。OOP 是从纵向的角度看待问题（继承、多态），而 AOP 则是从横向的角度看待问题（关注点分离），它们是分析抽象软件结构的两个不同的视角。AOP 并不是 OOP 的替代技术，它只是 OOP 的一种延续，OOP 和 AOP 是相辅相成的。AOP 是 SOC（Separation of Concerns，关注点分离）的一种体现，即把核心逻辑和其它逻辑的代码分离开来，这样我们就能够专心写某一个逻辑，无需关心其他的东西。既然有了分离，那么就有合并（专业术语叫做“织入”），织入的时机主要有 3 个：一是在编译期间进行静态织入（需要特殊的 Java 编译器）；二是在类装载期间进行动态织入（需要特殊的 Java 类加载器）；三是在实际使用之前使用 <strong>动态代理</strong> 来进行动态织入（Spring AOP 就是这种实现方式）。</p>
+<p>提到动态代理，就不得不提代理模式，因为动态代理是代理模式的一种（与之相对的就是静态代理）。代理的概念：为某个对象提供一个代理，以控制对这个对象的访问。代理类和委托类有共同的父类或父接口，这样在任何使用委托类对象的地方都可以用代理对象替代。代理类负责请求的预处理、将请求分派给委托类处理、以及委托类执行完请求后的后续处理（是不是感觉和 Java Web 中的 Filter 很相似？预处理、后处理）。根据代理类生成时机的不同，可以将代理分为 <strong>静态代理</strong>（运行之前确定代理类与委托类的关系，代码写死）和 <strong>动态代理</strong>（运行期间确定代理类与委托类的关系，相对灵活）两种。</p>
+<p>模拟需求：委托类需要处理一项耗时较长的任务，而客户需要知道委托类执行这个任务的具体耗时。<br>解决方法：在调用委托类方法之前以及之后，分别记录对应的时间，它们的时间差就是任务的耗时。</p>
+<p><strong>静态代理</strong><br>所谓静态代理就是，代理类的字节码是在运行之前就生成好了的（比如我们先写好代理类的代码）。</p>
+<p>定义委托类和代理类的共同接口，<code>Task.java</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+public interface Task {
+    void run(String taskName);
+}
+</script></code></pre>
+<p>然后定义委托类，用于处理具体的业务，<code>RealTask.java</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+public class RealTask implements Task {
+    @Override
+    public void run(String taskName) {
+        System.out.println("start run task: " + taskName);
+        try { Thread.sleep(3 * 1000); } catch (InterruptedException e) {}
+        System.out.println("task completed: " + taskName);
+    }
+}
+</script></code></pre>
+<p>接着定义代理类，用来代理委托类的业务方法，<code>ProxyTask.java</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+public class ProxyTask implements Task {
+    private Task realTask;
+
+    public ProxyTask(Task realTask) {
+        this.realTask = realTask;
+    }
+
+    @Override
+    public void run(String taskName) {
+        long time = System.currentTimeMillis();
+        realTask.run(taskName);
+        time = System.currentTimeMillis() - time;
+        System.out.println("task run time: " + time + " ms");
+    }
+}
+</script></code></pre>
+<p>创建一个静态工厂类，因为客户无需知道它用的是代理类对象还是委托类对象，<code>TaskFactory.java</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+public class TaskFactory {
+    private TaskFactory() {
+        throw new AssertionError();
+    }
+
+    public static Task getInstanceByStaticProxy() {
+        return new ProxyTask(new RealTask());
+    }
+}
+</script></code></pre>
+<p>最后，我们创建测试用的客户类，这里我就使用 Main 类来代替了，<code>Main.java</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+public class Main {
+    public static void main(String[] args) {
+        Task task1 = TaskFactory.getInstanceByStaticProxy();
+        task1.run("coding1");
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/proxy on git:master x [16:17:21] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/proxy on git:master x [16:17:46] 
+$ java com.zfl9.proxy.Main
+start run task: coding1
+task completed: coding1
+task run time: 3001 ms
+</script></code></pre>
+<p>静态代理的优点：</p>
+<ul>
+<li>业务类只需要关注业务逻辑本身，保证了业务类的重用性。这是所有代理模式的共有优点。</li>
+</ul>
+<p>静态代理的缺点： </p>
+<ul>
+<li>代理类的一个接口只服务于一种类型的委托类，如果要代理的方法很多，势必要为每一种方法都进行代理，程序规模稍大时将无法胜任。 </li>
+<li>如果后期要为相关接口增加一个方法，除了所有委托类需要实现这个方法外，所有代理类也需要实现此方法。增加了代码维护的复杂度。</li>
+</ul>
+<p><strong>动态代理</strong>（JDK 动态代理）<br>动态代理与静态代理正好相反，其代理类的字节码是在运行期间动态生成的（通过反射等机制）。<br>与动态代理紧密相关的 API：<code>java.lang.reflect.Proxy</code>、<code>java.lang.reflect.InvocationHandler</code>。</p>
+<p>1、<code>java.lang.reflect.Proxy</code>，这是 JDK 动态代理机制生成的所有代理类的父类，它提供了一组静态方法来为一组接口动态地生成代理类及其对象。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 方法 1: 用于获取指定代理类对象所关联的调用处理器
+static InvocationHandler getInvocationHandler(Object proxy)
+
+// 方法 2: 用于获取实现了指定接口的代理类的 Class 对象
+static Class<?> getProxyClass(ClassLoader loader, Class<?>... interfaces)
+
+// 方法 3: 用于判断指定的 Class 对象是否为一个动态代理类
+static boolean isProxyClass(Class<?> cl)
+
+// 方法 4: 用于获取实现了指定接口的代理类对象（传入调用处理器）
+static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)
+</script></code></pre>
+<p>方法 4 其实是一个便携方法，该方法内部会先调用方法 2 获取对应的代理类的 Class 对象，然后再通过 java.lang.Class 类的 <code>getConstructor()</code> 方法获取包含 InvocationHandler 调用处理器参数的构造函数（调用处理器作为一个参数传递给代理类的构造函数），最后通过 java.lang.Class 类的 <code>newInstance()</code> 方法创建该代理类的对象实例，并返回给调用者。</p>
+<p>2、<code>java.lang.reflect.InvocationHandler</code>，调用处理器接口，它自定义了一个 invoke() 方法，用于集中处理在动态代理类对象上的方法调用，通常在该方法中实现对委托类的代理访问。每次生成动态代理类对象时都要指定一个对应的调用处理器对象。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/**
+ * 集中实现代理类上的相关接口方法.
+ * @param proxy         动态代理类的对象
+ * @param method        被调用的 Method 对象
+ * @param args          被调用的 Method 参数
+ * @throws Throwable    调用接口方法时抛出的异常
+ */
+Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+</script></code></pre>
+<p>为了实现动态代理，我们需要先实现一个 InvocationHandler 调用处理器，<code>TaskInvocationHandler.java</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationHandler;
+
+public class TaskInvocationHandler implements InvocationHandler {
+    private Task realTask;
+
+    public TaskInvocationHandler(Task realTask) {
+        this.realTask = realTask;
+    }
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        long time = System.currentTimeMillis();
+        Object result = method.invoke(realTask, args);
+        time = System.currentTimeMillis() - time;
+        System.out.println("task run time: " + time + " ms");
+        return result;
+    }
+}
+</script></code></pre>
+<p>然后在刚才的静态工厂类中添加一个静态工厂方法，<code>getInstanceByDynamicProxy()</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+import java.lang.reflect.Proxy;
+
+public class TaskFactory {
+    private TaskFactory() {
+        throw new AssertionError();
+    }
+
+    public static Task getInstanceByStaticProxy() {
+        return new ProxyTask(new RealTask());
+    }
+
+    public static Task getInstanceByDynamicProxy() {
+        return (Task) Proxy.newProxyInstance(
+            RealTask.class.getClassLoader(),
+            RealTask.class.getInterfaces(),
+            new TaskInvocationHandler(new RealTask())
+        );
+    }
+}
+</script></code></pre>
+<p>然后，修改 Main 类，进行测试：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.proxy;
+
+public class Main {
+    public static void main(String[] args) {
+        Task task1 = TaskFactory.getInstanceByStaticProxy();
+        task1.run("coding1");
+
+        System.out.println();
+
+        Task task2 = TaskFactory.getInstanceByDynamicProxy();
+        task2.run("coding2");
+    }
+}
+</script></code></pre>
+<p>执行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/proxy on git:master x [17:37:45] 
+$ javac *.java
+
+# root @ arch in ~/java8-learn/com/zfl9/proxy on git:master x [17:37:57] 
+$ java com.zfl9.proxy.Main
+start run task: coding1
+task completed: coding1
+task run time: 3002 ms
+
+start run task: coding2
+task completed: coding2
+task run time: 3002 ms
+</script></code></pre>
+<p><strong>动态代理类的继承关系</strong><br><img src="/images/jdk-dynamic-proxy.jpg" alt="JDK 动态代理类的继承关系"></p>
+<p><strong>动态代理类实例的特点</strong><br>每个代理类实例都会关联一个调用处理器对象，可以通过 Proxy 提供的静态方法 <code>getInvocationHandler()</code> 获得代理类实例的调用处理器对象。在代理类实例上调用其代理的接口中所声明的方法时，这些方法最终都会由调用处理器的 invoke() 方法执行，此外，值得注意的是，代理类的根类 <code>java.lang.Object</code> 中有 3 个方法也同样会被分派到调用处理器的 invoke() 方法执行，它们是 <code>hashCode()</code>，<code>equals()</code> 和 <code>toString()</code>，可能的原因有：一是因为这些方法为 public 且非 final 类型，能够被代理类重写；二是因为这些方法往往呈现出一个类的某种特征属性，具有一定的区分度，所以为了保证代理类与委托类对外的一致性，这三个方法也应该被分派到委托类执行。当代理的一组接口有重复声明的方法且该方法被调用时，代理类总是从排在最前面的接口中获取方法对象并分派给调用处理器，而无论代理类实例是否正在以该接口（或继承于该接口的某子接口）的形式被外部引用，因为在代理类内部无法区分其当前的被引用类型。</p>
+<p><strong>动态代理类关联的接口的特点</strong><br>首先，要注意不能有重复的接口，以避免动态代理类代码生成时的编译错误。其次，这些接口对于类装载器必须可见，否则类装载器将无法链接它们，将会导致类定义失败。再次，需被代理的所有非 public 的接口必须在同一个包中，否则代理类生成也会失败。最后，接口的数目不能超过 65535（估计也没这么吊的委托类），这是 JVM 设定的限制。</p>
+<p><strong>动态代理类异常处理方面的特点</strong><br>从调用处理器接口声明的方法中可以看到理论上它能够抛出任何类型的异常，因为所有的异常都继承于 Throwable 接口，但事实是否如此呢？答案是否定的，原因是我们必须遵守一个继承原则：即子类重写父类或实现父接口的方法时，抛出的异常必须在原方法支持的异常列表之内（当然可以不抛出任何异常）。所以虽然调用处理器理论上讲能够，但实际上往往受限制，除非父接口中的方法支持抛 Throwable 异常。那么如果在 invoke() 方法中的确产生了接口方法声明中不支持的异常，那将如何呢？放心，Java 动态代理类已经为我们设计好了解决方法：它将会抛出 UndeclaredThrowableException 异常。这个异常是一个 RuntimeException 类型，所以不会引起编译错误。通过该异常的 getCause() 方法，还可以获得原来那个不受支持的异常对象，以便于错误诊断。</p>
+<p><strong>动态代理的优点和美中不足</strong></p>
+<p><strong>优点</strong>：<br>动态代理与静态代理相比较，最大的好处是接口中声明的所有方法都被转移到调用处理器一个集中的方法中处理（<code>InvocationHandler.invoke()</code>）。这样，在接口方法数量比较多的时候，我们可以进行灵活处理，而不需要像静态代理那样每一个方法进行中转。在本示例中看不出来，因为 invoke() 方法体内嵌入了具体的外围业务（记录任务处理前后时间并计算时间差），实际中可以类似 Spring AOP 那样配置外围业务。</p>
+<p><strong>美中不足</strong>：<br>诚然，Proxy 已经设计得非常优美，但是还是有一点点小小的遗憾之处，那就是它始终无法摆脱仅支持 interface 代理的桎梏，因为它的设计注定了这个遗憾。回想一下那些动态生成的代理类的继承关系图，它们已经注定有一个共同的父类叫 Proxy。Java 的继承机制注定了这些动态代理类们无法实现对 class 的动态代理，原因是多继承在 Java 中本质上就行不通。</p>
+<p>有很多条理由，人们可以否定对 class 代理的必要性，但是同样有一些理由，相信支持 class 动态代理会更美好。接口和类的划分，本就不是很明显，只是到了 Java 中才变得如此的细化。如果只从方法的声明及是否被定义来考量，有一种两者的混合体，它的名字叫抽象类。实现对抽象类的动态代理，相信也有其内在的价值。此外，还有一些历史遗留的类，它们将因为没有实现任何接口而从此与动态代理永世无缘。如此种种，不得不说是一个小小的遗憾。</p>
+<blockquote>
+<p>以上关于静态代理和动态代理的大部分内容，均取自 <a href="http://layznet.iteye.com/blog/1182924" rel="external nofollow noopener noreferrer" target="_blank">Java 静态代理和动态代理</a>。</p>
+</blockquote>
+<p><strong>CGLIB 动态代理</strong><br>因为 JDK 动态代理是基于接口的，但如果目标对象没有实现接口我们该如何处理呢？这时候就该 CGLIB（Code Generation Library）登场了。CGLIB 是一个基于 ASM 的字节码生成库，它允许我们在运行时对字节码进行修改和动态生成。CGLIB 是通过继承方式来实现动态代理的，弥补了 JDK 动态代理无法为没有实现接口的类提供代理的不足。</p>
+<p><strong>CGLIB 实现原理</strong></p>
+<ul>
+<li>CGLIB 原理：动态生成一个要代理类的子类，子类重写要代理的类的所有不是 final 的方法。在子类中采用方法拦截的技术拦截所有父类方法的调用，顺势织入横切逻辑。它比使用 Java 反射的 JDK 动态代理要快。</li>
+<li>CGLIB 底层：使用字节码处理框架 ASM，来转换字节码并生成新的类。不鼓励直接使用 ASM，因为它要求你必须对 JVM 内部结构包括 class 文件的格式和指令集都很熟悉。</li>
+<li>CGLIB 缺点：对于 final 方法，无法进行代理。</li>
+</ul>
+<p><strong>AOP 的好处，总结</strong><br>OK，说了这么多关于动态代理的东西，现在回到 AOP 面向切面编程。Spring AOP 的实现原理我们上面已经进行了详细探讨，那么使用 AOP 究竟能给我们带来什么好处呢？具体的好处其实前文也提到了，一句话概括就是 AOP 能够让我们同一时间专心干一件事，每个人（在 Java 中就是一个类）都各司其职，灵活组合，达到一种可配置的、可插拔的程序结构。最后再引用一下某位大佬的话：AOP 是 SOC（关注点分离）的一种实现，关注点分离是人类的解决问题的一种思维方法，先将复杂的问题做合理的分解，然后再分别仔细研究问题的不同侧面（关注点，Aspect 切面）。带来的好处是使复杂的问题变的清晰，分而治之又为维护和扩展带了很大的便利。而且有点儿像四人帮的 SRP（单一职责原则），但它不仅仅在责任上分离，还在视角上分离。从最早的 C 语言 <code>.c</code> <code>.h</code> 文件的分离，到后来的 MVC 三层架构，乃至现在 IOC、AOP，无不体现了这种分离。</p>
+<h2 id="配置文件与注解"><a href="#配置文件与注解" class="headerlink" title="配置文件与注解"></a>配置文件与注解</h2><p><strong>配置文件</strong></p>
+<ul>
+<li>优点：容易编辑，配置比较集中，方便修改，在大业务量的系统里面，通过配置文件可以方便后人理解整个系统的架构。</li>
+<li>缺点：比较繁琐，类型不安全（对于 XML 配置文件来说，都是字符串），配置形态丑陋，配置文件过多的时候难以管理。</li>
+</ul>
+<p><strong>注解</strong></p>
+<ul>
+<li>优点：方便、简洁，配置信息和 Java 代码放在一起，有助于增强程序的内聚性和可读性。</li>
+<li>缺点：注解往往分散在各个 class 文件中，不利于后期维护，而且注解本身也是一种耦合。</li>
+</ul>
+<p><strong>总结</strong>：需要经常改的东西建议使用 XML 配置文件，不需要经常改的东西建议使用 Java 注解。</p>
+<h2 id="类库和框架"><a href="#类库和框架" class="headerlink" title="类库和框架"></a>类库和框架</h2><p><strong>库是工具箱</strong><br>比如宜家买个便宜的架子，自己装，螺丝刀拧的手痛，就买了个电动螺丝刀，生产力立马跃迁好几倍。螺丝刀，电动螺丝刀，就是不同的库，虽然用法不同，API 不同，但想换就换了，改动不大。</p>
+<p><strong>框架是一套通用的解决方案</strong><br>比如刚才买的架子，可以放书，可以放花，可以放 DVD。也可以个性化，有的地方装上门，装抽屉，但是，它还是个架子，不能在上面睡觉。<br>对应软件框架来说，通常针对某类典型问题，预先规定好在什么地方做什么事情，不好僭越。更换框架，也是麻烦，就像架子一样，之前装的门，抽屉都要丢掉，架子里东西也要迁移，重新安置。</p>
+<p><strong>架构是高度抽象的需求，是系统中的不变量</strong><br>比如架子装好了，要有个房子放。买房子，房型图就是架构，这屋书房，那屋睡觉，二人世界，70 平搞定！装修，北欧风，中国风，都可以；打通墙，换马桶，也行，但承重墙不能动，70 平不会多，这就是架构。</p>
+<p>开心的住了一年，怀孕了，三胞胎，噗噗噗，生了，婆婆岳母都来了，乌压压的一屋人，晚上客厅里睡倒一片，书房改胶囊旅店也塞不下了，怎么办？没办法！架构在那里，需求的发展超出了架构师的想象，只能认怂，有钱就买新房，换架构，没钱就受着，谁让你当初低估生殖力呢？</p>
+<p><strong>平台是所有可能做的事的集合</strong><br>比如带着三胞胎搬进了新小区。想溜娃，去小区的滑梯；想运动，去小区的健身角；想游泳，物业说，不好意思，咱是中档小区，大哥你出门，打车，奥体。</p>
+<p>在家里，小区就是平台，你能做的受限于小区的设施。同样，网页上，JS 操作 DOM，风生水起，但想要随意动硬盘里的文件，就困难了，因为它跑在浏览器里，浏览器是平台，有所限制。如果 JS 跑另一个平台上，操作文件也不是大问题。微信之于小程序，浏览器之于前端，JVM 之于 Java，皆是平台，既提供了服务，也限制了可能。</p>
+<p>具体到实际操作，平台不需太费脑筋，没多少可选；架构比较考验人，设计的不好以后就被虐；框架看团队偏好，一般选熟悉的；库自己选顺手的即可。</p>
+<blockquote>
+<p>以上描述均摘自 <a href="https://www.zhihu.com/question/29643471" rel="external nofollow noopener noreferrer" target="_blank">库，框架，架构，平台，有什么明确的区别？</a> 中的第一个回答。</p>
+</blockquote>
+<p>我用自己的语言来总结一下类库和框架的区别：<br><strong>类库</strong>：我调用类库，主动权在我们自己；通常只有类库我们还不能直接完成我们的程序，因为它只是一个工具，程序的主体部分还是需要由我们自己写。<br><strong>框架</strong>：框架调用我，主动权在框架本身；而框架则是将大部分代码都写好了，我们只要按照框架的约定，实现我们自己的业务逻辑部分，程序就能运行。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/libevent.html" rel="next" title="libevent 笔记">
+                <i class="fa fa-chevron-left"></i> libevent 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-jdbc.html" rel="prev" title="Java JDBC 入门">
+                Java JDBC 入门 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaBean-与-POJO"><span class="nav-number">1.</span> <span class="nav-text">JavaBean 与 POJO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Model1-与-Model2"><span class="nav-number">2.</span> <span class="nav-text">Model1 与 Model2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH-与-SSM-框架"><span class="nav-number">3.</span> <span class="nav-text">SSH 与 SSM 框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件与注解"><span class="nav-number">4.</span> <span class="nav-text">配置文件与注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类库和框架"><span class="nav-number">5.</span> <span class="nav-text">类库和框架</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-framework.html';
+          this.page.identifier = 'java-framework.html';
+          this.page.title = 'JavaEE 框架预备知识';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

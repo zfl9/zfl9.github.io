@@ -1,0 +1,913 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 socket编程 linux socket编程 套接字">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - socket编程(一)，源IP地址和目的IP地址以及源端口号和目的端口号的组合称为套接字，其用于标识客户端请求的服务器和服务；它是网络通信过程中端点的抽象表示，包含进行网络通信必需的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - socket编程(一)">
+<meta property="og:url" content="https://www.zfl9.com/c-socket.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - socket编程(一)，源IP地址和目的IP地址以及源端口号和目的端口号的组合称为套接字，其用于标识客户端请求的服务器和服务；它是网络通信过程中端点的抽象表示，包含进行网络通信必需的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口">
+<meta property="og:image" content="https://www.zfl9.com/images/tcp_handshake.png">
+<meta property="og:image" content="https://www.zfl9.com/images/tcp_wave.png">
+<meta property="og:image" content="https://www.zfl9.com/images/tcp_handshake_wave.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - socket编程(一)">
+<meta name="twitter:description" content="c语言 - socket编程(一)，源IP地址和目的IP地址以及源端口号和目的端口号的组合称为套接字，其用于标识客户端请求的服务器和服务；它是网络通信过程中端点的抽象表示，包含进行网络通信必需的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口">
+<meta name="twitter:image" content="https://www.zfl9.com/images/tcp_handshake.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-socket.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - socket编程(一) | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-socket.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - socket编程(一)
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-08T10:42:00+08:00">
+                2017-08-08
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-socket.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-socket.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-socket.html" class="leancloud_visitors" data-flag-title="c语言 - socket编程(一)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - socket编程(一)，源IP地址和目的IP地址以及源端口号和目的端口号的组合称为套接字，其用于标识客户端请求的服务器和服务；<br>它是网络通信过程中端点的抽象表示，包含进行网络通信必需的五种信息：<code>连接使用的协议</code>，<code>本地主机的IP地址</code>，<code>本地进程的协议端口</code>，<code>远地主机的IP地址</code>，<code>远地进程的协议端口</code></p>
+<a id="more"></a>
+<h2 id="socket套接字"><a href="#socket套接字" class="headerlink" title="socket套接字"></a>socket套接字</h2><p><strong>网络主机之间的应用程序如何进行通信？</strong><br>网络层的<code>ip地址</code>可以唯一标识网络中的主机；<br>而传输层的<code>协议+端口</code>可以唯一标识主机中的应用程序(进程)；<br>这样利用<code>三元组(ip地址 + 协议 + 端口)</code>就可以<code>标识网络的进程</code>了，网络中的进程通信就可以利用这个标志与其它进程进行交互</p>
+<p><strong>什么是socket套接字？</strong><br>上面我们已经知道网络中的进程是通过socket来通信的，那什么是socket呢？<br>socket起源于Unix，而Unix/Linux基本哲学之一就是<code>一切皆文件</code>，都可以用<code>打开open –&gt; 读写read/write –&gt; 关闭close</code>模式来操作；<br>socket就是该模式的一个实现，socket即是一种特殊的文件，一些socket函数就是对其进行的操作(读/写IO、打开、关闭)；</p>
+<p><strong><code>SOCK_STREAM</code></strong>：流套接字<br>流套接字用于提供<code>面向连接</code>、<code>可靠的数据传输</code>服务；该服务将保证数据能够实现无差错、无重复发送，并按顺序接收；<br>流套接字之所以能够实现可靠的数据服务，原因在于其使用了传输控制协议，即<code>TCP协议</code></p>
+<p><strong><code>SOCK_DGRAM</code></strong>：数据报套接字<br>数据报套接字提供了一种<code>无连接</code>的服务；该服务<code>并不能保证数据传输的可靠性</code>，数据有可能在传输过程中丢失或出现数据重复，且无法保证顺序地接收到数据；<br>数据报套接字使用<code>UDP协议</code>进行数据的传输；由于数据报套接字不能保证数据传输的可靠性，对于有可能出现的数据丢失情况，需要在程序中做相应的处理</p>
+<p><strong><code>SOCK_RAW</code></strong>：原始套接字<br>原始套接字允许<code>对较低层次的协议直接访问</code>，比如<code>IP</code>、<code>ICMP</code>协议，它常用于检验新的协议实现，或者访问现有服务中配置的新设备；<br>因为RAW SOCKET可以自如地控制网络底层的传输机制，所以可以应用原始套接字来操纵网络层和传输层应用；<br>比如，我们可以通过RAW SOCKET来接收发向本机的ICMP、IGMP协议包，或者接收TCP/IP栈不能够处理的IP包，也可以用来发送一些自定包头或自定协议的IP包；<br>原始套接字与标准套接字(标准套接字指的是前面介绍的流套接字和数据包套接字)的区别在于：<br>原始套接字可以读写内核没有处理的IP数据包，而流套接字只能读取TCP协议的数据，数据报套接字只能读取UDP协议的数据；因此，如果要访问其他协议发送数据必须使用原始套接字</p>
+<h2 id="socket基本操作"><a href="#socket基本操作" class="headerlink" title="socket基本操作"></a>socket基本操作</h2><p><code>int socket(int domain, int type, int protocol);</code>：创建一个socket文件描述符fd</p>
+<ul>
+<li><code>domain</code>：输入参数，协议域、地址域或<code>协议族</code>；<br>常用的协议族有：<code>AF_INET</code>、<code>AF_INET6</code>、<code>AF_LOCAL</code>(或称<code>AF_UNIX</code>)、<code>AF_ROUTE</code>等等<br>协议族决定了socket的地址类型，在通信中必须采用对应的地址，如AF_INET决定了要用ipv4地址(32位)与端口号(16位)的组合、AF_UNIX决定了要用一个绝对路径名作为地址</li>
+<li><code>type</code>：输入参数，socket类型；<br>常用的socket类型有：<code>SOCK_STREAM</code>、<code>SOCK_DGRAM</code>、<code>SOCK_RAW</code>、<code>SOCK_PACKET</code>、<code>SOCK_SEQPACKET</code>等等</li>
+<li><code>protocol</code>：输入参数，指定使用的协议；<br>常用的协议有：<code>IPPROTO_TCP</code>、<code>IPPTOTO_UDP</code>、<code>IPPROTO_SCTP</code>、<code>IPPROTO_TIPC</code>等等<br>如果该参数为0，则让系统自动选择合适的协议，一般我们也这么操作</li>
+<li>返回值：成功返回一个非负整数的fd，失败则返回-1，并设置errno</li>
+</ul>
+<p>当我们调用socket创建一个socket时，返回的socket描述字它存在于协议族空间中，但没有一个具体的地址；<br>如果想要给它赋值一个地址，就必须调用<code>bind()</code>函数，否则就当调用<code>connect()</code>、<code>listen()</code>时系统会自动随机分配一个端口</p>
+<p><code>int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</code>：绑定一个固定的socket地址</p>
+<ul>
+<li><code>sockfd</code>：输入参数，socket文件描述符，即socket()的返回值</li>
+<li><code>addr</code>：输入参数，指向sock地址的指针</li>
+<li><code>addrlen</code>：输入参数，sock地址的长度</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int listen(int sockfd, int backlog);</code>：监听socket套接字</p>
+<ul>
+<li><code>sockfd</code>：输入参数，被监听的套接字</li>
+<li><code>backlog</code>：输入参数，最大等待队列数量，宏<code>SOMAXCONN</code>为系统设定的最大值，可通过<code>/etc/sysctl.conf</code>修改</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</code>：连接socket套接字</p>
+<ul>
+<li><code>sockfd</code>：输入参数，客户端的套接字</li>
+<li><code>addr</code>：输入参数，服务器的地址</li>
+<li><code>addrlen</code>：输入参数，服务器的地址的长度</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);</code>：接受socket连接请求</p>
+<ul>
+<li><code>sockfd</code>：输入参数，被监听的套接字</li>
+<li><code>addr</code>：输出参数，返回客户端的地址，可为NULL</li>
+<li><code>addrlen</code>：输入参数，指定客户端的地址的长度，可为NULL</li>
+<li>返回值：成功返回已连接的新套接字描述符connfd，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int recv(int sockfd, void *buf, int len, int flags);</code>：从socket接收数据</p>
+<ul>
+<li><code>sockfd</code>：输入参数，从这个socket接收数据</li>
+<li><code>buf</code>：输出参数，用来保存接收到的数据</li>
+<li><code>len</code>：输入参数，指定buf的长度，表示最多接收这么多个字节的数据</li>
+<li><code>flags</code>：输入参数，flags，指定对应的选项，一般置为0</li>
+<li>返回值：成功返回接收到的数据大小，返回0表示对方不再发送数据(可以理解为关闭了连接)，出错返回-1，并设置errno</li>
+</ul>
+<p><code>int send(int sockfd, void *buf, int len, int flags);</code>：向socket发送数据</p>
+<ul>
+<li><code>sockfd</code>：输入参数，向这个socket发送数据</li>
+<li><code>buf</code>：输入参数，发送buf指向的数据</li>
+<li><code>len</code>：输入参数，指定buf的长度，指定要发送的数据大小</li>
+<li><code>flags</code>：输入参数，flags，指定对应的选项，一般置为0</li>
+<li>返回值：成功返回已发送的数据大小，失败则返回-1，并设置errno</li>
+</ul>
+<p><code>int recvfrom(int sockfd, void *buf, int len, int flags, struct sockaddr *addr, socklen_t *addrlen);</code>：从udp socket接收数据</p>
+<ul>
+<li><code>sockfd</code>：输入参数，从该socket接收数据</li>
+<li><code>buf</code>：输出参数，将接收的数据存放在buf上</li>
+<li><code>len</code>：输入参数，指定buf的长度</li>
+<li><code>flags</code>：输入参数，flags，指定对应的选项，一般置为0</li>
+<li><code>addr</code>：输出参数，保存该数据的发送方地址</li>
+<li><code>addrlen</code>：输入参数，指定发送方地址的长度</li>
+<li>返回值：成功返回接收到的数据大小，失败则返回-1，并设置errno</li>
+</ul>
+<p><code>int sendto(int sockfd, void *buf, int len, int flags, struct sockaddr *addr, socklen_t addrlen);</code>：向udp socket发送数据</p>
+<ul>
+<li><code>sockfd</code>：输入参数，向该socket发送数据</li>
+<li><code>buf</code>：输入参数，发送buf指向的数据</li>
+<li><code>len</code>：输入参数，指定buf的长度</li>
+<li><code>flags</code>：输入参数，flags，指定对应的选项，一般置为0</li>
+<li><code>addr</code>：输入参数，指定接收方的地址</li>
+<li><code>addrlen</code>：输入参数，指定接收方的地址的长度</li>
+<li>返回值：成功返回发送的数据大小，失败则返回-1，并设置errno</li>
+</ul>
+<p>最后一个参数<code>flags</code>：</p>
+<ul>
+<li><code>MSG_WAITALL</code>：用于recv，尽可能等待所有数据</li>
+<li><code>MSG_DONTWAIT</code>：用于recv、send，仅本次操作不阻塞</li>
+<li><code>MSG_DONTROUTE</code>：用于send，绕过路由表查找</li>
+<li><code>MSG_OOB</code>：用于recv、send，发送或接收带外数据</li>
+<li><code>MSG_PEEK</code>：用于recv，窥看外来数据，不将其从socket缓冲区中删除</li>
+</ul>
+<p><code>int shutdown(int sockfd, int howto);</code>：关闭tcp连接</p>
+<ul>
+<li><code>sockfd</code>：输入参数，即将关闭连接的套接字</li>
+<li><code>howto</code>：输入参数，定义如何关闭：<code>SHUT_RD</code>值为0，关闭读、<code>SHUT_WR</code>值为1，关闭写、<code>SHUT_RDWR</code>值为2，关闭读写</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int close(int fd);</code>：关闭socket</p>
+<ul>
+<li><code>fd</code>：输入参数，要关闭的文件描述符fd</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><strong>shutdown和close的区别</strong><br><code>shutdown()</code>函数用于tcp连接的socket套接字，对udp无效<br>用于更精细的控制流的读和写，可以只关闭读，也可以只关闭写，或者读写都关闭，但是关闭后，该sockfd依旧是有效的，仍需调用close进行关闭<br>而<code>close()</code>函数用于关闭对应的fd文件描述符，socket也是特殊的文件，注意，close只是将对应的sockfd的引用计数减1，当引用计数减到0时，系统才关闭该sockfd</p>
+<p>还有一点：在多进程程序中，使用shutdown会导致共享进程的连接也被关闭，读写出现错误，而close不会影响共享进程的socket</p>
+<h2 id="tcp三次握手、四次挥手"><a href="#tcp三次握手、四次挥手" class="headerlink" title="tcp三次握手、四次挥手"></a>tcp三次握手、四次挥手</h2><p><img src="/images/tcp_handshake.png" alt="tcp三次握手"></p>
+<ol>
+<li>Client 发送 SYN 包（seq: x），告诉 Server：我要建立连接；Client 进入<code>SYN-SENT</code>状态；</li>
+<li>Server 收到 SYN 包后，发送 SYN+ACK 包（seq: y; ack: x+1），告诉它：好的；Server 进入<code>SYN-RCVD</code>状态；</li>
+<li>Client 收到 SYN+ACK 包后，发现 ack=x+1，于是进入<code>ESTABLISHED</code>状态，同时发送 ACK 包（seq: x+1; ack: y+1）给 Server；Server 发现 ack=y+1，于是也进入<code>ESTABLISHED</code>状态；</li>
+</ol>
+<p>接下来就是互相发送数据、接收数据了……</p>
+<p><img src="/images/tcp_wave.png" alt="tcp四次挥手"><br>注意，可以是连接的任意一方主动 close，这里假设 Client 主动关闭连接：</p>
+<ol>
+<li>Client 发送 FIN 包，告诉 Server：我已经没有数据要发送了；Client 进入<code>FIN-WAIT-1</code>状态；</li>
+<li>Server 收到 FIN 包后，回复 ACK 包，告诉 Client：好的，不过你需要再等会，我可能还有数据要发送；Server 进入<code>CLOSE-WAIT</code>状态；而 Client 收到 ACK 包后，继续等待 Server 做好准备，Client 进入<code>FIN-WAIT-2</code>状态；</li>
+<li>Server 准备完毕后，发送 FIN 包，告诉 Client：我也没有什么要发送了，准备关闭连接吧；Server 进入<code>LAST-ACK</code>状态；</li>
+<li>Client 收到 FIN 包后，知道 Server 准备完毕了，于是给它回复 ACK 包，告诉它我知道了，于是进入<code>TIME-WAIT</code>状态；而 Server 收到 ACK 包后，即进入<code>CLOSED</code>状态；Client 等待 2MSL 时间后，没有再次收到 Server 的 FIN 包，于是确认 Server 收到了 ACK 包并且已关闭，于是 Client 也进入<code>CLOSED</code>状态；</li>
+</ol>
+<blockquote>
+<p><code>MSL</code>即<code>报文最大生存时间</code>，RFC793 中规定 MSL 为 2 分钟，实际应用中常用的是 30 秒、1 分钟、2 分钟等；可以修改<code>/etc/sysctl.conf</code>内核参数，来缩短<code>TIME_WAIT</code>的时间，避免不必要的资源浪费。</p>
+</blockquote>
+<p>最后附上tcp从建立连接到传输数据到释放连接的过程图：<br><img src="/images/tcp_handshake_wave.jpg" alt="tcp连接"></p>
+<h2 id="tcp-socket实例"><a href="#tcp-socket实例" class="headerlink" title="tcp_socket实例"></a>tcp_socket实例</h2><p>实现一个echo回声的服务端/客户端，即client发送一条消息给server，server就把该消息原样返回给client：</p>
+<p><code>tcp_echo_server.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define LISTEN_PORT 8080
+#define BUF_SIZE 128
+
+int main(void){
+    int listenfd;
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if(listen(listenfd, SOMAXCONN) < 0){
+        perror("listen_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int connfd;
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    char buf[BUF_SIZE];
+    int nbuf;
+
+    for(;;){
+        if((connfd = accept(listenfd, (struct sockaddr *)&peeraddr, &peerlen)) < 0){
+            perror("accept_listenfd error");
+            continue;
+        }
+
+        nbuf = recv(connfd, buf, BUF_SIZE, 0);
+        buf[nbuf] = 0;
+        if(!strcmp(buf, "exit")){
+            printf("exit_server\n");
+            close(connfd);
+            break;
+        }
+        printf("new conn(%s:%d); msg: %s\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port), buf);
+        send(connfd, buf, nbuf, 0);
+        close(connfd);
+    }
+
+    close(listenfd);
+    return 0;
+}
+</script></code></pre>
+<p><code>tcp_echo_client.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define SERV_PORT 8080
+#define BUF_SIZE 128
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <MSG>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    if(inet_pton(AF_INET, "127.0.0.1", &servaddr.sin_addr) <= 0){
+        perror("convert_servaddr error");
+        exit(EXIT_FAILURE);
+    }
+    servaddr.sin_port = htons(SERV_PORT);
+
+    if(connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("connect_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    char buf[BUF_SIZE];
+    int nbuf = strlen(argv[1]);
+    send(sockfd, argv[1], nbuf, 0);
+    nbuf = recv(sockfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+    printf("echo msg: %s\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<p>测试echo回声程序：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [14:59:29]
+$ gcc -o server tcp_echo_server.c
+
+# root @ localhost in ~/tmp [14:59:36]
+$ gcc -o client tcp_echo_client.c
+
+# root @ localhost in ~/tmp [14:59:43]
+$ ./server
+
+# root @ localhost in ~/tmp [14:57:04]
+$ for ((i=0; i<10; i++)); do ./client 'www.zfl9.com'; done && ./client 'exit'
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg:
+
+# root @ localhost in ~/tmp [14:59:43]
+$ ./server
+new conn(127.0.0.1:55806); msg: www.zfl9.com
+new conn(127.0.0.1:55808); msg: www.zfl9.com
+new conn(127.0.0.1:55810); msg: www.zfl9.com
+new conn(127.0.0.1:55812); msg: www.zfl9.com
+new conn(127.0.0.1:55814); msg: www.zfl9.com
+new conn(127.0.0.1:55816); msg: www.zfl9.com
+new conn(127.0.0.1:55818); msg: www.zfl9.com
+new conn(127.0.0.1:55820); msg: www.zfl9.com
+new conn(127.0.0.1:55822); msg: www.zfl9.com
+new conn(127.0.0.1:55824); msg: www.zfl9.com
+exit_server
+</script></code></pre>
+<h2 id="udp-socket实例"><a href="#udp-socket实例" class="headerlink" title="udp_socket实例"></a>udp_socket实例</h2><p>我们也实现一个echo回声：</p>
+<p><code>udp_echo_server.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define BIND_PORT 8080
+#define BUF_SIZE 128
+
+int main(void){
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in bindaddr;
+    memset(&bindaddr, 0, sizeof(bindaddr));
+    bindaddr.sin_family = AF_INET;
+    bindaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    bindaddr.sin_port = htons(BIND_PORT);
+
+    if(bind(sockfd, (struct sockaddr *)&bindaddr, sizeof(bindaddr)) < 0){
+        perror("bind_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    char buf[BUF_SIZE];
+    int nbuf;
+
+    for(;;){
+        nbuf = recvfrom(sockfd, buf, BUF_SIZE, 0, (struct sockaddr *)&peeraddr, &peerlen);
+        buf[nbuf] = 0;
+        if(!strcmp(buf, "exit")){
+            printf("exit_server\n");
+            break;
+        }
+        printf("new msg(%s:%d): %s\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port), buf);
+        sendto(sockfd, buf, nbuf, 0, (struct sockaddr *)&peeraddr, peerlen);
+    }
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<p><code>udp_echo_client.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define SERV_PORT 8080
+#define BUF_SIZE 128
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <MSG>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    if(inet_pton(AF_INET, "127.0.0.1", &servaddr.sin_addr) <= 0){
+        perror("convert_servaddr error");
+        exit(EXIT_FAILURE);
+    }
+    servaddr.sin_port = htons(SERV_PORT);
+
+    char buf[BUF_SIZE];
+    int nbuf = strlen(argv[1]);
+    sendto(sockfd, argv[1], nbuf, 0, (struct sockaddr *)&servaddr, sizeof(servaddr));
+    nbuf = recvfrom(sockfd, buf, BUF_SIZE, 0, NULL, NULL);
+    buf[nbuf] = 0;
+    printf("echo msg: %s\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<p>测试echo回声程序：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [15:36:35]
+$ gcc -o server udp_echo_server.c
+
+# root @ localhost in ~/tmp [15:36:40]
+$ gcc -o client udp_echo_client.c
+
+# root @ localhost in ~/tmp [15:36:41]
+$ ./server
+
+# root @ localhost in ~/tmp [15:36:46]
+$ ./client 'test'
+^C
+
+# root @ localhost in ~/tmp [15:36:58] C:130
+$ for ((i=0; i<10; i++)); do ./client 'www.zfl9.com'; done && ./client 'exit'
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+echo msg: www.zfl9.com
+^C
+
+# root @ localhost in ~/tmp [15:36:41]
+$ ./server
+new msg(127.0.0.1:45884): test
+new msg(127.0.0.1:47339): www.zfl9.com
+new msg(127.0.0.1:49160): www.zfl9.com
+new msg(127.0.0.1:34802): www.zfl9.com
+new msg(127.0.0.1:45306): www.zfl9.com
+new msg(127.0.0.1:59937): www.zfl9.com
+new msg(127.0.0.1:53763): www.zfl9.com
+new msg(127.0.0.1:51414): www.zfl9.com
+new msg(127.0.0.1:58480): www.zfl9.com
+new msg(127.0.0.1:35993): www.zfl9.com
+new msg(127.0.0.1:33064): www.zfl9.com
+exit_server
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-socket-func.html" rel="next" title="c语言 - socket编程(二)">
+                <i class="fa fa-chevron-left"></i> c语言 - socket编程(二)
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-iniparser.html" rel="prev" title="c语言 - iniparser解析配置文件">
+                c语言 - iniparser解析配置文件 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#socket套接字"><span class="nav-number">1.</span> <span class="nav-text">socket套接字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket基本操作"><span class="nav-number">2.</span> <span class="nav-text">socket基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcp三次握手、四次挥手"><span class="nav-number">3.</span> <span class="nav-text">tcp三次握手、四次挥手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcp-socket实例"><span class="nav-number">4.</span> <span class="nav-text">tcp_socket实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#udp-socket实例"><span class="nav-number">5.</span> <span class="nav-text">udp_socket实例</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-socket.html';
+          this.page.identifier = 'c-socket.html';
+          this.page.title = 'c语言 - socket编程(一)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

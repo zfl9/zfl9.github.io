@@ -1,0 +1,919 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="linux,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="本文主要记录 Linux 中的一些实用命令，顺便介绍 iproute2 策略路由、iproute2 与 iptables 的关系和区别、交叉编译相关的知识。">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 笔记">
+<meta property="og:url" content="https://www.zfl9.com/linux.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="本文主要记录 Linux 中的一些实用命令，顺便介绍 iproute2 策略路由、iproute2 与 iptables 的关系和区别、交叉编译相关的知识。">
+<meta property="og:image" content="https://www.zfl9.com/images/ct-ng-menuconfig.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.240Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 笔记">
+<meta name="twitter:description" content="本文主要记录 Linux 中的一些实用命令，顺便介绍 iproute2 策略路由、iproute2 与 iptables 的关系和区别、交叉编译相关的知识。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/ct-ng-menuconfig.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/linux.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Linux 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/linux.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Linux 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T08:00:00+08:00">
+                2018-11-25
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/linux.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="linux.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/linux.html" class="leancloud_visitors" data-flag-title="Linux 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要记录 Linux 中的一些实用命令，顺便介绍 iproute2 策略路由、iproute2 与 iptables 的关系和区别、交叉编译相关的知识。</p>
+<a id="more"></a>
+<h2 id="UEFI-引导"><a href="#UEFI-引导" class="headerlink" title="UEFI 引导"></a>UEFI 引导</h2><pre><code class="language-bash line-numbers"><script type="text/plain">
+mkdir -p /boot/efi
+mount /dev/sda1 /boot/efi # 挂载ESP分区
+pacman -S grub efibootmgr os-prober
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=archlinux_grub
+grub-mkconfig -o /boot/grub/grub.cfg
+</script></code></pre>
+<h2 id="dd-命令"><a href="#dd-命令" class="headerlink" title="dd 命令"></a>dd 命令</h2><p>直接使用 Linux 自带的 <code>dd</code> 命令，简单快捷：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+dd bs=4M if=/path/to/linux.iso of=/dev/sda status=progress
+</script></code></pre>
+<h2 id="tee-命令"><a href="#tee-命令" class="headerlink" title="tee 命令"></a>tee 命令</h2><p>记录日志的好东西，与重定向不同，tee 会保留标准输出，同时将标准输出 dump 一份到指定的文件中。用法也很简单，比如要记录 <code>pacman -Syyu</code> 系统升级的详细日志，只需修改为 <code>pacman -Syyu | tee pacman.update.log</code></p>
+<h2 id="ncat-命令"><a href="#ncat-命令" class="headerlink" title="ncat 命令"></a>ncat 命令</h2><p>注意是 nmap.org 的 ncat 工具，不是 Linux 自带的，自带的不怎么好用。</p>
+<p><strong>连接两个端口</strong>，使得这两个端口互通。先创建一个管道文件，tunnel。</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+mkfifo tunnel
+nc -lk 0.0.0.0 8888 < tunnel | nc -lk 0.0.0.0 9999 > tunnel
+</script></code></pre>
+<p>假设 client-A 连接到 8888 端口，client-B 连接到 9999 端口，client-A 发送消息 hello，左边的 nc 接收后，因为有管道连接，并没有直接显示到屏幕上，而是写入到右边的 nc 的标准输入，右边的 nc 又将它传给 client-B，client-B 的屏幕上显示 hello，然后 client-B 回复 world，右边的 nc 接收到后，因为有重定向，并没有显示到屏幕上，而是写入到 tunnel 管道文件中，同时，左边的 nc 读取到了 tunnel 的数据，然后又传输给 client-A，最后 client-A 显示消息 world，反之亦然。</p>
+<p>稍微动动脑筋，可以发现 nc 的很多高级用法。比如实现内网穿透。内网穿透又称 NAT 穿透，TCP 打洞，UDP 打洞，指的都是一个东西。内网穿透的意思就是，可以让外网主机访问内网主机。内网主机访问外网主机很容易，但是反过来就没这么容易了。</p>
+<p>现在大部分电信宽带都没有为用户分配公网 IP，不过貌似可以打客服申请，我就是这样。假设你的宽带有公网 IP，那么实现内网穿透比较简单，只需在路由器上进行端口映射（服务器端口映射），或者直接开放全部端口，即所谓的 DMZ 主机。</p>
+<p>如果没有公网 IP，就麻烦一些了。这时候要进行内网穿透就必须借助一台外网主机，说起来也不难，首先在这台公网服务器上利用 nc 连接两个端口，假设监听的端口分别为 8888、9999。然后我们在这台要访问的内网主机上再利用 nc 连接两个端口，一头连接本地的服务，一头连接公网的 8888 端口，最后我们就可以在另一个主机上连接这台服务器的 9999 端口，来访问这个内网中的主机提供的服务了。</p>
+<p>假设，我要在外网环境中连接我家里那台电脑的 ssh 服务。首先，在一台有公网 IP 的主机上，利用 nc 连接两个端口：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+mkfifo tunnel
+nc -lk 0.0.0.0 8888 < tunnel | nc -lk 0.0.0.0 9999 > tunnel
+</script></code></pre>
+<p>然后，在家里这台电脑中，利用 nc，连接两个端口，一头连接 127.0.0.1:22，一头连接 home.zfl9.com:8888，如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+mkfifo tunnel
+nc 127.0.0.1 22 < tunnel | nc home.zfl9.com 8888 > tunnel
+</script></code></pre>
+<p>最后，我在当前电脑上就可以使用 ssh 命令连接它了，记得端口是 9999，主机是 home.zfl9.com，即 <code>ssh -p9999 root@home.zfl9.com</code>。</p>
+<p>除了利用 nc 进行内网穿透外，还可以利用 frp、ngrok，其实原理都是一样的。</p>
+<h2 id="kill-killall-pkill-pgrep"><a href="#kill-killall-pkill-pgrep" class="headerlink" title="kill/killall/pkill/pgrep"></a>kill/killall/pkill/pgrep</h2><p>kill 是最基本的命令，用于发送信号给对应的进程（使用 PID 识别进程），默认发送的信号是 15（正常关闭，可被忽略），发送信号 9 可以强制杀死进程，该信号不可忽略，立即杀死。kill 的用法非常简单，<code>kill -9 pid1 pid2 pid3 pid4</code> 杀死多个进程。</p>
+<p>killall 是 kill 命令的封装，可以使用 ERE 正则表达式匹配进程，然后发送指定的信号，如 9、15。默认也是 15。比如，杀死 aliyun 和 cloud 进程，<code>killall -9 -r &#39;aliyun|cloud&#39;</code>。</p>
+<p>pkill 和 pgrep 是同一个软件包下的两个工具，也都是使用 ERE 扩展正则表达式来匹配对应的进程，而且它们的命令行参数很相似。不同的是，前者是匹配后直接杀死（默认信号 15，可指定为 9），后者是仅仅匹配进程，然后打印它的 PID。</p>
+<p>pkill 用法：<code>pkill -9 &quot;^sh$|^bash$&quot;</code>，直接强制杀死<br>pgrep 用法：<code>pgrep -l &quot;^sh$|^bash$&quot;</code>，列出相关进程</p>
+<h2 id="systemd-相关"><a href="#systemd-相关" class="headerlink" title="systemd 相关"></a>systemd 相关</h2><p><code>Wants</code>：弱依赖，不涉及启动顺序，默认并行启动<br><code>Requires</code>：强依赖，不涉及启动顺序，默认并行启动</p>
+<p><code>Before</code>：先于给定服务启动，只涉及启动顺序，没有依赖<br><code>After</code>：后于给定服务启动，只涉及启动顺序，没有依赖</p>
+<p>这四个字段都可以有多个 unit（service、target、timer 等），多个 unit 之间使用空格隔开。建议两两搭配，即同组中选一个，切忌不可选择冲突项。</p>
+<p>如果想要一个 service 最后执行（单单通过 After、Before 无法实现），就必须新建一个 custom.target（当然名字随意），然后在该 target 中 Requires&amp;After multi-user.target/graphical.target，然后将当前 runlevel 设为 custom.target，最后我们在 custom.target 创建服务就 OK 了，不过也要记得在自定义服务中加入 After multi-user.target/graphical.target 哦，否则默认是并行启动的。</p>
+<p>这里以 rc-local.service 自定义服务为例。第一步，创建 custom.target：<br><code>vim /etc/systemd/system/custom.target</code><br><code>mkdir -p /etc/systemd/system/custom.target.wants</code></p>
+<pre><code class="language-ini line-numbers"><script type="text/plain">
+[Unit]
+Description=Custom Target
+Requires=multi-user.target
+After=multi-user.target
+AllowIsolate=yes
+</script></code></pre>
+<p>第二步，创建 rc-local.service 服务文件，细节如下：<br><code>vim /etc/systemd/system/rc-local.service</code></p>
+<pre><code class="language-ini line-numbers"><script type="text/plain">
+[Unit]
+Description=rc-local
+ConditionFileIsExecutable=/etc/rc.local
+Requires=multi-user.target
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/etc/rc.local start
+ExecStop=/etc/rc.local stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=custom.target
+</script></code></pre>
+<p>接着，enable rc-local 服务，把当前运行级别设为 custom.target：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+systemctl enable rc-local
+cd /etc/systemd/system/
+ln -sf custom.target default.target
+</script></code></pre>
+<p>最后，reboot 你的系统，开机后可以使用 <code>systemd-analyze blame</code> 查看启动详情。</p>
+<h2 id="X-Window-System"><a href="#X-Window-System" class="headerlink" title="X Window System"></a>X Window System</h2><p>X Window System，常称为 X11 或 X。是一种以位图方式显示的软件窗口系统。最初是1984年麻省理工学院的研究，之后变成UNIX、类UNIX、以及OpenVMS等操作系统所一致适用的标准化软件工具包及显示架构的运作协议。X窗口系统通过软件工具及架构协议来创建操作系统所用的图形用户界面，此后则逐渐扩展适用到各形各色的其他操作系统上。现在几乎所有的操作系统都能支持与使用X。更重要的是，今日知名的桌面环境——GNOME和KDE也都是以X窗口系统为基础建构成的。</p>
+<p>由于X只是工具包及架构规范，本身并无实际参与运作的实体，所以必须有人依据此标准进行开发撰写。如此才有真正可用、可执行的实体，始可称为实现体。目前依据X的规范架构所开发撰写成的实现体中，以X.Org最为普遍且最受欢迎。X.Org所用的协议版本，X11，是在1987年9月所发布。而今最新的引用实现（引用性、示范性的实现体）版本则是X11 Release 7.7（简称：X11R7.7），而此项目由X.Org基金会所领导，且是以MIT授权和相似的授权许可的自由软件。</p>
+<p>以上内容摘自维基百科。虽然说的很多，但是解释的还是不太清楚，我还是以自己的角度来解释 X Window System 吧。X 实际上是 C/S 模式。将它与 HTTP 的 C/S 模式联系在一起，就容易理解了。</p>
+<p>HTTP 协议：</p>
+<ul>
+<li>实现 HTTP 协议的服务器有 Apache、Nginx；</li>
+<li>实现 HTTP 协议的客户端有 Chrome、Firefox；</li>
+<li>HTTP 服务器与 HTTP 客户端之间使用 HTTP 协议通信。</li>
+</ul>
+<p>X 协议：</p>
+<ul>
+<li>实现 X 协议的服务器有 Xorg；</li>
+<li>实现 X 协议的客户端是所有 X 应用程序；</li>
+<li>Xorg 与 X 应用程序之间使用 X 协议通信（可跨网络）。</li>
+</ul>
+<p>只不过，HTTP 服务器和 HTTP 客户端通常位于不同的主机，而 X 服务器与 X 客户端通常位于同一台主机。实际上，我们完全可以在一台未安装图形界面的 Linux 中，以命令行模式启动 X 客户端，然后通过网络连接，将 X 请求发送到其他 X 服务器上。</p>
+<p>xorg-xinit 包带有两个命令：xinit、startx。其中后者是前者的封装，是一个 Shell 脚本，会自动搜寻 ~/.xinitrc 等配置文件。xinit 命令用于启动本地 X 服务器，以及一个 X 客户端。当这个 X 客户端结束运行时，xinit 会自动关闭本地 X 服务器。如果没有在命令行中指定要运行的 X 客户端，则搜寻用户家目录下的 ~/.xinitrc 文件，将其作为 shell 脚本，启动指定的 X 客户端，如果不存在此文件，则启动默认的 xterm（图形终端）。</p>
+<p>启动 xterm 后，你会发现，这个图形界面窗口不能移动，也不能最大化，最小化等等功能。不要奇怪，你需要安装一个 window manager（窗口管理器，WM），所谓的窗口管理器也是一个 X 客户端，只不过是专门用来管理窗口的，提供如最大化，最小化，移动图形窗口等基本功能。一般来说，桌面环境 DE 都自带专门的 WM。</p>
+<p>最后我们理清楚另外的几个概念：</p>
+<ul>
+<li>DM，Display Manager，显示管理器，其实我更喜欢称之为 Login Manager，登录管理器。这也是一个 X 应用。没装图形界面之前，Linux 启动后，弹出的登录界面，还记得吗？那是一个终端版的登录界面，而 DM 就是可视版的登录界面。DM 通常是第一个运行的 X Client（如果你将系统运行级别设为图形界面的话）。</li>
+<li>WM，Window Manager，窗口管理器，前面也说了，窗口管理器也是一个 X Client。它的主要作用是用来最大化、最小化、移动窗口的。一般来说，如果将系统运行级别设为图形界面，那么第一个运行的 X Client 是 DM，而第二个运行的 X Client 就是 WM 了（桌面环境通常自带 WM，如 GNOME、KDE）。</li>
+<li>DE，Desktop Environment，桌面环境，其实就是 WM + 一些实用的 X Client。常用的 DE 有 GNOME、KDE。不过我都不太喜欢，太丑，还是 Win10 漂亮。</li>
+</ul>
+<p>其实 WM 和 DE 很容易区分，WM 就是精简版的桌面（仅提供基本的窗口管理），而 DE 则包含其他的图形工具，更好看，更易使用一些，当然也更臃肿。DE 是 WM 的超集，一般来说，如果要轻量化，选择 WM 就可以了，如果要重量级，就选择 DE。</p>
+<p>GNOME 桌面环境的 DM 是 <strong>GDM</strong>，KDE 桌面环境的 DM 是 <strong>SDDM</strong>。而 WM 都是自带的，不需要额外安装，因为是配套的嘛，随意搭配是不好看的哟。还有一点，因为 DM 是第一个运行的 X Client，因此，如果你想开机就进入图形界面，就必须将 DM 服务设为开机自启，使用 systemctl enable gdm.service/sddm.service。</p>
+<h2 id="网络代理相关"><a href="#网络代理相关" class="headerlink" title="网络代理相关"></a>网络代理相关</h2><p><code>payload</code>，有效载荷，个人理解，对于一个普通的 HTTP 响应包：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+HTTP/1.1 200 OK
+Date: Fri, 27 Apr 2018 13:04:34 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: nginx
+
+hello, world!
+</script></code></pre>
+<p>这里分为两个部分，响应头和响应体，实际上，用户真正关心的只是 hello, world! 前面的一大堆头部信息对于用户来说都是无关紧要的。那么在这个例子中，payload 就是 <code>hello, world!</code>。</p>
+<p>其实就是有效数据（对用户有意义的数据）的意思，在一个 HTTP 响应数据包中，IP 报头、TCP 报头、HTTP 响应头，这些都是协议开销，而实际的有效载荷只是 hello, world!</p>
+<p><code>上游代理</code>、<code>下游代理</code>，这两个概念我一直都不太清楚，并且经常搞反，这回总是把它给弄清楚了，我们把网络数据包 <code>packet</code> 看作是水流，河流中也有所谓的上游、下游，下游的水都是上游流过来的，相反，上游的水是流向下游的。只要搞不清楚的时候，我们就需要想想这个数据包究竟是从哪发来的，又是要发往哪的。这个 <code>从哪发来的地方</code> 就叫做上游，<code>要发往的地方</code> 就叫做下游。</p>
+<p>比如 HTTP 注射器中的 SSH 配置中，有一个选项：启用上游代理。这个上游代理其实就是一个 HTTP Tunnel 代理（Connect 代理），这个上游代理接收到的数据最终都是发往 SSH 监听的 socks5 套接字的。将它们理解为水流的方向、数据包的流动方向，就很容易分辨了。</p>
+<p>再来说说 <code>前置代理</code> 这个东西（貌似没听过啥后置代理），前置代理其实就是 <strong>代理的代理</strong>。什么意思，以 ShadowsocksR 为例。假如我有两个 SSR 节点，一个是英国的，一个是香港的。我现在想要看一个英国的 XX 东西，但是我直接使用英国的节点速度肯定很慢，毕竟离得远，没有优化线路。但是阿里云香港的节点延迟低，速度快，并且，阿里云香港的 VPS 网络访问英国比我们直接访问英国快的多，这时候，我们就可以借助 HK 这个前置代理，来访问英国的 XX。对于这个英国代理来说，HK 代理就是它的前置代理。也就是说，英国代理发出的流量实际上是被 HK 代理传送的。</p>
+<p>为什么这样做就可以加速访问呢？我再举一个浅显的例子，我有两台 VPS，一台香港、一台日本。香港的延迟 50ms，日本的延迟 110ms（都是相对于本地网络来说的）。这时我想使用 SSH 连接到 JP 的 VPS，做一些配置工作，可是 110ms 的延迟有点高，操作起来很卡，不顺手。但是，我使用 SSH 连接到 HK 的 VPS 却很快，因为延迟较低，离大陆很近。同时，因为 VPS 服务商的网络都是经过优化的，比我们家用的网络肯定是好很多的。连接世界各个节点的速度都还可以，至少比大陆连接它们快多了。这时我连接到了 HK 这台服务器上，我 ping 日本这台 VPS，发现延迟还行，70ms，于是，我想到了一个方法，我可以先连接 HK 的 VPS，然后在 HK 的 VPS 中，再使用 SSH 连接到 JP 的 VPS。这样延迟就降下来了。这个其实不算前置代理，但是基本的原理和作用就是这样，我也不知道怎么更好的解释了。</p>
+<h2 id="iptables-思考"><a href="#iptables-思考" class="headerlink" title="iptables 思考"></a>iptables 思考</h2><p>关于 iptables 与 route 的几个思考，很多时候，我搞不清楚，iptables 和 路由配置 的优先级，究竟谁先处理，谁后处理。这时候突然想到，iptables 不是有 5 个 chain 吗，分别是：</p>
+<ul>
+<li><strong>PREROUTING</strong>：字面意思，路由前，数据包流入网卡（包括 loopback 网卡）之后，首先会被 PREROUTING 链处理，然后再经过 route 路由选择。</li>
+<li><strong>INPUT</strong>：经过 PREROUTING 链的处理，然后路由到本机的数据包（包括 loopback 网卡）。这时数据包即将进入内核，不过它得先经过 INPUT 链的处理。</li>
+<li><strong>FORWARD</strong>：经过 PREROUTING 链的处理，然后路由到其它网卡的数据包（数据包不是发往本机的），那为什么不是发往本机的数据包会被本机网卡接收呢？其实有两个缘由：一，本机是网关，它管理一个内网，内网中的其它主机将默认路由指向本机，当内网主机想要访问 114.114.114.114（解析 DNS）时，因为路由表中找不到匹配的条目，于是只好将这个包发给默认网关，即本机。于是本机接收到了一个目的地址不是本机的数据包，它首先经过 PREROUTING 链，然后被路由，因为并不是发往本机的，在本机路由表中也找不到对应的条目，于是也只好发给本机的默认网关，于是经过 PREROUTING -&gt; routing -&gt; FORWARD（网卡间转发，因为一张是内网网卡，一张是外网网卡），到达外网网卡后被 POSTROUTING 链处理，看名字也知道，路由后的链，注意此时这个数据包的源 IP 是内网主机，因为要经外网网卡传输到 114.114.114.114，肯定是不能使用一个内网地址上网的，于是在 POSTROUTING 中，要做 SNAT 源地址转换，将它的源地址改为本机公网网卡的 IP。二，114.114.114.114 返回了一个数据包，首先到达 PREROUTING 链，从本机的连接跟踪表中找到对应的内网 IP 以及端口号，然后做 DNAT 目的地址转换，将这个数据包的目的地址改回原先的内网主机的 IP 以及端口号，然后被本机路由，发现不是发往本机的，于是经过 FORWARD 链，达到内网网卡，FORWARD 处理后，又被 POSTROUTING 链处理，最后从内网网卡送出去，到达内网主机。注意，FOWARD 位于不同的网卡之间，相当于门卫，控制不同网卡之间的数据包转发。</li>
+<li><strong>OUTPUT</strong>：这其实就是本机发出的数据包要经过的第一条链（可以理解为从内核空间流出的包首先经过 OUTPUT 链）。经过 OUTPUT 链处理后，再查询本机路由表，决定去向，最后达到 POSTROUTING 链，最后从某张网卡发出去（注意，如果发现是发给 loopback 网卡的，那么会先经过 PREROUTING 链，然后被路由，然后又经过 POSTROUTING 链，然后经过 INPUT 链，最后流入内核空间）。</li>
+<li><strong>POSTROUTING</strong>：字面意思，路由后。这是数据包即将从网卡发出去前经过的最后一条链。和 PREROUTING 正好相反，PREROUTING 是数据包从网卡流入后经过的第一条链。一般来说，PREROUTING 用来做 DNAT，POSTROUTING 用来做 SNAT。</li>
+</ul>
+<p>这里强调一点，iptables 和 路由条目 的优先级是要看 chain 的，不同的 chain，它的优先级是不同的。还有一点要注意，数据包路由前和路由后本身是没有任何改变的，这和数据包经过 iptables 可不一样，iptables 很多操作都是会修改数据包的。</p>
+<p>因为存在部分认知错误，所以上面的有些描述不是很准确。首先，你要将 lo 网卡当作一块正常的网卡看待；然后就是 PREROUTING 和 POSTROUTING，其实他们的意思已经很明显了，PREROUTING 是路由前必须会经过的一条链，而 POSTROUTING 是路由后必须会经过的一条链，也即 <code>PREROUTING -&gt; routing -&gt; POSTROUTING</code>。POSTROUTING 处理之后，数据包会流出网卡，但是如果数据包的目的地址是本地（命中 local 类型的路由），那么他就会重新进入本机，经过 INPUT 链，然后进入内核空间，被本机进程接收并处理。</p>
+<p>例子，<code>ping -nc1 127.0.0.1</code>。</p>
+<ul>
+<li>去程：ping进程 -&gt; OUTPUT -&gt; routing -&gt; POSTROUTING -&gt; lo网卡 -&gt; PREROUTING -&gt; routing -&gt; INPUT -&gt; pong进程</li>
+<li>回程：pong进程 -&gt; OUTPUT -&gt; routing -&gt; POSTROUTING -&gt; lo网卡 -&gt; PREROUTING -&gt; routing -&gt; INPUT -&gt; ping进程</li>
+</ul>
+<p>然后再说一下 iproute2 中的 local 类型的路由是什么意思，local 路由的作用很简单，它表示本机拥有这个 IP 地址/网段，也就是说数据包的目的地址是本机，因此这些数据包会被送往 loopback 网卡（注意会经过 PREROUTING 链哦，不明白的请看上面的 ping 例子）。</p>
+<p>最后说一下 TPROXY 透明代理，因为 <code>TPROXY</code> target 只能用于 PREROUTING 链，所以对 iptables 了解不透彻的人会认为 TPROXY 只能代理来自内网的数据包，但其实不是的，你仔细看上面的 ping 例子就会知道，只要我们在 iproute2 中设置一条 local 类型的路由，然后让其命中要代理的数据包（通过 fwmark），那么要代理的数据包的目的地址就是本机咯，然后会进入 lo 网卡，继而经过 PREROUTING 链，然后又被 routing，经过 INPUT 链，最终被 proxy 进程处理。</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+## 代理内网主机的 TCP 和 UDP
+iptables -t mangle -A PREROUTING -i $内网网卡 ! -d $内网网段 -p tcp -j TPROXY --on-port $代理端口 --tproxy-mark 0x2333
+iptables -t mangle -A PREROUTING -i $内网网卡 ! -d $内网网段 -p udp -j TPROXY --on-port $代理端口 --tproxy-mark 0x2333
+
+## 代理当前主机的 TCP 和 UDP
+iptables -t mangle -A OUTPUT -o $外网网卡 -p tcp -j MARK --set-mark 0x2333
+iptables -t mangle -A OUTPUT -o $外网网卡 -p udp -j MARK --set-mark 0x2333
+iptables -t mangle -A PREROUTING -i lo -p tcp -m mark --mark 0x2333 -j TPROXY --on-port $代理端口
+iptables -t mangle -A PREROUTING -i lo -p udp -m mark --mark 0x2333 -j TPROXY --on-port $代理端口
+</script></code></pre>
+<p><strong>PREROUTING、POSTROUTING</strong></p>
+<ul>
+<li>PREROUTING：数据包流入网卡之后，首先被 PREROUTING 处理</li>
+<li>POSTROUTING：数据包流出网卡之前，会被 POSTROUTING 处理</li>
+</ul>
+<p><strong>INPUT、OUTPUT</strong></p>
+<ul>
+<li>INPUT：数据包即将发给本机进程之前，会被 INPUT 处理</li>
+<li>OUTPUT：数据包从本机进程发出之后，首先被 OUTPUT 处理</li>
+</ul>
+<p><strong>FORWARD</strong><br>设在不同的网卡之间，即卡口，这个很简单，不详细解说。</p>
+<h2 id="linux-策略路由"><a href="#linux-策略路由" class="headerlink" title="linux 策略路由"></a>linux 策略路由</h2><p>策略路由和 iptables 在结构上很相似，首先，Policy Routing 可以有多个路由表，每个表使用唯一的 ID 标识，可使用的 ID 范围：1 ~ 2^32-1，这意味着，最多可以有 4294967295 个路由表，42 亿多个，足够了。不过，我们可以为路由表 ID 设置名字，在 linux 中，修改 <code>/etc/iproute2/rt_tables</code> 文件，添加一条映射就可以了。安卓上的 <code>rt_tables</code> 位于 <code>/data/misc/net/rt_tables</code>。</p>
+<p>在 linux 中，默认有三个路由表，我们只需关注 main 表，local 表由内核维护，我们不应该直接修改，default 表主要用于默认路由，默认为空，除非特殊情况，否则不建议添加条目到 default 表。</p>
+<p>已过时的 net-tools 包的 route 命令管理的就是 main 表，ip route 命令如果未指明要操作的 table，则默认也是 main 表。</p>
+<p>那么这么多路由表的具体怎么用呢？它们之间有着怎样的优先级关系？我以熟悉的 iptables 自定义链来说明它。iptables 中有 5 个预定义的链，除此之外，我们还可以创建自定义链（自定义规则链其实就是规则集，和路由表的概念类似），然后我们可以添加规则到自定义链中，但是，此时，这个自定义链是没有起作用的，因为我没有在 iptables 的某条规则中引用它，我可以添加任意规则到这个自定义链，在某条规则引用它之前，它都不会起作用。</p>
+<p>对应到策略路由，路由表就是自定义链（规则集），我们可以创建多达 42 亿个路由表，但是，我们没有“注册”它之前，这些路由表都是没有起作用的。就像我们没有在 iptables 的某条规则中引用自定义链一样。那么路由表要如何“注册”呢？如何让它们生效呢？答案就是 <code>ip rule</code> 命令。rule 就是路由策略，route-table 就是规则集。</p>
+<p>对应到 iptables 中，rule 就是 iptables 规则，rtable 就是自定义链。这些理解了吧。</p>
+<p>我们先来看一下 <code>ip rule show</code> 的输出：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ip rule show
+0:    from all lookup local
+32766:    from all lookup main
+32767:    from all lookup default
+</script></code></pre>
+<p>默认有 3 条 rule，每条 rule 都有一个唯一的 ID 标识，称为优先级（preference，缩写 pref），值小的优先级高，输出结果中也排得靠前。同样的，pref 的范围：0 ~ 2^32-1，也是 42 亿多个，足够用。</p>
+<p>注意别把 rule 的优先级 ID 与 rtable 的表 ID 搞混了，虽然它们都是 42 亿多个。rule 的优先级和 iptables 中的规则序号是一样的，只不过 pref 可以不连续，iptables 规则序号必须是连续的。值小的排在前面，优先级越高。而 rtable 的表 ID 是表的名字，只不过这个名字是数字罢了，它们的值大小和优先级没有关系。你也可以往 rt_tables 文件中注册一个好记的名字，而不是使用数字。</p>
+<p>好了，现在来理清一下思绪。rule 是路由规则（对应 iptables 中的规则），rtable 是路由表（对应 iptables 中的自定义链）。如果想要让 rtable 生效，就必须注册对应的 rule，并引用它。</p>
+<p>注意，访问 127.0.0.1 地址也是需要经过路由表的，不信的话，你使用 <code>ip rule del pref 0</code>，让 local table 暂时失效，然后你会发现，<code>ping 127.0.0.1</code> 没用了。这里重新理解一下 local 表，local 表用于匹配发往本机的数据包（包括 127.0.0.0/8、所有网卡的接口地址、广播地址等）。</p>
+<p>其实，重新审视 ip rule 的规则，默认有三个规则，分别是 local（优先级 0）、main（优先级 32766）、default（优先级 32767）。当内核收到一个数据包时，会根据优先级，来依次的查找路由表。首先是 local 表，先查看是不是发往本机的，如果是就进行路由，然后结束。然后是 main 表，看看它的目的地址是哪个网段的， 然后根据路由表规则将它们路由出去，然后结束。如果还没找到（一般情况下并不会出现，因为会被 main 表的 default 路由命中），就到达 default 表，找默认路由。</p>
+<p>总而言之，rule 的匹配过程与 iptables 规则的匹配过程是类似的，按照优先级/规则序号，一条一条的匹配。</p>
+<p>最后，再来解释一下，添加 route 条目的细节问题。命令如下：<br><code>ip route add 0/0 via 192.168.255.254 dev ens33</code></p>
+<p>ens33 网卡的 IP 地址为 <code>192.168.255.120/24</code><br>ens33 所处网络的网关是 <code>192.168.255.254/24</code></p>
+<p>注意 0/0 不是 CIDR 网段，而是用来匹配数据包目的地址的掩码。前面的数字是网络号，后面的数字是掩码长度，0/0 匹配所有数据包。在同一 rtable 中，相关度近的优先匹配。因此，0/0 的优先级是最低的，只有找不到其它更相关的条目时才会使用 0/0 条目，因此 0/0 条目也被称为默认网关。也就是说，只要是不认识的目的地址的数据包，都发给这个默认网关。而 via 192.168.255.254 就是用来指定默认网关的 IP 地址的，而 dev ens33 则用来指定从哪个网卡出去。via 和 dev 不需要同时指定，因为系统只要知道一个，就可以推算出另一个值。因为每个接口的 IP 都是唯一的。不过，为了良好的阅读体验，建议每次添加路由条目时，都指定 via 和 dev 参数（via 指定网关，dev 指定接口）。</p>
+<p>最后，总结一下，一个数据包到达本机后，首先根据优先级，以默认的为例，先经过 local 表，看看是不是发往本机的，如果是则完成路由，如果不是，则继续下一个优先级的表 -&gt; main 表，如果在 main 表中找到了对应的条目，则完成路由，否则继续下一个优先级的表 -&gt; default 表，找对应的默认网关（不过这个表默认是空的，正常应该在 main 表中设置默认路由），以此类推。总之与 iptables 的匹配过程是相似的。</p>
+<p>在配置路由时，还有一个常用的参数，那就是 metric（度量值），metric 其实就是路由条目的优先级（pref），注意，metric 只有在同一种路由协议下比较才有意义。metric 的取值范围和 rule 的 pref 号、rtable 的 ID 号一样，为 <code>[0, 2^32-1]</code>。值越小，优先级越高。也就是说，如果内核发现有多条路径都可以到达目的地址时，它会根据 metric 的值来选择一条最佳路径。</p>
+<p>iproute2 配置 metric 的例子：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ip route add 192.168.255/24 via 192.168.255.254 dev ens33 metric 1 table 100
+$ ip route add 192.168.255/24 via 192.168.255.253 dev ens33 metric 2 table 100
+
+$ ip route show table 100
+192.168.255.0/24 via 192.168.255.254 dev ens33 metric 1
+192.168.255.0/24 via 192.168.255.253 dev ens33 metric 2
+</script></code></pre>
+<h2 id="交叉编译入门"><a href="#交叉编译入门" class="headerlink" title="交叉编译入门"></a>交叉编译入门</h2><p><strong>相关概念</strong></p>
+<ul>
+<li>本地编译：编译出来的程序/库是在相同 CPU 架构下运行的，称为本地编译。</li>
+<li>交叉编译：编译出来的程序/库是在不同 CPU 架构下运行的，称为交叉编译。</li>
+</ul>
+<p>比如，我想在 <code>linux/x86_64</code> 系统中编译一个 <code>linux/arm64</code> 系统上运行的 helloworld 程序，就需要进行交叉编译。是不是觉得不可思议，还有这种操作？别激动，正常操作。</p>
+<p>你想啊，那些内存只有几十兆，磁盘空间只有几十兆的无线路由，它们里面的程序是从哪来的？根本不可能是本地编译来的嘛！你能在路由里面安装 gcc、glibc 这些东西吗？就算能装，那性能也是够呛的，我树莓派 4 核都不够给力，还指望能在无线路由上操作？！</p>
+<p>还有，假设你现在要开发一种新的 CPU 架构，你只能使用交叉编译，因为它连系统都没，甚至还不能启动，这一切都要从头开始（交叉编译工具链还得自己制作，工程浩大）。</p>
+<p>一开始，我也觉得这很神奇，这究竟是如何做到的呢？后来我搞明白了，其实原理很简单，我们先来回顾下一个 C 程序是如何编译而来，先来个简单的 helloworld：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">
+#include <stdio.h>
+int main() {
+    printf("hello, world!\n");
+    return 0;
+}
+</script></code></pre>
+<p>程序很简单，就是打印 <code>hello, world!</code> 字符串。假设文件为 main.c，则从 main.c 变成可执行文件 main 要经过这 4 个过程：</p>
+<ul>
+<li>预处理：<code>cpp</code>，C Preprocessor。其实就是一个文本处理工具，用来进行宏展开、宏替换、条件编译等功能。处理后得到的依旧是 C 源代码，本质没有变化。</li>
+<li>编译：<code>gcc</code>，这实际上才是 gcc/g++ 做的事情，将 C/C++ 源码文件编译成平台适应的汇编源代码。这之后又没 gcc/g++ 什么事了。</li>
+<li>汇编：<code>as</code>，将汇编源代码编译成本地代码（二进制），这肯定也是与平台相关的。</li>
+<li>链接：<code>ld</code>，替换 obj 对象文件中的符号引用，对于静态链接库，直接将 .a 里面的 .o 对象文件取出来，然后包含进去，对于动态链接库，只是在符号链接处打上标记，让程序运行时再去动态的加载对应库函数。此步骤完成后，即生成了我们的 main 可执行文件。</li>
+</ul>
+<blockquote>
+<p>注意，以上均为个人理解，专业术语请勿考究！</p>
+</blockquote>
+<p>我们来看一下哪些是与平台相关的：</p>
+<ul>
+<li><code>cpp</code>，预处理器：很显然不是，这只是个文本替换工具。</li>
+<li><code>gcc</code>，C 编译器：很显然是了，因为要编译为汇编源代码。</li>
+<li><code>as</code>，汇编器：很显然，这也是平台相关的，因为要编译为机器码。</li>
+<li><code>ld</code>，链接器：很显然，这也是平台相关的，因为链接细节不一样。</li>
+</ul>
+<p>实际上，<code>cc</code>（这里将 gcc 简称 cc）、<code>as</code>、<code>ld</code> 三个都是平台相关的。除此之外，还有一个会用到的工具：<code>ar</code>，将多个 obj 文件打包为静态链接库时要用到，估计也是平台相关的（个人猜测）。</p>
+<p>其实我们想得到的编译后的结果有 3 种（常见的，linux 上）：</p>
+<ul>
+<li>可执行文件：这可能是最常用的，也就是俗称的命令。</li>
+<li>静态链接库：这其实就是一堆 .o 文件的归档（可理解为 tar 归档）。</li>
+<li>动态链接库：和可执行文件结构很相似，可理解为没有 main 函数的可执行文件。</li>
+</ul>
+<p>编译 <code>可执行文件</code> 的一般步骤：<br><code>gcc -o hello hello.c</code></p>
+<p>编译 <code>动态链接库</code> 的一般步骤：<br><code>gcc -o libtest.so test1.c test2.c test3.c -fPIC -shared</code></p>
+<p>编译 <code>静态链接库</code> 的一般步骤：<br><code>gcc -c test1.c test2.c test3.c</code><br><code>ar csr libtest.a test1.o test2.o test3.o</code></p>
+<p>因此，我们可以认为只要 <code>cc</code>、<code>as</code>、<code>ld</code>、<code>ar</code> 能够正确的处理跨平台就可以了。毕竟都是有章法的，我们可以按照目标平台的规则来进行嘛，这样就能实现交叉编译了。</p>
+<p>但是，这就真的可以了吗？还不行，helloworld 程序中使用了 printf() 函数，这个函数哪来的？当然是 libc 标准库中啊，记住，无论何种语言，离开了标准库，那可以说什么都不是，你根本干不了啥，一切都要从头开始，就拿简单的 printf() 来说吧，如果 libc 不帮你实现，要你自己实现，那难度可想而知。而 Linux 著名的 libc 库就是 glibc 了（gnu libc）。所以，为了能够实现交叉编译，glibc 也是必不可少的。</p>
+<p>而实际上，as、ld、ar 这些工具都是 <code>binutils</code> 包的工具，称为 <code>二进制工具</code>，即 binary utilities。除了这些外，还有 strip、ranlib、size、objdump、objcopy、readelf、strings、addr2line 等二进制工具，它们都是交叉编译过程中必不可少的。</p>
+<p>现在总结一下，要实现交叉编译，那么首先得有对应的 <strong>gcc</strong>、<strong>glibc</strong>、<strong>binutils</strong>。这些工具因为是互相依赖的，通常需要一并安装，所以也被称为 “<strong>交叉编译工具链</strong>”。</p>
+<p>在交叉编译中，还有一个常见的名词：ABI。全称 application binary interface，中文：应用二进制接口。ABI 和 API 的作用是相似的，只不过 ABI 更低级罢了。</p>
+<p>ABI 涵盖了各种细节，如：</p>
+<ul>
+<li>数据类型的大小、布局和对齐;</li>
+<li>调用约定（控制着函数的参数如何传送以及如何接受返回值），例如，是所有的参数都通过栈传递，还是部分参数通过寄存器传递；哪个寄存器用于哪个函数参数；通过栈传递的第一个函数参数是最先push到栈上还是最后；</li>
+<li>系统调用的编码和一个应用如何向操作系统进行系统调用；</li>
+<li>以及在一个完整的操作系统ABI中，目标文件的二进制格式、程序库等等。</li>
+</ul>
+<p>一个完整的 ABI，像 Intel 二进制兼容标准（iBCS）[1]，允许支持它的操作系统上的程序不经修改在其他支持此 ABI 的操作系统上运行。</p>
+<p>其他的 ABI 标准化了一些细节，包括 C++ 名称修饰[2] ,和同一个平台上的编译器之间的调用约定[3]，但是不包括跨平台的兼容性。</p>
+<p>ABI不同于应用程序接口（API），API定义了源代码和库之间的接口，因此同样的代码可以在支持这个API的任何系统中编译，然而ABI允许编译好的目标代码在使用兼容ABI的系统中无需改动就能运行。 在Unix风格的操作系统中，存在很多运行在同一硬件平台上互相相关但是不兼容的操作系统（尤其是Intel 80386兼容系统）。有一些努力尝试标准化ABI，以减少销售商将程序移植到其他系统时所需的工作。然而，直到现在还没有很成功的例子，虽然Linux标准化工作组正在为Linux做这方面的努力。</p>
+<p>其实，上面我们所说的交叉编译工具链，就是一套目标平台（target） ABI 接口的实现。所以我说了嘛，这一切都是有根据可循的，这就是交叉编译的原理和本质。</p>
+<p>除了 ABI 外，还有一个词也频繁出现，那就是 EABI，全称：Embedded Application Binary Interface，中文：嵌入式应用二进制接口。其实就是嵌入式系统专用的 ABI，对嵌入式系统进行了优化的，能够更好的运行，发挥性能。</p>
+<p>简单地说，ABI 指定了 <strong>文件格式</strong>、<strong>数据类型</strong>、<strong>寄存器使用</strong>、<strong>堆积组织优化</strong> 等标准约定。这其实就是我们上面说的“跨平台”的具体细节了。</p>
+<blockquote>
+<p>交叉编译：<code>cross compile</code>；交叉编译工具链：<code>cross compile toolchain</code>。</p>
+</blockquote>
+<p>busybox，用 Android 的同学不陌生吧，好多高级工具都需要 busybox 的支持才能正常运行。那么什么 busybox 呢？</p>
+<blockquote>
+<p>BusyBox是一个遵循GPL协议、以自由软件形式发行的应用程序。Busybox在单一的可执行文件中提供了精简的Unix工具集，可运行于多款POSIX环境的操作系统，例如Linux（包括Android）、Hurd、FreeBSD等等。由于BusyBox可执行文件的文件大小比较小、并通常使用Linux内核，这使得它非常适合使用于嵌入式系统。作者将BusyBox称为“嵌入式Linux的瑞士军刀”</p>
+</blockquote>
+<p>直接使用 pacman 安装，<code>pacman -S busybox</code>。运行 busybox，打印简要的帮助信息，并且可以看到 busybox 集成的命令。比如运行 ls 命令，只需执行 <code>busybox ls</code>，参数添加在后面就可以了。当然大部分人都不是这样使用的，毕竟太麻烦了，我们可以创建一个软链接，<code>busybox -&gt; ls</code>，然后直接执行 ls 就可以了，是不是很神奇，其实原理也很简单，就是 shell 脚本中的 <code>$0</code> 参数，这个参数就是当前的可执行文件名，busybox 只要根据这个名称就可以判断出要调用什么命令了。</p>
+<p>那么如何批量链接全部的 busybox 命令呢？busybox 早就想到了，使用 <code>--list</code> 参数，busybox 会打印出所支持的命令（一行一个），那么我们只需使用 <code>busybox --list | xargs -n1 ln -sf busybox</code> 就可以链接全部命令了。</p>
+<p>busybox 可以拿来当 linux 的启动盘，急救盘，当系统挂了，我们直接使用 busybox 加一个精简的 linux 内核和一些必要的组件，就可以当急救盘使用了。最初，busybox 就是拿来干这个的，只不过后来嵌入式发展迅猛，导致 busybox 经常与嵌入式开发挂钩，因为 busybox 整个可执行文件只有 800+ kb，全是静态链接的，复制即可运行，方便的很。</p>
+<p>交叉编译工具链的命名是有规律可循的，一般的命名规则（前缀）如下：</p>
+<ul>
+<li><strong><code>ARCH[-Vendor]-OS-ABI</code></strong>，Vendor 有的会省略。</li>
+<li><strong>ARCH</strong>，CPU 架构：如 arm、aarch64、mips、mips64。</li>
+<li><strong>Vendor</strong>，提供商：这个比较杂，有的是作者，有的是说明，有的则没有。</li>
+<li><strong>OS</strong>，运行的系统：裸机 <code>bare-metal</code>（有的会省略）、linux系统 <code>linux</code>。</li>
+<li><strong>ABI</strong>，应用二进制接口：如 <code>gnu</code>（Linux）、<code>eabi</code>、<code>gnueabi</code>、<code>gnueabihf</code> 等。</li>
+</ul>
+<p>比如 ArchLinux 中自带的（仓库自带），gcc 的命名如下：</p>
+<ul>
+<li><code>arm-none-eabi-gcc</code>：ARM 平台的，适用于裸机上运行，ABI 为 eabi。</li>
+<li><code>aarch64-linux-gnu-gcc</code>：ARM64 平台的，适用于 Linux 上运行，ABI 为 GNU。</li>
+<li><code>mips-img-linux-gnu-gcc</code>：MIPS 平台的，适用于 Linux 上运行，ABI 为 GNU。</li>
+</ul>
+<p>一般，从源代码编译成 可执行文件/库 需要进行下面三个步骤：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+./configure --prefix=/usr/local 
+make
+make install
+</script></code></pre>
+<p><code>--prefix</code> 默认为 <code>/usr/local</code>。所谓的 prefix，就是安装目录，比如编译后会生成 /bin 目录，那么实际安装的文件夹就是 <code>$prefix/bin</code>，以此类推，可以设置为 <code>/usr</code> 来安装到系统路径，更方便（但是不建议这么做）。</p>
+<p>有时候，因为源文件很多，项目很大，编译时间很长，可以在 make 阶段使用 <code>make -j$(nproc)</code> 来并行编译，-j 参数指定并行数量，nproc 用于获取当前系统的 CPU 个数。不过不能滥用这个参数，很多时候编译失败就是因为这个参数导致的。</p>
+<p>简单说明一下这几个命令具体的含义：</p>
+<ul>
+<li><code>./configure</code>：这其实是一个 shell 脚本，用来检查当前系统的编译环境、是否安装了指定的库、GCC 是否能运行等等，执行完后，会生成 <code>Makefile</code> 文件。</li>
+<li><code>make</code>：make 是一个自动化构建工具，其实和 shell 脚本差不多，make 命令会读取当前目录下 Makefile 文件（./configure 生成），然后根据指定的 target（就是后面指定的参数，如果没有指定，则执行 Makefile 中的第一个 target）来执行对应的命令（<code>make</code> 命令会进行编译、链接等所有步骤，一般存在当前目录下）。</li>
+<li><code>make install</code>：执行 install 这个 target，将 <code>make</code> 产生的文件复制到指定目录。</li>
+<li><code>make clean</code>：清除编译产生的对象文件，通常用于重新编译（浅）。</li>
+<li><code>make distclean</code>：清除编译产生的各种文件，通常用于重新编译（深）。</li>
+</ul>
+<p>而要进行交叉编译的关键就在于 <code>./configure</code> 命令。这里有两个约定俗成的参数：</p>
+<ul>
+<li><code>--build=BUILD_ARCH</code>：用什么系统编译，默认为当前系统，一般无需指定。</li>
+<li><code>--host=TORUN_ARCH</code>：在什么系统运行，默认为当前系统，交叉编译时要指定。</li>
+</ul>
+<p><code>--host</code> 指定的其实是一个前缀，也就是我们上面说的 toolchain 的 prefix。这个前缀是可以变的，我们可以自己修改为想要的 prefix（但不建议修改）。</p>
+<p>注意，<code>--host</code> 中指定 prefix 和指定的工具名称组合起来必须能够在 PATH 环境变量中找到，不然 configure 会检测失败。如 <code>./configure --host=aarch64-linux-gnu</code>，那么对应的 gcc <code>aarch64-linux-gnu-gcc</code> 必须能够在 PATH 中找到。</p>
+<p>可以临时的改变 PATH 环境变量，比如：<br><code>PATH=$PATH:/path/to/toolchain/bin ./configure --host=aarch64-linux-gnu</code><br>这个技巧很实用，并且可以指定多个环境变量，使用空格隔开就行。但是作用范围仅限后面的一条命令，多条命令必须分别指定。如果需要覆盖某个环境变量，只需在它后面重新设置就可以了，如 <code>CC=gcc CC=g++ ./configure</code> 实际 CC 环境变量为 g++。</p>
+<p>要显式指定 <code>--build</code> 参数也可以，默认的 <code>x86_64</code> linux 为 <code>x86_64-pc-linux-gnu</code>。</p>
+<p>一般交叉编译（可执行文件）都需要静态链接，避免各种依赖问题，可以通过传递 <code>LDFLAGS=&#39;-static&#39;</code> 来告诉链接器使用静态链接（前提你得有静态链接库）。有时候为了保险，可以同时指定这两个编译器参数：<code>CFLAGS=&#39;-static-libgcc -static-libstdc++&#39;</code>，CXXFLAGS 同理。</p>
+<p>除了静态链接外，还有两个常用的 GCC 参数，建议用上，即 <code>-Os</code> 优化，<code>-s</code> strip 脱衣服（调用 <code>strip -s</code>），也可以在 GCC 参数中指定使用静态链接，即 <code>-static</code>，而不需要使用 <code>LDFLAGS=&#39;-static&#39;</code>，直接使用 <code>CFLAGS=&#39;-Os -s -static&#39;</code>（仅适用于可执行文件的编译，如果是库文件，只需使用 <code>CFLAGS=&#39;-Os&#39;</code>，其它两个参数会被忽略）。</p>
+<p>如果编译器支持（<code>x86_64 linux</code>），可以直接使用 64 位系统的 gcc 编译 32 位的程序，使用 <code>-m32</code> 参数即可（前提你的系统安装了 32 位的 glibc），对应的，使用 <code>-m64</code> 则用来编译 64 位的程序（默认）。</p>
+<p>对于没有使用 <code>./configure</code>，或者 <code>./configure</code> 不支持 <code>--host</code> 参数的项目，我们也能进行交叉编译，设置这几个环境变量就好了（可以写一个 shell 脚本，省得麻烦）：</p>
+<ul>
+<li><code>CPP=aarch64-linux-gnu-cpp</code>：C/C++ 预处理器命令（<code>$(CC) -E</code>）</li>
+<li><code>CPPFLAGS=&#39;[cpp parameters]&#39;</code>：C/C++ 预处理器参数</li>
+<li><code>CC=aarch64-linux-gnu-gcc</code>：C 编译器命令</li>
+<li><code>CFLAGS=&#39;-Os -s -static&#39;</code>：C 编译器参数</li>
+<li><code>CXX=aarch64-linux-gnu-g++</code>：C++ 编译器命令</li>
+<li><code>CXXFLAGS=&#39;-Os -s -static&#39;</code>：C++ 编译器参数</li>
+<li><code>AS=aarch64-linux-gnu-as</code>：汇编器命令</li>
+<li><code>ASFLAGS=&#39;[as parameters]&#39;</code>：汇编器参数</li>
+<li><code>LD=aarch64-linux-gnu-ld</code>：链接器命令</li>
+<li><code>LDFLAGS=&#39;-static -lpthread&#39;</code>：链接器参数</li>
+<li><code>LIBS=&#39;-lm -lpthread -lpcre&#39;</code>：要链接的库</li>
+<li><code>AR=aarch64-linux-gnu-ar</code>：静态库打包命令（新）</li>
+<li><code>ARFLAGS=&#39;[ar parameters]&#39;</code>：静态库打包参数（新）</li>
+<li><code>RANLIB=aarch64-linux-gnu-ranlib</code>：静态库打包命令（旧）</li>
+<li><code>RANLIBFLAGS=&#39;[ranlib parameters]&#39;</code>：静态库打包参数（旧）</li>
+</ul>
+<p>注意，如果是临时在每条命令前面设置这些环境变量，那么每条命令都要设置，因为他们的作用范围只是紧跟的一条命令而已，<code>&amp;&amp;</code>、<code>;</code> 后的命令不会使用这些环境变量。为了方便，可以自己写一个 shell 脚本，一键设置环境变量，一键删除环境变量。</p>
+<p>一般 gcc/g++ 的调用方式（建议遵守这个约定）：</p>
+<ul>
+<li><code>$(CC) $(CPPFLAGS) $(CFLAGS) example.c -c -o example.o</code>，编译</li>
+<li><code>$(CC) $(LDFLAGS) example.o -o example</code>，链接</li>
+<li><code>$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) example.c -o example</code>，编译 + 链接</li>
+</ul>
+<p>尽管将源代码编译为二进制文件的四个步骤由不同的程序(cpp、gcc/g++、as、ld)完成，但是事实上 cpp, as, ld 都是由 gcc/g++ 进行间接调用的。换句话说，控制了 gcc/g++ 就等于控制了所有四个步骤。从 Makefile 规则中的编译命令可以看出，编译工具的行为全靠 <code>CC/CXX CPPFLAGS CFLAGS/CXXFLAGS LDFLAGS</code> 这几个变量在控制。当然理论上控制编译工具行为的还应当有 ASFLAGS 等变量，但是实践中基本上没有软件包使用它们（这里也是忽略这个参数）。</p>
+<p>那么我们如何控制这些变量呢？一种简易的做法是首先设置与这些 Makefile 变量同名的环境变量并将它们 export 为全局，然后运行 configure 脚本，大多数 configure 脚本会使用这同名的环境变量代替 Makefile 中的值。但是少数 configure 脚本并不这样做(比如 GCC 和 Binutils 的脚本就不传递 LDFLAGS)，你必须手动编辑生成的 Makefile 文件，在其中寻找这些变量并修改它们的值，许多源码包在每个子文件夹中都有 Makefile 文件，真是一件很累人的事！</p>
+<p>上面我们说的 15 个环境变量适用于 <code>./configure</code>、<code>make</code>、<code>make install</code>。一般，我们都是将它们设置为环境变量后再使用，比如（这里以临时生效方式演示）：</p>
+<ul>
+<li><code>CC=&#39;aarch64-linux-gnu-gcc&#39; CFLAGS=&#39;-s&#39; ./configure --prefix=/usr</code></li>
+<li><code>CC=&#39;aarch64-linux-gnu-gcc&#39; CFLAGS=&#39;-s&#39; make</code></li>
+<li><code>CC=&#39;aarch64-linux-gnu-gcc&#39; CFLAGS=&#39;-s&#39; make install</code></li>
+</ul>
+<p>但是，有时候你会看到这样的用法，将环境变量放到这些命令之后，比如：</p>
+<ul>
+<li><code>./configure --prefix=/usr CC=&#39;aarch64-linux-gnu-gcc&#39; CFLAGS=&#39;-s&#39;</code></li>
+<li><code>make CC=&#39;aarch64-linux-gnu-gcc&#39; CFLAGS=&#39;-s&#39;</code></li>
+<li><code>make install CC=&#39;aarch64-linux-gnu-gcc&#39; CFLAGS=&#39;-s&#39;</code></li>
+</ul>
+<p>一般它们都是没有差别的（只是说一般情况下），但是强烈建议用前者的方式调用。</p>
+<p>对于某些小项目，它可能没有 <code>./configure</code> 这个步骤，那么这种情况下，我们该如何指定 <code>make install</code> 的安装位置呢？我们之前是通过 <code>./configure --prefix</code> 参数来指定的，可现在没有 <code>./configure</code> 了怎么办？其实也是有办法的，即 <code>make install DESTDIR=/path/to/install</code>。</p>
+<p>前面说了，make 中进行编译、链接全是通过 <code>CC</code>、<code>CXX</code> 来间接调用的，如下：<br><code>CC/CXX CPPFLAGS CFLAGS/CXXFLAGS LDFLAGS</code>（注意，AS 汇编器通常没有参数）</p>
+<p>但实际上，我个人喜欢将 <code>CPPFLAGS</code>、<code>LDFLAGS</code> 合并到 <code>CFLAGS/CXXFLAGS</code> 中。省得指定这么多环境变量，太麻烦了。这里简单的说一下 GCC/G++ 的相关命令行参数：</p>
+<ul>
+<li><code>-I/path/to/include</code>：指定头文件所在的目录，只能同时指定一个目录，如果要指定多个目录，可以多次使用该参数来进行指定。CPPFLAGS 参数。</li>
+<li><code>-L/path/to/library</code>：指定库文件所在的目录，只能同时指定一个目录，如果要指定多个目录，可以多次使用该参数来进行指定。LDFLAGS 参数。</li>
+<li><code>-lnameoflib</code>：指定要链接的库（不需要指定前缀 lib，后缀 .so、.a），除了 libc 外的任意库文件，都需要使用该参数指定（别问为什么 libc 的不用，因为 gcc 内置了，不需要你指定，当然这都是个人猜测）。LDFLAGS 参数。</li>
+<li><code>-static</code>：告诉 GCC/G++，在链接时，全部都使用静态链接库（如果没有会报错）。默认情况下，GCC/G++ 同时找到了对应的动态库和静态库时，优先使用动态库。一般在进行交叉编译时，都建议指定这个参数，好部署，没有依赖问题。除了这个参数外，好像还有两个类似的参数，<code>-static-libgcc</code>、<code>-static-libstdc++</code>，为了保险建议也加上（酌情使用）。</li>
+<li><code>-O2</code>/<code>-Os</code>：优化参数，建议选择 <code>-O2</code> 级别（数字越大优化越深，编译时间也更长，<code>-Os</code> 相当于 <code>-O2.5</code>），如果存储空间比较紧张，可以考虑使用 <code>-Os</code> 参数。</li>
+<li><code>-s</code>：给可执行文件去皮（脱衣服），只针对可执行文件，对于静态库、动态库，不起作用，也不建议添加这个参数，因为在链接时，需要查找库文件中的对象文件的这层皮，如果你去掉了，就无法正确的进行链接了（我就上过当）。</li>
+<li>关于动态链接的一些细节：其实分为两个部分，编译期间、运行期间。编译期间，gcc 查找动态库是通过 <code>-L</code>、<code>-l</code> 参数结合找出具体的库文件的，这些参数指定目录都是仅在编译期间生效，与运行期间的动态链接没有关联。在运行相关的可执行程序时，系统会去寻找”预定义”的动态库搜索路径，然后按照编译期间（实际上是链接期间） <code>-l</code> 参数指定的库名，来结合找出给定的动态库。如果你的自定义库目录没有包含在这个”预定义”路径中，那么就会运行失败。最简单有效的方式，就是将自定义库的目录添加到 <code>/etc/ld.so.conf.d/custom.conf</code>（名字自取）中，然后运行 <code>ldconfig</code> 更新缓存就可以顺利运行这个可执行文件了。</li>
+</ul>
+<h2 id="交叉编译工具链"><a href="#交叉编译工具链" class="headerlink" title="交叉编译工具链"></a>交叉编译工具链</h2><p>获取交叉编译工具链有 3 种方法：</p>
+<ul>
+<li><strong>手动制作</strong>：即自己下载 gcc、glibc、binutils 等源码，自行编译，难度较大</li>
+<li><strong>辅助制作</strong>：利用 Crosstool-NG 等辅助工具，制作交叉编译工具链，难度适中</li>
+<li><strong>直接获取</strong>：直接从 Linaro 等网站下载别人制作好的交叉编译工具链，难度较小</li>
+</ul>
+<p>一般选择后两者就可以了，直接获取这里就不介绍了，着重介绍 crosstool-ng 工具。</p>
+<p>制作 cross compile toolchain 过程中，会遇到这三个名词，以 gcc 举例说明：</p>
+<ul>
+<li><code>build</code>：构建 toolchain 工具的平台，即当前主机，一般无需指定</li>
+<li><code>host</code>：构建出来的 toolchain 将在哪个平台上运行，需要手动指定</li>
+<li><code>target</code>：该 toolchain 构建的软件将在哪个平台运行，需要手动指定</li>
+</ul>
+<p>比如：</p>
+<ul>
+<li><code>build=i386-linux host=i386-linux target=i386-linux</code>：典型的本地工具链，表示当前架构为 i386，构建出来的工具链在 i386 上运行，该工具链构建的软件在 i386 上运行。</li>
+<li><code>build=i386-linux host=i386-linux target=arm-linux</code>：典型的交叉工具链，表示当前架构为 i386，构建出来的工具链在 i386 上运行，该工具链构建的软件在 arm 上运行。</li>
+<li><code>build=i386-linux host=arm-linux target=arm-linux</code>：本地工具链，表示当前架构为 i386，构建出来的工具链在 arm 上运行，该工具链构建的软件在 arm 上运行。</li>
+<li><code>build=i386-linux host=arm-linux target=mips-linux</code>：交叉工具链，表示当前架构为 i386，构建出来的工具链在 arm 上运行，该工具链构建的软件在 mips 上运行。</li>
+</ul>
+<blockquote>
+<p>crosstool-ng 不推荐使用 root 用户操作，请使用普通用户！</p>
+</blockquote>
+<p><strong>安装 crosstool-ng</strong><br>先解决依赖问题，archlinux 用户请安装这些软件包、软件组：<br><code>pacman -S --needed base base-devel git help2man python gperf</code></p>
+<p>获取 crosstool-ng 有两种方式：</p>
+<ol>
+<li><code>git clone https://github.com/crosstool-ng/crosstool-ng</code>：开发版（不推荐）</li>
+<li><code>wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.23.0.tar.xz</code>：稳定版</li>
+</ol>
+<p>这里选择稳定的 release 版本，下载后解压，然后编译安装 ct-ng：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+./configure --prefix=/path/to/install
+make
+make install
+export PATH="${PATH}:/path/to/install/bin"
+</script></code></pre>
+<p>我选择安装在 <code>~/crosstool-ng</code> 目录（即 <code>/path/to/install</code>）。</p>
+<p>安装完成后就不需要 ct-ng 源码目录了，直接进入任意工作目录，开始 toolchain 的制作。这里将工作目录设置为 <code>~/toolchain</code>，并在里面新建两个文件夹 <code>src</code>、<code>x-tools</code>，前者存放 ct-ng 下载的源码包，后者存放 ct-ng 制作完成的 toolchain。建议新建一个环境变量 BUILD（名称随意），指向这个工作目录 <code>~/toolchain</code>，后面会用到的。</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+mkdir ~/toolchain
+cd ~/toolchain
+mkdir src x-tools
+echo "export BUILD=~/toolchain" >> ~/.zshenv
+source ~/.zshenv
+</script></code></pre>
+<p>查看 ct-ng 命令的帮助信息：<code>ct-ng help</code>，注意不是 <code>ct-ng --help</code>，它只会显示 make 命令的帮助信息，因为 ct-ng 实际上是一个 make 脚本。因为加入了 PATH 环境变量，因此对应的 man 文档也是可以用的，<code>man ct-ng</code> 查看更详细的帮助。</p>
+<p><strong>使用 crosstool-ng</strong><br>ct-ng 自带了一些示例配置（样板），使用 <code>ct-ng list-samples</code> 查看所有示例配置，使用 <code>ct-ng show-&lt;sample-name&gt;</code> 查看对应的 sample 信息。用法如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+ct-ng list-samples
+ct-ng show-arm-unknown-linux-gnueabi
+</script></code></pre>
+<p>我们制作工具链基本都是使用的示例配置，然后进行微调，如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+ct-ng arm-unknown-linux-gnueabi
+ct-ng menuconfig
+</script></code></pre>
+<p>现在，我们可以看到一个类似 linux 内核的 menuconfig 界面，如下：<br><img src="/images/ct-ng-menuconfig.png" alt="crosstool-ng menuconfig"></p>
+<p>一些比较常用的选项如下：</p>
+<p><strong>Paths and misc options</strong></p>
+<ul>
+<li>Paths -&gt; Local tarballs directory：<code>${BUILD}/src</code>，源码包保存路径</li>
+<li>Paths -&gt; Prefix directory：<code>${BUILD}/x-tools/${CT_TARGET}</code>，工具链保存路径</li>
+<li>Number of parallel jobs：<code>4</code>，make -j 参数的值，建议与 <code>$(nproc)</code> 的值相同</li>
+</ul>
+<p><strong>Toolchain options</strong></p>
+<ul>
+<li>Build Static Toolchain：选中，编译成静态的 toolchain 可执行文件</li>
+<li>Toolchain ID string：自定义版本号，显示在标准版本号后面</li>
+<li>Toolchain bug URL：设置该 toolchain 的 bug 报告的 url 页面</li>
+<li>Tuple’s vendor string：设置 toolchain 前缀部分的 vendor 字符串</li>
+</ul>
+<p><strong>Operating System</strong></p>
+<ul>
+<li>Target OS：编译出来的程序运行的系统，裸机、Linux</li>
+<li>Build shared libraries：是否编译动态库，为了兼容，建议选上</li>
+<li>Linux kernel version：选择最低支持的内核版本，特别注意此项</li>
+</ul>
+<p><strong>Binary utilities</strong></p>
+<ul>
+<li>Binary format：二进制文件格式，ELF</li>
+</ul>
+<p><strong>C compiler</strong><br>可选择 C++、Java、Fortran 等语言的支持，建议 C、C++</p>
+<p><strong>Debug facilities</strong><br>选择调试器，为了节省时间，可以取消选择 gdb</p>
+<p>配置完成后（save），开始构建工具链：<br><code>ct-ng build</code>，同时可 <code>tail -f build.log</code> 查看详细日志<br>如果需要覆盖 <code>make -j</code> 参数值，可以使用 <code>ct-ng build.N</code></p>
+<p><strong>使用 toolchain</strong><br><code>export PATH=$PATH:/path/to/toolchain/bin</code> 即可使用。</p>
+<p><strong>注意事项</strong><br>编译 toolchain 需要比较多的资源，内存最好 4G+，磁盘空间最好 10G+。</p>
+<h2 id="iptables-端口转发"><a href="#iptables-端口转发" class="headerlink" title="iptables 端口转发"></a>iptables 端口转发</h2><blockquote>
+<p>用网易杭州节点 163.zfl9.com 中转 main.zfl9.com（阿里云新加坡）</p>
+</blockquote>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# DNAT，将发往本机的 8080,20633 包重定向到 main.zfl9.com:8080,20633
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 8080 -j DNAT --to-destination 47.74.249.213:8080
+iptables -t nat -A PREROUTING -p udp -m udp --dport 8080 -j DNAT --to-destination 47.74.249.213:8080
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 20633 -j DNAT --to-destination 47.74.249.213:20633
+iptables -t nat -A PREROUTING -p udp -m udp --dport 20633 -j DNAT --to-destination 47.74.249.213:20633
+
+# SNAT，将之前重定向到 main.zfl9.com:8080,20633 的包进行 SNAT（不然不给路由）
+iptables -t nat -A POSTROUTING -d 47.74.249.213/32 -p tcp -m tcp --dport 8080 -j SNAT --to-source 59.111.101.106
+iptables -t nat -A POSTROUTING -d 47.74.249.213/32 -p udp -m udp --dport 8080 -j SNAT --to-source 59.111.101.106
+iptables -t nat -A POSTROUTING -d 47.74.249.213/32 -p tcp -m tcp --dport 20633 -j SNAT --to-source 59.111.101.106
+iptables -t nat -A POSTROUTING -d 47.74.249.213/32 -p udp -m udp --dport 20633 -j SNAT --to-source 59.111.101.106
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/wlan.html" rel="next" title="WLAN 笔记">
+                <i class="fa fa-chevron-left"></i> WLAN 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/dnsmasq.html" rel="prev" title="dnsmasq 笔记">
+                dnsmasq 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UEFI-引导"><span class="nav-number">1.</span> <span class="nav-text">UEFI 引导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dd-命令"><span class="nav-number">2.</span> <span class="nav-text">dd 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tee-命令"><span class="nav-number">3.</span> <span class="nav-text">tee 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncat-命令"><span class="nav-number">4.</span> <span class="nav-text">ncat 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kill-killall-pkill-pgrep"><span class="nav-number">5.</span> <span class="nav-text">kill/killall/pkill/pgrep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemd-相关"><span class="nav-number">6.</span> <span class="nav-text">systemd 相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-Window-System"><span class="nav-number">7.</span> <span class="nav-text">X Window System</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络代理相关"><span class="nav-number">8.</span> <span class="nav-text">网络代理相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iptables-思考"><span class="nav-number">9.</span> <span class="nav-text">iptables 思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-策略路由"><span class="nav-number">10.</span> <span class="nav-text">linux 策略路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉编译入门"><span class="nav-number">11.</span> <span class="nav-text">交叉编译入门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉编译工具链"><span class="nav-number">12.</span> <span class="nav-text">交叉编译工具链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iptables-端口转发"><span class="nav-number">13.</span> <span class="nav-text">iptables 端口转发</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/linux.html';
+          this.page.identifier = 'linux.html';
+          this.page.title = 'Linux 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

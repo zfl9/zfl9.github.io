@@ -1,0 +1,810 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="变量名，函数名，数组名，符号表，内存溢出，内存泄露，野指针，堆栈，堆">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="栈和堆在线程之间是共享的还是独立的、什么是野指针，空指针，迷途指针、内存溢出和内存泄露的区别、变量名和地址之间的关系，动态链接库和静态链接库有什么区别？">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 野指针、静态/动态链接库">
+<meta property="og:url" content="https://www.zfl9.com/c-point-library.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="栈和堆在线程之间是共享的还是独立的、什么是野指针，空指针，迷途指针、内存溢出和内存泄露的区别、变量名和地址之间的关系，动态链接库和静态链接库有什么区别？">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 野指针、静态/动态链接库">
+<meta name="twitter:description" content="栈和堆在线程之间是共享的还是独立的、什么是野指针，空指针，迷途指针、内存溢出和内存泄露的区别、变量名和地址之间的关系，动态链接库和静态链接库有什么区别？">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-point-library.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 野指针、静态/动态链接库 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-point-library.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 野指针、静态/动态链接库
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-07T12:18:00+08:00">
+                2017-07-07
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-point-library.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-point-library.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-point-library.html" class="leancloud_visitors" data-flag-title="c语言 - 野指针、静态/动态链接库">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>栈和堆在线程之间是共享的还是独立的、什么是野指针，空指针，迷途指针、内存溢出和内存泄露的区别、变量名和地址之间的关系，动态链接库和静态链接库有什么区别？</p>
+<a id="more"></a>
+<h2 id="线程与进程区别"><a href="#线程与进程区别" class="headerlink" title="线程与进程区别"></a>线程与进程区别</h2><p><strong>在一个进程的线程共享堆区，而进程中的线程各自维持自己堆栈</strong></p>
+<p><code>线程</code><strong>共享</strong>的环境包括：</p>
+<ul>
+<li><code>进程代码段</code></li>
+<li><code>进程的公有数据</code>(利用这些共享的数据，线程很容易的实现相互之间的通讯)</li>
+<li><code>进程打开的文件描述符</code></li>
+<li><code>信号的处理器</code></li>
+<li><code>进程的当前目录</code></li>
+<li><code>进程用户ID</code></li>
+<li><code>进程组ID</code></li>
+</ul>
+<p>相关：</p>
+<ul>
+<li><code>线程ID</code><br>每个线程都有自己的线程ID，这个ID在本进程中是唯一的，进程用此来标识线程</li>
+<li><code>寄存器组的值</code><br>由于线程间是并发运行的，每个线程有自己不同的运行线索<br>当从一个线程切换到另一个线程上时，必须将原有的线程的寄存器集合的状态保存，以便将来该线程在被重新切换到时能得以恢复</li>
+<li><code>线程的堆栈</code><br><strong>堆栈是保证线程独立运行所必须的</strong><br>线程函数可以调用函数，而被调用函数中又是可以层层嵌套的，所以线程必须拥有自己的函数堆栈，使得函数调用可以正常执行，不受其他线程的影响</li>
+<li><code>错误返回码</code><br>由于同一个进程中有很多个线程在同时运行，可能某个线程进行系统调用后设置了errno值，而在该线程还没有处理这个错误，另外一个线程就在此时被调度器投入运行，这样错误值就有可能被修改<br>所以，<strong>不同的线程应该拥有自己的错误返回码变量</strong></li>
+<li><code>线程的信号屏蔽码</code><br>由于每个线程所感兴趣的信号不同，所以线程的信号屏蔽码应该由线程自己管理，但所有的线程都共享同样的信号处理器</li>
+<li><code>线程的优先级</code><br>由于线程需要像进程那样能够被调度，那么就必须要有可供调度使用的参数，这个参数就是线程的优先级</li>
+</ul>
+<h2 id="野指针、迷途指针"><a href="#野指针、迷途指针" class="headerlink" title="野指针、迷途指针"></a>野指针、迷途指针</h2><ul>
+<li><code>野指针</code><br>某些编程语言允许<code>未初始化的指针</code>的存在，而这类指针即为<code>野指针</code><br>除了static存储类的指针变量，任何指针变量刚被创建时不会自动成为NULL指针，它的缺省值是随机的，它会乱指一气<br>所以，指针变量在创建的同时应当被初始化，要么将指针设置为NULL，要么让它指向合法的内存</li>
+<li><code>迷途指针(悬垂指针)</code><br><strong>在计算机编程领域中，<code>迷途指针</code>与<code>野指针</code>指的是不指向任何合法的对象的指针</strong><br>当所指向的对象被释放或者收回，但是对该指针没有作任何的修改，以至于该指针仍旧指向已经回收的内存地址，此情况下该指针便称为<code>迷途指针(悬垂指针)</code><br>若操作系统将这部分已经释放的内存重新分配给另外一个进程，而原来的程序重新引用现在的迷途指针，则将产生无法预料的后果<br>因为此时迷途指针所指向的内存现在包含的已经完全是不同的数据，通常来说，若原来的程序继续往迷途指针所指向的内存地址写入数据，这些和原来程序不相关的数据将被损坏，进而导致不可预料的程序错误<br>这种类型的程序错误，不容易找到问题的原因，通常会导致<code>段错误</code>(Linux系统中)和<code>一般保护错误</code>(Windows系统中)</li>
+</ul>
+<p>防止野指针，迷途指针的错误：</p>
+<ul>
+<li>指针变量在定义的时候应该初始化为合法的内存或者<code>NULL</code></li>
+<li><code>malloc/free</code>、<code>new/delete</code>应该成对出现，不要混用</li>
+<li>申请堆内存之后，用if判断指针是否为<code>NULL</code></li>
+<li>使用完指针后，应立即将指针置为<code>NULL</code></li>
+</ul>
+<h2 id="内存溢出、内存泄漏"><a href="#内存溢出、内存泄漏" class="headerlink" title="内存溢出、内存泄漏"></a>内存溢出、内存泄漏</h2><ul>
+<li><code>内存溢出</code><br>内存溢出就是你要求分配的内存超出了系统能给你的，系统不能满足你的需求，于是产生溢出</li>
+<li><code>内存泄漏</code><br>内存泄漏就是你用malloc/new向系统申请了内存空间，你用完之后并没有将其归还(free/delete)<br>如果你把这块内存的地址也弄丢了，那么你也不能再使用这块内存，系统也无法将其分配给需要的程序<br>就这样越积越多，最终导致系统的内存不够用</li>
+<li><code>内存越界</code><br>何谓内存访问越界，简单的说，你向系统申请了一块内存，在使用这块内存的时候，超出了你申请的范围</li>
+<li><code>栈溢出</code><br>栈溢出是缓冲区溢出的一种，缓冲区溢出是指当计算机向缓冲区内填充数据位数时超过了缓冲区本身的容量溢出的数据覆盖在合法数据上<br>操作系统所使用的缓冲区又被称为<code>堆栈</code>，在各个操作进程之间，指令会被临时储存在<code>堆栈</code>中，<code>堆栈</code>也会出现缓冲区溢出</li>
+</ul>
+<p>一个简单的内存泄漏例子</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+    while(1){
+        malloc(1);
+    }
+    return 0;
+}
+</script></code></pre>
+<h2 id="变量名与地址"><a href="#变量名与地址" class="headerlink" title="变量名与地址"></a>变量名与地址</h2><p>本质上，变量名、数组名、函数名都是地址的助记符，但是一般我们认为<code>变量名</code>是数据本身，而<code>函数名</code>、<code>数组名</code>则表示的是地址，前者是函数的入口地址，后者是数组第0个元素的地址</p>
+<p>编译器会把所有<code>标识符</code>(变量名、函数名、数组名等)及它们对应的<code>数据类型</code>、<code>地址</code>、<code>作用域</code>等信息存放到一个叫做<code>符号表</code>的数据结构中</p>
+<p>变量名只存在于我们编写的源代码中，在编译、链接之后，都会被替换为相应的地址，所以在内存中并不存在所谓的变量名</p>
+<h2 id="静态库、动态库"><a href="#静态库、动态库" class="headerlink" title="静态库、动态库"></a>静态库、动态库</h2><p>从C语言源文件 <code>main.c</code> 到可执行文件 <code>main</code> 转变的过程：</p>
+<ul>
+<li><code>预处理</code>：执行预处理指令，如头文件包含、宏定义、宏展开、条件编译等，<code>gcc -E main.c -o main.i</code></li>
+<li><code>编译</code>：将源代码编译成汇编文件，<code>gcc -S main.i -o main.s</code></li>
+<li><code>汇编</code>：将汇编文件转换成二进制机器码，<code>gcc -c main.s -o main.o</code></li>
+<li><code>链接</code>：将目标文件、静态链接库、动态链接库链接成可执行文件，<code>gcc main.o -o main</code></li>
+</ul>
+<p>ELF文件格式有以下三种类型：</p>
+<ul>
+<li><code>可重定位的对象文件(Relocatable file)</code>：目标文件<code>main.o</code></li>
+<li><code>可执行的对象文件(Executable file)</code>：可执行文件<code>main</code></li>
+<li><code>可被共享的对象文件(Shared object file)</code>：动态链接库<code>libxxx.so</code></li>
+</ul>
+<p><code>节(section)</code>和<code>段(segment)</code><br>一个ELF文件从<code>连接器(Linker)</code>的角度看，是一些<code>节(section)</code>的集合<br>从程序<code>加载器(Loader)</code>的角度看，它是一些<code>段(Segments)</code>的集合<br>ELF格式的<code>程序</code>和<code>共享库</code>具有相同的结构，只是段的集合和节的集合上有些不同</p>
+<p><code>静态链接库</code>和<code>动态链接库</code></p>
+<ul>
+<li><code>静态链接库</code>：一般命名为<code>libxxx.a</code>，是一组目标文件(如: <code>main.o</code>)的打包，也就是<code>归档(Archive)</code>，在链接时，会将静态库拷贝进可执行文件，程序运行时，与静态库无关联</li>
+<li><code>动态链接库</code>：一般命名为<code>libxxx.so.major.minor</code>，major 是主版本号，minor是副版本号，也可以没有版本号，一般也会建立一个没有版本号的软链接到全名的文件<br>和可执行文件的结构类似，相对于静态库，在链接时，并不会将其拷贝进可执行文件中，而只是做些标记，等到程序运行时，动态的加载所需的模块</li>
+</ul>
+<p><strong>gcc 链接阶段，如果同时存在静态库和动态库，则优先使用动态库</strong></p>
+<p><strong>如何创建动态库和静态库</strong>？<br>说明：<code>test.h</code>函数库的头文件、<code>test_1.c, test_2.c, test_3.c</code>三个函数、<code>main.c</code>主函数</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [14:40:56]
+$ ll
+total 20K
+-rw-r--r-- 1 root root  89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root  89 Jul  9 14:36 test_1.c
+-rw-r--r-- 1 root root  89 Jul  9 14:37 test_2.c
+-rw-r--r-- 1 root root  89 Jul  9 14:37 test_3.c
+-rw-r--r-- 1 root root 121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:40:57]
+$ cat test.h
+#ifndef __TEST_H
+#define __TEST_H
+
+extern void test_1(void);
+extern void test_2(void);
+extern void test_3(void);
+
+#endif
+
+# root @ localhost in ~ [14:41:07]
+$ cat test_1.c
+#include <stdio.h>
+#include "test.h"
+
+void test_1(void){
+    printf("func: test_1\n");
+}
+
+# root @ localhost in ~ [14:41:11]
+$ cat test_2.c
+#include <stdio.h>
+#include "test.h"
+
+void test_2(void){
+    printf("func: test_2\n");
+}
+
+# root @ localhost in ~ [14:41:14]
+$ cat test_3.c
+#include <stdio.h>
+#include "test.h"
+
+void test_3(void){
+    printf("func: test_3\n");
+}
+
+# root @ localhost in ~ [14:41:17]
+$ cat main.c
+#include "test.h"
+
+int main(){
+    test_1();
+    test_2();
+    test_3();
+    return 0;
+}
+
+# root @ localhost in ~ [14:41:26]
+$ gcc -c test_1.c test_2.c test_3.c
+
+# root @ localhost in ~ [14:42:44]
+$ ll
+total 32K
+-rw-r--r-- 1 root root   89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root   89 Jul  9 14:36 test_1.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_1.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_2.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_2.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_3.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_3.o
+-rw-r--r-- 1 root root  121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:42:48]
+$ ar crs libtest.a test_1.o test_2.o test_3.o
+
+# root @ localhost in ~ [14:43:28]
+$ ll
+total 40K
+-rw-r--r-- 1 root root 4.7K Jul  9 14:43 libtest.a
+-rw-r--r-- 1 root root   89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root   89 Jul  9 14:36 test_1.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_1.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_2.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_2.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_3.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_3.o
+-rw-r--r-- 1 root root  121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:43:30]
+$ ar t libtest.a
+test_1.o
+test_2.o
+test_3.o
+
+# root @ localhost in ~ [14:43:52]
+$ mkdir lib
+
+# root @ localhost in ~ [14:44:12]
+$ mv libtest.a lib/
+
+# root @ localhost in ~ [14:44:19]
+$ ll
+total 32K
+drwxr-xr-x 2 root root   23 Jul  9 14:44 lib
+-rw-r--r-- 1 root root   89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root   89 Jul  9 14:36 test_1.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_1.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_2.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_2.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_3.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_3.o
+-rw-r--r-- 1 root root  121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:44:22]
+$ gcc test_1.c test_2.c test_3.c -fPIC -shared -o libtest.so
+
+# root @ localhost in ~ [14:46:11]
+$ ll
+total 40K
+drwxr-xr-x 2 root root   23 Jul  9 14:44 lib
+-rwxr-xr-x 1 root root 8.0K Jul  9 14:46 libtest.so
+-rw-r--r-- 1 root root   89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root   89 Jul  9 14:36 test_1.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_1.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_2.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_2.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_3.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_3.o
+-rw-r--r-- 1 root root  121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:46:13]
+$ mv libtest.so lib/
+
+# root @ localhost in ~ [14:46:17]
+$ ll
+total 32K
+drwxr-xr-x 2 root root   41 Jul  9 14:46 lib
+-rw-r--r-- 1 root root   89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root   89 Jul  9 14:36 test_1.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_1.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_2.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_2.o
+-rw-r--r-- 1 root root   89 Jul  9 14:37 test_3.c
+-rw-r--r-- 1 root root 1.5K Jul  9 14:42 test_3.o
+-rw-r--r-- 1 root root  121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:46:18]
+$ ll lib
+total 16K
+-rw-r--r-- 1 root root 4.7K Jul  9 14:43 libtest.a
+-rwxr-xr-x 1 root root 8.0K Jul  9 14:46 libtest.so
+
+# root @ localhost in ~ [14:46:21]
+$ rm -fr test_*
+
+# root @ localhost in ~ [14:46:42]
+$ ll
+total 8.0K
+drwxr-xr-x 2 root root  41 Jul  9 14:46 lib
+-rw-r--r-- 1 root root  89 Jul  9 14:40 main.c
+-rw-r--r-- 1 root root 121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:46:43]
+$ mkdir include
+
+# root @ localhost in ~ [14:46:47]
+$ mv test.h include
+
+# root @ localhost in ~ [14:46:51]
+$ ll
+total 4.0K
+drwxr-xr-x 2 root root 20 Jul  9 14:46 include
+drwxr-xr-x 2 root root 41 Jul  9 14:46 lib
+-rw-r--r-- 1 root root 89 Jul  9 14:40 main.c
+
+# root @ localhost in ~ [14:46:52]
+$ ll include
+total 4.0K
+-rw-r--r-- 1 root root 121 Jul  9 14:36 test.h
+
+# root @ localhost in ~ [14:46:54]
+$ ll lib
+total 16K
+-rw-r--r-- 1 root root 4.7K Jul  9 14:43 libtest.a
+-rwxr-xr-x 1 root root 8.0K Jul  9 14:46 libtest.so
+
+# root @ localhost in ~ [14:46:57]
+$ gcc main.c -I include -L lib -l test -o main_share
+
+# root @ localhost in ~ [14:49:02]
+$ gcc main.c -I include -L lib -Wl,-Bstatic -l test -Wl,-Bdynamic -o main_static
+
+# root @ localhost in ~ [14:50:20]
+$ ll
+total 28K
+drwxr-xr-x 2 root root   20 Jul  9 14:46 include
+drwxr-xr-x 2 root root   41 Jul  9 14:46 lib
+-rw-r--r-- 1 root root   89 Jul  9 14:40 main.c
+-rwxr-xr-x 1 root root 8.4K Jul  9 14:49 main_share
+-rwxr-xr-x 1 root root 8.5K Jul  9 14:50 main_static
+
+# root @ localhost in ~ [14:50:26]
+$ ldd main_share
+    linux-vdso.so.1 =>  (0x00007ffda77e5000)
+    libtest.so => not found
+    libc.so.6 => /lib64/libc.so.6 (0x00007f8ae4f08000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f8ae52dd000)
+
+# root @ localhost in ~ [14:50:31]
+$ ldd main_static
+    linux-vdso.so.1 =>  (0x00007ffdc935a000)
+    libc.so.6 => /lib64/libc.so.6 (0x00007ff8ad79a000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007ff8adb6e000)
+
+# root @ localhost in ~ [14:50:35]
+$ ./main_static
+func: test_1
+func: test_2
+func: test_3
+
+# root @ localhost in ~ [14:50:50]
+$ ./main_share
+./main_share: error while loading shared libraries: libtest.so: cannot open shared object file: No such file or directory
+
+# root @ localhost in ~ [14:50:55] C:127
+$ vim /etc/ld.so.conf.d/zfl.conf
+
+# root @ localhost in ~ [14:51:10]
+$ cat /etc/ld.so.conf.d/zfl.conf
+/root/lib
+
+# root @ localhost in ~ [14:51:18]
+$ ldconfig
+
+# root @ localhost in ~ [14:51:23]
+$ ./main_share
+func: test_1
+func: test_2
+func: test_3
+</script></code></pre>
+<p><strong>静态链接库</strong><br>创建静态链接库：<br><code>gcc -c test_1.c test_2.c test_3.c</code><br><code>ar csr libtest.a test_1.o test_2.o test_3.o</code><br>查看静态库包含的 obj 文件：<br><code>ar t libtest.a</code><br>释放静态库包含的 obj 文件：<br><code>ar x libtest.a</code></p>
+<p><strong>动态链接库</strong><br>创建动态链接库：<br><code>gcc test_1.c test_2.c test_3.c -fPIC -shared -o libtest.so</code></p>
+<p><strong>动态链接、静态链接、混合链接</strong><br>编译时使用动态链接（default）：<br><code>gcc main.c -I include -L lib -l test -o main_share</code><br>编译时使用静态链接：<br><code>gcc main.c -I include -L lib -l test -o main_static -static</code>，系统某些库没有静态库，所以会链接失败<br>编译时使用静态链接 libtest.a 库、动态链接其他库（混合链接）：<br><code>gcc main.c -I include -L lib -Wl,-Bstatic -l test -Wl,-Bdynamic -o main_static</code></p>
+<p><strong>查看相关信息</strong><br>查看程序或动态库所依赖的共享库列表：<code>ldd libtest.so</code>、<code>ldd main_share</code><br>查看elf文件的信息：<code>readelf</code><br>查看obj文件的信息：<code>objdump</code><br>查看符号表信息：<code>nm</code><br>查看 text/data/bss 占用的大小：<code>size</code><br>查看二进制文件中所有可打印字符：<code>strings</code></p>
+<p><strong>以 C/C++ 不同标准进行编译</strong><br><code>-std=c89</code>，c89<br><code>-std=c99</code>，c99<br><code>-std=c11</code>，c11（推荐）<br><code>-std=c++11</code>，c++11<br><code>-std=c++14</code>，c++14（推荐）</p>
+<p><strong>头文件相关</strong><br>在预处理时，可以通过<code>-I</code>参数来指定自定义的<code>include path</code>，具体的查找优先级为（从高到低）：</p>
+<ul>
+<li><code>-I</code>参数指定的路径；</li>
+<li><code>C_INCLUDE_PATH</code>、<code>CPLUS_INCLUDE_PATH</code>环境变量指定的路径；</li>
+<li>默认路径：<code>/usr/include</code>、<code>/usr/local/include</code>、<code>/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include</code>；</li>
+</ul>
+<blockquote>
+<p>对于用双引号扩起来的头文件，gcc/g++ 最先搜索当前目录下的头文件，然后再按照上面的优先级查找。</p>
+</blockquote>
+<p><strong>库相关 - 编译期间</strong><br>在链接时，可以通过<code>-L</code>参数来指定自定义<code>library path</code>，具体的查找优先级为（从高到低）；</p>
+<ul>
+<li><code>-L</code>参数指定的路径；</li>
+<li><code>LIBRARY_PATH</code>环境变量指定的路径；</li>
+<li>默认路径：<code>/lib</code>、<code>/lib64</code>、<code>/usr/lib</code>、<code>/usr/lib64</code>、<code>/usr/local/lib</code>、<code>/usr/local/lib64</code></li>
+</ul>
+<p>使用<code>-l</code>参数可指定要链接的库，对于<code>libxxx.so</code>或<code>libxxx.a</code>，只需要给出<code>xxx</code>就行。<br>使用<code>-static</code>参数强制 gcc/g++ 使用静态链接，如果只有动态库，没有静态库，会链接失败！</p>
+<p><strong>库相关 - 运行期间</strong><br><code>ld.so</code>是 Unix 或类 Unix 系统上的<code>动态链接器</code>，常见的有两个变体：</p>
+<ul>
+<li><code>ld.so</code>针对 a.out 格式的二进制可执行文件；</li>
+<li><code>ld-linux.so</code>针对 ELF 格式的二进制可执行文件；</li>
+</ul>
+<p>当应用程序需要使用动态链接库里的函数时，由 ld.so 负责加载，具体的查找优先级为（从高到低）：</p>
+<ul>
+<li><code>-Wl,rpath=path1:path2:path3</code>参数指定的路径；</li>
+<li><code>LD_LIBRARY_PATH</code>环境变量指定的路径；</li>
+<li><code>/etc/ld.so.cache</code>缓存文件指定的路径；</li>
+<li>默认路径：<code>/lib</code>、<code>/usr/lib</code>；</li>
+</ul>
+<blockquote>
+<p>如需在<code>/etc/ld.so.cache</code>添加搜索路径，可修改<code>/etc/ld.so.conf</code>、<code>/etc/ld.so.conf.d/*.conf</code>，然后使用<code>ldconfig</code>更新缓存，使用<code>ldconfig -p</code>可查看路径列表；</p>
+</blockquote>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-buffer.html" rel="next" title="c语言 - 缓冲区详解">
+                <i class="fa fa-chevron-left"></i> c语言 - 缓冲区详解
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-random.html" rel="prev" title="c语言 - 获取随机数">
+                c语言 - 获取随机数 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程与进程区别"><span class="nav-number">1.</span> <span class="nav-text">线程与进程区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#野指针、迷途指针"><span class="nav-number">2.</span> <span class="nav-text">野指针、迷途指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存溢出、内存泄漏"><span class="nav-number">3.</span> <span class="nav-text">内存溢出、内存泄漏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量名与地址"><span class="nav-number">4.</span> <span class="nav-text">变量名与地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态库、动态库"><span class="nav-number">5.</span> <span class="nav-text">静态库、动态库</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-point-library.html';
+          this.page.identifier = 'c-point-library.html';
+          this.page.title = 'c语言 - 野指针、静态/动态链接库';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

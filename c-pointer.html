@@ -1,0 +1,1271 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C语言 指针">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 指针">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 指针">
+<meta property="og:url" content="https://www.zfl9.com/c-pointer.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 指针">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 指针">
+<meta name="twitter:description" content="c语言 - 指针">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-pointer.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 指针 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-pointer.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 指针
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-08T04:56:00+08:00">
+                2017-07-08
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-pointer.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-pointer.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-pointer.html" class="leancloud_visitors" data-flag-title="c语言 - 指针">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 指针</p>
+<a id="more"></a>
+<h2 id="什么是指针"><a href="#什么是指针" class="headerlink" title="什么是指针"></a>什么是指针</h2><p>计算机中所有的数据都必须放在内存中，不同类型的数据占用的字节数不一样<br>例如 int 占用4个字节，char 占用1个字节<br>为了正确地访问这些数据，必须知道它们在内存中的准确位置，这个位置就叫做<code>地址(Address)</code>或<code>指针(Pointer)</code><br>内存地址通常使用16进制数表示，地址从0开始依次增加，对于32位环境，程序所能使用的内存为4G，最小的地址为0，最大的地址为0xFFFFFFFF</p>
+<p>下面的代码演示了如何输出一个地址：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a = 10;
+    int b[5] = {0, 1, 2, 3, 4};
+    char str1[] = "https://www.zfl9.com";
+    char *str2 = "https://www.zfl9.com";
+    printf("a: %p\nb: %p\nstr1: %p\nstr2: %p\n", &a, b, str1, str2);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [11:41:41]
+$ ./a.out
+a: 0x7ffcafdb1fe4
+b: 0x7ffcafdb1fd0
+str1: 0x7ffcafdb1fb0
+str2: 0x400650
+</script></code></pre>
+<p><code>%p</code>表示输出一个地址，也可以用<code>%#x</code>，<code>&amp;</code>是取地址符，因为数组名本身就表示数组的首地址，所以不需要<code>&amp;</code></p>
+<p><strong>指针变量</strong><br>数据在内存中的地址也称为指针，如果一个变量存储了一份数据的指针，我们就称它为<code>指针变量</code></p>
+<p>在C语言中，允许用一个变量来存放指针，这种变量称为指针变量。<br>指针变量的值就是某份数据的地址，这样的一份数据可以是数组、字符串、函数，也可以是另外的一个普通变量或指针变量</p>
+<p>定义指针变量<br><code>type *ptr;</code>、<code>type *ptr = value;</code><br><code>*</code>表示变量<code>ptr</code>是一个指针变量，而<code>type</code>是该指针指向的数据类型</p>
+<p>如：<code>int *p</code>，p是一个指针变量，指向的数据类型为int，是一个整型指针</p>
+<p>注意，指针变量和普通变量没有什么区别，都是变量，只不过存放的数据类型不同而已</p>
+<p>对于<code>int a</code>，它定义了一个变量<code>a</code>，数据的类型为<code>int</code><br>对于<code>int a[6]</code>，它定义了一个变量<code>a</code>，是一个拥有6个元素的数组，元素的数据类型为<code>int</code>，数组的数据类型为<code>int [6]</code><br>对于<code>int *p</code>，它定义了一个变量<code>p</code>，数据的类型为<code>int *</code></p>
+<p>给指针变量赋值</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int a = 10;
+int *p = &a;
+</script></code></pre>
+<p>指针变量需要的是一个地址，所以需要使用<code>&amp;</code>取出变量<code>a</code>的地址，并将其赋给变量<code>p</code></p>
+<p>同时，指针变量的值可以随时改变，和普通的变量一样，可以多次赋值</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int a = 10, b = 20, c = 30;
+int *p = &a;
+p = &b;
+p = &c;
+</script></code></pre>
+<p>通过指针变量取得数据</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a = 10;
+    int *p = &a;
+    printf("addr: %p, var: %d\n", p, *p);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [12:09:20]
+$ ./a.out
+addr: 0x7fffadfc0fd4, var: 10
+</script></code></pre>
+<p><code>*</code>是指针运算符，用来取得某个地址上的数据<br>使用指针是间接获取数据，要经过两步运算，而通过变量名是直接获取数据</p>
+<p>指针除了可以获取数据，还能修改数据</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a = 10;
+    int *p = &a;
+    *p = 100;
+    printf("addr: %p, var: %d\n", p, *p);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [12:13:03]
+$ ./a.out
+addr: 0x7ffedc87fe64, var: 100
+</script></code></pre>
+<p>通过指针交换两个变量的值</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a = 10, b = 20, temp;
+    printf("swap before: a = %d, b = %d\n", a, b);
+    int *pa = &a, *pb = &b;
+    temp = *pa;
+    *pa = *pb;
+    *pb = temp;
+    printf("swap afer: a = %d, b = %d\n", a, b);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [13:31:27]
+$ gcc a.c
+
+# root @ localhost in ~/test [13:31:29]
+$ ./a.out
+swap before: a = 10, b = 20
+swap afer: a = 20, b = 10
+</script></code></pre>
+<h2 id="指针变量的运算"><a href="#指针变量的运算" class="headerlink" title="指针变量的运算"></a>指针变量的运算</h2><p>指针变量保存的是一个地址，本质上是一个整数，可以进行部分运算，如：加法，减法，比较等</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char a = 'a', *pa = &a;
+    int b = 10, *pb = &b;
+    double c = 3.14, *pc = &c;
+    printf("pa: %p, pb: %p, pc: %p\n", pa, pb, pc);
+    pa++; pb++; pc++;
+    printf("pa: %p, pb: %p, pc: %p\n", pa, pb, pc);
+    pa--; pb--; pc--;
+    printf("pa: %p, pb: %p, pc: %p\n", pa, pb, pc);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [13:41:20] C:4
+$ gcc a.c
+
+# root @ localhost in ~/test [13:41:22]
+$ ./a.out
+pa: 0x7fff4574be77, pb: 0x7fff4574be70, pc: 0x7fff4574be68
+pa: 0x7fff4574be78, pb: 0x7fff4574be74, pc: 0x7fff4574be70
+pa: 0x7fff4574be77, pb: 0x7fff4574be70, pc: 0x7fff4574be68
+</script></code></pre>
+<p>可以看出，pa、pb、pc每次加1，它们的地址分别加1、4、8，正好是char、int、double类型的长度<br>而每次减1，它们的地址分别减1、4、8，也正好是char、int、double类型的长度</p>
+<p>看来指针偏移量与指针所指的数据类型相关，刚好等于数据类型的长度，而不仅仅是简单的算数加减，这就使得指针的加减运算有了实际意义</p>
+<p>不过对于指向普通变量的指针，对其进行加减运算没有什么意义，因为我们并不知道它们前后都是什么数据<br>但是对于指向数组的指针，由于数组的元素时连续存储的，这时候就可以用指针来访问元素了</p>
+<p>除了加减，还可以对指针变量进行比较，也就是比较它们的值，也就是数据的地址<br>不可以对指针变量进行乘法、除法、取余等运算，没有实际意义，编译器也会报错</p>
+<h2 id="数组指针"><a href="#数组指针" class="headerlink" title="数组指针"></a>数组指针</h2><p>数组指针：也就是指向数组的指针<br>数组(Array)是一系列相同数据类型的数据的集合，每一份数据叫做一个数组元素(Element)<br>数组中的所有元素在内存中是连续排列的，整个数组占用的是一块内存</p>
+<p>在定义数组的时候，需要给出数组名和数组长度，数组名在有些时候可以认为是一个指针，它指向数组的第0个元素，指向数组的首地址<br><strong>注意，数组和指针绝不等价，数组是另一种数据类型</strong>，具体请戳<a href="https://www.zfl9.com/c-array.html#数组什么时候会转换为指针">数组和指针的区别</a></p>
+<p>下面的例子演示了通过指针来访问数组：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a[5] = {0, 1, 2, 3, 4};
+    int i, len = sizeof(a) / sizeof(int);
+    for(i=0; i<len; i++){
+        printf("index: %d, var: %d\n", i, *(a + i));
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:03:03]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:03:05]
+$ ./a.out
+index: 0, var: 0
+index: 1, var: 1
+index: 2, var: 2
+index: 3, var: 3
+index: 4, var: 4
+</script></code></pre>
+<p><code>*(a + i)</code>等价于<code>a[i]</code></p>
+<p>也可以定义一个指针，指向数组，通过指针访问数组</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a[5] = {0, 1, 2, 3, 4};
+    int *p = a;
+    int i, len = sizeof(a) / sizeof(int);
+    // int i, len = sizeof(p) / sizeof(int); 错误，sizeof(p)求得的只是一个指针变量的长度，而不是数组的长度
+    for(i=0; i<len; i++){
+        printf("index: %d, var: %d\n", i, *(p + i));
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:07:27]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:07:29]
+$ ./a.out
+index: 0, var: 0
+index: 1, var: 1
+index: 2, var: 2
+index: 3, var: 3
+index: 4, var: 4
+</script></code></pre>
+<p>注意，当数组名为第0个元素的指针时，这个指针是一个指针常量，不能改变该指针自身的值，但是可以修改指针指向的数据<br>比如，我们可以使用指针，通过自增来遍历数组元素</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a[5] = {0, 1, 2, 3, 4};
+    int *p = a;
+    int i;
+    for(i=0; i<5; i++){
+        printf("%d ", *(p++));
+    }
+    printf("\n");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:12:33]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:12:34]
+$ ./a.out
+0 1 2 3 4
+</script></code></pre>
+<p>但是换成数组名就不行了，因为它是一个指针常量，是一个常量，指向的地址不能改变，下面的代码编译就会报错</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a[5] = {0, 1, 2, 3, 4};
+    int i;
+    for(i=0; i<5; i++){
+        printf("%d ", *(a++));
+    }
+    printf("\n");
+    return 0;
+}
+</script></code></pre>
+<p>假设指针p指向数组a的第n个元素，那<code>*p++</code>，<code>*++p</code>，<code>(*p)++</code>分别代表什么？<br>对于<code>*p++</code>，<code>++</code>优先级比<code>*</code>高，等价于<code>*(p++)</code>，由于是后自增，所以先进行其他操作，最后进行自增操作，所以是先取得第n个元素的值，然后再将指针p指向第n+1个元素<br>对于<code>*++p</code>，等价于<code>*(++p)</code>，前自增，先将p指向第n+1个元素，然后再取第n+1个元素的值<br>对于<code>(*p)++</code>，先取得第n个元素的值，然后将第n个元素的值加1</p>
+<h2 id="字符串指针"><a href="#字符串指针" class="headerlink" title="字符串指针"></a>字符串指针</h2><p>字符串指针：也就是指向字符串的指针</p>
+<p>由于c语言没有专门的字符串类型，一般都是通过字符数组来存储字符串<br>字符数组也是数组，也可以用一个指针来指向这个数组</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <string.h>
+
+int main(){
+    char str[] = "https://www.zfl9.com";
+    char *p = str;
+    int i, len = strlen(str);
+    for(i=0; i<len; i++){
+        printf("%c", str[i]);
+    }
+    printf("\n");
+    for(i=0; i<len; i++){
+        printf("%c", *(str + i));
+    }
+    printf("\n");
+    for(i=0; i<len; i++){
+        printf("%c", p[i]);
+    }
+    printf("\n");
+    for(i=0; i<len; i++){
+        printf("%c", *(p + i));
+    }
+    printf("\n");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:40:20]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:40:21]
+$ ./a.out
+https://www.zfl9.com
+https://www.zfl9.com
+https://www.zfl9.com
+https://www.zfl9.com
+</script></code></pre>
+<p>c语言还支持另外一种表示字符串的方法，就是直接用指针指向一个字符串，叫做<code>字符串常量</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char str1[] = "hello, world!";
+    char *str2 = "www.zfl9.com";
+    printf("%s\n", str1);
+    printf("%s\n", str2);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:44:08]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:44:23]
+$ ./a.out
+hello, world!
+www.zfl9.com
+</script></code></pre>
+<p>字符串的所有字符在内存中都是连续存储的，和数组一样<br>注意，字符数组和字符串常量的区别，字符数组的元素的值是可以改变的，而字符串常量的值是不能改变的<br>因为字符数组存放在内存的栈区(局部变量)或全局数据区(全局变量)，拥有读写权限<br>而字符串常量中的字符串存放在内存的字符串常量区域，常量区域只有读的权限，不能写入</p>
+<p>比如，下面的代码尝试修改字符串常量的值，这会发生段错误</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char str1[] = "hello, world!";
+    char *str2 = "www.zfl9.com";
+    printf("%s\n", str1);
+    printf("%s\n", str2);
+
+    str1[0] = 'H';
+    printf("%s\n", str1);
+
+    str2[0] = 'W';
+    printf("%s\n", str2);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:51:20]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:51:28]
+$ ./a.out
+hello, world!
+www.zfl9.com
+Hello, world!
+[1]    76302 segmentation fault  ./a.out
+</script></code></pre>
+<p>再次强调，字符串常量是字符串本身不能被修改，但是指向它的字符指针可以改变指向，指向别的数据<br>所以，如果需要经常修改字符串，那么应该选择字符数组，如果不需要经常变更字符串的值，就选择字符串常量</p>
+<h2 id="数组灵活多变的访问方式"><a href="#数组灵活多变的访问方式" class="headerlink" title="数组灵活多变的访问方式"></a>数组灵活多变的访问方式</h2><pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char str[20] = "www.zfl9.com";
+
+    char *s1 = str;
+    char *s2 = str+2;
+
+    char c1 = str[4];
+    char c2 = *str;
+    char c3 = *(str+4);
+    char c4 = *str+2;
+    char c5 = (str+1)[5];
+
+    int num1 = *str+2;
+    long num2 = (long)str;
+    long num3 = (long)(str+2);
+
+    printf("  s1 = %s\n", s1);
+    printf("  s2 = %s\n", s2);
+
+    printf("  c1 = %c\n", c1);
+    printf("  c2 = %c\n", c2);
+    printf("  c3 = %c\n", c3);
+    printf("  c4 = %c\n", c4);
+    printf("  c5 = %c\n", c5);
+
+    printf("num1 = %d\n", num1);
+    printf("num2 = %ld\n", num2);
+    printf("num3 = %ld\n", num3);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:58:28]
+$ ./a.out
+  s1 = www.zfl9.com
+  s2 = w.zfl9.com
+  c1 = z
+  c2 = w
+  c3 = z
+  c4 = y
+  c5 = l
+num1 = 121
+num2 = 140727275501696
+num3 = 140727275501698
+</script></code></pre>
+<p>分析：<br>s1 是指向数组 str 第 0 个元素的指针，所以输出 www.zfl9.com<br>s2 是指向数组 str 第 2 个元素的指针，所以输出 w.zfl9.com<br>c1 是数组 str 第 4 个元素的值，也就是 z<br>c2 是数组 str 第 0 个元素的值，也就是 w<br>c3 是数组 str 第 4 个元素的值，也就是 z<br>c4 是数组 str 第 0 个元素的值加2，也就是 w 的 ASCII 码加2，也就是字符 y<br>c5 是先计算 (str+1)，也就是指向数组 str 的第 1 个元素，然后转换为 *(str + 1 + 5)，也就是取得第 6 个元素的值，为 l<br>num1 是第 0 个元素的值，也就是字符 w 的 ASCII 码加2，为 121<br>num2 是数组 str 第 0 个元素的地址<br>num3 是数组 str 第 2 个元素的地址</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char str[20] = {0};
+    int i;
+    for(i=0; i<10; i++){
+        str[i] = 97 + i; // 97为字符a的ASCII码值
+    }
+    printf("%s\n", str);
+    printf("%s\n", str+2);
+    printf("%c\n", str[2]);
+    printf("%c\n", (str+2)[2]);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:28:43]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:28:44]
+$ ./a.out
+abcdefghij
+cdefghij
+c
+e
+</script></code></pre>
+<p><code>(str+2)[2]</code>相当于<code>*(str+2+2) == *(str+4) == str[4] == &#39;e&#39;</code></p>
+<h2 id="指针变量作为函数参数"><a href="#指针变量作为函数参数" class="headerlink" title="指针变量作为函数参数"></a>指针变量作为函数参数</h2><p>在C语言中，函数的参数不仅可以是整数、小数、字符等具体的数据，还可以是指向它们的指针<br>用指针变量作函数参数可以将函数外部的地址传递到函数内部，使得在函数内部可以操作函数外部的数据，并且这些数据不会随着函数的结束而被销毁</p>
+<p>像数组、字符串、动态分配的内存等都是一系列数据的集合，没有办法通过一个参数全部传入函数内部，只能传递它们的指针，在函数内部通过指针来影响这些数据集合</p>
+<p>有的时候，对于整数、小数、字符等基本类型数据的操作也必须要借助指针，一个典型的例子就是交换两个变量的值</p>
+<p>如果不使用指针，就不能改变函数外的变量的值</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void swap(int m, int n){
+    int temp;
+    temp = m;
+    m = n;
+    n = temp;
+}
+
+int main(){
+    int m = 10, n = 20;
+    printf("before: m = %d, n = %d\n", m, n);
+    swap(m, n);
+    printf("after: m = %d, n = %d\n", m, n);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:35:50]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:35:52]
+$ ./a.out
+before: m = 10, n = 20
+after: m = 10, n = 20
+</script></code></pre>
+<p>而通过指针就能交换</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void swap(int *p1, int *p2){
+    int temp;
+    temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+}
+
+int main(){
+    int m = 10, n = 20;
+    printf("before: m = %d, n = %d\n", m, n);
+    swap(&m, &n);
+    printf("after: m = %d, n = %d\n", m, n);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:37:35]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:37:36]
+$ ./a.out
+before: m = 10, n = 20
+after: m = 20, n = 10
+</script></code></pre>
+<p><strong>用数组作函数参数</strong><br>数组是一组数据的集合，无法通过参数将它们一次性传递到函数内部，如果希望在函数内部操作数组，就应该传递数组指针<br>下面的例子中，max() 函数用于查找数组中值最大的元素</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int max(int *array, int len){
+    int i, max = array[0]; // 假定 max = array[0]
+    for(i=1; i<len; i++){
+        if(array[i] > max){
+            max = array[i];
+        }
+    }
+    return max;
+}
+
+int main(){
+    int array[6], i, maxVal;
+    int len = sizeof(array) / sizeof(int);
+    printf("enter 6 nums: ");
+    for(i=0; i<len; i++){
+        scanf("%d", array + i);
+    }
+    maxVal = max(array, len);
+    printf("max: %d\n", maxVal);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:50:14]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:50:16]
+$ ./a.out
+enter 6 nums: 12 55 30 8 93 27
+max: 93
+</script></code></pre>
+<p>参数 array 仅仅是一个数组指针，在函数内部无法通过这个指针获得数组的长度，必须传入一个数组长度的参数</p>
+<p>函数 <code>int max(int *array, int len)</code> 也可以写成 <code>int max(int array[6], int len)</code> 或者 <code>int max(int array[], int len)</code><br>看似好像传入了整个数组，其实无论那种方式都不会创建一个数组，最后都会转换为一个<code>int *</code>类型的数组指针，所以还是乖乖用指针的方式吧</p>
+<p>为什么C语言不允许传递整个数组的元素呢？<br>这是考虑到效率问题，由于数组的元素个数并没有限制，可能很小也可能很大<br>而参数传递的本质实际上是一次赋值的过程，也就是内存的拷贝，对于基本数据类型和一些其他的类型，数据量也就几个字节，拷贝很快<br>而要使拷贝一个很长的数组，既浪费时间又浪费空间，所以为了不影响效率，C语言不允许传递数组所有的元素</p>
+<h2 id="指针作为函数的返回值"><a href="#指针作为函数的返回值" class="headerlink" title="指针作为函数的返回值"></a>指针作为函数的返回值</h2><p>C语言允许函数的返回值是一个指针(地址)，我们将这样的函数称为<code>指针函数</code><br>下面的例子定义了一个函数 longStr()，用于返回两个字符串中较长的那个</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <string.h>
+
+char *longStr(char *str1, char *str2){
+    int len1 = strlen(str1), len2 = strlen(str2);
+    return len1 > len2 ? str1 : str2;
+}
+
+int main(){
+    char str1[50], str2[50], *str;
+
+    printf("string1: ");
+    scanf("%[^\n]", str1);
+
+    printf("string2: ");
+    setbuf(stdin, NULL);
+    scanf("%[^\n]", str2);
+
+    str = longStr(str1, str2);
+    printf("longStr: %s\n", str);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [16:09:55]
+$ gcc a.c
+
+# root @ localhost in ~/test [16:09:57]
+$ ./a.out
+string1: 12345 12345
+string2: 1234 123 1
+longStr: 12345 12345
+
+# root @ localhost in ~/test [16:10:14]
+$ ./a.out
+string1: www zfl9 com
+string2: https://www.zfl9.com
+longStr: https://www.zfl9.com
+</script></code></pre>
+<h2 id="二级指针"><a href="#二级指针" class="headerlink" title="二级指针"></a>二级指针</h2><p>所谓的二级指针就是指向指针的指针</p>
+<p>指针可以指向一份普通类型的数据，例如 <code>int</code>、<code>double</code>、<code>char</code> 等，也可以指向一份指针类型的数据，例如 <code>int *</code>、<code>double *</code>、<code>char *</code> 等</p>
+<p>如果一个指针指向的是另外一个指针，我们就称它为二级指针，或者指向指针的指针</p>
+<p>假设有一个整型变量 a，p 是指向 a 的指针，pp 是指向 p 的指针：</p>
+<pre><code class="language-c"><script type="text/plain">int a = 10;
+int *p = &a;
+int **pp = &p;
+</script></code></pre>
+<p>指针变量也是一种变量，也会占用存储空间，也可以使用 &amp; 获取它的地址<br>C语言不限制指针的级数，每增加一级指针，在定义指针变量时就得增加一个星号<br>p1 是一级指针，指向普通类型的数据，定义时有一个星号<br>p2 是二级指针，指向一级指针 p1，定义时有两个星号</p>
+<p>实际开发中常用的也就是一级指针和二级指针，几乎不用高级指针</p>
+<p>想要获取指针指向的数据时，一级指针加一个星号，二级指针加两个星号，三级指针加三个星号，以此类推</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a = 10;
+    int *p1 = &a;
+    int **p2 = &p1;
+    int ***p3 = &p2;
+
+    printf("var of a: %d, %d, %d, %d\n", a, *p1, **p2, ***p3);
+    printf("addr of p2: %p, %p\n", &p2, p3);
+    printf("addr of p1: %p, %p, %p\n", &p1, p2, *p3);
+    printf("addr of a: %p, %p, %p, %p\n", &a, p1, *p2, **p3);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [16:25:07]
+$ gcc a.c
+
+# root @ localhost in ~/test [16:25:09]
+$ ./a.out
+var of a: 10, 10, 10, 10
+addr of p2: 0x7fff58ac1b80, 0x7fff58ac1b80
+addr of p1: 0x7fff58ac1b88, 0x7fff58ac1b88, 0x7fff58ac1b88
+addr of a: 0x7fff58ac1b94, 0x7fff58ac1b94, 0x7fff58ac1b94, 0x7fff58ac1b94
+</script></code></pre>
+<h2 id="NULL指针-void指针"><a href="#NULL指针-void指针" class="headerlink" title="NULL指针 void指针"></a>NULL指针 void指针</h2><p>一个指针变量可以指向计算机中的任何一块内存，不管该内存有没有被分配，也不管该内存有没有使用权限，只要把地址给它，它就可以指向，C语言没有一种机制来保证指向的内存的正确性，程序员必须自己提高警惕</p>
+<p>指针使用之前一定要记得初始化，使用未初始化的指针是非常危险的，因为未初始化的指针乱指一气，运行程序时，在Linux下表现为<code>段错误</code>，在Windows下直接奔溃</p>
+<p>强烈建议对未初始化的指针变量指向<code>NULL</code>，如<code>int *p = NULL;</code></p>
+<p><code>NULL</code>是零值、等于零的意思，在C语言中表示空指针<br>从表面上理解，空指针是不指向任何数据的指针，是无效指针，程序使用它不会产生效果</p>
+<p>很多库函数都对传入的指针做了判断，如果是空指针就不做任何操作，或者给出提示信息</p>
+<p>其实，<code>NULL</code>是在<code>stdio.h</code>中定义的一个宏，它的具体内容为：<br><code>#define NULL ((void *)0)</code><br><code>(void *)0</code>表示把数值 0 强制转换为<code>void *</code>类型，最外层的()把宏定义的内容括起来，防止发生歧义<br>从整体上来看，NULL 指向了地址为 0 的内存，而不是前面说的不指向任何数据</p>
+<p>注意，C语言没有规定 NULL 的指向，只是大部分标准库约定成俗地将 NULL 指向 0，所以不要将 NULL 和 0 等同起来</p>
+<p><strong>void指针</strong><br>对于空指针 NULL 的宏定义内容，上面只是对<code>((void *)0)</code>作了粗略的介绍，这里重点说一下<code>void *</code>的含义<br>void 用在函数定义中可以表示函数没有返回值或者没有形式参数，用在这里表示指针指向的数据的类型是未知的</p>
+<p>也就是说，<code>void *</code>表示一个有效指针，它确实指向实实在在的数据，只是<code>数据的类型尚未确定</code>，在后续使用过程中一般要进行强制类型转换</p>
+<h2 id="数组和指针不等价"><a href="#数组和指针不等价" class="headerlink" title="数组和指针不等价"></a>数组和指针不等价</h2><p><a href="https://www.zfl9.com/c-array.html#数组和指针绝不等价">数组和指针绝不等价</a><br><a href="https://www.zfl9.com/c-array.html#数组什么时候会转换为指针">数组什么时候会转换为指针</a></p>
+<h2 id="指针数组"><a href="#指针数组" class="headerlink" title="指针数组"></a>指针数组</h2><p>指针数组：是一个数组，数组的元素是一个指针</p>
+<p><code>type *array[len];</code><br>由于<code>[]</code>的优先级比<code>*</code>高，所以应理解为<code>type *(array[len]);</code><br>括号里面的<code>array[len]</code>说明这是一个数组，外面的<code>type *</code>说明数组元素的类型为指针</p>
+<p>比如<code>int *a[5];</code>，表示：a 是一个拥有 5 个元素的数组，每个元素的数据类型为 int *，即整型指针</p>
+<p>除了元素的数据类型不同，指针数组和普通数组没有区别</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a = 10, b = 20, c = 30;
+    int *array[3] = {&a, &b, &c};
+    int **p = array; // 指向指针数组的指针
+    printf("%d, %d, %d\n", *array[0], *array[1], *array[2]);
+    printf("%d, %d, %d\n", **(p + 0), **(p + 1), **(p + 2));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [17:45:24]
+$ gcc a.c
+
+# root @ localhost in ~/test [17:45:27]
+$ ./a.out
+10, 20, 30
+10, 20, 30
+</script></code></pre>
+<p><code>int **p = array;</code>应该理解为<code>int *(*p)</code>，括号里的<code>*p</code>表示这是一个指针，括号外的<code>int *</code>表示指针指向的数据类型为一个整型指针</p>
+<p><code>指针数组</code>还可以和<code>字符串数组</code>结合使用，请看下面的例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char *strings[3] = {
+        "www.zfl9.com",
+        "www.zflyun.com",
+        "www.otokaze.top"
+    };
+    int i;
+    for(i=0; i<3; i++){
+        printf("%s\n", strings[i]);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [17:51:44]
+$ gcc a.c
+
+# root @ localhost in ~/test [17:51:45]
+$ ./a.out
+www.zfl9.com
+www.zflyun.com
+www.otokaze.top
+</script></code></pre>
+<p>需要注意的是，字符数组 strings 中存放的是字符串的首地址，不是字符串本身，字符串本身位于其他的内存区域，和字符数组是分开的</p>
+<p><strong>一道题目玩转指针数组和二级指针</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    char *lines[5] = {
+        "COSC1283/1284",
+        "Programming",
+        "Techniques",
+        "is",
+        "great fun"
+    };
+
+    char *str1 = lines[1];
+    char *str2 = *(lines + 3);
+    char c1 = *(*(lines + 4) + 6);
+    char c2 = (*lines + 5)[5];
+    char c3 = *lines[0] + 2;
+
+    printf("str1 = %s\n", str1);
+    printf("str2 = %s\n", str2);
+    printf("  c1 = %c\n", c1);
+    printf("  c2 = %c\n", c2);
+    printf("  c3 = %c\n", c3);
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [18:01:51]
+$ gcc a.c
+
+# root @ localhost in ~/test [18:01:53]
+$ ./a.out
+str1 = Programming
+str2 = is
+  c1 = f
+  c2 = 2
+  c3 = E
+</script></code></pre>
+<p>说明：<br>lines 是一个拥有 5 个元素的数组，数组元素的数据类型为 <code>char *</code>，即各个字符串的首地址<br>str1：<code>lines[1]</code>，即数组 lines 的第1个元素，Programming 的首地址，所以输出 Programming<br>str2：<code>*(lines + 3)</code>，等价于<code>lines[3]</code>，即数组 lines 的第3个元素，is 的首地址，输出 is<br>c1：<code>*(*(lines + 4) + 6)</code>，先看<code>*(lines + 4)</code>，即数组 lines 的第4个元素，great fun 的首地址，然后加6，表示指针往后偏移6个长度，然后再取值，即 f<br>c2: <code>(*lines + 5)[5]</code>，<code>*lines</code>等价于<code>*(lines+0)</code>等价于<code>lines[0]</code>，即第0个元素，COSC1283/1284 的首地址，然后指针往后偏移5个长度，然后看到<code>[5]</code>，等价于<code>*(lines[0] + 5 + 5)</code>，即字符2<br>c3：<code>*lines[0] + 2</code>，等价于<code>*(lines[0]) + 2</code>，括号内表示数组第0个元素，即 COSC1283/1284 首地址，也就是字符 C 的地址，然后再取它的值，即字符 C，然后与数值2相加，即ASCII码67 + 2 = 69，即字符 E</p>
+<h2 id="二维数组指针"><a href="#二维数组指针" class="headerlink" title="二维数组指针"></a>二维数组指针</h2><p>二维数组指针：它是一个指针，指向一个二维数组</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int a[3][4] = {
+    {1, 2, 3, 4},
+    {2, 2, 3, 4},
+    {3, 2, 3, 4}
+};
+
+int (*p)[4] = a;
+</script></code></pre>
+<p>由于<code>[]</code>优先级比<code>*</code>高，所以这个括号是必须的<br>首先看<code>*p</code>，表示这是一个指针，然后看<code>int [4]</code>，表示这个指针指向一个拥有4个元素的数组</p>
+<p>对指针 p 进行加1时，因为指向的数据类型为 int [4]，所以前进的长度为 4 * 4 = 16 字节，刚好指向数组 a 下一个元素，减1同理</p>
+<p>1) p 指向数组 a 开头，p + 1 指向数组下一行，p - 1 指向数组上一行</p>
+<p>2) <code>*(p + 1)</code> 表示取地址上的数据，也就是第1行的数据，注意是一行数据，也就是一个一维数组，是由4个 int 类型组成的集合，所以用 sizeof 求它的长度为 4 * 4 = 16 字节</p>
+<p>3) <code>*(p + 1) + 1</code>，表示的是第1行第1个元素的地址，上面说了，<code>*(p + 1)</code>是一个一维数组，还记得数组什么时候会转换为指向第0个元素的地址吗，除了数组定义、sizeof、&amp;中，其他时候都会转换为指向第0个元素的指针，所以在这里就转换为了指针，然后加1，表示是一个指向第1行第1个元素的指针</p>
+<p>4) <code>*(*(p + 1) + 1)</code>，很明显，加了<code>*</code>操作符，表示第1行第1个元素的值</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">a + i == p + i
+a[i] == p[i] == *(a + i) == *(p + i)
+a[i][j] == p[i][j] == *(a[i] + j) == *(p[i] + j) == *(*(a + i) + j) == *(*(p + i) + j)
+</script></code></pre>
+<p>使用二维数组指针遍历二维数组</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a[3][4] = {
+        1, 2, 3, 4,
+        2, 2, 3, 4,
+        3, 2, 3, 4,
+    };
+    int i, j;
+    int (*p)[4] = a;
+    for(i=0; i<3; i++){
+        for(j=0; j<4; j++){
+            printf("%d ", *(*(p + i) + j));
+        }
+        printf("\n");
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [18:50:48]
+$ gcc a.c
+
+# root @ localhost in ~/test [18:50:49]
+$ ./a.out
+1 2 3 4
+2 2 3 4
+3 2 3 4
+</script></code></pre>
+<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>函数指针，即指向函数的指针</p>
+<p>本质上，变量名，数组名，函数名都是地址的助记符，但是我们认为变量名表示数据本身，而数组名、函数名分别表示数组第0个元素的地址、函数的入口地址</p>
+<p>我们也可以把一个指针指向一个函数，然后通过指针来调用函数</p>
+<p>定义的形式为：<code>return_type (*ptr)(param_list)</code></p>
+<p>其中参数列表可以只给出参数的类型，省略参数名，这和函数声明类似</p>
+<p>用指针来实现对函数的调用</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int max(int a, int b){
+    return a > b ? a : b;
+}
+
+int main(){
+    int a, b;
+    printf("enter 2 nums: ");
+    scanf("%d %d", &a, &b);
+    int (*p)(int, int) = max;
+    printf("max: %d\n", p(a, b));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [19:58:41]
+$ gcc a.c
+
+# root @ localhost in ~/test [19:58:43]
+$ ./a.out
+enter 2 nums: 10 20
+max: 20
+</script></code></pre>
+<h2 id="彻底攻克指针"><a href="#彻底攻克指针" class="headerlink" title="彻底攻克指针"></a>彻底攻克指针</h2><pre><code class="language-c line-numbers"><script type="text/plain">int *p[6];      // 指针数组
+int *(p[6]);    // 指针数组，等价于上面的形式
+int (*p)[6];    // 二维数组指针
+int (*p)(int, int); // 函数指针
+int (*p)(int a, int b); //函数指针，等价于上面的形式
+</script></code></pre>
+<p>C语言标准规定，对于一个符号的定义，编译器总是从它的名字开始读取，然后按照优先级顺序依次解析<br>对，从名字开始，不是从开头也不是从末尾，这是理解复杂指针的关键！</p>
+<p>与指针相关的运算符优先级，由高到低</p>
+<ul>
+<li>定义中被<code>()</code>扩起来的部分</li>
+<li>后缀操作符：括号<code>()</code>表示这是一个函数，方括号<code>[]</code>表示这是一个数组</li>
+<li>前缀操作符：星号<code>*</code>表示这是一个指针变量</li>
+</ul>
+<p>1) <code>int *p[6];</code><br>从 p 开始理解，编译器先解析 p[6]，p 是一个拥有6个元素数组，然后解析 <code>int *</code>，它说明这个数组的元素的数据类型为 <code>int *</code>，也就是指向 int 的指针，所以，从整体上讲，这是一个拥有6个元素的数组，数组元素的数据类型为整型指针，也就是<code>指针数组</code></p>
+<p>2) <code>int (*p)[6];</code><br>从 p 开始理解，编译器先解析 *p，p 是一个指针，然后解析 int [6]，它说明这个数组的元素的数据类型为 int [6]，每个元素都是一个拥有6个元素的一维数组，所以，从整体上讲，这是一个指针，该指针指向拥有6个元素的一维数组，也就是说，这是一个<code>二维数组指针</code></p>
+<p>3) <code>int (*p)(int, int);</code><br>从 p 开始理解，编译器先解析 *p，p 是一个指针，然后解析 int (int, int)，说明 p 指向一个函数，该函数的参数列表为两个整数，而前面的 int 说明该函数的返回值类型为 int，所以，从整体上讲，这是一个指针，该指针指向一个函数原型为 int func(int, int) 的函数，也就是说，这是一个<code>函数指针</code></p>
+<p>4) <code>char *(* c[10])(int **p);</code><br>从 c 开始理解，<code>c[10]</code>表示这是一个拥有10个元素数组，然后解析 <code>(* c[10])</code>，前面的 <code>*</code> 说明该数组的元素的是一个指针，但是指针指向的数据类型还不确定，剩下 <code>char * (int **p)</code>，这是一个函数，函数参数为 <code>int **p</code>，返回值类型为 <code>char *</code>，所以，整体上讲，这是一个拥有10个元素的<code>指针数组</code>，每个元素(指针)都指向函数原型为 <code>char *func(int **p)</code> 的函数</p>
+<p>5) <code>int (*(*(*pfunc)(int *))[5])(int *);</code><br>从 pfunc 开始理解，<code>(*pfunc)</code>表示这是一个指针，然后看它外面一层的<code>* (int *)</code>，这是一个函数，函数参数为 <code>int *</code>，返回值为一个指针，但是还不知道该指针指向的是什么数据类型，然后看它外面一层<code>* [5]</code>，这说明该函数返回的指针指向一个指针数组，那么这个指针数组的元素又是什么类型呢？继续看，<code>int (int *)</code>，这是一个函数，函数参数为 <code>int *</code>，返回值类型为 int，所以，这个指针数组的元素(指针)指向一个函数原型为<code>int func(int *)</code>的函数，综上所述，pfunc是一个<code>函数指针</code>，该函数的返回值是一个指针，它指向一个指针数组，指针数组的元素(指针)指向原型为<code>int func(int *)</code>的函数</p>
+<h2 id="带参数的main-函数"><a href="#带参数的main-函数" class="headerlink" title="带参数的main()函数"></a>带参数的main()函数</h2><p>我们之前的程序中，main()函数都是没有参数的，其实main()函数有两种标准函数原型</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int main();
+int main(int argc, char *argv[]);
+</script></code></pre>
+<p>如果要向程序传递命令行参数，就要使用第二种原型<br>第一个参数 int argc，是参数的个数，就算不传递参数，系统也会默认传递一个参数：当前执行文件的文件名，所以最小也为1<br>第二个参数 char *argv[]，这是一个指针数组，每一个指针都指向一个字符串的首地址，第0个元素总是当前可执行文件的文件名的首地址</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(int argc, char *argv[]){
+    printf("argc: %d, argv[0]: %s\n", argc, argv[0]);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [21:01:27]
+$ gcc a.c
+
+# root @ localhost in ~/test [21:01:29]
+$ ./a.out
+argc: 1, argv[0]: ./a.out
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(int argc, char *argv[]){
+    int i;
+    for(i=0; i<argc; i++){
+        printf("第 %d 个参数为: %s\n", i, argv[i]);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [21:03:25]
+$ gcc a.c
+
+# root @ localhost in ~/test [21:03:26]
+$ ./a.out
+第 0 个参数为: ./a.out
+
+# root @ localhost in ~/test [21:03:27]
+$ ./a.out 1 2 3
+第 0 个参数为: ./a.out
+第 1 个参数为: 1
+第 2 个参数为: 2
+第 3 个参数为: 3
+</script></code></pre>
+<h2 id="指针总结"><a href="#指针总结" class="headerlink" title="指针总结"></a>指针总结</h2><p>指针(Pointer)就是内存的地址，C语言允许用一个变量来存放指针，这种变量称为指针变量。<br>指针变量可以存放基本类型数据的地址，也可以存放数组、函数以及其他指针变量的地址。</p>
+<p>程序在运行过程中需要的是数据和指令的地址，变量名、函数名、字符串名和数组名在本质上是一样的，它们都是地址的助记符<br>在编写代码的过程中，我们认为变量名表示的是数据本身，而函数名、字符串名和数组名表示的是代码块或数据块的首地址<br>程序被编译和链接后，这些名字都会消失，取而代之的是它们对应的地址</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">定义</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>int *p;</code></td>
+<td style="text-align:center">p是一个整型指针，它可以指向<code>int</code>类型的数据，也可以指向类似<code>int arr[n]</code>的数组</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int **p;</code></td>
+<td style="text-align:center">p是一个二级指针，指向<code>int *</code>类型的数据</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int *p[n];</code></td>
+<td style="text-align:center">p是一个指针数组，数组的每个指针都指向类型为<code>int *</code>的数据</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int (*p)[n];</code></td>
+<td style="text-align:center">p是一个二维数组指针</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int *p();</code></td>
+<td style="text-align:center">p是一个函数，它的返回值类型为<code>int *</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>int (*p)();</code></td>
+<td style="text-align:center">p是一个函数指针，指向原型为<code>int func()</code>的函数</td>
+</tr>
+</tbody>
+</table>
+<p>1) 指针变量可以进行加减运算，例如p++、p+i、p-=i<br>指针变量的加减运算并不是简单的加上或减去一个整数，而是跟指针指向的数据类型有关</p>
+<p>2) 给指针变量赋值时，要将一份数据的地址赋给它，不能直接赋给一个整数，例如int *p = 1000;是没有意义的，使用过程中一般会导致程序崩溃(段错误)</p>
+<p>3) 使用指针变量之前一定要初始化，否则就不能确定指针指向哪里，如果它指向的内存没有使用权限，程序就崩溃了<br>对于暂时没有指向的指针，建议赋值NULL</p>
+<p>4) 两个指针变量可以相减，如果两个指针变量指向同一个数组中的某个元素，那么相减的结果就是两个指针之间相差的元素个数</p>
+<p>5) 数组也是有类型的，数组名的本意是表示一组类型相同的数据<br>在定义数组时，或者和 sizeof、&amp; 运算符一起使用时数组名才表示整个数组，表达式中的数组名会被转换为一个指向数组的指针</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-cpp.html" rel="next" title="c语言 - 预处理指令">
+                <i class="fa fa-chevron-left"></i> c语言 - 预处理指令
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-buffer.html" rel="prev" title="c语言 - 缓冲区详解">
+                c语言 - 缓冲区详解 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是指针"><span class="nav-number">1.</span> <span class="nav-text">什么是指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指针变量的运算"><span class="nav-number">2.</span> <span class="nav-text">指针变量的运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组指针"><span class="nav-number">3.</span> <span class="nav-text">数组指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串指针"><span class="nav-number">4.</span> <span class="nav-text">字符串指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组灵活多变的访问方式"><span class="nav-number">5.</span> <span class="nav-text">数组灵活多变的访问方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指针变量作为函数参数"><span class="nav-number">6.</span> <span class="nav-text">指针变量作为函数参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指针作为函数的返回值"><span class="nav-number">7.</span> <span class="nav-text">指针作为函数的返回值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二级指针"><span class="nav-number">8.</span> <span class="nav-text">二级指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NULL指针-void指针"><span class="nav-number">9.</span> <span class="nav-text">NULL指针 void指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组和指针不等价"><span class="nav-number">10.</span> <span class="nav-text">数组和指针不等价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指针数组"><span class="nav-number">11.</span> <span class="nav-text">指针数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二维数组指针"><span class="nav-number">12.</span> <span class="nav-text">二维数组指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数指针"><span class="nav-number">13.</span> <span class="nav-text">函数指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#彻底攻克指针"><span class="nav-number">14.</span> <span class="nav-text">彻底攻克指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带参数的main-函数"><span class="nav-number">15.</span> <span class="nav-text">带参数的main()函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指针总结"><span class="nav-number">16.</span> <span class="nav-text">指针总结</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-pointer.html';
+          this.page.identifier = 'c-pointer.html';
+          this.page.title = 'c语言 - 指针';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="之所以要单独讲解 Spring 的单元测试，是因为普通的 junit 单元测试并不能很好的与 spring 容器结合起来，因为很多对象都是需要从 spring 容器中自动注入进来的，而 Spring 也考虑到了这个问题，所以提供了一个专门的 Spring Runner 运行器，当我们使用 Spring Runner 来运行测试类时，就可以使用 Spring 的一些 bean 注解，来自动装配容器中">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 单元测试 (JUnit4)">
+<meta property="og:url" content="https://www.zfl9.com/spring-test.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="之所以要单独讲解 Spring 的单元测试，是因为普通的 junit 单元测试并不能很好的与 spring 容器结合起来，因为很多对象都是需要从 spring 容器中自动注入进来的，而 Spring 也考虑到了这个问题，所以提供了一个专门的 Spring Runner 运行器，当我们使用 Spring Runner 来运行测试类时，就可以使用 Spring 的一些 bean 注解，来自动装配容器中">
+<meta property="og:updated_time" content="2020-07-04T13:11:23.237Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring 单元测试 (JUnit4)">
+<meta name="twitter:description" content="之所以要单独讲解 Spring 的单元测试，是因为普通的 junit 单元测试并不能很好的与 spring 容器结合起来，因为很多对象都是需要从 spring 容器中自动注入进来的，而 Spring 也考虑到了这个问题，所以提供了一个专门的 Spring Runner 运行器，当我们使用 Spring Runner 来运行测试类时，就可以使用 Spring 的一些 bean 注解，来自动装配容器中">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/spring-test.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Spring 单元测试 (JUnit4) | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/spring-test.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Spring 单元测试 (JUnit4)
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-01T08:00:00+08:00">
+                2019-02-01
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/spring-test.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="spring-test.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/spring-test.html" class="leancloud_visitors" data-flag-title="Spring 单元测试 (JUnit4)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>之所以要单独讲解 Spring 的单元测试，是因为普通的 junit 单元测试并不能很好的与 spring 容器结合起来，因为很多对象都是需要从 spring 容器中自动注入进来的，而 Spring 也考虑到了这个问题，所以提供了一个专门的 Spring Runner 运行器，当我们使用 Spring Runner 来运行测试类时，就可以使用 Spring 的一些 bean 注解，来自动装配容器中的 bean，然后进行测试；而且对于 spring mvc 模块，spring 也提供了相应的支持，spring mvc 的测试难在程序的运行和测试都需要一个 servlet 容器环境，这个实在不好搞，所以如果不借助 spring 的测试模块，对于 spring mvc 的测试我们将束手无策，只能使用最原始的方式：使用浏览器或其它客户端进行手动测试，测试效率不高先不说，测试的结果也没有信服力，因为手动测试很难覆盖所有的测试点。</p>
+<a id="more"></a>
+<h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><ul>
+<li>Java 语言：由一个一个类组成，Class 是 Java 的一等公民，JRE 就是 Java 已经编写好的一些基础类，如 String、Object、System、java.io、java.util、java.net 等等，便于我们编写其它更高级的应用程序，这些东西称为 Java 的标准类库，当然我们也经常需要使用第三方类库，如 Spring、Apache Commons，总之你记住，Java 就是由一个一个的类组成的，基本单位就是 Class。</li>
+<li>Spring 容器：Spring 有两个核心概念：IoC 和 AOP，但其实最基本的东西还是 IoC，也就是所谓的 bean 容器，没错，Spring 就是一个容器，这个容器里面装的都是 bean/pojo（Java 对象），所有的一切都是基于这个 bean/pojo 容器展开的，没有这个 bean 容器就不能称为 Spring。注意，只有在 bean 容器中的 java 实例才会被 spring 管理，无论何时都是这样，如果一个对象没有注册在 bean 容器中，那么 spring 是不会对它进行任何操作的。spring 容器的基本成员就是 bean（java 对象实例），注册为 spring 的 bean 有两种方式，一种是使用 xmlconfig 的 <code>&lt;bean&gt;</code> 标签来注册，或者使用 javaconfig 的 <code>@Bean</code> 注解的方法进行注册；另一种方法则是启用 spring 组件扫描功能，然后在对应的 Bean/Pojo 类上使用 @Component、@Controller、@Service、@Repository 等注解来告诉 Spring 框架，自动为其实例化（注意 Spring 只会该类的无参构造函数，无法传入其它参数）并注册到 bean 容器中。Spring 的装配就是指一个 bean 对象需要一些依赖对象，而 bean 容器中有这些依赖对象，所以就直接引用这些依赖对象，而不是新创建一个，这就叫做装配，而自动装配则是 Spring 会根据 name 或 type 来自动在 bean 容器中查找当前对象所依赖的对象（通常就是使用 @Autowired 注解来告诉 Spring 框架哪些构造函数的参数、setter 方法对应的属性需要由 Spring 来自动装配），如下：<ul>
+<li>手动装配：在 xml/java-config 中，手动引用 bean 容器中的其它 bean 对象。</li>
+<li><del>自动装配：在 xml-config 中，使用 bean 元素的 <code>autowire</code> 属性来自动查找容器中合适的 bean。</del></li>
+<li>注解装配：启用注解驱动功能，然后直接在 bean 类上使用 <code>@Autowired</code>、<code>@Resource</code>、<code>@Inject</code> 来自动装配。</li>
+</ul>
+</li>
+<li>Servlet 容器：Servlet 容器（JSP 和静态资源本质上都会被 Servlet 给处理）常见的就是 Tomcat，容器这个词我们已经非常熟悉了，所谓容器就是装东西的东西，比如 Spring 容器就是装 java 对象的，而 Servlet 容器则是装 servlet 对象的。servlet 就是指实现了 javax.servlet.Servlet 接口的类的一个实例；和 Spring 容器一样，Servlet 容器中的 servlet 也是单例模式的，而 Servlet 容器又是多线程模型的，所以不要将需要修改的数据存放为 servlet 对象的实例变量，而应该放在 servlet 对象的 service() 方法中，因为函数的每次调用都是一个独立的栈结构，不会出现线程安全问题。servlet 对象的核心方法就是 void service(req, resp) 方法，这就是所谓的“服务方法”，req 就是当前请求的抽象表示，而 resp 则是当前请求对应的响应的抽象表示。而 Servlet 容器本质就是一个 java 进程，我们只需要提供 servlet 类，这个 Servlet 容器就能正常运行，并提供 Web 服务。大概流程和原理：Servlet 容器启动后，会创建一个线程池，监听某一个公共端口，如 8080；当一个客户端请求到达时，容器会从线程池中随机挑选一个线程来执行对应的 servlet 实例的 service() 方法（如果 servlet 实例还未创建则先创建），在此期间如果又有另外一个客户端请求到达，那么容器也是从线程池中随机挑选一个线程来执行对应的 servlet 实例的 service() 方法。所以 servlet 也可以认为是一个独立的 web 服务类，servlet 类并不能单独运行，它必须运行在 servlet 容器中。</li>
+</ul>
+<p>OK，啰嗦了这么多，主要还是为了让大家搞清楚 spring 应用程序的测试难在哪？现在我们清楚了：</p>
+<ul>
+<li>对于普通 spring 程序：需要 spring 容器，才能进行测试。</li>
+<li>对于 spring mvc 程序：需要 spring 容器和 servlet 容器，才能进行测试。</li>
+</ul>
+<p>Spring 测试模块（<code>spring-test</code>）对上述两种情况都提供了很好的支持，借助 spring-test 模块，我们就能够很好的进行 spring 应用的测试了。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-test</artifactId>
+  <version>${spring.version}</version>
+  <scope>test</scope>
+</dependency>
+</script></code></pre>
+<h2 id="Spring-程序测试"><a href="#Spring-程序测试" class="headerlink" title="Spring 程序测试"></a>Spring 程序测试</h2><p>junit 中，所有的 test-case 都是通过 Runner 运行的，我们可以在测试类上使用 <code>@RunWith(MyRunner.class)</code> 来指定使用 MyRunner 运行器来运行当前测试类，如果未使用 @RunWith 注解，则 junit 会使用默认的 Runner 来运行。而 Spring 的 test 模块也是这个原理，Spring 提供了 2 个 junit runner：<code>SpringJUnit4ClassRunner</code>、<code>SpringRunner</code>；它们的作用都是一样的，SpringRunner 是 SpringJUnit4ClassRunner 的子类，SpringRunner 是 spring 4.3 版本才加入的，需要与 junit 4.12 及以上版本一起使用，SpringRunner 是 SpringJUnit4ClassRunner 的别名，如果 SpringRunner 可用，那么建议选择 SpringRunner，因为好记且简洁。</p>
+<p>如果一个测试类被 <code>@RunWith(SpringRunner.class)</code> 标注了，则意味着这个测试类运行在 spring 容器中，然后我们就可以使用 @Autowired、@Resource 等注解来自动装配 spring 容器中的 bean 对象，进行测试，而不需要像以前一样，手动创建 ApplicationContext 上下文，然后调用 context 对象的 getBean() 方法来获取 bean 对象，这太麻烦了。</p>
+<p>当然，仅仅有一个 <code>@RunWith(SpringRunner.class)</code> 也是不行的，因为 Spring 容器运行需要一个 spring.xml 或 Config.class，因为我们的 bean 对象都是从这个配置文件、配置类中获取的。所以我们还需要使用 Spring 提供的 <code>@ContextConfiguration</code> 注解来加载基于 xml 或基于 java 的 spring 配置文件，以初始化 spring 容器，如下，value/locations 用于指定基于 xml 形式的配置文件，而 classes 属性则用于指定基于 java 形式的配置文件：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@ContextConfiguration(classes = SpringConfig.class) // 基于 java 的 spring 配置文件
+@ContextConfiguration(locations = "classpath:spring.xml") // 基于 xml 的 spring 配置文件
+</script></code></pre>
+<p>简单例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.spring;
+
+import javax.annotation.Resource;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@ContextConfiguration(locations = "classpath:spring.xml")
+public class IocByXmlConfigTestBySpring {
+    @Resource(name = "钟时兰")
+    private Teacher teacher;
+
+    @Resource(name = "钟学华")
+    private Student student01;
+
+    @Resource(name = "尹帧瑶")
+    private Student student02;
+
+    @Resource(name = "廖小兵")
+    private Student student03;
+
+    @Test
+    public void test01() {
+        System.out.println(teacher);
+        System.out.println(student01);
+        System.out.println(student02);
+        System.out.println(student03);
+    }
+
+    @Test
+    public void test02() {
+        for (Student student : teacher.getStudents()) {
+            System.out.println(student);
+        }
+    }
+}
+</script></code></pre>
+<h2 id="SpringMVC-程序测试"><a href="#SpringMVC-程序测试" class="headerlink" title="SpringMVC 程序测试"></a>SpringMVC 程序测试</h2><p>相比普通的 Spring 程序测试，SpringMVC 程序的测试还需要一个 servlet 环境；普通 spring 程序还可以不借助 spring-test 模块，因为我们可以很容易的创建出 ApplicationContext 对象；但是 spring mvc 程序不行，servlet 环境不好搞，最容易想到的方法就是运行 tomcat，但是这也太复杂了，所以这时候就必须使用 spring-test 模块来进行 spring mvc 应用程序的测试了。</p>
+<p>spring-test 对于 spring mvc 应用程序提供了很好的测试支持，估计各位也知道，servlet 环境启动需要一些时间，这通常会导致测试效率的下降，因为人的忍耐是有限的，而 spring-test 为了避免启动真实 servlet 环境的耗时长问题，它选择了使用 mock 对象，所谓 mock 对象就是模拟对象，也就是说 spring-test 提供的是一个模拟的 servlet 容器环境，虽然是模拟的，但是功能也很齐全，而且启动速度很快，相比真实的 servlet 容器来说。</p>
+<p>为测试类开启 spring + servlet 环境支持也很简单，只需要在原有的 spring 测试类基础上，再添加一个 <code>@WebAppConfiguration</code> 注解即可。这个注解的意思是为当前测试类启用 servlet 运行环境（当然是模拟的环境，速度相对较快），该注解只有一个属性 value，用于指定 webapp 目录的路径，对于 maven 项目，那就是 <code>src/main/webapp</code>，而 @WebAppConfiguration 的 value 默认值就是 src/main/webapp，所以我们无需手动指定它。</p>
+<p>简单例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.test;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+@RunWith(SpringRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/mvc.xml")
+public class EmployeeWebTest {
+    @Autowired
+    private WebApplicationContext context;
+
+    private MockMvc mockMvc;
+
+    @Before
+    public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
+
+    @Test
+    public void test() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/employees"))
+               .andDo(MockMvcResultHandlers.print())
+               .andExpect(MockMvcResultMatchers.view().name("employee-list"))
+               .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+}
+</script></code></pre>
+<p>WebApplicationContext 就是我们的 spring 上下文对象（web 环境），该上下文对象可以直接使用 @Autowired 注解自动装配，然后就是 MockMvc 模拟对象，通常为了方便，我们会在 @Before 方法中根据 context 对象创建它；然后就是我们的 test 方法，通过 mockMvc 的 perform 方法来发起一个 http 请求，比如上面的 <code>get /employees</code>，我们可以对其返回值进行 andDo() 操作，意思是在请求完成后打印相关的 request、response 信息（当然没有 html 视图，个人感觉不太直观），也可以调用 andExpect() 方法对响应结果进行断言，如上面的意思为：当前 uri 对应的 view 名为 employee-list，且当前响应的状态码为 200 OK，只要有一个不对，测试就会失败，然后我们可以在控制台上看到相关的错误信息。</p>
+<blockquote>
+<p>个人感觉还不如直接浏览器测试来得直接，这种测试方式看不到 html 页面（也许是姿势不对吧），这个大家了解一下就可以了。</p>
+</blockquote>
+<p><strong>spring-test 事务管理</strong><br>测试 ssm 程序时，通常都会涉及到数据库操作，这就有一个问题：每次我们测试之后，都需要将相关的数据库更改进行回滚，便于后续的测试，这其实是非常不方便的；现在，我们可以借助 spring-test 的贴心功能来自动回滚测试方法中的数据库操作（使用注解声明即可，简单、直观、方便）。并且 spring-test 模块对于测试类中的 @Test 方法的数据库操作，其实是会默认进行回滚操作的（当然是在开启了事务的前提下），简直不要太棒。</p>
+<p>主要涉及到的注解为：</p>
+<ul>
+<li><code>@TransactionConfiguration</code>：标注在测试类上，常用属性为 <code>defaultRollback</code>，默认值为 true，表示测试方法执行后会自动进行回滚，如果为 false 则会自动进行提交。从 spring 4.2 版本开始，该注解被弃用了，spring 建议我们使用 <code>@Rollback</code>、<code>@Commit</code> 注解来替代它，详见下。</li>
+<li><code>@Rollback</code>：可以标注在测试类或者测试方法上，属性为 value，默认值为 true，表示测试方法会在执行完成之后执行回滚，如果设为 false 则表示会自动进行提交操作；从 spring 4.2 起，可以使用 <code>@Commit</code> 来替代 <code>@Rollback(false)</code>，它们的作用完全是一样的。类上面的 @Rollback/@Commit 注解提供一个默认值，可以被方法上的 @Rollback/@Commit 注解给覆盖。</li>
+<li><code>@Commit</code>：同 <code>@Rollback</code>，相当于 <code>@Rollback(false)</code>，可以用在类上或方法上，表示事务会自动进行提交操作。</li>
+</ul>
+<p>然后我们可以在测试类/方法上使用 <code>@Transactional</code> 注解，开启声明式事务。方法上的 @Transactional 优先级高于类上的 @Transactional。</p>
+<p>旧版本的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = AppConfig.class)
+@TransactionConfiguration(defaultRollback = true)
+@Transactional
+public class Spring4JUnit4Test {
+  @Autowired
+  private IPersonDao personDao;
+
+  @Autowired
+  private HibernateTemplate hibernateTemplate;
+
+  @Test
+  public void savePersonTest(){
+    personDao.savePerson();
+    Person person = hibernateTemplate.get(Person.class, 1);
+    assertEquals("Ram", person.getName());
+  }
+} 
+</script></code></pre>
+<p>新版本的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.test;
+
+import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.transaction.AfterTransaction;
+import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.transaction.annotation.Transactional;
+import com.zfl9.domain.Employee;
+import com.zfl9.mapper.EmployeeMapper;
+
+@RunWith(SpringRunner.class)
+@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/mvc.xml")
+@Transactional(rollbackFor = Exception.class)
+@Rollback
+public class EmployeeDaoTest {
+    @Autowired
+    private EmployeeMapper mapper;
+
+    private void showAllEmployees() {
+        List<Employee> employees = mapper.getAllEmployees();
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }
+    }
+
+    @BeforeTransaction
+    public void beforeTx() {
+        System.out.println("===== BeforeTransaction =====");
+        showAllEmployees();
+    }
+
+    @Before
+    public void before() {
+        System.out.println("===== Before =====");
+        showAllEmployees();
+    }
+
+    @Test
+    public void testAddEmployee() {
+        mapper.addEmployee(new Employee("test01", "test01@zfl9.com", "jiangxi ganzhou", "123456"));
+        mapper.addEmployee(new Employee("test02", "test02@zfl9.com", "jiangxi ganzhou", "123456"));
+        mapper.addEmployee(new Employee("test03", "test03@zfl9.com", "jiangxi ganzhou", "123456"));
+    }
+
+    @After
+    public void after() {
+        System.out.println("===== After =====");
+        showAllEmployees();
+    }
+
+    @AfterTransaction
+    public void afterTx() {
+        System.out.println("===== AfterTransaction =====");
+        showAllEmployees();
+    }
+}
+</script></code></pre>
+<p>输出结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+19:49:19.283 [    main] INFO       o.s.t.c.s.DefaultTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+19:49:19.314 [    main] INFO       o.s.t.c.s.DefaultTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@12cdcf4, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@5bcea91b, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@5f3a4b84, org.springframework.test.context.support.DirtiesContextTestExecutionListener@27f723, org.springframework.test.context.transaction.TransactionalTestExecutionListener@670b40af, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@4923ab24]
+19:49:19.377 [    main] INFO            o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from URL [file:src/main/webapp/WEB-INF/mvc.xml]
+19:49:19.627 [    main] INFO              o.s.c.s.GenericApplicationContext - Refreshing org.springframework.context.support.GenericApplicationContext@548ad73b: startup date [Fri Feb 08 19:49:19 CST 2019]; root of context hierarchy
+19:49:19.830 [    main] TRACE           o.m.s.mapper.ClassPathMapperScanner - Scanning file [C:\Users\Otokaze\IdeaProjects\springmvc\02-springmvc-mybatis\target\classes\com\zfl9\mapper\EmployeeMapper.class]
+19:49:19.830 [    main] DEBUG           o.m.s.mapper.ClassPathMapperScanner - Identified candidate component class: file [C:\Users\Otokaze\IdeaProjects\springmvc\02-springmvc-mybatis\target\classes\com\zfl9\mapper\EmployeeMapper.class]
+19:49:19.830 [    main] DEBUG           o.m.s.mapper.ClassPathMapperScanner - Creating MapperFactoryBean with name 'employeeMapper' and 'com.zfl9.mapper.EmployeeMapper' mapperInterface
+19:49:19.830 [    main] DEBUG           o.m.s.mapper.ClassPathMapperScanner - Enabling autowire by type for MapperFactoryBean with name 'employeeMapper'.
+19:49:20.205 [    main] DEBUG              o.m.spring.SqlSessionFactoryBean - Scanned package: 'com.zfl9.domain' for aliases
+19:49:20.205 [    main] DEBUG              o.m.spring.SqlSessionFactoryBean - Property 'mapperLocations' was not specified or no matching resources found
+19:49:20.596 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/employees/new],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.newEmployee(org.springframework.ui.Model)
+19:49:20.596 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/employees/save],methods=[POST]}" onto public java.lang.String com.zfl9.controller.EmployeeController.saveEmployee(com.zfl9.domain.Employee)
+19:49:20.596 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/employees],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.listEmployee(org.springframework.ui.Model)
+19:49:20.596 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/employees/edit/{id}],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.editEmployee(org.springframework.ui.Model,int)
+19:49:20.596 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/employees/delete/{id}],methods=[GET]}" onto public java.lang.String com.zfl9.controller.EmployeeController.deleteEmployee(java.lang.String)
+19:49:20.627 [    main] INFO            o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.0.13.Final
+19:49:20.908 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.context.support.GenericApplicationContext@548ad73b: startup date [Fri Feb 08 19:49:19 CST 2019]; root of context hierarchy
+19:49:20.939 [    main] INFO     o.s.w.s.m.m.a.RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.context.support.GenericApplicationContext@548ad73b: startup date [Fri Feb 08 19:49:19 CST 2019]; root of context hierarchy
+19:49:20.986 [    main] INFO              o.s.w.s.h.SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler 'org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler#0'
+===== BeforeTransaction =====
+19:49:21.111 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+19:49:21.111 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@2e185cd7] was not registered for synchronization because synchronization is not active
+19:49:21.127 [    main] INFO             com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+19:49:21.268 [    main] INFO             com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+19:49:21.268 [    main] DEBUG              o.m.s.t.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@379430898 wrapping com.mysql.cj.jdbc.ConnectionImpl@3c1e23ff] will not be managed by Spring
+19:49:21.283 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+19:49:21.299 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==> Parameters: 
+19:49:21.314 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+19:49:21.314 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+19:49:21.314 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+19:49:21.330 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+19:49:21.330 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - <==      Total: 3
+19:49:21.330 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@2e185cd7]
+Employee[id=1, name=小明, email=xiaoming@gmail.com, address=北京市海淀区, telephone=123456]
+Employee[id=2, name=小红, email=xiaohong@gmail.com, address=上海市浦东区, telephone=654321]
+Employee[id=3, name=小刚, email=xiaogang@gmail.com, address=深圳市龙岗区, telephone=987654]
+19:49:21.330 [    main] INFO                   o.s.t.c.t.TransactionContext - Began transaction (1) for test context [DefaultTestContext@36a7abe1 testClass = EmployeeDaoTest, testInstance = com.zfl9.test.EmployeeDaoTest@64a896b0, testMethod = testAddEmployee@EmployeeDaoTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@5e8f9e2d testClass = EmployeeDaoTest, locations = '{file:src/main/webapp/WEB-INF/mvc.xml}', classes = '{}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{}', contextCustomizers = set[[empty]], contextLoader = 'org.springframework.test.context.support.DelegatingSmartContextLoader', parent = [null]]]; transaction manager [org.springframework.jdbc.datasource.DataSourceTransactionManager@e044b4a]; rollback [true]
+===== Before =====
+19:49:21.330 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+19:49:21.330 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+19:49:21.330 [    main] DEBUG              o.m.s.t.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@1731967318 wrapping com.mysql.cj.jdbc.ConnectionImpl@3c1e23ff] will be managed by Spring
+19:49:21.330 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+19:49:21.330 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==> Parameters: 
+19:49:21.330 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+19:49:21.330 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+19:49:21.330 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+19:49:21.346 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - <==      Total: 3
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+Employee[id=1, name=小明, email=xiaoming@gmail.com, address=北京市海淀区, telephone=123456]
+Employee[id=2, name=小红, email=xiaohong@gmail.com, address=上海市浦东区, telephone=654321]
+Employee[id=3, name=小刚, email=xiaogang@gmail.com, address=深圳市龙岗区, telephone=987654]
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8] from current transaction
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - ==>  Preparing: insert into employee(name, email, address, telephone) values(?, ?, ?, ?) 
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - ==> Parameters: test01(String), test01@zfl9.com(String), jiangxi ganzhou(String), 123456(String)
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - <==    Updates: 1
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8] from current transaction
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - ==>  Preparing: insert into employee(name, email, address, telephone) values(?, ?, ?, ?) 
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - ==> Parameters: test02(String), test02@zfl9.com(String), jiangxi ganzhou(String), 123456(String)
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - <==    Updates: 1
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8] from current transaction
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - ==>  Preparing: insert into employee(name, email, address, telephone) values(?, ?, ?, ?) 
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - ==> Parameters: test03(String), test03@zfl9.com(String), jiangxi ganzhou(String), 123456(String)
+19:49:21.346 [    main] DEBUG              c.z.m.EmployeeMapper.addEmployee - <==    Updates: 1
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+===== After =====
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8] from current transaction
+19:49:21.346 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+19:49:21.346 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==> Parameters: 
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 34, test01, test01@zfl9.com, jiangxi ganzhou, 123456
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 35, test02, test02@zfl9.com, jiangxi ganzhou, 123456
+19:49:21.346 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 36, test03, test03@zfl9.com, jiangxi ganzhou, 123456
+19:49:21.346 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - <==      Total: 6
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+Employee[id=1, name=小明, email=xiaoming@gmail.com, address=北京市海淀区, telephone=123456]
+Employee[id=2, name=小红, email=xiaohong@gmail.com, address=上海市浦东区, telephone=654321]
+Employee[id=3, name=小刚, email=xiaogang@gmail.com, address=深圳市龙岗区, telephone=987654]
+Employee[id=34, name=test01, email=test01@zfl9.com, address=jiangxi ganzhou, telephone=123456]
+Employee[id=35, name=test02, email=test02@zfl9.com, address=jiangxi ganzhou, telephone=123456]
+Employee[id=36, name=test03, email=test03@zfl9.com, address=jiangxi ganzhou, telephone=123456]
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+19:49:21.346 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@d2387c8]
+19:49:21.377 [    main] INFO                   o.s.t.c.t.TransactionContext - Rolled back transaction for test: [DefaultTestContext@36a7abe1 testClass = EmployeeDaoTest, testInstance = com.zfl9.test.EmployeeDaoTest@64a896b0, testMethod = testAddEmployee@EmployeeDaoTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@5e8f9e2d testClass = EmployeeDaoTest, locations = '{file:src/main/webapp/WEB-INF/mvc.xml}', classes = '{}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{}', contextCustomizers = set[[empty]], contextLoader = 'org.springframework.test.context.support.DelegatingSmartContextLoader', parent = [null]]]
+===== AfterTransaction =====
+19:49:21.377 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
+19:49:21.377 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@19f21b6b] was not registered for synchronization because synchronization is not active
+19:49:21.377 [    main] DEBUG              o.m.s.t.SpringManagedTransaction - JDBC Connection [HikariProxyConnection@355649049 wrapping com.mysql.cj.jdbc.ConnectionImpl@3c1e23ff] will not be managed by Spring
+19:49:21.377 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==>  Preparing: select id,name,email,address,telephone from employee 
+19:49:21.377 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - ==> Parameters: 
+19:49:21.377 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==    Columns: id, name, email, address, telephone
+19:49:21.377 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 1, 小明, xiaoming@gmail.com, 北京市海淀区, 123456
+19:49:21.377 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 2, 小红, xiaohong@gmail.com, 上海市浦东区, 654321
+19:49:21.377 [    main] TRACE          c.z.m.EmployeeMapper.getAllEmployees - <==        Row: 3, 小刚, xiaogang@gmail.com, 深圳市龙岗区, 987654
+19:49:21.377 [    main] DEBUG          c.z.m.EmployeeMapper.getAllEmployees - <==      Total: 3
+19:49:21.377 [    main] DEBUG            org.mybatis.spring.SqlSessionUtils - Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@19f21b6b]
+Employee[id=1, name=小明, email=xiaoming@gmail.com, address=北京市海淀区, telephone=123456]
+Employee[id=2, name=小红, email=xiaohong@gmail.com, address=上海市浦东区, telephone=654321]
+Employee[id=3, name=小刚, email=xiaogang@gmail.com, address=深圳市龙岗区, telephone=987654]
+19:49:21.393 [Thread-1] INFO              o.s.c.s.GenericApplicationContext - Closing org.springframework.context.support.GenericApplicationContext@548ad73b: startup date [Fri Feb 08 19:49:19 CST 2019]; root of context hierarchy
+19:49:21.393 [Thread-1] INFO             com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+19:49:21.393 [Thread-1] INFO             com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+</script></code></pre>
+<p>其中 <code>@BeforeTransaction</code> 和 <code>@AfterTransaction</code> 也是 spring-test 提供的注解，注意它们与 @Before、@After 注解的执行顺序：</p>
+<ul>
+<li>@BeforeTransaction：在事务开启之前执行，从输出结果也看得出来，此时没有开启事务。</li>
+<li>@Before：在事务开启之后且在测试方法之前执行，即在 @Test 前执行，此时已经有一个事务。</li>
+<li>@Test：在 @Before 方法之后执行，此时也有一个事务，@Before、@Test、@After 都是同一个事务。</li>
+<li>@After：在 @Test 方法之后执行，此时也有一个事务，@Before、@Test、@After 也都是同一个事务。</li>
+<li>@AfterTransaction：在事务完成后执行，此时事务已经提交或回滚，可以在方法中测试事务提交是否成功。</li>
+</ul>
+<p>因为默认就是会执行数据库回滚操作，所以我们可以省略 @Rollback 注解。另外，我们通常会使用 @Before + @Test + @After 三个注解方法（使用默认策略：自动回滚事务），在 before 方法中打印数据表，然后执行 test 方法，然后在 after 方法中打印数据表，这样就可以对比 test 方法是否执行正确，是否符合我们预期的输出，因为在事务关闭之前，事务会被自动提交，所以我们无需手动去回滚或提交事务，这是极好的。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/spring-javaconfig.html" rel="next" title="Spring JavaConfig 例子">
+                <i class="fa fa-chevron-left"></i> Spring JavaConfig 例子
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/spring-boot.html" rel="prev" title="Spring Boot">
+                Spring Boot <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#预备知识"><span class="nav-number">1.</span> <span class="nav-text">预备知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-程序测试"><span class="nav-number">2.</span> <span class="nav-text">Spring 程序测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringMVC-程序测试"><span class="nav-number">3.</span> <span class="nav-text">SpringMVC 程序测试</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/spring-test.html';
+          this.page.identifier = 'spring-test.html';
+          this.page.title = 'Spring 单元测试 (JUnit4)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

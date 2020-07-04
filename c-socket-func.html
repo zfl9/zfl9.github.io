@@ -1,0 +1,574 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 socket编程">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - socket编程(二)，socket缓冲区、阻塞与非阻塞模式、tcp粘包问题、网络字节序与主机字节序、dns域名解析等等">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - socket编程(二)">
+<meta property="og:url" content="https://www.zfl9.com/c-socket-func.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - socket编程(二)，socket缓冲区、阻塞与非阻塞模式、tcp粘包问题、网络字节序与主机字节序、dns域名解析等等">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - socket编程(二)">
+<meta name="twitter:description" content="c语言 - socket编程(二)，socket缓冲区、阻塞与非阻塞模式、tcp粘包问题、网络字节序与主机字节序、dns域名解析等等">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-socket-func.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - socket编程(二) | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-socket-func.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - socket编程(二)
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-08T18:44:00+08:00">
+                2017-08-08
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-socket-func.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-socket-func.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-socket-func.html" class="leancloud_visitors" data-flag-title="c语言 - socket编程(二)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - socket编程(二)，socket缓冲区、阻塞与非阻塞模式、tcp粘包问题、网络字节序与主机字节序、dns域名解析等等</p>
+<a id="more"></a>
+<h2 id="socket缓冲区"><a href="#socket缓冲区" class="headerlink" title="socket缓冲区"></a>socket缓冲区</h2><p>对于tcp_socket，在创建socket的时候同时分配了两个缓冲区：发送缓冲区、接收缓冲区，每个tcp_socket之间的缓冲区的互相独立的<br>对于udp_socket，只有一个缓冲区：接收缓冲区，没有发送缓冲区，因为udp的不可靠，所以也没必要在内核中保存发送的副本</p>
+<p>滑动窗口：<br>tcp实现流量控制的核心就是滑动窗口，所谓滑动窗口，可以理解为接收缓冲区buffer的剩余空间大小，也就是告诉对方，我还能接受多大的数据<br>接收到ACK报文后，从ACK报文中可以获得对方的滑动窗口win的大小，表示本次最多只能发送这么大的数据，如果无视改值，发送过多的数据，则对方会直接将溢出部分丢弃，这就保证了接收buffer不会溢出，保证了数据的可靠性</p>
+<p>但是udp并没有滑动窗口机制，没有任何流控机制，所以，如果对方不断发送udp包，而应用程序若不及时从内核拷走数据，会导致先前接收到的包被淹没，导致丢包<br>但是tcp却不会，因为如果对方不断发送数据，而应用程序没有及时的处理buffer中的数据，滑动窗口会逐渐缩小，一直到0，这时，对方也就不能再发送数据了，只能等待应用程序将buffer中的数据拷走之后，窗口才会打开，才会恢复数据的接收，保证了先前的数据不会被淹没</p>
+<p>查看内核当前的socket缓冲区大小：<br><code>net.ipv4.tcp_rmem = 32768 436600 873200</code>：tcp_socket接收缓冲区大小，min、default、max值(byte字节)<br><code>net.ipv4.tcp_wmem = 8192 436600 873200</code>：tcp_socket发送缓冲区大小，min、default、max值(byte字节)<br><code>net.core.rmem_default = 8388608</code>：内核socket接收缓冲区默认大小(byte字节)<br><code>net.core.wmem_default = 8388608</code>：内核socket发送缓冲区默认大小(byte字节)<br><code>net.core.rmem_max = 16777216</code>：内核socket接收缓冲区最大大小(byte字节)<br><code>net.core.wmem_max = 16777216</code>：内核socket发送缓冲区最大大小(byte字节)</p>
+<p>对于recv、send函数，其实都是在操作这个buffer缓冲区：<br>对于recv，该函数只是从socket的缓冲区中拷贝数据，并不是从网络中直接获取的数据<br>对于send，该函数只是往socket的缓冲区中写入数据，写入完毕就返回，并不知道数据什么时候发送给对方，这些都是tcp/ip协议栈做的事情</p>
+<h2 id="tcp粘包问题"><a href="#tcp粘包问题" class="headerlink" title="tcp粘包问题"></a>tcp粘包问题</h2><p>现在假设这么一个场景：<br>应用程序A和应用程序B通过tcp_socket建立了一条tcp连接，然后A将<code>1</code>、<code>2</code>、<code>3</code>内容的数据分三次发送给B；<br>但是如果B不及时处理buffer中的数据，在等待A发送完后，调用recv从buffer中拷贝数据后，会一次性把三个数据一下拷进来，内容也就变成了<code>123</code>，完全变了意义，这就是tcp的粘包问题，也反映了tcp数据的无边界性</p>
+<p>对于文件传输这类的应用，这可能并没有什么不妥，因为，接收方只管收就行，管他粘不粘包；<br>而对于某些应用，如长连接的http，需要在http头部加上CONTENT-LENGTH字段标明内容的长度，以便对方分清界限</p>
+<p>但是对于udp，并不会出现粘包问题，因为udp包之间本身是有界限的，也就不存在所谓的粘包问题了</p>
+<h2 id="网络字节序、主机字节序"><a href="#网络字节序、主机字节序" class="headerlink" title="网络字节序、主机字节序"></a>网络字节序、主机字节序</h2><p>我们知道，对于不同的cpu，有不同的字节序：<br>常见的Big-Endian：PowerPC、IBM、Sun<br>常见的Little-Endian：X86、DEC<br>ARM既可以是大端模式、也可以是小端模式，是可以调节的</p>
+<p>这就导致了在网络通信时的一个问题，我该怎么知道对方发来的数据是大端序还是小端序？<br>为了防止此类问题的发生，规定在网络传输中，统一使用大端序</p>
+<p>而在recv、send、recvfrom、sendto函数中，已经自动帮我们进行了相应的字节序的转换；<br>而在处理sockaddr的时候就要注意了，需要我们自己手动的转换相应的字节序</p>
+<p>主要用到这几个函数：<code>htons()</code>、<code>ntohs()</code>、<code>htonl()</code>、<code>ntohl()</code><br>h就是host，也就是主机序，n就是network，也就是网络序，s表示16bit的无符号数，l表示32bit的无符号数</p>
+<p>对于ipv4：ip地址就是32bit的无符号数，端口号就是16bit的无符号数，就可以用上面的函数进行相应的转换</p>
+<p>不过对于ip地址，我们其实一般都是用点分十进制记法的字符串来表示的，如<code>&quot;114.114.114.114&quot;</code>，而并不像端口号直接用整数表示</p>
+<p>对于这种形式的ip地址，可以用<code>inet_addr()</code>、<code>inet_aton()</code>、<code>inet_ntoa()</code>、<code>inet_pton()</code>、<code>inet_ntop()</code>函数进行转换</p>
+<p><code>in_addr_t inet_addr(const char *string);</code>：将点分十进制的ip转换为网络序</p>
+<ul>
+<li><code>string</code>：输入参数，点分十进制的ip地址</li>
+<li>返回值：成功返回网络序的ip地址，失败则返回INADDR_NONE</li>
+</ul>
+<p><code>int inet_aton(const char *string, struct in_addr *addr);</code>：将点分十进制的ip转换为网络序</p>
+<ul>
+<li><code>string</code>：输入参数，点分十进制的ip地址</li>
+<li><code>addr</code>：输出参数，struct in_addr类型的指针</li>
+<li>返回值：成功返回1，失败返回0</li>
+</ul>
+<p><code>char *inet_ntoa(struct in_addr addr);</code>：将网络序的ip地址转换为点分十进制的字符串</p>
+<ul>
+<li><code>addr</code>：输入参数，网络序的ip地址</li>
+<li>返回值：成功返回转换后的点分十进制的ip地址，失败返回NULL</li>
+</ul>
+<p><code>int inet_pton(int family, const char *string, void *addr);</code>：将点分十进制的ip转换为网络序</p>
+<ul>
+<li><code>family</code>：输入参数，协议族，AF_INET、AF_INET6</li>
+<li><code>string</code>：输入参数，点分十进制的ip地址</li>
+<li><code>addr</code>：输出参数，保存转换后的网络序ip地址</li>
+<li>返回值：成功返回1，输入不是有效格式则返回0，失败返回-1</li>
+</ul>
+<p><code>const char *inet_ntop(int family, const void *addr, char *str, size_t len);</code>：将网络序的ip地址转换为点分十进制的字符串</p>
+<ul>
+<li><code>family</code>：输入参数，协议族，AF_INET、AF_INET6</li>
+<li><code>addr</code>：输入参数，网络序的ip地址</li>
+<li><code>str</code>：输出参数，保存转换后的点分十进制地址</li>
+<li><code>len</code>：输入参数，指定str的长度</li>
+<li>返回值：成功返回str的地址，失败返回NULL</li>
+</ul>
+<p>总结：不推荐使用inet_addr，有缺陷；对于inet_aton、inet_ntoa只支持ipv4，而inet_pton、inet_ntop则支持ipv4、ipv6</p>
+<h2 id="在socket中使用域名"><a href="#在socket中使用域名" class="headerlink" title="在socket中使用域名"></a>在socket中使用域名</h2><p><code>struct hostent *gethostbyname(const char *name);</code>：将域名解析为ip地址</p>
+<ul>
+<li><code>name</code>：输入参数，域名，如”www.baidu.com”</li>
+<li>返回值：成功返回一个指向struct hostent类型的指针，失败返回NULL</li>
+</ul>
+<p><code>struct hostent</code>结构体：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct hostent
+{
+  char *h_name;            /* Official name of host.  */
+  char **h_aliases;        /* Alias list.  */
+  int h_addrtype;        /* Host address type.  */
+  int h_length;            /* Length of address.  */
+  char **h_addr_list;        /* List of addresses from name server.  */
+#ifdef __USE_MISC
+# define    h_addr    h_addr_list[0] /* Address, for backward compatibility.*/
+#endif
+};
+</script></code></pre>
+<p>一般我们使用<code>h_addr</code>就行了，如果你想用printf输出它指向的ip地址，别忘了进行字节序转换<br><code>h_addr</code>是一个指向<code>struct in_addr</code>结构体的指针，可以用inet_ntoa()进行转换<br>如：<code>printf(&quot;host: %s, addr: %s\n&quot;, hostname, inet_ntoa(*(struct in_addr *)resolv-&gt;h_addr));</code>，resolv是一个<code>struct hostent</code>结构体的指针，即gethostbyname的返回值</p>
+<h2 id="获取已连接的socket的本地、远程地址"><a href="#获取已连接的socket的本地、远程地址" class="headerlink" title="获取已连接的socket的本地、远程地址"></a>获取已连接的socket的本地、远程地址</h2><p><code>int getsockname(int sockfd, struct sockaddr *localaddr, socklen_t *addrlen);</code>：获取本地地址信息</p>
+<ul>
+<li><code>sockfd</code>：输入参数，一个已连接的socket套接字</li>
+<li><code>localaddr</code>：输出参数，保存获取到的本地地址</li>
+<li><code>addrlen</code>：输入参数，指明本地地址的长度</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int getpeername(int sockfd, struct sockaddr *peeraddr, socklen_t *addrlen);</code>：获取对方地址信息</p>
+<ul>
+<li><code>sockfd</code>：输入参数，一个已连接的socket套接字</li>
+<li><code>peeraddr</code>：输出参数，保存获取到的对方地址</li>
+<li><code>addrlen</code>：输入参数，指明对方地址的长度</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<h2 id="socket阻塞与非阻塞"><a href="#socket阻塞与非阻塞" class="headerlink" title="socket阻塞与非阻塞"></a>socket阻塞与非阻塞</h2><p><strong><code>tcp_socket</code></strong>：<br>阻塞模式的读(recv)：<code>数据在不超过指定长度的时候有多少读多少，没有数据就一直等待</code>；<br>非阻塞模式的读(recv)：<code>数据在不超过指定长度的时候有多少读多少，没有数据就立即返回，不等待</code>；</p>
+<p>阻塞模式的写(send)：<code>会一直等待，直到数据全部被发送完，才会返回</code>；<br>非阻塞模式的写(send)：<code>采取可以写多少就写多少的原则，并不会一直等到将数据全部发送完才返回</code>；</p>
+<p>默认情况下，所有的tcp_socket的相关操作都是阻塞的，我们之前用的也都是阻塞模式的读写；<br>读：阻塞和非阻塞，一般都会考虑循环读取的方式，因为一次读取不能保证读取到我们想要的长度；<br>对于阻塞读：recv有一个参数<code>MSG_WAITALL</code>，会一直读取到指定长度的数据后才会返回，不过也是尽量读全，在有中断的情况下还是可能被打断，造成没有读到buf_size的长度；<br>所以即使是采用<code>阻塞模式recv + MSG_WAITALL</code>的模式，也不保证可以读到buf_size的长度，还是需要考虑采取循环的方式；<br>不过一般情况下，MSG_WAITALL还是可以读取到buf_size的长度的，这种方式的读取，性能会比单纯循环读的好一些；</p>
+<p>写：阻塞模式下，也不保证能够发送完全部数据，因为还是可能被中断，导致只发送了一部分数据，所以还是需要考虑循环的方式；<br>不过通常情况下，一次调用还是能够发送完全部的数据</p>
+<p><strong><code>udp_socket</code></strong>：<br>对于udp的读，默认情况下也是阻塞的，会一直等待到一个完整的udp数据报的到来才会返回；<br>对于udp的写，因为没有发送缓冲区，所以不会因为缓冲区而阻塞，不过还是可能因其他原因而阻塞；</p>
+<p><strong>将默认的阻塞套接字设置为非阻塞套接字</strong>：<br>获取socket的flags：<code>int flags = fcntl(sockfd, F_GETFL, 0);</code><br>设置为非阻塞套接字：<code>fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);</code><br>设置为阻塞套接字：<code>fcntl(sockfd, F_SETFL, flags &amp; ~O_NONBLOCK);</code></p>
+<p><strong>非阻塞模式的注意事项</strong>：<br><code>connect</code>发起连接：</p>
+<ul>
+<li>返回0，表示已建立连接</li>
+<li>返回-1，errno为<code>EINPROGRESS</code>，表示当前进程正在处理</li>
+<li>返回-1，errno为其它值，表示connect出错</li>
+</ul>
+<p><code>accept</code>接收连接：</p>
+<ul>
+<li>返回&gt;0，表示成功接受连接</li>
+<li>返回-1，errno为<code>EAGAIN</code>，表示没有新连接</li>
+<li>返回-1，errno为其它值，表示accept出错</li>
+</ul>
+<p><code>recv</code>接收数据：</p>
+<ul>
+<li>返回&gt;0，表示已接收数据</li>
+<li>返回=0，表示已接收FIN报文(对方关闭了发送通道、关闭了连接等等)</li>
+<li>返回-1，errno为<code>EAGAIN</code>，表示当前没有数据可读，应该继续读取</li>
+<li>返回-1，errno为<code>EINTR</code>，表示当前操作被中断，应该继续读取</li>
+<li>返回-1，errno为其它值，表示recv出错</li>
+</ul>
+<p><code>send</code>发送数据：</p>
+<ul>
+<li>返回&gt;0，表示已发送数据</li>
+<li>返回-1，errno为<code>EAGAIN</code>，表示当前发送buffer空间不足，应该继续发送</li>
+<li>返回-1，errno为<code>EINTR</code>，表示当前操作被中断，应该继续发送</li>
+<li>返回-1，errno为其它值，表示send出错</li>
+</ul>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-socket-sockopt.html" rel="next" title="c语言 - socket编程(三)">
+                <i class="fa fa-chevron-left"></i> c语言 - socket编程(三)
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-socket.html" rel="prev" title="c语言 - socket编程(一)">
+                c语言 - socket编程(一) <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#socket缓冲区"><span class="nav-number">1.</span> <span class="nav-text">socket缓冲区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcp粘包问题"><span class="nav-number">2.</span> <span class="nav-text">tcp粘包问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络字节序、主机字节序"><span class="nav-number">3.</span> <span class="nav-text">网络字节序、主机字节序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在socket中使用域名"><span class="nav-number">4.</span> <span class="nav-text">在socket中使用域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取已连接的socket的本地、远程地址"><span class="nav-number">5.</span> <span class="nav-text">获取已连接的socket的本地、远程地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket阻塞与非阻塞"><span class="nav-number">6.</span> <span class="nav-text">socket阻塞与非阻塞</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-socket-func.html';
+          this.page.identifier = 'c-socket-func.html';
+          this.page.title = 'c语言 - socket编程(二)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

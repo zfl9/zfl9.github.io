@@ -1,0 +1,786 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言变量与数据类型">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 变量与数据类型，全局变量，局部变量，常量，基本数据类型，各种运算符，存储类，自动/强制类型转换">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 变量与数据类型">
+<meta property="og:url" content="https://www.zfl9.com/c-var-datatype.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 变量与数据类型，全局变量，局部变量，常量，基本数据类型，各种运算符，存储类，自动/强制类型转换">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 变量与数据类型">
+<meta name="twitter:description" content="c语言 - 变量与数据类型，全局变量，局部变量，常量，基本数据类型，各种运算符，存储类，自动/强制类型转换">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-var-datatype.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 变量与数据类型 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-var-datatype.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 变量与数据类型
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-01T17:38:00+08:00">
+                2017-07-01
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-var-datatype.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-var-datatype.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-var-datatype.html" class="leancloud_visitors" data-flag-title="c语言 - 变量与数据类型">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 变量与数据类型，全局变量，局部变量，常量，基本数据类型，各种运算符，存储类，自动/强制类型转换</p>
+<a id="more"></a>
+<h2 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h2><p><code>全局变量</code>: 定义在所有函数之外的变量，属于 static 存储类，默认初始值为 0<br><code>局部变量</code>: 函数的形参，函数体内定义的变量，代码块内定义的变量，属于 auto 存储类，需手动初始化，否则为垃圾值</p>
+<blockquote>
+<p>注意：函数体外只能进行全局变量的初始化，不能进行赋值运算。</p>
+</blockquote>
+<pre><code class="language-c"><script type="text/plain">int i; // 正确，i = 0
+
+int i; // 正确，i = 0
+i = 10; // 错误，不能进行赋值
+
+int i = 10; // 正确，赋初值（初始化）
+
+int i = 10; // 正确，赋初值（初始化）
+int j = i; // 错误，不能取变量值
+
+int i = 10 * 10; // 正确，编译器会自动优化为 int i = 100;
+
+int i = 10; // 正确，赋初值（初始化）
+int j = i + 10; // 错误，不能取变量值
+</script></code></pre>
+<h2 id="定义常量"><a href="#定义常量" class="headerlink" title="定义常量"></a>定义常量</h2><p>定义常量有两种方式</p>
+<ul>
+<li><code>#define</code>宏替换</li>
+<li><code>const</code>关键字</li>
+</ul>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#define PI 3.14
+
+int main(){
+    const int I = 1;
+    printf("PI: %.2f, I: %d\n", PI, I);
+}
+</script></code></pre>
+<h2 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">描述</th>
+<th style="text-align:center">数据类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">字符</td>
+<td style="text-align:center"><code>char</code></td>
+</tr>
+<tr>
+<td style="text-align:center">短整数</td>
+<td style="text-align:center"><code>short</code></td>
+</tr>
+<tr>
+<td style="text-align:center">整数</td>
+<td style="text-align:center"><code>int</code></td>
+</tr>
+<tr>
+<td style="text-align:center">长整数</td>
+<td style="text-align:center"><code>long</code></td>
+</tr>
+<tr>
+<td style="text-align:center">单精度浮点数</td>
+<td style="text-align:center"><code>float</code></td>
+</tr>
+<tr>
+<td style="text-align:center">双精度浮点数</td>
+<td style="text-align:center"><code>double</code></td>
+</tr>
+<tr>
+<td style="text-align:center">无类型</td>
+<td style="text-align:center"><code>void</code></td>
+</tr>
+</tbody>
+</table>
+<p>每种数据类型占用的内存大小（这是在 64 位的 Linux 下占用的大小，其它系统会有所不同）：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    printf("char: %d, short: %d, int: %d, long: %d, float: %d, double: %d, void: %d\n", sizeof(char), sizeof(short), sizeof(int), sizeof(long), sizeof(float), sizeof(double), sizeof(void));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [12:54:08]
+$ gcc type.c
+
+# root @ localhost in ~ [12:54:10]
+$ ./a.out
+char: 1, short: 2, int: 4, long: 8, float: 4, double: 8, void: 1
+</script></code></pre>
+<h3 id="NULL-值"><a href="#NULL-值" class="headerlink" title="NULL 值"></a>NULL 值</h3><p><code>NULL</code>在<code>stdio.h</code>实际上是<code>#define NULL ((void *) 0)</code>，而在 C++ 中则直接被定义为了 0，<code>#define NULL 0</code>。</p>
+<h3 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h3><pre><code class="language-c line-numbers"><script type="text/plain">float a = 1.0f;
+double b = 1.0d;
+long double ld = 1.0l;  //长浮点数
+// 如果不指定后缀f，则默认为double型
+</script></code></pre>
+<h3 id="无符号数"><a href="#无符号数" class="headerlink" title="无符号数"></a>无符号数</h3><p><code>char</code> <code>short</code> <code>int</code> <code>long</code>默认都是有符号的，首位用来存储符号位。<br>如果不需要使用负数，则可以使用无符号数，只要在前面加上<code>unsigned</code>即可。<br>如<code>unsigned char</code> <code>unsigned short</code>、<code>unsigned int</code>、<code>unsigned long</code>，其中<code>unsigned int</code>可以简写为<code>unsigned</code>。</p>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><ul>
+<li><strong>算术运算符</strong><br><code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>取余 <code>++</code>自增 <code>--</code>自减</li>
+<li><strong>关系运算符</strong><br><code>==</code> <code>!=</code> <code>&gt;</code> <code>&gt;=</code> <code>&lt;</code> <code>&lt;=</code>，结果为布尔值true/false</li>
+<li><strong>逻辑运算符</strong><br><code>&amp;&amp;</code>与 <code>||</code>或 <code>!</code>非</li>
+<li><strong>位运算符</strong><br>假设 A = 60，B = 13。二进制表示如下:<br>A = 0011 1100<br>B = 0000 1101<br>A &amp; B = 0000 1100，按位与<br>A | B = 0011 1101，按位或<br>A ^ B = 0011 0001，按位异或<br>~A = 1100 0011，按位非<br>A &lt;&lt; 2 = 1111 0000，左移<br>A &gt;&gt; 2 = 0000 1111，右移（有符号）</li>
+<li><strong>赋值运算符</strong><br><code>=</code> <code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>&gt;&gt;=</code> <code>&lt;&lt;=</code> <code>&amp;=</code> <code>|=</code> <code>^=</code></li>
+<li><strong>其它运算符</strong><br><code>sizeof(int)</code>返回变量长度（字节）<br><code>&amp;</code>返回变量地址<br><code>?:</code>条件表达式，如<code>int a = (b &gt; 10) ? 100 : 0</code>，如果 b 大于 10，则 a 为 100，否则为 0</li>
+</ul>
+<p><strong>运算符优先级</strong>（从高到低）<br>后缀、一元、乘除、加减、移位、关系、相等、位与、位异或、位或、逻辑与、逻辑或、条件运算符?:、赋值</p>
+<p><strong>自增，自减</strong></p>
+<ul>
+<li>++在前面叫做<code>前自增</code>（例如 ++a）；前自增先进行自增操作，再进行其他操作；</li>
+<li>++在后面叫做<code>后自增</code>（例如 a++）；后自增先进行其他操作，再进行自增操作；</li>
+<li>自减同理。</li>
+</ul>
+<p>其实这样描述不好理解，我把前自增和后自增分别比喻为两个函数（自减同理）：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int incrementAndGet(int *value) {
+    *value += 1;
+    return *value;
+}
+
+int getAndIncrement(int *value) {
+    int oldValue = *value;
+    *value += 1;
+    return oldValue;
+}
+</script></code></pre>
+<p>例如:</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    int a=10, b=20, c=30, d=40, aa, bb, cc, dd;
+    aa = a++;
+    bb = ++b;
+    cc = c--;
+    dd = --d;
+    printf("a=%d aa=%d\nb=%d bb=%d\nc=%d cc=%d\nd=%d dd=%d\n", a, aa, b, bb, c, cc, d, dd);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [14:50:17]
+$ gcc test.c
+
+# root @ localhost in ~ [14:50:19]
+$ ./a.out
+a=11 aa=10
+b=21 bb=21
+c=29 cc=30
+d=39 dd=39
+</script></code></pre>
+<h2 id="存储类"><a href="#存储类" class="headerlink" title="存储类"></a>存储类</h2><p>存储类定义 C 程序中变量/函数的范围（可见性）和生命周期。</p>
+<h3 id="auto"><a href="#auto" class="headerlink" title="auto"></a>auto</h3><p>所有局部变量的默认存储类，只能修饰局部变量</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">{
+    int i = 10;
+    auto char c = 'a';
+}
+</script></code></pre>
+<h3 id="static"><a href="#static" class="headerlink" title="static"></a>static</h3><p>static 有两个作用：</p>
+<ul>
+<li>指示编译器在程序的生命周期内保持<code>局部变量</code>的存在，而不需要在每次它进入和离开作用域时进行创建和销毁。因此，使用 static 修饰局部变量可以在函数调用之间保持局部变量的值。</li>
+<li>static 也可以应用于<code>全局变量</code>和<code>函数</code>，<code>全局变量</code>属于 static 存储类，当 static 修饰<code>全局变量</code>或<code>函数</code>时，会将其作用域限制在声明它的文件内（默认的作用域是工程内的所有文件）。</li>
+</ul>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void print(){
+    static int i=1;
+    printf("i = %d\n", i++);
+}
+
+int main(){
+    print();
+    print();
+    print();
+    print();
+    print();
+    return 0;
+}
+</script></code></pre>
+<p>编译并运行</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [17:17:36]
+$ gcc a.c
+
+# root @ localhost in ~ [17:17:39]
+$ ./a.out
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+</script></code></pre>
+<h3 id="register"><a href="#register" class="headerlink" title="register"></a>register</h3><p>用于定义存储在寄存器中而不是 RAM 中的局部变量，这意味着变量的最大尺寸等于寄存器的大小（通常是一个词），且不能对它应用<code>&amp;</code>运算符（因为它没有内存位置）。用了 register 修饰符，并不意味着该变量就存储在寄存器中，这取决于硬件和实现的限制。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">{
+    register int i = 1;
+}
+</script></code></pre>
+<h3 id="extern"><a href="#extern" class="headerlink" title="extern"></a>extern</h3><p>放在函数或者变量前，以标示函数或者变量的定义（实现部分）在别的文件（也可以在当前文件），用来声明全局变量或函数。</p>
+<p>a.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    extern int i; // 可简写为 extern i;
+    printf("i = %d\n", i);
+    return 0;
+}
+</script></code></pre>
+<p>b.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">int i = 10;
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [15:47:05]
+$ gcc a.c b.c
+
+# root @ localhost in ~ [15:47:09]
+$ ./a.out
+i = 10
+</script></code></pre>
+<blockquote>
+<p>函数默认都隐式声明为 extern，所以可以省略 extern</p>
+</blockquote>
+<p>a.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">extern void print(); //可省略extern
+
+int main(){
+    print();
+    return 0;
+}
+</script></code></pre>
+<p>b.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void print(){
+    printf("print\n");
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [15:56:55]
+$ gcc a.c b.c
+
+# root @ localhost in ~ [15:56:59]
+$ ./a.out
+print
+</script></code></pre>
+<p>注意<code>变量</code>的<code>声明</code>、<code>定义</code>的区别，<code>函数</code>的<code>声明</code>、<code>定义</code>很容易区分：<br><strong><code>定义</code></strong>: 分配内存空间，如<code>int i</code>，分配 4 个字节的内存<br><strong><code>声明</code></strong>: 不需要分配内存空间，如<code>extern int i</code>，这只是告诉编译器，<code>i</code>这个变量已经在别的文件定义了，不用为其分配内存，直接用就行</p>
+<blockquote>
+<p><strong>函数或者变量的声明都是为了提前使用，如果不需要提前使用，没有提前声明的必要性</strong></p>
+</blockquote>
+<pre><code class="language-c line-numbers"><script type="text/plain">// 函数的声明
+void print();
+int max(int m, int n);
+int min(int, int);
+
+// 函数的定义
+void print(){
+    printf("hello, world!\n");
+}
+
+// 变量的声明
+extern int i;
+extern i;   // 可省略数据类型
+
+// 变量的定义
+int i;
+
+// 变量的赋值
+i = 10;
+
+// 变量的初始化(定义的同时进行赋初值)
+int i = 10;
+</script></code></pre>
+<h2 id="变量初始值"><a href="#变量初始值" class="headerlink" title="变量初始值"></a>变量初始值</h2><ul>
+<li>static 存储类的变量（全局变量，static 变量），其初始值为 0</li>
+<li>auto 存储类的变量，系统并不会对其进行初始化，它的值是垃圾值，所以在使用前一定要进行手动初始化</li>
+</ul>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+char c;
+short s;
+int i;
+long l;
+float f;
+double d;
+
+int main() {
+    static int static_main;
+    int a1 = 10;
+    int a2 = 20;
+    int a = a1 * a2;
+    int auto_main;
+    printf("char: %c\nshort: %hd\nint: %d\nlong: %ld\nfloat: %f\ndouble: %lf\nstatic_main: %d\nauto_main: %d\n", c, s, i, l, f, d, static_main, auto_main);
+    return 0;
+}
+</script></code></pre>
+<p>编译并运行</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [17:30:37]
+$ gcc a.c
+
+# root @ localhost in ~ [17:30:38]
+$ ./a.out
+char:
+short: 0
+int: 0
+long: 0
+float: 0.000000
+double: 0.000000
+static_main: 0
+auto_main: -2099247248
+</script></code></pre>
+<h2 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h2><h3 id="自动类型转换"><a href="#自动类型转换" class="headerlink" title="自动类型转换"></a>自动类型转换</h3><ol>
+<li>若参与运算的数据类型不同，则先转换成同一类型，然后进行运算。</li>
+<li>转换按数据长度增加的方向进行，以保证精度不降低。例如 int 型和 long 型运算时，先把 int 转成 long 型后再进行运算。</li>
+<li>所有的浮点运算都是以双精度进行的，即使仅含 float 单精度量运算的表达式，也要先转换成 double 型，再作运算。</li>
+<li>char 型和 short 型参与运算时，必须先转换成 int 型。</li>
+<li>在赋值运算中，赋值号两边的数据类型不同时，需要把右边表达式的类型将转换为左边变量的类型。如果右边表达式的数据类型长度比左边长时，将丢失一部分数据，这样会降低精度。</li>
+</ol>
+<h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><pre><code class="language-c line-numbers">#include &lt;stdio.h&gt;
+
+int main() {
+    int a=10, b=3;
+    double result;
+    result = (double) a / b;
+    printf(&quot;(double) a / b = %f\n&quot;, result);
+    result = (double) (a / b);
+    printf(&quot;(double) (a / b) = %f\n&quot;, result);
+    return 0;
+}
+</code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [17:45:07]
+$ gcc a.c
+
+# root @ localhost in ~ [17:45:09]
+$ ./a.out
+(double) a / b = 3.333333
+(double) (a / b) = 3.000000
+</script></code></pre>
+<p>注意，(double) 的优先级更高，所以第一个结果是这样算的：先将 a 转换为 double 类型，然后再和 b 相除，这时，b 也自动转换为 double 类型，除出来的结果是 3.333333…<br>而第二个结果是先将 a 和 b 相除，因为都是 int 类型，所以后面的小数部分直接舍去了，然后再转换为 double 类型，结果就是 3.000000</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-mem.html" rel="next" title="c语言 - 程序内存分布">
+                <i class="fa fa-chevron-left"></i> c语言 - 程序内存分布
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-input-output.html" rel="prev" title="c语言 - 输入与输出">
+                c语言 - 输入与输出 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局变量"><span class="nav-number">1.</span> <span class="nav-text">全局变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义常量"><span class="nav-number">2.</span> <span class="nav-text">定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型"><span class="nav-number">3.</span> <span class="nav-text">基本类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NULL-值"><span class="nav-number">3.1.</span> <span class="nav-text">NULL 值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮点数"><span class="nav-number">3.2.</span> <span class="nav-text">浮点数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无符号数"><span class="nav-number">3.3.</span> <span class="nav-text">无符号数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">4.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储类"><span class="nav-number">5.</span> <span class="nav-text">存储类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#auto"><span class="nav-number">5.1.</span> <span class="nav-text">auto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static"><span class="nav-number">5.2.</span> <span class="nav-text">static</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#register"><span class="nav-number">5.3.</span> <span class="nav-text">register</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#extern"><span class="nav-number">5.4.</span> <span class="nav-text">extern</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量初始值"><span class="nav-number">6.</span> <span class="nav-text">变量初始值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型转换"><span class="nav-number">7.</span> <span class="nav-text">数据类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自动类型转换"><span class="nav-number">7.1.</span> <span class="nav-text">自动类型转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#强制类型转换"><span class="nav-number">7.2.</span> <span class="nav-text">强制类型转换</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-var-datatype.html';
+          this.page.identifier = 'c-var-datatype.html';
+          this.page.title = 'c语言 - 变量与数据类型';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

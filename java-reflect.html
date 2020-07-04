@@ -1,0 +1,1383 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java 反射 reflect">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 反射">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 反射">
+<meta property="og:url" content="https://www.zfl9.com/java-reflect.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 反射">
+<meta property="og:image" content="https://www.zfl9.com/images/java-reflect-jdk1.6.jpg">
+<meta property="og:image" content="https://www.zfl9.com/images/java-reflect-jdk1.8.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:48:22.108Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 反射">
+<meta name="twitter:description" content="Java 反射">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-reflect-jdk1.6.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-reflect.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 反射 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-reflect.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 反射
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-25T11:24:00+08:00">
+                2017-09-25
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-reflect.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-reflect.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-reflect.html" class="leancloud_visitors" data-flag-title="Java 反射">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 反射</p>
+<a id="more"></a>
+<h2 id="反射是什么"><a href="#反射是什么" class="headerlink" title="反射是什么"></a>反射是什么</h2><p>我们先来回顾一下之前的<a href="/java-jvm.html">深入理解 JVM 虚拟机</a>，还记得<strong>方法区</strong>吗？JVM 运行时数据区有五大区域：<strong>程序计数器</strong>、<strong>虚拟机栈</strong>、<strong>本地方法栈</strong>、<strong>堆</strong>、<strong>方法区</strong>。</p>
+<p>在方法区中，主要存放：<strong>类信息</strong>、<strong>方法代码</strong>、<strong>非<code>final</code>静态变量</strong>、<strong>JIT 即时编译器编译后的代码</strong>。每个已加载的类中还有一个<strong>运行时常量池</strong>，用于存储<strong>字面量</strong>、<strong><code>final</code>静态变量</strong>、<strong>符号引用</strong>。</p>
+<p>说白了，方法区其实就是存储 .class 文件的地方，方法区的这些数据是由<strong>类加载器（ClassLoader）</strong>生成的，与此同时，类加载器还在 Java 堆中创建了一个与之对应的 java.lang.Class 对象，作为该类在方法区的各种数据的访问入口。</p>
+<p>因此，我们可以利用这个 Class 对象来访问对应类的元数据，比如：获取它的构造方法、成员方法、成员变量，创建该类的对象、调用指定方法、获取和修改指定字段等等。而这就是所谓的<strong>反射机制（Reflection）</strong>。</p>
+<p>因此，我们要使用反射，第一步就是获取这个类的 Class 对象，然后通过这个 Class 对象进行各种反射操作。获取 Class 对象的途径：<br>1、通过类的隐藏静态属性<code>class</code>，如<code>String.class</code>、<code>int.class</code><br>2、通过继承自 Object 的<code>getClass()</code>成员方法，如<code>obj.getClass()</code><br>3、通过 Class 类的 forName() 静态方法，其中 name 为全限定类名：<br><code>Class&lt;?&gt; forName(String name) throws ClassNotFoundException</code><br><code>Class&lt;?&gt; forName(String name, boolean init, ClassLoader loader) throws ClassNotFoundException</code></p>
+<p>有几点要说明的是：<br>1、对于<strong>基本类型包装类</strong>，除了有 class 静态属性外，还有一个<code>TYPE</code>静态属性，而这个<code>TYPE</code>属性，其实就是其对应的基本类型的<code>class</code>属性，它们是同一个引用！比如，<code>int.class == Integer.class</code>为 false、<code>int.class == Integer.TYPE</code>为 true。</p>
+<p>2、通过<code>ClassName.class</code>方法获取 Class 对象和通过<code>classObj.getClass()</code>方法获取 Class 有什么不同吗？一般情况下没有区别的，前者是通过静态属性，后者是通过成员方法。不过，如果你使用基类指针引用了派生类对象的话，就不一样了，这时候，<code>getClass()</code>始终是获取该对象所属类的 Class 对象，而不是它的基类！</p>
+<p>3、类的全限定名是什么？假设 Test.class 位于 com.zfl9 包，那么 Test 这个类的全限定类名就是<code>com.zfl9.Test</code>。然后提一下<code>forName()</code>的第二个重载形式：</p>
+<ul>
+<li><code>init</code>参数：如果为 true 则执行该类的<code>&lt;clinit&gt;&lt;&gt;</code>类构造器方法，否则只进行<strong>加载</strong>、<strong>连接</strong>阶段；</li>
+<li><code>loader</code>参数：指定用于加载该类的类加载器。如果为 null，则使用 bootstrap 启动类加载器加载（建议指定）。</li>
+</ul>
+<p>而<code>forName(String name)</code>其实就是<code>forName(name, true, currentLoader)</code>，currentLoader 是调用者的类加载器。</p>
+<p><strong>反射 API 位于<code>java.lang.reflect</code>包</strong>，要使用反射，首先应获取类的 Class 对象，然后根据 Class 对象获取其它对象。</p>
+<p>JDK1.6 - 反射类图：<br><img src="/images/java-reflect-jdk1.6.jpg" alt="JDK1.6 - 反射类图"></p>
+<p>JDK1.8 - 反射类图：<br><img src="/images/java-reflect-jdk1.8.jpg" alt="JDK1.8 - 反射类图"></p>
+<p>Type 接口及其子接口是与<strong>泛型</strong>相关的，AnnotatedType 接口及其子接口则是与<strong>注解</strong>相关的，我们主要关注<code>Constructor</code>构造器、<code>Method</code>方法、<code>Field</code>字段、<code>Parameter</code>参数、以及<code>Class</code>入口类。</p>
+<p>这里说一下 AccessibleObject 类，该类为<strong>Constructor 构造器</strong>、<strong>Method 方法</strong>、<strong>Field 字段</strong>的共同父类。它提供了将反射的对象标记为在使用时取消默认 Java 语言访问控制检查的能力，即允许我们访问非 public 成员。其主要方法为：<br><code>boolean isAccessible()</code>：获取访问性 flag，默认为 false，即遵循访问性检查<br><code>void setAccessible(boolean flag)</code>：设置访问性，true: 忽略访问性检查、false: 遵循访问性检查<br><code>static void setAccessible(AccessibleObject[] array, boolean flag)</code>：静态方法，批量设置访问性</p>
+<p><strong>反射修改 String 对象</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.lang.reflect.Field;
+
+public class StringModifyTest {
+    public static void main(String[] args)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        // s1、s2 都指向同一个 String 对象，即 "www.zfl9.com"
+        String s1 = "www.zfl9.com";
+        String s2 = "www.zfl9.com";
+
+        System.out.println("s1 = " + s1);
+        System.out.println("s2 = " + s2);
+        System.out.println("(s1 == s2) -> " + (s1 == s2)); // true
+
+        Field fieldOfValue = s1.getClass().getDeclaredField("value"); // 数组名为 value
+        fieldOfValue.setAccessible(true); // 因为是 private 成员，所以必须修改访问性
+        ((char[]) fieldOfValue.get(s1))[7] = '8'; // "www.zfl9.com" -> "www.zfl8.com"
+
+        System.out.println("s1 = " + s1); // "www.zfl8.com"
+        System.out.println("s2 = " + s2); // "www.zfl8.com"
+        System.out.println("(s1 == s2) -> " + (s1 == s2)); // true
+
+        // s3 和 s1/s2 指向的是同一个 String 对象，因此此时字符串为 "www.zfl8.com"
+        String s3 = "www.zfl9.com";
+        System.out.println("s3 = " + s3); // "www.zfl8.com"
+        System.out.println("(s1 == s2 && s2 == s3) -> " + (s1 == s2 && s2 == s3)); // true
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:38:40]
+$ javac StringModifyTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [13:38:57]
+$ java com.zfl9.StringModifyTest
+s1 = www.zfl9.com
+s2 = www.zfl9.com
+(s1 == s2) -> true
+s1 = www.zfl8.com
+s2 = www.zfl8.com
+(s1 == s2) -> true
+s3 = www.zfl8.com
+(s1 == s2 && s2 == s3) -> true
+</script></code></pre>
+<p><strong>反射修改 final 变量</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9.reflect;
+
+import java.lang.reflect.Field;
+
+public class Main {
+    private static class Test {
+        final int value = 10;
+    }
+
+    public static void main(String[] args)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        Test test = new Test();
+
+        Class<Test> clazz = Test.class;
+        Field field = clazz.getDeclaredField("value");
+        System.out.println(field.get(test)); // 10
+
+        field.setAccessible(true); // 修改访问性
+        field.set(test, 20); // 10 -> 20
+        System.out.println(field.get(test)); // 20
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9/reflect on git:master x [9:51:31]
+$ javac Main.java
+
+# root @ arch in ~/java8-learn/com/zfl9/reflect on git:master x [9:52:06]
+$ java com.zfl9.reflect.Main
+10
+20
+</script></code></pre>
+<p>其实这都没什么可惊讶的，所谓的访问性修饰符，只不过是写给编译器看的；而 final 常量也仅仅是语义上的不可修改，事实上，我们只要能够获得它们的地址，就可以任意修改，因此，我们可以说，<strong>反射提供了部分 C/C++ 指针的能力</strong>。</p>
+<h2 id="Class-类"><a href="#Class-类" class="headerlink" title="Class 类"></a>Class 类</h2><p>java.lang.Class 类（泛型）的相关方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 静态方法 */
+public static Class<?> forName(String className) throws ClassNotFoundException;
+public static Class<?> forName(String name,
+                               boolean initialize,
+                               ClassLoader loader)
+                        throws ClassNotFoundException;
+
+/*
+ * Element-Type         Encoding
+ * boolean              Z
+ * byte                 B
+ * char                 C
+ * short                S
+ * int                  I
+ * long                 J
+ * float                F
+ * double               D
+ * class or interface   Lclassname;
+ * 一维数组             [
+ * 二维数组             [[
+ * 三维数组             [[[
+ * ...                  [[[[...
+ */
+public String getName();
+public String getSimpleName(); // 返回简单名称 (可读性好)
+public String getCanonicalName(); // 返回规范名称 (可读性好)
+public String getTypeName(); // 返回类型名称 (可读性更好) JDK1.8
+
+/*
+ * 类："class getName()"
+ * 接口："interface getName()"
+ * 基本类型："基本类型的名称"
+ */
+public String toString();
+public String toGenericString(); // JDK1.8，包含修饰符、类型参数
+
+// 调用无参构造器，实例化一个对象
+public T newInstance()
+    throws InstantiationException, // 实例化失败，如该类为接口、抽象类、数组、或没有无参构造器
+           IllegalAccessException; // 非法访问，如该构造器被声明为 private
+
+/* 测试方法 */
+public boolean isInstance(Object obj); // 即 "instanceof" 运算符
+public boolean isAssignableFrom(Class<?> cls); // 当前类是否与给定类(接口)相同，或为其父类(接口)
+public boolean isInterface(); // 是否为接口
+public boolean isArray(); // 是否为数组
+public boolean isPrimitive(); // 是否为基本类型
+public boolean isAnnotation(); // 是否为注解 (注解是接口的一种)
+public boolean isSynthetic(); // 是否为合成类
+public boolean isAnonymousClass(); // 是否为匿名类
+public boolean isLocalClass(); // 是否为局部类
+public boolean isMemberClass(); // 是否为成员类
+public boolean isEnum(); // 是否为枚举类
+public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass); // 是否存在给定注解
+
+/* 查询方法 */
+public ClassLoader getClassLoader(); // 获取加载它的 ClassLoader
+public Package getPackage(); // 获取它所在的 package
+public int getModifiers(); // 获取该类的修饰符
+public Object[] getSigners(); // 获取该类的签名者，如果为基本类型则返回 null
+public TypeVariable<Class<T>>[] getTypeParameters(); // 获取该类的类型参数，如 T、E
+
+public Class<?> getComponentType(); // 获取该数组的元素的 Class 对象
+public T[] getEnumConstants(); // 获取枚举常量，Enum.values()
+
+public Class<? super T> getSuperclass(); // 获取它的父类，如果此类为 Object、接口、基本类型，则返回 null
+public Type getGenericSuperclass(); // 同上，支持泛型父类的解析
+
+public Class<?>[] getInterfaces(); // 获取它所实现的接口
+public Type[] getGenericInterfaces(); // 同上，支持泛型接口的解析
+
+public Method getEnclosingMethod(); // 返回此类(方法中的匿名类/局部类)所在的方法
+public Constructor<?> getEnclosingConstructor(); // 返回此类所在的构造函数
+public Class<?> getEnclosingClass(); // 返回此类所在的外部类
+public Class<?> getDeclaringClass(); // 返回此类所在的外部类，同上
+
+public <A extends Annotation> A getAnnotation(Class<A> annotationClass); // 获取给定注解，或 null
+public <A extends Annotation> A[] getAnnotationsByType(Class<A> annotationClass); // 可处理重复注解
+public Annotation[] getAnnotations(); // 获取所有注解
+// 忽略继承的注解
+public <A extends Annotation> A getDeclaredAnnotation(Class<A> annotationClass);
+public <A extends Annotation> A[] getDeclaredAnnotationsByType(Class<A> annotationClass);
+public Annotation[] getDeclaredAnnotations();
+
+public AnnotatedType getAnnotatedSuperclass(); // 获取父类的注解
+public AnnotatedType[] getAnnotatedInterfaces(); // 获取父接口的注解
+
+/*
+ * getXXX()         获取其 public 成员 (包括继承而来的)
+ * getDeclaredXXX() 获取声明的所有成员 (不包括继承而来的)
+ */
+public Class<?>[] getClasses(); // 获取所有成员类
+public Field[] getFields(); // 获取所有字段
+public Method[] getMethods(); // 获取所有方法
+public Constructor<?>[] getConstructors(); // 获取所有构造器
+
+public Field getField(String name) throws NoSuchFieldException; // 获取给定字段
+public Method getMethod(String name, Class<?>... parameterTypes) // 获取给定方法
+                        throws NoSuchMethodException;
+public Constructor<T> getConstructor(Class<?>... parameterTypes) // 获取给定构造器
+                        throws NoSuchMethodException;
+
+public Class<?>[] getDeclaredClasses(); // 获取所有成员类
+public Field[] getDeclaredFields(); // 获取所有字段
+public Method[] getDeclaredMethods(); // 获取所有方法
+public Constructor<?>[] getDeclaredConstructors(); // 获取所有构造器
+
+public Field getDeclaredField(String name) throws NoSuchFieldException; // 获取给定字段
+public Method getDeclaredMethod(String name, Class<?>... parameterTypes) // 获取给定方法
+                        throws NoSuchMethodException;
+public Constructor<T> getDeclaredConstructor(Class<?>... parameterTypes) // 获取给定构造器
+                        throws NoSuchMethodException;
+
+/* 获取资源 */
+// 获取给定资源，具体的查找/获取工作交给此类的类加载器完成
+// 如果此类的类加载器为启动类加载器，则使用 System 类加载器查找资源
+// 如果 name 以 / 开头，则在 classpath 中查找资源
+// 如果 name 不以 / 开头，则在当前 package 中查找资源
+public InputStream getResourceAsStream(String name);
+public URL getResource(String name); // 同上，返回 URL 对象
+
+/* 断言相关 */
+public boolean desiredAssertionStatus(); // 查询是否已启用断言功能
+
+/* 类型转换 */
+public T cast(Object obj); // 将指定对象转换为当前类对象(强制类型转换)
+public <U> Class<? extends U> asSubclass(Class<U> clazz); // 将当前 Class 对象转换为指定 Class 对象的子类
+</script></code></pre>
+<h2 id="Field-类"><a href="#Field-类" class="headerlink" title="Field 类"></a>Field 类</h2><p>所谓的<code>字段（Field）</code>，就是我们平常所说的<strong>成员变量</strong>（静态、实例）。</p>
+<p>java.lang.reflect.Field 类的相关方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* getXXX() */
+public Class<?> getDeclaringClass(); // 获取所属类
+public int getModifiers(); // 获取修饰符
+public Class<?> getType(); // 获取字段类型
+public Type getGenericType(); // 获取字段类型(解析泛型)
+public AnnotatedType getAnnotatedType(); // 获取字段类型
+public String getName(); // 获取字段名
+
+/* isXXX() */
+public boolean isEnumConstant(); // 是否为枚举常量
+public boolean isSynthetic(); // 是否为合成字段
+
+/* Object */
+public int hashCode();
+public boolean equals(Object obj);
+public String toString();
+public String toGenericString(); // (解析泛型)
+
+/* getter 方法 */
+public Object get(Object obj) throws IllegalAccessException;
+public boolean getBoolean(Object obj) throws IllegalAccessException;
+public byte getByte(Object obj) throws IllegalAccessException;
+public char getChar(Object obj) throws IllegalAccessException;
+public short getShort(Object obj) throws IllegalAccessException;
+public int getInt(Object obj) throws IllegalAccessException;
+public long getLong(Object obj) throws IllegalAccessException;
+public float getFloat(Object obj) throws IllegalAccessException;
+public double getDouble(Object obj) throws IllegalAccessException;
+
+/* setter 方法 */
+public void set(Object obj, Object value) throws IllegalAccessException;
+public void setBoolean(Object obj, boolean z) throws IllegalAccessException;
+public void setByte(Object obj, byte b) throws IllegalAccessException;
+public void setChar(Object obj, char c) throws IllegalAccessException;
+public void setShort(Object obj, short s) throws IllegalAccessException;
+public void setInt(Object obj, int i) throws IllegalAccessException;
+public void setLong(Object obj, long l) throws IllegalAccessException;
+public void setFloat(Object obj, float f) throws IllegalAccessException;
+public void setDouble(Object obj, double d) throws IllegalAccessException;
+
+/* AnnotatedElement 接口 */
+public <T extends Annotation> T getAnnotation(Class<T> annotationClass); // 获取给定注解
+public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass); // 可处理重复注解
+public Annotation[] getDeclaredAnnotations(); // 获取所有注解（忽略继承的注解）
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.in;
+import static java.lang.System.out;
+import static java.lang.System.err;
+import java.lang.reflect.Field;
+
+public class Main {
+    public int pub = 10;
+    protected int prot = 20;
+    private int priv = 30;
+    int defa = 40;
+
+    @Override
+    public String toString() {
+        return String.format("[Main] -> {%d, %d, %d, %d}", pub, prot, priv, defa);
+    }
+
+    public static void main(String[] args) {
+        // 获取 public 字段 [Main]
+        for (Field f : Main.class.getFields()) {
+            out.println(f);
+        }
+
+        // 获取 public 字段 [Test]
+        out.println("-------------------------");
+        for (Field f : Test.class.getFields()) {
+            out.println(f);
+        }
+
+        // 获取所有声明的字段 [Main]
+        out.println("-------------------------");
+        for (Field f : Main.class.getDeclaredFields()) {
+            out.println(f);
+        }
+
+        // 获取所有声明的字段 [Test]
+        out.println("-------------------------");
+        for (Field f : Test.class.getDeclaredFields()) {
+            out.println(f);
+        }
+
+        // 操作 Main 类的私有成员
+        out.println("-------------------------");
+        Main main = new Main();
+        out.println(main);
+        try {
+            Field mainPriv = Main.class.getDeclaredField("priv");
+            // mainPriv.setAccessible(true); // 可有可无
+            mainPriv.setInt(main, 999);
+            out.println(main);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        // 操作 Test 类的私有成员
+        out.println("-------------------------");
+        Test test = new Test();
+        out.println(test);
+        try {
+            Field testPriv = Test.class.getDeclaredField("priv");
+            testPriv.setAccessible(true); // 必须修改访问性 [破坏类的封装性]
+            testPriv.setInt(test, 999);
+            out.println(test);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Test {
+    public int pub = 100;
+    protected int prot = 200;
+    private int priv = 300;
+    int defa = 400;
+
+    @Override
+    public String toString() {
+        return String.format("[Test] -> {%d, %d, %d, %d}", pub, prot, priv, defa);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:23:50]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:24:04]
+$ java Main
+public int Main.pub
+-------------------------
+public int Test.pub
+-------------------------
+public int Main.pub
+protected int Main.prot
+private int Main.priv
+int Main.defa
+-------------------------
+public int Test.pub
+protected int Test.prot
+private int Test.priv
+int Test.defa
+-------------------------
+[Main] -> {10, 20, 30, 40}
+[Main] -> {10, 20, 999, 40}
+-------------------------
+[Test] -> {100, 200, 300, 400}
+[Test] -> {100, 200, 999, 400}
+</script></code></pre>
+<h2 id="Method-类"><a href="#Method-类" class="headerlink" title="Method 类"></a>Method 类</h2><p>java.lang.reflect.Method 类的相关方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* getXXX() */
+public String getName(); // 获取方法名
+
+public Class<?> getDeclaringClass(); // 获取所属类
+public int getModifiers(); // 获取修饰符
+public TypeVariable<Method>[] getTypeParameters(); // 获取类型参数
+
+public Class<?> getReturnType(); // 获取返回值类型
+public Type getGenericReturnType(); // 获取返回值类型(解析泛型)
+public AnnotatedType getAnnotatedReturnType(); // 获取返回值类型
+
+public Class<?>[] getParameterTypes(); // 获取方法形参
+public Type[] getGenericParameterTypes(); // 获取方法形参(解析泛型)
+public int getParameterCount(); // 获取形参数目
+
+public Class<?>[] getExceptionTypes(); // 获取声明的异常
+public Type[] getGenericExceptionTypes(); // 获取声明的异常(解析泛型)
+
+/* isXXX() */
+public boolean isVarArgs(); // 是否为可变参数 JDK1.5
+public boolean isDefault(); // 是否为默认方法 JDK1.8
+public boolean isBridge(); // 是否为桥接方法
+public boolean isSynthetic(); // 是否为合成方法
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString();
+public String toGenericString(); // 解析泛型
+
+/* invoke */
+/**
+ * 调用当前方法.
+ * @param obj       this 指针，如果为 static 方法，可以为 null
+ * @param args      方法的参数
+ * @return Object   返回执行结果
+ * @throws IllegalAccessException       违反了 Java 访问性限制
+ * @throws InvocationTargetException    该方法抛出了未捕获异常
+ */
+public Object invoke(Object obj, Object... args)
+              throws IllegalAccessException,
+                     InvocationTargetException;
+
+/* 注解相关 */
+public Object getDefaultValue();
+public <T extends Annotation> T getAnnotation(Class<T> annotationClass); // 获取给定注解
+public Annotation[] getDeclaredAnnotations(); // 获取所有注解（忽略继承的注解）
+public Annotation[][] getParameterAnnotations(); // 获取形参的所有注解
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.in;
+import static java.lang.System.out;
+import static java.lang.System.err;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
+public class Main {
+    public static void main(String[] args) {
+        Class<?> clazz = Test.class;
+
+        try {
+            Method staticFunc = clazz.getMethod("staticFunc");
+            Method pubAdd = clazz.getMethod("pubAdd", int.class, int.class);
+            Method priAdd = clazz.getDeclaredMethod("priAdd", int.class, int.class);
+
+            staticFunc.invoke(null); // static方法
+
+            Integer result1 = (Integer) pubAdd.invoke(new Test(), 10, 20);
+            out.println("result1 -> " + result1);
+
+            priAdd.setAccessible(true);
+            Integer result2 = (Integer) priAdd.invoke(new Test(), 10, 20);
+            out.println("result2 -> " + result2);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Test {
+    public static void staticFunc() {
+        out.println("Test::staticFunc()");
+    }
+
+    public int pubAdd(int a, int b) {
+        return a + b;
+    }
+
+    private int priAdd(int a, int b) {
+        return a + b;
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:39:38]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:39:59]
+$ java Main
+Test::staticFunc()
+result1 -> 30
+result2 -> 30
+</script></code></pre>
+<h2 id="Constructor-类"><a href="#Constructor-类" class="headerlink" title="Constructor 类"></a>Constructor 类</h2><p>java.lang.reflect.Constructor 类（泛型）的相关方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* getXXX() */
+public String getName(); // 获取方法名(全限定类名)
+
+public Class<T> getDeclaringClass(); // 获取所属类
+public int getModifiers(); // 获取修饰符
+public TypeVariable<Constructor<T>>[] getTypeParameters(); // 获取类型参数
+
+public Class<?>[] getParameterTypes(); // 获取方法形参
+public Type[] getGenericParameterTypes(); // 获取方法形参(解析泛型)
+public int getParameterCount(); // 获取形参数目
+
+public AnnotatedType getAnnotatedReturnType();
+public AnnotatedType getAnnotatedReceiverType();
+
+public Class<?>[] getExceptionTypes(); // 获取声明的异常
+public Type[] getGenericExceptionTypes(); // 获取声明的异常(解析泛型)
+
+/* isXXX() */
+public boolean isVarArgs(); // 是否为可变参数
+public boolean isSynthetic(); // 是否为合成构造器
+
+/* Object */
+public boolean equals(Object obj);
+public int hashCode();
+public String toString();
+public String toGenericString(); // 解析泛型
+
+/* newInstance */
+/**
+ * 构造对象.
+ * @param initargs  方法实参
+ * @return T        对象引用
+ * @throws IllegalAccessException       违反了 Java 访问性限制
+ * @throws InvocationTargetException    该构造器抛出了未捕获异常
+ * @throws InstantiationException       该构造器为抽象类的构造器
+ */
+public T newInstance(Object... initargs)
+              throws InstantiationException,
+                     IllegalAccessException,
+                     InvocationTargetException;
+
+/* 注解相关 */
+public <T extends Annotation> T getAnnotation(Class<T> annotationClass); // 获取给定注解
+public Annotation[] getDeclaredAnnotations(); // 获取所有注解（忽略继承的注解）
+public Annotation[][] getParameterAnnotations(); // 获取形参的所有注解
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.in;
+import static java.lang.System.out;
+import static java.lang.System.err;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class Main {
+    public static void main(String[] args) {
+        Class<Test> clazz = Test.class;
+
+        try {
+            Constructor<Test> testPubCon = clazz.getConstructor(int.class);
+            Constructor<Test> testPriCon = clazz.getDeclaredConstructor(float.class);
+
+            testPubCon.newInstance(10);
+
+            testPriCon.setAccessible(true);
+            testPriCon.newInstance(3.14f);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Test {
+    public Test(int arg) {
+        out.println("public Test::Test(int)");
+    }
+
+    private Test(float arg) {
+        out.println("private Test::Test(float)");
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [20:51:26]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [20:51:38]
+$ java Main
+public Test::Test(int)
+private Test::Test(float)
+</script></code></pre>
+<h2 id="Array-类"><a href="#Array-类" class="headerlink" title="Array 类"></a>Array 类</h2><p>java.lang.reflect.Array 类（工具类，全为静态方法）的相关方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 创建数组 */
+/**
+ * 创建一维数组.
+ * @param componentType 元素类型
+ * @param length        数组长度
+ * @return Object       数组引用
+ * @throws IllegalArgumentException     数组维度大于 255
+ * @throws NegativeArraySizeException   数组长度小于 0
+ */
+public static Object newInstance(Class<?> componentType, int length);
+/**
+ * 创建 N 维数组.
+ * @param componentType 元素类型
+ * @param dimensions    数组维度
+ * @return Object       数组引用
+ * @throws IllegalArgumentException     数组维度大于 255
+ * @throws NegativeArraySizeException   数组长度小于 0
+ */
+public static Object newInstance(Class<?> componentType, int... dimensions);
+
+/* 数组长度 */
+public static int getLength(Object array); // 数组长度
+
+/* getter */
+public static Object get(Object array, int index);
+public static boolean getBoolean(Object array, int index);
+public static byte getByte(Object array, int index);
+public static char getChar(Object array, int index);
+public static short getShort(Object array, int index);
+public static int getInt(Object array, int index);
+public static long getLong(Object array, int index);
+public static float getFloat(Object array, int index);
+public static double getDouble(Object array, int index);
+
+/* setter */
+public static void set(Object array, int index, Object value);
+public static void setBoolean(Object array, int index, boolean z);
+public static void setByte(Object array, int index, byte b);
+public static void setChar(Object array, int index, char c);
+public static void setShort(Object array, int index, short s);
+public static void setInt(Object array, int index, int i);
+public static void setLong(Object array, int index, long l);
+public static void setFloat(Object array, int index, float f);
+public static void setDouble(Object array, int index, double d);
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.in;
+import static java.lang.System.out;
+import static java.lang.System.err;
+import java.util.Arrays;
+import java.lang.reflect.Array;
+
+public class Main {
+    public static void main(String[] args) {
+        // 基本类型
+        int[] intArr = (int[]) Array.newInstance(int.class, 5);
+        for (int i = 0; i < intArr.length; i++) {
+            intArr[i] = i * i;
+        }
+        out.println(Arrays.toString(intArr));
+
+        // 引用类型
+        Main[] intMain = (Main[]) Array.newInstance(Main.class, 5);
+        for (int i = 0; i < intMain.length; i++) {
+            intMain[i] = new Main();
+        }
+        out.println(Arrays.toString(intMain));
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [18:35:17]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [18:35:30]
+$ java Main
+[0, 1, 4, 9, 16]
+[Main@15db9742, Main@6d06d69c, Main@7852e922, Main@4e25154f, Main@70dea4e]
+</script></code></pre>
+<h2 id="Annotation-注解"><a href="#Annotation-注解" class="headerlink" title="Annotation 注解"></a>Annotation 注解</h2><p><strong>注解是什么</strong><br>注解是 Java 5 的新特性，注解可以看做一种注释或者<code>元数据（MetaData）</code>，也可以理解为高级点的注释语法。</p>
+<p><strong>注解标识符</strong><br>注解标识符由一个<code>@</code>符后面跟一个<code>Java 标识符</code>构成，类似于这样：<code>@MyAnnotation</code>。</p>
+<p><strong>注解的元素</strong><br>注解可以包含一些<strong>元素</strong>，这些元素类似于属性或者参数，可以用来设置值，供以后获取。<br>比如一个包含两个元素的<code>@Entity</code>注解：<code>@Entity(tableName = &quot;vehicles&quot;, primaryKey = &quot;id&quot;)</code><br>上面的注解中有两个元素，<code>tableName</code>和<code>primaryKey</code>，它们各自都被赋予了自己的元素值。</p>
+<p><strong>注解的位置</strong><br>可用于注释：<code>package包</code>、<code>类/接口/枚举</code>、<code>注解</code>（<strong>元注解</strong>）、<code>构造方法</code>、<code>成员方法</code>、<code>方法参数</code>、<code>成员变量</code>、<code>局部变量</code>等。</p>
+<p>在下边这个例子中，注解分别用在了类、字段、方法、参数和局部变量中：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">// 注解一个类
+@Entity
+public class Vehicle {
+    // 注解一个字段
+    @Persistent
+    protected String vehicleName = null;
+
+    // 注解一个方法
+    @Getter
+    public String getVehicleName() {
+        return this.vehicleName;
+    }
+
+    // 注解一个参数
+    public void setVehicleName(@Optional vehicleName) {
+        this.vehicleName = vehicleName;
+    }
+
+    public List addVehicleNameToList(List names) {
+        // 注解一个局部变量
+        @Optional
+        List localNames = names;
+
+        if (localNames == null) {
+            localNames = new ArrayList();
+        }
+
+        localNames.add(getVehicleName());
+        return localNames;
+    }
+}
+</script></code></pre>
+<p><strong>四种元注解</strong><br>元注解：即注解的注解，你可以和数据、元数据做类比。</p>
+<p>java.lang.annotation 包提供了 4 种元注解：<br>1) <code>@Target</code>，限制注解的<strong>作用范围</strong>，作用范围由<code>java.lang.annotation.ElementType</code>枚举定义：</p>
+<ul>
+<li><code>TYPE</code>：类、接口、枚举</li>
+<li><code>FIELD</code>：字段</li>
+<li><code>METHOD</code>：方法</li>
+<li><code>PARAMETER</code>：方法参数</li>
+<li><code>CONSTRUCTOR</code>：构造器</li>
+<li><code>LOCAL_VARIABLE</code>：局部变量</li>
+<li><code>ANNOTATION_TYPE</code>：注解类型</li>
+<li><code>PACKAGE</code>：包</li>
+<li><code>TYPE_PARAMETER</code>：类型参数（JDK1.8）</li>
+<li><code>TYPE_USE</code>：类型使用声明（JDK1.8）</li>
+<li>如果注解没有声明<code>@Target</code>，则默认作用范围为<strong>所有 Target</strong></li>
+</ul>
+<p>2) <code>@Retention</code>，限制注解的<strong>生命周期</strong>，生命周期由<code>java.lang.annotation.RetentionPolicy</code>枚举定义：</p>
+<ul>
+<li><code>SOURCE</code>：注解仅存于<strong>源代码</strong>中，在编译过程中有效，不会保存至 .class 字节码文件</li>
+<li><code>CLASS</code>：<strong>默认值</strong>，注解在 .class <strong>字节码文件</strong>中可用，在类被加载时被 JVM 丢弃</li>
+<li><code>RUNTIME</code>：注解在<strong>运行时</strong>也可用，JVM 不会将注解信息丢弃，可以通过反射获取注解信息</li>
+</ul>
+<p>3) <code>@Inherited</code>，表示此注解是<strong>可继承</strong>的，如果父类被此注解标示，则它的子类也会继承父类的该注解<br>4) <code>@Documented</code>，表示此注解属于<strong>文档</strong>的一部分，因此它可以被<strong>javadoc</strong>及类似的文档工具所记录</p>
+<p><strong>内置注解</strong><br>Java 本身提供了<strong>三个内置注解</strong>：<code>@Override</code>、<code>@Deprecated</code>、<code>@SuppressWarnings</code>；位于 java.lang 包。</p>
+<p>1) <code>@Override</code>，用于注解<strong>方法（Method）</strong>，属于<strong>源码（Source）</strong>注解，并且它是一个<strong>标记注解</strong>（没有元素）。<br>该注解用于在编译期间检查当前方法是否正确的重写了基类中的被重写方法。如果没有则抛出一个编译错误，若已正确重写则被忽略，不会保存到 .class 字节码文件中。</p>
+<p>2) <code>@Deprecated</code>，用于注解<strong>除注解外的所有 Target</strong>，属于<strong>运行时（Runtime）</strong>注解，并且它是一个<strong>标记注解</strong>（没有元素），同时还会被包含至 Javadoc 中。<br>该注解用于表示被注解的 Target 不被 Java 赞成使用，这些 Target 是过时的，废弃的，如果在编码中使用了这些 Target 则抛出一个编译警告。</p>
+<p>3) <code>@SuppressWarnings</code>，用于注解<strong>除注解、Package 外的所有 Target</strong>，属于<strong>源码（Source）</strong>注解，该注解有一个元素<code>String[] value()</code>。<br>该注解用于抑制被注解的 Target 中出现的 Warnings 编译警告，编译警告类型（即 value 的值）有：</p>
+<ul>
+<li><code>all</code>：to suppress all warnings</li>
+<li><code>boxing</code>：to suppress warnings relative to boxing/unboxing operations</li>
+<li><code>cast</code>：to suppress warnings relative to cast operations</li>
+<li><code>dep-ann</code>：to suppress warnings relative to deprecated annotation</li>
+<li><code>deprecation</code>：to suppress warnings relative to deprecation</li>
+<li><code>fallthrough</code>：to suppress warnings relative to missing breaks in switch statements</li>
+<li><code>finally</code>：to suppress warnings relative to finally block that don’t return</li>
+<li><code>hiding</code>：to suppress warnings relative to locals that hide variable</li>
+<li><code>incomplete-switch</code>：to suppress warnings relative to missing entries in a switch statement (enum case)</li>
+<li><code>javadoc</code>：to suppress warnings relative to javadoc warnings</li>
+<li><code>nls</code>：to suppress warnings relative to non-nls string literals</li>
+<li><code>null</code>：to suppress warnings relative to null analysis</li>
+<li><code>rawtypes</code>：to suppress warnings relative to usage of raw types</li>
+<li><code>resource</code>：to suppress warnings relative to usage of resources of type Closeable</li>
+<li><code>restriction</code>：to suppress warnings relative to usage of discouraged or forbidden references</li>
+<li><code>serial</code>：to suppress warnings relative to missing serialVersionUID field for a serializable class</li>
+<li><code>static-access</code>：to suppress warnings relative to incorrect static access</li>
+<li><code>static-method</code>：to suppress warnings relative to methods that could be declared as static</li>
+<li><code>super</code>：to suppress warnings relative to overriding a method without super invocations</li>
+<li><code>synthetic-access</code>：to suppress warnings relative to unoptimized access from inner classes</li>
+<li><code>sync-override</code>：to suppress warnings because of missing synchronize when overriding a synchronized method</li>
+<li><code>unchecked</code>：to suppress warnings relative to unchecked operations</li>
+<li><code>unqualified-field-access</code>：to suppress warnings relative to field access unqualified</li>
+<li><code>unused</code>：to suppress warnings relative to unused code and dead code</li>
+</ul>
+<p><strong>自定义注解</strong><br>除了可以使用 Java 内置注解外，我们还可以创建自定义注解。定义注解使用关键字<code>@interface</code>，就和定义一个 interface 接口一样简单。Annotation 注解和 interface 接口其实很相似，<strong>注解其实就是一种特殊的 interface 接口</strong>。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.in;
+import static java.lang.System.out;
+import static java.lang.System.err;
+
+public class Main {
+    public static void main(String[] args) {
+        @MyAnnotation
+        Object obj = new Object();
+    }
+}
+
+// 标记注解，默认作用范围为所有 Target & 默认生命周期为 CLASS
+@interface MyAnnotation {
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:07:48]
+$ ls
+Main.java
+
+# root @ arch in ~/work on git:master x [10:07:49]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [10:07:52]
+$ java Main
+
+# root @ arch in ~/work on git:master x [10:07:57]
+$ ls
+Main.class  Main.java  MyAnnotation.class
+
+# root @ arch in ~/work on git:master x [10:07:58]
+$ javap -c -p MyAnnotation
+Compiled from "Main.java"
+interface MyAnnotation extends java.lang.annotation.Annotation {
+}
+
+# root @ arch in ~/work on git:master x [10:08:07]
+$ javap -c -p Main
+Compiled from "Main.java"
+public class Main {
+  public Main();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: new           #2                  // class java/lang/Object
+       3: dup
+       4: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       7: astore_1
+       8: return
+}
+</script></code></pre>
+<p>从反编译结果来看，注解类型 MyAnnotation 实际上是 java.lang.annotation.Annotation 的子接口！定义一个注解使用关键字：<code>@interface</code>、定义一个接口使用关键字：<code>interface</code>。那么我们可以大胆推断，注解也可以有成员变量和成员方法，并且和接口具有相同的属性（基本相同）。</p>
+<p>首先我们来看一下 java.lang.annotation.Annotation 接口的定义：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Annotation {
+    boolean equals(Object obj);
+    int hashCode();
+    String toString();
+
+    Class<? extends Annotation> annotationType();
+}
+</script></code></pre>
+<p>我们只需要实现<code>annotationType()</code>方法，其它的几个 Object 类都帮我们提供了默认实现。</p>
+<p>1) 尝试模拟注解类型，失败：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.lang.annotation.Annotation;
+
+public class Main {
+    public static void main(String[] args) {
+        @MyAnnotation
+        Main main = null;
+    }
+}
+
+interface MyAnnotation extends Annotation {}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:36:42]
+$ javac Main.java
+Main.java:5: error: MyAnnotation is not an annotation type
+        @MyAnnotation
+         ^
+1 error
+</script></code></pre>
+<p>2) 尝试实现 Annotation 接口，成功：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.lang.annotation.Annotation;
+
+class A implements Annotation {
+    @Override
+    public Class<A> annotationType() {
+        return A.class;
+    }
+}
+
+@interface MyAnnotation {
+}
+
+class B implements MyAnnotation {
+    @Override
+    public Class<B> annotationType() {
+        return B.class;
+    }
+}
+</script></code></pre>
+<p>3) 注解也可以有方法和属性，成功：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">@interface MyAnnotation {
+    int field = 100;
+    int method();
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:48:45]
+$ javap -c -p MyAnnotation
+Compiled from "Main.java"
+interface MyAnnotation extends java.lang.annotation.Annotation {
+  public static final int field;
+
+  public abstract int method();
+}
+</script></code></pre>
+<p>和接口一样，注解中的字段都是<code>public static final</code>修饰的，方法都是<code>public abstract</code>修饰的。</p>
+<p><strong>注解中的元素</strong><br>前面我们创建的自定义注解是一个标记注解，即没有元素的注解。注解也可以有元素，元素可以有多个，<strong>元素其实就是接口中的抽象方法</strong>。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        @MyAnnotation(name = "ZhangSan",
+                      age = 14,
+                      score = 89.5f,
+                      array = {1, 2, 3, 4, 5})
+        Main main = null;
+    }
+}
+
+@interface MyAnnotation {
+    String name();
+    int age();
+    float score();
+    int[] array();
+}
+</script></code></pre>
+<p>在给元素赋值的时候需要指明元素的名称，语法和调用一个函数是一样的。</p>
+<p><strong>注解元素的类型</strong><br>所谓的元素类型其实就是抽象方法的<strong>返回值类型</strong>！<br>1) <strong>八大基本类型</strong>（boolean、byte、char、short、int、long、float、double）<br>2) <strong>String 字符串</strong><br>3) <strong>Class 类</strong><br>4) <strong>enum 枚举</strong><br>5) <strong>Annotation 注解接口</strong><br>6) <strong>以上所有类型的数组</strong></p>
+<p>使用其它类型会抛出一个编译错误。</p>
+<p><strong>元素默认值</strong><br>只需要使用 default 关键字就可以为一个元素指定其默认值，如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class Main {
+    public static void main(String[] args) {
+        @MyAnnotation(name = "ZhangSan",
+                      age = 14,
+                      score = 89.5f/*,
+                      array = {1, 2, 3, 4, 5}*/)
+        Main main = null;
+    }
+}
+
+@interface MyAnnotation {
+    String name();
+    int age();
+    float score();
+    int[] array() default {1, 2, 3, 4, 5};
+}
+</script></code></pre>
+<p>提供的默认值<strong>不能为 null</strong>，只能为一个<strong>字面量</strong>或者是一个<strong>final 常量</strong>（其值为一个字面量）。</p>
+<p><strong>value 元素</strong><br>如果注解只有一个元素，并且元素名为<code>value</code>，那么可以省略元素名，直接赋值，如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">@TestA("A")
+public class Main {
+    @TestB({"A", "B", "C"})
+    public static void main(String[] args) {}
+}
+
+@interface TestA {
+    String value();
+}
+
+@interface TestB {
+    String[] value();
+}
+</script></code></pre>
+<p>因此，<strong>如果注解只有一个元素，请务必将它命名为 value</strong>。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-javadoc.html" rel="next" title="javadoc 生成 API 文档">
+                <i class="fa fa-chevron-left"></i> javadoc 生成 API 文档
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-jvm.html" rel="prev" title="Java 深入理解 JVM 虚拟机">
+                Java 深入理解 JVM 虚拟机 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#反射是什么"><span class="nav-number">1.</span> <span class="nav-text">反射是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class-类"><span class="nav-number">2.</span> <span class="nav-text">Class 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Field-类"><span class="nav-number">3.</span> <span class="nav-text">Field 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method-类"><span class="nav-number">4.</span> <span class="nav-text">Method 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Constructor-类"><span class="nav-number">5.</span> <span class="nav-text">Constructor 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Array-类"><span class="nav-number">6.</span> <span class="nav-text">Array 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Annotation-注解"><span class="nav-number">7.</span> <span class="nav-text">Annotation 注解</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-reflect.html';
+          this.page.identifier = 'java-reflect.html';
+          this.page.title = 'Java 反射';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

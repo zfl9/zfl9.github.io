@@ -1,0 +1,595 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="前端,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="XML 指可扩展标记语言（EXtensible Markup Language）。XML 是一种很像 HTML 的标记语言。XML 的设计宗旨是 传输数据，而不是显示数据。XML 标签没有被预定义。您需要自行定义标签。XML 被设计为具有自我描述性。XML 是 W3C 的推荐标准。">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XML 笔记">
+<meta property="og:url" content="https://www.zfl9.com/xml.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="XML 指可扩展标记语言（EXtensible Markup Language）。XML 是一种很像 HTML 的标记语言。XML 的设计宗旨是 传输数据，而不是显示数据。XML 标签没有被预定义。您需要自行定义标签。XML 被设计为具有自我描述性。XML 是 W3C 的推荐标准。">
+<meta property="og:image" content="https://www.w3schools.com/xml/nodetree.gif">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XML 笔记">
+<meta name="twitter:description" content="XML 指可扩展标记语言（EXtensible Markup Language）。XML 是一种很像 HTML 的标记语言。XML 的设计宗旨是 传输数据，而不是显示数据。XML 标签没有被预定义。您需要自行定义标签。XML 被设计为具有自我描述性。XML 是 W3C 的推荐标准。">
+<meta name="twitter:image" content="https://www.w3schools.com/xml/nodetree.gif">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/xml.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>XML 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/xml.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                XML 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-07T08:00:00+08:00">
+                2018-12-07
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/xml.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="xml.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/xml.html" class="leancloud_visitors" data-flag-title="XML 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>XML 指可扩展标记语言（EXtensible Markup Language）。XML 是一种很像 HTML 的标记语言。XML 的设计宗旨是 <strong>传输数据</strong>，而不是显示数据。XML 标签没有被预定义。您需要自行定义标签。XML 被设计为具有自我描述性。XML 是 W3C 的推荐标准。</p>
+<a id="more"></a>
+<h2 id="XML-简介"><a href="#XML-简介" class="headerlink" title="XML 简介"></a>XML 简介</h2><p>XML 全称：E<strong>x</strong>tensible <strong>M</strong>arkup <strong>L</strong>anguage，即 <strong>可扩展标记语言</strong>。<br>XML 被设计用来 <strong>传输</strong> 和 <strong>存储</strong> 数据。HTML 被设计用来 <strong>显示</strong> 数据。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.zfl9.com/ss-redir.html</loc>
+    <lastmod>2018-03-12T07:01:15.514Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zfl9.com/array-search-sort-algo.html</loc>
+    <lastmod>2018-01-16T10:14:44.059Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zfl9.com/data-structures-algorithms.html</loc>
+    <lastmod>2018-01-14T08:20:42.631Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zfl9.com/java-collection.html</loc>
+    <lastmod>2018-01-14T02:46:44.095Z</lastmod>
+  </url>
+</urlset>
+</script></code></pre>
+<ul>
+<li>XML 是一种很像 HTML 的标记语言。</li>
+<li>XML 的设计宗旨是传输数据，而不是显示数据。</li>
+<li>XML 标签没有被预定义。您需要自行定义标签。</li>
+<li>XML 被设计为具有自我描述性。</li>
+<li>XML 是 W3C 的推荐标准。</li>
+</ul>
+<p><strong>XML 不会做任何事情</strong><br>这也许有点难以理解，但是 XML 不会做任何事情。<br>XML 被设计用来 <strong>结构化</strong>、<strong>存储</strong> 以及 <strong>传输</strong> 信息。<br>下面实例是 Jani 写给 Tove 的便签，存储为 XML：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<note>
+  <to>Tove</to>
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+</note>
+</script></code></pre>
+<p>上面的这条便签具有自我描述性。它包含了发送者和接受者的信息，同时拥有标题以及消息主体。但是，这个 XML 文档仍然没有做任何事情。它仅仅是包装在 XML 标签中的纯粹的信息。我们需要编写软件或者程序，才能传送、接收和显示出这个文档。</p>
+<ul>
+<li>XML 可作为配置文件使用</li>
+<li>XML 可作为小型数据库使用</li>
+</ul>
+<h2 id="XML-语法"><a href="#XML-语法" class="headerlink" title="XML 语法"></a>XML 语法</h2><p>XML 文档形成了一种树结构，它从”根部”开始，然后扩展到”枝叶”。<br>XML 文档必须包含根元素，根元素有且只有一个，其它情况均视为错误。<br>XML 文档由一系列的 Element 构成，Element 可以包含文本、属性、Element。<br><img src="https://www.w3schools.com/xml/nodetree.gif" alt="XML 文档树"></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<bookstore>
+  <book category="cooking">
+    <title lang="en">Everyday Italian</title>
+    <author>Giada De Laurentiis</author>
+    <year>2005</year>
+    <price>30.00</price>
+  </book>
+  <book category="children">
+    <title lang="en">Harry Potter</title>
+    <author>J K. Rowling</author>
+    <year>2005</year>
+    <price>29.99</price>
+  </book>
+  <book category="web">
+    <title lang="en">Learning XML</title>
+    <author>Erik T. Ray</author>
+    <year>2003</year>
+    <price>39.95</price>
+  </book>
+</bookstore>
+</script></code></pre>
+<p><strong>XML 声明</strong><br>XML 声明不是必选项，但是如果使用 XML 声明，必须在文档的第一行，前面不得包含任何其他内容或空白。虽然 XML 声明是可选的，但是强烈建议使用 XML 声明。</p>
+<p>XML 声明包含下列内容：</p>
+<ul>
+<li><code>&lt;?xml version=&quot;1.0&quot;?&gt;</code>，xml 版本号，必选项<br>目前的 XML 版本为 1.0，以后的 XML 版本可能会更改该数字</li>
+<li><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</code>，字符编码，可选项<br>编码声明必须位于版本声明的后面，字符编码名称是大小写不敏感的</li>
+<li><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;</code>，独立声明，可选项<br>独立声明必须位于 XML 声明的尾部，它的取值为 <code>yes</code>/<code>no</code>，默认值为 <code>no</code></li>
+</ul>
+<p><strong>根元素</strong>：XML 文档有且只有一个根元素，根元素是其余元素的共同祖先元素。<br><strong>关闭标签</strong>：所有 XML 元素必须有关闭标签，不可省略。<code>&lt;tag&gt;&lt;/tag&gt;</code> 或 <code>&lt;tag /&gt;</code>。<br><strong>大小写敏感</strong>：XML 标签对大小写是敏感的，这是与 HTML 不同的地方之一。<br><strong>正确嵌套</strong>：XML 标签之间必须正确的嵌套，<code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;</code>错，<code>&lt;a&gt;&lt;b&gt;&lt;/b&gt;&lt;/a&gt;</code>对。<br><strong>属性值必须加引号</strong>：单双引号都行，单引号中允许双引号，反之亦然，否则需要转义。</p>
+<p><strong>XML 字符实体</strong>：文本、属性值中有 5 个特殊字符，要表示它们，建议使用实体引用：</p>
+<ul>
+<li><code>&lt;</code> 实体引用：<code>&amp;lt;</code>，英文：<code>less than</code></li>
+<li><code>&gt;</code> 实体引用：<code>&amp;gt;</code>，英文：<code>greater then</code></li>
+<li><code>&amp;</code> 实体引用：<code>&amp;amp;</code>，英文：<code>ampersand</code></li>
+<li><code>&#39;</code> 实体引用：<code>&amp;apos;</code>，英文：<code>apostrophe</code></li>
+<li><code>&quot;</code> 实体引用：<code>&amp;quot;</code>，英文：<code>quotation mark</code></li>
+</ul>
+<p><strong>XML 注释</strong>：语法同 HTML，<code>&lt;!-- 注释内容 --&gt;</code>，多个注释之间不允许嵌套。<br><strong>XML 连续空白符</strong>：HTML 中的连续空白符将被缩减为一个，但 XML 中不会被缩减。<br><strong>XML 使用 LF 换行符</strong>：Windows 使用 CRLF、Linux 使用 LF、旧的 MAC 使用 CR。</p>
+<p><strong>XML 元素命名规则</strong></p>
+<ul>
+<li>元素名是大小写敏感的</li>
+<li>元素名必须以 <strong>字母</strong>、<strong>下划线</strong> 开头</li>
+<li>元素名不能以 <code>xml</code>、<code>XML</code>、<code>Xml</code> 等保留字符开头</li>
+<li>元素名可包含 <strong>字母</strong>、<strong>数字</strong>、<strong>下划线</strong>、<strong>连字符</strong>、<strong>英文句点</strong></li>
+</ul>
+<p><strong>元数据应存储为属性，数据本身应存储为元素</strong>，千万不要混用、滥用。</p>
+<h2 id="XML-解析"><a href="#XML-解析" class="headerlink" title="XML 解析"></a>XML 解析</h2><p>目前解析 XML 文档的两种基本方式：<strong>DOM</strong>、<strong>SAX</strong>。</p>
+<p><strong>大名鼎鼎的 DOM</strong>（Document Object Model，文档对象模型）<br>说它大名鼎鼎可是一点不为过，DOM 是 W3C 处理 XML 的标准 API，它是许多其它与 XML 处理相关的标准的基础，不仅是 Java，其它诸如 Javascript，PHP，MS .NET 等等语言都实现了该标准， 成为了应用最为广泛的 XML 处理方式。当然，为了能提供更多更加强大的功能，Java 对于 DOM 直接扩展工具类有很多，比如很多 Java 程序员耳熟能详的 JDOM，DOM4J 等等， 它们基本上属于对 DOM 接口功能的扩充，保留了很多 DOM API 的特性，许多原本的 DOM 程序员甚至都没有任何障碍就熟练掌握了另外两者的使用，直观、易于操作的方式使它深受广大 Java 程序员的喜爱。</p>
+<p><strong>绿色环保的 SAX</strong>（Simple API for XML，事件驱动模型）<br>SAX 的应运而生有它特殊的需要，为什么说它绿色环保呢，这是因为 SAX 使用了最少的系统资源和最快速的解析方式对 XML 处理提供了支持。但随之而来繁琐的查找方式也给广大程序员带来许多困扰，常常令人头痛不已，同时它对 XPath 查询功能的支持，令人们对它又爱又恨。</p>
+<p><strong>DOM、SAX 优缺点对比</strong><br><strong><em>DOM</em></strong><br>优缺点：实现 W3C 标准，有多种编程语言支持这种解析方式，并且这种方法本身操作上简单快捷，十分易于初学者掌握。其处理方式是将 XML 整个作为类似树结构的方式读入内存中以便操作及解析，因此支持应用程序对 XML 数据的内容和结构进行修改，但是同时由于其需要在处理开始时将整个 XML 文件读入到内存中去进行分析，因此其在解析大数据量的 XML 文件时会遇到类似于内存泄露以及程序崩溃的风险，请对这点多加注意。</p>
+<p>适用范围：小型 XML 文件解析、需要全解析或者大部分解析 XML、需要修改 XML 树内容以生成自己的对象模型。</p>
+<p><strong><em>SAX</em></strong><br>SAX 从根本上解决了 DOM 在解析 XML 文档时产生的占用大量资源的问题。其实现是通过类似于流解析的技术，通读整个 XML 文档树，通过事件处理器来响应程序员对于 XML 数据解析的需求。由于其不需要将整个 XML 文档读入内存当中，它对系统资源的节省是十分显而易见的，它在一些需要处理大型 XML 文档以及性能要求较高的场合有起了十分重要的作用。支持 XPath 查询的 SAX 使得开发人员更加灵活，处理起 XML 来更加的得心应手。但是同时，其仍然有一些不足之处也困扰广大的开发人员：首先是它十分复杂的 API 接口令人望而生畏，其次由于其是属于类似流解析的文件扫描方式，因此不支持应用程序对于 XML 树内容结构等的修改，可能会有不便之处。</p>
+<p>适用范围：大型 XML 文件解析、只需要部分解析或者只想取得部分 XML 树内容、有 XPath 查询需求、有自己生成特定 XML 树对象模型的需求。</p>
+<h2 id="XML-命名空间"><a href="#XML-命名空间" class="headerlink" title="XML 命名空间"></a>XML 命名空间</h2><p>在 XML 中，元素名称是由开发者定义的，当两个不同的文档使用相同的元素名时，就会发生命名冲突。</p>
+<p>使用 XML namespace 机制可以有效的避免命名冲突问题。XML 命名空间类似于 C++ 的命名空间、Java 的全限定类名，它们的作用都是类似的，为了避免命名冲突。</p>
+<p>XML 命名空间（XML namespace，也译作 XML 名称空间、XML 名字空间）用于在一个 XML 文档中提供 <strong>名字唯一</strong> 的 <strong>元素</strong> 和 <strong>属性</strong>。XML 命名空间在 W3C 推荐规范《Namespaces in XML》中定义。XML 命名空间于 1999年1月14日成为 W3C 的推荐规范。</p>
+<p>W3C 将 XML 命名空间定义为以 <strong>国际化资源标识符</strong>（Internationalized Resource Identifier，IRI）引用为标识的 <strong>元素名</strong> 和 <strong>属性名</strong> 的集合。但通常都是使用 URI（统一资源标识符）作为 XML 命名空间的标识符。</p>
+<p>声明一个命名空间使用属性 <code>xmlns</code>，语法如下：<code>xmlns[:prefix]=&quot;uri&quot;</code>，其中 <code>:prefix</code> 前缀部分是可选的，未定义前缀的命名空间将被用作 <strong>缺省命名空间</strong>。命名空间的 URI 仅仅是唯一的标识符，推荐规范并不要求，也不建议通过其获取信息。XML 解析器处理命名空间 URI 时，也仅仅将其作为普通字符串。之所以使用 URI 而不是普通字符串，是因为 URI 的重名概率很小。</p>
+<p>XML 文档中的元素名和属性名可以使用限定名或非限定名，限定名由命名空间前缀和原始名组合而成，如 <code>xhtml:table</code>，非限定名只有原始名，没有前缀部分。<strong>非限定名被认为属于缺省命名空间</strong>，如果缺省命名空间没有定义，则属于 <strong>无命名空间</strong>。</p>
+<p>在一个元素中声明的命名空间，对它自己和它所有子元素都是有效的，一种通常的做法是，<strong>在 XML 文档的根元素中声明所使用的默认命名空间</strong>。在子元素中声明的命名空间前缀可以覆盖父元素中声明的命名空间前缀。</p>
+<h2 id="XML-CDATA"><a href="#XML-CDATA" class="headerlink" title="XML CDATA"></a>XML CDATA</h2><p>XML 文档中的所有文本均会被解析器解析。<br>只有 CDATA 区段中的文本会被解析器忽略。</p>
+<p>CDATA（Character Data） 是不应该由 XML 解析器解析的文本数据。<br>在 XML 中，像 <code>&lt;</code> 和 <code>&amp;</code> 等字符出现在文本值、属性值中都是非法的。<br><code>&lt;</code> 会产生错误，因为解析器会把该字符解释为新元素的开始。<br><code>&amp;</code> 会产生错误，因为解析器会把该字符解释为字符实体的开始。</p>
+<p>某些文本，比如 JS 代码，包含大量 <code>&lt;</code> 或 <code>&amp;</code> 字符。<br>为了避免错误，我们可以将脚本代码定义为 CDATA。</p>
+<pre><code class="language-xml line-numbers">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;html xmlns=&quot;http://www.w3.org/html5&quot;&gt;
+  &lt;head&gt;
+    &lt;title&gt;hello, world!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;hello, world!&lt;/h1&gt;
+    &lt;script&gt;
+      &lt;![CDATA[
+        function compare(a, b) {
+          if (a &lt; b)
+            return -1;
+          else if (a === b)
+            return 0;
+          else if (a &gt; b)
+            return 1;
+        }
+      ]]&gt;
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/restful.html" rel="next" title="RESTful API">
+                <i class="fa fa-chevron-left"></i> RESTful API
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/javascript.html" rel="prev" title="JavaScript 笔记">
+                JavaScript 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#XML-简介"><span class="nav-number">1.</span> <span class="nav-text">XML 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML-语法"><span class="nav-number">2.</span> <span class="nav-text">XML 语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML-解析"><span class="nav-number">3.</span> <span class="nav-text">XML 解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML-命名空间"><span class="nav-number">4.</span> <span class="nav-text">XML 命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML-CDATA"><span class="nav-number">5.</span> <span class="nav-text">XML CDATA</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/xml.html';
+          this.page.identifier = 'xml.html';
+          this.page.title = 'XML 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

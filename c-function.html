@@ -1,0 +1,730 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言函数">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 函数，函数声明，函数定义，形式参数和实际参数">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 函数">
+<meta property="og:url" content="https://www.zfl9.com/c-function.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 函数，函数声明，函数定义，形式参数和实际参数">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 函数">
+<meta name="twitter:description" content="c语言 - 函数，函数声明，函数定义，形式参数和实际参数">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-function.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 函数 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-function.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 函数
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-03T08:33:00+08:00">
+                2017-07-03
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-function.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-function.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-function.html" class="leancloud_visitors" data-flag-title="c语言 - 函数">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 函数，函数声明，函数定义，形式参数和实际参数</p>
+<a id="more"></a>
+<h2 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h2><p>如果函数不需要参数，应该将其参数设为<code>void</code>，这样如果在别处调用该函数时传入了参数，在编译期间会报错，这是一个编程好习惯，虽然这并不是必须这么做，你也可以不加<code>void</code>，通常情况下也没什么不妥。函数可以有多个<code>return</code>语句，但是只有第一个<code>return</code>语句会被执行。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void func(void){
+    printf("func\n");
+}
+
+int main(){
+    func();
+    return 0;
+}
+</script></code></pre>
+<p>函数名会在汇编阶段、链接阶段、运行阶段（动态链接）被替换成函数的入口地址：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void func1(void){}
+void func2(void){}
+void func3(void){}
+
+int main(){
+    printf("func1: %p, func2: %p, func3: %p, main: %p\n", func1, func2, func3, main);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [9:55:09]
+$ gcc a.c
+
+# root @ localhost in ~ [9:55:11]
+$ ./a.out
+func1: 0x40052d, func2: 0x400533, func3: 0x400539, main: 0x40053f
+
+# root @ localhost in ~ [9:55:12]
+$ ./a.out
+func1: 0x40052d, func2: 0x400533, func3: 0x400539, main: 0x40053f
+
+# root @ localhost in ~ [9:55:13]
+$ ./a.out
+func1: 0x40052d, func2: 0x400533, func3: 0x400539, main: 0x40053f
+</script></code></pre>
+<h2 id="形参和实参"><a href="#形参和实参" class="headerlink" title="形参和实参"></a>形参和实参</h2><p>函数定义中出现的参数称之为<code>形式参数</code>，可以看作是一个占位符<br>在函数调用时出现的参数称之为<code>实际参数</code>，此时，将<code>实参</code>的值赋给<code>形参</code>，也就是内存的拷贝<br><code>形参</code>只有在函数被调用时分配内存，在定义函数时，不分配内存<br>注意，在调用函数过程中，<code>形参</code>和<code>实参</code>的值互不影响，因为它们拥有不同的内存</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void swap(int m, int n){
+    printf("(形参)交换前: m: %d, n: %d\n", m, n);
+    int temp;
+    temp = m;
+    m = n;
+    n = temp;
+    printf("(形参)交换后: m: %d, n: %d\n", m, n);
+}
+
+int main(){
+    int m=10, n=20;
+    swap(m, n);
+    printf("(实参)交换后: m: %d, n: %d\n", m, n);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ localhost in ~ [10:24:59]
+$ gcc a.c
+
+# root @ localhost in ~ [10:25:05]
+$ ./a.out
+(形参)交换前: m: 10, n: 20
+(形参)交换后: m: 20, n: 10
+(实参)交换后: m: 10, n: 20
+</script></code></pre>
+<h2 id="函数声明"><a href="#函数声明" class="headerlink" title="函数声明"></a>函数声明</h2><p>在使用某个函数之前，我们应该先定义该函数<br>但是某些情况，我们想让函数在后面定义，这时候就需要函数声明<br><code>函数声明</code>也称为<code>函数原型</code>，函数声明很简单，只是去掉大括号就行</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void swap(int m, int n); //函数声明
+/*
+void swap(int, int); //也可以省略m, n
+*/
+
+int main(){
+    int m=10, n=20;
+    swap(m, n);
+    printf("(实参)交换后: m: %d, n: %d\n", m, n);
+    return 0;
+}
+
+//函数定义
+void swap(int m, int n){
+    printf("(形参)交换前: m: %d, n: %d\n", m, n);
+    int temp;
+    temp = m;
+    m = n;
+    n = temp;
+    printf("(形参)交换后: m: %d, n: %d\n", m, n);
+}
+</script></code></pre>
+<h2 id="关于函数"><a href="#关于函数" class="headerlink" title="关于函数"></a>关于函数</h2><p>函数不能嵌套定义，但是可以嵌套调用，所谓嵌套调用就是可以在一个函数的定义或调用过程中出现对另一函数的调用。如果自己调用自己，那么就属于递归调用，C 语言允许递归调用，但是递归调用逻辑结构不清晰，容易造成代码混乱，常被改写为循环。</p>
+<p>函数体外，除了<strong>预处理指令</strong>、<strong>变量的定义</strong>、<strong>类型的定义</strong>，不允许出现任何具有运算、逻辑处理能力的语句。<br><code>main()</code>函数是 C 程序的入口函数，是最先入栈的函数，也是最后出栈的函数，可以调用其它函数（包括 main 函数自己）。</p>
+<h2 id="main-函数"><a href="#main-函数" class="headerlink" title="main()函数"></a>main()函数</h2><p>我们之前的main()函数，都是没有参数的，但是实际上，main()函数是可以接收命令行参数的，它有两种标准的原型：</p>
+<pre><code class="language-c"><script type="text/plain">int main();
+int main(int argc, char *argv[])
+</script></code></pre>
+<p>第一个参数是字符串的数目，第二个参数是一个指针数组，指针数组的第0个元素总是当前被执行的程序的文件名，所以，argc最小也为1。</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(int argc, char *argv[]){
+    printf("%d %s\n", argc, argv[0]);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c"><script type="text/plain"># root @ localhost in ~ [21:32:09]
+$ gcc a.c
+
+# root @ localhost in ~ [21:32:20]
+$ ./a.out
+1 ./a.out
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(int argc, char *argv[]){
+    int i;
+    for(i=0; i<5; i++){
+        printf("%d: %s\n", i, argv[i]);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c"><script type="text/plain"># root @ localhost in ~ [21:36:22]
+$ ./a.out
+0: ./a.out
+1: (null)
+2: USER=root
+3: LOGNAME=root
+4: HOME=/root
+
+# root @ localhost in ~ [21:36:25]
+$ ./a.out 1 2 3 4 5 6
+0: ./a.out
+1: 1
+2: 2
+3: 3
+4: 4
+</script></code></pre>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p>函数指针可以作为某个函数的参数来使用，<code>回调函数</code>就是一个通过函数指针调用的函数。先看下面的例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+void setArrayElem(int *array, int len, int (*func)(void)){
+    for(int i=0; i<len; i++){
+        array[i] = func();
+    }
+}
+
+int getNextRand(void){
+    return rand();
+}
+
+int main(){
+    int array[10], len = sizeof(array) / sizeof(int);
+    setArrayElem(array, len, getNextRand);
+    for(int i=0; i<len; i++){
+        printf("%d ", array[i]);
+    }
+    printf("\n");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c"><script type="text/plain"># root @ localhost in ~ [16:41:49]
+$ gcc a.c
+
+# root @ localhost in ~ [16:41:50]
+$ ./a.out
+1804289383 846930886 1681692777 1714636915 1957747793 424238335 719885386 1649760492 596516649 1189641421
+</script></code></pre>
+<p>被传入的函数，即<code>getNextRand()</code>，叫做<code>回调函数</code>；传入回调函数这个动作，即<code>setArrayElem(array, len, getNextRand)</code>，叫做<code>登记回调函数</code>；函数<code>setArrayElem()</code>叫做<code>中间函数</code>；中间函数的调用者，即<code>main()</code>函数，叫做<code>起始函数</code>。</p>
+<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h2><p>不知道你发现没有，我们一直用的 printf()、scanf() 其实是参数个数可变的函数，所谓可变参数就是，能根据具体的需求接受可变数量的参数。</p>
+<p>printf() 原型为：<code>int printf(const char *fmt, ...);</code><br>scanf() 原型为：<code>int scanf(const char *fmt, ...);</code></p>
+<p>除了第一个固定位置的参数<code>fmt</code>，就是<code>...</code>省略号了，这个省略号就表示可变参数</p>
+<p><strong>变参函数实现原理</strong><br>C 调用约定下可使用 va_list 系列变参宏实现变参函数，此处 va 意为 variable-argument（可变参数）</p>
+<p>先来认识一下 va_list 系列变参宏</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdarg.h>
+
+void var_args_func(int count, ...){ // count为变参列表的长度
+    va_list vl;     // 定义一个va_list类型的变量vl
+    va_start(vl, count);    // 初始化变量，使其指向第一个可变参数，该宏的第二个参数是变参列表的前一个参数，即最后一个固定参数
+    int value1 = va_arg(vl, int);   // 该宏返回变参列表中的当前变参值，并使其指向下一个变参，第二个参数是要返回的当前变参类型
+    double value2 = va_arg(vl, double); // 依次取出变参列表中的参数
+    char *value3 = va_arg(vl, char *);  // ...
+    va_end(vl);     // 变参列表结束
+    printf("value1: %d, value2: %.3f, value3: %s\n", value1, value2, value3);
+}
+
+int main(void){
+    var_args_func(3, 100, 3.1415926d, "www.zfl9.com");
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~ [20:29:04]
+$ gcc a.c
+
+# root @ localhost in ~ [20:29:18]
+$ ./a.out
+value1: 100, value2: 3.142, value3: www.zfl9.com
+</script></code></pre>
+<p>这实际上也不是真正的变参函数，我们实际上内定了参数为 int、double、char *</p>
+<p>变参宏根据堆栈生长方向和参数入栈特点，从最靠近第一个可变参数的固定参数开始，依次获取每个可变参数的地址。变参宏的定义和实现因操作系统、硬件平台及编译器而异(但原理相似)。</p>
+<p><strong>函数参数入栈顺序</strong><br>我们知道，栈是由高地址向低地址延伸的，栈顶在内存的低地址，先入栈的变量，内存地址高于后入栈的变量<br>一般来说，c语言的函数参数入栈顺序是从右往左的，正好符合我们的思维习惯，参数也是从低到高的地址依次排列</p>
+<p>但是实际上还是因操作系统、硬件平台、编译器而异，比如我的树莓派3b(armv7)上使用gcc编译就是从左往右入栈的</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+void func(int a, int b, int c){
+    printf("%p, %p, %p\n", &a, &b, &c);
+}
+
+int main(){
+    func(1, 2, 3);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ alarmpi in ~ [20:49:13]
+$ gcc a.c
+
+# root @ alarmpi in ~ [20:49:27]
+$ ./a.out
+0x7ea5f524, 0x7ea5f520, 0x7ea5f51c
+</script></code></pre>
+<p>而且奇怪的是，我在CentOS7.3上使用gcc也是这种情况，而在VS2017下就相反了</p>
+<p><strong>注意：va_arg(vl, data_type) 的 data_type 不能为下面这些数据类型:</strong></p>
+<ul>
+<li><code>char</code>、<code>signed char</code>、<code>unsigned char</code></li>
+<li><code>short</code>、<code>signed short</code>、<code>unsigned short</code></li>
+<li><code>float</code></li>
+</ul>
+<p>因为在C语言中，调用者会对每个参数执行<code>默认实际参数提升(default argument promotions)</code></p>
+<ul>
+<li><code>float</code>类型提升为<code>double</code></li>
+<li><code>char</code>、<code>short</code>以及对应的<code>signed</code>、<code>unsigned</code>提升为<code>int</code></li>
+<li>如果<code>int</code>不能存储原值，则提升为<code>unsigned int</code></li>
+</ul>
+<p><strong>简单应用：利用变参函数，求一组数字的平均数</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdarg.h>
+
+double average(int count, ...){
+    va_list vl;
+    va_start(vl, count);
+    double sum = 0;
+    for(int i=0; i<count; i++){
+        sum += va_arg(vl, int);
+    }
+    va_end(vl);
+    return sum / count;
+}
+
+int main(void){
+    printf("%.3lf\n", average(5, 1, 2, 3, 4, 5));
+    printf("%.3lf\n", average(3, 1, 2, 3));
+    printf("%.3lf\n", average(2, 1, 2));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ alarmpi in ~ [21:04:08]
+$ gcc a.c
+
+# root @ alarmpi in ~ [21:04:10]
+$ ./a.out
+3.000
+2.000
+1.500
+</script></code></pre>
+<p>仔细想想，在使用printf()、scanf()及其家族函数时，我们明明没有像上面一样传入一个count这样存储参数个数的参数，而它们却能够准确无误的输出我们给的各种数据类型？</p>
+<p>其实它是通过解析<code>const char *fmt</code>中的格式化字符串来判断的，有多少个<code>%</code>那就有多少个变参，然后再根据它们后面的数据类型，就可以知道它们的长度，进而取得它们的值了！</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-array.html" rel="next" title="c语言 - 数组">
+                <i class="fa fa-chevron-left"></i> c语言 - 数组
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-judge-loop.html" rel="prev" title="c语言 - 判断与循环">
+                c语言 - 判断与循环 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数定义"><span class="nav-number">1.</span> <span class="nav-text">函数定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#形参和实参"><span class="nav-number">2.</span> <span class="nav-text">形参和实参</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数声明"><span class="nav-number">3.</span> <span class="nav-text">函数声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于函数"><span class="nav-number">4.</span> <span class="nav-text">关于函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-函数"><span class="nav-number">5.</span> <span class="nav-text">main()函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调函数"><span class="nav-number">6.</span> <span class="nav-text">回调函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可变参数"><span class="nav-number">7.</span> <span class="nav-text">可变参数</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-function.html';
+          this.page.identifier = 'c-function.html';
+          this.page.title = 'c语言 - 函数';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

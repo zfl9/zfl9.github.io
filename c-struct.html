@@ -1,0 +1,1254 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="C语言 结构体 位域 共用体 枚举 内存对齐">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+<meta property="og:url" content="https://www.zfl9.com/c-struct.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+<meta name="twitter:description" content="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-struct.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 结构体、位域、共用体、枚举、内存对齐 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-struct.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 结构体、位域、共用体、枚举、内存对齐
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-11T13:57:00+08:00">
+                2017-07-11
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-struct.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-struct.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-struct.html" class="leancloud_visitors" data-flag-title="c语言 - 结构体、位域、共用体、枚举、内存对齐">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 结构体、位域、共用体、枚举、内存对齐</p>
+<a id="more"></a>
+<h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><p>数组可以存放一组相同数据类型的集合，但是如果一组数据类型不同的集合如何存放呢？那就是<code>结构体(struct)</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct 结构体名{
+    结构体成员
+};
+</script></code></pre>
+<p>结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同也可以不同，这样的变量或数组都称为结构体的<code>成员(member)</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct Student{
+    char *name;
+    int age;
+    float score;
+};
+</script></code></pre>
+<p>Student 为结构体名，它包含了 3 个成员：name、age、score，结构体成员的定义和变量的定义没什么不同，只是不能初始化，<strong>注意花括号后面的分号，不能省略，因为这是一个完整的语句！</strong></p>
+<p>结构体也是一种数据类型，是我们自定义的一种数据类型，它可以包含多个其他类型的数据</p>
+<p>像 int、char、float 等 C 语言本身提供的数据类型，我们称之为<code>基本数据类型</code>（基本类型），不能再拆解；<br>而结构体可以包含多个基本数据类型的数据，也可以包含其它的结构体，我们称之为<code>构造数据类型</code>（复合类型）。</p>
+<p>注意，对于基本类型，我们用 int、short、char 等 C 语言本身提供的标识符表示，而对于我们自定义的结构体数据类型，以上面的为例子，我们用<code>struct Student</code>来描述这种构造类型。</p>
+<p>它们都是描述数据类型的标识符，没有区别，只是有的是 C 语言自带的，有的是我们自定义的。</p>
+<p>还有一点要注意：<br>上面的代码只是定义了一个新的数据类型，它本身不占用内存，只有用它来定义变量时，才会给变量分配内存！就如同 int 一样，int 本身是不占用空间的，只有执行 <code>int i;</code> 才会分配 4 个字节的内存给变量 i。</p>
+<p>下面我们来用我们自定义的类型来定义变量：<br><code>struct Student stu1, stu2;</code></p>
+<p>也可以在定义结构体的同时定义变量：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct Student{
+    char *name;
+    int age;
+    float score;
+} stu1, stu2;
+</script></code></pre>
+<p>也可以省略结构体名，相当于一个匿名的结构体，如果没有结构体名，在之后的代码中就不能再用它来定义变量了，除了在定义结构体的同时定义的变量</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct{
+    char *name;
+    int age;
+    float score;
+} stu1, stu2;
+</script></code></pre>
+<p>理论上讲，结构体中的成员在内存中是连续的，但是实际上在编译器的具体实现中，各个成员之间可能会存在缝隙，这是因为C语言内存对齐的原因</p>
+<p><strong>什么是内存对齐，为什么要对齐？</strong></p>
+<ul>
+<li>现代计算机中内存空间都是按照 byte 划分的，从理论上讲似乎对任何类型的变量的访问可以从任何地址开始，但实际情况是在访问特定变量的时候经常在特定的内存地址访问，这就需要各类型数据按照一定的规则在空间上排列，而不是顺序的一个接一个的排放，这就是对齐。</li>
+<li>对齐的作用和原因：各个硬件平台对存储空间的处理上有很大的不同。一些平台对某些特定类型的数据只能从某些特定地址开始存取。其他平台可能没有这种情况，但是最常见的是如果不按照适合其平台的要求对数据存放进行对齐，会在存取效率上带来损失。<br>比如有些平台每次读都是从偶地址开始，如果一个 int 型（假设为32位）如果存放在偶地址开始的地方，那么一个读周期就可以读出，而如果存放在奇地址开始的地方，就可能会需要 2 个读周期，并对两次读出的结果的高低字节进行拼凑才能得到该 int 数据。显然在读取效率上下降很多，这也是空间和时间的博弈。</li>
+</ul>
+<p>“内存对齐”应该是编译器的“管辖范围”。<br>编译器为程序中的每个“数据单元”安排在适当的位置上。<br>但是C语言的一个特点就是太灵活，太强大，它允许你干预“内存对齐”</p>
+<p><strong>对齐规则</strong><br>每个特定平台上的编译器都有自己默认的“对齐系数”，我们可以通过预处理指令<code>#pragma pack(n), n=1, 2, 4, 8, 16...</code>来改变这一系数，这个 n 就是对齐系数</p>
+<ul>
+<li><strong><code>数据成员</code></strong>对齐规则：<code>结构(struct)</code>或<code>联合(union)</code>的数据成员，第一个数据成员放在 offset 为 0 的地方，以后的每个数据成员的对齐按照<code>#pragma pack(n)</code>指定的 <code>n</code> 值和该数据成员本身的长度 <code>len = sizeof(type)</code> 中，较小的那个进行，如果没有显示指定<code>n</code>值，则以<code>len</code>为准，进行对齐</li>
+<li><strong><code>结构/联合</code></strong>整体对齐规则：在数据成员对齐完成之后，结构/联合本身也要对齐，对齐按照<code>#pragma pack(n)</code>指定的<code>n</code>值和该结构/联合最大数据成员长度<code>max_len_of_members</code>中，较小的那个进行，如果没有显示指定<code>n</code>值，则以<code>max_len_of_members</code>为准，进行对齐</li>
+<li>结合1、2可推断：当<code>n</code>值均超过(或等于)所有数据成员的长度时，这个<code>n</code>值的大小将不产生任何效果</li>
+</ul>
+<p><strong>内存对齐的例子</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct{
+    char a;
+    double b;
+    int c;
+} test;
+
+int main(){
+    printf("%d\n", sizeof(test));
+    return 0;
+}
+</script></code></pre>
+<p>你肯定会想，占用的大小为 sizeof(char) + sizeof(double) + sizeof(int) = 1 + 8 + 4 = 13 字节，然而：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:46:05]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:46:07]
+$ ./a.out
+24
+</script></code></pre>
+<p>我们按照上面的对齐规则来分析一下：<br>首先是成员<code>a</code>，类型为<code>char</code>，长度为<code>1</code>，放在偏移量为 0 的地方，然后偏移量变为了 1<br>然后是成员<code>b</code>，类型为<code>double</code>，长度为<code>8</code>，要放在偏移量为 8 的整数倍的地方，所以就放在 8 上，然后偏移量变为了 8 + 8 = 16<br>最后是成员<code>c</code>，类型为<code>int</code>，长度为<code>4</code>，要是 4 的整数倍，16 刚好是它的倍数，偏移量变为了 16 + 4 = 20<br>最后，整个结构体也要对齐，成员中最大的长度为 8，而要它的整数倍，那就是 24 了，所以整个结构体的长度就是 24 个字节</p>
+<p>再来看定义了<code>#pragma pack(n)</code>的情况：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+#pragma pack(4)
+
+struct{
+    char a;
+    double b;
+    int c;
+} test;
+
+int main(){
+    printf("%d\n", sizeof(test));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:57:12]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:57:14]
+$ ./a.out
+16
+</script></code></pre>
+<p>根据对齐规则：<br>对于成员<code>a</code>，对齐数为 1，因为 1 小于 4，放在偏移量为 0 的位置上，然后长度变为 1<br>对于成员<code>b</code>，对齐数为 4，因为 4 小于 8，放在偏移量为 4 的位置上，长度变为 4 + 8 = 12<br>对于成员<code>c</code>，对齐数为 4，两个数相等，放在偏移量为 12 的位置上，长度变为 12 + 4 = 16<br>最后是结构体，最大的成员长度 8，大于 4，所以取 4，刚好整除，所以就是 16 字节</p>
+<p><strong>成员的获取与赋值</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+};
+
+int main(){
+    struct Student stu;
+    stu.name = "Otokaze";
+    stu.age = 18;
+    stu.score = 119.5f;
+    printf("%s 今年 %d 岁，Ta 考了 %.1f 分！\n", stu.name, stu.age, stu.score);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [14:51:37]
+$ gcc a.c
+
+# root @ localhost in ~/test [14:51:40]
+$ ./a.out
+Otokaze 今年 18 岁，Ta 考了 119.5 分！
+</script></code></pre>
+<p>除了可以对成员一一赋值，也可以在定义的时候进行整体赋值，这和数组非常相似，注意，只能在定义的时候进行整体赋值，其他时候只能一一赋值！数组也是一样的道理</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+} stu = {
+    "Otokaze",
+    18,
+    119.5f,
+};
+
+int main(){
+    printf("%s 今年 %d 岁，Ta 考了 %.1f 分！\n", stu.name, stu.age, stu.score);
+    return 0;
+}
+</script></code></pre>
+<p>再来看看下面这个例子；</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+};
+
+int main(){
+    struct Student stu;
+    printf("Name: ");
+    scanf("%s", stu.name);
+    printf("Age: ");
+    scanf("%d", &stu.age);
+    printf("Score: ");
+    scanf("%f", &stu.score);
+    printf("%s 今年 %d 岁，Ta 考了 %.1f 分！\n", stu.name, stu.age, stu.score);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:07:31]
+$ gcc a.c
+
+# root @ localhost in ~/test [15:07:33]
+$ ./a.out
+Name: Otokaze
+Age: 18
+Score: 118.5
+Otokaze 今年 18 岁，Ta 考了 118.5 分！
+</script></code></pre>
+<p>好像没什么问题，对吧，我们再来改一下，加了个循环：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+};
+
+int main(){
+    for(int i=0; i<5; i++){
+        struct Student stu;
+        printf("Name: ");
+        scanf("%s", stu.name);
+        printf("Age: ");
+        scanf("%d", &stu.age);
+        printf("Score: ");
+        scanf("%f", &stu.score);
+        printf("%s 今年 %d 岁，Ta 考了 %.1f 分！\n", stu.name, stu.age, stu.score);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:09:29]
+$ gcc b.c
+
+# root @ localhost in ~/test [15:09:30]
+$ ./a.out
+Name: Otokaze
+[1]    31162 segmentation fault  ./a.out
+</script></code></pre>
+<p>段错误？为什么？<br>这是一个很多初学者都会遇到的一个问题，包括我自己，我们来一步步分析：</p>
+<p>先来分析第一个例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;     // 这是一个指针变量，由于我的编译环境是 64bit 系统，所以一个指针变量的长度为 64bit / 8bit = 8个字节
+    int age;        // 整型变量，4字节
+    float score;    // 浮点型变量，4字节
+};
+// 注意在上面所说的成员的占用内存大小到目前为止都还没分配，我只是先说明一下，再来看下面的代码：
+int main(){
+    struct Student stu; /* 分配内存，stu变量占用的内存大小我们先不考究，但是它每个成员的内存大小我们已经可以确认
+stu.name分配了8个字节，stu.age分配了4个字节，stu.score分配了4个字节 */
+    printf("Name: ");
+    scanf("%s", stu.name); /* 将stu.name变量的值，即该指针保存的地址传递给scanf()，这时候问题来了，因为这个指针没有初始化，所以它现在指向的内存是随机的，对于它指向的内存，该指针不一定有读和写的权限，所以极有可能指向了一块没有权限的内存，就会导致段错误！ */
+    printf("Age: ");
+    scanf("%d", &stu.age); // 没问题，stu.age分配了有效的内存，用以存储 int 类型的数据
+    printf("Score: ");
+    scanf("%f", &stu.score); // 也没问题，stu.score分配了有效的内存，用以存储 float 类型的数据
+    printf("%s 今年 %d 岁，Ta 考了 %.1f 分！\n", stu.name, stu.age, stu.score);
+    return 0;
+}
+</script></code></pre>
+<p>很奇怪，为什么我们第一个例子，在运行的时候并没有发生任何异常，因为恰好它指向的内存是该指针有权限(读和写)的一块内存<br>如果运气不好，指向了一块只读的内存比如常量区，或者指向了代码区，这是会致命的！</p>
+<p>为了看到效果，我们在外边加了一个 for 循环，所以问题一下子就出来了</p>
+<p>那如何解决这个问题？那就要在使用这个指针之前，为其分配内存空间，让它指向一块有意义的内存</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+#define STRLEN 128
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+};
+
+int main(){
+    for(int i=0; i<5; i++){
+        struct Student stu;
+        printf("Name: ");
+        stu.name = (char *)malloc(sizeof(char) * STRLEN);
+        scanf("%s", stu.name);
+        printf("Age: ");
+        scanf("%d", &stu.age);
+        printf("Score: ");
+        scanf("%f", &stu.score);
+        printf("%s 今年 %d 岁，Ta 考了 %.1f 分！\n", stu.name, stu.age, stu.score);
+        free(stu.name);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [15:40:34]
+$ gcc b.c
+
+# root @ localhost in ~/test [15:41:03]
+$ ./a.out
+Name: Otokaze
+Age: 18
+Score: 129
+Otokaze 今年 18 岁，Ta 考了 129.0 分！
+Name: 张三
+Age: 10
+Score: 39
+张三 今年 10 岁，Ta 考了 39.0 分！
+Name: 李四
+Age: 17
+Score: 100
+李四 今年 17 岁，Ta 考了 100.0 分！
+Name: 二狗子
+Age: 15
+Score: 0
+二狗子 今年 15 岁，Ta 考了 0.0 分！
+Name: 马云
+Age: 45
+Score: 150
+马云 今年 45 岁，Ta 考了 150.0 分！
+</script></code></pre>
+<h2 id="结构体数组"><a href="#结构体数组" class="headerlink" title="结构体数组"></a>结构体数组</h2><p>所谓结构体数组，就是数组的每个元素都是一个结构体<br>定义结构体数组：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct Student{
+    char *name;
+    int age;
+    float score;
+} stus[3] = {
+    {"Otokaze", 18, 119},
+    {"ZhangSan", 17, 120},
+    {"Lisi", 19, 110.5}
+};
+</script></code></pre>
+<p>使用也很简单：<br><code>int myAge = stus[1].age</code></p>
+<h2 id="结构体指针"><a href="#结构体指针" class="headerlink" title="结构体指针"></a>结构体指针</h2><pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+} stu;
+
+int main(){
+    struct Student *p = &stu;
+    (*p).name = (char *)malloc(sizeof(char) * 30);
+    printf("name: ");
+    scanf("%s", (*p).name);
+    printf("age: ");
+    scanf("%d", &((*p).age));
+    printf("score: ");
+    scanf("%f", &((*p).score));
+    printf("Name: %s, Age: %d, Score: %.1f\n", (*p).name, (*p).age, (*p).score);
+    free((*p).name);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [16:23:45]
+$ gcc a.c
+
+# root @ localhost in ~/test [16:23:47]
+$ ./a.out
+name: Otokaze
+age: 18
+</script></code></pre>
+<p>但是每次都用<code>*p</code>取数据，太麻烦了，我们可以直接用<code>-&gt;</code>来通过指针直接获取结构体的成员，这也是<code>-&gt;</code>在c语言中唯一的用途</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+} stu;
+
+int main(){
+    struct Student *p = &stu;
+    p->name = (char *)malloc(sizeof(char) * 30);
+    printf("name: ");
+    scanf("%s", p->name);
+    printf("age: ");
+    scanf("%d", &p->age);
+    printf("score: ");
+    scanf("%f", &p->score);
+    printf("Name: %s, Age: %d, Score: %.1f\n", p->name, p->age, p->score);
+    free(p->name);
+    return 0;
+}
+</script></code></pre>
+<p><strong>结构体数组指针的应用</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    int num;
+    char group;
+    float score;
+} stus[] = {
+    {"Zhou ping", 5, 18, 'C', 145.0},
+    {"Zhang ping", 4, 19, 'A', 130.5},
+    {"Liu fang", 1, 18, 'A', 148.5},
+    {"Cheng ling", 2, 17, 'F', 139.0},
+    {"Wang ming", 3, 17, 'B', 144.5}
+};
+
+int main(){
+    struct Student *ptr = stus;
+    int len = sizeof(stus) / sizeof(struct Student);
+    printf("%10s%10s%10s%10s%10s\n", "Name", "Age", "Num", "Group", "Score");
+    for(; ptr<stus+len; ptr++){
+        printf("%10s%10d%10d%10c%10.1f\n", ptr->name, ptr->age, ptr->num, ptr->group, ptr->score);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [16:39:55]
+$ gcc a.c
+
+# root @ localhost in ~/test [16:39:56]
+$ ./a.out
+      Name       Age       Num     Group     Score
+ Zhou ping         5        18         C     145.0
+Zhang ping         4        19         A     130.5
+  Liu fang         1        18         A     148.5
+Cheng ling         2        17         F     139.0
+ Wang ming         3        17         B     144.5
+</script></code></pre>
+<p><strong>结构体指针作为函数参数传递</strong><br>结构体变量名代表的是<code>整个集合本身</code>，作为函数参数时传递的整个集合，也就是所有成员，而不是像数组一样被编译器转换成一个指针<br>如果结构体成员较多，尤其是成员为数组时，传送的时间和空间开销会很大，影响程序的运行效率<br>所以最好的办法就是使用<code>结构体指针</code>，这时由实参传向形参的只是一个地址，非常快速</p>
+<p>如：计算全班总成绩、平均成绩、成绩低于140的人数</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    int num;
+    char group;
+    float score;
+} stus[] = {
+    {"Zhou ping", 5, 18, 'C', 145.0},
+    {"Zhang ping", 4, 19, 'A', 130.5},
+    {"Liu fang", 1, 18, 'A', 148.5},
+    {"Cheng ling", 2, 17, 'F', 139.0},
+    {"Wang ming", 3, 17, 'B', 144.5}
+};
+
+void average(struct Student *ptr, int len){
+    float sum = 0, aver;
+    int less_140 = 0;
+    struct Student * const ptr_cp = ptr;
+    for(; ptr<ptr_cp+len; ptr++){
+        sum += ptr->score;
+        if(ptr->score < 140){
+            less_140++;
+        }
+    }
+    aver = sum / len;
+    printf("总分: %.1f, 平均分: %.1f, 少于140分的人数: %d\n", sum, aver, less_140);
+}
+
+int main(){
+    struct Student *ptr = stus;
+    int len = sizeof(stus) / sizeof(struct Student);
+    average(ptr, len);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [16:57:22]
+$ gcc a.c
+
+# root @ localhost in ~/test [16:57:24]
+$ ./a.out
+总分: 707.5, 平均分: 141.5, 少于140分的人数: 2
+</script></code></pre>
+<h2 id="枚举-Enum"><a href="#枚举-Enum" class="headerlink" title="枚举 Enum"></a>枚举 Enum</h2><p>在实际编程中，有些数据的取值往往是有限的，只能是非常少量的整数，并且最好为每个值都取一个名字，以方便在后续代码中使用，比如一个星期只有七天，一年只有十二个月，一个班每周有六门课程等</p>
+<p>以一周7天为例，我们可以用<code>#define</code>来给每天指定一个名字：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+#define Mon 1
+#define Tues 2
+#define Wed 3
+#define Thurs 4
+#define Fri 5
+#define Sat 6
+#define Sun 7
+
+int main(){
+    int day;
+    scanf("%d", &day);
+    switch(day){
+        case Mon:
+            printf("Monday\n");
+            break;
+        case Tues:
+            printf("Tuesday\n");
+            break;
+        case Wed:
+            printf("Wednesday\n");
+            break;
+        case Thurs:
+            printf("Thursday\n");
+            break;
+        case Fri:
+            printf("Friday\n");
+            break;
+        case Sat:
+            printf("Saturday");
+            break;
+        case Sun:
+            printf("Sunday\n");
+            break;
+        default:
+            printf("Error!");
+    }
+    return 0;
+}
+</script></code></pre>
+<p><code>#define</code>命令虽然能解决问题，但也带来了不小的副作用，导致宏名过多，代码松散，看起来总有点不舒服<br>C语言提供了一种<code>枚举(Enum)</code>类型，能够列出所有可能的取值，并给它们取一个名字</p>
+<p>定义枚举类型：<code>enum NAME{var1, var2, var3...};</code></p>
+<p>例如：列出一个星期有几天：<code>enum week{ Mon, Tues, Wed, Thurs, Fri, Sat, Sun };</code><br>可以看到，我们仅仅给出了名字，却没有给出名字对应的值，这是因为枚举值默认从 0 开始，往后逐个加 1 (递增)<br>也就是说，week 中的 Mon、Tues …… Sun 对应的值分别为 0、1 …… 6</p>
+<p>我们也可以给每个名字指定一个值：<code>enum week{ Mon = 1, Tues = 2, Wed = 3, Thurs = 4, Fri = 5, Sat = 6, Sun = 7 };</code><br>更为简单的方法是只给第一个名字指定值：<code>enum week{ Mon = 1, Tues, Wed, Thurs, Fri, Sat, Sun };</code><br>这两种方式都是等效的，推荐使用后者</p>
+<p>枚举是一种类型，通过它可以定义枚举变量：<code>enum week a, b, c;</code></p>
+<p>也可以在定义枚举类型的同时定义变量：<code>enum week{ Mon = 1, Tues, Wed, Thurs, Fri, Sat, Sun } a, b, c;</code><br>然后就可以把列表中的值赋给变量：<code>a = Mon, b = Wed, c = Fri;</code></p>
+<p>判断用户输入的是星期几：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    enum week{ Mon = 1, Tues, Wed, Thurs, Fri, Sat, Sun } day;
+    scanf("%d", &day);
+    switch(day){
+        case Mon: puts("Monday"); break;
+        case Tues: puts("Tuesday"); break;
+        case Wed: puts("Wednesday"); break;
+        case Thurs: puts("Thursday"); break;
+        case Fri: puts("Friday"); break;
+        case Sat: puts("Saturday"); break;
+        case Sun: puts("Sunday"); break;
+        default: puts("Error!");
+    }
+    return 0;
+}
+</script></code></pre>
+<p>注意，枚举列表中的 Mon、Tues、Wed 标识符的作用范围是全局的(严格来说是main()函数内部)，不能再定义与他们相同名字的变量<br>Mon、Tues、Wed 等都是常量，不能对它们赋值，只能将它们的值赋给其他的变量</p>
+<p>枚举和宏其实非常类似：宏在预处理阶段将名字替换成对应的值，枚举在编译阶段将名字替换成对应的值。我们可以将枚举理解为编译阶段的宏</p>
+<p>对于上面的代码，在编译的某个时刻会变成类似下面的样子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    enum week{ Mon = 1, Tues, Wed, Thurs, Fri, Sat, Sun } day;
+    scanf("%d", &day);
+    switch(day){
+        case 1: puts("Monday"); break;
+        case 2: puts("Tuesday"); break;
+        case 3: puts("Wednesday"); break;
+        case 4: puts("Thursday"); break;
+        case 5: puts("Friday"); break;
+        case 6: puts("Saturday"); break;
+        case 7: puts("Sunday"); break;
+        default: puts("Error!");
+    }
+    return 0;
+}
+</script></code></pre>
+<p>Mon、Tues、Wed 这些名字都被替换成了对应的数字<br>这意味着，Mon、Tues、Wed 等都不是变量，它们不占用数据区(常量区、全局数据区、栈区和堆区)的内存，而是直接被编译到命令里面，放到代码区，所以不能用 &amp; 取得它们的地址，这就是枚举的本质</p>
+<p>case 关键字后面必须是一个整数，或者是结果为整数的表达式，但不能包含任何变量，正是由于 Mon、Tues、Wed 这些名字最终会被替换成一个整数，所以它们才能放在 case 后面</p>
+<p>枚举类型变量需要的是一整数，它的长度应该和 int 相同:</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(){
+    enum Test{A = 1, B, C, D, E, F, G};
+    enum Test test;
+    printf("%d, %d, %d, %d\n", sizeof(enum Test), sizeof(test), sizeof(A), sizeof(int));
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [17:29:08]
+$ gcc a.c
+
+# root @ localhost in ~/test [17:29:10]
+$ ./a.out
+4, 4, 4, 4
+</script></code></pre>
+<h2 id="共用体"><a href="#共用体" class="headerlink" title="共用体"></a>共用体</h2><p>还有一种和结构体类似的构造类型，叫做<code>共用体(union)</code>，也叫做联合、联合体</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">union 联合体名{
+    成员列表
+};
+</script></code></pre>
+<p>区别在于：结构体的各个成员会占用不同的内存，互相之间没有影响；而共用体的所有成员占用同一段内存，修改一个成员会影响其余所有成员</p>
+<p><code>结构体</code>占用的内存<code>大于等于</code>所有成员占用的<code>内存的总和</code>(成员之间可能会存在缝隙)<br><code>共用体</code>占用的内存<code>等于最长的成员占用的内存</code><br>共用体使用了内存覆盖技术，<strong>同一时刻只能保存一个成员的值，如果对新的成员赋值，就会把原来成员的值覆盖掉</strong></p>
+<p>共用体也是一种自定义类型，也可以用来创建变量</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">union Data{
+    char c;
+    int i;
+    double f;
+} data1, data2, data3;
+</script></code></pre>
+<p>联合体 Data 中，最长的成员为double: 8字节，所以成员 c、i、f 共用这 8 个字节的内存，在同一个时刻，只能保存一个值</p>
+<p>看下面这个例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+union Data{
+    char ch;
+    short sh;
+    int n;
+} data;
+
+int main(){
+    data.ch = 0x65;
+    printf("%#x, %#x, %#x\n", data.ch, data.sh, data.n);
+    data.ch = 0x12345678;
+    printf("%#x, %#x, %#x\n", data.ch, data.sh, data.n);
+    data.sh = 0x87654321;
+    printf("%#x, %#x, %#x\n", data.ch, data.sh, data.n);
+    data.n = 0x87654321;
+    printf("%#x, %#x, %#x\n", data.ch, data.sh, data.n);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [17:51:42]
+$ gcc a.c
+a.c: In function ‘main’:
+a.c:12:5: warning: overflow in implicit constant conversion [-Woverflow]
+     data.ch = 0x12345678;
+     ^
+a.c:14:5: warning: overflow in implicit constant conversion [-Woverflow]
+     data.sh = 0x87654321;
+     ^
+
+# root @ localhost in ~/test [17:51:43]
+$ ./a.out
+0x65, 0x65, 0x65
+0x78, 0x78, 0x78
+0x21, 0x4321, 0x4321
+0x21, 0x4321, 0x87654321
+</script></code></pre>
+<p>因为赋的值超过了 ch、sh 所能容纳的大小，所以高位会被截去，gcc也会警告，我们先不管<br>对于16进制数<code>0x12</code>：<code>0x1</code>占用4个bit，<code>0x2</code>占用4个bit，所以两个16进制数的字符就是一个字节长<br>从这个例子中可以知道，我这台电脑是<code>小端字节序</code></p>
+<ul>
+<li><code>小端字节序</code>：是指将数据的低位(如 0x1234 的 0x34)存放在内存的低地址，而数据的高位(如 0x1234 的 0x12)存放在内存的高地址上</li>
+<li><code>大端字节序</code>：是指将数据的高位(如 0x1234 的 0x12)存放在内存的低地址，而数据的低位(如 0x1234 的 0x34)存放在内存的高地址上<br>一般而言：x86架构的cpu是小端模式，51单片机是大端模式，很多arm、dsp也是小端模式(部分arm可以由硬件来选择大小端)</li>
+</ul>
+<p>共用体一般在单片机中应用较多，对于pc机，经常使用到的一个实例是：<br>现有一张关于学生信息和教师信息的表格，学生信息包括姓名、编号、性别、职业、分数，教师的信息包括姓名、编号、性别、职业、教学科目<br>f 和 m 分别表示女性和男性，s 表示学生，t 表示教师<br>可以看出，学生和教师所包含的数据是不同的。现在要求把这些信息放在同一个表格中，并设计程序输入人员信息然后输出</p>
+<p>如果把每个人的信息都看作一个结构体变量的话，那么教师和学生的前 4 个成员变量是一样的，第 5 个成员变量可能是 score 或者 course。<br>当第 4 个成员变量的值是 s 的时候，第 5 个成员变量就是 score；当第 4 个成员变量的值是 t 的时候，第 5 个成员变量就是 course。</p>
+<p>经过上面的分析，我们可以设计一个包含共用体的结构体，请看下面的代码：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+
+#define TOTAL 4
+#define STRLEN 30
+
+struct{
+    char *name;
+    int num;
+    char sex;
+    char profession;
+    union{
+        float score;
+        char *course;
+    } sc;
+} info[TOTAL];
+
+int main(){
+    for(int i=0; i<TOTAL; i++){
+        info[i].name = (char *)malloc(sizeof(char) * STRLEN);
+        printf("input info: ");
+        scanf("%s %d %c %c", info[i].name, &info[i].num, &info[i].sex, &info[i].profession);
+        if(info[i].profession == 's'){
+            scanf("%f", &info[i].sc.score);
+        }else if(info[i].profession == 't'){
+            info[i].sc.course = (char *)malloc(sizeof(char) * STRLEN);
+            scanf("%s", info[i].sc.course);
+        }
+    }
+    printf("%13s%13s%13s%13s%13s\n", "Name", "Num", "Sex", "Profession", "Score/Course");
+    for(int i=0; i<TOTAL; i++){
+        if(info[i].profession == 's'){
+            printf("%13s%13d%13c%13c%13.1f\n", info[i].name, info[i].num, info[i].sex, info[i].profession, info[i].sc.score);
+        }else if(info[i].profession == 't'){
+            printf("%13s%13d%13c%13c%13s\n", info[i].name, info[i].num, info[i].sex, info[i].profession, info[i].sc.course);
+            free(info[i].sc.course);
+        }
+        free(info[i].name);
+    }
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [20:53:12]
+$ gcc a.c
+
+# root @ localhost in ~/test [20:53:13]
+$ ./a.out
+input info: HanXiaoXiao 501 f s 89.5
+input info: ZhaoFeiYan 982 m s 95.0
+input info: LiuZhenTao 109 f t English
+input info: YanWeiMin 1011 m t math
+         Name          Num          Sex   Profession Score/Course
+  HanXiaoXiao          501            f            s         89.5
+   ZhaoFeiYan          982            m            s         95.0
+   LiuZhenTao          109            f            t      English
+    YanWeiMin         1011            m            t         math
+</script></code></pre>
+<h2 id="位域"><a href="#位域" class="headerlink" title="位域"></a>位域</h2><p>有些数据在存储时并不需要占用一个完整的字节，只需要占用一个或几个二进制位即可。<br>例如开关只有通电和断电两种状态，用 0 和 1 表示足以，也就是用一个二进位。<br>正是基于这种考虑，C语言又提供了一种叫做<code>位域</code>的数据结构</p>
+<p><strong>在结构体定义时，我们可以指定某个成员变量所占用的二进制位数（Bit），这就是位域</strong> 请看下面的例子：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct bs{
+    unsigned int a;
+    unsigned int b:4;
+    unsigned char c:1;
+};
+</script></code></pre>
+<p>成员a占用4个字节，成员b占用4个bit，成员c占用1个bit<br>因为占用的内存有限，所以数值稍大一些就会发生溢出：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdbool.h>
+
+struct{
+    unsigned int a;
+    unsigned int b:4;
+    unsigned char c:1;
+} test;
+
+int main(){
+    test.a = 0x56781234;
+    test.b = 0x6;
+    test.c = true;
+    printf("%d\n", sizeof(test));
+    printf("%#x, %#x, %#x\n", test.a, test.b, test.c);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/test [21:08:55]
+$ gcc a.c
+
+# root @ localhost in ~/test [21:08:58]
+$ ./a.out
+8
+0x56781234, 0x6, 0x1
+</script></code></pre>
+<p>C语言标准规定，位域的宽度不能超过它所依附的数据类型的长度<br>通俗地讲，成员变量都是有类型的，这个类型限制了成员变量的最大长度，后面的数字不能超过这个长度</p>
+<p>我们可以这样认为，位域技术就是在成员变量所占用的内存中选出一部分位宽来存储数据</p>
+<p>C语言标准还规定，只有有限的几种数据类型可以用于位域。<br>在 ANSI C 中，这几种数据类型是 int、signed int 和 unsigned int(int 默认就是 signed int)；到了 C99，_Bool 也被支持了</p>
+<p>但编译器在具体实现时都进行了扩展，额外支持了 char、signed char、unsigned char 以及 enum 类型，所以上面的代码虽然不符合C语言标准，但它依然能够被编译器支持</p>
+<p>C语言标准并没有规定位域的具体存储方式，不同的编译器有不同的实现，但它们都尽量压缩存储空间</p>
+<p><strong>位域的对齐规则</strong><br>1) 当<strong>相邻成员的类型相同</strong>时<br>如果它们的<strong>位宽之和小于类型的 sizeof 大小</strong>，那么后面的成员紧邻前一个成员存储，直到不能容纳为止<br>如果它们的<strong>位宽之和大于类型的 sizeof 大小</strong>，那么后面的成员将从新的存储单元开始，其偏移量为类型大小的整数倍</p>
+<p>2) 当<strong>相邻成员的类型不同</strong>时<br>不同的编译器有不同的实现方案，GCC 会压缩存储，而 VC/VS 不会</p>
+<p>3) 如果<strong>成员之间穿插着非位域成员</strong>，那么不会进行压缩</p>
+<p>通过上面的分析，我们发现位域成员往往不占用完整的字节，有时候也不处于字节的开头位置，因此使用 &amp; 获取位域成员的地址是没有意义的<br>C语言也禁止这样做，地址是字节(Byte)的编号，而不是位(Bit)的编号</p>
+<p><strong>无名位域</strong><br>位域成员可以没有名称，只给出数据类型和位宽，无名位域一般用来作填充或者调整成员位置，因为没有名称，无名位域不能使用</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct Data{
+    int a:12;
+    int :20;
+    int c:4;
+};
+</script></code></pre>
+<h2 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h2><p>C语言允许为一个数据类型起一个新的别名，就像给人起“绰号”一样<br>起别名的目的不是为了提高程序运行效率，而是为了编码方便<br>例如有一个结构体的名字是 Student，要想定义一个结构体变量就得这样写：<br><code>struct Student stu;</code><br>前面的<code>struct</code>看起来好多余，但是不加上又会报错<br>我们可以用 typedef 给来给它取个名字 Student：<br><code>typedef struct Student Student;</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+struct Student{
+    char *name;
+    int age;
+    float score;
+};
+
+typedef struct Student Student;
+
+int main(){
+    Student stu = {"Otokaze", 18, 111.5f};
+    printf("Name: %s, Age: %d, Score: %.1f\n", stu.name, stu.age, stu.score);
+    return 0;
+}
+</script></code></pre>
+<p>怎么理解<code>typedef struct Student Student;</code>？<br>首先，<code>typedef</code>可以看作是一个修饰符，是一个关键字，抛开它，剩下<code>struct Student Student;</code><br>这不就是定义一个结构体变量的写法嘛，后面那个<code>Student</code>可以看作是定义的变量名，前面的<code>struct Student</code>是数据类型<br>只不过在<code>typedef</code>的修饰下，这个<code>Student</code>有了新的意义，它表示一种数据类型，即<code>struct Student</code>这个结构体类型</p>
+<p>同样可以用 typedef 给数组、指针、指针数组、函数指针、二维数组指针、二级指针等定义别名：<br><code>typedef int int_array[20];</code>；数组<code>int [20]</code><br><code>typedef int *int_ptr;</code>：指针<code>int *</code>，(可指向一个整数或一个整型数组)<br><code>typedef int *ptr_array[20];</code>：指针数组<code>int * [20]</code><br><code>typedef int (*func_ptr)(int, int);</code>：函数指针，指向原型为<code>int func(int, int);</code>的函数<br><code>typedef int (*array_ptr)[20];</code>：二维数组指针，指向类型为<code>int [20]</code>的数组<br><code>typedef int **ptr_ptr;</code>：二级指针</p>
+<p><strong><code>typedef</code>和<code>#define</code>的区别</strong><br><code>typedef</code> 在表现上有时候类似于 <code>#define</code>，但它和宏替换之间存在一个关键性的区别<br>正确思考这个问题的方法就是把 typedef 看成一种彻底的“封装”类型，声明之后不能再往里面增加别的东西</p>
+<p>比如：<code>typedef long long int llong;</code>之后不能出现类似<code>unsigned llong var;</code>但是宏却可以</p>
+<p>在连续定义几个变量的时候，typedef 能够保证定义的所有变量均为同一类型，而 #define 则无法保证</p>
+<p>因为 <code>#define</code>仅仅是宏展开，字符替换而已，而<code>typedef</code>是一种封装类型</p>
+<h2 id="const修饰符"><a href="#const修饰符" class="headerlink" title="const修饰符"></a>const修饰符</h2><p>有时候我们希望定义这样一种变量，它的值不能被改变，在整个作用域中都保持固定<br>例如，用一个变量来表示班级的最大人数，或者表示缓冲区的大小<br>为了满足这一要求，可以使用const关键字对变量加以限定<br><code>const int MAX = 100;</code><br>这样 MAX 的值就不能更改了，在后续的代码中，如果尝试更改它的内容，编译器会报错<br>我们经常将const变量称为常量，定义const常量的格式为：<br><code>const type name = value;</code><br>或者<code>type const name = value;</code><br>推荐使用前者</p>
+<p>由于常量一旦被创建后其值就不能再改变，所以常量必须在定义的同时赋值（初始化），后面的任何赋值行为都将引发错误</p>
+<p><strong>const和指针一起用时</strong></p>
+<ul>
+<li><code>const int *ptr</code>：表示指针指向的数据是只读的，但是指针本身可以改变指向</li>
+<li><code>int const *ptr</code>：同上</li>
+<li><code>int *const ptr</code>：表示指针本身是只读的，但是指针指向的数据是可以读写的</li>
+</ul>
+<p><strong>const和函数形参</strong><br>在C语言中，单独定义 const 变量没有明显的优势，完全可以使用#define命令代替<br>const 通常用在函数形参中，如果形参是一个指针，为了防止在函数内部修改指针指向的数据，就可以用 const 来限制</p>
+<p>在C语言标准库中，有很多函数的形参都被 const 限制了</p>
+<p>我们自己在定义函数时也可以使用 const 对形参加以限制，例如查找字符串中某个字符出现的次数：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <string.h>
+
+void strnchr(const char *str, char chr){
+    int count = 0;
+    int len = strlen(str);
+    for(int i=0; i<len; i++){
+        if(str[i] == chr){
+            count++;
+        }
+    }
+    printf("%d\n", count);
+}
+
+int main(){
+    char str[] = "www.zfl9.com", chr = 'w';
+    strnchr(str, chr);
+    return 0;
+}
+</script></code></pre>
+<p>根据 strnchr() 的功能可以推断，函数内部要对字符串 str 进行遍历，不应该有修改的动作，用 const 加以限制，不但可以防止由于程序员误操作引起的字符串修改，还可以给用户一个提示，函数不会修改你提供的字符串，请你放心</p>
+<p><strong>const 和非 const 类型转换</strong><br>当一个指针变量 str1 被 const 限制时，并且类似<code>const char *str1</code>这种形式，说明指针指向的数据不能被修改<br>如果将 str1 赋值给另外一个未被 const 修饰的指针变量 str2，就有可能发生危险<br>因为通过 str1 不能修改数据，而赋值后通过 str2 能够修改数据了，意义发生了转变，所以编译器不提倡这种行为，会给出错误或警告</p>
+<p>也就是说，<code>const char *</code>和<code>char *</code>是不同的类型，不能将<code>const char *</code>类型的数据赋值给<code>char *</code>类型的变量<br>但反过来是可以的，编译器允许将<code>char *</code>类型的数据赋值给<code>const char *</code>类型的变量</p>
+<p>这种限制很容易理解，<code>char *</code>指向的数据有读取和写入权限，而<code>const char *</code>指向的数据只有读取权限，降低数据的权限不会带来任何问题，但提升数据的权限就有可能发生危险</p>
+<p>不过，我们依旧可以通过指针修改 const 变量的值，因为 const 仅仅是写给编译器看的，只要能够获得它的地址就能修改：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+
+int main(void) {
+    const int arr[5] = {1, 2, 3, 4, 5};
+    int *ptr = (int *)arr, len = sizeof(arr) / sizeof(int);
+
+    for (int i = 0; i < len; i++)
+        printf("%d, ", ptr[i]);
+    printf("\b\b \n");
+
+    for (int i = 0; i < len; i++)
+        ptr[i] += 100;
+
+    for (int i = 0; i < len; i++)
+        printf("%d, ", ptr[i]);
+    printf("\b\b \n");
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work [9:35:04]
+$ gcc -o main main.c
+
+# root @ arch in ~/work [9:37:01]
+$ ./main
+1, 2, 3, 4, 5
+101, 102, 103, 104, 105
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/ulimit.html" rel="next" title="Linux ulimit详解">
+                <i class="fa fa-chevron-left"></i> Linux ulimit详解
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-cpp.html" rel="prev" title="c语言 - 预处理指令">
+                c语言 - 预处理指令 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体"><span class="nav-number">1.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体数组"><span class="nav-number">2.</span> <span class="nav-text">结构体数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体指针"><span class="nav-number">3.</span> <span class="nav-text">结构体指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举-Enum"><span class="nav-number">4.</span> <span class="nav-text">枚举 Enum</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#共用体"><span class="nav-number">5.</span> <span class="nav-text">共用体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#位域"><span class="nav-number">6.</span> <span class="nav-text">位域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#typedef"><span class="nav-number">7.</span> <span class="nav-text">typedef</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#const修饰符"><span class="nav-number">8.</span> <span class="nav-text">const修饰符</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-struct.html';
+          this.page.identifier = 'c-struct.html';
+          this.page.title = 'c语言 - 结构体、位域、共用体、枚举、内存对齐';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

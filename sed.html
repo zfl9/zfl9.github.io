@@ -1,0 +1,663 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="sed, 文本处理">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="sed：Stream EDitor，即流编辑器，使用 regex 处理数据；个人认为 sed 更像是一门编程语言，而非编辑器，请待我慢慢道来。">
+<meta name="keywords" content="linux,文本处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sed 详解">
+<meta property="og:url" content="https://www.zfl9.com/sed.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="sed：Stream EDitor，即流编辑器，使用 regex 处理数据；个人认为 sed 更像是一门编程语言，而非编辑器，请待我慢慢道来。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sed 详解">
+<meta name="twitter:description" content="sed：Stream EDitor，即流编辑器，使用 regex 处理数据；个人认为 sed 更像是一门编程语言，而非编辑器，请待我慢慢道来。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/sed.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>sed 详解 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/sed.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                sed 详解
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-02T17:29:29+08:00">
+                2016-11-02
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/文本处理/" itemprop="url" rel="index">
+                    <span itemprop="name">文本处理</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/sed.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="sed.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/sed.html" class="leancloud_visitors" data-flag-title="sed 详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>sed：Stream EDitor，即流编辑器，使用 regex 处理数据；个人认为 sed 更像是一门编程语言，而非编辑器，请待我慢慢道来。</p>
+<a id="more"></a>
+<h2 id="sed-简介"><a href="#sed-简介" class="headerlink" title="sed 简介"></a>sed 简介</h2><p>sed 每次只从输入中读取一行到一个 buffer 中（在 buffer 中不存在换行符），而这个 buffer 还有一个特别的名字 - <strong>模式空间（pattern space）</strong>；然后，模式空间将依次被 script（即 sed 指令）操作，一条一条的顺序执行下去，就像流水线一样；模式空间被 script 操作完成后，最后被送往屏幕（使用 -i 选项将直接修改源文件）；然后又紧接着读取输入的下一行，就这样重复，直到文件流的末尾，sed 就执行完毕了。</p>
+<p>sed 除了<strong>模式空间</strong>外，还存在一个<strong>保持空间（hold space）</strong>，也就是说：sed 存在两个 buffer 缓冲区，使用 h(Hold) 命令将模式空间复制至保持空间，使用 H 命令将模式空间追加至保持空间，使用 g(Get) 命令将保持空间复制至模式空间，使用 G 命令将保持空间追加至模式空间，还有一个 x 命令，用于交换模式空间和保持空间。</p>
+<p>sed 还支持语句块（statement block），使用<code>{}</code>括起来即可，就像 shell 的函数一样；同时还有注释行，也是使用<code>#</code>；sed 也有 goto 语句，不过在 sed 中，它不叫做 goto，而是被叫做 branch 分支（git 也有分支概念），而 branch 的 target 是一个 label 标签；因此，我们可以在任何一个位置打 label，然后再使用 b 命令无条件跳转至 label 处，以此达到 goto、loop 的效果；有<strong>无条件跳转</strong>就当然有<strong>条件跳转</strong>了，条件跳转就如同在跳转前先使用 if 条件语句，如果条件为真才会跳转至 label 处；而这个条件就是<strong>上一个<code>s///</code>语句（正则替换）是否修改了模式空间</strong>，t 是修改了，T 是未修改。</p>
+<p>这样看下来，是不是觉得 sed-script 和一个普通的脚本语言很相似？是的，我一直都认为这是一门像模像样的 script-language！</p>
+<h2 id="sed-详解"><a href="#sed-详解" class="headerlink" title="sed 详解"></a>sed 详解</h2><p>Usage：<code>sed [OPTIONS...] {sed-script} [FILES...]</code></p>
+<ul>
+<li><code>OPTIONS</code>：命令行选项；</li>
+<li><code>sed-script</code>：脚本，使用 -e 从命令行读取，使用 -f 从文件中读取；<ul>
+<li><code>ADDRESS</code>：定位，也叫作用行，表示仅将指定行应用 COMMAND；</li>
+<li><code>COMMAND</code>：指令，即定义如何对模式空间、保持空间进行操作；</li>
+</ul>
+</li>
+<li><code>FILES</code>：输入文件，如果省略，表示从标准输入读取；</li>
+</ul>
+<h3 id="命令行选项"><a href="#命令行选项" class="headerlink" title="命令行选项"></a>命令行选项</h3><ul>
+<li><code>-e script</code>：从命令行中读取 script，可以有多个 -e 选项；如果省略，则默认为第一个参数；</li>
+<li><code>-f script-file</code>：从文件中读取 script；</li>
+<li><code>-r</code>：使用扩展正则表达式，GNU；</li>
+<li><code>-R</code>：使用扩展正则表达式，POSIX（不推荐）；</li>
+<li><code>--posix</code>：关闭所有 GNU 扩展（不推荐）；</li>
+<li><code>--follow-symlinks</code>：始终跟随符号链接文件；</li>
+<li><code>-n</code>：禁止自动打印模式空间，除非使用 p/P 等显式打印命令；</li>
+<li><code>-l N</code>：定义模式空间初始大小，默认为 70 个字符；</li>
+<li><code>-u</code>：输入和输出都尽量不使用缓冲区；如，从输入文件读取最少量的数据、经常刷新输出缓冲区；</li>
+<li><code>-s</code>：将每个文件看作是一个单独的文件（在使用行号定位时有影响），默认将所有输入文件合并为一个输入流；</li>
+<li><code>-i[SUFFIX]</code>：直接编辑文件，如果指定了 SUFFIX（如：<code>-i&#39;.bak&#39;</code>），则将源文件备份为同名 .bak 文件；</li>
+</ul>
+<h3 id="ADDRESS"><a href="#ADDRESS" class="headerlink" title="ADDRESS"></a>ADDRESS</h3><p>默认 sed 会将 COMMAND 应用于所有行，除非指定以下 ADDRESS 作用域：</p>
+<ul>
+<li><code>number</code>：指定行（有多个文件时行号会累加，使用 -s 不累加），最后一行为<code>$</code>；</li>
+<li><code>first,last</code>：指定行范围；</li>
+<li><code>first,+N</code>：指定行范围（相对行数）；</li>
+<li><code>/regex/</code>：所有匹配 regex 的行；</li>
+<li><code>\cregexc</code>：所有匹配 regex 的行，c 可以为任意字符；</li>
+<li><code>/regex1/,/regex2/</code>：所有匹配 regex1 ~ regex2 的行范围；</li>
+<li><code>\cregex1c,\cregex2c</code>：所有匹配 regex1 ~ regex2 的行范围，c 可以为任意字符；</li>
+<li><code>first~step</code>：每隔 step 行处理；如 <code>sed -n &#39;1~2 p&#39;</code> 将打印所有奇数行；</li>
+<li><code>!</code>：放置在 ADDRESS 后用于取反操作，表示不与之相匹配的行执行后面的 COMMAND；</li>
+</ul>
+<h3 id="COMMAND"><a href="#COMMAND" class="headerlink" title="COMMAND"></a>COMMAND</h3><ul>
+<li><code>{}</code>：sed 语句块；</li>
+<li><code>#</code>：sed 注释行；</li>
+<li><code>: label</code>：在当前语句处打上标签，与 b、t、T 结合使用，类似 goto 语句；</li>
+<li><code>b label</code>：无条件跳转至 label 标签，如果标签不存在则跳转至脚本末尾；</li>
+<li><code>t label</code>：如果上一个<code>s///</code>修改了模式空间则跳转，如果标签不存在则跳转至脚本末尾；</li>
+<li><code>T label</code>：如果上一个<code>s///</code>未修改模式空间则跳转，如果标签不存在则跳转至脚本末尾（GNU）；</li>
+<li><code>q [code]</code>：立即退出 sed-script，默认退出码为 0（若未指定 -n，则打印模式空间后退出）；</li>
+<li><code>Q [code]</code>：立即退出 sed-script，默认退出码为 0；</li>
+<li><code>c \string</code>：使用文本”string”替换当前行，使用<code>\n</code>可写入多行；</li>
+<li><code>i \string</code>：在当前行前插入文本”string”，使用<code>\n</code>可插入多行；</li>
+<li><code>a \string</code>：在当前行后追加文本”string”，使用<code>\n</code>可追加多行；</li>
+<li><code>r filename</code>：在当前行后追加文件 filename 所有行；</li>
+<li><code>R filename</code>：在当前行后追加文件 filename 第一行（GNU）；</li>
+<li><code>w filename</code>：将当前模式空间所有行写入文件 filename；</li>
+<li><code>W filename</code>：将当前模式空间第一行写入文件 filename（GNU）；</li>
+<li><code>h H</code>：复制/追加<strong>模式空间</strong>至<strong>保持空间</strong>；</li>
+<li><code>g G</code>：复制/追加<strong>保持空间</strong>至<strong>模式空间</strong>；</li>
+<li><code>x</code>：交换<strong>模式空间</strong>和<strong>保持空间</strong>；</li>
+<li><code>=</code>：打印当前行号；</li>
+<li><code>p</code>：打印当前模式空间所有行；</li>
+<li><code>P</code>：打印当前模式空间第一行；</li>
+<li><code>l</code>：以 “视觉明确” 形式打印当前行（如显示 Tab 符、行尾符）；</li>
+<li><code>d</code>：删除模式空间所有行，并开始下轮循环；</li>
+<li><code>D</code>：删除模式空间第一行，并开始下轮循环；</li>
+<li><code>n N</code>：读取/追加下一输入行至模式空间；</li>
+<li><code>y/src/dst/</code>：将 src 替换为 dst（非正则匹配）；</li>
+<li><code>s/regex/repl/</code>：将首个被 regex 匹配的字符串替换为 repl 字符串，<code>/</code>可替换为其它字符如<code>@</code>；在 repl 中，可引用匹配的子串，<code>&amp;</code>引用整个匹配串、<code>\1~\9</code>引用对应序号子串；</li>
+<li><code>s/regex/repl/g</code>：将全部被 regex 匹配的字符串替换为 repl 字符串；</li>
+<li><code>s/regex/repl/i</code>：将首个被 regex 匹配的字符串替换为 repl 字符串（忽略大小写匹配）；</li>
+<li><code>s/regex/repl/ig</code>：将全部被 regex 匹配的字符串替换为 repl 字符串（忽略大小写匹配）；</li>
+</ul>
+<h3 id="其它说明"><a href="#其它说明" class="headerlink" title="其它说明"></a>其它说明</h3><ul>
+<li>sed 不支持 regex 非贪婪匹配，不过可以使用各种 sed 奇技淫巧来完成；</li>
+<li>sed 支持多个 script，每个 script 前使用 -e 选项指定；也可以使用<code>;</code>分隔，而不是用 -e 选项；</li>
+<li>比如：<code>sed -e &#39;s/9/8/g&#39; -e &#39;s/8/7/g&#39;</code>和<code>sed &#39;s/9/8/g; s/8/7/g&#39;</code>是等价的，个人比较喜欢后者。</li>
+</ul>
+<h2 id="sed-例子"><a href="#sed-例子" class="headerlink" title="sed 例子"></a>sed 例子</h2><h3 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h3><pre><code class="language-bash line-numbers"><script type="text/plain">## 测试文件
+$ cat test.txt
+Shanghai Shanghai 2001
+Shanghai Shanghai 2002
+Shanghai Shanghai 2003
+Shanghai Shanghai 2004
+Shanghai Shanghai 2005
+
+## 打印 1~3 行（不加 -n）
+$ cat test.txt | sed '1,3 p'
+Shanghai Shanghai 2001
+Shanghai Shanghai 2001
+Shanghai Shanghai 2002
+Shanghai Shanghai 2002
+Shanghai Shanghai 2003
+Shanghai Shanghai 2003
+Shanghai Shanghai 2004
+Shanghai Shanghai 2005
+
+## 打印 1~3 行（加 -n）
+$ cat test.txt | sed -n '1,3 p'
+Shanghai Shanghai 2001
+Shanghai Shanghai 2002
+Shanghai Shanghai 2003
+
+## 在末行后追加文本
+$ cat test.txt | sed '$ a\Shanghai Shanghai 2006\nShanghai Shanghai 2007'
+Shanghai Shanghai 2001
+Shanghai Shanghai 2002
+Shanghai Shanghai 2003
+Shanghai Shanghai 2004
+Shanghai Shanghai 2005
+Shanghai Shanghai 2006
+Shanghai Shanghai 2007
+
+## 在首行前插入文本
+$ cat test.txt | sed '1 i\Shanghai Shanghai 1999\nShanghai Shanghai 2000'
+Shanghai Shanghai 1999
+Shanghai Shanghai 2000
+Shanghai Shanghai 2001
+Shanghai Shanghai 2002
+Shanghai Shanghai 2003
+Shanghai Shanghai 2004
+Shanghai Shanghai 2005
+
+## 正则替换（一个）
+$ cat test.txt | sed 's/Shanghai/SHANGHAI/'
+SHANGHAI Shanghai 2001
+SHANGHAI Shanghai 2002
+SHANGHAI Shanghai 2003
+SHANGHAI Shanghai 2004
+SHANGHAI Shanghai 2005
+
+## 正则替换（全局）
+$ cat test.txt | sed 's/Shanghai/SHANGHAI/g'
+SHANGHAI SHANGHAI 2001
+SHANGHAI SHANGHAI 2002
+SHANGHAI SHANGHAI 2003
+SHANGHAI SHANGHAI 2004
+SHANGHAI SHANGHAI 2005
+
+## 多次替换
+$ cat test.txt | sed 's/Shanghai/SHANGHAI/g; s/SHANGHAI/ShangHAI/'
+ShangHAI SHANGHAI 2001
+ShangHAI SHANGHAI 2002
+ShangHAI SHANGHAI 2003
+ShangHAI SHANGHAI 2004
+ShangHAI SHANGHAI 2005
+
+## 引用子串
+$ cat test.txt | sed -r 's/^(Shanghai)\ (Shanghai)\ ([0-9]{4})$/\1XXX \2YYY \3 year/g'
+ShanghaiXXX ShanghaiYYY 2001 year
+ShanghaiXXX ShanghaiYYY 2002 year
+ShanghaiXXX ShanghaiYYY 2003 year
+ShanghaiXXX ShanghaiYYY 2004 year
+ShanghaiXXX ShanghaiYYY 2005 year
+</script></code></pre>
+<h3 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h3><p>我现在有一个 C 语言源文件，它的内容如下（省略了其它无关紧要的部分）：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">printf("begin\n"); /* Comments Line 1
+Comments Line 2 */
+printf("end\n");
+</script></code></pre>
+<p>我现在想将<code>/* ... */</code>注释行删除，用 sed 该怎么做？<br>因为它们在不同的行，想要删除它们需要使用多行匹配；</p>
+<p>sed 脚本如下（script.sed）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">/\/\*/ {
+    : loop;
+    /\*\// ! N;
+    /\*\// ! b loop;
+    s@^(.*)/\*.*\*/(.*)$@\1\2@g;
+}
+</script></code></pre>
+<p>测试一下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">$ sed -rf script.sed main.c
+printf("begin\n");
+printf("end\n");
+</script></code></pre>
+<p>sed 脚本解释如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">/\/\*/ { # 在模式空间匹配 /* 注释打开标记，如果匹配成功则开始执行后面的语句
+    : loop; # (a) 先定义一个 loop label，用于循环读取
+    /\*\// ! N; # (b) 在模式空间匹配 */ 注释关闭标记，如果匹配成功则无需接着读取下一行
+                #     如果匹配失败，则说明注释还没读取完，需要使用 N 命令读取下一行（追加至当前模式空间）
+    /\*\// ! b loop; # (c) 然后再次在模式空间匹配 */ 注释关闭标记，如果匹配成功则说明读取完毕，无需继续循环
+                     #     如果匹配失败，说明还没有读取完毕，需要跳转至 loop 处，重复执行 (a) (b) 语句
+    s@^(.*)/\*.*\*/(.*)$@\1\2@g; # 到了这里说明已经读取完毕，因此开始执行 s@@@g regex 替换语句，不作详细解释
+} # 语句块关闭标记
+</script></code></pre>
+<p>但是，sed 并不支持非贪婪匹配，也就是说：<code>*</code>元字符会匹配尽可能多的字符；看例子：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">$ cat main.c
+printf("begin\n"); /* Comments Line 1
+Comments Line 2 */
+printf("end\n"); /* Comment-A */ printf("test\n"); /* Comment-B */
+
+$ sed -rf script.sed main.c
+printf("begin\n");
+printf("end\n"); /* Comment-A */ printf("test\n");
+</script></code></pre>
+<p>我们主要分析这条 sed 命令<code>s@^(.*)/\*.*\*/(.*)$@\1\2@g</code>：<br>第一个括号的<code>.*</code>匹配到了<code>printf(&quot;end\n&quot;); /* Comment-A */ printf(&quot;test\n&quot;);</code>；<br>第二个括号的<code>.*</code>什么都没匹配到，为空；<br>因此后面的<code>\1\2</code>实际就是引用的<code>\1</code>。</p>
+<p>不过，我想应该还是可以通过其他 sed 奇技淫巧实现”非贪婪匹配”，来完成替换；<br>我们暂且不考虑这个东西，如果真的需要非贪婪匹配，那么请使用更强大的 Perl 正则。</p>
+<h2 id="sed-参考"><a href="#sed-参考" class="headerlink" title="sed 参考"></a>sed 参考</h2><p><a href="http://www.grymoire.com/Unix/Sed.html" rel="external nofollow noopener noreferrer" target="_blank">Sed - An Introduction and Tutorial by Bruce Barnett</a><br><a href="https://www.gnu.org/software/sed/manual/sed.html" rel="external nofollow noopener noreferrer" target="_blank">sed, a stream editor - GNU.org</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/文本处理/" rel="tag"># 文本处理</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/awk.html" rel="next" title="awk 详解">
+                <i class="fa fa-chevron-left"></i> awk 详解
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/text-tools.html" rel="prev" title="文本处理工具">
+                文本处理工具 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sed-简介"><span class="nav-number">1.</span> <span class="nav-text">sed 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed-详解"><span class="nav-number">2.</span> <span class="nav-text">sed 详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行选项"><span class="nav-number">2.1.</span> <span class="nav-text">命令行选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADDRESS"><span class="nav-number">2.2.</span> <span class="nav-text">ADDRESS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#COMMAND"><span class="nav-number">2.3.</span> <span class="nav-text">COMMAND</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它说明"><span class="nav-number">2.4.</span> <span class="nav-text">其它说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed-例子"><span class="nav-number">3.</span> <span class="nav-text">sed 例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础用法"><span class="nav-number">3.1.</span> <span class="nav-text">基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进阶用法"><span class="nav-number">3.2.</span> <span class="nav-text">进阶用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed-参考"><span class="nav-number">4.</span> <span class="nav-text">sed 参考</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/sed.html';
+          this.page.identifier = 'sed.html';
+          this.page.title = 'sed 详解';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

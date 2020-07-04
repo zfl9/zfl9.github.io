@@ -1,0 +1,1480 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JUnit 是由 Erich Gamma 和 Kent Beck 编写的一个回归测试框架（regression testing framework），主要供 Java 开发人员编写单元测试。JUnit 是在极限编程和重构中被极力推荐使用的一个工具，因为它可以大大地提高开发的效率。JUnit 测试是程序员测试，即所谓白盒测试，因为程序员知道被测试的软件如何（How）完成功能和完成什么样（What）的">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JUnit 笔记">
+<meta property="og:url" content="https://www.zfl9.com/java-junit.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JUnit 是由 Erich Gamma 和 Kent Beck 编写的一个回归测试框架（regression testing framework），主要供 Java 开发人员编写单元测试。JUnit 是在极限编程和重构中被极力推荐使用的一个工具，因为它可以大大地提高开发的效率。JUnit 测试是程序员测试，即所谓白盒测试，因为程序员知道被测试的软件如何（How）完成功能和完成什么样（What）的">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JUnit 笔记">
+<meta name="twitter:description" content="JUnit 是由 Erich Gamma 和 Kent Beck 编写的一个回归测试框架（regression testing framework），主要供 Java 开发人员编写单元测试。JUnit 是在极限编程和重构中被极力推荐使用的一个工具，因为它可以大大地提高开发的效率。JUnit 测试是程序员测试，即所谓白盒测试，因为程序员知道被测试的软件如何（How）完成功能和完成什么样（What）的">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-junit.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java JUnit 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-junit.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java JUnit 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-12T08:00:00+08:00">
+                2018-12-12
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-junit.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-junit.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-junit.html" class="leancloud_visitors" data-flag-title="Java JUnit 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JUnit 是由 Erich Gamma 和 Kent Beck 编写的一个回归测试框架（regression testing framework），主要供 Java 开发人员编写单元测试。JUnit 是在极限编程和重构中被极力推荐使用的一个工具，因为它可以大大地提高开发的效率。JUnit 测试是程序员测试，即所谓白盒测试，因为程序员知道被测试的软件如何（How）完成功能和完成什么样（What）的功能。</p>
+<a id="more"></a>
+<h2 id="JUnit-简介"><a href="#JUnit-简介" class="headerlink" title="JUnit 简介"></a>JUnit 简介</h2><p><strong>JUnit 是什么</strong>？<br>JUnit 是一个简单的开源框架，用于编写和运行可重复的测试。它是 xUnit 单元测试框架体系结构的一个实例。JUnit 功能包括：用于测试预期结果的断言、用于共享通用测试数据的测试夹具、用于运行测试的测试运行器。JUnit 最初由 Erich Gamma 和 Kent Beck 编写。</p>
+<p>简单的说，JUnit 是 Java 中的一个单元测试开源库，基本上 JUnit 已经成为了 Java 单元测试的事实标准。目前 JUnit 存在 3 个主流版本，分别是 JUnit 3.x、JUnit 4.x、JUnit 5.x。其中 JUnit 3.x 已经过时，主流是 JUnit 4.x（4.x 版本开始支持 <code>@Test</code> 等注解，之前是要继承对于的测试基类的），而 JUnit 5.x 则是基于 Java 8 开发的测试框架，因此 JUnit 5.x 要求的最低 JDK 版本是 1.8，所以不是那么通用，我们主要学习 JUnit 4.x 就行了，目前 JUint 4.x 的最新 relase 版是 <code>JUnit 4.12</code>。</p>
+<p><strong>什么是单元测试？</strong><br>在计算机编程中，<strong>单元测试</strong>（英语：<code>Unit Testing</code>）又称为 <strong>模块测试</strong>，是针对程序模块（软件设计的最小单位）来进行正确性检验的测试工作。程序单元是应用的最小可测试部件。对于面向过程编程，基本单元就是函数；对于面向对象编程，基本单元就是方法。好吧，其实本质来说都是函数而已，无论是 OPP 还是 OOP。而在 JUnit 中我们也是对方法进行测试。</p>
+<p>通常来说，程序员每修改一次程序就会进行最少一次单元测试，在编写程序的过程中前后很可能要进行多次单元测试，以证实程序达到软件规格书要求的工作目标，没有程序错误；虽然单元测试不是什么必须的，但也不坏，这牵涉到项目管理的政策决定。</p>
+<p>每个理想的测试案例独立于其它案例；为测试时隔离模块，经常使用 stubs、mock 或 fake 等测试马甲程序。<strong>单元测试通常由软件开发人员编写</strong>（俗称“白盒测试”），用于确保他们所写的代码匹配软件需求和遵循开发目标。它的实施方式可以是非常手动的（透过纸笔），或者是做成构建自动化的一部分。</p>
+<p><strong>白盒测试、灰盒测试、黑盒测试</strong><br>所谓灰白黑，是指测试人员对软件的了解程度，白盒测试就是说测试人员非常了解软件的细节（软件开发人员），而黑盒测试就是说测试人员一点都不了解软件的细节，他只是测试软件提供的 API 是否有问题（普通用户），灰盒测试则处于白盒与黑盒之间，了解软件的大致逻辑，然后进行测试（测试人员）。</p>
+<p>举个例子，某个软件出现了问题，那么：</p>
+<ul>
+<li>黑盒测试员：软件有问题，不能用了</li>
+<li>灰盒测试员：通过某些工具，发现原来是 X 的问题</li>
+<li>白盒测试员：通过检查程序源码，才知道是 Y 行代码出现了问题</li>
+</ul>
+<p>这就是所谓的黑盒、白盒、灰盒测试，懂了吧。</p>
+<h2 id="JUnit-使用"><a href="#JUnit-使用" class="headerlink" title="JUnit 使用"></a>JUnit 使用</h2><p>首先，我们知道 JUnit 主要是用来进行白盒测试的，所以在 maven 的依赖配置中，它的 scope 一般是 <code>test</code>，因为我们只需要在测试环境中用到 JUnit，打包后的 jar 包里面是不需要这个依赖的。所以：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.zfl9</groupId>
+  <artifactId>junit-learn</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <exec.mainClass>com.zfl9.Main</exec.mainClass>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<p>然后项目的目录结构如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+.
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── zfl9
+    │               ├── Calculator.java
+    │               └── Main.java
+    └── test
+        └── java
+            └── com
+                └── zfl9
+                    └── CalculatorTest.java
+</script></code></pre>
+<p>按照约定，我们将项目源码放到 <code>src/main/java</code> 目录，将测试源码放到 <code>src/test/java</code> 目录，相应的，项目资源放到 <code>src/main/resources</code> 目录，测试资源放到 <code>src/test/resources</code> 目录，这些文件会自动加入到运行时的 CLASSPATH 中，便于程序使用。注意，maven 会自动将 <code>src/main/java</code> 和 <code>src/test/java</code> 进行合并，所以处于同一个包中的源码类和测试类是会放到一起的，也就是说我们可以直接在 <code>src/test/java</code> 的测试类里面使用同名包下面的其它类（比如上面的 <code>com.zfl9.CalculatorTest</code> 测试类中就可以直接使用 <code>com.zfl9.Calculator</code> 工具类，因为它们实际会被放到同一个目录空间中）。</p>
+<p>我们来看看 <code>com.zfl9.Calculator</code> 工具类的源码：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class Calculator {
+    private Calculator() {
+        throw new AssertionError("private constructor");
+    }
+
+    public static int add(int a, int b) {
+        return a + b;
+    }
+
+    public static int sub(int a, int b) {
+        return a - b;
+    }
+
+    public static int mul(int a, int b) {
+        return a * b;
+    }
+
+    public static int div(int a, int b) {
+        return a / b;
+    }
+}
+</script></code></pre>
+<p>简单的加减乘除而已，add/sub/mul/div。来看看对应的测试类（测试类命名一般用 Test 结尾）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class CalculatorTest {
+    @Test
+    public void testAdd() {
+        assertEquals(30, Calculator.add(20, 10));
+    }
+
+    @Test
+    public void testSub() {
+        assertEquals(10, Calculator.sub(20, 10));
+    }
+
+    @Test
+    public void testMul() {
+        assertEquals(200, Calculator.mul(20, 10));
+    }
+
+    @Test
+    public void testDiv() {
+        assertEquals(2, Calculator.div(20, 10));
+    }
+}
+</script></code></pre>
+<p>最基本的测试大概就是上面这样，首先导入 <code>org.junit.Test</code> 注解，然后导入 <code>org.junit.Assert</code> 工具类的所有静态断言方法（不使用静态导入也行，但是使用静态导入明显是更方便的）。注意到测试类与源码类的命名特点了吗，测试类一般就是在源码类的名字后面加上 <code>Test</code> 后缀，这样的好处是可读性好，别人一看就知道这是用于测试 Calculator 的测试类，当然 junit 并没有规定测试类与源码类的命名规则，但是遵循这个约定是有好处的。</p>
+<p>然后就是 <code>@Test</code> 注解了，我们需要将这个注解放到对应的测试方法上面，告诉 JUnit，这是一个用于测试的方法，而对于的测试方法的命名也是有约定的（注意是约定不是规定，所以名字什么的是可以自取的，当然遵守约定总是有好处的），约定是使用 <code>test</code> 开头，使用驼峰命名法来进行命名，如上。每个测试方法都是 <code>public void MethodName()</code> 修饰的，访问性为 public，没有返回值，不接收参数，是一个实例方法。</p>
+<p>一般来说，每个测试方法都对应一个源码方法，比如 add 就是 <code>testAdd</code>，<code>div</code> 就是 <code>testDiv</code>。然后就是利用 Assert 提供的断言方法进行测试了，比如最常见的就是 <code>assertEquals(expecteds, actuals)</code>，expected 表示期望结果值，而 actual 表示实际结果值，而 assertEquals 表示，如果实际值不等于预期值，则抛出断言错误，在进行 <code>mvn test</code> 生命周期时就会提示对应的错误信息。如果相等则没有什么输出。</p>
+<p>我们来看看默认的执行输出：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.163 sec
+
+Results :
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+
+20 + 10 = 30
+20 - 10 = 10
+20 * 10 = 200
+20 / 10 = 2
+</script></code></pre>
+<p>我们来改一下测试类，故意让它与预期值不相等，看下什么结果：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class CalculatorTest {
+    @Test
+    public void testAdd() {
+        assertEquals(30, Calculator.add(20, 10));
+    }
+
+    @Test
+    public void testSub() {
+        assertEquals(10, Calculator.sub(20, 10));
+    }
+
+    @Test
+    public void testMul() {
+        assertEquals(200, Calculator.mul(20, 10));
+    }
+
+    @Test
+    public void testDiv() {
+        assertEquals(3, Calculator.div(20, 10));
+    }
+}
+</script></code></pre>
+<p>我们将 2 改为了 3，故意让它报错，这是运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.05 sec <<< FAILURE!
+testDiv(com.zfl9.CalculatorTest)  Time elapsed: 0.004 sec  <<< FAILURE!
+java.lang.AssertionError: expected:<3> but was:<2>
+    at org.junit.Assert.fail(Assert.java:88)
+    at org.junit.Assert.failNotEquals(Assert.java:834)
+    at org.junit.Assert.assertEquals(Assert.java:645)
+    at org.junit.Assert.assertEquals(Assert.java:631)
+    at com.zfl9.CalculatorTest.testDiv(CalculatorTest.java:24)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+    at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+    at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+    at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+    at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+    at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+    at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+    at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+    at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+    at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+    at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+    at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+    at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+
+Results :
+Failed tests:   testDiv(com.zfl9.CalculatorTest): expected:<3> but was:<2>
+
+Tests run: 4, Failures: 1, Errors: 0, Skipped: 0
+
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project junit-learn: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /root/maven-workspace/junit-learn/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+</script></code></pre>
+<p><strong>资源对象的创建与销毁</strong><br>在进行单元测试时，我们通常需要在执行测试方法前创建要用到的对象，然后在测试方法执行完之后又要销毁它们（释放资源），最无脑的做法是在每个测试方法的前后拷贝这些创建和销毁的代码（很多重复代码，不好），稍微明智一点的做法就是声明一个私有数据成员，然后将创建对象的代码单独放到一个成员函数中，销毁对象的代码也是单独放到一个成员函数中，然后在每个测试方法的首尾加入这两个函数的调用就行。</p>
+<p>但是 junit 提供了一个更简便的方法，我们不需要在测试方法的首尾加入两个函数的调用，而是直接使用 <code>@Before</code> 和 <code>@After</code> 注解来标注创建函数和销毁函数，junit 在进行测试时会自动在运行测试方法前调用 <code>@Before</code> 方法，测试函数返回后又会自动调用 <code>@After</code> 方法，很方便，例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class CalculatorTest {
+    private Object obj = null;
+
+    @Before
+    public void newObj() {
+        obj = new Object();
+        System.out.println("newObj()");
+    }
+
+    @After
+    public void delObj() {
+        obj = null;
+        System.out.println("delObj()");
+    }
+
+    @Test
+    public void testAdd() {
+        System.out.println("testAdd()");
+        assertEquals(30, Calculator.add(20, 10));
+    }
+
+    @Test
+    public void testSub() {
+        System.out.println("testSub()");
+        assertEquals(10, Calculator.sub(20, 10));
+    }
+
+    @Test
+    public void testMul() {
+        System.out.println("testMul()");
+        assertEquals(200, Calculator.mul(20, 10));
+    }
+
+    @Test
+    public void testDiv() {
+        System.out.println("testDiv()");
+        assertEquals(2, Calculator.div(20, 10));
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+newObj()
+testAdd()
+delObj()
+newObj()
+testDiv()
+delObj()
+newObj()
+testMul()
+delObj()
+newObj()
+testSub()
+delObj()
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 sec
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+
+20 + 10 = 30
+20 - 10 = 10
+20 * 10 = 200
+20 / 10 = 2
+</script></code></pre>
+<p><strong>Test 注解的两个参数</strong><br><code>@Test</code> 注解是 junit 4.x 中最常用的一个注解元素，它有两个可选参数，分别是：</p>
+<ul>
+<li><code>long timeout</code>：表示该方法必须在指定的时间内执行完成（单位为毫秒），如果不是则表示测试失败</li>
+<li><code>Class&lt;? extends Throwable&gt; expected</code>：表示该方法必须抛出指定异常类或其子类，否则测试失败</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testException() {
+       throw new IndexOutOfBoundsException();
+    }
+}
+</script></code></pre>
+<p>运行：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+
+20 + 10 = 30
+20 - 10 = 10
+20 * 10 = 200
+20 / 10 = 2
+</script></code></pre>
+<p>如果我们把抛出异常的那条语句给注释掉，那么会测试失败：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testException() {
+       // throw new IndexOutOfBoundsException();
+    }
+}
+</script></code></pre>
+<p>运行：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec <<< FAILURE!
+testException(com.zfl9.SimpleTest)  Time elapsed: 0.002 sec  <<< FAILURE!
+java.lang.AssertionError: Expected exception: java.lang.IndexOutOfBoundsException
+    at org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:32)
+    at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+    at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+    at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+    at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+    at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+    at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+    at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+    at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+    at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+    at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+    at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+
+
+Results :
+
+Failed tests:   testException(com.zfl9.SimpleTest): Expected exception: java.lang.IndexOutOfBoundsException
+
+Tests run: 5, Failures: 1, Errors: 0, Skipped: 0
+
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project junit-learn: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /root/maven-workspace/junit-learn/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+</script></code></pre>
+<p>同理，如果我们不传递对应的异常类给 Test 注解，而测试方法可能会抛出异常，则也会导致测试失败：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    @Test
+    public void testException() throws IndexOutOfBoundsException {
+        throw new IndexOutOfBoundsException();
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q 
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+testException(com.zfl9.SimpleTest)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.IndexOutOfBoundsException
+    at com.zfl9.SimpleTest.testException(SimpleTest.java:9)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+    at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+    at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+    at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+    at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+    at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+    at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+    at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+    at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+    at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+    at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+    at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+    at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+
+
+Results :
+
+Tests in error: 
+  testException(com.zfl9.SimpleTest)
+
+Tests run: 5, Failures: 0, Errors: 1, Skipped: 0
+
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project junit-learn: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /root/maven-workspace/junit-learn/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+</script></code></pre>
+<p>然后我们来试试 timeout 参数，表示该方法必须能够在指定时间内返回：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    @Test(timeout = 10)
+    public void testException() {
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+    }
+}
+</script></code></pre>
+<p>我们设置的是该方法必须在 10ms 之内返回，然而我们故意在里面 sleep 100ms，结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q 
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.009 sec <<< FAILURE!
+testException(com.zfl9.SimpleTest)  Time elapsed: 0.009 sec  <<< ERROR!
+org.junit.runners.model.TestTimedOutException: test timed out after 10 milliseconds
+    at java.lang.Thread.sleep(Native Method)
+    at com.zfl9.SimpleTest.testException(SimpleTest.java:9)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+    at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+    at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    at org.junit.internal.runners.statements.FailOnTimeout$CallableStatement.call(FailOnTimeout.java:298)
+    at org.junit.internal.runners.statements.FailOnTimeout$CallableStatement.call(FailOnTimeout.java:292)
+    at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+    at java.lang.Thread.run(Thread.java:748)
+
+
+Results :
+
+Tests in error: 
+  testException(com.zfl9.SimpleTest): test timed out after 10 milliseconds
+
+Tests run: 5, Failures: 0, Errors: 1, Skipped: 0
+
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project junit-learn: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /root/maven-workspace/junit-learn/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+</script></code></pre>
+<p><strong>简单的测试类模板</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SampleTest {
+    private java.util.List emptyList;
+
+    @Before
+    public void setUp() {
+        emptyList = new java.util.ArrayList();
+    }
+
+    @After
+    public void tearDown() {
+        emptyList = null;
+    }
+
+    @Test
+    public void testSomeBehavior() {
+        assertEquals("Empty list should have 0 elements", 0, emptyList.size());
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testForException() {
+        Object o = emptyList.get(0);
+    }
+}
+</script></code></pre>
+<p><strong>一次性的 before 和 after 方法</strong><br>我们注意到，上面的 <code>@Before</code>、<code>@After</code> 注解的方法是每次执行测试方法时都会被执行的，而有时候我们可能需要 setUp() 方法和 tearDown() 方法执行一次就行（首尾），在 junit 中是运行我们这样做的，我们只需使用 <code>@BeforeClass</code>、<code>@AfterClass</code> 注解来标注对应的 public static void 方法就行：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.util.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    private Collection collection;
+
+    @BeforeClass
+    public static void oneTimeSetUp() {
+        // one-time initialization code        
+    }
+
+    @AfterClass
+    public static void oneTimeTearDown() {
+        // one-time cleanup code
+    }
+
+    @Before
+    public void setUp() {
+        collection = new ArrayList();
+    }
+
+    @After
+    public void tearDown() {
+        collection.clear();
+    }
+
+    @Test
+    public void testEmptyCollection() {
+        assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    public void testOneItemCollection() {
+        collection.add("itemA");
+        assertEquals(1, collection.size());
+    }
+}
+</script></code></pre>
+<p>执行顺序如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+oneTimeSetUp()
+setUp()
+testEmptyCollection()
+tearDown()
+setUp()
+testOneItemCollection()
+tearDown()
+oneTimeTearDown()
+</script></code></pre>
+<h2 id="JUnit-进阶"><a href="#JUnit-进阶" class="headerlink" title="JUnit 进阶"></a>JUnit 进阶</h2><p><strong>Javadoc API</strong>：<a href="https://junit.org/junit4/javadoc/latest/index.html" rel="external nofollow noopener noreferrer" target="_blank">https://junit.org/junit4/javadoc/latest/index.html</a></p>
+<p>在第二章节，我们介绍了 junit 最常见的用法，涉及到的东西有：<code>@Test</code> 注解、<code>@Before</code>/<code>@After</code> 注解、<code>@BeforeClass</code>/<code>@AfterClass</code> 注解、以及 <code>@Test</code> 注解的 expected、timeout 参数。</p>
+<p>我们来简单总结编写测试代码时要注意的几个东西：</p>
+<ul>
+<li>测试方法必须使用 <code>@Test</code> 注解进行标注</li>
+<li>测试方法必须使用 <code>public void</code> 修饰，不能带任何的参数</li>
+<li>源代码和测试代码的存放要分开，可参考 maven 标准目录结构</li>
+<li>测试类所在的包名应该和被测试类所在的包名保持一致（很重要）</li>
+<li>测试单元的每个方法必须可以独立测试，测试方法间不能有任何依赖</li>
+<li>测试类使用 <code>Test</code> 作为类名的后缀（不是必须，但强烈建议）</li>
+<li>测试方法使用 <code>test</code> 作为方法名的前缀（不是必须，但强烈建议）</li>
+<li>准备测试数据的方法应命名为 <code>setUp()</code>，并且使用 <code>@Before</code> 进行标注</li>
+<li>销毁测试数据的方法应命名为 <code>tearDown()</code>，并且使用 <code>@After</code> 进行标注</li>
+<li>一次性的 setUp、tearDown，应使用 <code>@BeforeClass</code>、<code>@AfterClass</code> 注解</li>
+<li><code>@Test</code> 注解所标注的测试方法是可以抛出检查异常和非检查异常的，没有要求</li>
+<li>如果某些测试方法因为各种原因暂时不想进行测试，可以使用 <code>@Ignore</code> 进行注解</li>
+<li>如果某个测试类中不想被 Runner 运行，你也可以使用 <code>@Ignore</code> 来注解整个测试类</li>
+</ul>
+<p>我们唯一没有介绍的就是 <code>@Ignore</code> 注解，我们来试一下，注解测试方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    @Ignore
+    @Test(timeout = 100)
+    public void testException() {
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.001 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 1
+
+20 + 10 = 30
+20 - 10 = 10
+20 * 10 = 200
+20 / 10 = 2
+</script></code></pre>
+<p>注意到没，<code>Skipped</code> 的值为 1，表示 Runner 在执行测试时跳过了一个测试方法。<br>当然我们也可以直接使用 <code>@Ignore</code> 来注解整个类，这样整个测试类就不会运行了：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+@Ignore
+public class SimpleTest {
+    @Test(timeout = 100)
+    public void testException() {
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+    }
+}
+</script></code></pre>
+<p>运行结果如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.002 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 1
+
+20 + 10 = 30
+20 - 10 = 10
+20 * 10 = 200
+20 / 10 = 2
+</script></code></pre>
+<p><strong>Assert 工具类的常见方法</strong><br>JUnit 提供了一些辅助函数，他们用来帮助我们确定被测试的方法是否按照预期正常执行，这些辅助函数我们称之为 <strong>断言(Assertion)</strong>。JUnit4 所有的断言都在 <code>org.junit.Assert</code> 类中，Assert 类包含了一组 <strong>静态</strong> 的测试方法，用于验证 <strong>期望值 expected</strong> 与 <strong>实际值 actual</strong> 之间的逻辑关系是否正确，如果不符合我们的预期则表示测试未通过。Assert 实用类提供的方法都是静态方法，即 <code>public static void</code>，常见的有：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/**
+ * @param message   错误信息，字符串
+ * @param expected  期望值，任意类型（重载）
+ * @param actual    实际值，任意类型（重载）
+ * 如果期望值与实际值不相等则表示测试失败，JUnit 会报错
+ */
+assertEquals([message, ]expected, actual) // 是否相等 (标量)
+assertNotEquals([message, ]unexpected, actual) // 是否不等 (标量)
+assertArrayEquals([message, ]expecteds, actuals) // 是否相等 (数组)
+
+assertSame([message, ]expected, actual) // 引用的内存地址相同
+assertNotSame([message, ]expected, actual) // 引用的内存地址不同
+
+assertNull([message, ]object) // 断言 object 为 null
+assertNotNull([message, ]object) // 断言 object 不为 null
+
+assertTrue([message, ]condition) // 断言 condition 为真
+assertFalse([message, ]condition) // 断言 condition 为假
+</script></code></pre>
+<p>你可能会对 <code>assertEquals()</code>、<code>assertSame()</code> 方法产生疑惑，其实很好分辨，一个是通过调用 <code>equals()</code> 方法进行判断是否“相等”，一个是通过调用 <code>==</code> 运算符进行判断是否“相等”，后者判断的其实是对象的内存地址是否相同，这和前者的判断是不一样的，这样说估计你就能记住它们的区别了。</p>
+<p>除了上面这些方法之外，还有两个 fail() 方法，用来手动导致测试失败：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public static void fail() // 没有消息
+public static void fail(String message)
+</script></code></pre>
+<p>什么是”手动导致测试失败”？很简单，比如：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public class SimpleTest {
+    @Test
+    public void testFail() {
+        fail("test failed");
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean test exec:java -q
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.zfl9.CalculatorTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 sec
+Running com.zfl9.SimpleTest
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+testFail(com.zfl9.SimpleTest)  Time elapsed: 0.001 sec  <<< FAILURE!
+java.lang.AssertionError: test failed
+    at org.junit.Assert.fail(Assert.java:88)
+    at com.zfl9.SimpleTest.testFail(SimpleTest.java:9)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+    at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+    at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+    at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+    at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+    at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+    at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+    at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+    at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+    at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+    at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+    at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+    at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+    at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+
+
+Results :
+
+Failed tests:   testFail(com.zfl9.SimpleTest): test failed
+
+Tests run: 5, Failures: 1, Errors: 0, Skipped: 0
+</script></code></pre>
+<p><strong>思考：测试类是如何运行的？</strong><br>大家刚开始使用 JUnit 的时候，可能会跟我一样有一个疑问，JUnit 没有 main() 方法，那它是怎么开始执行的呢？众所周知，不管是什么程序，都必须有一个程序执行入口，而这个入口通常是 main() 方法。显然，JUnit 能直接执行某个测试方法，那么它肯定会有一个程序执行入口。没错，其实在 <code>org.junit.runner</code> 包下，有个 <code>JUnitCore.java</code> 类，这个类有一个标准的 main() 方法，这个其实就是 JUnit 程序的执行入口，其代码如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public static void main(String... args) {
+    Result result = new JUnitCore().runMain(new RealSystem(), args);
+    System.exit(result.wasSuccessful() ? 0 : 1);
+}
+</script></code></pre>
+<p>通过分析里面的runMain()方法，可以找到最终的执行代码如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public Result run(Runner runner) {
+    Result result = new Result();
+    RunListener listener = result.createListener();
+    notifier.addFirstListener(listener);
+    try {
+        notifier.fireTestRunStarted(runner.getDescription());
+        runner.run(notifier);
+        notifier.fireTestRunFinished(result);
+    } finally {
+        removeListener(listener);
+    }
+    return result;
+}
+</script></code></pre>
+<p>可以看到，所有的单元测试方法都是通过 Runner 来执行的。Runner 只是一个抽象类，它是用来跑测试用例并通知结果的，JUnit 提供了很多 Runner 的实现类，可以根据不同的情况选择不同的 test runner。</p>
+<p>当然，我们一般都是使用 maven 或 IDE 来执行测试，你也许注意到了，我们在之前的使用中，并没有手动运行什么 Runner，而是直接使用 <code>mvn test</code> 来跑单元测试，其实 maven 自动运行了对应的 Runner 而已啦。</p>
+<h2 id="JUnit-扩展"><a href="#JUnit-扩展" class="headerlink" title="JUnit 扩展"></a>JUnit 扩展</h2><p><strong>五个常用注解</strong></p>
+<ul>
+<li><code>@BeforeClass</code>：初始化方法，<code>public static void init()</code>，只允许一次</li>
+<li><code>@Before</code>：准备测试数据，<code>public void setUp()</code>，在每个 Test 方法前运行</li>
+<li><code>@Test</code>：要测试的方法，<code>public void testXxx()</code>，由 JUnit Runner 来运行</li>
+<li><code>@After</code>：回收测试数据，<code>public void tearDown()</code>，在每个 Test 方法后运行</li>
+<li><code>@AfterClass</code>：销毁方法，<code>public static void destroy()</code>，也是只会运行一次</li>
+</ul>
+<p><strong>JUnit 4.4 引入的 Hamcrest</strong><br>Hamcrest 是一个协助编写用 Java 语言进行软件测试的框架。它支持创建自定义的断言匹配器（assertion matchers），名称 <code>Hamcrest</code> 即为 <code>matchers</code> 的异位构词，允许声明式定义匹配规则。这些匹配器在单元测试框架（例如 JUnit 和 jMock）中有用。Hamcrest 已经被移植到 Java、C++、Objective-C、Python、ActionScript 3、PHP、JavaScript 和 Erlang。</p>
+<p><strong>“第一代”断言表达式</strong><br>原始的断言语句，基本上和 java 语言规范提供的断言是一样的，不好用：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+assert(x == y); // 如果 x == y 表达式的值为 false 则断言失败，否则断言成功
+</script></code></pre>
+<p><strong>“第二代”断言表达式</strong><br>第一代断言表达式太原始了，断言失败产生的错误信息不友好，于是第二代断言表达式提供了一组断言语句，从而产生更友好的错误信息：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+assert_equal(x, y);
+assert_not_equal(x, y);
+</script></code></pre>
+<p><strong>“第三代”断言表达式</strong><br>因为断言条件有很多，导致测试框架需要提供数量庞大的断言语句，不利于维护，所以第三代断言表达式提供了更灵活的断言语句 <code>assert_that</code>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+assert_that(x, equal_to(y))
+assert_that(x, is_not(equal_to(y)))
+</script></code></pre>
+<p>这样做的好处是，断言失败时依旧可以得到可读性良好的错误信息，同时也有了更强大的可扩展性（可以编写自定义的断言操作）、可读性（与口语相似）。我们知道，junit 提供的是“第二代断言表达式”，即 <code>assertXxx()</code>，不过，从 junit 4.4 起，junit 引入了 <code>assertThat(actual, matcher)</code> 语法，这就是所谓的“第三代断言表达式”，而 Hamcrest 则提供了很多常用的 matcher 匹配器，如字符串匹配器、集合/数组匹配器、逻辑运算符等，junit 提供 2 个重载形式的 assertThat() 断言方法，如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+assertThat(T actual, org.hamcrest.Matcher<T> matcher) // reason=""
+assertThat(String reason, T actual, org.hamcrest.Matcher<T> matcher) 
+</script></code></pre>
+<p><strong>如何使用 Hamcrest</strong><br>junit 4.12 内部默认引用了 hamcrest-core 1.3，所以我们只需要再引入 hamcrest-library 1.3 就可以了：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>4.12</version>
+  <scope>test</scope>
+</dependency>
+
+<dependency>
+  <groupId>org.hamcrest</groupId>
+  <artifactId>hamcrest-library</artifactId>
+  <version>1.3</version>
+  <scope>test</scope>
+</dependency>
+</script></code></pre>
+<blockquote>
+<p>声明一句，junit 提供的 assertXxx() 和 hamcrest 提供的 assertThat() 并没有冲突，实际上两个都会去使用，哪个方便用哪个。</p>
+</blockquote>
+<p>然后，我们只需要在测试类中静态导入 junit 的断言方法和 hamcrest 的匹配器方法，就可以开始使用了：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+</script></code></pre>
+<blockquote>
+<p>hamcrest 提供的所有断言测试方法（匹配器方法）：<a href="http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/Matchers.html" rel="external nofollow noopener noreferrer" target="_blank">http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/Matchers.html</a></p>
+</blockquote>
+<p>assertThat() 使用例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
+
+public class CTest {
+  @Test
+  public void test() {
+    /* 一般匹配符 */
+    int s = new C().add(1, 1);
+    // allOf：所有条件必须都成立，测试才通过
+    assertThat(s, allOf(greaterThan(1), lessThan(3)));
+    // anyOf：只要有一个条件成立，测试就通过
+    assertThat(s, anyOf(greaterThan(1), lessThan(1)));
+    // anything：无论什么条件，测试都通过
+    assertThat(s, anything());
+    // is：变量的值等于指定值时，测试通过
+    assertThat(s, is(2));
+    // not：和is相反，变量的值不等于指定值时，测试通过
+    assertThat(s, not(1));
+
+    /* 数值匹配符 */
+    double d = new C().div(10, 3);
+    // closeTo：浮点型变量的值在3.0±0.5范围内，测试通过
+    assertThat(d, closeTo(3.0, 0.5));
+    // greaterThan：变量的值大于指定值时，测试通过
+    assertThat(d, greaterThan(3.0));
+    // lessThan：变量的值小于指定值时，测试通过
+    assertThat(d, lessThan(3.5));
+    // greaterThanOrEuqalTo：变量的值大于等于指定值时，测试通过
+    assertThat(d, greaterThanOrEqualTo(3.3));
+    // lessThanOrEqualTo：变量的值小于等于指定值时，测试通过
+    assertThat(d, lessThanOrEqualTo(3.4));
+
+    /* 字符串匹配符 */
+    String n = new C().getName("Magci");
+    // containsString：字符串变量中包含指定字符串时，测试通过
+    assertThat(n, containsString("ci"));
+    // startsWith：字符串变量以指定字符串开头时，测试通过
+    assertThat(n, startsWith("Ma"));
+    // endsWith：字符串变量以指定字符串结尾时，测试通过
+    assertThat(n, endsWith("i"));
+    // euqalTo：字符串变量等于指定字符串时，测试通过
+    assertThat(n, equalTo("Magci"));
+    // equalToIgnoringCase：字符串变量在忽略大小写的情况下等于指定字符串时，测试通过
+    assertThat(n, equalToIgnoringCase("magci"));
+    // equalToIgnoringWhiteSpace：字符串变量在忽略头尾任意空格的情况下等于指定字符串时，测试通过
+    assertThat(n, equalToIgnoringWhiteSpace(" Magci   "));
+
+    /* 集合匹配符 */
+    List<String> l = new C().getList("Magci");
+    // hasItem：Iterable变量中含有指定元素时，测试通过
+    assertThat(l, hasItem("Magci"));
+
+    Map<String, String> m = new C().getMap("mgc", "Magci");
+    // hasEntry：Map变量中含有指定键值对时，测试通过
+    assertThat(m, hasEntry("mgc", "Magci"));
+    // hasKey：Map变量中含有指定键时，测试通过
+    assertThat(m, hasKey("mgc"));
+    // hasValue：Map变量中含有指定值时，测试通过
+    assertThat(m, hasValue("Magci"));
+  }
+}
+</script></code></pre>
+<p><strong>常用的一些断言方法</strong></p>
+<ul>
+<li><code>is</code> - decorator for equalTo to improve readability</li>
+<li><code>not</code> - matches if the wrapped matcher doesn’t match and vice</li>
+<li><code>allOf</code> - matches if all matchers match (short circuits)</li>
+<li><code>anyOf</code> - matches if any matchers match (short circuits)</li>
+<li><code>notNullValue</code>, <code>nullValue</code> - test for null</li>
+<li><code>equalTo</code> - test object equality using the equals method</li>
+<li><code>instanceOf</code>, <code>isCompatibleType</code> - test type</li>
+<li><code>sameInstance</code> - test object identity</li>
+<li><code>hasEntry</code>, <code>hasKey</code>, <code>hasValue</code> - test a map contains an entry, key or value</li>
+<li><code>hasItem</code>, <code>hasItems</code> - test a collection contains elements</li>
+<li><code>hasItemInArray</code> - test an array contains an element</li>
+<li><code>closeTo</code> - test floating point values are close to a given value</li>
+<li><code>greaterThan</code>, <code>greaterThanOrEqualTo</code>, <code>lessThan</code>, <code>lessThanOrEqualTo</code></li>
+<li><code>hasToString</code> - test Object.toString</li>
+<li><code>equalToIgnoringCase</code> - test string equality ignoring case</li>
+<li><code>equalToIgnoringWhiteSpace</code> - test string equality ignoring differences in runs of whitespace</li>
+<li><code>containsString</code>, <code>endsWith</code>, <code>startsWith</code> - test string matching</li>
+</ul>
+<p><strong>自定义匹配器（扩展）</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+
+public class IsNotRangeNumber extends TypeSafeMatcher<Double> {
+    private Double start;
+    private Double end;
+
+    private IsNotRangeNumber(Double start,Double end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("这个数字不在指定范围内");
+    }
+
+    @Override
+    protected boolean matchesSafely(Double item) {
+        boolean flag = false;
+        if (item != null && start <= item && item <= end) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    public static Matcher<Double> notRangeNumber(Double a,Double b) {
+        return new IsNotRangeNumber(a,b);
+    }
+}
+</script></code></pre>
+<p>使用方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+assertThat(22.9, IsNotRangeNumber.notRangeNumber(12.0, 20.0));
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-spi.html" rel="next" title="Java 的 SPI 机制">
+                <i class="fa fa-chevron-left"></i> Java 的 SPI 机制
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-log4j.html" rel="prev" title="Java Log4j 笔记">
+                Java Log4j 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-简介"><span class="nav-number">1.</span> <span class="nav-text">JUnit 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-使用"><span class="nav-number">2.</span> <span class="nav-text">JUnit 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-进阶"><span class="nav-number">3.</span> <span class="nav-text">JUnit 进阶</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-扩展"><span class="nav-number">4.</span> <span class="nav-text">JUnit 扩展</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-junit.html';
+          this.page.identifier = 'java-junit.html';
+          this.page.title = 'Java JUnit 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

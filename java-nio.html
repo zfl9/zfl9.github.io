@@ -1,0 +1,2526 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java NIO、NIO.2、非阻塞IO、IO多路复用、异步IO">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java NIO">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO">
+<meta property="og:url" content="https://www.zfl9.com/java-nio.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java NIO">
+<meta property="og:image" content="https://www.zfl9.com/images/java-nio-1.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-nio-2.png">
+<meta property="og:updated_time" content="2019-02-18T12:46:33.178Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java NIO">
+<meta name="twitter:description" content="Java NIO">
+<meta name="twitter:image" content="https://www.zfl9.com/images/java-nio-1.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-nio.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java NIO | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-nio.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java NIO
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-15T14:43:00+08:00">
+                2017-10-15
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-nio.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-nio.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-nio.html" class="leancloud_visitors" data-flag-title="Java NIO">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java NIO</p>
+<a id="more"></a>
+<h2 id="IO、NIO、NIO-2"><a href="#IO、NIO、NIO-2" class="headerlink" title="IO、NIO、NIO.2"></a>IO、NIO、NIO.2</h2><p>IO/BIO：即<code>java.io.*</code>，面向流、阻塞IO，逐个字节的读取/写入，没有相应的缓冲区（除了Buffered），因此效率较低；<br>NIO：即<code>java.nio.*</code>，面向缓冲区、阻塞/非阻塞IO(可配置)，主要组件：<code>Buffer</code>缓冲器、<code>Channel</code>通道、<code>Selector</code>选择器；<br>AIO/NIO.2：即<code>java.nio.channels.Asynchronous*</code>，异步IO、阻塞IO、由ThreadPool线程池实现，每个异步IO Channel都属于某个AsynchronousChannelGroup，而每个AsynchronousChannelGroup都与一个ThreadPool相关联。</p>
+<p><strong>Linux 中的 5 种 IO Model</strong>：</p>
+<ul>
+<li><strong>同步IO(synchronous IO)</strong><ul>
+<li>阻塞IO(bloking IO)</li>
+<li>非阻塞IO(non-blocking IO)</li>
+<li>多路复用IO(multiplexing IO)</li>
+<li>信号驱动式IO(signal-driven IO)</li>
+</ul>
+</li>
+<li><strong>异步IO(asynchronous IO)</strong></li>
+</ul>
+<blockquote>
+<p>其中，由于<code>信号驱动式IO</code>不太常用，因此下面我们只讨论其他 4 种 IO 模型</p>
+</blockquote>
+<p>IO 操作可以简单的分为这三类：<br>1) 内存IO，即<code>byte[]</code>、<code>char[]</code>数组，不涉及与外部IO设备的交互；<br>2) 文件IO，即<code>FileInputStream</code>、<code>FileOutputStream</code>、<code>RandomAccessFile</code>，主要与本地磁盘进行交互；<br>3) 套接字IO，即<code>ServerSocket</code>、<code>Socket</code>、<code>DatagramSocket</code>，对于Linux来说，套接字也是一种文件，这里不深究。</p>
+<p><code>内存IO</code>，本质就是内存的拷贝，效率非常高，没有所谓的阻塞、非阻塞之分；<br><code>文件IO</code>，在<code>java.nio.channels.FileChannel</code>实现中，只能运行在阻塞模式，因此不进行讨论；<br><code>套接字IO</code>，Java NIO 的主要研究对象，有阻塞模式、非阻塞模式，默认为阻塞模式。</p>
+<p>对于 Socket 的两个基本操作<code>recv()</code>、<code>send()</code>，一个线程/进程调用它们主要经历两个阶段，以<code>recv()</code>为例：<br>1) <strong>等待数据准备</strong>，通常涉及等待网络上的数据分组到达，然后被复制到内核的某个缓冲区(Socket缓冲区)；<br>2) <strong>将数据从内核空间拷贝至进程空间</strong>，把接收到的数据从内核缓冲区复制(准确说是剪切)到应用进程的缓冲区(字节数组)；</p>
+<p>了解这些细节之后，我们来逐个的分析这 4 种 IO 模型：<br><strong>同步阻塞IO</strong><br>当 socket 接收缓冲区中没有数据时，当前进程会被 recv 阻塞，一直会等待数据的到来；<br>当 socket 接收缓冲区中有数据时，recv 将数据拷贝到进程空间的这个过程，也是阻塞的；</p>
+<blockquote>
+<p>对于<code>同步阻塞IO</code>来说，这两个阶段都被阻塞了；</p>
+</blockquote>
+<p><strong>同步非阻塞IO</strong><br>当 socket 接收缓冲区中没有数据时，recv 会立即返回一个特定状态值，表示现在没有数据，等下再来吧；<br>当 socket 接收缓冲区中有数据时，recv 将数据拷贝到进程空间的这个过程，也是阻塞的；</p>
+<p>对于非阻塞IO，通常采取轮询 polling 的方式，循环往复的主动询问内核，当前时候有数据可以读取了。实际上，这样的轮询还不如阻塞IO的性能好。</p>
+<blockquote>
+<p>对于<code>同步非阻塞IO</code>来说，只有第一个阶段未被阻塞，第二个阶段依旧是阻塞的；</p>
+</blockquote>
+<p><strong>多路复用IO</strong><br>和非阻塞IO很相似，但是它的优点是可以借助几个特殊的系统调用(<code>select</code>、<code>poll</code>、<code>epoll</code>)，来同时轮询多个 socket 连接：</p>
+<p>当调用select、poll、epoll时，如果所监控的socket中有部分socket可读、可写或其他事件发生时，就会返回，将其交给用户进程来处理，这个过程是阻塞的，只不过是因为select、poll、epoll系统调用而阻塞的；<br>当调用返回后，用户进程再调用recv，将数据从内核拷贝到进程空间中，这个过程也是阻塞的，因recv拷贝数据而阻塞；</p>
+<p>实际上这种方式相比第二种还差一些，因为这里面包含了两个系统调用(select/poll/epoll、recv)，而第二种只有一个系统调用recv；<br>但是，IO多路复用的优点是可以处理更多的连接，当连接数大的时候，缺点就被优点给掩盖了。</p>
+<p>IO多路复用相比多进程/多线程 + 阻塞IO的系统开销小，因为系统不需要创建新的进程或线程，也不需要维护多个进程、线程的执行；</p>
+<blockquote>
+<p>对于<code>多路复用IO</code>来说，第一个阶段是因为select、poll、epoll而阻塞的，第二个阶段(实际IO操作)依旧是阻塞的；</p>
+</blockquote>
+<p><strong>异步IO</strong><br>前面的几种IO模型都是同步的，因为所有的实际IO操作(将数据从内核拷贝到进程空间的这个过程)都是阻塞的；<br>所谓同步IO，就是必须等待当前的IO操作完成之后，才能执行后面的指令，这个等待的过程中是不能进行其他操作的，也就是说，指令序列都是线性执行的；<br>而异步IO，进程/线程并不会因为这个IO操作而阻塞，可以立即执行别的操作，当IO操作完成后，进程会收到完成的通知(回调函数、信号等等)；</p>
+<blockquote>
+<p>对于<code>异步IO</code>来说，两个阶段都没有被阻塞，因为我仅仅需要发起recv、send请求，具体怎么搞那是别人的事，我可以继续忙我的事情，等你干完了告诉我一声就行。</p>
+</blockquote>
+<p><strong>多线程和异步操作的异同</strong><br>相同点：多线程和异步操作两者都可以达到避免调用线程阻塞的目的，从而提高软件的可响应性。<br>不同点：多线程是实现异步的一个重要手段，但不是唯一手段，对于一个单线程程序也可以是异步执行的。</p>
+<p><strong>异步操作的本质</strong><br>所有的程序最终都会由计算机硬件来执行，所以为了更好的理解异步操作的本质，我们有必要了解一下它的硬件基础。</p>
+<p>熟悉电脑硬件的朋友肯定对 DMA 这个词不陌生，硬盘、光驱的技术规格中都有明确 DMA 的模式指标，其实网卡、声卡、显卡也是有 DMA 功能的。<br>DMA 就是<strong>直接内存访问</strong>的意思，也就是说，<strong>拥有 DMA 功能的硬件在和内存进行数据交换的时候可以不消耗 CPU 资源</strong>。只要 CPU 在发起数据传输时发送一个指令，硬件就开始自己和内存交换数据，在传输完成之后硬件会触发一个中断来通知操作完成。</p>
+<p>这些无须消耗 CPU 时间的 I/O 操作正是异步操作的硬件基础。所以即使在 DOS 这样的单进程（而且无线程概念）系统中也同样可以发起异步的 DMA 操作。</p>
+<p><strong>线程的本质</strong><br>线程不是一个计算机硬件的功能，而是操作系统提供的一种逻辑功能，线程本质上是进程中一段并发运行的代码，所以线程需要操作系统投入 CPU 资源来运行和调度。</p>
+<blockquote>
+<p>而 Java7 新引入的 AIO、NIO.2，其实就是通过多线程来实现的，但是不是简单的每个IO都创建一个线程，而是用ThreadPool线程池进行管理。</p>
+</blockquote>
+<p>BIO、NIO、AIO 适用场景分析：<br>1) BIO方式适用于<strong>连接数目比较小且固定的架构</strong>，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4 以前的唯一选择，但程序直观简单易理解。<br>2) NIO方式适用于<strong>连接数目多且连接比较短（轻操作）的架构</strong>，比如聊天服务器，并发局限于应用中，编程比较复杂，JDK1.4 开始支持。<br>3) AIO方式适用于<strong>连接数目多且连接比较长（重操作）的架构</strong>，比如相册服务器，充分调用 OS 参与并发操作，编程比较复杂，JDK1.7 开始支持。</p>
+<blockquote>
+<p>另外，I/O 属于底层操作，需要操作系统支持，并发也需要操作系统的支持，所以性能方面不同操作系统差异会比较明显。</p>
+</blockquote>
+<p><strong>NIO的几个主要概念</strong></p>
+<ul>
+<li><code>Channel</code>通道，相比之前的”流”的概念，是差不多的；但是有一个很大的区别就是：Channel 是双向的，Stream 是单向的；</li>
+<li><code>Buffer</code>缓冲器，就是数组的包装而已，我们可以直接把它看成一个数组，Buffer 和 Channel 通常需要一起使用；</li>
+<li><code>Selector</code>选择器，select/poll/epoll 系统调用，用于 Socket Channel，因为它要求 Channel 必须是非阻塞的；</li>
+</ul>
+<p>BIO 都是没有缓冲区的，包括 RandomAccessFile 也没有缓冲区，除了 Buffered 装饰流；<br>NIO 都是具有缓冲区的，必须和 Buffer 对象一起使用，Buffer 对象就是缓冲区；</p>
+<blockquote>
+<p><code>ByteBuffer</code>是唯一直接与 Channel 交互的缓冲器，因为所有的数据都是以二进制形式存在的。</p>
+</blockquote>
+<p>在 BIO 中，与文件 IO 相关联的三个类是：<br>1) <code>java.io.FileInputStream</code>，从文件流中读取字节数据，只读；<br>2) <code>java.io.FileOutputStream</code>，向文件流中写入字节数据，只写；<br>3) <code>java.io.RandomAccessFile</code>，独立的IO流类，支持<code>r</code>只读、<code>rw</code>读写、<code>rws</code>读写 + metadata/data自动同步、<code>rwd</code>读写 + data自动同步四种模式；</p>
+<p>为了迎合 NIO，这几个类都进行修改，加入了<code>getChannel()</code>方法，获取对应的<code>FileChannel</code>对象，提供高效率的 I/O 操作；<br>但是 NIO 并未给 FileChannel 提供非阻塞支持，FileChannel 只能运行在阻塞模式下，但是效率依旧比 BIO 高，因为有 Buffer 啊；</p>
+<p>而<code>java.net</code>包中的三个 Socket 类：<br>1) <code>java.net.ServerSocket</code>：TCP Socket，Server端；<br>2) <code>java.net.Socket</code>：TCP Socket；<br>3) <code>java.net.DatagramSocket</code>：UDP Socket；</p>
+<p>这几个类其实也定义了一个<code>getChannel()</code>方法，但是默认只能返回null，需要显式的 open() 对应的 SocketChannel 通道。</p>
+<p><strong>Channel</strong>通道的主要实现：<br>1) <code>java.nio.channels.Channel</code>，所有 Channel 通道的父接口，定义了两个方法：<code>isOpen()</code>、<code>close()</code>；<br>2) <code>java.nio.channels.FileChannel</code>，可以通过<code>open()</code>方法获得、或者通过<code>FileInputStream</code>、<code>FileOutputStream</code>、<code>RandomAccessFile</code>的<code>getChannel()</code>方法获得，只能为阻塞模式；<br>3) <code>java.nio.channels.ServerSocketChannel</code>：通过<code>open()</code>方法获得，可以自己配置为阻塞模式、非阻塞模式；<br>4) <code>java.nio.channels.SocketChannel</code>：通过<code>open()</code>方法获得，可以自己配置为阻塞模式、非阻塞模式；<br>5) <code>java.nio.channels.DatagramChannel</code>：通过<code>open()</code>方法获得，可以自己配置为阻塞模式、非阻塞模式；</p>
+<p><strong>Buffer</strong>缓冲器的主要实现：<br>1) Buffer：缓冲器的公共父类；<br>2) ByteBuffer：byte数组，Heap内存、Direct内存两种；<br>3) MappedByteBuffer：内存映射文件(<code>mmap()</code>)，适合读写大文件；<br>4) CharBuffer：char数组；<br>5) ShortBuffer：short数组；<br>6) IntBuffer：int数组；<br>7) LongBuffer：long数组；<br>8) FloatBuffer：float数组；<br>9) DoubleBuffer：double数组；</p>
+<p><strong>Selector</strong>选择器：<br>1) SelectionKey：选择键，可以理解为 epoll 中的一个 event 事件，定义了<code>OP_READ</code>、<code>OP_WRITE</code>、<code>OP_ACCEPT</code>、<code>OP_CONNECT</code>四个常量；<br>2) Selector：选择器，select、poll、epoll的包装，和 SelectionKey 一起使用。</p>
+<blockquote>
+<p>如果需要使用 Selector，必须将 Channel 配置为非阻塞模式，因此 FileChannel 不能用于 Selector。</p>
+</blockquote>
+<p><strong>Scattering、Gathering</strong>，分散读取、聚集写入<br>1) <code>分散读取（Scattering Reads）</code>是指从 Channel 中读取的数据“分散”到多个 Buffer 中，如下图：<br><img src="/images/java-nio-1.png" alt="分散读取"><br>2) <code>聚集写入（Gathering Writes）</code>是指将多个 Buffer 中的数据“聚集”写入到 Channel 中，如下图：<br><img src="/images/java-nio-2.png" alt="聚集写入"></p>
+<p>其实就是一个概念而已，从 Buffer[] 数组中依次读取、依次写入。</p>
+<h2 id="Buffer缓冲器"><a href="#Buffer缓冲器" class="headerlink" title="Buffer缓冲器"></a>Buffer缓冲器</h2><blockquote>
+<p>Buffer 缓冲器主要在<code>java.nio</code>包中，是几个基本类型数组的包装，但是比直接使用数组更方便，有效率；</p>
+</blockquote>
+<h3 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a>Buffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">public abstract class Buffer {
+    private int mark = -1; // mark位置
+    private int position = 0; // 当前位置
+    private int limit; // 操作的范围限制
+    private int capacity; // 底层数组长度
+
+    public final int capacity(); // 获取底层数组的容量
+
+    public final int position(); // 获取当前位置pos
+    public final Buffer position(int newPosition); // newPos <= limit，移动pos指针
+
+    public final int limit(); // 获取当前限制limit
+    public final Buffer limit(int newLimit); // newLimit <= capacity，更改限制
+
+    public final Buffer mark(); // 标记当前pos
+    public final Buffer reset(); // 复位至mark的pos
+
+    public final Buffer rewind(); // pos指针复位(置零)
+    public final Buffer flip(); // 调整limit、pos置零
+    public final Buffer clear(); // 清空、重置buffer
+
+    public final int remaining(); // 剩余可操作的元素数量
+    public final boolean hasRemaining(); // 是否还有可操作元素
+
+    public abstract boolean isDirect(); // 是否为Direct内存
+    public abstract boolean isReadOnly(); // 是否为只读buffer
+
+    public abstract boolean hasArray(); // hasArray() && !isReadOnly()
+    public abstract Object array(); // 获取底层数组
+    public abstract int arrayOffset(); // 不明确其用途
+}
+</script></code></pre>
+<h3 id="ByteBuffer"><a href="#ByteBuffer" class="headerlink" title="ByteBuffer"></a>ByteBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* static方法，分配内存空间 */
+public static ByteBuffer allocate(int capacity); // new HeapByteBuffer(capacity, capacity)
+public static ByteBuffer allocateDirect(int capacity); // new DirectByteBuffer(capacity)
+
+/* static方法，包装已有数组 */
+public static ByteBuffer wrap(byte[] array, int offset, int length);
+public static ByteBuffer wrap(byte[] array);
+
+/* view视图 */
+public abstract ByteBuffer slice(); // 子视图
+public abstract ByteBuffer duplicate(); // 重复视图
+public abstract ByteBuffer asReadOnlyBuffer(); // 只读视图
+
+/* get()、put() */
+public abstract byte get(); // get当前pos的元素，并pos++
+public abstract ByteBuffer put(byte b); // put至当前pos位置，并pos++
+
+public abstract byte get(int index); // get指定pos的元素，不改变pos
+public abstract ByteBuffer put(int index, byte b); // put指定pos的元素，不改变pos
+
+public ByteBuffer put(ByteBuffer src); // 将src剩余的元素put至当前buffer，src.pos、this.pos会相应的自增
+
+public ByteBuffer get(byte[] dst, int offset, int length); // 批量get，offset是相对dst来说的，如果remaining() < length，则抛出BufferUnderflowException
+public ByteBuffer get(byte[] dst); // offset = 0, length = dst.length
+public ByteBuffer put(byte[] src, int offset, int length); // 批量put
+public final ByteBuffer put(byte[] src);
+
+/* 属性判断 */
+public abstract boolean isDirect(); // 是否为Direct内存
+
+public final boolean hasArray(); // hasArray() && !isReadOnly()
+public final byte[] array(); // 获取底层数组
+public final int arrayOffset();
+
+/* 压缩buffer */
+public abstract ByteBuffer compact(); // 将当前pos ~ limit的数据移至buffer开头，并且当前pos的位置为limit-pos位置，所有新数据将写入至它们后面
+
+/* 字节序 */
+public final ByteOrder order(); // 获取底层数组的字节序(默认为BE)
+public final ByteBuffer order(ByteOrder bo); // 修改字节序，LE、BE
+
+/* 各大基本类型的view视图 */
+public abstract char getChar();
+public abstract ByteBuffer putChar(char value);
+public abstract char getChar(int index);
+public abstract ByteBuffer putChar(int index, char value);
+public abstract CharBuffer asCharBuffer();
+
+public abstract short getShort();
+public abstract ByteBuffer putShort(short value);
+public abstract short getShort(int index);
+public abstract ByteBuffer putShort(int index, short value);
+public abstract ShortBuffer asShortBuffer();
+
+public abstract int getInt();
+public abstract ByteBuffer putInt(int value);
+public abstract int getInt(int index);
+public abstract ByteBuffer putInt(int index, int value);
+public abstract IntBuffer asIntBuffer();
+
+public abstract long getLong();
+public abstract ByteBuffer putLong(long value);
+public abstract long getLong(int index);
+public abstract ByteBuffer putLong(int index, long value);
+public abstract LongBuffer asLongBuffer();
+
+public abstract float getFloat();
+public abstract ByteBuffer putFloat(float value);
+public abstract float getFloat(int index);
+public abstract ByteBuffer putFloat(int index, float value);
+public abstract FloatBuffer asFloatBuffer();
+
+public abstract double getDouble();
+public abstract ByteBuffer putDouble(double value);
+public abstract double getDouble(int index);
+public abstract ByteBuffer putDouble(int index, double value);
+public abstract DoubleBuffer asDoubleBuffer();
+</script></code></pre>
+<h3 id="CharBuffer"><a href="#CharBuffer" class="headerlink" title="CharBuffer"></a>CharBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* static方法，分配数组内存 */
+public static CharBuffer allocate(int capacity); // char为单位
+
+/* static方法，包装现有数组 */
+public static CharBuffer wrap(char[] array，, int offset, int length);
+public static CharBuffer wrap(char[] array);
+
+public static CharBuffer wrap(CharSequence csq, int start, int end);
+public static CharBuffer wrap(CharSequence csq);
+
+/* view 视图 */
+public abstract CharBuffer slice();
+public abstract CharBuffer duplicate();
+public abstract CharBuffer asReadOnlyBuffer();
+
+/* read() */
+public int read(CharBuffer target) throws IOException; // 读取数据至指定CharBuffer
+
+/* get()、put() */
+public abstract char get();
+public abstract CharBuffer put(char c);
+public abstract char get(int index);
+public abstract CharBuffer put(int index, char c);
+
+public CharBuffer get(char[] dst, int offset, int length);
+public CharBuffer get(char[] dst);
+public CharBuffer put(char[] src, int offset, int length);
+public final CharBuffer put(char[] src);
+
+public CharBuffer put(String src, int start, int end);
+public final CharBuffer put(String src);
+
+public CharBuffer put(CharBuffer src)
+
+/* 属性判断 */
+public abstract boolean isDirect();
+
+public final boolean hasArray();
+public final char[] array();
+public final int arrayOffset();
+
+/* 压缩buffer */
+public abstract CharBuffer compact();
+
+/* CharSequence 接口 */
+public final int length(); // remaining()
+public final char charAt(int index);
+public abstract CharBuffer subSequence(int start, int end);
+public CharBuffer append(CharSequence csq);
+public CharBuffer append(CharSequence csq, int start, int end);
+public CharBuffer append(char c);
+
+/* 字节序 */
+public abstract ByteOrder order();
+</script></code></pre>
+<h3 id="ShortBuffer"><a href="#ShortBuffer" class="headerlink" title="ShortBuffer"></a>ShortBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">public static ShortBuffer allocate(int capacity);
+
+public static ShortBuffer wrap(short[] array, int offset, int length);
+public static ShortBuffer wrap(short[] array);
+
+public abstract ShortBuffer slice();
+public abstract ShortBuffer duplicate();
+public abstract ShortBuffer asReadOnlyBuffer();
+
+public abstract short get();
+public abstract ShortBuffer put(short s);
+public abstract short get(int index);
+public abstract ShortBuffer put(int index, short s);
+
+public ShortBuffer put(ShortBuffer src);
+
+public ShortBuffer get(short[] dst, int offset, int length);
+public ShortBuffer get(short[] dst);
+public ShortBuffer put(short[] src, int offset, int length);
+public final ShortBuffer put(short[] src);
+
+public abstract boolean isDirect();
+
+public final boolean hasArray();
+public final short[] array();
+public final int arrayOffset();
+
+public abstract ShortBuffer compact();
+
+public abstract ByteOrder order();
+</script></code></pre>
+<h3 id="IntBuffer"><a href="#IntBuffer" class="headerlink" title="IntBuffer"></a>IntBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">public static IntBuffer allocate(int capacity);
+
+public static IntBuffer wrap(int[] array, int offset, int length);
+public static IntBuffer wrap(int[] array);
+
+public abstract IntBuffer slice();
+public abstract IntBuffer duplicate();
+public abstract IntBuffer asReadOnlyBuffer();
+
+public abstract int get();
+public abstract IntBuffer put(int i);
+public abstract int get(int index);
+public abstract IntBuffer put(int index, int i);
+
+public IntBuffer put(IntBuffer src);
+
+public IntBuffer get(int[] dst, int offset, int length);
+public IntBuffer get(int[] dst);
+public IntBuffer put(int[] src, int offset, int length);
+public final IntBuffer put(int[] src);
+
+public abstract boolean isDirect();
+
+public final boolean hasArray();
+public final int[] array();
+public final int arrayOffset();
+
+public abstract IntBuffer compact();
+
+public abstract ByteOrder order();
+</script></code></pre>
+<h3 id="LongBuffer"><a href="#LongBuffer" class="headerlink" title="LongBuffer"></a>LongBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">public static LongBuffer allocate(int capacity);
+
+public static LongBuffer wrap(long[] array, int offset, int length);
+public static LongBuffer wrap(long[] array);
+
+public abstract LongBuffer slice();
+public abstract LongBuffer duplicate();
+public abstract LongBuffer asReadOnlyBuffer();
+
+public abstract long get();
+public abstract LongBuffer put(long l);
+public abstract long get(int index);
+public abstract LongBuffer put(int index, long l);
+
+public LongBuffer put(LongBuffer src);
+
+public LongBuffer get(long[] dst, int offset, int length);
+public LongBuffer get(long[] dst);
+public LongBuffer put(long[] src, int offset, int length);
+public final LongBuffer put(long[] src);
+
+public abstract boolean isDirect();
+
+public final boolean hasArray();
+public final long[] array();
+public final int arrayOffset();
+
+public abstract LongBuffer compact();
+
+public abstract ByteOrder order();
+</script></code></pre>
+<h3 id="FloatBuffer"><a href="#FloatBuffer" class="headerlink" title="FloatBuffer"></a>FloatBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">public static FloatBuffer allocate(int capacity);
+
+public static FloatBuffer wrap(float[] array, int offset, int length);
+public static FloatBuffer wrap(float[] array);
+
+public abstract FloatBuffer slice();
+public abstract FloatBuffer duplicate();
+public abstract FloatBuffer asReadOnlyBuffer();
+
+public abstract float get();
+public abstract FloatBuffer put(float f);
+public abstract float get(int index);
+public abstract FloatBuffer put(int index, float f);
+
+public FloatBuffer put(FloatBuffer src);
+
+public FloatBuffer get(float[] dst, int offset, int length);
+public FloatBuffer get(float[] dst);
+public FloatBuffer put(float[] src, int offset, int length);
+public final FloatBuffer put(float[] src)
+
+public abstract boolean isDirect();
+
+public final boolean hasArray();
+public final float[] array();
+public final int arrayOffset();
+
+public abstract FloatBuffer compact();
+
+public abstract ByteOrder order();
+</script></code></pre>
+<h3 id="DoubleBuffer"><a href="#DoubleBuffer" class="headerlink" title="DoubleBuffer"></a>DoubleBuffer</h3><pre><code class="language-java line-numbers"><script type="text/plain">public static DoubleBuffer allocate(int capacity);
+
+public static DoubleBuffer wrap(double[] array, int offset, int length);
+public static DoubleBuffer wrap(double[] array);
+
+public abstract DoubleBuffer slice();
+public abstract DoubleBuffer duplicate();
+public abstract DoubleBuffer asReadOnlyBuffer();
+
+public abstract double get();
+public abstract DoubleBuffer put(double d);
+public abstract double get(int index);
+public abstract DoubleBuffer put(int index, double d);
+
+public DoubleBuffer put(DoubleBuffer src);
+
+public DoubleBuffer get(double[] dst, int offset, int length);
+public DoubleBuffer get(double[] dst);
+public DoubleBuffer put(double[] src, int offset, int length);
+public final DoubleBuffer put(double[] src);
+
+public abstract boolean isDirect();
+
+public final boolean hasArray();
+public final double[] array();
+public final int arrayOffset();
+
+public abstract DoubleBuffer compact();
+
+public abstract ByteOrder order();
+</script></code></pre>
+<h3 id="MappedByteBuffer"><a href="#MappedByteBuffer" class="headerlink" title="MappedByteBuffer"></a>MappedByteBuffer</h3><p>ByteBuffer 的子类，使用内存映射文件，效率比read()、write()高<br>非常适合读写大文件，MappedByteBuffer 对象通过 FileChannel.map() 方法获得</p>
+<p><strong>内存映射文件</strong>：将虚拟内存地址和物理设备文件内容建立一一映射关系的一种内存映射技术。<br>而访问这段已映射的内存就像直接访问物理设备上文件的内容一样，省去了read()、write()系统调用，减少了不必要的内存拷贝，效率较高。</p>
+<p>但是并不是说内存映射文件就一定效率高，这毕竟是一个重量级系统调用，因此，仅适合于大文件的读写，可显著提高IO效率。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final MappedByteBuffer load(); // 加载缓冲区内容至物理内存
+public final boolean isLoaded(); // 是否已加载至物理内存
+
+public final MappedByteBuffer force(); // 强制将更改写入至文件
+</script></code></pre>
+<h2 id="Channel通道"><a href="#Channel通道" class="headerlink" title="Channel通道"></a>Channel通道</h2><blockquote>
+<p><code>java.nio.channels</code>包，主要有：<code>FileChannel</code>、<code>ServerSocketChannel</code>、<code>SocketChannel</code>、<code>DatagramChannel</code></p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface Channel extends Closeable {
+    public boolean isOpen(); // 通道是否已打开
+    public void close() throws IOException; // 关闭通道
+}
+</script></code></pre>
+<h3 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h3><blockquote>
+<p><code>FileChannel.open()</code>方法涉及 Java7 引入的<code>java.nio.file</code>包的相关类，如需了解，请跳转至<a href="#新的文件API">Java7 新的文件API</a></p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/**
+ * 打开一个文件通道，JDK1.7
+ * @param path 文件路径
+ * @param options 打开方式
+ * @param attrs 文件属性
+ * @throws IOException
+ */
+public static FileChannel open(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException;
+public static FileChannel open(Path path, OpenOption... options) throws IOException; // 常用
+
+/* read()、write() */
+public abstract int read(ByteBuffer dst) throws IOException; // 返回读取的字节数，EOF返回-1
+public abstract long read(ByteBuffer[] dsts, int offset, int length) throws IOException;
+public final long read(ByteBuffer[] dsts) throws IOException;
+
+public abstract int write(ByteBuffer src) throws IOException;
+public abstract long write(ByteBuffer[] srcs, int offset, int length) throws IOException;
+public final long write(ByteBuffer[] srcs) throws IOException;
+
+public abstract int read(ByteBuffer dst, long position) throws IOException; // 从给定位置读取数据
+public abstract int write(ByteBuffer src, long position) throws IOException; // 写入数据到指定位置
+
+/* pos、size、sync */
+public abstract long position() throws IOException; // 当前pos
+public abstract FileChannel position(long newPosition) throws IOException; // 可以超过文件size
+
+public abstract long size() throws IOException; // 文件大小
+public abstract FileChannel truncate(long size) throws IOException; // 截断文件, size < fc.size()
+
+public abstract void force(boolean metaData) throws IOException; // 强制同步至文件，metaData可选
+
+/* 在通道之间传递数据 */
+public abstract long transferTo(long position, long count, WritableByteChannel target) throws IOException; // 返回实际传递的字节数
+public abstract long transferFrom(ReadableByteChannel src, long position, long count) throws IOException; // 返回实际传递的字节数
+
+/* MapMode 静态成员类 */
+public static class MapMode {
+    public static final MapMode READ_ONLY; // 只读
+    public static final MapMode READ_WRITE; // 读写
+    public static final MapMode PRIVATE; // 私有的，copy on write(写时复制技术)
+}
+
+/* 内存映射文件 mmap */
+public abstract MappedByteBuffer map(MapMode mode, long position, long size) throws IOException;
+
+/* file lock */
+// 其他进程依旧可见，由操作系统支持; shared表示使用共享锁或者独占锁
+public abstract FileLock lock(long position, long size, boolean shared) throws IOException;
+public final FileLock lock() throws IOException; // pos=0, size=Long.MAX_VALUE, shared=false
+
+// 非阻塞版本
+public abstract FileLock tryLock(long position, long size, boolean shared) throws IOException;
+public final FileLock tryLock() throws IOException;
+</script></code></pre>
+<p><strong>FileLock</strong></p>
+<blockquote>
+<p><code>java.nio.channels.FileLock</code>，文件锁</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">public final FileChannel channel(); // [不建议使用] 与之关联的channel
+public Channel acquiredBy(); // [替代者] 获取与之关联的channel
+
+public final long position(); // 获取起始pos
+public final long size(); // 获取lock区域的大小
+public final boolean isShared(); // 是否为共享锁
+
+public final boolean overlaps(long position, long size); // 测试当前锁定范围是否与给定范围产生重叠
+public abstract boolean isValid(); // 是否有效
+
+public abstract void release() throws IOException; // 释放lock
+public final void close() throws IOException; // 同release()
+</script></code></pre>
+<p>例1，通过 BIO 的 getChannel() 方法获取 FileChannel：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
+public class FileChannelDemo {
+    public static void main(String[] args) throws IOException {
+        FileChannel fc = null;
+
+        fc = new FileOutputStream("data.txt").getChannel();
+        fc.write(ByteBuffer.wrap("www.zfl9.com\n".getBytes()));
+        fc.close();
+
+        fc = new RandomAccessFile("data.txt", "rw").getChannel();
+        fc.position(fc.size());
+        fc.write(ByteBuffer.wrap("www.google.com\n".getBytes()));
+        fc.close();
+
+        fc = new FileInputStream("data.txt").getChannel();
+        ByteBuffer buf = ByteBuffer.allocate(1024 * 4);
+        fc.read(buf);
+        buf.flip();
+        while (buf.hasRemaining()) {
+            System.out.print((char)buf.get());
+        }
+        // or
+        System.out.println();
+        buf.rewind();
+        System.out.print(new String(buf.array(), 0, buf.remaining()));
+        fc.close();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:04:16]
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:04:32]
+$ java FileChannelDemo
+www.zfl9.com
+www.google.com
+
+www.zfl9.com
+www.google.com
+</script></code></pre>
+<p>例2，使用 open() 方法打开一个 FileChannel 通道：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.io.IOException;
+
+public class FileChannelOpen {
+    private static Path path = Paths.get("test.txt");
+    private static final int BUF_SIZE = 1024 * 4;
+
+    public static void main(String[] args)
+        throws IOException
+    {
+        FileChannel fc = FileChannel.open(path, // 文件路径
+                                          StandardOpenOption.READ, // r
+                                          StandardOpenOption.WRITE, // w
+                                          StandardOpenOption.CREATE, // 不存在时新建
+                                          StandardOpenOption.TRUNCATE_EXISTING); // 清空原有内容
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+        buf.put(args.length == 0 ?
+                "default-file-content\n".getBytes() :
+                args[0].getBytes());
+
+        fc.write((ByteBuffer)buf.flip());
+        fc.position(0).read((ByteBuffer)buf.clear());
+        System.out.print(new String(buf.array(), 0, buf.flip().remaining()));
+
+        fc.close();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:23:02]
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:23:10]
+$ java FileChannelOpen $'www.zfl9.com\nwww.baidu.com\nwww.google.com\n'
+www.zfl9.com
+www.baidu.com
+www.google.com
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:23:32]
+$ cat test.txt
+www.zfl9.com
+www.baidu.com
+www.google.com
+</script></code></pre>
+<p>例3，文件拷贝，使用 transferFrom()、transferTo() 方法，非常简单：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+
+public class FileCopy2 {
+    public static void main(String[] args) throws IOException {
+        if (args.length < 2) {
+            System.err.println("Usage: FileCopy2 <src_file> <dst_file>");
+            System.exit(1);
+        }
+
+        FileChannel
+            in = new FileInputStream(args[0]).getChannel(),
+            out = new FileOutputStream(args[1]).getChannel();
+
+        in.transferTo(0, in.size(), out);
+        // or:
+        // out.transferFrom(in, 0, in.size());
+
+        in.close();
+        out.close();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master o [19:27:27]
+$ javac FileCopy2.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master o [19:28:14]
+$ java FileCopy2 /etc/sysctl.d/default.conf sysctl.conf
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:28:26]
+$ cat sysctl.conf
+net.ipv4.ip_forward = 1
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_tw_reuse = 1
+#net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_fin_timeout = 3
+net.ipv4.ip_local_port_range = 10000 65535
+net.ipv4.tcp_max_tw_buckets = 5000
+net.ipv4.tcp_max_syn_backlog = 10240
+net.core.netdev_max_backlog = 10240
+net.core.somaxconn = 10240
+net.ipv4.tcp_syn_retries = 2
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_max_orphans = 3276800
+net.ipv4.tcp_keepalive_time = 120
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_keepalive_probes = 3
+net.core.rmem_default = 8388608
+net.core.wmem_default = 8388608
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 32768 436600 873200
+net.ipv4.tcp_wmem = 8192 436600 873200
+net.ipv4.tcp_mem = 398458 448266 498073
+net.ipv4.tcp_fastopen = 3
+fs.file-max = 500000000
+</script></code></pre>
+<p>例4，ByteBuffer 提供的各基本类型的 view 视图：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.ShortBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
+
+public class ViewBuffers {
+    public static void main(String[] args) {
+        ByteBuffer byteBuf = ByteBuffer.wrap(new byte[] {0, 0, 0, 0, 0, 0, 0, 'a'});
+        System.out.print("byte: ");
+        while (byteBuf.hasRemaining())
+            System.out.print(byteBuf.position() + " -> " + byteBuf.get() + ", ");
+        System.out.println("\b\b ");
+
+        CharBuffer charBuf = ((ByteBuffer)byteBuf.rewind()).asCharBuffer();
+        System.out.print("char: ");
+        while (charBuf.hasRemaining())
+            System.out.print(charBuf.position() + " -> " + charBuf.get() + ", ");
+        System.out.println("\b\b ");
+
+        ShortBuffer shortBuf = ((ByteBuffer)byteBuf.rewind()).asShortBuffer();
+        System.out.print("short: ");
+        while (shortBuf.hasRemaining())
+            System.out.print(shortBuf.position() + " -> " + shortBuf.get() + ", ");
+        System.out.println("\b\b ");
+
+        IntBuffer intBuf = ((ByteBuffer)byteBuf.rewind()).asIntBuffer();
+        System.out.print("int: ");
+        while (intBuf.hasRemaining())
+            System.out.print(intBuf.position() + " -> " + intBuf.get() + ", ");
+        System.out.println("\b\b ");
+
+        LongBuffer longBuf = ((ByteBuffer)byteBuf.rewind()).asLongBuffer();
+        System.out.print("long: ");
+        while (longBuf.hasRemaining())
+            System.out.print(longBuf.position() + " -> " + longBuf.get() + ", ");
+        System.out.println("\b\b ");
+
+        FloatBuffer floatBuf = ((ByteBuffer)byteBuf.rewind()).asFloatBuffer();
+        System.out.print("float: ");
+        while (floatBuf.hasRemaining())
+            System.out.print(floatBuf.position() + " -> " + floatBuf.get() + ", ");
+        System.out.println("\b\b ");
+
+        DoubleBuffer doubleBuf = ((ByteBuffer)byteBuf.rewind()).asDoubleBuffer();
+        System.out.print("double: ");
+        while (doubleBuf.hasRemaining())
+            System.out.print(doubleBuf.position() + " -> " + doubleBuf.get() + ", ");
+        System.out.println("\b\b ");
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:32:07]
+$ javac ViewBuffers.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:32:18]
+$ java ViewBuffers
+byte: 0 -> 0, 1 -> 0, 2 -> 0, 3 -> 0, 4 -> 0, 5 -> 0, 6 -> 0, 7 -> 97
+char: 0 -> , 1 -> , 2 -> , 3 -> a
+short: 0 -> 0, 1 -> 0, 2 -> 0, 3 -> 97
+int: 0 -> 0, 1 -> 97
+long: 0 -> 97
+float: 0 -> 0.0, 1 -> 1.36E-43
+double: 0 -> 4.8E-322
+</script></code></pre>
+<p>例5，字符编码问题，ByteBuffer、CharBuffer：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+
+public class BufferToText {
+    public static void main(String[] args) throws IOException {
+        FileChannel fc = null;
+
+        fc = new FileOutputStream("data.txt").getChannel();
+        fc.write(ByteBuffer.wrap("www.zfl9.com".getBytes())); // UTF-8
+        fc.close();
+
+        fc = new FileInputStream("data.txt").getChannel();
+        ByteBuffer buf = ByteBuffer.allocate(1024 * 4);
+        fc.read(buf); // UTF-8 字节流
+        fc.close();
+
+        buf.flip();
+        System.out.println(buf.asCharBuffer()); // 默认将其作为 UTF-16BE 字节流，导致编码不一致
+
+        buf.rewind();
+        String encoding = System.getProperty("file.encoding"); // 获取系统默认的文件编码，UTF-8
+        System.out.println("encoding: " + encoding + ", data: " + Charset.forName(encoding).decode(buf)); // 一致
+
+        fc = new FileOutputStream("data.txt").getChannel();
+        fc.write(ByteBuffer.wrap("www.zfl9.com".getBytes("UTF-16BE"))); // UTF-16BE，Java的内码
+        fc.close();
+
+        fc = new FileInputStream("data.txt").getChannel();
+        buf.clear();
+        fc.read(buf); // UTF-16BE 字节流
+        fc.close();
+
+        buf.flip();
+        System.out.println(buf.asCharBuffer()); // UTF-16BE -> UTF-16BE，编码一致
+
+        fc = new FileOutputStream("data.txt").getChannel();
+        buf = ByteBuffer.allocate(1024); // 实际不需要这么多个字节
+        buf.asCharBuffer().put("www.zfl9.com"); // UTF-16BE，12 * 2 = 24 bytes
+        fc.write(buf);
+        fc.close();
+
+        fc = new FileInputStream("data.txt").getChannel();
+        buf.clear();
+        fc.read(buf); // UTF-16BE 字节流
+        fc.close();
+
+        buf.flip();
+        System.out.println(buf.asCharBuffer()); // 编码一致，但是'\0'字符不会打印出来
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:47:40]
+$ javac BufferToText.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:47:44]
+$ java BufferToText
+睷眮穦氹⹣潭
+encoding: UTF-8, data: www.zfl9.com
+www.zfl9.com
+www.zfl9.com
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:47:51]
+$ ll data.txt
+-rw-r--r-- 1 root root 1.0K Oct 15 19:47 data.txt
+</script></code></pre>
+<p>例6，ByteOrder 字节序，Big-Endian大端字节序、Little-Endian小端字节序：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+
+public class ByteOrderTest {
+    public static void main(String[] args) {
+        ByteBuffer buf = ByteBuffer.allocate(12);
+
+        buf.asCharBuffer().put("abcdef");
+        System.out.println("default(BE): " + Arrays.toString(buf.array()));
+        buf.clear();
+
+        buf.order(ByteOrder.BIG_ENDIAN);
+        buf.asCharBuffer().put("abcdef");
+        System.out.println("Big-Endian: " + Arrays.toString(buf.array()));
+        buf.clear();
+
+        buf.order(ByteOrder.LITTLE_ENDIAN);
+        buf.asCharBuffer().put("abcdef");
+        System.out.println("Little-Endian: " + Arrays.toString(buf.array()));
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:51:04]
+$ javac ByteOrderTest.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:52:16]
+$ java ByteOrderTest
+default(BE): [0, 97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102]
+Big-Endian: [0, 97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102]
+Little-Endian: [97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0]
+</script></code></pre>
+<p>例7，MappedByteBuffer，读写效率对比：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.IntBuffer;
+import java.nio.channels.FileChannel;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+
+public class MappedIO {
+    private static final int numOfBuf = 4000000;
+    private static final int numOfUBuf = 200000;
+
+    private static abstract class Tester {
+        private String name;
+        public Tester(String name) { this.name = name; }
+        public void runTest() {
+            System.out.print(name + ": ");
+            try {
+                long start = System.nanoTime();
+                test();
+                long time = System.nanoTime() - start;
+                System.out.printf("%.2f\n", time / 1.0e9);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        public abstract void test() throws IOException;
+    }
+
+    private static Tester[] tests = {
+        new Tester("Stream Write") {
+            @Override
+            public void test() throws IOException {
+                DataOutputStream dos = new DataOutputStream(
+                    new BufferedOutputStream(new FileOutputStream("tmp.data")));
+                for (int i = 0; i < numOfBuf; i++)
+                    dos.writeInt(i);
+                dos.close();
+            }
+        },
+        new Tester("Mapped Write") {
+            @Override
+            public void test() throws IOException {
+                FileChannel fc = new RandomAccessFile("tmp.data", "rw").getChannel();
+                IntBuffer buf = fc.map(FileChannel.MapMode.READ_WRITE, 0, fc.size()).asIntBuffer();
+                for (int i = 0; i < numOfBuf; i++)
+                    buf.put(i);
+                fc.close();
+            }
+        },
+        new Tester("Stream Read") {
+            @Override
+            public void test() throws IOException {
+                DataInputStream dis = new DataInputStream(
+                    new BufferedInputStream(new FileInputStream("tmp.data")));
+                for (int i = 0; i < numOfBuf; i++)
+                    dis.readInt();
+                dis.close();
+            }
+        },
+        new Tester("Mapped Read") {
+            @Override
+            public void test() throws IOException {
+                FileChannel fc = new FileInputStream("tmp.data").getChannel();
+                IntBuffer buf = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size()).asIntBuffer();
+                while (buf.hasRemaining())
+                    buf.get();
+                fc.close();
+            }
+        },
+        new Tester("Stream Read/Write") {
+            @Override
+            public void test() throws IOException {
+                RandomAccessFile raf = new RandomAccessFile("tmp.data", "rw");
+                raf.writeInt(1);
+                for (int i = 1; i < numOfUBuf; i++) {
+                    raf.seek(raf.length() - 4);
+                    raf.writeInt(raf.readInt());
+                }
+                raf.close();
+            }
+        },
+        new Tester("Mapped Read/Write") {
+            @Override
+            public void test() throws IOException {
+                FileChannel fc = new RandomAccessFile("tmp.data", "rw").getChannel();
+                IntBuffer buf = fc.map(FileChannel.MapMode.READ_WRITE, 0, fc.size()).asIntBuffer();
+                buf.put(1);
+                for (int i = 1; i < numOfUBuf; i++) {
+                    buf.put(buf.get(i - 1));
+                }
+                fc.close();
+            }
+        }
+    };
+
+    public static void main(String[] args) {
+        for (Tester test : tests) {
+            test.runTest();
+        }
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:53:16]
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/file_channel on git:master x [19:54:03]
+$ java MappedIO
+Stream Write: 0.47
+Mapped Write: 0.03
+Stream Read: 0.28
+Mapped Read: 0.01
+Stream Read/Write: 1.54
+Mapped Read/Write: 0.01
+</script></code></pre>
+<h3 id="SelectableChannel"><a href="#SelectableChannel" class="headerlink" title="SelectableChannel"></a>SelectableChannel</h3><p>可选择(用于Selector)的通道，主要子类：<code>ServerSocketChannel</code>、<code>SocketChannel</code>、<code>DatagramChannel</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* register()，注册当前Channel至指定Selector */
+public abstract SelectionKey register(Selector sel, int ops, Object att) throws ClosedChannelException; // 可提供一个附加对象
+public final SelectionKey register(Selector sel, int ops) throws ClosedChannelException; // 多个ops之间使用按位或|连接
+
+/* 相关查询 */
+public abstract boolean isRegistered(); // 是否已注册
+public abstract SelectionKey keyFor(Selector sel); // 查找当前SelectionKey
+public abstract int validOps(); // 支持的select操作
+
+/* blocking <-> non-blocking */
+public abstract SelectableChannel configureBlocking(boolean block) throws IOException; // true: blocking; false: non-blocking
+public abstract boolean isBlocking(); // 默认为blocking
+</script></code></pre>
+<h3 id="StandardSocketOptions"><a href="#StandardSocketOptions" class="headerlink" title="StandardSocketOptions"></a>StandardSocketOptions</h3><blockquote>
+<p><code>java.net.StandardSocketOptions</code>，提供了一些标准的 Socket 选项；</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">public static final SocketOption<Boolean> SO_REUSEADDR; // 重用time-wait端口
+public static final SocketOption<Boolean> SO_KEEPALIVE; // 保持tcp长连接
+public static final SocketOption<Boolean> TCP_NODELAY; // 禁用 Nagle 算法
+public static final SocketOption<Integer> SO_RCVBUF; // 接收缓冲区大小
+public static final SocketOption<Integer> SO_SNDBUF; // 发送缓冲区大小
+public static final SocketOption<Integer> SO_LINGER; // 不推荐使用
+
+public static final SocketOption<Boolean> SO_BROADCAST;
+public static final SocketOption<Integer> IP_TOS;
+public static final SocketOption<NetworkInterface> IP_MULTICAST_IF;
+public static final SocketOption<Integer> IP_MULTICAST_TTL;
+public static final SocketOption<Boolean> IP_MULTICAST_LOOP;
+</script></code></pre>
+<h3 id="ServerSocketChannel"><a href="#ServerSocketChannel" class="headerlink" title="ServerSocketChannel"></a>ServerSocketChannel</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static ServerSocketChannel open() throws IOException;
+
+/* bind() */
+public abstract ServerSocketChannel bind(SocketAddress local, int backlog) throws IOException;
+public final ServerSocketChannel bind(SocketAddress local) throws IOException; // backlog=0，默认值
+
+/* accept() */
+public abstract SocketChannel accept() throws IOException; // 可用于Selector
+
+/* socketOpt */
+public abstract <T> ServerSocketChannel setOption(SocketOption<T> name, T value) throws IOException;
+
+/* LocalAddress */
+public abstract SocketAddress getLocalAddress() throws IOException;
+
+/* 可用于select的操作，只有SelectionKey.OP_ACCEPT */
+public final int validOps();
+
+/* ServerSoceket */
+public abstract ServerSocket socket(); // 返回底层ServerSocket
+</script></code></pre>
+<h3 id="SocketChannel"><a href="#SocketChannel" class="headerlink" title="SocketChannel"></a>SocketChannel</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static SocketChannel open() throws IOException;
+public static SocketChannel open(SocketAddress remote) throws IOException; // open() && connect()
+
+/* bind() */
+public abstract SocketChannel bind(SocketAddress local) throws IOException;
+
+/* connect() */
+public abstract boolean connect(SocketAddress remote) throws IOException;
+public abstract boolean finishConnect() throws IOException; // 用来完成连接，循环条件
+
+/* read()、write() */
+// read() 返回成功读取的字节数，EOF返回-1
+// write() 返回成功写入的字节数，可能为0
+public abstract int read(ByteBuffer dst) throws IOException;
+public abstract long read(ByteBuffer[] dsts, int offset, int length) throws IOException;
+public final long read(ByteBuffer[] dsts) throws IOException;
+
+public abstract int write(ByteBuffer src) throws IOException;
+public abstract long write(ByteBuffer[] srcs, int offset, int length) throws IOException;
+public final long write(ByteBuffer[] srcs) throws IOException;
+
+/* shutdown() */
+public abstract SocketChannel shutdownInput() throws IOException;
+public abstract SocketChannel shutdownOutput() throws IOException;
+
+/* socketOpt */
+public abstract <T> SocketChannel setOption(SocketOption<T> name, T value) throws IOException;
+
+/* 状态查询 */
+public abstract boolean isConnected(); // 是否已连接
+public abstract boolean isConnectionPending(); // 是否正在连接
+
+public abstract SocketAddress getLocalAddress() throws IOException;
+public abstract SocketAddress getRemoteAddress() throws IOException;
+
+/*
+ * 可用于select的操作:
+ * SelectionKey.OP_READ | SelectionKey.OP_WRITE | SelectionKey.OP_CONNECT
+ */
+public final int validOps();
+
+/* Socket */
+public abstract Socket socket();
+</script></code></pre>
+<p>例子：<br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.net.StandardSocketOptions;
+import java.net.InetSocketAddress;
+import java.io.IOException;
+
+public class Server {
+    private static ServerSocketChannel servChannel;
+
+    private static final InetSocketAddress BIND_ADDR = new InetSocketAddress("0.0.0.0", 8080);
+    private static final int BACKLOG = 128;
+    private static final int BUF_SIZE = 1024;
+
+    public static void main(String[] args) throws IOException {
+        // 注册 shutdown hook 钩子, 关闭 servChannel
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    servChannel.close();
+                } catch (IOException e) {}
+            }
+        }));
+
+        servChannel = ServerSocketChannel.open();
+        servChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+        servChannel.bind(BIND_ADDR, BACKLOG);
+
+        System.out.printf("----- listen: %s:%d -----\n",
+                          BIND_ADDR.getAddress().getHostAddress(),
+                          BIND_ADDR.getPort());
+
+        SocketChannel connChannel = null;
+        while (true) {
+            connChannel = servChannel.accept();
+            service(connChannel);
+        }
+    }
+
+    private static void service(SocketChannel connChannel) throws IOException {
+        InetSocketAddress remoteAddr = (InetSocketAddress) connChannel.getRemoteAddress();
+        System.out.printf("new Connect: %s:%d\n",
+                          remoteAddr.getAddress().getHostAddress(),
+                          remoteAddr.getPort());
+
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+        while (connChannel.read((ByteBuffer)buf.clear()) != -1) {
+            System.out.printf("msg: %s\n", Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+            connChannel.write((ByteBuffer)buf.rewind());
+        }
+        System.out.printf("close Connect: %s:%d\n",
+                          remoteAddr.getAddress().getHostAddress(),
+                          remoteAddr.getPort());
+        connChannel.close();
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.channels.SocketChannel;
+import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+import java.io.IOException;
+
+public class Client {
+    private static final InetSocketAddress SERV_ADDR = new InetSocketAddress("127.0.0.1", 8080);
+    private static final int BUF_SIZE = 1024;
+
+    public static void main(String[] args) throws IOException {
+        SocketChannel sockChannel = SocketChannel.open();
+        sockChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+        sockChannel.connect(SERV_ADDR);
+
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+        if (args.length == 0) {
+            buf.put("default-message".getBytes("UTF-8"));
+            sockChannel.write((ByteBuffer)buf.flip());
+            sockChannel.read((ByteBuffer)buf.clear());
+            System.out.printf("msg: %s\n", Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+        }
+        for (String s : args) {
+            ((ByteBuffer)buf.clear()).put(s.getBytes("UTF-8"));
+            sockChannel.write((ByteBuffer)buf.flip());
+            sockChannel.read((ByteBuffer)buf.clear());
+            System.out.printf("msg: %s\n", Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+        }
+        sockChannel.close();
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/tcp_blocking on git:master o [20:07:42] C:1
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/tcp_blocking on git:master o [20:07:45]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+
+# root @ arch in ~/work/java_nio_learn/tcp_blocking on git:master o [20:06:59]
+$ java Client www.zfl9.com www.google.com www.baidu.com
+msg: www.zfl9.com
+msg: www.google.com
+msg: www.baidu.com
+
+# root @ arch in ~/work/java_nio_learn/tcp_blocking on git:master o [20:07:45]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+new Connect: 127.0.0.1:23512
+msg: www.zfl9.com
+msg: www.google.com
+msg: www.baidu.com
+close Connect: 127.0.0.1:23512
+^CException in thread "main" #
+</script></code></pre>
+<h3 id="DatagramChannel"><a href="#DatagramChannel" class="headerlink" title="DatagramChannel"></a>DatagramChannel</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static DatagramChannel open() throws IOException;
+
+/* bind() */
+public abstract DatagramChannel bind(SocketAddress local) throws IOException;
+
+/* connect() */
+public abstract DatagramChannel connect(SocketAddress remote) throws IOException;
+public abstract DatagramChannel disconnect() throws IOException;
+
+/* receive()、send() */
+public abstract SocketAddress receive(ByteBuffer dst) throws IOException; // return: src地址
+public abstract int send(ByteBuffer src, SocketAddress target) throws IOException; // return: 成功send的字节数
+
+/* connect()前提下: read()、write() */
+public abstract int read(ByteBuffer dst) throws IOException;
+public abstract long read(ByteBuffer[] dsts, int offset, int length) throws IOException;
+public final long read(ByteBuffer[] dsts) throws IOException;
+
+public abstract int write(ByteBuffer src) throws IOException;
+public abstract long write(ByteBuffer[] srcs, int offset, int length) throws IOException;
+public final long write(ByteBuffer[] srcs) throws IOException;
+
+/* socketOpt */
+public abstract <T> DatagramChannel setOption(SocketOption<T> name, T value) throws IOException;
+
+/* 状态查询 */
+public abstract boolean isConnected();
+
+public abstract SocketAddress getLocalAddress() throws IOException;
+public abstract SocketAddress getRemoteAddress() throws IOException;
+
+/* select可用操作：SelectionKey.OP_READ | SelectionKey.OP_WRITE */
+public final int validOps();
+
+/* DatagramSocket */
+public abstract DatagramSocket socket();
+</script></code></pre>
+<p>例子：<br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.channels.DatagramChannel;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+import java.io.IOException;
+
+public class Server {
+    private static DatagramChannel bindChannel;
+    private static final InetSocketAddress BIND_ADDR = new InetSocketAddress("0.0.0.0", 8080);
+    private static final int BUF_SIZE = 1024 * 4;
+
+    public static void main(String[] args) throws IOException {
+        // hook钩子，用于释放socket资源
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                bindChannel.close();
+            } catch (IOException e) {}
+        }));
+
+        bindChannel = DatagramChannel.open();
+        bindChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+        bindChannel.bind(BIND_ADDR);
+
+        System.out.printf("----- bind: %s:%d -----\n",
+                          BIND_ADDR.getAddress().getHostAddress(),
+                          BIND_ADDR.getPort());
+
+        InetSocketAddress remoteAddr = null;
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+        while (true) {
+            remoteAddr = (InetSocketAddress) bindChannel.receive((ByteBuffer)buf.clear());
+            System.out.printf("from: %s:%d, msg: %s\n",
+                              remoteAddr.getAddress().getHostAddress(),
+                              remoteAddr.getPort(),
+                              Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+            bindChannel.send((ByteBuffer)buf.rewind(), remoteAddr);
+        }
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.channels.DatagramChannel;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+import java.io.IOException;
+
+public class Client {
+    private static final InetSocketAddress SERV_ADDR = new InetSocketAddress("127.0.0.1", 8080);
+    private static final int BUF_SIZE = 1024 * 4;
+
+    public static void main(String[] args) throws IOException {
+        DatagramChannel sockChannel = DatagramChannel.open();
+        sockChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+
+        InetSocketAddress remoteAddr = null;
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+
+        if (args.length == 0) {
+            sockChannel.send((ByteBuffer)
+                             (buf.put("default-message".getBytes("UTF-8")).flip()),
+                             SERV_ADDR);
+            remoteAddr = (InetSocketAddress) sockChannel.receive((ByteBuffer)buf.clear());
+            System.out.printf("from: %s:%d, msg: %s\n",
+                              remoteAddr.getAddress().getHostAddress(),
+                              remoteAddr.getPort(),
+                              Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+        } else {
+            for (String s : args) {
+                sockChannel.send((ByteBuffer)
+                                 (((ByteBuffer)buf.clear()).put(s.getBytes("UTF-8")).flip()),
+                                 SERV_ADDR);
+                remoteAddr = (InetSocketAddress) sockChannel.receive((ByteBuffer)buf.clear());
+                System.out.printf("from: %s:%d, msg: %s\n",
+                                  remoteAddr.getAddress().getHostAddress(),
+                                  remoteAddr.getPort(),
+                                  Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+            }
+        }
+
+        sockChannel.close();
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/udp_blocking on git:master x [20:11:17]
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/udp_blocking on git:master x [20:11:19]
+$ java Server
+----- bind: 0.0.0.0:8080 -----
+
+# root @ arch in ~/work/java_nio_learn/udp_blocking on git:master x [20:11:27]
+$ java Client www.zfl9.com www.google.com www.baidu.com
+from: 127.0.0.1:8080, msg: www.zfl9.com
+from: 127.0.0.1:8080, msg: www.google.com
+from: 127.0.0.1:8080, msg: www.baidu.com
+
+# root @ arch in ~/work/java_nio_learn/udp_blocking on git:master x [20:11:19]
+$ java Server
+----- bind: 0.0.0.0:8080 -----
+from: 127.0.0.1:17164, msg: www.zfl9.com
+from: 127.0.0.1:17164, msg: www.google.com
+from: 127.0.0.1:17164, msg: www.baidu.com
+^C#
+</script></code></pre>
+<h3 id="AsynchronousChannel"><a href="#AsynchronousChannel" class="headerlink" title="AsynchronousChannel"></a>AsynchronousChannel</h3><blockquote>
+<p><code>java.nio.channels.AsynchronousChannel</code>，异步 Channel 的父接口</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface AsynchronousChannel extends Channel {
+    @Override
+    void close() throws IOException;
+}
+</script></code></pre>
+<h3 id="AsynchronousChannelGroup"><a href="#AsynchronousChannelGroup" class="headerlink" title="AsynchronousChannelGroup"></a>AsynchronousChannelGroup</h3><blockquote>
+<p><code>java.nio.channels.AsynchronousChannelGroup</code>，异步 Channel 组，每个 ChannelGroup 都和一个 ThreadPool 相关联，如果不明确指明使用哪个 ChannelGroup，则自动归入 Default ChannelGroup。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* static方法，创建group */
+public static AsynchronousChannelGroup withFixedThreadPool(int nThreads,
+                                                           ThreadFactory threadFactory)
+    throws IOException;
+public static AsynchronousChannelGroup withCachedThreadPool(ExecutorService executor,
+                                                            int initialSize)
+    throws IOException;
+public static AsynchronousChannelGroup withThreadPool(ExecutorService executor)
+    throws IOException; // 常用
+
+/* 相关操作 */
+public abstract void shutdown(); // 标记为shutdown状态
+public abstract void shutdownNow() throws IOException; // 立即关闭
+
+/* 状态查询 */
+public abstract boolean isShutdown(); // 是否标记为shutdown
+public abstract boolean isTerminated(); // group&pool是否已关闭
+public abstract boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException; // 等待group&pool终止
+</script></code></pre>
+<h3 id="AsynchronousFileChannel"><a href="#AsynchronousFileChannel" class="headerlink" title="AsynchronousFileChannel"></a>AsynchronousFileChannel</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static AsynchronousFileChannel open(Path file,
+                                           Set<? extends OpenOption> options,
+                                           ExecutorService executor,
+                                           FileAttribute<?>... attrs) throws IOException;
+public static AsynchronousFileChannel open(Path file,
+                                           OpenOption... options) throws IOException;
+
+/* size()、truncate()、force() */
+public abstract long size() throws IOException; // 文件大小
+public abstract AsynchronousFileChannel truncate(long size) throws IOException; // 截断文件, size < fc.size()
+public abstract void force(boolean metaData) throws IOException; // 强制同步至底层设备
+
+/* lock() */
+public abstract Future<FileLock> lock(long position, long size, boolean shared);
+public final Future<FileLock> lock();
+
+public abstract <A> void lock(long position,
+                              long size,
+                              boolean shared, // 共享锁|独占锁
+                              A attachment, // 附加的obj
+                              CompletionHandler<FileLock, ? super A> handler);
+public final <A> void lock(A attachment,
+                           CompletionHandler<FileLock, ? super A> handler);
+// 非阻塞版本
+public abstract FileLock tryLock(long position, long size, boolean shared) throws IOException;
+public final FileLock tryLock() throws IOException;
+
+/* read()、write() */
+public abstract <A> void read(ByteBuffer dst,
+                              long position,
+                              A attachment,
+                              CompletionHandler<Integer, ? super A> handler);
+public abstract Future<Integer> read(ByteBuffer dst, long position);
+
+public abstract <A> void write(ByteBuffer src,
+                               long position,
+                               A attachment,
+                               CompletionHandler<Integer, ? super A> handler);
+public abstract Future<Integer> write(ByteBuffer src, long position);
+</script></code></pre>
+<p>从 API 中可以看出，处理异步 IO 主要有两种方式：<br>1) <code>java.util.concurrent.Future</code>，一个 Future 表示一个异步执行结果，可以调用<code>get()</code>方法获取执行结果，注意此方法是阻塞的。<br>2) <code>java.nio.channels.CompletionHandler</code>，一个回调函数，在异步操作完成之后将自动调用其 completed()、failed() 方法(根据是否操作成功来判断)，我们来看一下该接口的定义：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface CompletionHandler<V, A> { // V: 执行结果的类型; A: 附加数据的类型
+    /**
+     * Invoked when an operation has completed.
+     *
+     * @param   result
+     *          The result of the I/O operation.
+     * @param   attachment
+     *          The object attached to the I/O operation when it was initiated.
+     */
+    void completed(V result, A attachment); // 执行成功时被调用
+
+    /**
+     * Invoked when an operation fails.
+     *
+     * @param   exc
+     *          The exception to indicate why the I/O operation failed
+     * @param   attachment
+     *          The object attached to the I/O operation when it was initiated.
+     */
+    void failed(Throwable exc, A attachment); // 执行失败时被调用
+}
+</script></code></pre>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.CompletionHandler;
+import java.util.concurrent.Future;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
+import java.util.Set;
+import java.util.HashSet;
+
+public class AIOFileDemo {
+    private static Path path = Paths.get("test.txt");
+    private static final int BUF_SIZE = 1024 * 4;
+
+    public static void main(String[] args)
+        throws IOException, InterruptedException, ExecutionException
+    {
+        ExecutorService pool = // 与异步Channel组相关联的ThreadPool
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+
+        // 文件的打开选项
+        Set<StandardOpenOption> set = new HashSet<>();
+        set.add(StandardOpenOption.READ);
+        set.add(StandardOpenOption.WRITE);
+        set.add(StandardOpenOption.CREATE);
+        set.add(StandardOpenOption.TRUNCATE_EXISTING);
+
+        // FileChannel、ByteBuffer
+        AsynchronousFileChannel fc = AsynchronousFileChannel.open(path, set, pool);
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+
+        // Future - write
+        buf.put(args.length == 0 ? "default-content-by-Future\n".getBytes() : args[0].getBytes());
+        Future<Integer> result = fc.write((ByteBuffer)buf.flip(), 0);
+        while (!result.isDone());
+        System.out.println("[by Future] write done!");
+
+        // Future - read
+        result = fc.read((ByteBuffer)buf.clear(), 0);
+        while (!result.isDone());
+        System.out.println("[by Future] read done!");
+        System.out.printf("----- %s -----\n%s",
+                          path.getFileName(),
+                          StandardCharsets.UTF_8.decode((ByteBuffer)buf.flip()));
+
+        System.out.println();
+
+        // CompletionHandler - write
+        ((ByteBuffer)buf.clear()).put(args.length == 0 ?
+                                      "default-content-by-CompletionHandler\n".getBytes() :
+                                      args[0].getBytes());
+        fc.truncate(0).write((ByteBuffer)buf.flip(),
+                             0,
+                             null,
+                             new CompletionHandler<Integer, Object>() {
+            @Override
+            public void completed(Integer result, Object attachment) {
+                System.out.println("[by CompletionHandler] write done!");
+            }
+
+            @Override
+            public void failed(Throwable exc, Object attachment) {
+                System.out.println("[by CompletionHandler] write failed!");
+                exc.printStackTrace();
+            }
+        });
+
+        // CompletionHandler - read
+        fc.read((buf = ByteBuffer.allocate(BUF_SIZE)),
+                0,
+                buf,
+                new CompletionHandler<Integer, ByteBuffer>() {
+            @Override
+            public void completed(Integer result, ByteBuffer buf) {
+                System.out.println("[by CompletionHandler] read done!");
+                System.out.printf("----- %s -----\n%s",
+                                  path.getFileName(),
+                                  StandardCharsets.UTF_8.decode((ByteBuffer)buf.flip()));
+            }
+
+            @Override
+            public void failed(Throwable exc, ByteBuffer buf) {
+                System.out.println("[by CompletionHandler] read failed!");
+                exc.printStackTrace();
+            }
+        });
+
+        // 关闭线程池、文件通道
+        pool.shutdown();
+        while (!pool.isTerminated());
+        fc.close();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/async_file on git:master x [9:04:13]
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/async_file on git:master x [9:04:41]
+$ java AIOFileDemo
+[by Future] write done!
+[by Future] read done!
+----- test.txt -----
+default-content-by-Future
+
+[by CompletionHandler] write done!
+[by CompletionHandler] read done!
+----- test.txt -----
+default-content-by-CompletionHandler
+</script></code></pre>
+<h3 id="AsynchronousServerSocketChannel"><a href="#AsynchronousServerSocketChannel" class="headerlink" title="AsynchronousServerSocketChannel"></a>AsynchronousServerSocketChannel</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static AsynchronousServerSocketChannel open(AsynchronousChannelGroup group)
+    throws IOException;
+public static AsynchronousServerSocketChannel open()
+    throws IOException; // default-group
+
+/* bind() */
+public abstract AsynchronousServerSocketChannel bind(SocketAddress local, int backlog)
+    throws IOException;
+public final AsynchronousServerSocketChannel bind(SocketAddress local)
+    throws IOException; // backlog = 0
+
+/* accept() */
+public abstract <A> void accept(A attachment,
+                                CompletionHandler<AsynchronousSocketChannel,? super A> handler);
+public abstract Future<AsynchronousSocketChannel> accept();
+
+/* setOption() */
+public abstract <T> AsynchronousServerSocketChannel setOption(SocketOption<T> name, T value)
+    throws IOException;
+
+/* localAddr:localPort */
+public abstract SocketAddress getLocalAddress() throws IOException;
+</script></code></pre>
+<h3 id="AsynchronousSocketChannel"><a href="#AsynchronousSocketChannel" class="headerlink" title="AsynchronousSocketChannel"></a>AsynchronousSocketChannel</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static AsynchronousSocketChannel open(AsynchronousChannelGroup group)
+    throws IOException;
+public static AsynchronousSocketChannel open()
+    throws IOException;
+
+/* bind() */
+public abstract AsynchronousSocketChannel bind(SocketAddress local)
+    throws IOException;
+
+/* connect() */
+public abstract <A> void connect(SocketAddress remote,
+                                 A attachment,
+                                 CompletionHandler<Void,? super A> handler);
+public abstract Future<Void> connect(SocketAddress remote);
+
+/* read()、write() */
+public abstract Future<Integer> read(ByteBuffer dst);
+public abstract <A> void read(ByteBuffer dst,
+                              long timeout,
+                              TimeUnit unit,
+                              A attachment,
+                              CompletionHandler<Integer,? super A> handler);
+public final <A> void read(ByteBuffer dst,
+                           A attachment,
+                           CompletionHandler<Integer,? super A> handler); // timeout=0
+
+public abstract Future<Integer> write(ByteBuffer src);
+public abstract <A> void write(ByteBuffer src,
+                               long timeout,
+                               TimeUnit unit,
+                               A attachment,
+                               CompletionHandler<Integer,? super A> handler);
+public final <A> void write(ByteBuffer src,
+                            A attachment,
+                            CompletionHandler<Integer,? super A> handler); // timeout=0
+
+public abstract <A> void read(ByteBuffer[] dsts,
+                              int offset,
+                              int length,
+                              long timeout,
+                              TimeUnit unit,
+                              A attachment,
+                              CompletionHandler<Long,? super A> handler);
+public abstract <A> void write(ByteBuffer[] srcs,
+                               int offset,
+                               int length,
+                               long timeout,
+                               TimeUnit unit,
+                               A attachment,
+                               CompletionHandler<Long,? super A> handler);
+
+/* shutdown() */
+public abstract AsynchronousSocketChannel shutdownInput() throws IOException;
+public abstract AsynchronousSocketChannel shutdownOutput() throws IOException;
+
+/* setOption() */
+public abstract <T> AsynchronousSocketChannel setOption(SocketOption<T> name, T value)
+    throws IOException;
+
+/* localAddr、remoteAddr */
+public abstract SocketAddress getLocalAddress() throws IOException;
+public abstract SocketAddress getRemoteAddress() throws IOException;
+</script></code></pre>
+<h2 id="Selector选择器"><a href="#Selector选择器" class="headerlink" title="Selector选择器"></a>Selector选择器</h2><h3 id="SelectionKey"><a href="#SelectionKey" class="headerlink" title="SelectionKey"></a>SelectionKey</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* 可select的事件 */
+public static final int OP_READ;
+public static final int OP_WRITE;
+public static final int OP_CONNECT;
+public static final int OP_ACCEPT;
+
+/* 就绪状态检查 */
+public final boolean isReadable(); // 是否已可读
+public final boolean isWritable(); // 是否已可写
+public final boolean isConnectable(); // 是否已连接
+public final boolean isAcceptable(); // 是否已有新连接
+public abstract int readyOps(); // 获取已就绪的事件集合
+
+/* 获取与之关联的信息 */
+public abstract SelectableChannel channel(); // 获取与之关联的Channel
+public abstract Selector selector(); // 获取与之关联的Selector
+
+public abstract int interestOps(); // 获取兴趣集，即监听事件
+public abstract SelectionKey interestOps(int ops); // 设置新的兴趣集
+
+public final Object attachment(); // 获取附加的obj
+public final Object attach(Object ob); // 附加一个obj
+
+/* 取消注册 */
+public abstract void cancel(); // 取消关联的Channel与其Selector的注册
+public abstract boolean isValid(); // 当前key是否有效
+</script></code></pre>
+<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><pre><code class="language-java line-numbers"><script type="text/plain">/* open() */
+public static Selector open() throws IOException;
+public abstract boolean isOpen(); // 是否已open()
+
+/* select() */
+public abstract int selectNow() throws IOException; // [非阻塞]选择, return: key的数量
+public abstract int select(long timeout) throws IOException; // [超时阻塞]选择，return: key的数量，单位: ms毫秒
+public abstract int select() throws IOException; // [永久阻塞]选择，return: key的数量，timeout=0
+
+/* keys()、selectedKeys() */
+public abstract Set<SelectionKey> keys(); // [只读]获取所有key
+public abstract Set<SelectionKey> selectedKeys(); // [可删除] 获取已就绪的key
+
+/* wakeup()、close() */
+public abstract Selector wakeup(); // 唤醒在此Selector上阻塞的线程，如果当前没有阻塞的线程，则下个select()阻塞操作会立即被唤醒
+public abstract void close() throws IOException; // 释放资源，关闭选择器
+</script></code></pre>
+<p>例子：<br>Server.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.Selector;
+import java.nio.channels.SelectionKey;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.io.IOException;
+import java.net.StandardSocketOptions;
+import java.net.InetSocketAddress;
+import java.util.Set;
+import java.util.Iterator;
+
+public class Server {
+    private static ServerSocketChannel servChannel;
+    private static Selector selector;
+
+    private static final InetSocketAddress BIND_ADDR = new InetSocketAddress("0.0.0.0", 8080);
+    private static final int BACKLOG = 128;
+    private static final int BUF_SIZE = 1024;
+
+    public static void main(String[] args) throws IOException {
+        // hook，确保socket资源正确释放
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    servChannel.close();
+                    selector.wakeup();
+                    selector.close();
+                } catch (IOException e) {}
+            }
+        }));
+
+        selector = Selector.open();
+
+        servChannel = ServerSocketChannel.open();
+        servChannel.configureBlocking(false);
+        servChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+        servChannel.register(selector, SelectionKey.OP_ACCEPT);
+        servChannel.bind(BIND_ADDR, BACKLOG);
+
+        System.out.printf("----- listen: %s:%d -----\n",
+                          BIND_ADDR.getAddress().getHostAddress(),
+                          BIND_ADDR.getPort());
+
+        SelectionKey key = null;
+        Set<SelectionKey> keys = null;
+        Iterator<SelectionKey> iter = null;
+
+        while (true) {
+            if (selector.select() == 0) { // 此调用将阻塞
+                continue;
+            }
+            keys = selector.selectedKeys(); // 获取就绪事件的集合
+            for (iter = keys.iterator(); iter.hasNext(); iter.remove()) { // 注意需要删除已处理的事件iter.remove()
+                key = iter.next();
+                if (key.isAcceptable()) // Accept事件
+                    accept(key);
+                else if (key.isReadable()) // Read事件
+                    read(key);
+                else if (key.isWritable()) // Write事件
+                    write(key);
+            }
+        }
+    }
+
+    private static void accept(SelectionKey key) throws IOException {
+        SocketChannel connChannel = ((ServerSocketChannel) key.channel()).accept();
+        connChannel.configureBlocking(false);
+
+        InetSocketAddress remoteAddr = (InetSocketAddress) connChannel.getRemoteAddress();
+        System.out.printf("new Connect: %s:%d\n",
+                          remoteAddr.getAddress().getHostAddress(),
+                          remoteAddr.getPort());
+
+        connChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocate(BUF_SIZE));
+    }
+
+    private static void read(SelectionKey key) throws IOException {
+        SocketChannel connChannel = (SocketChannel) key.channel();
+        ByteBuffer buf = (ByteBuffer) key.attachment();
+
+        if (connChannel.read((ByteBuffer)buf.clear()) == -1) {
+            InetSocketAddress remoteAddr = (InetSocketAddress) connChannel.getRemoteAddress();
+            System.out.printf("close Connect: %s:%d\n",
+                              remoteAddr.getAddress().getHostAddress(),
+                              remoteAddr.getPort());
+            connChannel.close();
+            key.cancel();
+        } else {
+            System.out.printf("msg: %s\n", Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+            connChannel.register(selector, SelectionKey.OP_WRITE, buf.rewind());
+        }
+    }
+
+    private static void write(SelectionKey key) throws IOException {
+        SocketChannel connChannel = (SocketChannel) key.channel();
+        ByteBuffer buf = (ByteBuffer) key.attachment();
+        connChannel.write((ByteBuffer)buf.rewind());
+        connChannel.register(selector, SelectionKey.OP_READ, buf.clear());
+    }
+}
+</script></code></pre>
+<p>Client.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.channels.SocketChannel;
+import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+import java.io.IOException;
+
+public class Client {
+    private static final InetSocketAddress SERV_ADDR = new InetSocketAddress("127.0.0.1", 8080);
+    private static final int BUF_SIZE = 1024;
+
+    public static void main(String[] args) throws IOException {
+        SocketChannel sockChannel = SocketChannel.open();
+        sockChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+        sockChannel.connect(SERV_ADDR);
+
+        ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+        if (args.length == 0) {
+            buf.put("default-message".getBytes("UTF-8"));
+            sockChannel.write((ByteBuffer)buf.flip());
+            sockChannel.read((ByteBuffer)buf.clear());
+            System.out.printf("msg: %s\n", Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+        }
+        for (String s : args) {
+            ((ByteBuffer)buf.clear()).put(s.getBytes("UTF-8"));
+            sockChannel.write((ByteBuffer)buf.flip());
+            sockChannel.read((ByteBuffer)buf.clear());
+            System.out.printf("msg: %s\n", Charset.forName("UTF-8").decode((ByteBuffer)buf.flip()));
+        }
+        sockChannel.close();
+    }
+}
+</script></code></pre>
+<p>运行结果</p>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work/java_nio_learn/tcp_non_blocking on git:master x [9:16:10]
+$ javac *.java
+
+# root @ arch in ~/work/java_nio_learn/tcp_non_blocking on git:master x [9:16:26]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+
+# root @ arch in ~/work/java_nio_learn/tcp_non_blocking on git:master x [9:15:37]
+$ java Client a b c d e f g
+msg: a
+msg: b
+msg: c
+msg: d
+msg: e
+msg: f
+msg: g
+
+# root @ arch in ~/work/java_nio_learn/tcp_non_blocking on git:master x [9:16:26]
+$ java Server
+----- listen: 0.0.0.0:8080 -----
+new Connect: 127.0.0.1:23514
+msg: a
+msg: b
+msg: c
+msg: d
+msg: e
+msg: f
+msg: g
+close Connect: 127.0.0.1:23514
+^CException in thread "main" java.nio.channels.ClosedSelectorException
+</script></code></pre>
+<h2 id="Charset字符集"><a href="#Charset字符集" class="headerlink" title="Charset字符集"></a>Charset字符集</h2><blockquote>
+<p><code>java.nio.charset</code>包，主要方法：<code>Charset.forName(&quot;UTF-8&quot;)</code><br>Charset.encode()：CharBuffer -&gt; ByteBuffer<br>Charset.decode()：ByteBuffer -&gt; CharBuffer</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常用静态方法 */
+public static Charset forName(String charsetName); // 查找并获取指定字符集
+
+/* 相关信息 */
+public static SortedMap<String,Charset> availableCharsets(); // 获取所有可用的字符集
+public static Charset defaultCharset(); // 获取当前默认字符集
+public final Set<String> aliases(); // 获取字符集的别名
+
+public static boolean isSupported(String charsetName); // 是否支持指定字符集
+public final boolean isRegistered(); // 当前字符集是否已注册
+public abstract boolean contains(Charset cs); // 当前字符集是否包含指定字符集
+
+public final String name(); // 获取字符集的规范名称
+public String displayName(); // 获取字符集的规范名称，可被子类重写
+public String displayName(Locale locale); // 符合当前语言环境的字符集名称
+
+/* Encoder、Decoder */
+public abstract CharsetEncoder newEncoder(); // 构造编码器
+public abstract CharsetDecoder newDecoder(); // 构造解码器
+
+/* encode()、decode() */
+public boolean canEncode(); // 是否可以进行编码
+public final ByteBuffer encode(String str); // string -> byte[]
+public final ByteBuffer encode(CharBuffer cb); // 编码: char[] -> byte[]
+public final CharBuffer decode(ByteBuffer bb); // 解码: byte[] -> char[]
+</script></code></pre>
+<p><strong>StandardCharsets</strong>标准字符集</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public static final Charset US_ASCII = Charset.forName("US-ASCII");
+public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+public static final Charset UTF_8 = Charset.forName("UTF-8");
+public static final Charset UTF_16BE = Charset.forName("UTF-16BE");
+public static final Charset UTF_16LE = Charset.forName("UTF-16LE");
+public static final Charset UTF_16 = Charset.forName("UTF-16");
+</script></code></pre>
+<h2 id="ByteOrder字节序"><a href="#ByteOrder字节序" class="headerlink" title="ByteOrder字节序"></a>ByteOrder字节序</h2><blockquote>
+<p><code>java.nio.ByteOrder</code>类，定义了字节序，Big-Endian、Little-Endian</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* 常量 */
+public static final ByteOrder BIG_ENDIAN; // 大端字节序
+public static final ByteOrder LITTLE_ENDIAN; // 小端字节序
+
+public static ByteOrder nativeOrder(); // 检测底层平台的字节序
+</script></code></pre>
+<h2 id="新的文件API"><a href="#新的文件API" class="headerlink" title="新的文件API"></a>新的文件API</h2><blockquote>
+<p><code>java.nio.file</code>包，新的文件API，基本可以取代<code>java.io.File</code>类；</p>
+</blockquote>
+<h3 id="Path"><a href="#Path" class="headerlink" title="Path"></a>Path</h3><p>这是一个接口，定义了 Path（文件路径）的相关操作方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">FileSystem getFileSystem(); // 获取对应的文件系统
+Path getRoot(); // 获取根Path
+
+Path getFileName(); // 获取文件名
+Path getParent(); // 获取父Path
+
+int getNameCount(); // 路径的深度
+Path getName(int index); // 获取具体索引位置的Path
+Path subpath(int beginIndex, int endIndex); // 子Path [beg, end)
+
+boolean isAbsolute(); // 是否为绝对路径
+
+boolean startsWith(Path other); // 是否以给定路径开始
+boolean startsWith(String other); // 是否以给定路径开始
+boolean endsWith(Path other); // 是否以给定路径结尾
+boolean endsWith(String other); // 是否以给定路径结尾
+
+Path normalize(); // 去除Path中冗余部分
+
+URI toUri(); // 转换为URI
+File toFile(); // 获取对应的File对象
+
+Path toAbsolutePath(); // 转换为Abs路径
+Path toRealPath(LinkOption... options) throws IOException; // 获取此符号链接的真实Path
+
+Iterator<Path> iterator(); // 获取迭代器
+</script></code></pre>
+<h3 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h3><p>目录流，用于 for-each 遍历目录内容，只有一个迭代器，同时它还定义了一个 Filter 子接口：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public interface DirectoryStream<T> extends Closeable, Iterable<T> {
+    @FunctionalInterface
+    public static interface Filter<T> { // 过滤器
+        boolean accept(T entry) throws IOException;
+    }
+
+    @Override
+    Iterator<T> iterator();
+}
+</script></code></pre>
+<h3 id="StandardOpenOption"><a href="#StandardOpenOption" class="headerlink" title="StandardOpenOption"></a>StandardOpenOption</h3><p>枚举类，定义了几个标准打开选项（文件）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum StandardOpenOption implements OpenOption {
+    READ, // 读
+    WRITE, // 写
+    APPEND, // 追加
+    TRUNCATE_EXISTING, // 清空已存在的内容
+    CREATE, // 创建[不存在时]
+    CREATE_NEW, // 创建[存在则failed]
+    DELETE_ON_CLOSE, // 关闭时删除文件
+    SPARSE, // 稀疏文件
+    SYNC, // [data+metadata]每次都sync
+    DSYNC; // [data]每次都sync
+}
+</script></code></pre>
+<h3 id="StandardCopyOption"><a href="#StandardCopyOption" class="headerlink" title="StandardCopyOption"></a>StandardCopyOption</h3><p>枚举类，定义了拷贝文件时的相关处理选项：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum StandardCopyOption implements CopyOption {
+    REPLACE_EXISTING, // 替换(如果存在)
+    COPY_ATTRIBUTES, // 保留属性
+    ATOMIC_MOVE; // 原子移动
+}
+</script></code></pre>
+<h3 id="AccessMode"><a href="#AccessMode" class="headerlink" title="AccessMode"></a>AccessMode</h3><p>枚举类，定义了 Posix 中的三个文件权限、rwx</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum AccessMode {
+    READ, // 可读
+    WRITE, // 可写
+    EXECUTE; // 可执行
+}
+</script></code></pre>
+<h3 id="LinkOption"><a href="#LinkOption" class="headerlink" title="LinkOption"></a>LinkOption</h3><p>枚举类，定义了如何处理符号链接文件的相关选项</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public enum LinkOption implements OpenOption, CopyOption {
+    NOFOLLOW_LINKS; // 不跟随符号链接
+}
+</script></code></pre>
+<h3 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h3><p>工具类，提供了 get() 方法，用于获取 Path 对象</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* get() */
+public static Path get(String first, String... more); // 返回Path对象
+public static Path get(URI uri);  // 从URI中解析Path对象
+</script></code></pre>
+<h3 id="FileSystem"><a href="#FileSystem" class="headerlink" title="FileSystem"></a>FileSystem</h3><p>抽象类，定义了与文件系统相关的操作方法</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public abstract boolean isOpen(); // 是否为open()状态
+public abstract boolean isReadOnly(); // 是否可读
+
+public abstract void close() throws IOException; // close
+
+public abstract String getSeparator(); // 获取分隔符
+
+public abstract Iterable<Path> getRootDirectories(); // 获取root的可迭代对象
+public abstract Iterable<FileStore> getFileStores(); // 获取store的可迭代对象
+
+public abstract Path getPath(String first, String... more); // 获取给定路径的Path对象
+</script></code></pre>
+<h3 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h3><p>工具类，提供了 get() 方法，用于获取 FileSystem 对象</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* get() */
+public static FileSystem getDefault(); // 获取默认fs对象
+public static FileSystem getFileSystem(URI uri); // 获取指定uri的fs对象
+</script></code></pre>
+<h3 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h3><p>磁盘分区、卷的抽象，如：C盘、D盘、新加卷等</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public abstract String name(); // 名称
+public abstract String type(); // 类型
+
+public abstract boolean isReadOnly(); // 是否只读
+
+public abstract long getTotalSpace() throws IOException; // 总大小
+public abstract long getUsableSpace() throws IOException; // 可用大小
+public abstract long getUnallocatedSpace() throws IOException; // 未分配大小
+</script></code></pre>
+<h3 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h3><p>工具类，用于文件操作</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">/* InputStream、OutputStream */
+public static InputStream newInputStream(Path path, OpenOption... options) throws IOException;
+public static OutputStream newOutputStream(Path path, OpenOption... options) throws IOException;
+
+/* FileChannel */
+public static SeekableByteChannel newByteChannel(Path path,
+                                                 Set<? extends OpenOption> options,
+                                                 FileAttribute<?>... attrs)
+    throws IOException;
+public static SeekableByteChannel newByteChannel(Path path, OpenOption... options)
+    throws IOException;
+
+/* Reader、Writer */
+public static BufferedReader newBufferedReader(Path path, Charset cs)
+    throws IOException;
+public static BufferedReader newBufferedReader(Path path)
+    throws IOException; // UTF-8
+public static BufferedWriter newBufferedWriter(Path path, Charset cs,
+                                               OpenOption... options)
+    throws IOException;
+public static BufferedWriter newBufferedWriter(Path path, OpenOption... options)
+    throws IOException; // UTF-8
+
+/* Read、Write(Line) */
+public static List<String> readAllLines(Path path, Charset cs) throws IOException;
+public static List<String> readAllLines(Path path) throws IOException; // UTF-8
+
+public static Path write(Path path, Iterable<? extends CharSequence> lines,
+                         Charset cs, OpenOption... options)
+    throws IOException;
+public static Path write(Path path,
+                         Iterable<? extends CharSequence> lines,
+                         OpenOption... options)
+    throws IOException; // UTF-8
+
+/* DirectoryStream */
+public static DirectoryStream<Path> newDirectoryStream(Path dir) throws IOException;
+public static DirectoryStream<Path> newDirectoryStream(Path dir, String glob) throws IOException; // glob即shell通配符
+public static DirectoryStream<Path> newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter)
+    throws IOException;
+
+/* 文件信息 */
+public static long size(Path path) throws IOException; // 文件的大小
+public static boolean exists(Path path, LinkOption... options); // 给定文件是否存在
+public static boolean notExists(Path path, LinkOption... options); // 给定文件是否不存在
+public static boolean isHidden(Path path) throws IOException; // 是否为隐藏文件(夹)
+public static boolean isSymbolicLink(Path path); // 是否为符号链接文件
+public static boolean isDirectory(Path path, LinkOption... options); // 是否为目录文件
+public static String probeContentType(Path path) throws IOException; // 文件内容的类型
+public static Path readSymbolicLink(Path link) throws IOException; // 获取符号链接的target
+public static FileStore getFileStore(Path path) throws IOException; // 获取Path所在的FileStore
+
+/* 文件权限 rwx */
+public static Set<PosixFilePermission> getPosixFilePermissions(Path path,
+                                                               LinkOption... options)
+    throws IOException;
+public static Path setPosixFilePermissions(Path path,
+                                           Set<PosixFilePermission> perms)
+    throws IOException;
+
+public static boolean isReadable(Path path); // 是否有可读权限
+public static boolean isWritable(Path path); // 是否有可写权限
+public static boolean isExecutable(Path path); // 是否有可执行权限
+
+/* 文件操作 */
+// 普通file、dir创建
+public static Path createFile(Path path, FileAttribute<?>... attrs) throws IOException;
+public static Path createDirectory(Path dir, FileAttribute<?>... attrs) throws IOException;
+public static Path createDirectories(Path dir, FileAttribute<?>... attrs) throws IOException; // 递归mkdir -p
+
+// 临时file、dir创建
+public static Path createTempFile(Path dir, // 父路径
+                                  String prefix, // 前缀
+                                  String suffix, // 后缀
+                                  FileAttribute<?>... attrs)
+    throws IOException;
+public static Path createTempFile(String prefix,
+                                  String suffix,
+                                  FileAttribute<?>... attrs)
+    throws IOException;
+public static Path createTempDirectory(Path dir,
+                                       String prefix,
+                                       FileAttribute<?>... attrs)
+    throws IOException;
+public static Path createTempDirectory(String prefix,
+                                       FileAttribute<?>... attrs)
+    throws IOException;
+
+// 符号链接、硬链接文件创建
+public static Path createSymbolicLink(Path link, Path target,
+                                      FileAttribute<?>... attrs)
+    throws IOException;
+public static Path createLink(Path link, Path existing) throws IOException;
+
+// 删除文件、空目录
+public static void delete(Path path) throws IOException;
+public static boolean deleteIfExists(Path path) throws IOException;
+
+// 拷贝文件，如果为目录，则仅仅创建一个空目录
+public static Path copy(Path source, Path target, CopyOption... options) throws IOException;
+
+// 移动文件、空目录、在同一FileStore的目录
+public static Path move(Path source, Path target, CopyOption... options) throws IOException;
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-system-runtime.html" rel="next" title="Java System类、Runtime类">
+                <i class="fa fa-chevron-left"></i> Java System类、Runtime类
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-socket.html" rel="prev" title="Java Socket编程">
+                Java Socket编程 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IO、NIO、NIO-2"><span class="nav-number">1.</span> <span class="nav-text">IO、NIO、NIO.2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Buffer缓冲器"><span class="nav-number">2.</span> <span class="nav-text">Buffer缓冲器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Buffer"><span class="nav-number">2.1.</span> <span class="nav-text">Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteBuffer"><span class="nav-number">2.2.</span> <span class="nav-text">ByteBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CharBuffer"><span class="nav-number">2.3.</span> <span class="nav-text">CharBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ShortBuffer"><span class="nav-number">2.4.</span> <span class="nav-text">ShortBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IntBuffer"><span class="nav-number">2.5.</span> <span class="nav-text">IntBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LongBuffer"><span class="nav-number">2.6.</span> <span class="nav-text">LongBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FloatBuffer"><span class="nav-number">2.7.</span> <span class="nav-text">FloatBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DoubleBuffer"><span class="nav-number">2.8.</span> <span class="nav-text">DoubleBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MappedByteBuffer"><span class="nav-number">2.9.</span> <span class="nav-text">MappedByteBuffer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Channel通道"><span class="nav-number">3.</span> <span class="nav-text">Channel通道</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FileChannel"><span class="nav-number">3.1.</span> <span class="nav-text">FileChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SelectableChannel"><span class="nav-number">3.2.</span> <span class="nav-text">SelectableChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StandardSocketOptions"><span class="nav-number">3.3.</span> <span class="nav-text">StandardSocketOptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ServerSocketChannel"><span class="nav-number">3.4.</span> <span class="nav-text">ServerSocketChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SocketChannel"><span class="nav-number">3.5.</span> <span class="nav-text">SocketChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DatagramChannel"><span class="nav-number">3.6.</span> <span class="nav-text">DatagramChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AsynchronousChannel"><span class="nav-number">3.7.</span> <span class="nav-text">AsynchronousChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AsynchronousChannelGroup"><span class="nav-number">3.8.</span> <span class="nav-text">AsynchronousChannelGroup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AsynchronousFileChannel"><span class="nav-number">3.9.</span> <span class="nav-text">AsynchronousFileChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AsynchronousServerSocketChannel"><span class="nav-number">3.10.</span> <span class="nav-text">AsynchronousServerSocketChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AsynchronousSocketChannel"><span class="nav-number">3.11.</span> <span class="nav-text">AsynchronousSocketChannel</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selector选择器"><span class="nav-number">4.</span> <span class="nav-text">Selector选择器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SelectionKey"><span class="nav-number">4.1.</span> <span class="nav-text">SelectionKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selector"><span class="nav-number">4.2.</span> <span class="nav-text">Selector</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Charset字符集"><span class="nav-number">5.</span> <span class="nav-text">Charset字符集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ByteOrder字节序"><span class="nav-number">6.</span> <span class="nav-text">ByteOrder字节序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新的文件API"><span class="nav-number">7.</span> <span class="nav-text">新的文件API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Path"><span class="nav-number">7.1.</span> <span class="nav-text">Path</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DirectoryStream"><span class="nav-number">7.2.</span> <span class="nav-text">DirectoryStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StandardOpenOption"><span class="nav-number">7.3.</span> <span class="nav-text">StandardOpenOption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StandardCopyOption"><span class="nav-number">7.4.</span> <span class="nav-text">StandardCopyOption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AccessMode"><span class="nav-number">7.5.</span> <span class="nav-text">AccessMode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkOption"><span class="nav-number">7.6.</span> <span class="nav-text">LinkOption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paths"><span class="nav-number">7.7.</span> <span class="nav-text">Paths</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileSystem"><span class="nav-number">7.8.</span> <span class="nav-text">FileSystem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileSystems"><span class="nav-number">7.9.</span> <span class="nav-text">FileSystems</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileStore"><span class="nav-number">7.10.</span> <span class="nav-text">FileStore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Files"><span class="nav-number">7.11.</span> <span class="nav-text">Files</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-nio.html';
+          this.page.identifier = 'java-nio.html';
+          this.page.title = 'Java NIO';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

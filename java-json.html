@@ -1,0 +1,859 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java JSON 解析 org.json">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="JSON 全称 JavaScript Object Notation，中文 JavaScript 对象表示法，JSON 是基于文本的，易于阅读的，语言独立的，轻量级的 数据交换格式。">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JSON 解析">
+<meta property="og:url" content="https://www.zfl9.com/java-json.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="JSON 全称 JavaScript Object Notation，中文 JavaScript 对象表示法，JSON 是基于文本的，易于阅读的，语言独立的，轻量级的 数据交换格式。">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.343Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JSON 解析">
+<meta name="twitter:description" content="JSON 全称 JavaScript Object Notation，中文 JavaScript 对象表示法，JSON 是基于文本的，易于阅读的，语言独立的，轻量级的 数据交换格式。">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-json.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java JSON 解析 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-json.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java JSON 解析
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T21:01:00+08:00">
+                2018-03-22
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-json.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-json.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-json.html" class="leancloud_visitors" data-flag-title="Java JSON 解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>JSON 全称 <strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation，中文 <strong>JavaScript 对象表示法</strong>，JSON 是基于文本的，易于阅读的，语言独立的，轻量级的 <strong>数据交换格式</strong>。</p>
+<a id="more"></a>
+<h2 id="JSON-简介"><a href="#JSON-简介" class="headerlink" title="JSON 简介"></a>JSON 简介</h2><p>JSON（<strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation，JS 对象表示法），是一种由 道格拉斯·克罗克福特 构想设计、<strong>轻量级的数据交换格式</strong>，以文本为基础，且易于让人阅读。尽管 JSON 是 Javascript 的一个子集，但 JSON 是<strong>独立于语言的文本格式</strong>，并且采用了类似于 C 语言家族的一些习惯。</p>
+<p>JSON 数据格式与语言无关，脱胎于 JavaScript，但目前很多编程语言都支持 JSON 格式数据的生成和解析。JSON 的官方 MIME 类型是 <code>application/json</code>，文件扩展名是 <code>.json</code>。</p>
+<p>JSON 建构于两种结构：</p>
+<ul>
+<li><strong>键值对的集合</strong>。不同的语言中，它被理解为对象（object），纪录（record），结构（struct），字典（dictionary），哈希表（hash table），有键列表（keyed list），或者关联数组（associative array）。</li>
+<li><strong>值的有序列表</strong>。在大部分语言中，它被理解为数组（array），在 Java 中，JS 数组表示为 Collection 集合。</li>
+</ul>
+<p>这两种结构分别对应 JavaScript 中的 <strong>对象</strong> 和 <strong>数组</strong>。注意，JSON 只是一个字符串！是一个纯文本！</p>
+<ul>
+<li><strong>对象</strong>：<code>{k1: v1, k2: v2, ..., kN: vN}</code>，key 必须显式得加上双引号</li>
+<li><strong>数组</strong>：<code>[e1, e2, e3, ..., eN]</code>，JS 数组其实就是对象，其 key 是隐式的</li>
+</ul>
+<p>值（即对象中的 value、数组中的 element）可以是以下类型：</p>
+<ul>
+<li><code>null</code>：空指针</li>
+<li><code>true/false</code>：布尔值</li>
+<li><code>number</code>：数值（十进制）</li>
+<li><code>string</code>：字符串（双引号）</li>
+<li><code>array</code>：数组</li>
+<li><code>object</code>：对象</li>
+</ul>
+<p><code>number</code> 只支持十进制的整数、浮点数。其中浮点数支持科学记数法，即 <code>1.3E4</code> 表示 13000（E 大小写不敏感）。</p>
+<p><code>string</code> 必须使用双引号包围，包括 object 中的 key，这是为了适应 C/C++、Java 中的”单引号为字符，双引号为字符串”语法。此外，还支持一些转义序列：</p>
+<ul>
+<li><code>\&quot;</code>：双引号</li>
+<li><code>\\</code>：反斜杠</li>
+<li><code>\/</code>：正斜杠</li>
+<li><code>\b</code>：退格符</li>
+<li><code>\t</code>：制表符</li>
+<li><code>\r</code>：回车符</li>
+<li><code>\n</code>：换行符</li>
+<li><code>\f</code>：换页符</li>
+<li><code>\uhhhh</code>：UTF-16 code-unit</li>
+</ul>
+<h2 id="JSON-解析"><a href="#JSON-解析" class="headerlink" title="JSON 解析"></a>JSON 解析</h2><p>Java 的 JSON 解析库有很多，如：Gson（谷歌出品）、Jackson、Fastjson（阿里巴巴）、org.json（小巧，简单易用）。本文使用 <a href="https://github.com/stleary/JSON-java" rel="external nofollow noopener noreferrer" target="_blank"><code>org.json</code></a> 解析库。</p>
+<p>在 <a href="http://www.json.org" rel="external nofollow noopener noreferrer" target="_blank">JSON 官网</a> 中，找到 Java 相关的 JSON 库，第一个就是 JSON-java（即 org.json），点击进入 org.json 的 github 项目地址，然后我们 clone 到本地，使用 javac 编译器编译，最后使用 jar 命令打包即可，细节如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/temp [15:40:29]
+$ git cl https://github.com/stleary/JSON-java.git
+Cloning into 'JSON-java'...
+remote: Counting objects: 1093, done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 1093 (delta 11), reused 11 (delta 3), pack-reused 1071
+Receiving objects: 100% (1093/1093), 784.66 KiB | 804.00 KiB/s, done.
+Resolving deltas: 100% (662/662), done.
+
+# root @ arch in ~/temp [15:40:50]
+$ mkdir -p org/json
+
+# root @ arch in ~/temp [15:41:01]
+$ cp -af JSON-java/*.java org/json
+
+# root @ arch in ~/temp [15:41:12]
+$ rm -fr JSON-java
+
+# root @ arch in ~/temp [15:41:17]
+$ cd org/json
+
+# root @ arch in ~/temp/org/json [15:41:21]
+$ javac *.java
+
+# root @ arch in ~/temp/org/json [15:41:31]
+$ rm -fr *.java
+
+# root @ arch in ~/temp/org/json [15:41:41]
+$ ll
+total 164K
+-rw-r--r-- 1 root root 3.7K Mar 23 15:41  CDL.class
+-rw-r--r-- 1 root root 2.7K Mar 23 15:41  Cookie.class
+-rw-r--r-- 1 root root 1.7K Mar 23 15:41  CookieList.class
+-rw-r--r-- 1 root root 2.4K Mar 23 15:41  HTTP.class
+-rw-r--r-- 1 root root  893 Mar 23 15:41  HTTPTokener.class
+-rw-r--r-- 1 root root  15K Mar 23 15:41  JSONArray.class
+-rw-r--r-- 1 root root  560 Mar 23 15:41  JSONException.class
+-rw-r--r-- 1 root root 6.2K Mar 23 15:41  JSONML.class
+-rw-r--r-- 1 root root  196 Mar 23 15:41 'JSONObject$1.class'
+-rw-r--r-- 1 root root  27K Mar 23 15:41  JSONObject.class
+-rw-r--r-- 1 root root  710 Mar 23 15:41 'JSONObject$Null.class'
+-rw-r--r-- 1 root root 1.1K Mar 23 15:41 'JSONPointer$Builder.class'
+-rw-r--r-- 1 root root 4.4K Mar 23 15:41  JSONPointer.class
+-rw-r--r-- 1 root root  420 Mar 23 15:41  JSONPointerException.class
+-rw-r--r-- 1 root root  438 Mar 23 15:41  JSONPropertyIgnore.class
+-rw-r--r-- 1 root root  465 Mar 23 15:41  JSONPropertyName.class
+-rw-r--r-- 1 root root  156 Mar 23 15:41  JSONString.class
+-rw-r--r-- 1 root root  526 Mar 23 15:41  JSONStringer.class
+-rw-r--r-- 1 root root 5.7K Mar 23 15:41  JSONTokener.class
+-rw-r--r-- 1 root root 4.9K Mar 23 15:41  JSONWriter.class
+-rw-r--r-- 1 root root 1.6K Mar 23 15:41  Property.class
+-rw-r--r-- 1 root root 1.2K Mar 23 15:41 'XML$1$1.class'
+-rw-r--r-- 1 root root  724 Mar 23 15:41 'XML$1.class'
+-rw-r--r-- 1 root root 8.4K Mar 23 15:41  XML.class
+-rw-r--r-- 1 root root 4.5K Mar 23 15:41  XMLTokener.class
+
+# root @ arch in ~/temp/org/json [15:41:43]
+$ cd ../../
+
+# root @ arch in ~/temp [15:41:54]
+$ ls
+org
+
+# root @ arch in ~/temp [15:41:57]
+$ jar cvMf org-json.jar org
+adding: org/(in = 0) (out= 0)(stored 0%)
+adding: org/json/(in = 0) (out= 0)(stored 0%)
+adding: org/json/JSONML.class(in = 6305) (out= 3175)(deflated 49%)
+adding: org/json/HTTP.class(in = 2419) (out= 1336)(deflated 44%)
+adding: org/json/JSONException.class(in = 560) (out= 333)(deflated 40%)
+adding: org/json/JSONPointer$Builder.class(in = 1030) (out= 578)(deflated 43%)
+adding: org/json/JSONArray.class(in = 15106) (out= 6726)(deflated 55%)
+adding: org/json/JSONObject$Null.class(in = 710) (out= 396)(deflated 44%)
+adding: org/json/JSONPointer.class(in = 4447) (out= 2386)(deflated 46%)
+adding: org/json/XML$1.class(in = 724) (out= 406)(deflated 43%)
+adding: org/json/JSONObject$1.class(in = 196) (out= 152)(deflated 22%)
+adding: org/json/HTTPTokener.class(in = 893) (out= 577)(deflated 35%)
+adding: org/json/CookieList.class(in = 1699) (out= 896)(deflated 47%)
+adding: org/json/JSONString.class(in = 156) (out= 120)(deflated 23%)
+adding: org/json/XML.class(in = 8562) (out= 4640)(deflated 45%)
+adding: org/json/Property.class(in = 1545) (out= 806)(deflated 47%)
+adding: org/json/JSONTokener.class(in = 5814) (out= 3199)(deflated 44%)
+adding: org/json/XMLTokener.class(in = 4569) (out= 2588)(deflated 43%)
+adding: org/json/JSONPropertyName.class(in = 465) (out= 276)(deflated 40%)
+adding: org/json/JSONPropertyIgnore.class(in = 438) (out= 258)(deflated 41%)
+adding: org/json/XML$1$1.class(in = 1207) (out= 713)(deflated 40%)
+adding: org/json/JSONPointerException.class(in = 420) (out= 289)(deflated 31%)
+adding: org/json/JSONStringer.class(in = 526) (out= 343)(deflated 34%)
+adding: org/json/Cookie.class(in = 2678) (out= 1527)(deflated 42%)
+adding: org/json/CDL.class(in = 3690) (out= 1904)(deflated 48%)
+adding: org/json/JSONWriter.class(in = 4986) (out= 2523)(deflated 49%)
+adding: org/json/JSONObject.class(in = 26810) (out= 13051)(deflated 51%)
+
+# root @ arch in ~/temp [15:42:08]
+$ ls
+org  org-json.jar
+
+# root @ arch in ~/temp [15:42:11]
+$ rm -fr org
+
+# root @ arch in ~/temp [15:42:14]
+$ ls
+org-json.jar
+
+# root @ arch in ~/temp [15:42:14]
+$ # 将 org-json.jar 添加到 ClassPath 中即可，所在的包名为 org.json.*
+</script></code></pre>
+<p><code>org.json</code> 包的 javadoc 文档：<a href="http://stleary.github.io/JSON-java/index.html" rel="external nofollow noopener noreferrer" target="_blank">http://stleary.github.io/JSON-java/index.html</a>。</p>
+<p><strong>读取 JSON 数据</strong><br><code>org.json.JSONTokener</code>：JSON 词法 token，从 Reader、InputStream、String 中获取 JSON 数据并解析。JSONArray、JSONObject 的构造函数接受该类对象作为参数，用于构造 JSON 对象，便于在内存中操作 JSON 数据。</p>
+<p><strong>操作 JSON 数据</strong><br><code>org.json.JSONArray</code>：JSON 数组，由方括号包围。getXxx()、optXxx() 方法读取字段，put() 方法修改/添加字段。<br><code>org.json.JSONObject</code>：JSON 对象，由花括号包围。getXxx()、optXxx() 方法读取字段，put() 方法修改/添加字段。</p>
+<p><strong>保存 JSON 数据</strong><br><code>org.json.JSONWriter</code>：将 JSON 数据写入到 Writer 中，链式调用 API。<br><code>org.json.JSONStringer</code>：将 JSON 数据导出为 String 字符串，链式调用 API。</p>
+<p>简单例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.json.JSONTokener;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONStringer;
+import org.json.JSONWriter;
+
+public class JsonDemo {
+    public static void main(String[] args) throws IOException {
+        // 读取 json 文件
+        JSONObject jsonObj = new JSONObject(new JSONTokener(new FileReader("ssr-redir.json")));
+
+        // 无缩进，省空间
+        System.out.println("=============== toString() ===============");
+        System.out.println(jsonObj.toString());
+        // 有缩进，易阅读
+        System.out.println("=============== toString(4) ==============");
+        System.out.println(jsonObj.toString(4));
+
+        // getXxx(key) 方法，如不存在则抛出 JSONException 运行时异常
+        // optXxx(key) 方法，如不存在则返回默认的 defaultValue，null/false/0/NaN/""
+        // optXxx(key, defaultValue) 方法，如不存在则返回给定的默认值
+        String server_addr = jsonObj.getString("server_addr");
+        String server_port = jsonObj.getString("server_port");
+        String method = jsonObj.getString("method");
+        String password = jsonObj.getString("password");
+        String protocol = jsonObj.getString("protocol");
+        String protocol_param = jsonObj.getString("protocol_param");
+        String obfs = jsonObj.getString("obfs");
+        String obfs_param = jsonObj.getString("obfs_param");
+        String local_addr = jsonObj.getString("local_addr");
+        String local_port = jsonObj.getString("local_port");
+        String listen_mode = jsonObj.getString("listen_mode");
+        int workers = jsonObj.getInt("workers");
+        boolean no_delay = jsonObj.getBoolean("no_delay");
+        boolean reuse_port = jsonObj.getBoolean("reuse_port");
+        boolean fast_open = jsonObj.getBoolean("fast_open");
+        boolean verbose = jsonObj.getBoolean("verbose");
+        String log_file = jsonObj.getString("log_file");
+        // 打印修改前的 JSON 字符串
+        System.out.println("=============== origin ==============");
+        System.out.println("server_addr: " + server_addr);
+        System.out.println("server_port: " + server_port);
+        System.out.println("method: " + method);
+        System.out.println("password: " + password);
+        System.out.println("protocol: " + protocol);
+        System.out.println("protocol_param: " + protocol_param);
+        System.out.println("obfs: " + obfs);
+        System.out.println("obfs_param: " + obfs_param);
+        System.out.println("local_addr: " + local_addr);
+        System.out.println("local_port: " + local_port);
+        System.out.println("listen_mode: " + listen_mode);
+        System.out.println("workers: " + workers);
+        System.out.println("no_delay: " + no_delay);
+        System.out.println("reuse_port: " + reuse_port);
+        System.out.println("fast_open: " + fast_open);
+        System.out.println("verbose: " + verbose);
+        System.out.println("log_file: " + log_file);
+
+        // put(key, value) 添加/替换，key 为 String，value 可为：
+        // boolean: 布尔值
+        // int: 整型
+        // long: 长整型
+        // double: 双精度浮点型
+        // String: 字符串
+        // JSONObject.NULL: null空指针
+        // java.util.Map<?, ?>: JS对象，调用 toString()
+        // java.util.Collection<?>: JS数组，调用 toString()
+        jsonObj.put("verbose", false); // 替换
+        jsonObj.put("log_file", "/dev/null"); // 替换
+
+        List<Integer> list = new ArrayList<>(3);
+        list.add(1); list.add(2); list.add(3);
+        jsonObj.put("new_array", list); // 添加，数组
+
+        Map<String, String> map = new HashMap<>();
+        map.put("key1", "value1"); map.put("key2", "value2"); map.put("key3", "value3");
+        jsonObj.put("new_object", map); // 添加，对象
+
+        // 打印修改后的 JSON 字符串
+        System.out.println("=============== modify ==============");
+        System.out.println(jsonObj.toString(4));
+
+        // remove(key) 删除给定的键值对，返回关联的值，没有则返回 null
+        // write(java.io.Writer writer) 写入当前 JSON 字符串到给定 Writer，紧凑型
+        // write(java.io.Writer writer, indentFactor, indent) 同上，缩进型，indent 一般为 0
+        jsonObj.remove("new_array");
+        jsonObj.remove("new_object");
+        jsonObj.write(new FileWriter("test1.json")).close(); // 必须 close，否则不会写入
+        jsonObj.write(new FileWriter("test2.json"), 4, 0).close(); // 必须 close，否则不会写入
+
+        // JSONStringer、JSONWriter 用法类似，前者是写入到字符串中，后者是写入到文件中
+        String json_obj = new JSONStringer()
+            .object()
+                .key("key1")
+                .value("value1")
+                .key("key2")
+                .value("value2")
+                .key("key3")
+                .value("value3")
+            .endObject()
+            .toString();
+        System.out.println("=============== json_obj ===============");
+        System.out.println(json_obj);
+
+        String json_arr = new JSONStringer()
+            .array()
+                .value("element1")
+                .value("element2")
+                .value("element3")
+            .endArray()
+            .toString();
+        System.out.println("=============== json_arr ===============");
+        System.out.println(json_arr);
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9/json on git:master x [16:13:41]
+$ cat ssr-redir.json
+{
+    "server_addr": "node1.shadowsocks.org",
+    "server_port": "12345",
+    "method": "rc4-md5",
+    "password": "password",
+    "protocol": "origin",
+    "protocol_param": "",
+    "obfs": "plain",
+    "obfs_param": "www.zfl9.com",
+    "local_addr": "0.0.0.0",
+    "local_port": "1080",
+    "listen_mode": "tcp_and_udp",
+    "workers": 4,
+    "no_delay": true,
+    "reuse_port": true,
+    "fast_open": true,
+    "verbose": true,
+    "log_file": "/var/log/ssr-redir.log"
+}
+
+# root @ arch in ~/java8-learn/com/zfl9/json on git:master x [16:13:45]
+$ javac *.java && java JsonDemo
+=============== toString() ===============
+{"listen_mode":"tcp_and_udp","method":"rc4-md5","local_port":"1080","no_delay":true,"protocol_param":"","local_addr":"0.0.0.0","server_addr":"node1.shadowsocks.org","obfs_param":"www.zfl9.com","fast_open":true,"verbose":true,"password":"password","protocol":"origin","obfs":"plain","log_file":"/var/log/ssr-redir.log","server_port":"12345","workers":4,"reuse_port":true}
+=============== toString(4) ==============
+{
+    "listen_mode": "tcp_and_udp",
+    "method": "rc4-md5",
+    "local_port": "1080",
+    "no_delay": true,
+    "protocol_param": "",
+    "local_addr": "0.0.0.0",
+    "server_addr": "node1.shadowsocks.org",
+    "obfs_param": "www.zfl9.com",
+    "fast_open": true,
+    "verbose": true,
+    "password": "password",
+    "protocol": "origin",
+    "obfs": "plain",
+    "log_file": "/var/log/ssr-redir.log",
+    "server_port": "12345",
+    "workers": 4,
+    "reuse_port": true
+}
+=============== origin ==============
+server_addr: node1.shadowsocks.org
+server_port: 12345
+method: rc4-md5
+password: password
+protocol: origin
+protocol_param:
+obfs: plain
+obfs_param: www.zfl9.com
+local_addr: 0.0.0.0
+local_port: 1080
+listen_mode: tcp_and_udp
+workers: 4
+no_delay: true
+reuse_port: true
+fast_open: true
+verbose: true
+log_file: /var/log/ssr-redir.log
+=============== modify ==============
+{
+    "listen_mode": "tcp_and_udp",
+    "method": "rc4-md5",
+    "local_port": "1080",
+    "no_delay": true,
+    "protocol_param": "",
+    "local_addr": "0.0.0.0",
+    "server_addr": "node1.shadowsocks.org",
+    "obfs_param": "www.zfl9.com",
+    "fast_open": true,
+    "verbose": false,
+    "password": "password",
+    "protocol": "origin",
+    "obfs": "plain",
+    "new_object": {
+        "key1": "value1",
+        "key2": "value2",
+        "key3": "value3"
+    },
+    "new_array": [
+        1,
+        2,
+        3
+    ],
+    "log_file": "/dev/null",
+    "server_port": "12345",
+    "workers": 4,
+    "reuse_port": true
+}
+=============== json_obj ===============
+{"key1":"value1","key2":"value2","key3":"value3"}
+=============== json_arr ===============
+["element1","element2","element3"]
+
+# root @ arch in ~/java8-learn/com/zfl9/json on git:master x [16:13:56]
+$ cat test1.json
+{"listen_mode":"tcp_and_udp","method":"rc4-md5","local_port":"1080","no_delay":true,"protocol_param":"","local_addr":"0.0.0.0","server_addr":"node1.shadowsocks.org","obfs_param":"www.zfl9.com","fast_open":true,"verbose":false,"password":"password","protocol":"origin","obfs":"plain","log_file":"/dev/null","server_port":"12345","workers":4,"reuse_port":true}#
+
+# root @ arch in ~/java8-learn/com/zfl9/json on git:master x [16:14:06]
+$ cat test2.json
+{
+    "listen_mode": "tcp_and_udp",
+    "method": "rc4-md5",
+    "local_port": "1080",
+    "no_delay": true,
+    "protocol_param": "",
+    "local_addr": "0.0.0.0",
+    "server_addr": "node1.shadowsocks.org",
+    "obfs_param": "www.zfl9.com",
+    "fast_open": true,
+    "verbose": false,
+    "password": "password",
+    "protocol": "origin",
+    "obfs": "plain",
+    "log_file": "/dev/null",
+    "server_port": "12345",
+    "workers": 4,
+    "reuse_port": true
+}
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-mail.html" rel="next" title="Java Mail 电子邮件">
+                <i class="fa fa-chevron-left"></i> Java Mail 电子邮件
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-xml.html" rel="prev" title="Java XML 解析">
+                Java XML 解析 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-简介"><span class="nav-number">1.</span> <span class="nav-text">JSON 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-解析"><span class="nav-number">2.</span> <span class="nav-text">JSON 解析</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-json.html';
+          this.page.identifier = 'java-json.html';
+          this.page.title = 'Java JSON 解析';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

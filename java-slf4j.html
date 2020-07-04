@@ -1,0 +1,2256 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="SLF4J 全称为 Simple Logging Facade for Java，即：Java 简单日志门面。类似于 Apache Common-Logging，是对不同日志框架提供的一个门面封装，可以在部署的时候不修改任何配置即可接入一种日志实现方案。但是，SLF4J 在编译时静态绑定真正的 Logging 库。使用 SLF4J 时，如果你需要使用某一种日志实现，那么你必须选择正确的 SLF4J">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java SLF4J 笔记">
+<meta property="og:url" content="https://www.zfl9.com/java-slf4j.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="SLF4J 全称为 Simple Logging Facade for Java，即：Java 简单日志门面。类似于 Apache Common-Logging，是对不同日志框架提供的一个门面封装，可以在部署的时候不修改任何配置即可接入一种日志实现方案。但是，SLF4J 在编译时静态绑定真正的 Logging 库。使用 SLF4J 时，如果你需要使用某一种日志实现，那么你必须选择正确的 SLF4J">
+<meta property="og:image" content="https://www.slf4j.org/images/concrete-bindings.png">
+<meta property="og:image" content="https://logback.qos.ch/manual/images/chapters/configuration/basicSyntax.png">
+<meta property="og:image" content="https://logback.qos.ch/manual/images/chapters/configuration/appenderSyntax.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.227Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java SLF4J 笔记">
+<meta name="twitter:description" content="SLF4J 全称为 Simple Logging Facade for Java，即：Java 简单日志门面。类似于 Apache Common-Logging，是对不同日志框架提供的一个门面封装，可以在部署的时候不修改任何配置即可接入一种日志实现方案。但是，SLF4J 在编译时静态绑定真正的 Logging 库。使用 SLF4J 时，如果你需要使用某一种日志实现，那么你必须选择正确的 SLF4J">
+<meta name="twitter:image" content="https://www.slf4j.org/images/concrete-bindings.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-slf4j.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java SLF4J 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-slf4j.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java SLF4J 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T08:00:00+08:00">
+                2018-12-10
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-slf4j.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-slf4j.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-slf4j.html" class="leancloud_visitors" data-flag-title="Java SLF4J 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>SLF4J 全称为 <code>Simple Logging Facade for Java</code>，即：Java 简单日志门面。类似于 Apache Common-Logging，是对不同日志框架提供的一个门面封装，可以在部署的时候不修改任何配置即可接入一种日志实现方案。但是，SLF4J 在编译时静态绑定真正的 Logging 库。使用 SLF4J 时，如果你需要使用某一种日志实现，那么你必须选择正确的 SLF4J 的 jar 包的集合（各种桥接包）。</p>
+<a id="more"></a>
+<h2 id="相关简介"><a href="#相关简介" class="headerlink" title="相关简介"></a>相关简介</h2><p>对于现在的应用程序来说，日志的重要性是不言而喻的。很难想象没有任何日志记录功能的应用程序运行在生产环境中。日志所能提供的功能是多种多样的，包括记录程序运行时产生的错误信息、状态信息、调试信息和执行时间信息等。在生产环境中，日志是查找问题来源的重要依据。应用程序运行时的产生的各种信息，都应该通过日志 API 来进行记录。很多开发人员习惯于使用 System.out.println、System.err.println 以及异常对象的 printStrackTrace 方法来输出相关信息。这些使用方式虽然简便，但是所产生的信息在出现问题时并不能提供有效的帮助。这些使用方式都应该改为使用日志 API。使用日志 API 并没有增加很多复杂度，但是所提供的好处是显著的。</p>
+<p>尽管记录日志是应用开发中必不可少的功能，但在 JDK 的最初版本中并不包含日志记录相关的 API 和实现。相关的 API（java.util.logging 包，<strong>JUL</strong>）和实现，直到 JDK 1.4 才被加入。因此在日志记录这一个领域，社区贡献了很多开源的实现。其中比较流行的包括 <strong>log4j</strong> 及其后继者 <strong>logback</strong>。除了真正的日志记录实现之外，还有一类与日志记录相关的封装 API，如 <strong>Apache Commons Logging</strong> 和 <strong>SLF4J</strong>。这类库的作用是在日志记录实现的基础上提供一个封装的 API 层次，对日志记录 API 的使用者提供一个统一的接口，使得可以自由切换不同的日志记录实现。比如从 JDK 的默认日志记录实现 JUL 切换到 log4j。这类封装 API 库在框架的实现中比较常用，因为需要考虑到框架使用者的不同需求。在实际的项目开发中则使用得比较少，因为很少有项目会在开发中切换不同的日志记录实现。本文对于这两类库都会进行具体的介绍。</p>
+<p>记录日志只是有效地利用日志的第一步，更重要的是如何对程序运行时产生的日志进行处理和分析。典型的情景包括当日志中包含满足特定条件的记录时，触发相应的通知机制，比如邮件或短信通知；还可以在程序运行出现错误时，快速地定位潜在的问题源。这样的处理和分析的能力对于实际系统的维护尤其重要。当运行系统中包含的组件过多时，日志对于错误的诊断就显得格外重要。</p>
+<blockquote>
+<p>JCL 和 log4j 1.x 已经在 2014 年停止更新，不再建议使用，新应用应首先考虑 slf4j + logback，或者 slf4j + log4j 2.x。本文以 slf4j + logback 为例。</p>
+</blockquote>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>从功能上来说，日志 API 本身所需求的功能非常简单，只需要能够记录一段文本即可。API 的使用者在需要进行记录时，根据当前的上下文信息构造出相应的文本信息，调用 API 完成记录。一般来说，日志 API 由下面几个部分组成：</p>
+<ul>
+<li><strong>记录器（Logger）</strong>：日志 API 的使用者通过记录器来发出日志记录请求，并提供日志的内容。在记录日志时，需要指定日志的严重性级别。</li>
+<li><strong>格式化器（Formatter）</strong>：对记录器所记录的文本进行格式化，并添加额外的元数据。</li>
+<li><strong>处理器（Handler）</strong>：把经过格式化之后的日志记录输出到不同的地方。常见的日志输出目标包括控制台、文件和数据库等。</li>
+</ul>
+<p><strong>记录器</strong><br>当程序中需要记录日志时，首先需要获取一个日志记录器对象。一般的日志记录 API 都提供相应的工厂方法来创建记录器对象。每个记录器对象都是有名称的。一般的做法是使用当前的 Java 类的名称或所在包的名称作为记录器对象的名称。记录器的名称通常是具有层次结构的，与 Java 包的层次结构相对应。比如 Java 类 <code>com.myapp.web.IndexController</code> 中使用的日志记录器的名称一般是 <code>com.myapp.web.IndexController</code> 或 <code>com.myapp.web</code>。除了使用类名或包名之外，还可以根据日志记录所对应的功能来进行划分，从而选择不同的名称。比如用 “security” 作为所有与安全相关的日志记录器的名称。这样的命名方式对于某些横切的功能比较实用。开发人员一般习惯于使用当前的类名作为日志记录器的名称，这样可以快速在日志记录中定位到产生日志的 Java 类。使用有意义的其他名称在很多情况下也是一个不错的选择。</p>
+<p>在通过日志记录器对象记录日志时，需要指定日志的严重性级别（日志级别）。根据每个记录器对象的不同配置，低于某个级别的日志消息可能不会被记录下来（级别越高，记录的东西越少，越简略）。该级别是日志 API 的使用者根据日志记录中所包含的信息来自行决定的。不同的日志记录 API 所定义的级别也不尽相同。日志记录封装 API 也会定义自己的级别并映射到底层实现中相对应的实际级别。比如 JDK 标准的日志 API 使用的级别包括 OFF、SEVERE、WARNING、INFO、CONFIG、FINE、FINER、FINEST 和 ALL 等，Log4j 使用的级别则包括 OFF、FATAL、ERROR、WARN、INFO、DEBUG、TRACE 和 ALL 等。一般情况下，使用得比较多的级别是 <code>FATAL</code>、<code>ERROR</code>、<code>WARN</code>、<code>INFO</code>、<code>DEBUG</code> 和 <code>TRACE</code> 等（日志级别从高到低排列，级别越低，记录的信息越详尽）。这 6 个级别所对应的情况也有所不同：</p>
+<ul>
+<li>FATAL：导致程序提前结束的严重错误。</li>
+<li>ERROR：运行时异常以及预期之外的错误。</li>
+<li>WARN：预期之外的运行时状况，不一定是错误的情况。</li>
+<li>INFO：运行时产生的事件。</li>
+<li>DEBUG：与程序运行时的流程相关的详细信息。</li>
+<li>TRACE：更加具体的详细信息。</li>
+</ul>
+<blockquote>
+<p>在这 6 个级别中，以 ERROR、WARN、INFO 和 DEBUG 作为常用。</p>
+</blockquote>
+<p>日志记录 API 的使用者通过记录器来记录日志消息。日志消息在记录下来之后只能以文本的形式保存。不过有的实现（如 Log4j）允许在记录日志时使用任何 Java 对象。非 String 类型的对象会被转换成 String 类型。由于日志记录通常在出现异常时使用，记录器在记录消息时可以把产生的异常（Throwable 类的对象）也记录下来。</p>
+<p>每个记录器对象都有一个运行时对应的严重性级别。该级别可以通过配置文件或代码的方式来进行设置。如果没有显式指定严重性级别，则会根据记录器名称的层次结构关系往上进行查找，直到找到一个设置了严重性级别的名称为止。比如名称为“com.myapp.web.IndexController”的记录器对象，如果没有显式指定其严重性级别，则会依次查找是否有为名称“com.myapp.web”、“com.myapp”和“com”指定的严重性级别。如果仍然没有找到，则使用根记录器配置的值。</p>
+<p>通过记录器对象来记录日志时，只是发出一个日志记录请求。该请求是否会完成取决于请求和记录器对象的严重性级别。记录器使用者产生的低于记录器对象严重性级别的日志消息不会被记录下来。这样的记录请求会被忽略。除了基于严重性级别的过滤方式之外，日志记录框架还支持其他自定义的过滤方式。比如 JUL 可以通过实现 java.util.logging.Filter 接口的方式来进行过滤。Log4j 可以通过继承 org.apache.log4j.spi.Filter 类的方式来过滤。</p>
+<p><strong>格式化器</strong><br>实际记录的日志中除了使用记录器对象时提供的消息之外，还包括一些元数据。这些元数据由日志记录框架来提供。常用的信息包括记录器的名称、时间戳、线程名等。格式化器用来确定所有这些信息在日志记录中的展示方式。不同的日志记录实现提供各自默认的格式化方式和自定义支持。</p>
+<p>Log4j 在格式化器的实现上要简单一些，由 org.apache.log4j.PatternLayout 类来负责完成日志记录的格式化。在自定义时不需要创建新的 Java 类，而是通过配置文件指定所需的格式化模式。在格式化模式中，不同的占位符表示不同类型的信息。比如 <code>%c</code> 表示记录器的名称，<code>%d</code> 表示日期，<code>%m</code> 表示日志的消息文本，<code>%p</code> 表示严重性级别，<code>%t</code> 表示线程的名称。清单 3 给出了 Log4j 配置文件中日志记录的自定义方式（<code>%n</code> 就是 <code>\n</code> 换行符）。</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} [%p] %c - %m%n
+</script></code></pre>
+<p><strong>日志处理器</strong><br>日志记录经过格式化之后，由不同的处理器来进行处理（处理器就是用来存储日志信息的，比如将日志发送到控制台、文件、数据库、套接字）。不同的处理器有各自不同的处理方式。比如控制台处理器会把日志输出到控制台中，文件处理器把日志写入到文件中。除了这些之外，还有写入到数据库、通过邮件发送、写入到 JMS 队列等各种不同的处理方式。</p>
+<p>日志处理器也可以配置所处理日志信息的最低严重性级别。低于该级别的日志不会被处理。这样可以控制所处理的日志记录数量。比如控制台处理器的级别一般设置为 INFO，而文件处理器则一般设置为 DEBUG。日志记录框架一般提供了比较多的日志处理器实现。开发人员也可以创建自定义的实现。</p>
+<p><strong>Java 日志封装 API</strong><br>除了 JUL 和 log4j 这样的日志记录库之外，还有一个类型的库用来封装不同的日志记录库。这样的封装库中一开始以 <strong>Apache Commons Logging</strong> 框架最为流行，现在比较流行的是 <strong>SLF4J</strong>（Simple Logging Facade for Java，简单日志门面）。这样封装库的 API 都比较简单，只是在日志记录库的 API 基础上做了一层简单的封装，屏蔽不同实现之间的区别。由于日志记录实现所提供的 API 大致上比较相似，封装库的作用更多的是达到语法上的一致性（以及为了能够方便的切换不同日志实现框架，而不需要更改任何代码）。</p>
+<p>在 Apache Commons Logging 库中，核心的 API 是 org.apache.commons.logging.LogFactory 类和 org.apache.commons.logging.Log 接口。LogFactory 类提供了工厂方法用来创建 Log 接口的实现对象。比如 LogFactory.getLog 可以根据 Java 类或名称来创建 Log 接口的实现对象。Log 接口中为 6 个不同的严重性级别分别定义了一组方法。比如对 DEBUG 级别，定义了 isDebugEnabled()、debug(Object message) 和 debug(Object message, Throwable t) 三个方法。从这个层次来说，Log 接口简化了对于日志记录器的使用。</p>
+<p>SLF4J 库的使用方式与 Apache Commons Logging 库比较类似。SLF4J 库中核心的 API 是提供工厂方法的 <code>org.slf4j.LoggerFactory</code> 类和记录日志的 <code>org.slf4j.Logger</code> 接口。通过 LoggerFactory 类的 getLogger 方法来获取日志记录器对象。与 Apache Commons Logging 库中的 Log 接口类似，Logger 接口中的方法也是按照不同的严重性级别来进行分组的。Logger 接口中有同样 isDebugEnabled 方法。不过 Logger 接口中发出日志记录请求的 debug 等方法使用 String 类型来表示消息，同时可以使用包含参数的消息，如清单 4 所示。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public class Slf4jBasic { 
+   private static final Logger LOGGER = LoggerFactory.getLogger(Slf4jBasic.class); 
+   public void logBasic() { 
+       if (LOGGER.isInfoEnabled()) { 
+           LOGGER.info("My log message for %s", "Alex"); 
+       } 
+   } 
+}
+</script></code></pre>
+<p>关于为什么使用 java.lang.Class 对象作为 logger 的名称，前面已经说过了，防止重名，而且在出现问题时，更容易知道究竟是哪个类发出的日志信息。所以，普遍做法都是将当前类的 Class 实例作为 logger 的名称（logger 内部应该会将其转换为 String，而 Class 的 String 描述就是对应的全限定类名）。</p>
+<p>另外，slf4j 支持 <code>{}</code> 参数化消息（其实就和 printf 的格式参数一样，只是一个占位符而已），利用这个特性，我们不需要编写上述丑陋的代码，但又不会消耗额外的性能。怎么说呢，我们知道 logger 记录的日志其实就是字符串信息，而在 Java 中，字符串拼接操作（就是使用加号连起来）实际上是多个方法调用（StringBuilder 或 StringBuffer），它们的开销其实是不小的，所以，slf4j 想出了一个办法，那就是使用 <code>{}</code> 来对要填充的参数进行占位，然后在该方法内部，它首先会检测当前的日志级别，如果当前级别低于选择的日志级别，那么该方法就会立即返回，而不会进行其他操作，也就是和上面的判断是一样的效果。如果确实需要记录，那么方法内部就会对 <code>{}</code> 标记进行替换，然后再输出，开销比字符串拼接小多了。</p>
+<h2 id="日志框架"><a href="#日志框架" class="headerlink" title="日志框架"></a>日志框架</h2><p>前面一节中，我们提到了这么几个常见的 Java 日志框架（类库）：</p>
+<ul>
+<li><code>java.util.logging</code>（JUL）、<code>log4j</code>、<code>logback</code></li>
+<li><code>Jakarta Commons Logging</code>（JCL）、<code>Simple Logging Facade for Java</code>（SLF4J）。</li>
+</ul>
+<p>我们一般将它们分为两类框架：</p>
+<ul>
+<li>日志门面框架：JCL、SLF4J</li>
+<li>日志实现框架：JUL、log4j、logback</li>
+</ul>
+<p>因为 JUL 功能过于简单，所以实际上我们很少使用，所以，可分为：</p>
+<ul>
+<li>门面框架：JCL、SLF4J</li>
+<li>实现框架：log4j、logback</li>
+</ul>
+<p>日志门面框架其实是日志实现框架的一个抽象层，之所以要抽象出来，是为了便于日后更换其它类型的日志实现框架，而不需要修改代码，此外，门面框架还可以简化实现框架的使用，将 API 进行统一，屏蔽底层差异。</p>
+<p>那么为什么叫做门面框架呢？因为门面框架其实上是运用的 <strong>门面模式</strong>（外观模式，Facade），门面模式很好理解，就是我们 Java 中常说的面向接口编程，比如 JDBC API 我们就可以称为门面模式，为什么呢，因为我们在使用过程中，只需要利用 JDBC API 就能完成数据库程序的编写、编译，到了运行时，我们再提供 JDBC 驱动实现就行了。这个其实和日志门面框架是差不多的（JCL、SLF4J），我们使用日志框架的时候，一般都不是直接导入实现框架的 jar 包，利用它们的 API 进行编程，而是在他们之间引入一个门面框架，我们在程序中调用的只是门面框架提供的 API，门面框架会自动将这些调用传递给实现框架（你将它们类比到 JDBC API 就很好理解了，不再多说）。门面模式的作用是简化程序的开发，统一不同的 API。</p>
+<p>JCL + log4j 曾经是最流行的日志框架组合，但是因为 JCL 的动态绑定机制太复杂，而且很容易在生产环境中出现问题，出现问题还不好排查，并且 log4j 存在性能问题、死锁 bug，所以现在大多数应用都换为了 <code>SLF4J + logback</code> 日志框架组合。值得一提的是，log4j、logback、slf4j 都出自同一个作者，它就是 Ceki Gülcü，所以我们有理由相信，SLF4J + logback 是目前来说最好的日志解决方案。</p>
+<p>当然，SLF4J + logback 出来之后，Apache 也没闲着，它也一直在鼓捣 log4j 2.x 版本，当然因为各种原因，log4j 2.x 版本憋了很久，当然成果还是有的，log4j 2.x 借鉴和吸收了 logback 的很多优点，性能提升很大，甚至比 logback 快的多，但即使这样，因为 log4j 2.x 推出较晚，很多应用已经习惯使用 SLF4J + logback 组合了，所以目前来说，主流还是 SLF4J + logback，当然，如果你的程序很注重性能，那么 SLF4J + log4j2 组合还是不错的，毕竟现在来说，log4j2 的性能是最好的。</p>
+<p>在本文，我就介绍 <code>SLF4J + logback</code> 组合吧，它们都是出自同一个作者，而且文档也很丰富，所以自学起来没什么压力，前面说了，SLF4J 是一个日志门面，而 logback 是实现了这个门面的日志框架，我们在程序中使用的 API 都是 SLF4J 里面的 API，与 logback 无关，SLF4J 会自动将对应的 API 调用传递给 logback，因为 SLF4J 实际上不会做任何事，他只是一个 API 规范（是不是感觉和 maven 又有点类似，哈哈）.</p>
+<p>所以，我们需要学习两个部分，一个是 SLF4J 的 Logger API，一个是 logback 的配置文件。</p>
+<h2 id="SLF4J-简介"><a href="#SLF4J-简介" class="headerlink" title="SLF4J 简介"></a>SLF4J 简介</h2><p>SLF4J 是 JCL 的对标产品，它们都是 Java 日志框架的门面/外观，但是 SLF4J 比 JCL 更简单，更易用，更不容易出错，所以目前 SLF4J 是日志门面的主流框架，而 JCL 则只存在与老旧的应用中。</p>
+<p>使用 SLF4J 只需要一个依赖 <code>slf4j-api.jar</code>，当然我是说使用 SLF4J，你当然还需要一个 SLF4J 接口的实现框架，这里我就以 logback 为例了。所以如果是 <code>SLF4J + logback</code>，那么 maven 中只需配置两个依赖项：<code>slf4j-api</code>、<code>logback-classic</code>（logback-classis 依赖 logback-core，但这不需要在 pom.xml 中显式声明，因为 maven 的依赖机制知道要怎么做，你不需要担心这些东西）。</p>
+<p><strong>hello, world</strong><br>首先配置 pom.xml，加入 slf4j-api 依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-api</artifactId>
+  <version>1.7.25</version>
+</dependency>
+</script></code></pre>
+<p>然后，编写 hello world 类，看看什么结果：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class HelloWorld {
+  public static void main(String[] args) {
+    Logger logger = LoggerFactory.getLogger(HelloWorld.class);
+    logger.info("Hello World");
+  }
+}
+</script></code></pre>
+<p>然后，使用 exec:java 目标运行它，得到以下错误：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+</script></code></pre>
+<p>原因很简单，这就和 JDBC API 一样，如果运行时没有找到对应的 JDBC 驱动实现，那么是运行不了的。在 SLF4J 中，也是一样的道理，因为我们只引入了 slf4j-api 依赖，并没有引入任何 slf4j-api 的实现框架。</p>
+<p>所以我们需要引入 logback-classic 依赖，程序才能正常运行，但是在这之前，我们先引入 slf4j-simple 这个依赖，slf4j-simple 是 slf4j-api 的一个简单实现，所以我们先不必使用 logback 这种重型武器。</p>
+<p>修改 pom.xml，设置依赖项：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-simple</artifactId>
+  <version>1.7.25</version>
+</dependency>
+</script></code></pre>
+<p>然后，我们重新编译，运行它：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/maven-workspace/slf4j-learn [12:04:33] 
+$ mvn clean package exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ slf4j-learn ---
+[INFO] Deleting /root/maven-workspace/slf4j-learn/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ slf4j-learn ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /root/maven-workspace/slf4j-learn/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ slf4j-learn ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /root/maven-workspace/slf4j-learn/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ slf4j-learn ---
+[INFO] Not copying test resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ slf4j-learn ---
+[INFO] Not compiling test sources
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ slf4j-learn ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ slf4j-learn ---
+[INFO] Building jar: /root/maven-workspace/slf4j-learn/target/slf4j-learn-1.0.0.jar
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+[com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.274 s
+[INFO] Finished at: 2018-11-01T12:04:37+08:00
+[INFO] ------------------------------------------------------------------------
+</script></code></pre>
+<p>程序输出的结果为：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world!
+</script></code></pre>
+<p>是不是很简单，现在，我们来引入 logback-classic 依赖：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.25</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.25</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+  </dependencies>
+</script></code></pre>
+<p>注意，我们引入了两个 slf4j 的实现框架，我们看看会有什么结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/root/.m2/repository/org/slf4j/slf4j-simple/1.7.25/slf4j-simple-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/root/.m2/repository/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.slf4j.impl.SimpleLoggerFactory]
+[com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world!
+</script></code></pre>
+<p>能够正常运行，但是 slf4j 弹出了几行警告信息，大概意思是说，在 CLASSPATH 类路径中找到多个 <code>org.slf4j.impl.StaticLoggerBinder</code> 实现类，也就是说当前 CLASSPATH 路径中有多个 slf4j 静态绑定实现，这不是 SLF4J 想要的情况，因为 SLF4J 只允许 CLASSPATH 路径中存在且仅存在一个 <code>org.slf4j.impl.StaticLoggerBinder</code> 实现类，一个都没找到就会出现最开始那个错误，如果存在多个，那么实际上使用的是第一个被加载到的实现框架，但是 SLF4J 会提示上述警告，告诉使用者有问题。</p>
+<p>现在，我们把 slf4j-simple 依赖去掉，如下，然后再运行：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.25</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+  </dependencies>
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+13:58:02.593 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world!
+</script></code></pre>
+<p>这就是 logback-classic 日志框架的默认输出，而上面的都是 slf4j-simple 日志框架的输出。</p>
+<p><strong>slf4j 典型使用</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Wombat {
+
+  final Logger logger = LoggerFactory.getLogger(Wombat.class);
+  Integer t;
+  Integer oldT;
+
+  public void setTemperature(Integer temperature) {
+
+    oldT = t;        
+    t = temperature;
+
+    logger.debug("Temperature set to {}. Old temperature was {}.", t, oldT);
+
+    if(temperature.intValue() > 50) {
+      logger.info("Temperature has risen above 50 degrees.");
+    }
+  }
+}
+</script></code></pre>
+<p>如前所述，SLF4J 支持各种日志框架。SLF4J 发行版附带了几个称为 “SLF4J bindings” 的 jar 文件，每个绑定对应一个受支持的框架（所谓 bindings 就是实现类的意思，差不多）。</p>
+<ul>
+<li><code>slf4j-log4j12-1.8.0-beta2.jar</code><br>绑定 log4j 1.2 版，一个广泛使用的日志框架。您还需要将 log4j.jar 放在类路径上。</li>
+<li><code>slf4j-jdk14-1.8.0-beta2.jar</code><br>绑定 java.util.logging，也称为 JDK1.4 日志记录</li>
+<li><code>slf4j-nop-1.8.0-beta2.jar</code><br>绑定 NOP（无操作），静默丢弃所有日志记录。</li>
+<li><code>slf4j-simple-1.8.0-beta2.jar</code><br>绑定 Simple 实现，将所有事件输出到 System.err。仅打印 INFO 级别以上的消息。此绑定在小应用程序的上下文中可能很有用。</li>
+<li><code>slf4j-jcl-1.8.0-beta2.jar</code><br>绑定 Jakarta Commons Logging。此绑定将委派所有 SLF4J 日志记录到 JCL。</li>
+<li><code>logback-classic-1.0.13.jar</code><br><strong>原生实现</strong>，推荐使用。Logback 是 SLF4J 接口的直接实现。因此，将 SLF4J 与 logback 结合使用会严格限制零内存和计算开销。</li>
+</ul>
+<p>要切换日志框架，只需替换类路径上的 slf4j 绑定。例如，要从 java.util.logging 切换到 log4j，只需将 slf4j-jdk14-1.8.0-beta2.jar 替换为 slf4j-log4j12-1.8.0-beta2.jar 即可。</p>
+<p>SLF4J 不依赖于任何特殊的类装载机制。实际上，每个 SLF4J 绑定在编译期间都是硬连线的，以使用<strong>一个且只有一个</strong>特定的日志记录框架。例如，slf4j-log4j12-1.8.0-beta2.jar 绑定在编译时绑定以使用 log4j。在您的代码中，除了 slf4j-api-1.8.0-beta2.jar 之外，您只需将您选择的一个且只有一个绑定放到相应的类路径位置。<strong>不要在类路径上放置多个绑定</strong>。以下是一般概念的图解说明。</p>
+<p><img src="https://www.slf4j.org/images/concrete-bindings.png" alt="图例说明"></p>
+<p>使用 SLF4J，我们可以自由的更换底层日志框架，并且不需要重新编译我们的应用程序，我们要做的仅仅是，停止运行我们的应用，然后替换 CLASSPATH 中的 SLF4J 实现框架，最后启动我们的应用即可，很便捷。</p>
+<p><strong>常用的几个组合，maven 配置</strong></p>
+<p><strong>SLF4J + logback</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency> 
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.0.13</version>
+</dependency>
+</script></code></pre>
+<p><strong>SLF4J + log4j</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency> 
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-log4j12</artifactId>
+  <version>1.8.0-beta2</version>
+</dependency>
+</script></code></pre>
+<p><strong>SLF4J + JDKLOG</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<dependency> 
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-jdk14</artifactId>
+  <version>1.8.0-beta2</version>
+</dependency>
+</script></code></pre>
+<p>注意，slf4j-api 的版本号必须与对应的 bindings 版本号相对应，否则会出现不兼容的问题。</p>
+<p><strong>SLF4J FAQ 常见问题</strong></p>
+<ol>
+<li><p><strong>SLF4J 允许我们在不重新编译程序的情况下，替换底层的日志框架（restart 应用程序即可）。</strong></p>
+</li>
+<li><p><strong>SLF4J 和 JCL 是同一层面的东西，都是日志门面，但 SLF4J 避免了困扰 JCL 的类加载器问题。</strong></p>
+</li>
+<li><p><strong>为什么 Logger 接口中的打印方法不接受 Object 类型的消息，而只接受 String 类型的消息？</strong></p>
+</li>
+</ol>
+<p>在 SLF4J 1.0 beta4 中，修改了 Logger 接口中的 debug()，info()，warn()，error() 等打印方法，以便只接受 String 类型而不是 Object 类型的消息。因此，DEBUG 级别的一组打印方法变为（其它级别的类似）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+debug(String msg);
+debug(String msg, Throwable t);
+debug(String format, Object... arg);
+</script></code></pre>
+<p>以前，上述方法中的第一个参数是类型 Object（显然这不是一个好设计）。<br>之所以将它们改为 String 是因为：日志记录是关于与 String 相关的消息，而不是 Object。<br>而且，改动后的 API 使得我们不是那么容易犯错，例如，以前编写以下内容是合法的（很容易犯错）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.debug(new Exception("some error"));
+</script></code></pre>
+<p>不幸的是，上面的调用没有打印异常的堆栈跟踪（而只是调用了 throwable 对象的 toString() 方法而已）。因此，可能丢失潜在的关键信息。当第一个参数被限制为 String 时，则只有该方法可用于记录异常：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+debug(String msg, Throwable t);
+</script></code></pre>
+<p>这样做还有一个好处，那就是可确保每个记录的异常都附带描述性消息（也算是养成一个好习惯）。</p>
+<p><strong>问：如何降低日志记录对程序运行的性能影响，答：使用 SLF4J 的参数化消息（<code>{}</code> 占位）。</strong></p>
+<p>比如，这种写法会在程序没有启动 debug 日志级别时损耗不必要的性能（字符串拼接的性能消耗）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));
+</script></code></pre>
+<p>为了解决这个问题，我们通常会在 debug 日志记录上套上 if 判断语句，来避免不必要的 debug 性能开销：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+if (logger.isDebugEnabled()) {
+  logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));
+}
+</script></code></pre>
+<p>这虽然能解决问题，但是有没有感觉这种写法非常丑陋，也非常繁琐（这就和 C 语言里面的，调用一个系统 API，就要检查一下它的返回值，然后还要考虑如何处理这种情况，简直烦死），所以 SLF4J 提供了另一种方法来避免 debug 日志的性能开销（也不是说单指 debug 级别的日志，所有日志记录都有额外的性能开销的）。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+Object entry = new SomeObject();
+logger.debug("The entry is {}.", entry);
+</script></code></pre>
+<p>参数化消息的语法非常简单，就是使用 <code>{}</code> 进行占位，然后 SLF4J 内部会自动将它们替换到原本的位置。可以说和 printf 没什么两样。这种方法虽然简单，但是却也能取得很好的效果，因为如果当前选择的 log_level 高于当前调用的 log 方法时，那么该 log 方法会立即 return 返回，所以除了几个函数调用开销之外，基本上没什么很大的影响。最关键的是，这种方式可以避免上面那种丑陋的写法。</p>
+<p>所以，这两种写法虽然很相似，但是它们的性能差距却可能达到 30 倍：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.debug("The new entry is " + entry + ".");
+logger.debug("The new entry is {}.", entry);
+</script></code></pre>
+<p>当然，我们可以有多个 <code>{}</code> 占位符，它们会被按照出现的顺序自动填充到对应的位置：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.debug("The new entry is {}. It replaces {}.", entry, oldEntry);
+logger.debug("Value {} was inserted between {} and {}.", newVal, below, above);
+</script></code></pre>
+<p>问题来了，SLF4J 引入了 <code>{}</code> 特殊占位符，那么如果我们的 msg 消息中刚好有这个字符串怎么办呢？</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.debug("Set {1,2} differs from {}", "3");
+// 输出: "Set {1,2} differs from 3"
+
+logger.debug("Set {1,2} differs from {{}}", "3");
+// 输出: "Set {1,2} differs from {3}"
+
+logger.debug("Set \\{} differs from {}", "3");
+// 输出: "Set {} differs from 3"
+
+logger.debug("File name is C:\\\\{}.", "file.zip");
+// 输出: "File name is C:\file.zip"
+</script></code></pre>
+<p>如果对象的 toString() 调用很昂贵，那么我们可以这么做，SLF4J 会在需要的时候再调用 toString()：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.debug("{}", complexObject);
+</script></code></pre>
+<p><strong>为什么 TRACE 级别仅在 SLF4J 版本 1.4.0 中引入？</strong></p>
+<p>TRACE 级别的增加经常被激烈争论。通过研究各种项目，我们观察到 TRACE 级别用于禁用某些类的日志输出，而无需为这些类配置日志记录。实际上，默认情况下，在 log4j 和 logback 以及大多数其他日志记录系统中禁用 TRACE 级别。通过在配置文件中添加适当的指令可以实现相同的结果。</p>
+<p>因此，在许多情况下，TRACE 级别具有与 DEBUG 相同的语义含义。在这种情况下，TRACE 级别仅保存一些配置指令。在其他更有趣的场合，TRACE 具有与 DEBUG 不同的含义，可以使用 Marker 对象来传达所需的含义。但是，如果您不能使用标记并且希望使用低于 DEBUG 的日志记录级别，则 TRACE 级别可以完成工作。</p>
+<p>请注意，虽然评估已禁用的日志请求的成本大约为几 nanoseconds，但在严格的循环中不鼓励使用 TRACE 级别（或任何其他级别），其中日志请求可能会被评估数百万次。如果启用了日志请求，那么它将以大量输出压倒目标目标。如果请求被禁用，则会浪费资源。</p>
+<p>简而言之，我们仍然不鼓励使用 TRACE 级别，因为存在替代方案，或者因为在许多情况下，TRACE 级别的日志请求是浪费的，因为人们不断要求它，我们决定屈服于大众需求。</p>
+<p><strong>SLF4J 是否可以在记录 throwable 对象的堆栈跟踪的同时，使用参数化消息？</strong><br>从 SLF4J 1.6.0 开始被支持，在这之前不支持，注意，最后一个参数是异常对象：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+String s = "Hello world";
+try {
+  Integer i = Integer.valueOf(s);
+} catch (NumberFormatException e) {
+  logger.error("Failed to format {}", s, e);
+}
+</script></code></pre>
+<p>SLF4J API 内部会检查最后一个参数是否为 Throwable 类的对象，如果是那么就会打印其堆栈跟踪。</p>
+<h2 id="SLF4J-API"><a href="#SLF4J-API" class="headerlink" title="SLF4J API"></a>SLF4J API</h2><p>slf4j-api 中，最常用的两个类就是 <code>org.slf4j.Logger</code> 接口、<code>org.slf4j.LoggerFactory</code> 工厂类。</p>
+<p><strong>LoggerFactory 工厂类</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 获取 logger 类的实例
+public static Logger getLogger(String name)    // 以 name 命名的 logger
+public static Logger getLogger(Class<?> clazz) // 以类名作为命名的 logger
+
+public static ILoggerFactory getILoggerFactory() // 返回 logger factory 的实例
+</script></code></pre>
+<p><strong>Logger 接口</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+// 根 logger 的名称
+static final String ROOT_LOGGER_NAME;
+
+String getName(); // 返回当前 logger 的 name
+
+boolean isTraceEnabled()
+void trace(String msg)
+void trace(String msg, Throwable t)
+void trace(String format, Object arg)
+void trace(String format, Object arg1, Object arg2)
+void trace(String format, Object... arguments)
+
+boolean isDebugEnabled()
+void debug(String msg)
+void debug(String msg, Throwable t)
+void debug(String format, Object arg)
+void debug(String format, Object arg1, Object arg2)
+void debug(String format, Object... arguments)
+
+boolean isInfoEnabled()
+void info(String msg)
+void info(String msg, Throwable t)
+void info(String format, Object arg)
+void info(String format, Object arg1, Object arg2)
+void info(String format, Object... arguments)
+
+boolean isWarnEnabled()
+void warn(String msg)
+void warn(String msg, Throwable t)
+void warn(String format, Object arg)
+void warn(String format, Object arg1, Object arg2)
+void warn(String format, Object... arguments)
+
+boolean isErrorEnabled()
+void error(String msg)
+void error(String msg, Throwable t)
+void error(String format, Object arg)
+void error(String format, Object arg1, Object arg2)
+void error(String format, Object... arguments)
+</script></code></pre>
+<p>基本上就是五个 log-level 对应的函数，trace、debug、info、warn、error。然后每个日志级别还有一个 isLevelEnabled() 函数，用来查询当前的 Logger 是否启用了对应的 log_level。以进行下一步操作。</p>
+<p>而每个 log level 都有 3 个类型的调用形式，分别是：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+info(String msg) // 最普通的调用，记录 msg 信息
+info(String msg, Throwable ex) // 记录 throwable 对象
+info(String fmt, Object... args) // 支持 SLF4J 的参数化消息
+</script></code></pre>
+<p><strong>更新：其实 slf4j-api 很简单，就是 2 个日志记录方法</strong>：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+logger.info(String... msg);
+logger.info(String... msg, Throwable ex);
+</script></code></pre>
+<p>前面的 msg 参数就是日志消息，可以只有一个（单纯的日志消息），也可以有多个（格式化处理，<code>{}</code> 占位符），而最后一个 Throwable 参数则是用来记录对应的异常信息（堆栈跟踪信息）。</p>
+<p>值得说明的是，上面的所有日志记录方法，每调用一次，就是相当于发送了一条完整的日志请求。所以，我们不需要在 msg 尾部添加 <code>\n</code> 换行符，因为对应的 log 方法内部会自动给你加上换行符。换句话说，同一条日志消息不应该通过多次的 log 方法调用来完成，因为这实际上会产生多条独立的日志消息，通常不是你想要的。</p>
+<h2 id="Logback-简介"><a href="#Logback-简介" class="headerlink" title="Logback 简介"></a>Logback 简介</h2><p>Logback 旨在作为流行的 log4j 项目的后续版本，从而恢复 log4j 离开的位置。</p>
+<p>Logback 的体系结构足够通用，以便在不同情况下应用。目前，logback 分为三个模块：<strong>logback-core</strong>，<strong>logback-classic</strong>和<strong>logback-access</strong>。</p>
+<ul>
+<li><strong>logback-core</strong>：为其他两个模块奠定了基础。</li>
+<li><strong>logback-classic</strong>：可以被理解为 log4j 的显着改进版本。此外，logback-classic 本身实现了 SLF4J API，因此您可以在 logback 和其他日志框架（如 log4j 或 java.util.logging）之间来回切换。</li>
+<li><strong>logback-access</strong>：可以与 Servlet 容器（如 Tomcat 和 Jetty）集成，以提供 HTTP 访问日志的功能。请注意，您可以在 logback-core 之上轻松构建自己的模块。</li>
+</ul>
+<p><strong>hello，world</strong><br>首先，使用 maven 构建工具来开始我们的 hello world 之旅。pom.xml：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.zfl9</groupId>
+  <artifactId>slf4j-learn</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+    <exec.mainClass>com.zfl9.Main</exec.mainClass>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.25</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<p>然后，编写 com.zfl9.Main 类，我们分别调用 debug、info、warn、error 日志记录方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        logger.debug("hello, world.");
+        logger.info("hello, world.");
+        logger.warn("hello, world.");
+        logger.error("hello, world.");
+    }
+}
+</script></code></pre>
+<p>最后，我们执行 <code>mvn clean compile exec:java</code>，即可运行该 hello world 程序：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean compile exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ slf4j-learn ---
+[INFO] Deleting /root/maven-workspace/slf4j-learn/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ slf4j-learn ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /root/maven-workspace/slf4j-learn/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ slf4j-learn ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /root/maven-workspace/slf4j-learn/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+17:19:47.136 [com.zfl9.Main.main()] DEBUG com.zfl9.Main - hello, world.
+17:19:47.138 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world.
+17:19:47.138 [com.zfl9.Main.main()] WARN com.zfl9.Main - hello, world.
+17:19:47.138 [com.zfl9.Main.main()] ERROR com.zfl9.Main - hello, world.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.135 s
+[INFO] Finished at: 2018-11-01T17:19:47+08:00
+[INFO] ------------------------------------------------------------------------
+</script></code></pre>
+<p>我们去掉 maven 的输出信息，来看下 logback 的默认日志格式：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+17:19:47.136 [com.zfl9.Main.main()] DEBUG com.zfl9.Main - hello, world.
+17:19:47.138 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world.
+17:19:47.138 [com.zfl9.Main.main()] WARN com.zfl9.Main - hello, world.
+17:19:47.138 [com.zfl9.Main.main()] ERROR com.zfl9.Main - hello, world.
+</script></code></pre>
+<p>第一列：日志记录发生的时间，默认带毫秒数值（一秒等于 1000 毫秒）。<br>第二列：发出日志请求的线程，上面几个日志请求都是 main 线程发出的。<br>第三列：当前日志记录的级别，它们都是大写形式，最大长度为 5 个字符。<br>第四列：该日志记录器的名称，使用类对象作为名称时，名称为全限定类名。<br>第五列：当前日志记录的内容，我们上面发送的日志消息为 hello, world。</p>
+<p><strong>SLF4J 和 Logback 都是线程安全的</strong></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(Main.class);
+        logger.info("hello, world");
+        logger.info("hello, world");
+        logger.info("hello, world");
+        new Thread(() -> { logger.info("hello, world"); }).start();
+        new Thread(() -> { logger.info("hello, world"); }).start();
+        new Thread(() -> { logger.info("hello, world"); }).start();
+    }
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn clean compile exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ slf4j-learn ---
+[INFO] Deleting /root/maven-workspace/slf4j-learn/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ slf4j-learn ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /root/maven-workspace/slf4j-learn/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ slf4j-learn ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /root/maven-workspace/slf4j-learn/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+19:28:27.404 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world
+19:28:27.407 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world
+19:28:27.407 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world
+19:28:27.463 [Thread-3] INFO com.zfl9.Main - hello, world
+19:28:27.463 [Thread-2] INFO com.zfl9.Main - hello, world
+19:28:27.467 [Thread-4] INFO com.zfl9.Main - hello, world
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.224 s
+[INFO] Finished at: 2018-11-01T19:28:27+08:00
+[INFO] ------------------------------------------------------------------------
+</script></code></pre>
+<h2 id="Logback-架构"><a href="#Logback-架构" class="headerlink" title="Logback 架构"></a>Logback 架构</h2><p><strong>Logback 的架构</strong><br>Logback 的基本架构足够通用，以便在不同情况下应用。目前，logback 分为三个模块：<code>logback-core</code>，<code>logback-classic</code> 和 <code>logback-access</code>。</p>
+<p>所述 core 模块奠定了其它两个模块的基础。classic 模块扩展 core 模块，classic 模块对应于 log4j 的显着改进版本。Logback-classic 本身实现了 SLF4J API，因此您可以在 logback 和其他日志记录系统（如 JUL 或 Log4J或java.util.logging（JUL））之间来回切换。第三个名为 access 的模块与 Servlet 容器集成，以提供 HTTP 访问日志的功能。</p>
+<p>在本文档的其余部分中，”logback” 均指代 <code>logback-classic</code> 模块。</p>
+<p><strong>Logger、Appender、Layout</strong><br>Logger：记录器，用来发送日志记录请求的对象<br>Appender：追加器，实际用来写入日志消息的对象<br>Layout：日志布局，也称为日志格式/模式，Pattern</p>
+<p>简而言之，Logger 负责处理日志记录请求，Appender 负责如何写日志（日志写到哪），Layout 则是日志消息的最终格式定义，Appender 会通过查询 Layout 来确定日志消息的最终格式。请牢记他们的关系。</p>
+<p><strong>Logger 命名层次结构</strong><br>记录器是命名实体。名称区分大小写，名称遵循分层命名规则（和 Java 的分层结构很相似）：<br><strong>如果记录器的名称后跟一个点且它是后代记录器名称的前缀，则称该记录器是另一个记录器的祖先。</strong></p>
+<p>例如，命名的记录器 “com.foo” 是名为 “com.foo.Bar” 的记录器的父级。同样，”java” 是 “java.util” 的父级，是 “java.util.Vector” 的祖先级。大多数  Java 开发人员都应该熟悉这种命名方案。</p>
+<p><strong>根记录器</strong><br>root Logger 是所有 Logger 的共同祖先，就像 Object 是所有类的共同父类一样。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+</script></code></pre>
+<blockquote>
+<p>所有的 Logger 都被安排在一个共同的树状层次结构中，它的根就是 root Logger。</p>
+</blockquote>
+<p>注意，我们不仅可以通过 <code>LoggerFactory.getLogger(loggerName)</code> 来获取 root Logger，也可以用来获取其它的 Logger，如果不存在这个 name 的 Logger，那么 LoggerFactory 内部会自动创建一个新的 Logger，并返回给你，如果存在这个一个 Logger，那么就会直接返回该 Logger 的对象给你（单例模式）。</p>
+<p><strong>日志级别</strong><br>所有 logger 都有日志打印级别，可以为一个 logger 指定它的日志打印级别。如果不为一个 logger 指定打印级别，那么它将继承离它最近的一个有指定打印级别的祖先的打印级别。这里有一个容易混淆想不清楚的地方，如果 logger 先找它的父亲，而它的父亲没有指定打印级别，那么它会立即忽略它的父亲，往上继续寻找它爷爷，直到它找到 root logger。因此，也能看出来，要使用 logback， 必须为 root logger 指定日志打印级别。但其实 Logback 的 root logger 有一个默认级别，那就是 debug。所以这也是为什么我们什么东西都没配置，却能打印出 debug 级别及其以上级别的日志消息（注意 trace 级别的日志默认会被丢弃）。</p>
+<p>我还是要强调一点，logger 的 name 最好使用当前类的类名来命名（比如上面的 <code>Main.class</code>），这样 logger 工厂内部会自动使用这个 Class 对象的对应的类的全限定类名作为 logger 的名称，而又因为 logger 是有层次结构的，它们的层次结构又和 java 的包非常相似，都是使用 <code>.</code> 来分级，比如名为 <code>com.zfl9.Eatable</code> 的 logger，该 logger 的直接父 logger 就是 <code>com.zfl9</code>，直接爷爷 logger 就是 <code>com</code>，再上一级那就是 root logger 了，它的名字是 <code>org.slf4j.Logger.ROOT_LOGGER_NAME</code> 常量。</p>
+<p>我们来看看 root logger 的名字是什么：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(Main.class);
+        logger.info(Logger.ROOT_LOGGER_NAME);
+        logger.info("hello, world");
+        logger.info("hello, world");
+        logger.info("hello, world");
+        new Thread(() -> { logger.info("hello, world"); }).start();
+        new Thread(() -> { logger.info("hello, world"); }).start();
+        new Thread(() -> { logger.info("hello, world"); }).start();
+    }
+}
+</script></code></pre>
+<p>看到没，root logger 的名称就是大写的 ROOT：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+20:31:10.631 [com.zfl9.Main.main()] INFO com.zfl9.Main - ROOT
+20:31:10.633 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world
+20:31:10.634 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world
+20:31:10.634 [com.zfl9.Main.main()] INFO com.zfl9.Main - hello, world
+20:31:10.675 [Thread-2] INFO com.zfl9.Main - hello, world
+20:31:10.677 [Thread-3] INFO com.zfl9.Main - hello, world
+20:31:10.684 [Thread-4] INFO com.zfl9.Main - hello, world
+</script></code></pre>
+<p><strong>5 个日志级别</strong><br>SLF4J 定义了 5 个日志级别，分别为：TRACE、DEBUG、INFO、WARN、ERROR。按照从低到高的顺序排列。<br>如果日志记录请求的级别高于或等于其记录器的有效级别，则称其已启用的。否则，该请求被称为已禁用的。<br>为方便描述，我建议把实际生效的 log level 称为有效日志级别，而发出请求的级别则称为请求日志级别。</p>
+<blockquote>
+<p>effective level 即”有效级别”（实际生效的级别），request level 即”请求级别”。<br>级别越高，记录的信息越少，级别越低，记录的信息越多，一般有效级别设为 INFO 就行。</p>
+</blockquote>
+<p><strong>单例模式</strong><br>在 SLF4J 中获取 logger 的方式是通过 LoggerFactory.getLogger(name) 这个静态方法获取的，这里面其实是一个“单例模式”的工作方式，同一个 name 获取到的 logger 引用是完全相同的，同一个 JVM 中不会出现两个 name 相同的 logger 对象。当我们第一次获取一个 name 的 logger 时，factory 会 new 一个新的 logger 给我们，然后当我们再次获取同一个 name 的 logger 时，factory 发现之前已经 new 过了，于是直接就把之前那个返回给我们了。</p>
+<p>因此，我们可以在代码的不同位置通过这种方式来获取 logger 实例，而不需要传递它的引用。前面说了，logger 之间是存在继承关系的，其关系与 java 的很相似，但是这并不意味着 logger 的创建顺序必须遵循 logger 的 name 的父子关系。比如我们可以先创建 <code>com.zfl9.app</code> logger，然后再创建 <code>com.zfl9</code> logger，LoggerFactory 内部会自动将它们的父子关系进行关联，无需我们关心。</p>
+<p><strong>配置文件以及其他一些东西</strong><br>通常在应用程序初始化时完成对 logback 环境的配置。首选方法是读取配置文件。这种方法将很快讨论。</p>
+<p>Logback 可以轻松地按软件组件命名记录器。这可以通过在每个类中实例化记录器来完成，记录器名称等于类的完全限定名称。这是定义记录器的有用且直接的方法。由于日志输出带有生成记录器的名称，因此该命名策略可以轻松识别日志消息的来源。但是，这只是命名记录器的一种可能的策略，尽管很常见。Logback 不会限制可能的记录器集。作为开发人员，您可以根据需要自由命名记录器。</p>
+<p>尽管如此，在它们所在的类之后命名记录器似乎是目前已知的最佳通用策略。</p>
+<p><strong>Appender</strong><br>基于记录器选择性地启用或禁用记录请求的能力只是 logback 能力的一部分。Logback 允许将记录请求打印到多个目标。在 logback 中，输出目标称为 appender。目前，控制台，文件，远程套接字服务器，MySQL，PostgreSQL，Oracle 和其他数据库，JMS 和远程 UNIX Syslog 守护程序都存在 appender。</p>
+<p>一个 logger 可以连接到多个 appender，这样我们就能同时保存多种形式的 log。</p>
+<p><strong>appender 也是存在继承关系的</strong><br>addAppender() 方法将 appender 添加到给定的 logger。给定 logger 的每个启用的日志记录请求都将转发到该记录器中的所有 appender 以及层次结构中较高的 appender（继承而来的 appender）。</p>
+<p>换句话说，appender 是从记录器层次结构中附加地继承的。例如，如果将控制台 appender 添加到根记录器，则所有启用的日志记录请求将至少在控制台上打印。如果另外一个文件追加器被添加到记录器，比如说 L，那么 L 和 L 的所有子节点的启用日志记录请求将打印在文件上和在控制台上。通过将记录器的 additivity 标志设置为 false，可以改变此默认行为，以便不再继承父级的 appender（默认为 true）。</p>
+<p><strong>layout 与 appender 的关系</strong><br>用户通常不仅要定制输出目的地，还要定制输出格式。这是通过将 Layout 与 Appender 相关联来实现的。Layout 负责根据用户的意愿格式化日志记录请求，而 Appender 负责将格式化的输出发送到其目的地。该 PatternLayout 标准的 logback 分布的，让用户根据类似于 C 语言的格式化参数来指定输出格式的功能。</p>
+<p>比如 layout 为 <code>%-4relative [%thread] %-5level %logger{32} - %msg%n</code>，那么可能的输出如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+176  [main] DEBUG manual.architecture.HelloWorld2 - Hello world.
+</script></code></pre>
+<p>第一个字段是自程序启动以来经过的毫秒数。第二个字段是发出日志请求的线程。第三个字段是日志请求的级别。第四个字段是与日志请求关联的记录器的名称。<code>&#39; - &#39;</code> 后面的文本是请求的日志消息。</p>
+<h2 id="Logback-配置"><a href="#Logback-配置" class="headerlink" title="Logback 配置"></a>Logback 配置</h2><p>SLF4J 的日志记录 API 很简单，就是 5 个 level 的 log 函数而已。所以，我们主要的关注点是，如何对 logback 的日志行为进行配置，以便符合我们想要的日志记录效果。</p>
+<p>对日志框架进行配置的主要手段就是通过外部的配置文件，虽然所有的日志框架都可以使用 Java 代码的形式进行配置，但是几乎现实中很少有人这么做，因为如果后期要修改配置的话，那么就意味着需要修改对应的 Java 代码，这不符合开闭原则（对扩展开放，对修改关闭）。而使用配置文件就好办多了，完全不需要改动任何 java 代码，最多也就是重启我们的应用程序而已，不过，在 logback 中，我们连重启应用程序都不用，因为 logback 会自动重载新的 logback.xml 配置文件。</p>
+<p><strong>配置文件查找顺序</strong></p>
+<ul>
+<li>Logback tries to find a file called <code>logback-test.xml</code> in the classpath.</li>
+<li>If no such file is found, logback tries to find a file called <code>logback.groovy</code> in the classpath.</li>
+<li>If no such file is found, it checks for the file <code>logback.xml</code> in the classpath.</li>
+<li>If no such file is found, service-provider loading facility (introduced in JDK 1.6) is used to resolve the implementation of <code>com.qos.logback.classic.spi.Configurator</code> interface by looking up the file <code>META-INF\services\ch.qos.logback.classic.spi.Configurator</code> in the class path. Its contents should specify the fully qualified class name of the desired Configurator implementation.</li>
+<li>If none of the above succeeds, logback configures itself automatically using the <code>BasicConfigurator</code> which will cause logging output to be directed to the console.</li>
+</ul>
+<p>总而言之，logback 在启动时会按照这个顺序查找 logback 的配置文件：</p>
+<ul>
+<li>查找 <code>logback.configurationFile</code> 系统属性指定的文件</li>
+<li>查找 ClassPath 中的 <code>logback.groovy</code> 文件</li>
+<li>查找 ClassPath 中的 <code>logback-test.xml</code> 文件</li>
+<li>查找 ClassPath 中的 <code>logback.xml</code> 文件</li>
+<li>查找 <code>com.qos.logback.classic.spi.Configurator</code> 接口实现类，调用实现类的 configure 方法设置</li>
+<li>使用 <code>BasicConfigurator</code> 类的 <code>configure</code> 方法设置（默认将日志输出到控制台）</li>
+</ul>
+<p>如果您正在使用 Maven，并且将 <code>logback-test.xml</code> 放在 <code>src/test/resources</code> 文件夹下，Maven 将确保它不会包含在生成的工件中。因此，您可以使用不同的配置文件，即测试期间的 <code>logback-test.xml</code>，以及生产中的另一个文件，即 <code>logback.xml</code>。</p>
+<p><strong>logback 默认配置</strong><br>假设 classpath 路径中不存在 logback.xml、logback-test.xml，那么 logback 将采用 BasicConfigurator 的默认配置，这是一个最小配置，它包含一个 ConsoleAppender，将日志输出到控制台（放到 root logger 中），输出的格式为 <code>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</code>，并且，默认情况下，root logger 的有效日志级别为 debug（注意 trace 级别默认是禁用状态的）。</p>
+<p><strong>logback 的配置文件</strong><br>logback 的配置文件可以采用 xml 或者 groovy 格式，我们就以 xml 格式为主了，groovy 没接触过，不太懂，还是 xml 比较通用和易懂一点。那么 logback.xml 和 logback-test.xml 两个配置文件有什么区别呢？我们来 Google 来看下。谷歌上并没有得到任何答案，暂且先认为 logback-test.xml 的优先级更高咯。</p>
+<p>注意，logback 是在 classpath 路径中搜寻 logback-test.xml 或 logback.xml 文件的，所以，我们需要将 logback.xml、logback-test.xml 文件放到程序运行时的 classpath 路径中。在 maven 中，我们需要将项目要用到的资源放到 src/main/resources 目录下，这样 maven 会自动将该目录下的文件添加到 CLASSPATH 路径中，非常方便。那么你有没有想过，如果我们自己需要在项目中读取 resources 下的文件，该如何做呢？其实很简单，使用 java.lang.Class 对象的 getResource(name) 方法就行了，来演示一下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.InputStream;
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        InputStream input = Main.class.getResourceAsStream("/test.txt");
+        byte[] buffer = new byte[4096];
+        int length = -1;
+        while ((length = input.read(buffer)) != -1) {
+            System.out.write(buffer, 0, length);
+        }
+    }
+}
+</script></code></pre>
+<p>然后，我们在 src/main/resources 目录下放入我们的 test.txt 文件，文件内容为：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+hello, world!
+www.zfl9.com
+www.baidu.com
+www.google.com
+</script></code></pre>
+<p>最后，我们来运行一下，看下什么结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+hello, world!
+www.zfl9.com
+www.baidu.com
+www.google.com
+</script></code></pre>
+<p>没问题，我们通过 Main.class 方式获取的是 Class 类的实例，而 Class 类中的 getResource()、getResourceAsStream() 方法其实都是调用的当前 ClassLoader 的 getResource()、getResourceAsStream() 方法，不过我还是喜欢使用 Class 类的 getXxx() 方法，因为我们可以使用相对路径、绝对路径，相对路径是说从当前类所在的 package 下面获取文件，绝对路径是说从 CLASSPATH 里面获取文件（比如上面的就是绝对路径，以 / 开头）。logback 获取 logback.xml、logback-test.xml 同理。</p>
+<p><strong>默认配置的等价 logback.xml 文件</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+</script></code></pre>
+<p>我们把它保存到 src/main/resources/logback.xml 文件，然后运行程序，看效果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+# root @ arch in ~/maven-workspace/slf4j-learn [19:10:20] 
+$ cat src/main/resources/logback.xml 
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+
+# root @ arch in ~/maven-workspace/slf4j-learn [19:10:23] 
+$ mvn clean compile exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ slf4j-learn ---
+[INFO] Deleting /root/maven-workspace/slf4j-learn/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ slf4j-learn ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ slf4j-learn ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /root/maven-workspace/slf4j-learn/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+19:10:27.605 [com.zfl9.Main.main()] INFO  com.zfl9.Main - hello, world!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.203 s
+[INFO] Finished at: 2018-11-02T19:10:27+08:00
+[INFO] ------------------------------------------------------------------------
+</script></code></pre>
+<p>为了确认是否使用的是我们提供的 logback.xml 配置文件，我们来改一下看看：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/maven-workspace/slf4j-learn [19:11:33] 
+$ cat src/main/resources/logback.xml 
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="error">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+
+# root @ arch in ~/maven-workspace/slf4j-learn [19:11:37] 
+$ mvn clean compile exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ slf4j-learn ---
+[INFO] Deleting /root/maven-workspace/slf4j-learn/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ slf4j-learn ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ slf4j-learn ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /root/maven-workspace/slf4j-learn/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.203 s
+[INFO] Finished at: 2018-11-02T19:11:42+08:00
+[INFO] ------------------------------------------------------------------------
+</script></code></pre>
+<p>我们将 log level 的有效级别改为了 error，然后运行我们的项目，发现没问题。说明已生效。</p>
+<p><strong>配置文件解析异常时 logback 会自动打印错误信息</strong><br>如果在解析配置文件时，发生警告或者错误，那么 logback 会自动打印内部的状态信息到控制台上。我们先来看看如何手动打印 logback 的内部状态，其实前面忘记说了，每个 logger 都会关联到一个 logger context 上下文对象，这个上下文对象可以理解为生产这些 logger 的一个容器对象，当我们调用 LoggerFactory.getLogger() 方法时，其实就是调用的 logger context 对象的 getLogger() 方法，所以下面的代码就很好理解了，我们来看下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
+
+public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        StatusPrinter.print(loggerContext);
+    }
+}
+</script></code></pre>
+<p>然后运行的结果如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+19:32:39,063 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
+19:32:39,063 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.groovy]
+19:32:39,063 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback.xml] at [file:/root/maven-workspace/slf4j-learn/target/classes/logback.xml]
+19:32:39,106 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - debug attribute not set
+19:32:39,106 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+19:32:39,111 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [STDOUT]
+19:32:39,116 |-INFO in ch.qos.logback.core.joran.action.NestedComplexPropertyIA - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+19:32:39,134 |-INFO in ch.qos.logback.classic.joran.action.RootLoggerAction - Setting level of ROOT logger to DEBUG
+19:32:39,134 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[ROOT]
+19:32:39,135 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - End of configuration.
+19:32:39,135 |-INFO in ch.qos.logback.classic.joran.JoranConfigurator@780b7449 - Registering current configuration as safe fallback point
+</script></code></pre>
+<p>输出的信息比较好理解，大概是说，没有在 classpath 中找到 logback-test.xml、logback.groovy，但是找到了 logback.xml 配置文件，然后对于的 appender 是 STDOUT，这个 appender 是直接将日志记录输出到控制台的标准输出中。和默认的配置是一样的。</p>
+<p><strong>启用 logback 的调试功能</strong><br>所谓调试是说，让 logback 在运行时，自动打印其内部的一些调试信息，这在我们排查问题时，可能很有用，那么怎么打开这个调试开关呢？很简单，修改 logback.xml 文件，在根元素 configuration 中添加属性 <code>debug=&quot;true&quot;</code> 就行了，我们来看下修改后的 logback.xml 文件：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        logger.info("hello, world!");
+    }
+}
+</script></code></pre>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+</script></code></pre>
+<p>然后，我们的运行输出如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+19:40:01,797 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
+19:40:01,797 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.groovy]
+19:40:01,797 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback.xml] at [file:/root/maven-workspace/slf4j-learn/target/classes/logback.xml]
+19:40:01,846 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+19:40:01,850 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [STDOUT]
+19:40:01,854 |-INFO in ch.qos.logback.core.joran.action.NestedComplexPropertyIA - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+19:40:01,874 |-INFO in ch.qos.logback.classic.joran.action.RootLoggerAction - Setting level of ROOT logger to DEBUG
+19:40:01,876 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[ROOT]
+19:40:01,877 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - End of configuration.
+19:40:01,879 |-INFO in ch.qos.logback.classic.joran.JoranConfigurator@720b1985 - Registering current configuration as safe fallback point
+19:40:01.881 [com.zfl9.Main.main()] INFO  com.zfl9.Main - hello, world!
+</script></code></pre>
+<p>调试的输出结果和我们刚才手动打印的内部状态机基本一致，所以设置 <code>debug=&quot;true&quot;</code> 有时候很有用。</p>
+<p>除了将 logback.xml 配置文件放到 classpath 路径中外，我们还可以在运行时通过指定 logback.configurationFile 系统属性来告诉 logback 我们的配置文件在哪，这是优先级最高的一种指定方式。注意，通过系统属性指定日志文件名称的后缀必须为 .xml 或者 .groovy，否则将被 logback 忽略，我们可以通过 debug 或者 status 信息来查看。我们来试试：</p>
+<p>首先将 src/main/resources 目录下的 logback.xml 拷贝到一个非 CLASSPATH 路径中，我们就把它放到 /tmp 目录吧，并且文件名改一下，就叫做 <code>log.xml</code>，然后运行我们的程序，看看实际效果：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ mvn exec:java -Dlogback.configurationFile=/tmp/log.xml
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+19:54:14,145 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [/tmp/log.xml] at [file:/tmp/log.xml]
+19:54:14,211 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+19:54:14,217 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [STDOUT]
+19:54:14,232 |-INFO in ch.qos.logback.core.joran.action.NestedComplexPropertyIA - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+19:54:14,250 |-INFO in ch.qos.logback.classic.joran.action.RootLoggerAction - Setting level of ROOT logger to DEBUG
+19:54:14,251 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[ROOT]
+19:54:14,252 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - End of configuration.
+19:54:14,257 |-INFO in ch.qos.logback.classic.joran.JoranConfigurator@777e71cf - Registering current configuration as safe fallback point
+19:54:14.261 [com.zfl9.Main.main()] INFO  com.zfl9.Main - hello, world!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.631 s
+[INFO] Finished at: 2018-11-02T19:54:14+08:00
+[INFO] ------------------------------------------------------------------------
+</script></code></pre>
+<p>因为我们传递给程序的仅仅是一个 system properties，所以其实我们也可以直接在程序中使用 Java 代码指定对应的 logback.xml 文件路径，但是要注意，如果你需要在程序中使用 Java 代码的方式来指定 logback.xml 文件的路径，那么请在获取 logger 实例之前设置这个 system property，否则不会生效。</p>
+<p><strong>配置文件自动重载</strong><br>logback 支持我们在运行时修改 logback.xml 配置文件，<del>logback 默认情况下会每隔一分钟去检查 logback.xml 文件是否以修改，如果已修改，那么 logback 会自动重新加载这个新的配置文件</del>。logback 默认情况下并不会去自动重载 logback.xml 配置文件，除非我们手动去打开 <code>scan=&quot;true&quot;</code> 属性，默认情况下，logback 会每分钟检查一次 logback.xml 文件是否已改动，当然我是说在启用了自动重载的情况下。</p>
+<p>但是据我观察发现，logback 好像不是每分钟扫描一次，因为我测试的时候，好几分钟都没有扫描的迹象，不管了，反正一般情况下，如果我们启用了自动扫描以重载的功能，一般也会指定一个扫描的周期时间。</p>
+<p>通过 <code>&lt;configuration&gt;</code> 根元素的两个属性进行配置：</p>
+<ul>
+<li><code>scan=&quot;true&quot;</code>：启用自动重载功能，默认为 false</li>
+<li><code>scanPeriod=&quot;30 seconds&quot;</code>：设置扫描的周期时间，默认为 1 分钟<ul>
+<li><code>milliseconds</code>：毫秒为单位（默认）</li>
+<li><code>seconds</code>：秒为单位</li>
+<li><code>minutes</code>：分钟为单位</li>
+<li><code>hours</code>：小时为单位</li>
+</ul>
+</li>
+</ul>
+<p>虽然默认单位为毫秒，但是我强烈建议在指定时间时带上单位，便于后人阅读。</p>
+<p><strong>在堆栈跟踪中包含 jar 包信息</strong><br>什么意思呢？所谓 jar 包信息就是 jar 包的名称以及版本号，logback 会在启用这一特性时打印这些信息，与堆栈跟踪一起输出，方便我们找到出现异常的 jar 包信息。但是因为这一操作非常昂贵，如果应用程序经常出现异常，那么可能会严重拖慢程序的速度。因此，从 logback 1.1.4 版本开始，默认禁用这个功能。效果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+14:28:48.835 [btpool0-7] INFO  c.q.l.demo.prime.PrimeAction - 99 is not a valid value
+java.lang.Exception: 99 is invalid
+  at ch.qos.logback.demo.prime.PrimeAction.execute(PrimeAction.java:28) [classes/:na]
+  at org.apache.struts.action.RequestProcessor.processActionPerform(RequestProcessor.java:431) [struts-1.2.9.jar:1.2.9]
+  at org.apache.struts.action.RequestProcessor.process(RequestProcessor.java:236) [struts-1.2.9.jar:1.2.9]
+  at org.apache.struts.action.ActionServlet.doPost(ActionServlet.java:432) [struts-1.2.9.jar:1.2.9]
+  at javax.servlet.http.HttpServlet.service(HttpServlet.java:820) [servlet-api-2.5-6.1.12.jar:6.1.12]
+  at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:502) [jetty-6.1.12.jar:6.1.12]
+  at ch.qos.logback.demo.UserServletFilter.doFilter(UserServletFilter.java:44) [classes/:na]
+  at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115) [jetty-6.1.12.jar:6.1.12]
+  at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:361) [jetty-6.1.12.jar:6.1.12]
+  at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:417) [jetty-6.1.12.jar:6.1.12]
+  at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230) [jetty-6.1.12.jar:6.1.12]
+</script></code></pre>
+<p>如果你觉得这一点性能不是问题，那么也可以通过根元素的 packagingData 属性打开：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration packagingData="true">
+  ...
+</configuration>
+</script></code></pre>
+<p>或者可以通过 Java 代码的方式来启用这个功能（但是不建议这么做，始终建议使用配置文件）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+lc.setPackagingDataEnabled(true);
+</script></code></pre>
+<p><strong>配置文件语法</strong><br>配置文件的基本结构可以描述为，<code>&lt;configuration&gt;</code> 根元素，包含零个或多个 <code>&lt;appender&gt;</code> 元素，零个或多个 <code>&lt;logger&gt;</code> 元素，最多一个 <code>&lt;root&gt;</code> 元素。下图说明了这种基本结构：<br><img src="https://logback.qos.ch/manual/images/chapters/configuration/basicSyntax.png" alt="logback.xml 文件结构"></p>
+<p>root 元素其实就是 root logger 元素，因为 root 元素有且只有一个，所以 logback 单独把它弄出来，以和 logger 元素进行区分。appender 元素就是我们前面讲的用来写入日志的组件，而 logger 元素就是用来接收和处理日志请求的组件。配置文件的结构很简单。</p>
+<p><strong>logger 元素</strong><br>logger 元素的属性有：</p>
+<ul>
+<li><code>name</code>：必选，指定 logger 的名称，建议 logger 的名称与对应的类名保持一致，方便日志分析。</li>
+<li><code>level</code>：可选，指定 logger 的级别，其值为大小写不敏感的字符串值：TRACE, DEBUG, INFO, WARN, ERROR, ALL or OFF；还有两个特殊的大小写不敏感的字符串值：INHERITED、NULL，它们是同义词，表示从它们的父级 logger 那里继承 level 属性。默认从父级继承过来，可以理解为默认为 NULL。</li>
+<li><code>additivity</code>：可选，指定 logger 是否应该继承父级的 appender。它的值是一个 true/false 的布尔值，默认情况下为 true，表示会从父级那里继承 appender，如果设为 false 则表示不从父级那里继承。</li>
+</ul>
+<p>logger 元素可以包含零个或多个 <code>&lt;appender-ref&gt;</code> 元素，用来指定当前 logger 关联的 appender 名称。</p>
+<p><strong>root 元素</strong><br>root 元素就是 root logger 元素，root 元素只有一个 <code>level</code> 属性，和上面一样，默认为 DEBUG。root logger 的名称固定为 <code>ROOT</code>，所以 root 元素也没有所谓的 name 属性，因为不需要，还有就是 <code>additivity</code> 属性，因为 root logger 是最顶层的 logger，所以没有所谓的父级 logger，也不需要。和 logger 元素类似，root 元素可以包含零个或多个 <code>&lt;appender-ref&gt;</code> 元素。</p>
+<p>例子：<br><code>logback.xml</code></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9" level="error"/>
+  <logger name="com.zfl9.Main" level="null"/>
+</configuration>
+</script></code></pre>
+<p><code>Main.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread.currentThread().setName("main");
+
+        Logger loggerA = LoggerFactory.getLogger("ROOT");
+        Logger loggerB = LoggerFactory.getLogger("com.zfl9");
+        Logger loggerC = LoggerFactory.getLogger("com.zfl9.Main");
+
+        loggerA.trace("ROOT");
+        loggerA.debug("ROOT");
+        loggerA.info("ROOT");
+        loggerA.warn("ROOT");
+        loggerA.error("ROOT");
+
+        loggerB.trace("com.zfl9");
+        loggerB.debug("com.zfl9");
+        loggerB.info("com.zfl9");
+        loggerB.warn("com.zfl9");
+        loggerB.error("com.zfl9");
+
+        loggerC.trace("com.zfl9.Main");
+        loggerC.debug("com.zfl9.Main");
+        loggerC.info("com.zfl9.Main");
+        loggerC.warn("com.zfl9.Main");
+        loggerC.error("com.zfl9.Main");
+    }
+}
+</script></code></pre>
+<p>运行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+2018-11-03 10:04:51.554 [main]          ROOT INFO  - ROOT
+2018-11-03 10:04:51.556 [main]          ROOT WARN  - ROOT
+2018-11-03 10:04:51.557 [main]          ROOT ERROR - ROOT
+2018-11-03 10:04:51.558 [main]      com.zfl9 ERROR - com.zfl9
+2018-11-03 10:04:51.558 [main] com.zfl9.Main ERROR - com.zfl9.Main
+</script></code></pre>
+<p><strong>配置 appender</strong><br><code>&lt;appender&gt;</code> 元素有两个必需属性：<code>name</code>、<code>class</code>，name 指定 appender 的名称，便于 logger/root 元素中进行引用；class 指定当前 appender 的实现类（类别），用来定义对应的日志消息该如何保存。</p>
+<p>appender 元素可以有零个或一个 <code>layout</code> 元素，零个或多个 <code>encoder</code> 元素，零个或多个 <code>filter</code> 元素。</p>
+<p>除了这三个公共元素之外，<code>&lt;appender&gt;</code> 元素可以包含与 appender 类的 JavaBean 属性相对应的任意数量的元素。无缝支持给定 logback 组件的任何属性是 Joran 的主要优势之一，正如后面的章节所讨论的那样。下图说明了常见的结构。请注意，对属性的支持不可见：<br><img src="https://logback.qos.ch/manual/images/chapters/configuration/appenderSyntax.png" alt="appender 元素的结构"></p>
+<p>layout 元素需要指定 class 属性，指定要实例化的 layout 类的完全限定名称。与 <code>appender</code> 元素一样， <code>&lt;layout&gt;</code> 可以包含与布局实例的属性对应的 javabean 元素。如果布局类是 PatternLayout，那么可以省略 class 属性（因为这是很常见的情况，为了简化配置文件，logback 这么做）。</p>
+<p>encoder 元素需要指定 class 属性，指定要实例化的 encoder 类的完全限定名称。如果编码器类是 PatternLayoutEncoder，则可以省略 class 属性。和 layout 一样。</p>
+<p>例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>myApp.log</file>
+    <encoder>
+      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+</script></code></pre>
+<p>FileAppender 的 <code>file</code> bean 属性的文件路径可以是相对的也可以是绝对的，相对是说相对于当前路径。</p>
+<p><strong>appender 默认是会累加的，看例子</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="chapters.configuration">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+</script></code></pre>
+<p>root logger 上配置了 STDOUT 追加器，chapters.configuration 这个 logger 上我们也配置了一个 STDOUT 追加器，而 chapters.configuration 这个 logger 实际上是会从 root logger 上继承 root 上设置的 STDOUT 追加器的，所以 chapters.configuration 这个 logger 实际上有两个一模一样的 STDOUT 追加器，因此，日志就会重复的输出两遍，看例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="trace">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9.Main">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+</configuration>
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        Thread.currentThread().setName("main");
+
+        Logger loggerA = LoggerFactory.getLogger("ROOT");
+        Logger loggerB = LoggerFactory.getLogger("com.zfl9");
+        Logger loggerC = LoggerFactory.getLogger("com.zfl9.Main");
+
+        loggerA.trace("ROOT");
+        loggerA.debug("ROOT");
+        loggerA.info("ROOT");
+        loggerA.warn("ROOT");
+        loggerA.error("ROOT");
+
+        loggerB.trace("com.zfl9");
+        loggerB.debug("com.zfl9");
+        loggerB.info("com.zfl9");
+        loggerB.warn("com.zfl9");
+        loggerB.error("com.zfl9");
+
+        loggerC.trace("com.zfl9.Main");
+        loggerC.debug("com.zfl9.Main");
+        loggerC.info("com.zfl9.Main");
+        loggerC.warn("com.zfl9.Main");
+        loggerC.error("com.zfl9.Main");
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+2018-11-03 10:55:15.328 [main]          ROOT TRACE - ROOT
+2018-11-03 10:55:15.330 [main]          ROOT DEBUG - ROOT
+2018-11-03 10:55:15.330 [main]          ROOT INFO  - ROOT
+2018-11-03 10:55:15.330 [main]          ROOT WARN  - ROOT
+2018-11-03 10:55:15.330 [main]          ROOT ERROR - ROOT
+2018-11-03 10:55:15.330 [main]      com.zfl9 TRACE - com.zfl9
+2018-11-03 10:55:15.330 [main]      com.zfl9 DEBUG - com.zfl9
+2018-11-03 10:55:15.330 [main]      com.zfl9 INFO  - com.zfl9
+2018-11-03 10:55:15.330 [main]      com.zfl9 WARN  - com.zfl9
+2018-11-03 10:55:15.331 [main]      com.zfl9 ERROR - com.zfl9
+2018-11-03 10:55:15.331 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main ERROR - com.zfl9.Main
+2018-11-03 10:55:15.331 [main] com.zfl9.Main ERROR - com.zfl9.Main
+</script></code></pre>
+<p>看到没，root logger 和 com.zfl9 logger 是正常输出的，但是 com.zfl9.Main 这个 logger 每条日志信息都会输出两遍，因为它有两个一样的 STDOUT 追加器。</p>
+<p>我们可以将 com.zfl9.Main logger 的 additivity 属性改为 false，就可以解决：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="trace">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9.Main" additivity="false">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+</configuration>
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+2018-11-03 10:56:57.195 [main]          ROOT TRACE - ROOT
+2018-11-03 10:56:57.198 [main]          ROOT DEBUG - ROOT
+2018-11-03 10:56:57.198 [main]          ROOT INFO  - ROOT
+2018-11-03 10:56:57.198 [main]          ROOT WARN  - ROOT
+2018-11-03 10:56:57.199 [main]          ROOT ERROR - ROOT
+2018-11-03 10:56:57.199 [main]      com.zfl9 TRACE - com.zfl9
+2018-11-03 10:56:57.200 [main]      com.zfl9 DEBUG - com.zfl9
+2018-11-03 10:56:57.201 [main]      com.zfl9 INFO  - com.zfl9
+2018-11-03 10:56:57.201 [main]      com.zfl9 WARN  - com.zfl9
+2018-11-03 10:56:57.202 [main]      com.zfl9 ERROR - com.zfl9
+2018-11-03 10:56:57.202 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 10:56:57.202 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 10:56:57.203 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 10:56:57.204 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 10:56:57.204 [main] com.zfl9.Main ERROR - com.zfl9.Main
+</script></code></pre>
+<p>所以，请牢记 logger 名字之间的继承关系，ROOT -&gt; com -&gt; com.zfl9 -&gt; com.zfl9.Main 等等。子 logger 默认会继承父 logger 的 appender。基于这个特性我们可以这样写 logback.xml，让某些 logger 不仅在控制台输出日志，同时也保存到指定的文件中：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>app.log</file>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="trace">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9.Main">
+    <appender-ref ref="FILE"/>
+  </logger>
+</configuration>
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+# root @ arch in ~/maven-workspace/slf4j-learn [11:08:50] 
+$ mvn process-resources exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.zfl9:slf4j-learn >------------------------
+[INFO] Building slf4j-learn 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ slf4j-learn ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ slf4j-learn ---
+2018-11-03 11:08:57.591 [main]          ROOT TRACE - ROOT
+2018-11-03 11:08:57.593 [main]          ROOT DEBUG - ROOT
+2018-11-03 11:08:57.594 [main]          ROOT INFO  - ROOT
+2018-11-03 11:08:57.594 [main]          ROOT WARN  - ROOT
+2018-11-03 11:08:57.594 [main]          ROOT ERROR - ROOT
+2018-11-03 11:08:57.594 [main]      com.zfl9 TRACE - com.zfl9
+2018-11-03 11:08:57.594 [main]      com.zfl9 DEBUG - com.zfl9
+2018-11-03 11:08:57.594 [main]      com.zfl9 INFO  - com.zfl9
+2018-11-03 11:08:57.594 [main]      com.zfl9 WARN  - com.zfl9
+2018-11-03 11:08:57.594 [main]      com.zfl9 ERROR - com.zfl9
+2018-11-03 11:08:57.594 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 11:08:57.594 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 11:08:57.594 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 11:08:57.594 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 11:08:57.595 [main] com.zfl9.Main ERROR - com.zfl9.Main
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.702 s
+[INFO] Finished at: 2018-11-03T11:08:57+08:00
+[INFO] ------------------------------------------------------------------------
+
+# root @ arch in ~/maven-workspace/slf4j-learn [11:08:57] 
+$ cat app.log 
+2018-11-03 11:08:57.594 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 11:08:57.594 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 11:08:57.594 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 11:08:57.594 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 11:08:57.595 [main] com.zfl9.Main ERROR - com.zfl9.Main
+</script></code></pre>
+<p><strong>修改 logger 上下文的名称</strong><br>我们知道，所有的 logger 都是由一个 logger context 生产出来的，而这个 context 的名称默认为 <code>default</code>，当然，我们可以更改这个名称，以便在某些时候区分不同的 logger：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <contextName>myAppName</contextName>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d %contextName [%t] %level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+</script></code></pre>
+<p><strong>变量替换</strong><br>在之前的版本中，变量替换被称为属性替换。和许多脚本语言一样，logback 的配置文件也支持变量的定义与替换，变量有一个作用范围（scope），并且，变量可以在配置文件本身、外部文件、外部资源中定义，甚至可以在计算过程中动态产生与定义。</p>
+<p>变量替换的语法和 shell 的替换语法很相似，<code>${var_name}</code>，变量替换可以出现在配置文件的允许配置值的任何位置，logback 的配置文件中有两个默认定义的变量：<code>HOSTNAME</code> 主机名、<code>CONTEXT_NAME</code> 上下文名称。这两个内置变量的 scope 均为 context，因为某些环境中计算 HOSTNAME 可能需要一些时间，所以 logback 对于 HOSTNAME 变量时延迟计算的，也就是说只有等你实际用到的时候才会为这个变量赋值。</p>
+<p><strong>变量的定义</strong><br>变量可以直接在配置文件中定义，也可以在外部属性文件或或者外部资源中定义。由于历史原因，<code>&lt;property&gt;</code> 和 <code>&lt;variable&gt;</code> 两个元素都可以使用，它们是同义词。前者是“属性”的意思，后者是“变量”的意思。下面的例子演示了在文件开头定义 <code>USER_HOME</code> 属性，然后在后面引用它：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <property name="USER_HOME" value="/home/sebastien" />
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${USER_HOME}/myApp.log</file>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+</script></code></pre>
+<p>如果配置文件中引用的变量没有在配置文件中定义，那么 logback 会在 system property 里面查找，例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${USER_HOME}/myApp.log</file>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+</script></code></pre>
+<p>然后运行时指定这个属性就行了（注意，配置文件中的变量定义优先于系统属性中的变量定义）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+java -DUSER_HOME="/home/sebastien" MyApp2
+</script></code></pre>
+<p>如果有很多变量需要定义，那么将这些变量放到一个单独的文件中可能更方便一些（properties 文件）：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+ROOT = /tmp
+</script></code></pre>
+<p>然后修改 logback.xml，设置 property/variable 元素：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <property file="target/classes/variables.properties"/>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+     <file>${USER_HOME}/myApp.log</file>
+     <encoder>
+       <pattern>%msg%n</pattern>
+     </encoder>
+   </appender>
+
+   <root level="debug">
+     <appender-ref ref="FILE" />
+   </root>
+</configuration>
+</script></code></pre>
+<p>注意，property 里面的 file 属性可以是相对路径也可以是绝对路径，绝对路径就是系统上的绝对路径，而相对路径是相对 maven 项目的（其实我感觉不是这样，因为我们是在 maven 项目根目录上运行 mvn exec:java，所以给我们的感觉就是相对于 maven 的项目根目录）。</p>
+<p>当然，为了方便，我们可以不使用 file 属性，而是使用 resource 属性，这样就是告诉 logback，在 classpath 中查找属性文件，比如这个 logback.xml 的定义：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <variable resource="logback.properties"/>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${logfile}</file>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %13logger{36} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="trace">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9.Main">
+    <appender-ref ref="FILE"/>
+  </logger>
+</configuration>
+</script></code></pre>
+<p>然后，我们将 logback.properties 文件放到 src/main/resources/logback.properties，内容：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+logfile = app.log
+</script></code></pre>
+<p>然后运行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+$ mvn exec:java
+2018-11-03 13:53:04.793 [main]          ROOT TRACE - ROOT
+2018-11-03 13:53:04.795 [main]          ROOT DEBUG - ROOT
+2018-11-03 13:53:04.795 [main]          ROOT INFO  - ROOT
+2018-11-03 13:53:04.796 [main]          ROOT WARN  - ROOT
+2018-11-03 13:53:04.796 [main]          ROOT ERROR - ROOT
+2018-11-03 13:53:04.798 [main]      com.zfl9 TRACE - com.zfl9
+2018-11-03 13:53:04.798 [main]      com.zfl9 DEBUG - com.zfl9
+2018-11-03 13:53:04.798 [main]      com.zfl9 INFO  - com.zfl9
+2018-11-03 13:53:04.799 [main]      com.zfl9 WARN  - com.zfl9
+2018-11-03 13:53:04.799 [main]      com.zfl9 ERROR - com.zfl9
+2018-11-03 13:53:04.799 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 13:53:04.800 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 13:53:04.801 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 13:53:04.802 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 13:53:04.802 [main] com.zfl9.Main ERROR - com.zfl9.Main
+
+$ cat app.log
+2018-11-03 13:53:04.799 [main] com.zfl9.Main TRACE - com.zfl9.Main
+2018-11-03 13:53:04.800 [main] com.zfl9.Main DEBUG - com.zfl9.Main
+2018-11-03 13:53:04.801 [main] com.zfl9.Main INFO  - com.zfl9.Main
+2018-11-03 13:53:04.802 [main] com.zfl9.Main WARN  - com.zfl9.Main
+2018-11-03 13:53:04.802 [main] com.zfl9.Main ERROR - com.zfl9.Main
+</script></code></pre>
+<p><strong>变量的作用范围</strong><br>使用 property/variable 元素的 <code>scope</code> 属性定义，有三个作用域取值：</p>
+<ul>
+<li><code>local</code>：局部作用域（默认值）</li>
+<li><code>context</code>：上下文作用域</li>
+<li><code>system</code>：系统作用域（JVM）</li>
+</ul>
+<p>local 作用域：属性仅作用于当前配置文件，因此，我们可以知道，如果配置文件被重载，那么 logback 将会重新定义 local 作用域中的属性/变量。</p>
+<p>context 作用域：属性作用于当前 logger context，所有同一个 context 的其他 logger 也能访问该属性的值。定义为 context 作用域的属性时 logger context 的一部分。</p>
+<p>system 作用域：输出作用于当前 JVM，因为 logback 会将属性存进 system property 里面，所以它的生命周期是当前 JVM 进程。直到当前 JVM 进程结束，这个属性才会被回收。</p>
+<p>在执行变量替换的过程中，logback 会先从 local 作用域中查找属性，然后从 context 作用域中查找，然后在 system 作用域中查找，如果都没找到，那么 logback 会尝试从 env 环境变量中查找。</p>
+<p>The <code>scope</code> attribute of the <code>&lt;property&gt;</code> element, <code>&lt;define&gt;</code> element or the <code>&lt;insertFromJNDI&gt;</code> element can be used to set the scope of a property. The scope attribute admits “local”, “context” and “system” strings as possible values. If not specified, the scope is always assumed to be “local”.</p>
+<p>我们可以使用 property/variable 元素的 scope 属性来定义作用范围，默认为 local。</p>
+<p>在变量替换的语法中，为了防止变量未定义的错误情况，我们可以为这个变量设置一个默认值，语法和 bash 设置默认值是一样的，如为 logfile 这个变量设置默认值 app.log，可以这么写：<code>${logfile:-app.log}</code>。</p>
+<p><strong>变量的嵌套</strong><br>logback.xml 完全支持变量嵌套。比如变量的名称，默认值和值定义都可以引用其他变量。</p>
+<p><strong>value 嵌套</strong></p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+USER_HOME=/home/sebastien
+fileName=myApp.log
+destination=${USER_HOME}/${fileName}
+</script></code></pre>
+<p>一个 properties 文件，注意，destination 属性是由 USER_HOME 属性以及 fileName 属性组成的，实际上 java 默认的 properties 并不支持这种语法，之所以可以这样用，是因为 logback 会进行解析而已。</p>
+<p><strong>name 嵌套</strong><br><code>&quot;${${userid}.password}&quot;</code>，其中 userid 是一个变量，假设它的值为 main，那么这条语句就是 <code>${main.password}</code>，也就是获取 main.password 这个属性的值，很简单，其实，只要一层层替换就行。</p>
+<p><strong>默认值嵌套</strong><br><code>${id:-${userid}}</code>，这里我们的默认值也是一个变量，很好理解，就不多说了。</p>
+<p><strong>配置文件内的条件判断</strong><br>logback.xml 支持 if…else 条件判断，语法如下：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+  <!-- if-then form -->
+   <if condition="some conditional expression">
+    <then>
+      ...
+    </then>
+  </if>
+
+  <!-- if-then-else form -->
+  <if condition="some conditional expression">
+    <then>
+      ...
+    </then>
+    <else>
+      ...
+    </else>    
+  </if>
+</script></code></pre>
+<p>condition 是 Java 表达式，其中只能访问 context 属性或 system 属性。对于作为参数传递的键，property() 或其较短的 p() 方法返回属性的 String 值。例如，要使用键 <code>k</code> 属性的值，您可以编写 <code>property(&quot;k&quot;)</code> 或等效 <code>p(&quot;k&quot;)</code>。如果未定义键 <code>k</code>，则属性方法将返回空字符串而不是 null。这避免了检查空值的需要。</p>
+<p><code>isDefined()</code> 方法可用于检查属性是否已定义。例如，要检查是否定义了属性 <code>k</code>，可以使用 <code>isDefined(&quot;k&quot;)</code>，类似的，如果需要检查属性是否为 null，可以使用 <code>isNull()</code> 方法，如 <code>isNull(&quot;k&quot;)</code>。</p>
+<p>configuration 元素内的任何位置都支持条件处理。还支持嵌套的 if-then-else 语句。但是，由于 XML 的语法本身就很麻烦，如果再加上 if…else 等语句，那么可读性将会大大降低，非常不利于维护，所以基本上没有人在 xml 中设置 if…else 条件表达式。</p>
+<p><strong>文件包含</strong><br>logback.xml 中可以使用 <code>&lt;include file=&quot;/path/to/part.xml&quot;/&gt;</code> 元素来包含子配置文件，这个子配置文件的根元素必须为 <code>&lt;include&gt;</code>。除了通过 file 属性指定外，我们还可以使用 <code>resource</code> 属性来让 logback 在 classpath 里面查找子配置文件，同时，还可以通过 <code>url</code> 属性来让 logback 通过解析 url 来获取对应的子配置文件。除此之外，我们还可以通过 <code>optional</code> 属性告诉 logback 这个子配置文件是否是可选的，默认为 false，表示这个配置文件必须要能够访问，否则将报错，如果设置为 true，那么不会出现任何错误、警告信息。例子：</p>
+<p><code>logback.xml</code>（主文件）</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <include file="src/main/java/chapters/configuration/includedConfig.xml"/>
+
+  <root level="DEBUG">
+    <appender-ref ref="includedConsole" />
+  </root>
+</configuration>
+</script></code></pre>
+<p><code>included.xml</code>（子文件）</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<included>
+  <appender name="includedConsole" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>"%d - %m%n"</pattern>
+    </encoder>
+  </appender>
+</included>
+</script></code></pre>
+<h2 id="Logback-Appender"><a href="#Logback-Appender" class="headerlink" title="Logback Appender"></a>Logback Appender</h2><p>Appender 是决定如何写日志，日志写到哪的一个组件。</p>
+<p><strong>ConsoleAppender</strong><br>ConsoleAppender 就是将日志写到控制台（STDOUT、STDERR，默认为 STDOUT）的一个 Appender，对应的 class 为 <code>ch.qos.logback.core.ConsoleAppender</code>，可配置的元素有：</p>
+<ul>
+<li><code>&lt;encoder&gt;</code>：配置 encoder 编码器，关于编码器的知识在下一节中会详细介绍。</li>
+<li><code>&lt;target&gt;</code>：日志输出的目的地，字符串值，System.out（默认）、System.err。</li>
+<li><code>&lt;withJansi&gt;</code>：是否激活 Jansi 库，默认 false，可以在 Windows 中输出颜色。</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+</script></code></pre>
+<p><strong>FileAppender</strong><br>顾名思义，FileAppender 会将日志写入到文件中，目标文件由 <code>&lt;file&gt;</code> 元素指定，如果文件已存在，则默认会继续追加日志到该文件，而不会先清空再记录日志，这个行为可由 append 元素进行配置，默认为 true。</p>
+<ul>
+<li><code>&lt;encoder&gt;</code>：编码器，这个下一节会介绍。</li>
+<li><code>&lt;append&gt;</code>：文件已存在时是否继续追加日志到文件中，布尔值，默认为 true。</li>
+<li><code>&lt;file&gt;</code>：日志保存的文件路径，字符串，不存在时会自动创建，如 <code>c:/temp/test.log</code>。</li>
+<li><code>&lt;prudent&gt;</code>：布尔值，是否启用谨慎模式，默认为 false，启用谨慎模式意味着 append=true。</li>
+<li><code>&lt;immediateFlush&gt;</code>：布尔值，收到日志请求时是否立即写入到文件，而不是缓冲区，默认 true。</li>
+</ul>
+<p>配置的例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>testFile.log</file>
+    <append>true</append>
+    <immediateFlush>true</immediateFlush>
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+</script></code></pre>
+<p><strong>唯一命名的文件（根据时间戳）</strong><br>在开发或测试阶段，我们经常需要在每次新启动应用程序的时候都创建一个新的日志文件，便于分析，在 <code>&lt;timestamp&gt;</code> 元素的帮助下，这很容易在 logback 中做到，例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>log-${bySecond}.txt</file>
+    <encoder>
+      <pattern>%logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+</script></code></pre>
+<p>timestamp 元素采用两个必需属性 <code>key</code> 和 <code>datePattern</code> 以及一个可选的 <code>timeReference</code> 属性。所述 key 属性是时间戳将提供给后续配置元件在其下键的名称作为变量。所述 datePattern 属性表示用于将当前时间（在该配置文件被解析）转换成一个字符串的时间图案。日期模式应遵循 SimpleDateFormat 中定义的约定。该 timeReferenceattribute 表示时间戳的时间参考。默认值是配置文件的解释/解析时间，即当前时间。但是，在某些情况下，使用上下文出生时间作为时间参考可能是有用的。这可以通过将 timeReference 属性设置为 <code>&quot;contextBirth&quot;</code> 来完成。</p>
+<p><strong>RollingFileAppender</strong><br>RollingFileAppender 扩展了 FileAppender，实现了日志轮转的功能（和 Nginx 一样，可以实现类似每天的日志都额外存档的功能，每个日志文件都是保存当天的日志信息）。当然也不是说只能根据日期来进行轮转，logback 中有很多内置的轮转策略，非常灵活，比如按照时间进行轮转，按照日志文件大小进行轮转等等。</p>
+<p>RollingFileAppender 中有两个重要组件，一个是 RollingPolicy（轮转策略，负责 <code>what</code>），一个是 <code>TriggeringPolicy</code>（触发时机，负责 <code>when</code>），如果要使用 RollingFileAppender，那么这两个组件是必不可少的，当然，如果  RollingPolicy 实现了 TriggeringPolicy 接口，那么就只需要 RollingPolicy。</p>
+<p>注意，RollingFileAppender 以及相关的实现类都在 <code>ch.qos.logback.core.rolling</code> 包，不要搞错了哦。</p>
+<p><strong>可用的 javabean 属性（同名元素）</strong></p>
+<ul>
+<li><code>file</code>：同 FileAppender，指定日志文件的路径</li>
+<li><code>append</code>：同 FileAppender，指定是否可以追加</li>
+<li><code>encoder</code>：同 FileAppender，指定相应的编码器</li>
+<li><code>rollingPolicy</code>：轮转策略，告诉 logback 如何轮转</li>
+<li><code>triggeringPolicy</code>：触发时机，告诉 logback 合适轮转</li>
+<li><code>prudent</code>：谨慎模式，值类型为布尔值，不建议启用此特性</li>
+</ul>
+<p><strong>RollingPolicy 相关</strong><br>简单的说，RollingPolicy 负责如何移动和重命名我们的日志文件。元素的属性为 <code>class</code>，指定实现类。</p>
+<p><strong>TimeBasedRollingPolicy</strong><br>根据时间进行日志轮转，这可能是最常见和最受欢迎的一个轮转策略，比如按天进行轮转，或者按月进行轮转。TimeBasedRollingPolicy 实现了 RollingPolicy 和 TriggerPolicy 接口，所以我们只需要这一个就行。</p>
+<p>TimeBasedRollingPolicy 有一个必需属性 <code>fileNamePattern</code> 以及几个可选属性：</p>
+<ul>
+<li><code>fileNamePattern</code>：类型为字符串，此属性必须设置。该属性用来定义已归档的日志文件的名称，使用 <code>%d</code> 时间转换符，支持 <code>java.text.SimpleDateFormat</code> 类中的时间格式，如果省略日期和时间模式，则默认假定的模式为 <code>yyyy-MM-dd</code>，注意，logback 决定何时轮转是根据这个时间模式来决定的，可以得知，默认情况下，是按照“天”进行轮转的。可以设置多个 %d 说明符，但是只有一个是主要的，即用于推断轮转周期，对于非主要的 %d，你必须传递 aux 参数将其它的 %d 标记为辅助的。例子，还是每天都轮转，但是日志名中包含日期信息：<code>/var/log/%d{yyyy/MM, aux}/myapplication.%d{yyyy-MM-dd}.log</code>。默认情况下，logback 进行轮转的时区是与当前主机相同的，如果你需要指定为其他时区，可以这样指定：<code>aFolder/test.%d{yyyy-MM-dd-HH, UTC}.log</code>。注意，任何正斜杠和反斜杠都会被解释为路径分隔符（也就是文件夹的分隔符，正反都是，注意反斜杠不需要转义）。</li>
+<li><code>maxHistory</code>：整数，指定保留的已归档日志的最大数量，比如轮转周期为每天，maxHistory 设置为 15，则表示只保留 15 天内的日志，过期的日志将会被自动删除，默认情况下，不会限制已归档日志文件数量。</li>
+<li><code>totalSizeCap</code>：整数，控制所有已归档的日志文件的总大小，当超过总大小时，logback 会异步的删除那些最旧的归档日志。建议 maxHistory 和 totalSizeCap 都设置，这样便于管理。</li>
+<li><code>cleanHistoryOnStart</code>：布尔值，如果设置为 true，则 appender 启动时，会自动删除已归档的日志文件，默认情况下，该值为 false。</li>
+</ul>
+<p>例子：假设有如下配置，那么日志将会每分钟轮转一次：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>app.log</file>
+    <encoder>
+      <pattern>[%level] - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>app-%d{MMdd_HHmm}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%level] - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="trace">
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+</script></code></pre>
+<p>得到的归档日志文件如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ll
+total 28K
+drwxr-xr-x 3 root root 4.0K Oct 24 10:14 src
+drwxr-xr-x 5 root root 4.0K Nov  4 20:48 target
+-rw-r--r-- 1 root root 6.7K Nov  4 20:49 app-1104_2049.log
+-rw-r--r-- 1 root root 5.0K Nov  4 20:50 app.log
+-rw-r--r-- 1 root root  825 Nov  2 20:04 pom.xml
+</script></code></pre>
+<p>关键信息：<code>&lt;file&gt;app.log&lt;/file&gt;</code>、<code>&lt;fileNamePattern&gt;app-%d{MMdd_HHmm}.log&lt;/fileNamePattern&gt;</code><br>所以当前活动的日志文件名为 <code>app.log</code>，而已归档的日志文件名为 <code>app-MMdd_HHmm.log</code>，和 nginx 一样。</p>
+<p>如果我们省略了 <code>&lt;file&gt;app.log&lt;/file&gt;</code>，那么当前活动的日志和已存档的日志的名称都是按照 filenNamePattern 命名的，例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>[%level] - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>app-%d{MMdd_HHmm}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%level] - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="trace">
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
+</script></code></pre>
+<p>得到的日志文件，当前活动的与已经存档的名称没有区别：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+$ ll
+total 20K
+drwxr-xr-x 3 root root 4.0K Oct 24 10:14 src
+drwxr-xr-x 5 root root 4.0K Nov  4 20:48 target
+-rw-r--r-- 1 root root  904 Nov  6 14:57 app-1106_1457.log
+-rw-r--r-- 1 root root  565 Nov  6 14:58 app-1106_1458.log
+-rw-r--r-- 1 root root  825 Nov  2 20:04 pom.xml
+</script></code></pre>
+<p>TimeBasedRollingPolicy 支持自动压缩，你只需要将 fileNamePattern 的值以 .gz、.zip 结尾，就行。</p>
+<p><strong>配置 - 例一</strong><br>每日轮转，最多保留 30 内的日志，且总大小不超过 3GB。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logFile.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+      <!-- keep 30 days' worth of history capped at 3GB total size -->
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender> 
+
+  <root level="DEBUG">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+</script></code></pre>
+<p><strong>配置 - 例二</strong><br>谨慎模式，以支持多个 JVM 进程同时写日志到同一个文件</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- Support multiple-JVM writing to the same log file -->
+    <prudent>true</prudent>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory> 
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender> 
+
+  <root level="DEBUG">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+</script></code></pre>
+<p><strong>SizeAndTimeBasedRollingPolicy 轮转策略</strong><br>有时候我们可能需要对单个日志文件的大小进行限制，比如单个文件最大为 100M。假设我们还是以每日轮转为例，那么如果当天的日志的大小超过 100M，就会被自动切割为多个文件。这时候我们就可以使用 SizeAndTimeBasedRollingPolicy 轮转策略（我猜测这应该是 TimeBasedRollingPolicy 的子类），基本上可以认为 SizeAndTime 是 Time 的基础上添加了一个 <code>&lt;maxFileSize&gt;</code> bean 属性的实现类，例子：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration>
+  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>mylog.txt</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- rollover daily -->
+      <fileNamePattern>mylog-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+       <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+       <maxFileSize>100MB</maxFileSize>    
+       <maxHistory>60</maxHistory>
+       <totalSizeCap>20GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="ROLLING" />
+  </root>
+</configuration>
+</script></code></pre>
+<p>注意上面的 filename pattern，它是 <code>mylog-%d{yyyy-MM-dd}.%i.txt</code>，在 SizeAndTime 策略中，有两个必须要有的修饰符，<code>%d</code> 决定轮转周期，<code>%i</code> 用来告诉 logback 在单个文件大于指定大小时，如何重命名，如果单个大小大于规定大小，那么将会自动被重命名为带 N 的日志文件，这个 N 是从 0 开始的。</p>
+<h2 id="Logback-Encoder"><a href="#Logback-Encoder" class="headerlink" title="Logback Encoder"></a>Logback Encoder</h2><p>注意，我们早就说过，日志框架中有三个基本概念，那就是：logger、appender、pattern。我们再来温习一下这些知识，logger 是用来接收程序发出的日志请求的一个对象，比如 <code>logger.info(message)</code> 这种调用，基本上它的作用就是这样。而 appender 则是实际用来写入日志信息的组件，比如写到控制台、磁盘文件、套接字、数据库、系统服务等等。最常见的两个就是 Console、File（包括 RollingFile）。而 pattern（注意在 logback 不叫做 pattern，而是叫做 layout/encoder），则是用来控制日志格式的，相当于 printf 的格式字符串。</p>
+<p>现在的疑问是，logback 中有两个关于 “pattern” 的组件，即 layout、encoder。好吧，其实它们是同一种东西，只不过 layout 现在已经不被推荐使用了，目前官方强烈推荐使用 encoder。具体什么原因，我们来看看官方的描述：</p>
+<blockquote>
+<p>Encoder 负责将 event 转换为 byte[]，并将该 byte[] 写入 OutputStream。Encoder 自 logback v0.9.19 中引入。在以前的版本中，大多数 appender 依靠 Layout 将 event 转换为 String 并使用 java.io.Writer 写入目标流。在以前的版本中，用户将嵌套在 PatternLayout 内部 FileAppender。由于 logback 0.9.19， FileAppender 子类需要 Encoder 而不再采用 Layout。</p>
+</blockquote>
+<p><strong>为什么发生变化？</strong></p>
+<p>如下一章中详细讨论的，Layout 只能将 event 转换为 String。此外，由于 Layout 无法控制何时写出 Event，因此 Layout 无法将 Event 聚合到批处理中。将此与 Encoder 进行对比，Encoder 不仅可以完全控制写出的 byte 格式，还可以控制何时（以及是否）写出这些 byte。</p>
+<p>目前，<strong>PatternLayoutEncoder</strong> 是唯一真正有用的 Encoder。它只包括一个 PatternLayout 完成大部分工作的东西。因此，除了不必要的复杂性之外，Encoder 看起来并没有带来太大的影响。但是，我们希望随着新的强大 Encoder 的出现，这种印象会发生变化。</p>
+<p><strong>LayoutWrappingEncoder 包装器</strong><br>在回溯版本 0.9.19 之前，许多 appender 依赖于 Layout 实例来控制日志输出的格式。由于存在大量基于 Layout 界面的代码，我们需要一种 Encoder 与 Layout 互操作的方法。LayoutWrappingEncoder 填补了 Encoder 和 Layout 之间的空白。它实现了 Encoder 接口并包装了一个 Layout，它将委托转换为 String 的工作。</p>
+<p><strong>Encoder 详解</strong><br>PatternLayout 的转换模式与 printf() 的转换模式非常相似。转换模式由 <strong>普通文本</strong>、<strong>转换说明符</strong> 两部分组成。您可以在转换模式中插入任何文字文本。每个转换说明符都<strong>以百分号 <code>%</code> 开头</strong>，后跟 <strong>格式修饰符</strong>（可选），<strong>转换字</strong>（必须）和 <strong>花括号参数</strong>（可选）。<strong>转换字</strong> 控制要转换的 <strong>数据字段</strong>，例如 <strong>记录器名称</strong>，<strong>级别</strong>，<strong>日期</strong> 或 <strong>线程名称</strong>。<strong>格式修饰符</strong> 控制 <strong>字段宽度</strong>，<strong>填充</strong>和<strong>左对齐</strong>或<strong>右对齐</strong>。</p>
+<p>正如已经多次提到的那样，FileAppender 子类期望 Encoder。因此，当与 FileAppender 子类或其子类一起使用时， PatternLayout 必须将其包裹在 Encoder 中。鉴于 FileAppender/ PatternLayout 组合是如此常见，logback 附带一个名为 PatternLayoutEncoder 的编码器，其设计仅用于包装 PatternLayout 实例，以便可以将其视为 Encoder。下面是其编程配置一个示例 ConsoleAppender 具有 PatternLayoutEncoder：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+    PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+    encoder.setContext(loggerContext);
+    encoder.setPattern("%-5level [%thread]: %message%n");
+    encoder.start();
+</script></code></pre>
+<p>注意到没：<code>%-5level [%thread]: %message%n</code>，这个其实和 printf 的很相似。除了花括号有特殊含义之外，圆括号也是有特殊含义的，圆括号可以用来进行逻辑分组，关于分组的知识后面会介绍，如果你想单纯的输出圆括号本身，那么请使用反斜杠进行转义。</p>
+<p><strong>转换字</strong><br>完整列表请参考：<a href="https://logback.qos.ch/manual/layouts.html#conversionWord" rel="external nofollow noopener noreferrer" target="_blank">格式字符串的完整转换字列表</a>。这里就介绍几个最常见的：</p>
+<ul>
+<li><code>%c{length}</code>、<code>%lo{length}</code>、<code>%logger{length}</code>：输出 logger 的名称。前面两个是简写形式，下同。支持的唯一参数就是 length，用来限定输出的 logger name 的最大长度，如果省略此参数，则 logger 的全部名称都将显示，如果 length 为 0，那么只会显示最后一个段的名称，其他都会被隐藏。</li>
+<li><code>%cn</code>、<code>%contextName</code>：输出当前 logger context 的名称。</li>
+<li><code>%d{pattern[, timezone]}</code>、<code>%date{pattern[, timezone]}</code>：当前的时间格式字符串。具体的格式与 java.text.SimpleDateFormat 兼容。支持两个参数，pattern 用来指定日期的格式，timezone 指定基准时区，默认为本地系统的时区。如果没有参数则默认的时间格式为 <code>%d{yyyy-MM-dd HH:mm:ss,SSS}</code>，常见的格式有 <code>%d{yyyy-MM-dd HH:mm:ss.SSS}</code>，格式 <code>%d{ISO8601}</code> 与默认模式相同。</li>
+<li><code>%m</code>、<code>%msg</code>、<code>%message</code>：实际收到的日志消息（logger 对应方法发来的消息字符串）。</li>
+<li><code>%n</code>：其实就是 <code>\n</code> 的同义词，换行符。</li>
+<li><code>%p</code>、<code>%le</code>、<code>%level</code>：产生当前日志消息的日志级别。</li>
+<li><code>%t</code>、<code>%thread</code>：产生日志请求的线程名称。</li>
+<li><code>%ex{depth}</code>、<code>%exception{depth}</code>、<code>%throwable{depth}</code>：输出与当前日志相关联的异常对象的堆栈跟踪信息（默认输出完整的堆栈跟踪信息，如果有的话）。对应的参数是 depth，表示输出的深度，默认为 full，可选值有：short（一行）、full（完整）、NUM（指定行数）。</li>
+</ul>
+<p>由于 <code>%</code> 本身表示格式串的开头符号，所以如果要表示 <code>%</code> 自身，则需要进行转义，转义的语法为 <code>\%</code>，注意不同于 printf 的 <code>%%</code> 转义方式。</p>
+<p>对于某些特殊模式，比如 <code>%date%nHello</code>，本意是 <code>%date\nHello</code>，但是实际上 logback 会将 nHello 看作为一个完整的转义词，但是实际上这个转义词是不存在的，所以它会原模原样输出 <code>%nHello</code>，但是你可以这么做：<code>%date%n{}Hello</code> 来强制分离它们，即使 <code>%n</code> 没有参数。</p>
+<p><strong>格式说明符</strong><br>格式说明符位于 <code>%</code> 与 <code>{}</code> 之间，比如 <code>%-5level</code> 的 <code>-5</code> 就是格式说明符。</p>
+<p>第一个是 <code>-</code>，表示左对齐，默认是右对齐的。然后是一个最小字段宽度的修饰器，如果没有这么长，那么会在其左侧、右侧进行填充（取决于如何对齐，默认是右对齐，也就是默认是在左边填充），填充的字符是空格，如果数据的长度大于这个值，则没有任何影响。</p>
+<p>然而，我们可以使用 <code>.N</code> 格式来控制字段的最大长度，如果数据的长度大于指定长度，则将从数据的头部删除相应长度的字符。当然，如果 N 为负数（即 <code>.-N</code>），那么会从数据的尾部删除相应长度的字符串。</p>
+<p>比如，我只想输出 DEBUG、INFO、WARN、ERROR 的头一个字符，D、I、W、E，可以这么写：<code>%.-1level</code>。</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+2018-11-06 19:36:40,517 - [T] - hello, world
+2018-11-06 19:36:40,519 - [D] - hello, world
+2018-11-06 19:36:40,520 - [I] - hello, world
+2018-11-06 19:36:40,520 - [W] - hello, world
+2018-11-06 19:36:40,521 - [E] - hello, world
+2018-11-06 19:36:41,522 - [T] - hello, world
+2018-11-06 19:36:41,523 - [D] - hello, world
+2018-11-06 19:36:41,523 - [I] - hello, world
+2018-11-06 19:36:41,523 - [W] - hello, world
+2018-11-06 19:36:41,523 - [E] - hello, world
+2018-11-06 19:36:42,524 - [T] - hello, world
+2018-11-06 19:36:42,525 - [D] - hello, world
+</script></code></pre>
+<p>如果需要输出花括号本身，请使用 <code>&#39;{&#39;</code>、<code>&quot;}&quot;</code>（单双引号都可以），<code>&#39; &#39;</code>、<code>&#39;,&#39;</code>（我说的是花括号内部）。</p>
+<p><strong>圆括号是有特殊意义的</strong><br>具体含义是将多个 <code>%spec</code> 合并为一个，方便进行对齐控制，比如 <code>%-30(spec...)</code>：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+%-30(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{32} - %msg%n
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+13:09:30 [main]            DEBUG c.q.logback.demo.ContextListener - Classload hashcode is 13995234
+13:09:30 [main]            DEBUG c.q.logback.demo.ContextListener - Initializing for ServletContext
+13:09:30 [main]            DEBUG c.q.logback.demo.ContextListener - Trying platform Mbean server
+13:09:30 [pool-1-thread-1] INFO  ch.qos.logback.demo.LoggingTask - Howdydy-diddly-ho - 0
+13:09:38 [btpool0-7]       INFO  c.q.l.demo.lottery.LotteryAction - Number: 50 was tried.
+13:09:40 [btpool0-7]       INFO  c.q.l.d.prime.NumberCruncherImpl - Beginning to factor.
+13:09:40 [btpool0-7]       DEBUG c.q.l.d.prime.NumberCruncherImpl - Trying 2 as a factor.
+13:09:40 [btpool0-7]       INFO  c.q.l.d.prime.NumberCruncherImpl - Found factor 2
+</script></code></pre>
+<p><strong>颜色化输出</strong><br>如上所述通过 <strong>括号分组</strong> 允许对 sub-spec 进行着色。从版本 1.0.5 开始，PatternLayout 识别 <code>%black</code>，<code>%red</code>，<code>%green</code>，<code>%yellow</code>，<code>%blue</code>，<code>%magenta</code>，<code>%cyan</code>，<code>%white</code>，<code>%grey</code>，<code>%boldRed</code>，<code>%boldGreen</code>，<code>%boldYellow</code>，<code>%boldBlue</code>，<code>%boldMagenta</code>、<code>%boldCyan</code>，<code>%boldWhite</code> 和 <code>%highlight</code> 作为转换字。这些转换字旨在包含子模式。由着色字包围的任何子图案将以指定的颜色输出。</p>
+<p>以下是说明着色的配置文件。请注意包含 <code>%logger{15}</code> 的转换说明符。这将输出以青色为单位缩写为 15 个字符的记录器名称。<code>%highlight</code> 转换说明符以粗体红色显示其级别为 ERROR 的事件，红色为 WARN，BLUE 为 INFO，以及其他级别的默认颜色。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<configuration debug="true">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- On Windows machines setting withJansi to true enables ANSI
+         color code interpretation by the Jansi library. This requires
+         org.fusesource.jansi:jansi:1.8 on the class path.  Note that
+         Unix-based operating systems such as Linux and Mac OS X
+         support ANSI color codes by default. -->
+    <withJansi>true</withJansi>
+    <encoder>
+      <pattern>[%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n</pattern>
+    </encoder>
+  </appender>
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[main] WARN  c.l.TrivialMain - a warning message 0
+[main] DEBUG c.l.TrivialMain - hello world number1
+[main] DEBUG c.l.TrivialMain - hello world number2
+[main] INFO  c.l.TrivialMain - hello world number3
+[main] DEBUG c.l.TrivialMain - hello world number4
+[main] WARN  c.l.TrivialMain - a warning message 5
+[main] ERROR c.l.TrivialMain - Finish off with fireworks
+</script></code></pre>
+<p><strong>比较好的一个日志格式化方案</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%white(%d{HH:mm:ss.SSS} [%8.8thread] %-5level %45.45logger{36}) - %highlight(%msg%n)</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9" level="trace"/>
+</configuration>
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-log4j.html" rel="next" title="Java Log4j 笔记">
+                <i class="fa fa-chevron-left"></i> Java Log4j 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/maven.html" rel="prev" title="Maven 笔记">
+                Maven 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关简介"><span class="nav-number">1.</span> <span class="nav-text">相关简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志框架"><span class="nav-number">3.</span> <span class="nav-text">日志框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SLF4J-简介"><span class="nav-number">4.</span> <span class="nav-text">SLF4J 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SLF4J-API"><span class="nav-number">5.</span> <span class="nav-text">SLF4J API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Logback-简介"><span class="nav-number">6.</span> <span class="nav-text">Logback 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Logback-架构"><span class="nav-number">7.</span> <span class="nav-text">Logback 架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Logback-配置"><span class="nav-number">8.</span> <span class="nav-text">Logback 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Logback-Appender"><span class="nav-number">9.</span> <span class="nav-text">Logback Appender</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Logback-Encoder"><span class="nav-number">10.</span> <span class="nav-text">Logback Encoder</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-slf4j.html';
+          this.page.identifier = 'java-slf4j.html';
+          this.page.title = 'Java SLF4J 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

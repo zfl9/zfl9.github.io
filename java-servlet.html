@@ -1,0 +1,3329 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java Servlet 笔记">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Servlet（Server Applet），全称 Java Servlet，未有中文译文。是用 Java 编写的服务器端程序。其主要功能在于交互式地浏览和修改数据，动态生成 Web 内容。狭义的 Servlet 是指 Java 语言实现的一个接口（javax.servlet.Servlet），广义的 Servlet 是指任何实现了这个 Servlet 接口的类，一般情况下，人们将 Servlet">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Servlet 笔记">
+<meta property="og:url" content="https://www.zfl9.com/java-servlet.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Servlet（Server Applet），全称 Java Servlet，未有中文译文。是用 Java 编写的服务器端程序。其主要功能在于交互式地浏览和修改数据，动态生成 Web 内容。狭义的 Servlet 是指 Java 语言实现的一个接口（javax.servlet.Servlet），广义的 Servlet 是指任何实现了这个 Servlet 接口的类，一般情况下，人们将 Servlet">
+<meta property="og:image" content="https://www.zfl9.com/images/tomcat-welcome.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-servlet-login-html.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-servlet-login-html-2.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-servlet-user-do.png">
+<meta property="og:image" content="https://www.zfl9.com/images/java-servlet-user-do.png">
+<meta property="og:image" content="https://www.zfl9.com/images/sid-via-cookie.gif">
+<meta property="og:image" content="https://www.zfl9.com/images/sid-via-urlparam.gif">
+<meta property="og:image" content="https://www.zfl9.com/images/tomcat-server-xml.gif">
+<meta property="og:image" content="https://www.zfl9.com/images/tomcat-errorpage-hidden-info.png">
+<meta property="og:image" content="https://www.zfl9.com/images/tomcat-home-base.png">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.359Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Servlet 笔记">
+<meta name="twitter:description" content="Servlet（Server Applet），全称 Java Servlet，未有中文译文。是用 Java 编写的服务器端程序。其主要功能在于交互式地浏览和修改数据，动态生成 Web 内容。狭义的 Servlet 是指 Java 语言实现的一个接口（javax.servlet.Servlet），广义的 Servlet 是指任何实现了这个 Servlet 接口的类，一般情况下，人们将 Servlet">
+<meta name="twitter:image" content="https://www.zfl9.com/images/tomcat-welcome.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-servlet.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java Servlet 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-servlet.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java Servlet 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T17:12:00+08:00">
+                2018-04-13
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-servlet.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-servlet.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-servlet.html" class="leancloud_visitors" data-flag-title="Java Servlet 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Servlet（Server Applet），全称 Java Servlet，未有中文译文。是用 Java 编写的服务器端程序。其主要功能在于交互式地浏览和修改数据，动态生成 Web 内容。狭义的 Servlet 是指 Java 语言实现的一个接口（<code>javax.servlet.Servlet</code>），广义的 Servlet 是指任何实现了这个 Servlet 接口的类，一般情况下，人们将 Servlet 理解为后者。<br>Servlet 运行于支持 Java 的应用服务器中（常用的有 Tomcat、WebLogic）。从实现上讲，Servlet 可以响应任何类型的请求，但绝大多数情况下 Servlet 只用来扩展基于 HTTP 协议的 Web 服务器。</p>
+<a id="more"></a>
+<h2 id="Servlet-相关简介"><a href="#Servlet-相关简介" class="headerlink" title="Servlet 相关简介"></a>Servlet 相关简介</h2><p>介绍 Servlet 之前，先来了解 <strong>静态页面</strong>、<strong>动态页面</strong> 的区别：</p>
+<ul>
+<li><strong>静态页面</strong>：或称为静态资源，一般除了 php、asp、jsp、cgi 等文件外，其它的都是静态资源。如常见的 html、css、js、png、gif、gzip 文件。用户访问某个静态资源时，web 服务器进行的操作很简单，就是添加适当的 HTTP 响应头部，然后一个空行，表示头部结束，最后去磁盘中读取这个文件，将读取到的数据追加到这个空行的后面，同时将 HTTP 响应数据发送给浏览器，也就是一个简单的文件传输过程，仅此而已。</li>
+<li><strong>动态页面</strong>：与静态资源不同，对于 php、asp、jsp、cgi 等动态页面，web 服务器不再是简单的去磁盘读取这些文件，然后将其发送给浏览器（如果是这样的，那我们访问 php 页面得到的将是该页面的 php 源码，而不是执行后的输出），而是先运行这些 php、asp、jsp、cgi 程序，获取它们的输出，最后将输出结果发送给浏览器。也就是说，这些响应数据是程序运算后动态生成的，不再是简单的文件传输了。</li>
+</ul>
+<p>那么我们该如何编写动态页面呢？也就是说，我们该如何将编写的程序与 web 服务器进行交互，来动态的生成 web 内容呢？最简单的方式就是 CGI 了。CGI 是 Common Gateway Interface 的缩写，即 <strong>通用网关接口</strong>。CGI 不是一门编程语言，它只是规定 web 服务器与执行程序之间如何通信的一个协议。CGI 是独立于任何语言的，CGI 程序可以使用任何脚本语言或者是完全独立的编程语言实现，只要这个语言可以在当前系统上运行。比如 Python、Perl、PHP、Shell、C/C++ 等等（其实 Java 也是可以的，不过要借助 Shell 脚本）。</p>
+<p>我们来简要的了解一下 HTTP 的两种常见请求方式：GET、POST。GET 请求只有 <strong>请求行</strong>、<strong>请求头</strong>，而 POST 请求还有 <strong>请求体</strong>。其实我更喜欢将请求行和请求头看作是一部分，后面提到的”请求头”若未特别说明，应理解为”请求行” + “请求头”。请求头由多个报头域组成，每个报头域都是一个 name-value 名值对，格式 <code>NAME: VALUE[CRLF]</code>，注意冒号后面有一个空格符。请求头与请求体之间使用 <code>[CRLF]</code>（回车符 + 换行符）分隔。</p>
+<p><code>curl http://www.baidu.com</code> 的请求头部如下：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">GET / HTTP/1.1[CRLF]
+Host: www.baidu.com[CRLF]
+User-Agent: curl/7.59.0[CRLF]
+Accept: */*[CRLF]
+[CRLF]
+</script></code></pre>
+<p><code>curl http://127.0.0.1 -d &#39;username=Otokaze&#39; -d &#39;password=123456&#39;</code> 的请求头部如下：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">POST / HTTP/1.1[CRLF]
+Host: 127.0.0.1[CRLF]
+User-Agent: curl/7.59.0[CRLF]
+Accept: */*[CRLF]
+Content-Length: 32[CRLF]
+Content-Type: application/x-www-form-urlencoded[CRLF]
+[CRLF]
+username=Otokaze&password=123456
+</script></code></pre>
+<p><code>curl http://127.0.0.1 -F &#39;file=@/etc/resolv.conf&#39;</code> 的请求头部如下：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">POST / HTTP/1.1[CRLF]
+Host: 127.0.0.1[CRLF]
+User-Agent: curl/7.59.0[CRLF]
+Accept: */*[CRLF]
+Content-Length: 256[CRLF]
+Content-Type: multipart/form-data; boundary=------------------------e9407b918dea090b[CRLF]
+[CRLF]
+--------------------------e9407b918dea090b[CRLF]
+Content-Disposition: form-data; name="file"; filename="resolv.conf"[CRLF]
+Content-Type: application/octet-stream[CRLF]
+[CRLF]
+# Generated by resolvconf
+nameserver 192.168.255.254
+[CRLF]
+--------------------------e9407b918dea090b--[CRLF]
+</script></code></pre>
+<p><code>curl http://127.0.0.1 -F &#39;file1=@/etc/resolv.conf&#39; -F &#39;file2=@/etc/hosts&#39;</code> 的请求头部如下：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">POST / HTTP/1.1[CRLF]
+Host: 127.0.0.1[CRLF]
+User-Agent: curl/7.59.0[CRLF]
+Accept: */*[CRLF]
+Content-Length: 443[CRLF]
+Content-Type: multipart/form-data; boundary=------------------------f979f247a1e5df24[CRLF]
+[CRLF]
+--------------------------f979f247a1e5df24[CRLF]
+Content-Disposition: form-data; name="file1"; filename="resolv.conf"[CRLF]
+Content-Type: application/octet-stream[CRLF]
+[CRLF]
+# Generated by resolvconf
+nameserver 192.168.255.254
+[CRLF]
+--------------------------f979f247a1e5df24[CRLF]
+Content-Disposition: form-data; name="file2"; filename="hosts"[CRLF]
+Content-Type: application/octet-stream[CRLF]
+[CRLF]
+127.0.0.1   arch
+::1         arch
+[CRLF]
+--------------------------f979f247a1e5df24--[CRLF]
+</script></code></pre>
+<p><strong>Web 服务器与 CGI 程序的通信过程</strong></p>
+<ul>
+<li>Web 服务器 =&gt; CGI 程序：请求头转换为环境变量传递给 CGI 程序，请求体则写入到 CGI 程序的标准输入中。</li>
+<li>CGI 程序 =&gt; Web 服务器：CGI 程序的输出分为两个部分，即响应头和响应体，它们之间使用 <code>[CRLF]</code> 分隔。</li>
+</ul>
+<p>因此，只要一门语言可以读取环境变量，可以读取标准输入，可以向标准输出中写入数据，那么就可以用来编写 CGI 程序。符合这三个条件的语言实在是太多了，或者说，很难找到不符合这些条件的编程语言。</p>
+<p>为了更加深刻的理解这个过程，我用 Linux 中使用最广泛的 Shell 脚本和 Apache 服务器来编写一个简单的 CGI 程序：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">#!/bin/bash
+echo -ne "Content-Type: text/plain; charset=UTF-8\r\n"
+echo -ne "\r\n"
+echo -e "=============== HTTP Request Head ==============="
+env | sort | grep -Pv '^PATH=|^PWD=|^SHLVL=|^_='
+echo -e "=============== HTTP Request Body ==============="
+cat
+</script></code></pre>
+<p><code>curl 127.0.0.1</code>，GET 请求，请求体为空：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">$ curl 127.0.0.1
+=============== HTTP Request Head ===============
+CONTEXT_DOCUMENT_ROOT=/srv/http/
+CONTEXT_PREFIX=/
+DOCUMENT_ROOT=/srv/http
+GATEWAY_INTERFACE=CGI/1.1
+HTTP_ACCEPT=*/*
+HTTP_HOST=127.0.0.1
+HTTP_USER_AGENT=curl/7.59.0
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_PORT=26168
+REQUEST_METHOD=GET
+REQUEST_SCHEME=http
+REQUEST_URI=/
+SCRIPT_FILENAME=/srv/http/index.sh
+SCRIPT_NAME=/index.sh
+SERVER_ADDR=127.0.0.1
+SERVER_ADMIN=root@zfl9.com
+SERVER_NAME=127.0.0.1
+SERVER_PORT=80
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SIGNATURE=
+SERVER_SOFTWARE=Apache/2.4.33 (Unix)
+=============== HTTP Request Body ===============
+</script></code></pre>
+<p><code>curl 127.0.0.1 -d &#39;username=Otokaze&#39; -d &#39;password=123456&#39;</code>，POST 请求（表单提交）：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">$ curl 127.0.0.1 -d 'username=Otokaze' -d 'password=123456'
+=============== HTTP Request Head ===============
+CONTENT_LENGTH=32
+CONTENT_TYPE=application/x-www-form-urlencoded
+CONTEXT_DOCUMENT_ROOT=/srv/http/
+CONTEXT_PREFIX=/
+DOCUMENT_ROOT=/srv/http
+GATEWAY_INTERFACE=CGI/1.1
+HTTP_ACCEPT=*/*
+HTTP_HOST=127.0.0.1
+HTTP_USER_AGENT=curl/7.59.0
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_PORT=26170
+REQUEST_METHOD=POST
+REQUEST_SCHEME=http
+REQUEST_URI=/
+SCRIPT_FILENAME=/srv/http/index.sh
+SCRIPT_NAME=/index.sh
+SERVER_ADDR=127.0.0.1
+SERVER_ADMIN=root@zfl9.com
+SERVER_NAME=127.0.0.1
+SERVER_PORT=80
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SIGNATURE=
+SERVER_SOFTWARE=Apache/2.4.33 (Unix)
+=============== HTTP Request Body ===============
+username=Otokaze&password=123456
+</script></code></pre>
+<p><code>curl 127.0.0.1 -F &#39;file=@/etc/resolv.conf&#39;</code>，POST 请求，<code>multipart/form-data</code>（文件上传）：</p>
+<pre><code class="language-http line-numbers"><script type="text/plain">$ curl 127.0.0.1 -F 'file=@/etc/resolv.conf'
+=============== HTTP Request Head ===============
+CONTENT_LENGTH=256
+CONTENT_TYPE=multipart/form-data; boundary=------------------------5edad009420c5145
+CONTEXT_DOCUMENT_ROOT=/srv/http/
+CONTEXT_PREFIX=/
+DOCUMENT_ROOT=/srv/http
+GATEWAY_INTERFACE=CGI/1.1
+HTTP_ACCEPT=*/*
+HTTP_HOST=127.0.0.1
+HTTP_USER_AGENT=curl/7.59.0
+QUERY_STRING=
+REMOTE_ADDR=127.0.0.1
+REMOTE_PORT=26172
+REQUEST_METHOD=POST
+REQUEST_SCHEME=http
+REQUEST_URI=/
+SCRIPT_FILENAME=/srv/http/index.sh
+SCRIPT_NAME=/index.sh
+SERVER_ADDR=127.0.0.1
+SERVER_ADMIN=root@zfl9.com
+SERVER_NAME=127.0.0.1
+SERVER_PORT=80
+SERVER_PROTOCOL=HTTP/1.1
+SERVER_SIGNATURE=
+SERVER_SOFTWARE=Apache/2.4.33 (Unix)
+=============== HTTP Request Body ===============
+--------------------------5edad009420c5145
+Content-Disposition: form-data; name="file"; filename="resolv.conf"
+Content-Type: application/octet-stream
+
+# Generated by resolvconf
+nameserver 192.168.255.254
+
+--------------------------5edad009420c5145--
+</script></code></pre>
+<p>请求体没什么好说的，就是原始数据，没有变动，我们主要分析与请求头相关的环境变量。可以发现，除了 <code>Content-Type</code>、<code>Content-Length</code> 两个与请求体有关的报头域外，其它报头域（包括自定义的报头域）均被转换为以 <code>HTTP_</code> 开头的环境变量，且被转换为大写（头域 Name 是不区分大小写的），而连字符则被转换为下划线。而请求行则被表示为 <code>REQUEST_METHOD</code>、<code>REQUEST_URI</code>、<code>REQUEST_SCHEME</code> 几个字段。</p>
+<p>可以发现，使用 CGI 编写动态页面是非常简单的，但是，这并不是说 CGI 就完美了，事实上，它有很多缺点，以至于现在基本没人使用 CGI 编写动态页面。为什么呢？最主要的问题就是 CGI 的 <strong>fork-and-execute</strong> 工作模式。每次访问 CGI 页面时，Web 服务器都要启动一个新的 CGI 进程，然后服务完成后又退出。也就是说，当前有多少个请求在线，就有多少个 CGI 进程在系统运行。这种工作模式在大规模的并发下，就会死翘翘了。</p>
+<p>为了提高 CGI 的性能，有人提出了 FastCGI。FastCGI 是 Fast Common Gateway Interface 的缩写，即 <strong>快速通用网关接口</strong>。同样的，FastCGI 也是一种协议，它是早期 CGI 的增强版本。FastCGI 致力于减少 Web 服务器与 CGI 程序之间交互的开销，从而使服务器可以同时处理更多的 Web 请求。</p>
+<p>CGI 使外部程序与 Web 服务器之间交互成为可能。CGI 程序运行在独立的进程中，并对每个 Web 请求创建一个进程，这种方法非常容易实现，但效率很差，难以扩展。面对大量请求，进程的大量创建和消亡使操作系统性能大大下降。此外，由于地址空间无法共享，也限制了资源重用。</p>
+<p>与为每个请求创建一个新的进程不同，FastCGI 会预先启动多个 CGI 进程，当 Web 服务器接到一个请求时，将相关的环境变量与请求主体通过 Socket 传递给 FastCGI 管理器，FastCGI 管理器从 CGI 进程池中随机挑选一个进程，来处理这个请求，处理完毕后，该 CGI 进程不会立即退出，而是放回进程池中，继续等待下一个 Web 请求，直到 FastCGI 关闭。因为没有了额外的进程创建与进程销毁过程，所以 FastCGI 的性能相比 CGI 大大提高。</p>
+<p>但是，进程池的消耗也是不小的，如果可以采取线程池的方式，那就更加完美了，这就是 Servlet 采取的方法，因为 Java 天生就支持多线程，况且还有 J.U.C 包的助力。文章开头说了，狭义上的 Servlet 是指 JavaEE 中的一个接口 <code>javax.servlet.Servlet</code>，广义上的 Servlet 是指实现了 Servlet 接口的类，我们通常将 Servlet 理解为后者。Servlet 是一个普通的 Java 类，可以简单的将一个 Servlet 类理解为一个动态页面。</p>
+<p>为了更好的利用 Java 的优势，我们不再使用 Apache、Nginx 等 Web 服务器了，而是使用 Java 编写的 Web 服务器。此 Java 服务器程序监听在 0.0.0.0:80 端口，维护一个线程池，等待客户端的连接请求。当有一个请求到达时，服务器程序从线程池中选择一个空闲线程，执行对应的 Servlet 程序，当有另一个请求到达时，也是从线程池中抽取一个空闲线程，执行对应的 Servlet 程序。执行完毕后，这些线程不会立即销毁，而是回到线程池中，等待新的任务到达。</p>
+<p>而这个 Java 语言实现的 HTTP 服务器被称为 <strong>应用服务器</strong>，实际上，应用服务器根本不用我们自己开发，市面上有很多 Java 应用服务器的实现，有开源的（如 Tomcat），也有付费的（如 WebLogic）。因此，我们实际上要操心的只是 Servlet 而已。因为从始至终都只有应用服务器这一个 Java 进程在系统运行，所以此方案占用的系统资源是非常少的，最大的资源消耗也就是线程池了。</p>
+<p>注意，Java 应用服务器只能执行 Java 程序（比如这里的 Servlet，但实际上还有 Filter、Listener 等等），那么 <strong>静态资源</strong> 该怎么处理呢？也是通过 Servlet 来处理，让 Servlet 去磁盘中读取这些静态资源，然后发送回客户端。也就是说，在 Java 应用服务器中，静态资源和动态资源都是要经过 Servlet 处理的，这也带来一个问题，在处理静态资源时，Java 肯定是没有 C、C++ 快速的，况且，Java 应用服务器没有 Apache、Nginx 这么多关于静态资源的优化参数，就更慢了。所以，通常情况下，我们都是将 Apache/Nginx + Tomcat 两者整合在一起，Apache/Nginx 在前，Tomcat 在后，所有 Web 请求都先到达 Apache/Nginx，Apache/Nginx 判断是否为动态资源，如果是则交给后端的 Tomcat 处理，否则（静态资源）直接使用 Apache/Nginx 处理。这样的架构下，静态资源和动态资源的处理速度都非常好，两全其美。</p>
+<p>这里先理清楚几个名词，通常所说的 Servlet 是指实现了 javax.servlet.Servlet 接口的类，但是要运行这些 Servlet 类就必须要有一个专用的执行环境，而提供这个环境的就是 <strong>Servlet 容器</strong>（其实就是一个普通的 Java 程序），目前有很多 Servlet 容器的实现，比如开源的 Tomcat，但 Tomcat 不只包含 Servlet 容器，还包含其它一些组件，Tomcat 的 Servlet 容器有一个专有名称 Catalina。而 Tomcat 又是 Apache 软件基金会下属的 Jakarta 项目开发的一个 Servlet 容器，因此你经常看到这样一个名词 Apache Tomcat，其实就是指 Tomcat。</p>
+<p>差点忘了介绍 Java EE，目前，Java 平台有 3 个版本，它们分别是：</p>
+<ul>
+<li><strong>Java SE</strong>：Java 平台标准版，所谓的标准版就是 JVM + Java标准类库，也就是 JRE。</li>
+<li><strong>Java EE</strong>：Java 平台企业版，它只是一个规范，任何人都可以去实现，如 Tomcat 实现了 Servlet API。</li>
+<li><strong>Java ME</strong>：Java 平台微型版，这是一套专门为于移动设备、嵌入式设备设计的 API，注意 Android 不使用 JavaME。</li>
+</ul>
+<p><strong>相关文档 [参考]</strong></p>
+<ul>
+<li><a href="https://docs.oracle.com/javaee/7/api/index.html" rel="external nofollow noopener noreferrer" target="_blank">Java(TM) EE 7 Specification APIs</a></li>
+<li><a href="https://tomcat.apache.org/tomcat-8.5-doc/index.html" rel="external nofollow noopener noreferrer" target="_blank">Apache Tomcat 8.5 Documentation Index</a></li>
+</ul>
+<h2 id="Servlet-环境配置"><a href="#Servlet-环境配置" class="headerlink" title="Servlet 环境配置"></a>Servlet 环境配置</h2><p>首先是下载 Tomcat 了，这里选择最新稳定版 <a href="https://tomcat.apache.org/download-80.cgi" rel="external nofollow noopener noreferrer" target="_blank">Tomcat 8.5</a>，<a href="http://apache.mirror.rafal.ca/tomcat/tomcat-8/v8.5.30/bin/apache-tomcat-8.5.30.tar.gz" rel="external nofollow noopener noreferrer" target="_blank">apache-tomcat-8.5.30.tar.gz</a>，tomcat 是绿色软件，不需要安装，解压后可以在 bin 目录看到 .bat、.sh 脚本，前者适用于 Windows，后者适用于 Linux。tomcat 目录下的文件夹命名都比较规范，一看就懂，这里就不详细说它们的作用了。多个 tomcat 版本可以共存，也可以同时运行，但要注意使用不同的端口号。</p>
+<p>然后配置与 Tomcat 相关的两个环境变量，<code>CATALINA_HOME</code>、<code>PATH</code>，前者指定 tomcat 的绝对路径，后者则将 $tomcat/bin/ 添加到 PATH 搜索路径中。在 Linux 中，可以新建一个文件 <code>/etc/profile.d/tomcat.sh</code>，配置如下（这里假设 tomcat 的路径为 /usr/local/tomcat8/）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">export CATALINA_HOME=/usr/local/tomcat8
+export PATH=$CATALINA_HOME/bin:$PATH
+</script></code></pre>
+<p>配好之后，执行 <code>source /etc/profile</code> 立即生效，运行 <code>startup.sh</code> 命令即可启动 tomcat，tomcat 默认监听在 8080 端口，打开浏览器，输入 <a href="http://localhost:8080" rel="external nofollow noopener noreferrer" target="_blank">http://localhost:8080</a> 即可查看 tomcat 的欢迎页。使用 <code>shutdown.sh</code> 命令关闭 tomcat。但是，我觉得这些脚本不是很好用，比如查看 tomcat 是否正在运行，就只能使用 <code>ps | grep java</code> 了。所以我在 tomcat.sh 中添加了如下内容，怎么用就不用我说了吧，一看就懂：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">alias tomcat.start='startup.sh'
+alias tomcat.stop='shutdown.sh'
+alias tomcat.status='__tomcat_status'
+alias tomcat.restart='shutdown.sh && startup.sh'
+alias tomcat.conftest='configtest.sh'
+alias tomcat.version='version.sh'
+
+function __tomcat_status() {
+    if [ $(/bin/ps -ef | /bin/grep -E "java.+$CATALINA_HOME" | /bin/grep -v 'grep' -c) -ge 1 ]; then
+        echo "tomcat running ..."
+        return 0
+    else
+        echo "tomcat stopped ..."
+        return 1
+    fi
+}
+</script></code></pre>
+<p><img src="/images/tomcat-welcome.png" alt="Tomcat 欢迎页"></p>
+<p>不过，如果你要编写 Servlet 类，那么还需要将 tomcat 提供的 servlet-api.jar 添加到 CLASSPATH 中，不过，为了一劳永逸，我建议直接将 $CATALINA_HOME/lib 目录下的所有 jar 文件添加到 CLASSPATH 中。配置如下（添加到 tomcat.sh 中）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">export CLASSPATH=$CATALINA_HOME/lib/*:$CLASSPATH
+</script></code></pre>
+<h2 id="Tomcat-使用简介"><a href="#Tomcat-使用简介" class="headerlink" title="Tomcat 使用简介"></a>Tomcat 使用简介</h2><p><strong>tomcat 目录结构</strong></p>
+<ul>
+<li>bin：存放启动、关闭 tomcat 的相关脚本。</li>
+<li>lib：存放 tomcat 服务器运行时需要的 jar 包。</li>
+<li>conf：存放 tomcat 全局配置文件，如 server.xml。</li>
+<li>webapps：存放 tomcat webapp（项目存放目录）。</li>
+<li>logs：存放 tomcat 服务器运行时产生的日志文件。</li>
+<li>work：存放 tomcat 服务器运行时产生的数据文件。</li>
+<li>temp：存放 tomcat 服务器运行时产生的临时文件。</li>
+</ul>
+<p>bin 目录下的几个常用脚本：</p>
+<ul>
+<li><code>startup.sh</code>：启动 tomcat。</li>
+<li><code>shutdown.sh</code>：关闭 tomcat。</li>
+<li><code>version.sh</code>：查看 tomcat 版本。</li>
+<li><code>configtest.sh</code>：测试 server.xml。</li>
+<li><code>catalina.sh</code>：does everything，其它脚本均调用此脚本。</li>
+</ul>
+<p>conf 目录下的几个重要文件：</p>
+<ul>
+<li><code>server.xml</code>：tomcat 服务器配置文件，如修改 tomcat 监听端口，虚拟主机配置，https 支持。此文件修改后须重启 tomcat 生效。</li>
+<li><code>tomcat-users.xml</code>：tomcat 用户角色配置文件，如果需要使用 manager、host-manager，则需要配置此文件，修改后也是重启生效。</li>
+<li><code>web.xml</code>：web 项目中 servlet/filter/listener 相关配置（url 映射、listener 注册、mime-type 定义、欢迎页配置、错误页配置等），全局配置文件。$webapps/[app-name]/WEB-INF/web.xml 为项目配置文件，优先级更高。这两个配置文件默认情况下是热加载的（context.xml 中可配置），tomcat 会自动扫描这些配置文件，如果发现文件修改时间变了，则自动进行重载，无需手动重启 tomcat。</li>
+<li><code>context.xml</code>：上下文相关配置，所谓的上下文就是 web 项目，web 项目也叫做 app 应用，全局配置文件。$conf/Catalina/[hostname]/context.xml.default 为主机配置文件，$conf/Catalina/[hostname]/[app-name].xml 为项目配置文件，$webapps/[app-name]/META-INF/context.xml 为嵌入配置文件（默认启用，默认不会自动复制到 $conf/Catalina/[hostname]/[app-name].xml，可通过 $conf/server.xml 的 Host 元素的 copyXML、deployXML 属性进行配置）。$conf/Catalina/[hostname]/ 目录下的上下文配置文件优先级最高。context.xml 和 web.xml 默认都是热加载的，tomcat 会定期扫描这些文件的修改时间，如果发现变了就会自动重载。</li>
+</ul>
+<p><strong>webapps 目录结构</strong>：<br>web 项目一般都放在这个目录，<code>$CATALINA_HOME/webapps/[app-name]</code> 对应的 url 为 <code>http://[hostname]/[app-name]</code>。其中有一个特殊的 app-name：ROOT，访问 ROOT app 不需要任何前缀，即 <code>http://[hostname]</code>。</p>
+<p><code>$CATALINA_HOME/webapps/[app-name]/WEB-INF/web.xml</code> 文件管理 Servlet 与访问 URL 之间的对应关系。假设，web.xml 定义了一条映射：/index.do 对应某个 Servlet。如果 app-name 为 ROOT，则访问的 url 为 <code>http://[hostname]/index.do</code>，如果 app-name 为 myapp，则访问的 url 为 <code>http://[hostname]/myapp/index.do</code>，其它的同理。也就是说 web.xml 中的 / 是相对于 <code>http://[hostname]/[app-name]</code> 的（ROOT 除外，它没有特定前缀）。</p>
+<p>打开 webapps 目录，可以看到几个默认的文件夹，如下：</p>
+<ul>
+<li>ROOT：tomcat 默认 app。【Servlet 环境配置】中的欢迎页就是这个 app。</li>
+<li>manager：tomcat 自带的 app 管理器。默认禁用，向 tomcat-users.xml 中添加用户后才能使用。通过 manager，可以在线启动、停止、重载、添加、删除 app。manager 只能管理当前虚拟主机中的 app。如果需要在其他虚拟主机中使用 manager，只需将 $CATALINA_HOME/webapps/manager 目录复制到给定虚拟主机 webapps 目录下即可。</li>
+<li>host-manager：tomcat 自带的 host 管理器。默认禁用，向 tomcat-users.xml 中添加用户后才能使用。通过 host-manager，可以在线添加、删除、停止 vhost。manager 可以管理除当前 vhost 外的 vhost。</li>
+<li>docs：tomcat 自带文档。</li>
+<li>examples：tomcat 自带例子。</li>
+</ul>
+<p>每个 app 的目录结构：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">$ tree .
+.
+├── index.html
+├── META-INF
+│   └── context.xml
+└── WEB-INF
+    ├── classes
+    │   └── com
+    │       └── zfl9
+    │           └── Test.class
+    ├── lib
+    │   └── test-lib.jar
+    └── web.xml
+</script></code></pre>
+<p>WEB-INF 目录不能直接被客户端访问，如果要访问里面的资源，必须在 web.xml 中进行相应的映射，因此该目录也称为安全目录。其中 classes 目录用于存放 Servlet 类（按照全限定类名的目录结构存放，比如上面的 com.zfl9.Test 类），lib 目录存放 classes 中的类的相关依赖包，只能以 jar 包的方式存放，如果没有依赖包，lib 目录可以不要。而 web.xml 的作用之前已经说了，存放 servlet/filter/listener 相关的配置（如 url 映射关系），web.xml 还有一个专业的名称：部署描述符文件。在 servlet 3.0 后，web.xml 文件不再是必须的了，因为我们可以使用 javax.servlet.annotation 包中的相关注解来配置 servlet/filter/listener。</p>
+<p>META-INF 应该是 Tomcat 独有的，主要用于存放 context.xml 上下文配置文件，这个目录客户端无法访问。</p>
+<p>除了这两个目录外，其它地方都可以用来存放静态资源（大部分 jsp 页面也放在这里），比如上面的 index.html，这些静态资源不需要在 web.xml 注册（但实际上它们已经在 $CATALINA_HOME/conf/web.xml 中注册了），我们可以直接通过对应的 url 访问它们。</p>
+<p>logs 目录的几个日志文件：</p>
+<ul>
+<li>catalina.out：tomcat 运行时的标准输出、标准错误均被重定向至此文件，同时 tomcat 的一些运行日志也会写入到这里，这也是为什么 catalina.out 与 catalina.log 也很多相同的日志内容（直接合并一个文件多好）。</li>
+<li>catalina.yyyy-MM-dd.log：tomcat 服务器运行日志，其中 yyyy-MM-dd 为记录日志的日期。</li>
+<li>manager.yyyy-MM-dd.log：manager 内置项目的运行日志，yyyy-MM-dd 意义同上。</li>
+<li>host-manager.yyyy-MM-dd.log：host-manager 内置项目的运行日志，yyyy-MM-dd 意义同上。</li>
+<li>localhost.yyyy-MM-dd.log：默认 vhost 的运行日志（访问记录除外），yyyy-MM-dd 意义同上。</li>
+<li>localhost_access_log.yyyy-MM-dd.txt：默认 vhost 的访问日志，每行都是一个 HTTP 请求记录。</li>
+</ul>
+<p>work 目录结构 <code>$CATALINA_HOME/work/Catalina/[hostname]/[app-name]</code>，存放运行时由 JSP 页面生成的 Servlet 源文件以及编译后的类文件、Session 持久化文件等。</p>
+<p>temp 目录主要存放 tomcat 运行时产生的一些临时文件，可以安全删除这个目录下的内容，但是切记不要删除 temp 这个目录。</p>
+<h2 id="Servlet-生命周期"><a href="#Servlet-生命周期" class="headerlink" title="Servlet 生命周期"></a>Servlet 生命周期</h2><p>第一节中我们说到，Servlet 容器在内部维护了一个线程池，当一个 Web 请求到达时，容器会从池中随机挑选一个线程来执行相应的 Servlet。Servlet 是一个实现了 javax.servlet.Servlet 接口的类，Servlet 接口定义了 5 个方法，其中比较重要的 3 个如下：<br><code>void init(ServletConfig config) throws ServletException</code>：初始化方法，servlet 实例化时此方法被调用，相当于构造函数，只会在实例化时执行一次。<br><code>void service(ServletRequest req, ServletResponse res) throws ServletException, IOException</code>：服务方法，主要方法，用于动态生成 Web 响应内容。<br><code>void destroy()</code>：servlet 实例被回收前执行的方法，相当于 C++ 的析构函数，和初始化方法一样，只会执行一次，主要用于资源释放，如关闭数据库连接。</p>
+<p>但实际上，我们不会直接实现 Servlet 接口，而是继承 HttpServlet 类（HttpServlet 继承自 GenericServlet，而 GenericServlet 实现了 Servlet 接口）。HttpServlet 的 service() 方法其实也不需要我们重写，该方法的可能实现如下（网上找到，重在理解）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">@Override
+public void service(ServletRequest req, ServletResponse res)
+    throws ServletException, IOException
+{
+    HttpServletRequest  request;
+    HttpServletResponse response;
+
+    if (!(req instanceof HttpServletRequest &&
+            res instanceof HttpServletResponse)) {
+        throw new ServletException("non-HTTP request or response");
+    }
+
+    request = (HttpServletRequest) req;
+    response = (HttpServletResponse) res;
+
+    service(request, response);
+}
+
+protected void service(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException
+{
+    String method = req.getMethod();
+
+    if (method.equals(METHOD_GET)) {
+        long lastModified = getLastModified(req);
+        if (lastModified == -1) {
+            // servlet doesn't support if-modified-since, no reason
+            // to go through further expensive logic
+            doGet(req, resp);
+        } else {
+            long ifModifiedSince = req.getDateHeader(HEADER_IFMODSINCE);
+            if (ifModifiedSince < lastModified) {
+                // If the servlet mod time is later, call doGet()
+                // Round down to the nearest second for a proper compare
+                // A ifModifiedSince of -1 will always be less
+                maybeSetLastModified(resp, lastModified);
+                doGet(req, resp);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            }
+        }
+
+    } else if (method.equals(METHOD_HEAD)) {
+        long lastModified = getLastModified(req);
+        maybeSetLastModified(resp, lastModified);
+        doHead(req, resp);
+
+    } else if (method.equals(METHOD_POST)) {
+        doPost(req, resp);
+
+    } else if (method.equals(METHOD_PUT)) {
+        doPut(req, resp);
+
+    } else if (method.equals(METHOD_DELETE)) {
+        doDelete(req, resp);
+
+    } else if (method.equals(METHOD_OPTIONS)) {
+        doOptions(req,resp);
+
+    } else if (method.equals(METHOD_TRACE)) {
+        doTrace(req,resp);
+
+    } else {
+        //
+        // Note that this means NO servlet supports whatever
+        // method was requested, anywhere on this server.
+        //
+
+        String errMsg = lStrings.getString("http.method_not_implemented");
+        Object[] errArgs = new Object[1];
+        errArgs[0] = method;
+        errMsg = MessageFormat.format(errMsg, errArgs);
+
+        resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, errMsg);
+    }
+}
+</script></code></pre>
+<p>很容易知道，我们只需要重写 HttpServlet 的 doXxx() 方法，最常用的两个就是 doGet() 和 doPost()。</p>
+<p>Servlet 对象的生命周期：</p>
+<ul>
+<li>通过 init() 方法进行初始化，只在实例化时执行一次；</li>
+<li>通过 service() 方法处理客户端请求，servlet 对象的主要方法；</li>
+<li>通过 destroy() 方法进行资源回收，只在 servlet 对象被回收前执行一次；</li>
+<li>最后，servlet 对象被 JVM 垃圾回收线程（GC 线程）回收，释放占用的内存。</li>
+</ul>
+<p>一般来说，servlet 对象在实例化后就不会被回收了，常驻内存，并且，在同一个 Servlet 容器中，一个 Servlet 类只存在一个实例。而又因为 Servlet 容器是多线程模型的，所以要特别注意 Servlet 的线程安全问题。在 Servlet 中应尽量避免使用实例变量，可以的话，使用 service() 方法的局部变量代替。</p>
+<h2 id="Servlet-HelloWorld"><a href="#Servlet-HelloWorld" class="headerlink" title="Servlet HelloWorld"></a>Servlet HelloWorld</h2><p>为了方便，我们先将 $CATALINA_HOME/webapps/ROOT 目录重命名为 $CATALINA_HOME/webapps/tomcat，然后重新建立一个 ROOT 项目（这样做主要是为了少打字～）。在这之后，如果想要访问 tomcat 的默认页面，可以通过 <a href="http://[hostname]/tomcat/" rel="external nofollow noopener noreferrer" target="_blank">http://[hostname]/tomcat/</a> 来访问。</p>
+<p>然后我们在新的 ROOT 目录中新建几个文件夹，具体的：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/tomcat-apps/ROOT [8:41:08]
+$ mkdir WEB-INF
+
+# root @ arch in ~/tomcat-apps/ROOT [8:41:41]
+$ cd WEB-INF
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF [8:41:42]
+$ mkdir classes src
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF [8:41:54]
+$ ll
+total 8.0K
+drwxr-xr-x 2 root root 4.0K Apr 20 08:41 classes
+drwxr-xr-x 2 root root 4.0K Apr 20 08:41 src
+</script></code></pre>
+<p>其中 src 目录用于存放 servlet 源文件（也可以使用其它名字），假设包名为 com.zfl9，则：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/tomcat-apps/ROOT/WEB-INF [8:42:08]
+$ mkdir -p classes/com/zfl9
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF [8:46:14]
+$ mkdir -p src/com/zfl9
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF [8:46:18]
+$ tree
+.
+├── classes
+│   └── com
+│       └── zfl9
+└── src
+    └── com
+        └── zfl9
+
+6 directories, 0 files
+</script></code></pre>
+<p>然后，我们在 src/com/zfl9/ 中新建 Index.java，hello-world 程序：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Index extends HttpServlet {
+    // java.io.Serializable
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='utf-8'>");
+        out.println("<title>hello, world!</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<h1>hello, world!</h1>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+}
+</script></code></pre>
+<p>编译 Index.java，添加 WEB-INF/web.xml 部署描述符文件：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="utf-8"?>
+<web-app>
+  <!-- 项目名称 [可选] -->
+  <display-name>My Web Application</display-name>
+
+  <!-- 定义 Servlet -->
+  <servlet>
+    <servlet-name>Index</servlet-name>
+    <servlet-class>com.zfl9.Index</servlet-class>
+  </servlet>
+
+  <!-- 映射 Servlet -->
+  <servlet-mapping>
+    <servlet-name>Index</servlet-name>
+    <url-pattern>/index.do</url-pattern>
+  </servlet-mapping>
+</web-app>
+</script></code></pre>
+<p>为了给后面的 Nginx + Tomcat 整合做准备，建议规范 Servlet 页面的后缀名，这里我选择常用的 <code>*.do</code>。默认情况下，<code>welcome-file-list</code> 中没有添加 index.do 为默认主页，修改 conf/web.xml 全局配置文件中的 welcome-file-list，添加 index.do 条目：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.do</welcome-file>
+</welcome-file-list>
+</script></code></pre>
+<p>因为 tomcat 服务器默认监听在 0.0.0.0:8080/tcp 地址，而 http 协议的默认端口号为 80，为了不输入端口号，我建议先将 tomcat 的端口改为 80，修改 conf/server.xml，定位至 Server -&gt; Service -&gt; Connector[protocol=”HTTP/1.1”]，修改它的 port 属性，改为 80 端口即可。</p>
+<p>最后，启动 tomcat，打开浏览器，键入 <code>http://localhost</code> 或 <code>http://localhost/index.do</code>（一样的）。不过，我喜欢使用 curl 来访问，输出如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF [13:21:20]
+$ curl http://localhost
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>hello, world!</title>
+</head>
+<body>
+<h1>hello, world!</h1>
+</body>
+</html>
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF [13:21:40]
+$ curl http://localhost -i  # 显示 HTTP 响应头
+HTTP/1.1 200
+Content-Type: text/html;charset=UTF-8
+Content-Length: 136
+Date: Fri, 20 Apr 2018 05:21:45 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>hello, world!</title>
+</head>
+<body>
+<h1>hello, world!</h1>
+</body>
+</html>
+</script></code></pre>
+<p>Index.java 的代码很容易理解，其实和第一节中的 CGI 程序很相似，只不过现在是用 Java 写的摆了。基本结构都是：<strong>先写响应头，再写响应体</strong>（但这不是强制性的，和 Shell 脚本还是有点不一样的）。javax.servlet.ServletResponse 中有两个方法获取 out 对象（这两个方法不可同时调用，否则抛出异常，页面会返回 500 错误），分别是：</p>
+<ul>
+<li><code>PrintWriter getWriter() throws IOException</code>：PrintWriter 对象，用于写入纯文本数据。</li>
+<li><code>ServletOutputStream getOutputStream() throws IOException</code>：OutputStream 对象，用于写入二进制数据。</li>
+</ul>
+<p>现在来分析一下 web.xml 文件，其中最主要的就是 <code>&lt;servlet&gt; ... &lt;/servlet&gt;</code>、<code>&lt;servlet-mapping&gt; ... &lt;/servlet-mapping&gt;</code>。这两个元素一般都是成对出现的，前者用于注册 Servlet，后者用于映射 Servlet。它们有一个共同子元素 <code>&lt;servlet-name&gt;</code>，表示 servlet 的名称，这个名称可以随便取，但是它们两个必须保持一致。<code>&lt;servlet-class&gt;</code> 中填写 Servlet 的全限定类名。然后我们来详细分析 url-pattern。</p>
+<p>url-pattern 可以有多个，url-pattern 共有四种语法，它们按照从高到低的优先级排列如下：</p>
+<ul>
+<li><strong>精确匹配</strong>：如 <code>/index.do</code>，只匹配 /index.do 这个 url。</li>
+<li><strong>前缀匹配</strong>：如 <code>/index/*</code>，匹配 /index/ 目录下的任意 url。</li>
+<li><strong>后缀匹配</strong>：如 <code>*.do</code>，匹配任意以 .do 结尾的 url。</li>
+<li><strong>默认匹配</strong>：<code>/</code>，任意未被上述模式匹配的 url 将被它匹配。</li>
+</ul>
+<p>当我们访问 <code>http://localhost/index.do?name1=value1&amp;name2=value2</code> 时，tomcat 首先去除 query-string 部分，得到 <code>/index.do</code>，该 url 与 ROOT 项目相匹配，然后 tomcat 查找 conf/web.xml、WEB-INF/web.xml 文件中的 url-pattern 元素，按照上述优先级，依次匹配对应的 url-pattern 模式，一旦命中，就会停止继续匹配，然后找到该 url-pattern 对应的 Servlet，最后交给它处理这个请求。</p>
+<p>这里强调一点，tomcat 是拿着 url 去匹配 web.xml 中的 url-pattern 模式，然后再找到对应的 Servlet。我们来看看默认的 conf/web.xml 文件内容：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+  version="3.1">
+
+    <!-- 默认 Servlet，处理静态资源 -->
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>listings</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- JSP Servlet，处理 JSP 文件 -->
+    <servlet>
+        <servlet-name>jsp</servlet-name>
+        <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+        <init-param>
+            <param-name>fork</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xpoweredBy</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <!-- default: "/" -->
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- jsp: "*.jsp|*.jspx" -->
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.jspx</url-pattern>
+    </servlet-mapping>
+
+    <!-- session 超时配置(min) -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!-- MIME 类型定义 -->
+    <mime-mapping>
+        <extension>123</extension>
+        <mime-type>application/vnd.lotus-1-2-3</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>3dml</extension>
+        <mime-type>text/vnd.in3d.3dml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>3ds</extension>
+        <mime-type>image/x-3ds</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>3g2</extension>
+        <mime-type>video/3gpp2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>3gp</extension>
+        <mime-type>video/3gpp</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>7z</extension>
+        <mime-type>application/x-7z-compressed</mime-type>
+    </mime-mapping>
+    <!-- 有几千行，省略了... -->
+
+    <!-- 默认页面的名称 -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.do</welcome-file>
+    </welcome-file-list>
+</web-app>
+</script></code></pre>
+<p>这里有两个预注册的 servlet，他们分别是：</p>
+<ul>
+<li><code>org.apache.catalina.servlets.DefaultServlet</code>，name 为 default，url-pattern 为 <code>/</code>。</li>
+<li><code>org.apache.jasper.servlet.JspServlet</code>，name 为 jsp，url-pattern 为 <code>*.jsp</code>、<code>*.jspx</code>。</li>
+</ul>
+<p>在 tomcat 中，所有 url 都会被某个 servlet 命中，无论它是 servlet 页面、jsp 页面、静态页面。也就是说，tomcat 其实只能处理 servlet。访问 jsp 页面时，被 JspServlet 这个 Servlet 命中，它将对应的 jsp 页面转换为 servlet 源文件，然后编译为 servlet 类文件，最后运行这个 servlet。访问其它静态资源时，被 DefaultServlet 这个 Servlet 命中，它先判断这个静态资源是否存在磁盘中，如果存在，则读取文件内容，发送给客户端，如果不存在，则返回 404 Not Found 页面。Java 的 IO 库性能肯定是比 C/C++ 低的，所以，这也是为什么 tomcat 处理静态资源不如 apache/nginx 了。</p>
+<p>上面我们只使用了 service() 方法，这里演示一下 init()、destroy() 方法，并观察它们的执行顺序。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.Enumeration;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Test extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        System.out.printf("@init %1$tF %1$tT\n", System.currentTimeMillis());
+        String name = null;
+        for (Enumeration<String> iter = config.getInitParameterNames(); iter.hasMoreElements();)
+            System.out.printf("@init [%s = %s]\n", name = iter.nextElement(), config.getInitParameter(name));
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        System.out.printf("@service %1$tF %1$tT\n", System.currentTimeMillis());
+
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='UTF-8'>");
+        out.println("<title>test.do</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<h1>test.do</h1>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+
+    @Override
+    public void destroy() {
+        System.out.printf("@destroy %1$tF %1$tT\n", System.currentTimeMillis());
+        super.destroy();
+    }
+}
+</script></code></pre>
+<p>配置 web.xml 部署描述符文件，添加以下内容：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- 注册 Servlet -->
+<servlet>
+  <servlet-name>Test</servlet-name>
+  <servlet-class>com.zfl9.Test</servlet-class>
+
+  <!-- 参数1 -->
+  <init-param>
+    <param-name>ServletName</param-name> <!-- 参数 name -->
+    <param-value>Test</param-value>      <!-- 参数 value -->
+  </init-param>
+
+  <!-- 参数2 -->
+  <init-param>
+    <param-name>MappingUrl</param-name>  <!-- 参数 name -->
+    <param-value>/test.do</param-value>  <!-- 参数 value -->
+  </init-param>
+</servlet>
+
+<!-- 映射 Servlet -->
+<servlet-mapping>
+  <servlet-name>Test</servlet-name>
+  <url-pattern>/test.do</url-pattern>
+</servlet-mapping>
+</script></code></pre>
+<p>然后重启 tomcat，<code>tomcat.restart</code>，使用 curl 测试，并观察 <code>logs/catalina.out</code> 日志文件：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [14:32:23]
+$ curl 127.0.0.1/test.do
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>test.do</title>
+</head>
+<body>
+<h1>test.do</h1>
+</body>
+</html>
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [14:32:38]
+$ curl 127.0.0.1/test.do
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>test.do</title>
+</head>
+<body>
+<h1>test.do</h1>
+</body>
+</html>
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [14:32:48]
+$ curl 127.0.0.1/test.do
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>test.do</title>
+</head>
+<body>
+<h1>test.do</h1>
+</body>
+</html>
+</script></code></pre>
+<p>关闭 tomcat，过滤后，catalina.out 日志文件的内容如下，可以看出，init()、destroy() 只执行了一次：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+@init 2018-05-01 14:32:38
+@init [ServletName = Test]
+@init [MappingUrl = /test.do]
+@service 2018-05-01 14:32:38
+@service 2018-05-01 14:32:48
+@service 2018-05-01 14:32:48
+@destroy 2018-05-01 14:33:29
+</script></code></pre>
+<p>除了在 <code>void init(config)</code> 方法中使用 ServletConfig 对象外，还可以在其它方法中调用 <code>this.getServletConfig()</code> 来获取 config 对象的引用。除了通过 config 对象来获取 init-param Sevlet 初始化参数外，还可以直接使用 GenericServlet 中定义的 getInitParameter(name) 方法来获取对应的值，另一个方法 getInitParameterNames() 用于获取所有 init-param 的 name 枚举。</p>
+<p>在 GenericServlet 类中，定义了两个 log() 方法，用于记录日志（保存到 <code>logs/localhost.yyyy-MM-dd.log</code>）：<br><code>public void log(java.lang.String msg)</code>：INFO 级别（信息），打印指定 message 字符串；<br><code>public void log(java.lang.String msg, java.lang.Throwable t)</code>：SEVERE 级别（严重），打印堆栈跟踪。<br>格式如 <code>org.apache.catalina.core.ApplicationContext.log com.zfl9.Test: test</code>（servlet-name 为前缀）。</p>
+<p>除了 Servlet 外，我们还经常接触到一个名词：<strong>Servlet 上下文</strong>。所谓的 Servlet 上下文就是指该 Servlet 所在的 WebApp（Web 项目、Web 应用）。ServletContext 其实就是一组 Servlet（逻辑分组），<code>webapps</code> 目录下的每个目录都是一个 ServletContext。除了 ROOT 上下文外，访问其他上下文需要加上与文件夹名相同的前缀。</p>
+<p>在 web.xml 中，可以通过 <code>context-param</code> 元素给当前 ServletContext 传递静态参数（和 Servlet 中的 init-param 参数作用类似）。那么我们该如何在具体的 Servlet 中访问这些上下文静态参数呢？要访问它们，首先得获取 ServletContext 对象的引用，在 GenericServlet 类中，提供了 <code>getServletContext()</code> 方法用于获取 ServletContext 对象的引用。然后再使用上下文对象的 <code>getInitParameter(name)</code>、<code>getInitParameterNames()</code> 方法来读取这些静态参数。</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.Enumeration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Test extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Servlet 静态参数
+        out.println("==> Servlet Init Param");
+        String name = null;
+        for (Enumeration<String> names = this.getInitParameterNames(); names.hasMoreElements();) {
+            out.println((name = names.nextElement()) + " = " + this.getInitParameter(name));
+        }
+
+        // ServletContext 静态参数
+        out.println("==> ServletContext Init Param");
+        ServletContext webapp = this.getServletContext();
+        for (Enumeration<String> names = webapp.getInitParameterNames(); names.hasMoreElements();) {
+            out.println((name = names.nextElement()) + " = " + webapp.getInitParameter(name));
+        }
+    }
+}
+</script></code></pre>
+<p>web.xml 中添加如下内容：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<context-param>
+  <param-name>ContextParamA</param-name>
+  <param-value>ContextValueA</param-value>
+</context-param>
+<context-param>
+  <param-name>ContextParamB</param-name>
+  <param-value>ContextValueB</param-value>
+</context-param>
+<context-param>
+  <param-name>ContextParamB</param-name>
+  <param-value>ContextValueB</param-value>
+</context-param>
+
+<servlet>
+  <servlet-name>Test</servlet-name>
+  <servlet-class>com.zfl9.Test</servlet-class>
+  <init-param>
+    <param-name>ServletParamA</param-name>
+    <param-value>ServletValueA</param-value>
+  </init-param>
+  <init-param>
+    <param-name>ServletParamB</param-name>
+    <param-value>ServletValueB</param-value>
+  </init-param>
+  <init-param>
+    <param-name>ServletParamC</param-name>
+    <param-value>ServletValueC</param-value>
+  </init-param>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>Test</servlet-name>
+  <url-pattern>/test.do</url-pattern>
+</servlet-mapping>
+</script></code></pre>
+<p>编译，重启 tomcat，然后使用 curl 查看输出：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl http://127.0.0.1/test.do
+==> Servlet Init Param
+ServletParamC = ServletValueC
+ServletParamB = ServletValueB
+ServletParamA = ServletValueA
+==> ServletContext Init Param
+ContextParamB = ContextValueB
+ContextParamA = ContextValueA
+</script></code></pre>
+<p>在 ServletContext 中，也定义了两个 log() 方法，它们的函数声明是一样的，这 4 个方法记录的日志都保存在 <code>logs/localhost.yyyy-MM-dd.log</code> 文件。它们之间的输出差异如下（前者为 Context，后者为 Servlet）：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+18-May-2018 15:09:01.611 INFO [http-nio-80-exec-1] org.apache.catalina.core.ApplicationContext.log Context-INFO-log
+18-May-2018 15:09:01.610 INFO [http-nio-80-exec-1] org.apache.catalina.core.ApplicationContext.log Test: Servlet-INFO-log
+</script></code></pre>
+<p>Servlet 3.0 之后，web.xml 部署描述符文件不再是必须的了，因为我们可以使用更加简便的注解来配置 Servlet，相关的注解都在 <code>javax.servlet.annotation</code> 包。主要的几个注解如下：</p>
+<ul>
+<li><strong><code>WebServlet</code></strong>：与 Servlet 相关的注解。<ul>
+<li><code>String name = &quot;&quot;</code>：servlet 的名称，对应 <code>&lt;servlet-name&gt;</code>。</li>
+<li><code>String[] value = {}</code>：servlet 的 url，对应 <code>&lt;url-pattern&gt;</code>，注意是数组，因为可以有多个 url-pattern。</li>
+<li><code>String[] urlPatterns = {}</code>：servlet 的 url，对应 <code>&lt;url-pattern&gt;</code>。完全同 value，但二者不可同时指定。</li>
+<li><code>int loadOnStartup = -1</code>：是否在容器启动时实例化 servlet，并调用 init() 方法，默认在首次访问时初始化。</li>
+<li><code>WebInitParam[] initParams = {}</code>：init() 方法中的 config 对象的相关配置，对应 <code>&lt;init-param&gt;</code> xml 元素。</li>
+</ul>
+</li>
+<li><strong><code>WebFilter</code></strong>：与 Filter 相关的注解。<ul>
+<li><code>String filterName = &quot;&quot;</code>：filter 的名称，对应 <code>&lt;filter-name&gt;</code>。</li>
+<li><code>String[] value = {}</code>：filter 的 url，对应 <code>&lt;url-pattern&gt;</code>。</li>
+<li><code>String[] urlPatterns = {}</code>：filter 的 url，对应 <code>&lt;url-pattern&gt;</code>。</li>
+<li><code>String[] servletNames = {}</code>：filter 作用的 servlet，对应 <code>&lt;filter-mapping&gt;</code> 中的 <code>&lt;servlet-name&gt;</code>。</li>
+<li><code>DispatcherType[] dispatcherTypes = {DispatcherType.REQUEST}</code>：从哪来的 servlet 请求将被 filter 处理。</li>
+<li><code>WebInitParam[] initParams = {}</code>：init() 方法中的 config 对象的相关配置，对应 <code>&lt;init-param&gt;</code> xml 元素。</li>
+</ul>
+</li>
+<li><strong><code>WebListener</code></strong>：与 Listener 相关的注解。<ul>
+<li><code>String value = &quot;&quot;</code>：listener 的描述信息，该注解一般没有元素，用来注册 listener。</li>
+</ul>
+</li>
+<li><strong><code>WebInitParam</code></strong>：Servlet/Filter 的 init-param。<ul>
+<li><code>String name</code>：init-param 的 name。</li>
+<li><code>String value</code>：init-param 的 value。</li>
+</ul>
+</li>
+<li><strong><code>MultipartConfig</code></strong>：用于 Servlet 类，与 <code>multipart/form-data</code> 上传相关的配置。<ul>
+<li><code>String location = &quot;&quot;</code>：存放上传的文件的文件夹的绝对路径。</li>
+<li><code>long maxFileSize = -1L</code>：上传的文件的最大大小，-1 为无限制。</li>
+<li><code>long maxRequestSize = -1L</code>：POST 请求体的最大大小，-1 为无限制。</li>
+<li><code>int fileSizeThreshold = 0</code>：当文件大小大于此值时，将被写入临时文件中。</li>
+</ul>
+</li>
+</ul>
+<p>现在，我们来演示一下，如何使用注解替代 web.xml 配置，还是上面这个例子，使用注解替代：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.Enumeration;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.annotation.WebInitParam;
+
+@WebServlet(
+    urlPatterns = {"/test.do"},
+    initParams = {
+        @WebInitParam(name = "addr", value = "127.0.0.1"),
+        @WebInitParam(name = "port", value = "80")
+    }
+)
+public class Test extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        System.out.printf("@init %1$tF %1$tT\n", System.currentTimeMillis());
+        String name = null;
+        for (Enumeration<String> iter = config.getInitParameterNames(); iter.hasMoreElements();)
+            System.out.printf("@init [%s = %s]\n", name = iter.nextElement(), config.getInitParameter(name));
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        System.out.printf("@service %1$tF %1$tT\n", System.currentTimeMillis());
+
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='UTF-8'>");
+        out.println("<title>test.do</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<h1>test.do</h1>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+
+    @Override
+    public void destroy() {
+        System.out.printf("@destroy %1$tF %1$tT\n", System.currentTimeMillis());
+        super.destroy();
+    }
+}
+</script></code></pre>
+<h2 id="Servlet-字符编码"><a href="#Servlet-字符编码" class="headerlink" title="Servlet 字符编码"></a>Servlet 字符编码</h2><p>在 Tomcat 中，Servlet 的默认编码（准确的说应该是 request 和 response 的默认编码）为 <code>ISO 8859-1</code>（即 <code>Latin-1</code>），Latin-1 是专门用于处理西欧语言的字符编码，所以不能用来处理中文字符，会出现所谓的“乱码问题”。为避免出现乱码，我们必须将 request 和 response 对象的字符编码改为 UTF-8（或者 GBK，但强烈建议使用 UTF-8）。怎么改呢，很简单，javax.servlet.ServletRequest 和 javax.servlet.ServletResponse 接口提供了两个与 Character Encoding 相关的 API：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+String getCharacterEncoding() // 获取当前的字符编码
+void setCharacterEncoding(String enc) throws UnsupportedEncodingException // 修改当前的字符编码
+</script></code></pre>
+<p>所以我们只需要在 doGet()/doPost() 方法最开头加上 <code>request/response.setCharacterEncoding(&quot;UTF-8&quot;)</code> 语句即可。当然我们可以也借助 Filter 来统一设置 request/response 的字符编码（Filter 稍后会详细介绍），即创建一个 EncodingFilter 过滤器，在 Servlet 处理 request、response 之前将字符编码设为 UTF-8：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
+
+@WebFilter("/*")
+public class EncodingFilter implements Filter {
+    @Override
+    public void init(FilterConfig config) throws ServletException {}
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws ServletException, java.io.IOException
+    {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        chain.doFilter(request, response);
+    }
+
+    @Override
+    public void destroy() {}
+}
+</script></code></pre>
+<p>这样我们就可以不用在每个 Servlet 里面调用 <code>setCharacterEncoding(&quot;UTF-8&quot;)</code> 了，因为在执行 Servlet 之前，request/response 的字符编码已经被 EncodingFilter 设置为了 UTF-8。但是，这只是规范了 request 和 response 对象的字符编码，我们还需要对 HTTP 响应体的字符编码进行设置，即在 doGet()/doPost() 方法中加入 <code>response.setContentType(&quot;text/html; charset=UTF-8&quot;)</code>，来告诉浏览器响应体的字符编码为 UTF-8。</p>
+<h2 id="Servlet-请求数据"><a href="#Servlet-请求数据" class="headerlink" title="Servlet 请求数据"></a>Servlet 请求数据</h2><p>客户端发送的请求正文，有两种常见的 MIME 类型，分别是：</p>
+<ul>
+<li><code>application/x-www-form-urlencoded</code>：url 编码，也称为百分号编码。可通过 GET、POST 方法传递。</li>
+<li><code>multipart/form-data</code>：上传文件使用的 MIME 类型就是这个，字面意思：附带多个请求体（有分隔符）。</li>
+</ul>
+<p><code>application/x-www-form-urlencoded</code> 其实就是 name-value 名值对，多个名值对之间使用 <code>&amp;</code> 连接。格式：<code>name1=value1&amp;name2=value2&amp;name3=value3</code>。因为这里有两个特殊字符，<code>=</code>、<code>&amp;</code>，因此，必须采用某种编码方式，避免 name、value 中出现这两个特殊字符，不然就无法解析了。首先，uri 中的字符分为两类：<strong>特殊字符</strong>、<strong>普通字符</strong>，特殊字符也就是有特殊意义的字符，比如上面提到的 <code>=</code>、<code>&amp;</code>，而普通字符使用正则可表示为 <code>[a-zA-Z0-9._~-]</code>。如果 name、value 中出现了非普通字符（如特殊字符、中文、日文），那么需要将这些非普通字符转换为 utf-8 字节序（十六进制表示），然后在每个字节前面（也就是两个十六进制数字）插入一个 <code>%</code> 符号。因为编码后的字符串有很多百分号，因此也被称作百分号编码。注意，如果 name、value 中没有夹杂非普通字符，则不需要进行百分号编码（如纯英文）。</p>
+<p>举个例子，<code>语言=中文</code>，<code>语</code>的 utf-8 字节序为<code>E8AFAD</code>、<code>言</code>的 utf-8 字节序为<code>E8A880</code>、<code>中</code>的 utf-8 字节序为<code>E4B8AD</code>、<code>文</code>的 utf-8 字节序为<code>E69687</code>。拼接在一起，为 <code>E8AFADE8A880=E4B8ADE69687</code>，然后每两个十六进制数字前插入一个百分号，为 <code>%E8%AF%AD%E8%A8%80=%E4%B8%AD%E6%96%87</code>。</p>
+<p>开头我们说了，<code>application/x-www-form-urlencoded</code> 有两种传输方式，一种是通过 GET 方法，一种是通过 POST 方法。GET 方法是比较简单的，只需要在 URL 的尾部添加一个 <code>?</code>，然后再将编码后的字符串添加到 <code>?</code> 后面就可以了。而 POST 方法则是将编码后的字符串作为请求主体，发送给服务器的。GET 方法传递时，查询数据会显示在浏览器地址栏，而 POST 方法传递时则不会显示到地址栏，可以通过浏览器控制台看到。因此，如果涉及到用户密码等隐私数据，建议使用 POST 方式传递，避免出现安全问题。同时，GET 方式传递还有一个限制，那就是查询参数有长度限制。其实 HTTP/1.1 协议本身对 URL 是没有长度限制的，但是浏览器和服务器通常是有长度限制的（比如 nginx 会限制客户端请求头部的长度，通常是 4k/8k）。</p>
+<p>在 Servlet 中，可以通过 ServletRequest 对象的这几个方法来解析 <code>application/x-www-form-urlencoded</code> 数据：<br><code>String getParameter(String name)</code>：获取给定 name 的 value。如果有多个相同的 name，则获取第一个 value。没有则返回 null。<br><code>String[] getParameterValues(String name)</code>：获取给定 name 的所有 value。注意返回的是一个数组，如果没有则返回 null。<br><code>Enumeration&lt;String&gt; getParameterNames()</code>：获取所有 name 的枚举，如果没有查询参数，则返回一个空枚举对象。<br><code>Map&lt;String,String[]&gt; getParameterMap()</code>：获取由所有 name、value 组成的键值对。key 为 String、value 为 String[]。</p>
+<blockquote>
+<p>特别注意，上面几个方法中的 name 参数不需要经过编码，比如获取 <code>语言=中文</code> 这个名值对，name 就写为 <code>语言</code>！</p>
+</blockquote>
+<p>例子，先编写一个 form.html 表单页面，一个使用 GET 方式传递，一个使用 POST 方式传递。</p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>form.html</title>
+  </head>
+  <body>
+    <strong>GET (application/x-www-form-urlencoded)</strong>
+    <form action="/urldecoded.do" method="get">
+      username: <input type="text" name="username"><br>
+      password: <input type="password" name="password"><br>
+      中文(简体): <input type="checkbox" name="language" value="中文(简体)" checked><br>
+      中文(繁体): <input type="checkbox" name="language" value="中文(繁体)"><br>
+      英文(英国): <input type="checkbox" name="language" value="en_GB"><br>
+      英文(美国): <input type="checkbox" name="language" value="en_US"><br>
+      <input type="submit" value="提交">
+    </form>
+    <br>
+    <strong>POST (application/x-www-form-urlencoded)</strong>
+    <form action="/urldecoded.do" method="post">
+      username: <input type="text" name="username"><br>
+      password: <input type="password" name="password"><br>
+      中文(简体): <input type="checkbox" name="language" value="中文(简体)" checked><br>
+      中文(繁体): <input type="checkbox" name="language" value="中文(繁体)"><br>
+      英文(英国): <input type="checkbox" name="language" value="en_GB"><br>
+      英文(美国): <input type="checkbox" name="language" value="en_US"><br>
+      <input type="submit" value="提交">
+    </form>
+  </body>
+</html>
+</script></code></pre>
+<p>然后，编写 Servlet 类 <code>com.zfl9.URLEncodedTest</code>，程序如下：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.util.Map;
+import java.io.PrintWriter;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/urldecoded.do")
+public class URLEncodedTest extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='utf-8'>");
+        out.println("<title>urldecoded.do</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<pre>");
+
+        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+            if (entry.getValue().length == 1)
+                out.println(entry.getKey() + " = " + entry.getValue()[0]);
+            else {
+                out.print(entry.getKey() + " = [ ");
+                for (int i = 0, len = entry.getValue().length; i < len - 1; i++)
+                    out.print(entry.getValue()[i] + ", ");
+                out.println(entry.getValue()[entry.getValue().length - 1] + " ]");
+            }
+        }
+
+        out.println("</pre>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        doGet(request, response);
+    }
+}
+</script></code></pre>
+<p>说完第一种，我们再来说第二种：<code>multipart/form-data</code>。在 Servlet 3.0 之前，我们只能借助第三方 API 来完成 <code>multipart/form-data</code> 的解析（如 Apache 的 commons-fileupload.jar、commons-io.jar）。Servlet 3.0 之后，终于有官方 API 来完成这件事了（早该如此，像 PHP 多明智啊）。</p>
+<p>先来看看 <code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code> 请求的区别（POST 为例）：</p>
+<p><strong>表单数据</strong></p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+POST / HTTP/1.1[CRLF]
+Host: 127.0.0.1[CRLF]
+User-Agent: curl/7.59.0[CRLF]
+Accept: */*[CRLF]
+Content-Length: 32[CRLF]
+Content-Type: application/x-www-form-urlencoded[CRLF]
+[CRLF]
+username=Otokaze&password=123456
+</script></code></pre>
+<p><strong>文件上传</strong></p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+POST / HTTP/1.1[CRLF]
+Host: 127.0.0.1[CRLF]
+User-Agent: curl/7.59.0[CRLF]
+Accept: */*[CRLF]
+Content-Length: 443[CRLF]
+Content-Type: multipart/form-data; boundary=------------------------f979f247a1e5df24[CRLF]
+[CRLF]
+--------------------------f979f247a1e5df24[CRLF]
+Content-Disposition: form-data; name="file1"; filename="resolv.conf"[CRLF]
+Content-Type: application/octet-stream[CRLF]
+[CRLF]
+# Generated by resolvconf
+nameserver 192.168.255.254
+[CRLF]
+--------------------------f979f247a1e5df24[CRLF]
+Content-Disposition: form-data; name="file2"; filename="hosts"[CRLF]
+Content-Type: application/octet-stream[CRLF]
+[CRLF]
+127.0.0.1   arch
+::1         arch
+[CRLF]
+--------------------------f979f247a1e5df24--[CRLF]
+</script></code></pre>
+<p>文件上传的 Content-Type：<code>multipart/form-data; boundary=------------------------f979f247a1e5df24</code>，分号前面的是请求正文的类型，分号后面的是附带的参数。<code>boundary</code>的中文意思是”边界”，从后面的请求正文可以看出，共有 2 个部分（称为 Part），每个 Part 以 boundary 值开头，然后是两个请求头域，第一个头域用于描述当前 Part（如 Part 的名称，name），第二个头域用于指明当前 Part 的类型，头域与内容之间使用一个空行（crlf）分隔，内容后又是一个空行（crlf），最后一个 Part 后面还有一个 boundary，并且尾部多了两个 <code>-</code> 符号，表示 multipart 结束了。要说明的是，boundary 每次都是不一样的，它是浏览器随机生成的字符串。</p>
+<p>从上面的分析中可以看出，<code>multipart/form-data</code> 的请求正文是由多个 Part 组成的，每个 Part 都以一个随机的 boundary 行开头，请求正文以 boundary 表示结束（添加两个连字符）。Servlet 3.0 中的 HttpServletRequest 对象提供了两个方法，用于获取对应的 Part：</p>
+<ul>
+<li><code>Part getPart(String name) throws IOException, ServletException</code>：获取给定 name 的 Part 对象。</li>
+<li><code>Collection&lt;Part&gt; getParts() throws IOException, ServletException</code>：获取所有 Part 对象（集合）。</li>
+</ul>
+<p><code>javax.servlet.http.Part</code> 接口的方法列表：</p>
+<ul>
+<li><code>String getName()</code>：获取当前 part 的名称。</li>
+<li><code>long getSize()</code>：获取当前 part 的内容大小（byte）。</li>
+<li><code>String getContentType()</code>：获取当前 part 的内容类型（mime）。</li>
+<li><code>String getSubmittedFileName()</code>：获取当前 part 的文件名称（客户端提供）。</li>
+<li><code>String getHeader(String name)</code>：获取当前 part 的给定头部或返回 null。</li>
+<li><code>Collection&lt;String&gt; getHeaders(String name)</code>：获取当前 part 的给定头部或空集合。</li>
+<li><code>Collection&lt;String&gt; getHeaderNames()</code>：获取当前 part 的所有头部的 name 集合（可能为空）。</li>
+<li><code>InputStream getInputStream() throws IOException</code>：获取当前 part 的内容的输入流。</li>
+<li><code>void write(String fileName) throws IOException</code>：便携方法，将 part 内容写入到文件中。</li>
+<li><code>void delete() throws IOException</code>：删除与 part 的相关操作产生的各种临时文件。</li>
+</ul>
+<p>例子，先编写一个 upload.html，包含一个简单的文件上传表单（html5）：</p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>upload.html</title>
+  </head>
+  <body>
+    <form action="/upload.do" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" multiple><br>
+      <input type="submit" value="上传文件">
+    </form>
+  </body>
+</html>
+</script></code></pre>
+<p>编写 com.zfl9.Upload 类，处理客户端上传的文件（使用 Servlet 3.0 API 实现）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.annotation.MultipartConfig;
+
+@WebServlet("/upload.do")
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10, // 10MB
+                 maxRequestSize = 1024 * 1024 * 50, // 50MB
+                 fileSizeThreshold = 1024 * 1024 * 1) // 1MB
+public class Upload extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='utf-8'>");
+        out.println("<title>upload.do</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<pre>");
+
+        String uploadDir = this.getServletContext().getRealPath("/WEB-INF/uploads/");
+        File uploadDirFile = new File(uploadDir);
+        if (!uploadDirFile.exists()) uploadDirFile.mkdirs();
+        for (Part part : request.getParts()) {
+            out.println(part.getName() + " : {");
+            out.println("   size = " + part.getSize());
+            out.println("   type = " + part.getContentType());
+            out.println("   name = " + part.getSubmittedFileName());
+            out.println("}");
+            part.write(uploadDir + part.getSubmittedFileName());
+        }
+
+        out.println("</pre>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+}
+</script></code></pre>
+<p>注意，处理上传文件的 Servlet 类必须被 <code>javax.servlet.annotation.MultipartConfig</code> 所注解，否则运行时返回 500 错误，抛出 <code>java.lang.IllegalStateException: Unable to process parts as no multi-part configuration has been provided</code> 异常。</p>
+<p>保存文件时需要提供绝对路径，借助 ServletContext 对象的 getRealPath() 方法可以获取其真实路径。</p>
+<h2 id="Servlet-过滤器"><a href="#Servlet-过滤器" class="headerlink" title="Servlet 过滤器"></a>Servlet 过滤器</h2><p>过滤器是指实现了 <code>javax.servlet.Filter</code> 接口的类，Filter 接口有三个方法，与 Servlet 接口类似：</p>
+<ul>
+<li><code>void init(FilterConfig config) throws ServletException</code>：容器启动时，实例化 filter，并调用 init() 方法。</li>
+<li><code>void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException</code>：过滤方法。</li>
+<li><code>void destroy()</code>：容器关闭时，调用此方法，主要用于资源的回收（如关闭连接），最后回收 filter 对象的内存。</li>
+</ul>
+<p>Filter 有两种作用，<strong>预处理</strong>、<strong>后处理</strong>。这里的预处理和后处理均是相对于 Servlet 说的。比如前面的字符编码 Filter 就是典型的预处理，在 Servlet 处理之前，先将字符编码设为 UTF-8。再举个后处理的例子，Web 服务器一般都会记录客户端的访问日志，格式一般为：访问时间 - 客户端 IP - 请求的 URL - 响应的状态 - 响应的大小。因为需要知道响应状态、响应体大小等信息，所以需要在 Servlet 处理完后再进行日志的记录。</p>
+<p>一个 URL 可以匹配多个 Filter，而对于 Servlet 来说，一个 URL 只能被一个 Servlet 处理。因为可能有多个 Filter，因此它们之间必定有某种执行顺序，我们可以通过 <code>&lt;filter-mapping&gt;</code> 元素的前后相对顺序来决定多个 Filter 间的执行顺序（使用注解也要这么做），即写在前面的 <code>&lt;filter-mapping&gt;</code> 比写在后面的 <code>&lt;filter-mapping&gt;</code> 的对应的 filter 先执行。还有一点，Filter 对象的初始化是在容器启动时进行的，而 Servlet 对象的初始化默认是在第一次被访问时进行的（可通过 web.xml、WebServlet 注解的相关元素配置为容器启动时初始化）。</p>
+<p>假设：某个 servlet 的 url-pattern 为 <code>/index.do</code>，filter1、filter2 的 url-pattern 为 <code>/index.do</code>，且 filter1 的 filter-mapping 位于 filter2 的前面。当浏览器访问 <code>http://localhost/index.do</code> 时，首先执行 filter1 的 doFilter() 方法的预处理部分，然后执行 filter2 的 doFilter() 方法的预处理部分，然后执行 servlet 的 service() 方法（如果还没初始化则先进行初始化），然后执行 filter2 的 doFilter() 方法的后处理部分，最后执行 filter1 的 doFilter() 方法的后处理部分。即：client -&gt; filter1 -&gt; fitler2 -&gt; servlet -&gt; filter2 -&gt; filter1 -&gt; client。</p>
+<p>那么 doFilter() 方法中是如何区分 <strong>预处理部分</strong>、<strong>后处理部分</strong> 的呢？看到 doFilter() 方法的第三个参数没？FilterChain 对象。chain 对象只有一个方法，<code>doFilter(request, response)</code>。Filter 类的 doFilter() 方法的一般形式：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    throws ServletException, IOException
+{
+    // TODO 预处理部分
+    chain.doFilter(request, response);
+    // TODO 后处理部分
+}
+</script></code></pre>
+<p>个人理解，容器收到一个请求时，先查找 web.xml（这里假设没有使用注解），找到与该 url 匹配的所有 filter、servlet，然后将它们按照顺序保存到一个列表中。先假设容器找到了至少一个 filter，于是调用 filter.doFilter() 方法，运行到 chain.doFilter() 位置时，查找这个列表的下一个元素，假设下一个元素也是一个 filter，则转而执行该 filter 的 doFilter() 方法，然后又运行到 chain.doFilter() 位置，接着查找这个列表的下一个元素，假设下一个元素是一个 servlet（最后一个元素），于是转而执行该 servlet 的 service() 方法，service() 方法执行完后，chain.doFilter() 返回，接着执行后面的代码，也即后面那个 filter 的后处理部分，而当该 doFilter() 方法运行完后，最开始的 chain.doFilter() 方法也返回，于是开始执行前面那个 filter 的后处理部分，最后返回给容器，容器再将响应结果返回给客户端。简而言之，这就是一个函数调用链。回到开头，假设没有匹配到任何 filter，则直接运行对应 servlet 的 service() 方法。</p>
+<p>不过，不是什么资源 filter 都会处理的，一个资源要被 filter 处理也是有条件的。这个条件使用 <code>javax.servlet.DispatcherType</code> 枚举常量表示，在 web.xml 中，使用 <code>&lt;filter-mapping&gt;</code> 的 <code>&lt;dispatcher&gt;</code> 元素表示（它们的取值是一样的）。DispatcherType 枚举常量有：</p>
+<ul>
+<li><code>REQUEST</code>：表示当前请求是直接从客户端过来的（原始请求），默认值。</li>
+<li><code>FORWARD</code>：表示当前请求是被 requestDispatcher.forward() 转发过来的。</li>
+<li><code>INCLUDE</code>：表示当前请求是被 requestDispatcher.include() 包含过来的。</li>
+<li><code>ERROR</code>：表示当前请求是被 web.xml 中注册的错误处理程序触发而来的。</li>
+</ul>
+<p>dispatcher 可以有多个，如果没有指定，则默认为 REQUEST，如果指定了，则使用指定的 dispatcher（不会默认包含 REQUEST）。</p>
+<p>一个简单的例子，验证 filter、servlet 之间的执行顺序。<br><code>FilterA.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
+
+@WebFilter("/servlet.do")
+public class FilterA implements Filter {
+    @Override
+    public void init(FilterConfig config) {}
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws ServletException, IOException
+    {
+        PrintWriter out = response.getWriter();
+        out.println("@filterA pre");
+        chain.doFilter(request, response);
+        out.println("@filterA post");
+    }
+
+    @Override
+    public void destroy() {}
+}
+</script></code></pre>
+<p><code>FilterB.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
+
+@WebFilter("/servlet.do")
+public class FilterB implements Filter {
+    @Override
+    public void init(FilterConfig config) {}
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws ServletException, IOException
+    {
+        PrintWriter out = response.getWriter();
+        out.println("@filterB pre");
+        chain.doFilter(request, response);
+        out.println("@filterB post");
+    }
+
+    @Override
+    public void destroy() {}
+}
+</script></code></pre>
+<p><code>ServletTest.java</code></p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/servlet.do")
+public class ServletTest extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        response.getWriter().println("@servlet doGet");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        response.getWriter().println("@servlet doPost");
+    }
+}
+</script></code></pre>
+<p>使用 curl 测试，观察 filterA、filterB、servlet 之间的执行顺序：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [19:36:57]
+$ curl http://127.0.0.1/servlet.do -X GET
+@filterA pre
+@filterB pre
+@servlet doGet
+@filterB post
+@filterA post
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [19:37:02]
+$ curl http://127.0.0.1/servlet.do -X POST
+@filterA pre
+@filterB pre
+@servlet doPost
+@filterB post
+@filterA post
+</script></code></pre>
+<h2 id="Servlet-重定向"><a href="#Servlet-重定向" class="headerlink" title="Servlet 重定向"></a>Servlet 重定向</h2><p>Servlet 中有 3 种“重定向语义”，分别是：</p>
+<ul>
+<li><code>redirect</code>：<strong>重定向</strong>。HTTP 协议层面的重定向，与之相关的响应头为 <code>Location: &lt;new-url&gt;</code>，其中 new-url 是重定向的目的地址，new-url 必须是绝对 url（HTTP/1.1 新规范允许使用相对 url，但为了保证兼容性，建议始终使用绝对 url）。当客户端接收到这种含有 Location 的响应后，会自动向新的 url 发起 HTTP 请求，并丢弃原 url 的请求（浏览器地址栏会改变）。通过 HttpServletResponse 的 sendRedirect() 方法进行此类重定向（默认为 302 临时重定向）。</li>
+<li><code>rewrite</code>：<strong>重写</strong>。服务器内部的重定向，与 redirect 的明显区别是，rewrite 不会改变浏览器地址栏。假如有这么一个配置，<code>rewrite old.html new.html</code>，当浏览器访问 old.html 时，服务器在内部自动将请求发送给 new.html 而不是 old.html。该方法进行重定向有一个限制，那就是新的 url 只能是当前 context 中的资源，其它 context 或其它域中的资源无法实现 rewrite。通过 RequestDispatcher 的 forward() 方法进行此类重定向。rewrite 机制在 servlet 中其实已经被多次应用了，比如访问一个不存在的资源时，实际显示的页面为 404 页面，但 url 却没有改变；例外，下一节中的异常处理其实也是 rewrite。</li>
+<li><code>include</code>：<strong>包含</strong>。严格来说，这并不是重定向，仅仅是“文件包含”。通过 RequestDispatcher 的 include() 方法进行此类重定向。被包含的页面不能改变当前页面的响应头部，也就是说，被包含的页面应该是纯内容的。利用文件包含，可以在多个页面中共享一些频繁使用的 html 片段。</li>
+</ul>
+<p><strong>重定向</strong><br>常见的重定向有：301 永久重定向、302 临时重定向。javax.servlet.http.HttpServletResponse.sendRedirect() 方法发送的重定向响应其实是 302 临时重定向，要发送 301 永久重定向只能手动设置响应状态码和 Location 头部。<br><code>void sendRedirect(String location) throws IOException</code>：location 可以是相对 url 也可以是绝对 url，如果相对 url 以 <code>/</code> 开头，则是相对于当前域名，如果相对 url 不以 <code>/</code> 开头，则是相对于当前 servlet。调用此方法后，应该认为响应已提交，不应该再写入。如果 servlet 使用了 redirect，那么实际上客户端不会接受到任何之前或之后的响应体（使用 curl 进行验证）。</p>
+<p>发送 301 永久重定向的具体步骤：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+response.setStatus(301); // 设置响应状态码
+response.setHeader("Location", "login.do"); // 设置重定向头部
+</script></code></pre>
+<p><strong>RequestDispatcher</strong><br><code>javax.servlet.RequestDispatcher</code> 是一个 Web 资源包装器，该接口有两个方法，分别是 <em>转发</em>、<em>包含</em>。<br><code>void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException</code><br><code>void include(ServletRequest request, ServletResponse response) throws ServletException, IOException</code></p>
+<p>获取 RequestDispatcher 实例有两种方法，一是通过 ServletRequest，二是通过 ServletContext；<br>ServletRequest 的 <code>RequestDispatcher getRequestDispatcher(String path)</code> 方法：获取指定 url 的包装器，path 可以是相对的（相对于当前 servlet，非 <code>/</code> 开头），也可以是绝对的（相对于当前 context，以 <code>/</code> 开头）。<br>ServletContext 的 <code>RequestDispatcher getRequestDispatcher(String path)</code> 方法：获取指定 url 的包装器，path 只能是以 <code>/</code> 开头的绝对路径（相对于当前 context）。<br>ServletContext 的 <code>RequestDispatcher getNamedDispatcher(String name)</code> 方法：获取指定名称的 servlet 的包装器，其中 name 参数是要匹配的 servlet name。</p>
+<p>forward() 方法就不演示了，主要看一下 include() 方法：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/reqinclude.do")
+public class ReqInclude extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/plain; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("===> pre <===");
+        request.getRequestDispatcher("included.html").include(request, response);
+        out.println("===> post <===");
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl 127.0.0.1/reqinclude.do -i
+HTTP/1.1 200
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 59
+Date: Sat, 09 Jun 2018 11:05:30 GMT
+
+===> pre <===
+hello, world! [included.html]
+===> post <===
+</script></code></pre>
+<p><strong>最后</strong><br>redirect 和 rewrite 之间的区别仅仅是“外部重定向”、“内部重定向”，效率的话，明显是后者更高，因为少了一次 HTTP 请求。redirect 和 rewrite 都会忽略响应体，无论是调用前还是调用后的。这其实很好理解，之所以使用重定向是因为当前页面“作废”了、“过期”了，所以需要引导用户到新的页面，获取正确的信息，所以当前页面的内容也就无关紧要了。include 包含的仅仅是响应体，其它的什么响应头、响应行都是不能去修改的（尝试修改的操作都会被忽略）。</p>
+<h2 id="Servlet-异常处理"><a href="#Servlet-异常处理" class="headerlink" title="Servlet 异常处理"></a>Servlet 异常处理</h2><p>Servlet 中主要有两种异常情况，一是类似 404 Not Found 这样的 HTTP 异常，二是 Servlet 在运行时抛出了一个异常。</p>
+<p>第一种，假设客户端访问 <code>/noSuch.html</code>（一个不存在的文件），容器收到请求后，发现它与 <code>/</code> 这个 url-pattern 相匹配，于是将它交给 default-servlet 处理，default-servlet 在尝试读取此文件时，发现这个文件根本不存在，于是尝试查找 web.xml 文件，看看有没有已定义的异常处理程序，如果没有，则采用默认的异常处理程序，即直接将 404 Not Found 页面发送给用户。</p>
+<p>第二种，假设客户端访问 <code>/index.do</code>，对应的 servlet 在执行 service() 方法的过程中，因为某种原因，抛出了一个异常，容器捕获后会写入到日志文件中，然后查询 web.xml 文件，因为没有找到相应的异常处理程序，于是采取默认的处理方式，返回一个 500 状态码给客户端（返回的页面通常不完整，对用户极不友好），仓促的结束访问。</p>
+<p>其实第一种还好，用户可以一眼看出这是个什么错误，但是第二种，如果异常发生在 body 前，则用户获取的页面是空白的，没有任何提示，如果异常发生在 body 后（假如是最后面），那么用户可能会获取一个完整的页面，但是实际上这是不正确的处理结果，并且用户也是看不到任何提示的（只能通过控制台查看，但是你觉得普通用户会去查看控制台吗，天真）。所以这样的默认处理方式对用户来说是极不友好的，我们很有必要自己来处理 500 错误，至少告诉用户发生了什么。</p>
+<p>通过 web.xml 的 <code>&lt;error-page&gt;</code> 元素，可以自定义错误处理页面，它有 3 个子元素：</p>
+<ul>
+<li><code>&lt;error-code&gt;</code>：要匹配的错误码（4xx、5xx）</li>
+<li><code>&lt;exception-type&gt;</code>：要匹配的异常类（全限定类名）</li>
+<li><code>&lt;location&gt;</code>：指定处理该错误的 url（rewrite 机制）</li>
+</ul>
+<p>注意，<code>&lt;error-code&gt;</code> 和 <code>&lt;exception-type&gt;</code> 只能二选一，并且最多只能有一个，可以没有，即只有一个 <code>&lt;location&gt;</code> 元素，此时，它匹配所有异常情况。如果要匹配所有异常（Java 语言中的异常类），可以使用 <code>java.lang.Throwable</code>，因为它是所有异常类的父类。</p>
+<p>有个问题需要注意一下，如果 servlet 在执行过程中，发生了异常，并且没有在内部消化，那么此时返回的 HTTP 状态码为 500（Internal Server Error）。容器捕获到这个异常后，查找 web.xml 中注册的异常处理程序，此时假设找到了这两个条目：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<error-page>
+  <error-code>500</error-code>
+  <location>/5xx.html</location>
+</error-page>
+<error-page>
+  <exception-type>java.lang.Throwable</exception-type>
+  <location>/exception.html</location>
+</error-page>
+</script></code></pre>
+<p>你觉得这个请求会被 rewrite 到哪个 url 呢？好像两个都符合条件，它即是 500 错误，也是 java.lang.Throwable 的子类。经实际测验，它会被 rewrite 到 /exception.html 这个 url。我得出的结论是：如果是未捕获的异常而导致的 500 错误，那么首先会查找 <code>&lt;exception-type&gt;</code> 元素，如果没找到，才会去匹配 <code>&lt;error-code&gt;500&lt;/error-code&gt;</code>，无论它们的先后顺序如何。</p>
+<p>如果容器找到的是这两个条目（假设抛出的异常是 <code>java.lang.NullPointerException</code>）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<error-page>
+  <exception-type>java.lang.Throwable</exception-type>
+  <location>/throwable.html</location>
+</error-page>
+<error-page>
+  <exception-type>java.lang.NullPointerException</exception-type>
+  <location>/nullptr.html</location>
+</error-page>
+</script></code></pre>
+<p>那么该请求会被 rewrite 到哪个 url 呢？是按照前后顺序匹配，还是按照相关度匹配呢？答案是后者，也即匹配最相关的那个。所谓的最相关就是最接近的意思，在这里，空指针异常当然与 java.lang.NullPointerException 更相关了，所以会被 rewrite 至 /nullptr.html。其实上面那个例子也是一样的，都是匹配最相关的那个。</p>
+<p>上面说到的异常都是被动发生的，比如说 404，servlet 本来以为它存在，然而并没有；比如运行时抛出异常，这也是被动的，我们是期望它不会抛出异常的。其实也有些异常是开发人员主动触发的，比如，某页面访问前需要进行认证，如果用户没有经过认证，就想访问该页面，那我们也可以主动触发一个异常，返回一个 403 页面，告诉用户要先认证才能访问。</p>
+<p>HttpServletResponse 中有两种方式，用来设置 HTTP Status Code，分别是：</p>
+<ul>
+<li><code>void setStatus(int sc)</code>：设置状态码，不触发错误处理机制，可设置的状态码有：2xx、3xx、4xx、5xx。</li>
+<li><code>void sendError(int sc) throws IOException</code>：设置状态码，并触发错误处理机制，响应缓冲区的内容被丢弃。</li>
+<li><code>void sendError(int sc, String msg) throws IOException</code>：同上，向错误处理页面提供一个简短的错误信息。</li>
+</ul>
+<p>它们的主要区别就是会不会触发错误处理机制。一般，setStatus() 用于设置 2xx、3xx 状态码，作为正常响应，表示当前没有发生异常。而 sendError() 用于设置 4xx、5xx 错误码，提示用户该请求没有正常响应。注意，setStatus() 就如同 setHeader()/addHeader() 方法，只是单纯的修改响应行/响应头部，并不会丢弃当前响应缓冲区中的数据，调用 setStatus() 方法后，可以继续写入正常页面内容。而 sendError() 则会修改响应行，并且丢弃当前响应缓冲区中的数据，同时，触发容器的错误处理机制，查找 web.xml 中注册的错误处理程序，最后 rewrite 到对应的 url，相当于当前页面完全被替换了，因此，调用 sendError() 方法后，不应该再往响应缓冲区中写入数据，因为此时控制权已经不在当前 servlet 中了。</p>
+<p><code>&lt;location&gt;</code> 元素中指定的 url 被称为错误处理程序，它可以是一个静态 html 页面，也可以是 servlet/jsp 页面。容器在 rewrite 过程中，会传递 6 个 attribute 属性给错误处理程序，attribute 保存在 request 对象中，通过 getAttribute() 方法可获取这些信息。其实所谓的 attribute 就是哈希表，key 是字符串，value 为 Object 对象。而 getAttribute() 方法就是使用给定的 key 来查找对应的 value。涉及的 6 个 key 如下：</p>
+<ul>
+<li><code>javax.servlet.error.status_code</code>：状态码，java.lang.Integer 类型。</li>
+<li><code>javax.servlet.error.exception</code>：异常对象，java.lang.Throwable 类型。</li>
+<li><code>javax.servlet.error.exception_type</code>：异常类型，java.lang.Class 类型。</li>
+<li><code>javax.servlet.error.message</code>：描述信息，java.lang.String 类型。</li>
+<li><code>javax.servlet.error.servlet_name</code>：servlet 名称，java.lang.String 类型。</li>
+<li><code>javax.servlet.error.request_uri</code>：请求 uri，java.lang.String 类型。</li>
+</ul>
+<p>例子，编写一个 error-handler.do 通用错误处理页面：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/error-handler.do")
+public class ErrorHandler extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        String requestUri = (String) request.getAttribute("javax.servlet.error.request_uri");
+        String servletName = (String) request.getAttribute("javax.servlet.error.servlet_name");
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        String message = (String) request.getAttribute("javax.servlet.error.message");
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='utf-8'>");
+        out.println("<title>error-handler.do</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<pre>");
+        out.println("exception: " + exception);
+        out.println("request_uri: " + requestUri);
+        out.println("servlet_name: " + servletName);
+        out.println("status_code: " + statusCode);
+        out.println("message: " + message);
+        out.println("</pre>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        doGet(request, response);
+    }
+}
+</script></code></pre>
+<p>然后在 web.xml 文件中注册它就可以了，如下：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<error-page>
+  <location>/error-handler.do</location>
+</error-page>
+</script></code></pre>
+<h2 id="Servlet-Cookie"><a href="#Servlet-Cookie" class="headerlink" title="Servlet Cookie"></a>Servlet Cookie</h2><p>什么是 Cookie？（MDN）：</p>
+<blockquote>
+<p>HTTP Cookie（也叫 Web Cookie 或浏览器 Cookie）是服务器发送到用户浏览器并保存在本地的一小块数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上。通常，它用于告知服务端两个请求是否来自同一浏览器，如保持用户的登录状态。Cookie 使基于无状态的 HTTP 协议记录稳定的状态信息成为了可能。</p>
+</blockquote>
+<p>从这段介绍中，可以得到一些重要的信息：</p>
+<ul>
+<li>Cookie 是服务器发送给客户端的（实际上 JS 也可以设置）</li>
+<li>Cookie 是保存在客户端的一小块数据（大小限制在 4KB 左右）</li>
+<li>Cookie 中文意思是 <strong>小文本</strong>，因此 Cookie 存储的是纯文本数据</li>
+<li>Cookie 会在浏览器下次访问同一服务器（不严谨）时被自动发送到服务器</li>
+<li>Cookie 的主要作用是识别不同的 HTTP 请求是否来自同一用户（HTTP 协议是无状态的）</li>
+<li>Cookie 的出现使得基于无状态的 HTTP 协议记录稳定的状态信息成为了可能（但不是唯一途径）</li>
+</ul>
+<p>为什么说 HTTP 协议是无状态的？假设你现在要写一个统计用户访问次数的页面，即为每个用户记录他访问本网页的次数。乍一看你会觉得很简单，只需要每次访问时进行递增操作就好了呀。但实际上，这样真的就可以了吗？那我问你，你怎么知道两个不同的 HTTP 请求是不是来自同一个用户呢？或许你会说，根据 IP 地址啊，但是很可惜，IPv4 地址早就枯竭了，现在绝大多数用户分配到的 IP 都是运营商级 NAT 内网地址（<code>100.64.0.0/10</code>），一个外网 IP 往往对应多个不同的用户，你这个方法是行不通的，就算每个人都有公网 IP，那假设某个用户换了个设备，比如之前使用电脑登录，现在使用手机登录，IP 地址也是不一样的啊，这时服务器会认为它们是不同的用户，但实际上它们是相同的用户。</p>
+<p>这时有人想到个方法，我们可以在请求 URL 中添加一个查询参数，假设为 uid，为每个用户分配一个不同的 uid，然后每次用户访问时，都将这个 uid 附带到 url 中，发送给服务器，这样服务器就知道是哪个用户了。办法是个好方法，就是不太方便，毕竟每次访问页面时都要附带一个 uid 查询参数。</p>
+<p>有没有方法可以让浏览器自动发送这个 uid 给服务器呢？最简单的方法就是使用 Cookie 了。前面说了，Cookie 是服务器发送给客户端的，那么我们先来看看发送了 Cookie 的响应请求是怎样的：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ curl -i http://127.0.0.1/test.do
+HTTP/1.1 200
+Set-Cookie: uid=255ba30d55d14366b2b42a17c3bc625b
+Content-Type: text/html;charset=UTF-8
+Content-Length: 203
+Date: Fri, 18 May 2018 12:42:18 GMT
+
+==> Servlet Init Param
+ServletParamC = ServletValueC
+ServletParamB = ServletValueB
+ServletParamA = ServletValueA
+==> ServletContext Init Param
+ContextParamB = ContextValueB
+ContextParamA = ContextValueA
+</script></code></pre>
+<p>出现了一个新的 HTTP 响应头部：<code>Set-Cookie</code>，其实服务器可以发送多个 Cookie，每个 Cookie 对应一个 <code>Set-Cookie</code> 头。上面的 Set-Cookie 头部还是比较简单的，就是一个 name-value 名值对。但实际上，<code>Set-Cookie</code> 头部可以包含更多的信息，如下：<br><code>Set-Cookie: &lt;name&gt;=&lt;value&gt;; expires=&lt;date&gt;; max-age=&lt;date&gt;; domain=&lt;domain&gt;; path=&lt;path&gt;; httponly; secure</code><br>除了 <code>&lt;name&gt;=&lt;value&gt;</code> 字段外，其他部分都是可选的，这些字段的意义如下：</p>
+<ul>
+<li><code>&lt;name&gt;</code>：除 <strong>控制字符</strong>、<strong>空白符</strong>、<code>(</code> <code>)</code> <code>&lt;</code> <code>&gt;</code> <code>@</code> <code>,</code> <code>;</code> <code>:</code> <code>\</code> <code>&quot;</code> <code>/</code> <code>[</code> <code>]</code> <code>?</code> <code>=</code> <code>{</code> <code>}</code> 外的任意 ASCII 字符。</li>
+<li><code>&lt;value&gt;</code>：除 <strong>控制字符</strong>、<strong>空白符</strong>、<strong>双引号</strong>、<strong>逗号</strong>、<strong>分号</strong> 以及 <strong>反斜线</strong> 外的任意 ASCII 字符。许多应用会对 cookie 值按照 URL 编码规则进行编码，但是按照 RFC 规范，这不是必须的。不过满足规范中对于 <code>&lt;value&gt;</code> 所允许使用的字符的要求是有用的。</li>
+<li><code>expires</code>：<strong>到期时间</strong>，如果省略此字段，则表示这是一个 <strong>会话期 Cookie</strong>，客户端关闭时会话期 Cookie 被移除。如果此时间已过去，则表示，服务端希望客户端移除此 Cookie。</li>
+<li><code>max-age</code>：<strong>生存时间</strong>（秒数，优先级高），一些老浏览器不支持该字段（IE6、IE7、IE8），对于其他浏览器，如果同时存在 <code>expires</code>、<code>max-age</code> 字段，则 max-age 优先级高。</li>
+<li><code>domain</code>：<strong>作用域名</strong>，指定该 Cookie 作用于哪些域名，如果省略，默认为当前域名；如果指定一个具体域名，则表示作用于该域名及其子域名。</li>
+<li><code>path</code>：<strong>作用路径</strong>，指定该 Cookie 作用于哪些路径，如果省略，默认为当前路径；如果指定一个具体路径，则表示作用于该路径及其子路径。</li>
+<li><code>httponly</code>：只允许通过 HTTP 来访问 Cookie，即 <strong>不允许如 JS 脚本访问该 Cookie，以防跨站脚本攻击</strong>。</li>
+<li><code>secure</code>：<strong>该 Cookie 只允许通过 HTTPS 方式发送到服务器</strong>，在 Chrome 52+、Firefox 52+ 后，不允许 http 站点设置此属性。</li>
+</ul>
+<p>浏览器接收到此响应后，会根据 <code>Set-Cookie</code> 头域的相关字段决定如何存储这些 Cookie。如果 expires/max-age 被省略，则可能保存在内存中，因为这是一个会话期 Cookie；如果没有省略，则保存到本地磁盘的某个文件中。</p>
+<p>当浏览器访问一个页面时，会查找所有已保存的 Cookie，将所有与该页面相匹配的 Cookie（根据 domain、path、secure 属性，如果 cookie 已过期，则删除它）附加到 HTTP 请求头部中，发送给服务器。添加的请求头为 <code>Cookie</code>，格式：<code>Cookie: &lt;name1&gt;=&lt;value1&gt;[; &lt;name2&gt;=&lt;value2&gt;[; ...]]</code>。注意，浏览器发送的 HTTP 请求头中，只会有一个 Cookie 头域，其中包含所有相关的 cookie 名值对，不同的名值对之间使用英文分号隔开（不以分号结尾）。</p>
+<p>完整的 curl 示例如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [15:31:41]
+$ curl -i -c cookie.dat http://127.0.0.1/test.do
+HTTP/1.1 200
+Set-Cookie: uid=255ba30d55d14366b2b42a17c3bc625b
+Content-Type: text/html;charset=UTF-8
+Content-Length: 203
+Date: Thu, 24 May 2018 07:32:06 GMT
+
+==> Servlet Init Param
+ServletParamC = ServletValueC
+ServletParamB = ServletValueB
+ServletParamA = ServletValueA
+==> ServletContext Init Param
+ContextParamB = ContextValueB
+ContextParamA = ContextValueA
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [15:32:06]
+$ cat cookie.dat
+# Netscape HTTP Cookie File
+# https://curl.haxx.se/docs/http-cookies.html
+# This file was generated by libcurl! Edit at your own risk.
+
+127.0.0.1    FALSE    /    FALSE    0    uid    255ba30d55d14366b2b42a17c3bc625b
+
+# root @ arch in ~/tomcat-apps/ROOT/WEB-INF/src/com/zfl9 [15:32:09]
+$ curl -v -b cookie.dat http://127.0.0.1/index.do
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 80 (#0)
+> GET /index.do HTTP/1.1
+> Host: 127.0.0.1
+> User-Agent: curl/7.60.0
+> Accept: */*
+> Cookie: uid=255ba30d55d14366b2b42a17c3bc625b
+>
+< HTTP/1.1 200
+< Content-Type: text/html;charset=UTF-8
+< Content-Length: 136
+< Date: Thu, 24 May 2018 07:32:34 GMT
+<
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>hello, world!</title>
+</head>
+<body>
+<h1>hello, world!</h1>
+</body>
+</html>
+* Connection #0 to host 127.0.0.1 left intact
+</script></code></pre>
+<p><strong>会话期 Cookie</strong><br>会话期 Cookie 是最简单的 Cookie：浏览器关闭之后它会被自动删除，也就是说它仅在会话期内有效。会话期 Cookie 不需要指定过期时间（Expires）或者有效期（Max-Age）。需要注意的是，有些浏览器提供了会话恢复功能，这种情况下即使关闭了浏览器，会话期 Cookie 也会被保留下来，就好像浏览器从来没有关闭一样。</p>
+<p><strong>持久性 Cookie</strong><br>和关闭浏览器便失效的会话期 Cookie 不同，持久性 Cookie 可以指定一个特定的过期时间（Expires）或有效期（Max-Age）。<br>如：<code>Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT</code><br>注：当 Cookie 的过期时间被设定时，设定的日期和时间只与客户端的本地时间有关。</p>
+<p>利用浏览器自动检索可用的 cookie 并发送给服务器的特点，可以很方便的在基于无状态的 HTTP 协议中保持稳定的状态信息。</p>
+<p><strong>发送 Cookie</strong><br>在 Servlet-API 中，HTTP Cookie 使用 <code>javax.servlet.http.Cookie</code> 类的一个对象表示。构造函数：<br><code>public Cookie(String name, String value)</code>，根据给定的 name、value 创建一个 cookie 对象。<br>因为 cookie 的 name/value 有些字符不能使用，为了符合规范，建议对 value 进行 url 编码或 base64 编码。</p>
+<p>Cookie 类的成员方法：</p>
+<ul>
+<li><code>public String getName()</code>：获取 name（创建后无法修改）</li>
+<li><code>public void setValue(String newValue)</code>：设置 value</li>
+<li><code>public String getValue()</code>：获取 value</li>
+<li><code>public void setDomain(String pattern)</code>：设置作用域名</li>
+<li><code>public String getDomain()</code>：获取作用域名</li>
+<li><code>public void setPath(String uri)</code>：设置作用路径（须包含上下文路径）</li>
+<li><code>public String getPath()</code>：获取作用路径</li>
+<li><code>public void setMaxAge(int expiry)</code>：设置到期时间，负值：会话期cookie、零值：删除此cookie、正值：生存时间，单位为秒</li>
+<li><code>public int getMaxAge()</code>：获取到期时间，负值表示此 cookie 为会话期 cookie、正值表示此 cookie 的有效时间，单位为秒</li>
+<li><code>public void setSecure(boolean flag)</code>：设置是否使用安全协议，即只在 HTTPS 连接下发送此 Cookie，默认为 false</li>
+<li><code>public boolean getSecure()</code>：获取是否使用安全协议，默认为 false</li>
+<li><code>public void setHttpOnly(boolean httpOnly)</code>：设置是否对客户端脚本隐藏（JS），默认为 false</li>
+<li><code>public boolean isHttpOnly()</code>：判断是否对客户端脚本隐藏（JS）</li>
+<li><code>public void setComment(String purpose)</code>：设置注释</li>
+<li><code>public String getComment()</code>：获取注释，或 null</li>
+<li><code>public void setVersion(int v)</code>：设置版本号，默认是 0（一般不改）</li>
+<li><code>public int getVersion()</code>：获取版本号</li>
+<li><code>public Object clone()</code>：克隆当前 Cookie 对象</li>
+</ul>
+<p>获得 cookie 对象后，调用 HttpServletResponse.addCookie(cookie) 方法，添加 Set-Cookie 头。</p>
+<p><strong>接收 Cookie</strong><br>读取 Cookie 也很简单，使用 HttpServletRequest.getCookies() 方法，获取 cookie 对象的数组，或者 null。</p>
+<p><strong>删除 Cookie</strong><br>如果 cookie.setMaxAge(expiry) 的 expiry 为 0，则表示删除此 cookie。删除 cookie 的步骤如下：</p>
+<ol>
+<li>调用 request.getCookies() 方法，获取该 cookie 对象的引用</li>
+<li>调用 cookie.setMaxAge(0) 方法，将 max-age 设为 0，表示想删除它</li>
+<li>调用 response.addCookie(cookie) 方法，将修改后的 cookie 发送回客户端</li>
+</ol>
+<p>例子，实现一个简单的登录/登出功能。两个页面：login.html 登录表单、user.do 用户中心。流程：用户只需打开 user.do 页面，user.do 内部进行判断，实现登录、显示个人信息、登出功能。</p>
+<p><code>login.html</code> 登录表单：<br><img src="/images/java-servlet-login-html.png" alt="登录表单"></p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>login.html</title>
+  </head>
+  <body>
+    <h1>欢迎登录</h1>
+    <form action="/user.do" method="post">
+      昵称：<input type="text" name="name"><br>
+      邮箱：<input type="email" name="mail"><br>
+      简介：<input type="text" name="profile"><br>
+      <input type="submit" value="点击登录">
+    </form>
+  </body>
+</html>
+</script></code></pre>
+<p><code>user.do</code> 用户中心：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/user.do")
+public class User extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        Cookie[] cookies = request.getCookies();
+        Enumeration<String> params = request.getParameterNames();
+
+        // 用户登出，删除 cookie
+        if ("logout".equals(request.getParameter("target"))) {
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
+            }
+            response.sendRedirect("/login.html");
+            return;
+        }
+
+        // 未登录状态，跳转至 login 页面
+        if (cookies == null && !params.hasMoreElements()) {
+            response.sendRedirect("/login.html");
+            return;
+        }
+
+        String name, mail, profile;
+
+        // 首次登录（login.html 提交表单）
+        if (params.hasMoreElements()) {
+            name = request.getParameter("name");
+            mail = request.getParameter("mail");
+            profile = request.getParameter("profile");
+            Cookie nameCookie = new Cookie("name", URLEncoder.encode(name, "UTF-8"));
+            Cookie mailCookie = new Cookie("mail", URLEncoder.encode(mail, "UTF-8"));
+            Cookie profileCookie = new Cookie("profile", URLEncoder.encode(profile, "UTF-8"));
+            response.addCookie(nameCookie);
+            response.addCookie(mailCookie);
+            response.addCookie(profileCookie);
+        }
+        // 非首次登录（携带 cookie 登录的）
+        else {
+            name = URLDecoder.decode(getCookie("name", cookies).getValue(), "UTF-8");
+            mail = URLDecoder.decode(getCookie("mail", cookies).getValue(), "UTF-8");
+            profile = URLDecoder.decode(getCookie("profile", cookies).getValue(), "UTF-8");
+        }
+
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+
+        out.println("<head>");
+        out.println("<meta charset='utf-8'>");
+        out.println("<title>欢迎：" + name + "！</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<h2>个人信息</h2>");
+        out.println("<ul>");
+        out.println("<li>昵称：" + name + "</li>");
+        out.println("<li>邮箱：" + mail + "</li>");
+        out.println("<li>简介：" + profile + "</li>");
+        out.println("</ul>");
+        out.println("<h2><a href='/user.do?target=logout'>退出登录</a></h2>");
+        out.println("</body>");
+
+        out.println("</html>");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        doGet(request, response);
+    }
+
+    private static Cookie getCookie(String name, Cookie[] cookies) {
+        for (Cookie cookie : cookies) {
+            if (name.equals(cookie.getName())) {
+                return cookie;
+            }
+        }
+        return null;
+    }
+}
+</script></code></pre>
+<p>第一次访问 <code>/user.do</code>，自动跳转到 <code>/login.html</code> 登录页面：<br><img src="/images/java-servlet-login-html-2.png" alt="登录表单"></p>
+<p>填写信息后，点击登录按钮，跳转到 <code>/user.do</code> 用户中心：<br><img src="/images/java-servlet-user-do.png" alt="用户中心"></p>
+<p>关闭页面，再次打开 <code>user.do</code>，解析 cookie，显示个人信息：<br><img src="/images/java-servlet-user-do.png" alt="个人信息"></p>
+<p>点击【退出登录】按钮，删除相关 cookie，跳转到登录页面，再次访问 <code>user.do</code> 还是会跳转到登录页面。</p>
+<h2 id="Servlet-Session"><a href="#Servlet-Session" class="headerlink" title="Servlet Session"></a>Servlet Session</h2><p>那么 Session 又是什么呢？和 Cookie 又有什么区别？好多人说 Cookie 和 Session 很难理解和区分，其实并没有，上一节说到，Cookie 其实就是两个 HTTP 头部（<code>Set-Cookie</code>、<code>Cookie</code>），Cookie 的工作方式也很简单，服务端先向客户端发送一个 Set-Cookie 头部，里面包含一个 name=value 对以及其它一些信息，客户端接收到后，根据 Set-Cookie 的生存时间来决定如何保存这个 name=value 对；当浏览器再次访问该页面时，会检索与该页面相关的 Cookie，将其附加到 HTTP 请求的 Cookie 头部中，发送给服务器，服务器根据每个 HTTP 请求的 Cookie 来区分不同的“用户”。</p>
+<p>既然 Cookie 能够在不同的 HTTP 请求中保持状态信息，那为什么还要搞出 Session 这个东西呢？上一节说到，Cookie 是有大小限制的，一般来说，每个域的 Cookie 数量最好不超过 50 个，每个域的所有 Cookie 的总大小最好不超过 4KB。而且 Cookie 过多会导致请求头过大，加重网络的负担，还有可能被拒绝服务，因为服务器通常会限制单个请求允许发送的请求头大小。</p>
+<p>所以 Cookie 中保存的信息必须足够精简，那么明显比 Cookie 限制大的状态信息要如何保持呢？一个办法是，将这些状态信息保存在服务器上，每个用户的状态信息都有一个唯一的标识（暂且称为 ID），服务器只需要将这个唯一的标识通过 Cookie 存储在客户端，就能够保持“大容量”的状态了。具体的流程就是：第一次访问页面时，服务端发现客户端的 Cookie 中并没有 ID 信息，于是创建一个新的状态信息（或者称为 Session 会话，ID 也即 SID，会话 ID），这个状态信息可以保存在内存中，也可以作为一个文件保存在服务器的磁盘中，或者是存储在服务器的某个数据库中，然后通过 Set-Cookie 头部将这个 SID 发送给客户端，客户端再次访问页面时会将 SID 通过 Cookie 发送到服务器，这样服务器就能够根据 SID 来找到对应的会话信息，从而继续上次的会话（即保持了状态）。</p>
+<p>因此有 Session 的地方一般也有 Cookie，因为需要使用 Cookie 来存储这个 SID。不过这也不是绝对的，你要知道，浏览器是可以禁用 Cookie 的，那么这种情况下，SessionID 是如何传递的呢？通过备用方案：<strong>URL 传参</strong>，比如一些电商网站的地址栏夹杂着一长串无规律的字符，其实这就是 SessionID。</p>
+<p><strong>获取 Session</strong><br>开始一个会话首先得获取 <code>javax.servlet.http.HttpSession</code> 对象，<code>HttpServletRequest</code> 类提供了两个方法来获取它：<br><code>HttpSession getSession(boolean create)</code>：返回与此请求关联的 Session，create 为 false 则不创建新会话，返回 null。<br><code>HttpSession getSession()</code>：返回与此请求关联的 Session，如果没有则创建一个 Session。它等同于 <code>getSession(true)</code>。<br>getSession() 方法内部的大致逻辑：如果请求中包含了 SID（cookie、url-param），则查找对应的 Session 数据，如果确实存在，则返回该 Session 对象的引用，如果不存在（比如用户伪造的 SID），则直接新建一个 Session，并返回该 Session 对象的引用。如果请求中没有包含 SID（cookie、url-param），则创建一个新的 Session，并返回该 Session 对象的引用。</p>
+<p><strong>使用 Session</strong><br>HttpSession 对象其实和关联数组的用法差不多，存取数据都需要一个 name，每个 name 都与一个 value 对应，其中 name 是 String 类型，value 是 Object 类型。这样一对数据在 HttpSession 中称为 Attribute（属性），相关的数据操作方法有：</p>
+<ul>
+<li><code>void setAttribute(String name, Object value)</code>：创建/修改与指定 name 相关联的 value。</li>
+<li><code>Object getAttribute(String name)</code>：获取与指定 name 关联的 value，如果没有则返回 null。</li>
+<li><code>Enumeration&lt;String&gt; getAttributeNames()</code>：获取存储的所有 names，如果没有则返回空枚举。</li>
+<li><code>void removeAttribute(String name)</code>：删除与指定 name 相关联的 name/value 名值对记录。</li>
+</ul>
+<p>除了数据存取相关的方法外，还有一些 Session 属性的操作方法：</p>
+<ul>
+<li><code>String getId()</code>：获取 Session 的 ID。</li>
+<li><code>long getCreationTime()</code>：获取 Session 的创建时间（自 1970-01-01 00:00:00 UTC 起的毫秒数）。</li>
+<li><code>long getLastAccessedTime()</code>：获取上次访问 Session 的时间（自 1970-01-01 00:00:00 UTC 起的毫秒数）。</li>
+<li><code>ServletContext getServletContext()</code>：获取 Session 所在的 Context 对象。</li>
+<li><code>void setMaxInactiveInterval(int interval)</code>：设置 Session 的超时时间（秒为单位）。</li>
+<li><code>int getMaxInactiveInterval()</code>：获取 Session 的超时时间（秒为单位）。</li>
+<li><code>boolean isNew()</code>：查询当前 Session 是否为新创建的。</li>
+<li><code>void invalidate()</code>：注销当前 Session，让其失效。</li>
+</ul>
+<p>注意，setMaxInactiveInterval() 设置的超时时间和 web.xml 中的 <code>&lt;session-timeout&gt;30&lt;/session-timeout&gt;</code> 是一个意思，都是指允许客户端不活动的最大时长，也即：当客户端超过指定时长未活动时，该 Session 将自动注销（失效）。默认情况下，timeout 时长为 30 min（全局 web.xml 中指定的）。除了通过超时机制让 Session 失效外，也可以直接调用 session.invalidate() 方法来注销会话。如果希望 Session 永不超时，可以使用 <code>session.setMaxInactiveInterval(0)</code> 来实现（负数也可以）。</p>
+<p><strong>修改 SessionID 的名称</strong><br>默认情况下，Servlet 的 SessionID 的 cookie/url-param 名称为 <code>JSESSIONID</code>，在 Servlet API 3.0 前要自定义这个 SID 名称并不是那么容易，好在 Servlet API 3.0 提供了相应的 web.xml 配置项，比如我想将 SID 的名称修改为 SessionID，只需在 web.xml 中加入：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<session-config>
+  <cookie-config>
+    <name>SessionID</name>
+  </cookie-config>
+</session-config>
+</script></code></pre>
+<p><strong>URL 传参方式保持 SID</strong><br>大多数服务端都是使用 Cookie 来存储 SessionID，当浏览器禁用 Cookie 时，则使用备用方案（fallback）：URL 传参。在 PHP 中，只需简单配置 php.ini 就可以无缝的使用 URL 传递 SID，无需改变 PHP 代码，全由 PHP 自动完成。但是在 Servlet 中，就比较原始一点了，需要自己手动修改相应的 URL，当然，Servlet 还是提供了自动判断浏览器是否禁用了 Cookie 的方法的，分别是（但我仍未搞清楚它们的区别，我主要使用第一个）：</p>
+<ul>
+<li><code>String encodeURL(String url)</code>：Encodes the specified URL by including the session ID in it, or, if encoding is not needed, returns the URL unchanged.</li>
+<li><code>String encodeRedirectURL(String url)</code>：Encodes the specified URL for use in the sendRedirect method or, if encoding is not needed, returns the URL unchanged.</li>
+</ul>
+<p>如果单从这两句话理解，那么 encodeURL(url) 应用于非 redirect 方法（比如 rewrite），encodeRedirectURL(url) 应用于 sendRedirect() 方法。不过具体什么意思我是不太明白了，如果你知道的话，麻烦告诉我哦。一般情况下，使用第一个就够了。</p>
+<p>假设传入的 url 为 <code>/profile.do</code>，如果客户端启用了 Cookie，则返回原 url，即 <code>/profile.do</code>，如果客户端禁用了 Cookie，则返回附加了 SID 的 url，即 <code>/profile.do;SessionID=34E4AC91E05A47BDD64E02EA6DF8CF31</code>；如果传入的 url 带有参数，如 <code>/profile.do?name=Otokaze</code>，如果客户端启用了 Cookie，则返回原 url，即 <code>/profile.do?name=Otokaze</code>，如果客户端禁用了 Cookie，那么返回的 url 为 <code>/profile.do;SessionID=34E4AC91E05A47BDD64E02EA6DF8CF31?name=Otokaze</code>。可以发现 SID 总是紧跟原 url 的，它们之间使用 <code>;</code> 分隔（和 PHP 的 URL 传递 SID 方式有点不一样，PHP 中是通过正常的 query-string 来传递 SID 的）。</p>
+<p>例子，为每个用户统计访问的次数：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/visitCount.do")
+public class VisitCount extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        HttpSession session = request.getSession();
+        Integer count = (Integer)session.getAttribute("count");
+        if (count == null) count = 1;
+        session.setAttribute("count", count + 1);
+
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<meta charset='utf-8'>");
+        out.println("<title>visitCount.do</title>");
+        out.println("</head>");
+
+        out.println("<body>");
+        out.println("<pre>");
+        out.println("visitCount: " + count);
+
+        out.println("SID from Cookie: " + request.isRequestedSessionIdFromCookie());
+        out.println("SID from URLParam: " + request.isRequestedSessionIdFromURL());
+
+        String originURL = request.getRequestURI() + (request.getQueryString() == null ? "" : request.getQueryString());
+        String encodeURL = response.encodeURL(originURL);
+        out.printf("originURL: <a href='%1$s'>%1$s</a>\n", originURL);
+        out.printf("encodeURL: <a href='%1$s'>%1$s</a>\n", encodeURL);
+
+        out.println("</pre>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+}
+</script></code></pre>
+<p>启用 Cookie 时：<br><img src="/images/sid-via-cookie.gif" alt="启用 Cookie 时"></p>
+<p>禁用 Cookie 时：<br><img src="/images/sid-via-urlparam.gif" alt="禁用 Cookie 时"></p>
+<p>可以发现，无论有没有启用 Cookie，第一次使用 encodeURL() 返回的 url 都是带有 SID 的，为什么会这样呢？因为 encodeURL() 判断浏览器是否启用 Cookie 的逻辑是这这样的：如果 request 中的 url 和 cookie 都没有附带 SID，那么 encodeURL() 将返回带有 SID 的 url；如果 request 中的 url 或 cookie 带有 SID，那么就返回原 url。因此，当启用了 Cookie 的浏览器第一次访问 visitCount.do 时，因为 url 和 cookie 都没有附带 SID，所以返回的 url 是带有 sid 的，而第二次访问时，浏览器发送的 cookie 中携带了 SID，所以后面返回的 url 就没有附带 sid 了。而当禁用了 Cookie 的浏览器第一次访问 visitCount.do 时，因为 url 和 cookie 都没有附带 SID，所以返回的 url 是带有 sid 的，如果刷新的话，因为禁用了 cookie，所以还是会返回带有 sid 的 url（每次返回的 sid 都是不一样的），此时只有访问它返回的带 sid 的 url，才能够正常的维持会话状态。</p>
+<p><strong>Session 持久化</strong><br>默认情况下，Tomcat 会在 shutdown 时将内存中的 session 持久化到 $tomcat/work/$engine/$host/$app/SESSIONS.ser 文件，在 startup 时，会查找该文件，将其载入内存，恢复会话数据（载入后该文件就被删除了）。</p>
+<p>如果在 session 中保存了对象，那么这个对象必须是可序列化的，即必须实现 java.io.Serializable 接口。Serializable 是一个标记接口，它没有定义任何与序列化相关的方法。如果一个类实现了 Serializable 接口，那么该类的所有实例变量都必须能够序列化，即它的实例变量都必须实现 Serializable 接口（基本类型不需要），如果某些实例变量不需要序列化，可以在它前面加上 transient 修饰符，在序列化时，这些变量会被自动跳过，在反序列化时，这些变量被赋予初始值（0、null 等）。</p>
+<p>如果保存在 session 中的对象未实现序列化接口，那么 tomcat 在持久化 session 时，会忽略这些对象！</p>
+<p>Tomcat 允许管理员修改默认的 Session 持久化方式，默认使用的持久化方式为 StandardManager，StandardManager 可配置的地方比较少，它的实现也很简单，就是对每个 context 的 session 序列化，然后保存到 work/$engine/$host/$context/SESSIONS.ser 文件（session 的作用范围为 context）。除了 StandardManager 外，Tomcat 还提供了 PersistentManager，PersistentManager 中有两种存储方式：File（存储在文件夹中，每个 Session 都存储为一个单独的文件）、JDBC（存储在数据库中，性能是 3 者中最好的，如果 session 很多，可以考虑使用 JDBC 存储）。</p>
+<h2 id="Servlet-监听器"><a href="#Servlet-监听器" class="headerlink" title="Servlet 监听器"></a>Servlet 监听器</h2><p><strong>什么是监听器</strong><br>监听器是一个实现特定接口的普通 Java 程序（类），这个程序专门用于监听另一个 Java 对象的方法调用或属性改变，当被监听对象发生上述事件后，监听器某个方法将立即被执行。</p>
+<p><strong>监听器相关概念</strong></p>
+<ul>
+<li>事件源：被监听的对象称为事件源。</li>
+<li>事件对象：描述发生的事件的对象，可以从事件对象中获取事件源。</li>
+<li>事件监听器：一系列方法的集合，当事件被触发时，自动调用对应的监听器方法。</li>
+</ul>
+<p>Java 中的事件监听机制一般都是通过回调函数来实现的，我们来写一个简单的事件监听。<br><em>事件对象</em>，PersonEvent.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.util.EventObject;
+
+public class PersonEvent extends EventObject {
+    private static final long serialVersionUID = 1L;
+
+    public PersonEvent(Person source) {
+        super(source);
+    }
+
+    public Person getPerson() {
+        return (Person)super.getSource();
+    }
+}
+</script></code></pre>
+<p><em>事件监听器</em>，PersonListener.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.util.EventListener;
+
+public interface PersonListener extends EventListener {
+    void beforeEat(PersonEvent event);
+    void afterEat(PersonEvent event);
+}
+</script></code></pre>
+<p><em>事件源</em>，Person.java</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.util.List;
+import java.util.ArrayList;
+
+public class Person {
+    private String name;
+    private List<PersonListener> list = new ArrayList<>();
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void eat() {
+        // before eat
+        for (PersonListener listener : list)
+            listener.beforeEat(new PersonEvent(this));
+
+        // eating
+        System.out.println(name + " 正在吃饭.");
+
+        // after eat
+        for (PersonListener listener : list)
+            listener.afterEat(new PersonEvent(this));
+    }
+
+    public void addEventListener(PersonListener listener) {
+        list.add(listener);
+    }
+
+    public static void main(String[] args) {
+        Person zhang3 = new Person("张三");
+        Person wang5 = new Person("王五");
+
+        zhang3.addEventListener(new PersonListener() {
+            @Override
+            public void beforeEat(PersonEvent event) {
+                System.out.println(event.getPerson().getName() + " 开始吃饭.");
+            }
+            @Override
+            public void afterEat(PersonEvent event) {
+                System.out.println(event.getPerson().getName() + " 吃完饭了.");
+            }
+        });
+
+        zhang3.eat();
+        System.out.println();
+        wang5.eat();
+    }
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ll
+total 12K
+-rw-r--r-- 1 root root  284 Jun 10 14:31 PersonEvent.java
+-rw-r--r-- 1 root root 1.4K Jun 10 14:56 Person.java
+-rw-r--r-- 1 root root  168 Jun 10 14:35 PersonListener.java
+
+# root @ arch in ~/workspace [15:01:10]
+$ javac *.java
+
+# root @ arch in ~/workspace [15:01:13]
+$ java Person
+张三 开始吃饭.
+张三 正在吃饭.
+张三 吃完饭了.
+
+王五 正在吃饭.
+</script></code></pre>
+<p><strong>Servlet 中的监听器</strong><br>在 Servlet 中，也存在监听器，主要的事件源有 3 个：ServletContext、ServletRequest、HttpSession。</p>
+<p><em>ServletContext</em></p>
+<ul>
+<li>ServletContextListener：监听 context 的创建、销毁事件，对应的事件对象为 ServletContextEvent。</li>
+<li>ServletContextAttributeListener：监听 context 属性的添加、删除、修改事件，对应的事件对象为 ServletContextAttributeEvent。</li>
+</ul>
+<p><em>ServletRequest</em></p>
+<ul>
+<li>ServletRequestListener：监听 request 的创建、销毁事件，对应的事件对象为 ServletRequestEvent。</li>
+<li>ServletRequestAttributeListener：监听 request 属性的添加、删除、修改事件，对应的事件对象为 ServletRequestAttributeEvent。</li>
+</ul>
+<p><em>HttpSession</em></p>
+<ul>
+<li>HttpSessionListener：监听 session 的创建、销毁事件，对应的事件对象为 HttpSessionEvent。</li>
+<li>HttpSessionIdListener：监听 SessionID（会话 ID） 的改变事件，对应的事件对象为 HttpSessionEvent。</li>
+<li>HttpSessionAttributeListener：监听 session 属性的添加、删除、修改事件，对应的事件对象为 HttpSessionBindingEvent。</li>
+<li>HttpSessionActivationListener：监听 session 的活化、钝化事件（持久化至文件），对应的事件对象为 HttpSessionEvent。</li>
+</ul>
+<p><em>被添加到 session 中的属性</em><br>HttpSessionBindingListener：事件源是 <em>被添加到 session 中的属性/对象</em>，监听这些对象的添加、移除事件，对应的事件对象为 HttpSessionBindingEvent。假设某个类实现了 HttpSessionBindingListener 接口，那么当该类的实例被添加到 session 中时（<code>session.setAttribute(name, value)</code>）触发对应的 valueBound 事件，当该类的实例从 session 移除时（<code>session.removeAttribute(name)</code>）触发对应的 valueUnbound 事件。</p>
+<p>要注册一个 Servlet 监听器，需要通过 web.xml 或者 <code>@WebListener</code> 注解（HttpSessionBindingListener 除外）。</p>
+<p><em>通过 web.xml 方式</em></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<listener>
+    <listener-class>com.example.FooListener</listener-class>
+</listener>
+</script></code></pre>
+<p><em>通过 WebListener 注解</em><br>只需要在实现了对应的监听器接口的类上方使用 <code>@WebListener</code> 注解就可以了，推荐此方式，简单明了。</p>
+<p>例子，监听 request 的创建事件（记录日志）</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.annotation.WebListener;
+
+@WebListener
+public class RequestListener implements ServletRequestListener {
+    @Override
+    public void requestInitialized(ServletRequestEvent event) {
+        HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+        System.out.printf("[%1$tF %1$tT] %2$s \"%3$s %4$s %5$s\" %6$s\n",
+            System.currentTimeMillis(),
+            request.getRemoteAddr(),
+            request.getMethod(),
+            request.getRequestURI() + (request.getQueryString() == null ? "" : "?" + request.getQueryString()),
+            request.getProtocol(),
+            request.getHeader("User-Agent"));
+    }
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent event) {
+        // TODO
+    }
+}
+</script></code></pre>
+<p>当我们访问某个页面时，$tomcat/logs/catalina.out 中就可以看到对应的日志，如下：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+[2018-06-10 17:11:00] 127.0.0.1 "GET / HTTP/1.1" curl/7.60.0
+[2018-06-10 17:11:09] 127.0.0.1 "GET / HTTP/1.1" Wget/1.19.5 (linux-gnu)
+</script></code></pre>
+<p>来总结一下 Servlet、Filter、Listener：</p>
+<ul>
+<li>启动顺序：Listener -&gt; Filter -&gt; Servlet</li>
+<li>Servlet：用来响应客户端的请求，一般一个 Servlet 类就是一个“动态页面”</li>
+<li>Filter：预处理、后处理 Servlet 的响应数据，多个 Filter 形成一个 Filter 链</li>
+<li>Listener：用来监听 Context、Request 及 Session 的相关事件，并做出响应</li>
+<li>Filter 和 Listener 都是容器启动时初始化的，Servlet 默认是第一次访问时初始化</li>
+</ul>
+<h2 id="Tomcat-相关配置"><a href="#Tomcat-相关配置" class="headerlink" title="Tomcat 相关配置"></a>Tomcat 相关配置</h2><p><strong>web.xml</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="utf-8"?>
+<web-app>
+  <!-- 项目名称 -->
+  <display-name>My Web Application</display-name>
+  <!-- 项目描述 -->
+  <description>Learn Java Servet/JSP</description>
+
+  <!-- 上下文参数 -->
+  <context-param>
+    <!-- 参数名 -->
+    <param-name>param_name</param-name>
+    <!-- 参数值 -->
+    <param-value>param_value</param-value>
+  </context-param>
+
+  <!-- Listener -->
+  <listener>
+    <!-- 监听器的全限定类名 -->
+    <listener-class>com.foo.Hello</listener-class>
+  </listener>
+
+  <!-- Filter -->
+  <filter>
+    <!-- 过滤器的名称 -->
+    <filter-name>CharsetEncoding</filter-name>
+    <!-- 过滤器的全限定类名 -->
+    <filter-class>com.foo.CharsetEncoding</filter-class>
+
+    <!-- 初始化参数 -->
+    <init-param>
+      <!-- 参数名 -->
+      <param-name>param_name</param-name>
+      <!-- 参数值 -->
+      <param-value>param_value</param-value>
+    </init-param>
+  </filter>
+
+  <!-- Filter 映射 -->
+  <filter-mapping>
+    <!-- 过滤器的名称 -->
+    <filter-name>CharsetEncoding</filter-name>
+
+    <!-- 匹配的 url -->
+    <url-pattern>/*</url-pattern>
+    <!-- 匹配的 servlet -->
+    <servlet-name>TestServlet</servlet-name>
+
+    <!-- 过滤的条件 (详见前文) -->
+    <dispatcher>REQUEST</dispatcher> <!-- 正常请求 (默认) -->
+    <dispatcher>FORWARD</dispatcher> <!-- 转发请求 -->
+    <dispatcher>INCLUDE</dispatcher> <!-- 包含请求 -->
+  </filter-mapping>
+
+  <!-- Servlet -->
+  <servlet>
+    <!-- servlet 的名称 -->
+    <servlet-name>TestServlet</servlet-name>
+    <!-- servlet 的全限定类名 -->
+    <servlet-class>com.foo.TestServlet</servlet-class>
+
+    <!--
+      启动优先级
+        负数/未指定: 首次访问时初始化，这是默认值
+        非负整数: 容器启动时初始化，值越小优先级越高，越先初始化
+    -->
+    <load-on-startup>0</load-on-startup>
+
+    <!-- 初始化参数 -->
+    <init-param>
+      <!-- 参数名 -->
+      <param-name>param_name</param-name>
+      <!-- 参数值 -->
+      <param-value>param_value</param-value>
+    </init-param>
+  </servlet>
+
+  <!-- Servet 映射 -->
+  <servlet-mapping>
+    <!-- servlet 的名称 -->
+    <servlet-name>TestServlet</servlet-name>
+    <!-- servlet 的 url -->
+    <url-pattern>/test.do</url-pattern>
+  </servlet-mapping>
+
+  <!-- Session -->
+  <session-config>
+    <!-- 会话超时时间 (min) -->
+    <session-timeout>30</session-timeout>
+
+    <!-- SID 跟踪模式 -->
+    <tracking-mode>COOKIE</tracking-mode> <!-- cookie 方式 -->
+    <tracking-mode>URL</tracking-mode>    <!-- url传参方式 -->
+    <tracking-mode>SSL</tracking-mode>    <!-- tls/ssl方式 -->
+
+    <!-- Cookie 配置 -->
+    <cookie-config>
+      <!-- SID 的名称 -->
+      <name>SessionID</name>
+      <!-- 会话的作用域名 -->
+      <domain>example.org</domain>
+      <!-- 会话的作用路径 -->
+      <path>/shop</path>
+      <!-- 此 Cookie 的注释 -->
+      <comment>some information</comment>
+      <!-- 禁止通过 JS 访问 -->
+      <http-only>true</http-only>
+      <!-- 只能通过 HTTPS 传递 -->
+      <secure>false</secure>
+      <!-- 会话 ID 的有效时长 (s) -->
+      <max-age>1800</max-age>
+    </cookie-config>
+  </session-config>
+
+  <!-- MIME 类型定义 -->
+  <mime-mapping>
+    <!-- 文件扩展名 -->
+    <extension>7z</extension>
+    <!-- MIME 类型 -->
+    <mime-type>application/x-7z-compressed</mime-type>
+  </mime-mapping>
+
+  <!-- 默认页面配置 -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.do</welcome-file>
+  </welcome-file-list>
+
+  <!-- 异常处理配置 -->
+  <error-page>
+    <!-- 响应状态码 -->
+    <error-code>500</error-code>
+    <!-- 处理页面的 url -->
+    <location>/5xx.html</location>
+  </error-page>
+  <error-page>
+    <!-- 未捕获的异常类型 -->
+    <exception-type>java.lang.Throwable</exception-type>
+    <!-- 处理页面的 url -->
+    <location>/exception.html</location>
+  </error-page>
+</web-app>
+</script></code></pre>
+<p><strong>context.xml</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The contents of this file will be loaded for each web application -->
+<Context>
+    <!-- Default set of monitored resources. If one of these changes, the    -->
+    <!-- web application will be reloaded.                                   -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+    <!-- Uncomment this to disable session persistence across Tomcat restarts -->
+    <!--
+    <Manager pathname="" />
+    -->
+</Context>
+</script></code></pre>
+<p><strong>server.xml</strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <GlobalNamingResources>
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               URIEncoding="UTF-8" />
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" URIEncoding="UTF-8" />
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
+
+      <Host name="localhost"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true">
+
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+      </Host>
+    </Engine>
+  </Service>
+</Server>
+</script></code></pre>
+<p>server.xml 的整体结构（核心结构）如下：<br><img src="/images/tomcat-server-xml.gif" alt="server.xml 整体结构 - 图解"></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<Server>
+    <Service>
+        <Connector />
+        <Engine>
+            <Host>
+                <Context />
+            </Host>
+        </Engine>
+    </Service>
+</Server>
+</script></code></pre>
+<p>Server 节点代表整个 Tomcat 服务器，每个 Service 节点代表一个服务（虽然可以有多个 Service 节点，但是貌似没什么大用处，因为实际上还是只有一个 JVM 进程在运行，还不如同时启用多个 Tomcat）。Service 节点中可以有多个 Connector 连接器（默认情况下，一个 HTTP 连接器，一个 AJP 连接器），一个 Engine 引擎。Connector 用来接受连接，Engine 则用来处理请求。Engine 节点中可以有多个 Host 虚拟主机节点，然后每个 Host 节点中可以有多个 Context 上下文节点，不过现在 Tomcat 已经不建议在 server.xml 中配置 Context 节点了（应该放在 context.xml 中），因为 server.xml 是不可重载的资源，这意味着修改该文件后必须重启 Tomcat 才能生效。</p>
+<p>现在，我们来简单的“精简”一下 Tomcat，不必要的东西统统删掉，还原 Tomcat 的本质（Servlet/JSP 容器）。首先，将 tomcat 目录下的几个无关文件删掉（LICENSE、NOTICE、RELEASE-NOTES、RUNNING.txt）。然后，将 bin 目录下的 <code>*.bat</code> 或 <code>*.sh</code> 删掉（取决于你现在使用的什么系统）。</p>
+<p>进入 conf 目录，删除 <code>tomcat-users.*</code>，修改 logging.properties，如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+#handlers = 1catalina.org.apache.juli.AsyncFileHandler, 2localhost.org.apache.juli.AsyncFileHandler, 3manager.org.apache.juli.AsyncFileHandler, 4host-manager.org.apache.juli.AsyncFileHandler, java.util.logging.ConsoleHandler
+handlers = 1catalina.org.apache.juli.AsyncFileHandler, 2localhost.org.apache.juli.AsyncFileHandler, java.util.logging.ConsoleHandler
+</script></code></pre>
+<p>修改 server.xml，这是我的配置（请酌情修改）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <Service name="Catalina">
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               URIEncoding="UTF-8" />
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+      </Host>
+    </Engine>
+  </Service>
+</Server>
+</script></code></pre>
+<p>修改 web.xml，将默认的 SID 名称改为 SessionID（随便），添加 index.do 到默认欢迎页列表，如：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<session-config>
+    <session-timeout>30</session-timeout>
+    <cookie-config>
+        <name>SessionID</name>
+    </cookie-config>
+</session-config>
+
+<welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.do</welcome-file>
+</welcome-file-list>
+</script></code></pre>
+<p>修改 context.xml，启用 reloadable 自动重载（监控 WEB-INF/classes、WEB-INF/lib 下的 jar、class 文件）：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- 建议开发环境中使用 -->
+<Context reloadable="true">
+</script></code></pre>
+<p>最后，进入 webapps 目录，全部都删除，然后将你自己的 web 项目放进去（取名 ROOT），启动 tomcat 开始食用。</p>
+<h2 id="Tomcat-配置优化"><a href="#Tomcat-配置优化" class="headerlink" title="Tomcat 配置优化"></a>Tomcat 配置优化</h2><p>先把默认的 catalina.sh 管理脚本包装一下，在 <code>$CATALINA_HOME/bin</code> 目录下创建 tomcat，添加可执行权限：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+#!/bin/bash
+
+test -z "$JAVA_HOME" && export JAVA_HOME=/usr/local/jdk/jdk1.8
+test -z "$CATALINA_HOME" && export CATALINA_HOME=/usr/local/tomcat
+export CLASSPATH=$CATALINA_HOME/lib/*
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$JAVA_HOME/bin:$CATALINA_HOME/bin
+
+if [ "$1" = 'status' ]; then
+    result=$(pgrep -af "java.+-Dcatalina.home=$CATALINA_HOME")
+    if [ -z "$result" ]; then
+        echo "Tomcat not running."
+        exit
+    fi
+    pid=$(echo "$result" | awk '{print $1}')
+    arg=$(echo "$result" | sed -r 's@^[0-9]+\s*@@g')
+    echo -e "\e[1mCommand Parameter\e[0m"
+    echo -e "$arg"
+    echo -e "\e[1mListening Address\e[0m"
+    ss -lnptu | head -n1 | sed -r 's@\s*$@@g'
+    ss -lnptu | sed -r 's@\s*$@@g' | grep "pid=$pid"
+elif [ "$1" = 'restart' ]; then
+    result=$(pgrep -f "java.+-Dcatalina.home=$CATALINA_HOME")
+    if [ -z "$result" ]; then
+        $CATALINA_HOME/bin/catalina.sh start
+    else
+        $CATALINA_HOME/bin/catalina.sh stop
+        echo
+        $CATALINA_HOME/bin/catalina.sh start
+    fi
+else
+    $CATALINA_HOME/bin/catalina.sh "$@"
+fi
+</script></code></pre>
+<p>主要添加两个参数：status、restart，其它参数还是转发给 catalina.sh 处理。然后创建 tomcat 服务文件，让其可以通过 systemctl 管理，在 <code>/etc/systemd/system</code> 目录创建 tomcat.service 文件，内容如下：</p>
+<pre><code class="language-ini line-numbers"><script type="text/plain">
+[Unit]
+Description=Tomcat Servlet/JSP Container
+Requires=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/tomcat/bin/tomcat start
+ExecStop=/usr/local/tomcat/bin/tomcat stop
+ExecReload=/usr/local/tomcat/bin/tomcat restart
+
+[Install]
+WantedBy=multi-user.target
+</script></code></pre>
+<p>启动：<code>systemctl start tomcat.service</code><br>停止：<code>systemctl stop tomcat.service</code><br>重启：<code>systemctl restart tomcat.service</code><br>状态：<code>systemctl -l status tomcat.service</code> 或 <code>tomcat status</code>（推荐）</p>
+<p><strong>自动部署、自动重载、自动重编译</strong></p>
+<ul>
+<li>自动部署：默认启用，通过 server.xml 的 <code>&lt;Host autoDeploy=&quot;true&quot; /&gt;</code> autoDeploy 属性可配置。启用自动部署功能后，Tomcat 会定期扫描 context.xml、应用目录（非内容）、应用 war 包，比如对比文件的时间戳，是否有新应用，是否删除了应用等，然后自动更新。</li>
+<li>自动重载：部分启用，对于 conf/web.xml、WEB-INF/web.xml，使用 context.xml 中的 <code>&lt;WatchedResource&gt;</code> 元素配置，默认是启用的；对于 WEB-INF/classes、WEB-INF/lib 目录下的 <code>*.class</code>、<code>*.jar</code> 文件，默认是不进行自动重载的，可通过 context.xml 的 <code>&lt;Context reloadable=&quot;true&quot; /&gt;</code> reloadable 属性配置。</li>
+<li>自动重编译：默认启用，自动重编译是针对 JSP 文件的，如果在 Tomcat 运行期间，修改了 JSP 文件，Tomcat 默认是会自动重编译的，可通过 conf/web.xml 中的 jsp servlet 的 init-param 进行配置，将 <code>development</code> 这个 param 设为 false，关闭开发模式，以禁用 JSP 重编译。</li>
+</ul>
+<p>开发环境：建议将这 3 个自动功能打开，省的频繁重启 Tomcat；<br>生产环境：建议将这 3 个自动功能关闭，以减轻服务器运行负担。</p>
+<p><strong>隐藏 Tomcat 服务器信息</strong><br>默认情况下，Tomcat 的错误页面会显示 Tomcat 的具体版本信息，比如 404 Not Found 界面，默认会显示 <code>Apache Tomcat/8.5.29</code>。这对于开发环境是好的，但是在生产环境中，不建议将服务器版本信息暴露给客户端，可能会被攻击者利用（因为缩小了研究范围）。除了错误页面外，Tomcat 的响应头中，还存在 <code>Server: Apache-Coyote/1.1</code> 服务器头部（但我的 Tomcat 8.5 版本没有发现这个头部，但为了保险，建议修改），可能会暴露一些信息，通过 server.xml 文件中的 <code>&lt;Connector server=&quot;WebServer&quot; /&gt;</code> server 属性修改。还可以添加 <code>&lt;Connector xpoweredBy=&quot;false&quot; /&gt;</code> 属性，关闭 X-Powered-By 响应头部（默认是关闭的）。<del>错误页面的信息目前只能在 Web 项目中自定义错误页来规避了，比较好的方法是，自定义一个通用的错误处理页，自己来处理所有的异常情况</del>。修改 <code>org/apache/catalina/util/ServerInfo.properties</code> 文件可以自定义服务器信息字符串，比自定义错误处理页更方便，具体操作如下（重启 Tomcat 生效）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~ [17:46:09]
+$ cd /usr/local/tomcat/lib
+
+# root @ arch in /usr/local/tomcat/lib [17:46:15]
+$ unzip catalina.jar org/apache/catalina/util/ServerInfo.properties
+Archive:  catalina.jar
+  inflating: org/apache/catalina/util/ServerInfo.properties
+
+# root @ arch in /usr/local/tomcat/lib [17:46:36]
+$ cat org/apache/catalina/util/ServerInfo.properties
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+server.info=Apache Tomcat/8.5.29
+server.number=8.5.29.0
+server.built=Mar 5 2018 13:11:12 UTC#
+
+# root @ arch in /usr/local/tomcat/lib [17:46:53]
+$ vim org/apache/catalina/util/ServerInfo.properties
+
+# root @ arch in /usr/local/tomcat/lib [17:47:18]
+$ cat org/apache/catalina/util/ServerInfo.properties
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+server.info=WebServer
+server.number=
+server.built=
+
+# root @ arch in /usr/local/tomcat/lib [17:47:27]
+$ tomcat restart
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+</script></code></pre>
+<p>访问一个不存在的页面，Tomcat 返回的 404 错误页如图所示（没有版本信息，显示 WebServer）：<br><img src="/images/tomcat-errorpage-hidden-info.png" alt="隐藏了 Tomcat 服务器版本信息的错误页"></p>
+<p><strong>JVM 启动参数</strong><br>因为 Tomcat 是运行在 JVM 上的，所以 Tomcat 配置调优需要同时考虑 JVM 运行参数、Tomcat 自身配置。</p>
+<ul>
+<li><code>-server</code>：使用 Server VM 虚拟机（<code>-client</code> 为 Client VM，不建议使用）。</li>
+<li><code>-Xss&lt;size&gt;</code>：线程栈大小，32 位默认为 512k、64 位默认为 1024k，一般不用设置。</li>
+<li><code>-Xms&lt;size&gt;</code>：初始堆大小，建议手动指定，比如 512m，并且建议与最大堆大小相同。</li>
+<li><code>-Xmx&lt;size&gt;</code>：最大堆大小，建议手动指定，比如 512m，并且建议与初始堆大小相同。</li>
+<li><code>-Xmn&lt;size&gt;</code>：年轻代大小，可以手动指定，这里给一个参考值：Java 堆大小的 3/8。</li>
+<li><code>-XX:Permsize=&lt;size&gt;</code>：初始永久代大小，JDK1.8 无效（使用元空间替代），比如 32m。</li>
+<li><code>-XX:MaxPermsize=&lt;size&gt;</code>：最大永久代大小，JDK1.8 无效（使用元空间替代），如堆大小的 1/2。</li>
+<li><code>-XX:MetaspaceSize=&lt;size&gt;</code>：初始元空间大小，仅针对 JDK1.8，不建议设置，元空间使用 Native Memory。</li>
+<li><code>-XX:MaxMetaspaceSize=&lt;size&gt;</code>：最大元空间大小，仅针对 JDK1.8，不建议设置，默认没有大小限制。</li>
+<li><code>-XX:+UseConcMarkSweepGC</code>：启用 CMS 收集器，默认 ParNew + CMS，备用 ParNew + Serial Old（内存不足时）。</li>
+<li><code>-XX:+DisableExplicitGC</code>：禁用 System.gc()，让其变为空调用（没效果），大部分情况下，都不建议手动调用 GC。</li>
+<li><code>-Djava.awt.headless=true</code>：启用 Headless 模式，该模式下表示系统缺少显示设备、键盘、鼠标（如命令行环境）。</li>
+</ul>
+<p>大部分博客都说修改 catalina.sh 脚本来设置 JVM 参数，但实际上，Tomcat 中有更优雅的方式设置环境变量，只需在 Tomcat 的 bin 目录下创建 setenv.sh 或 setenv.bat 文件（无需可执行权限）。设置 JVM 参数可以通过 JAVA_OPTS 环境变量，也可以通过 CATALINA_OPTS 环境变量，前者会被 start、run、stop 命令引用，后者会被 start、run 命令引用，一般设置 JAVA_OPTS 就可以了，这是我的配置（JDK1.8）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+export JAVA_OPTS='-server -Xss1024k -Xms256m -Xmx256m -Xmn96m -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -Djava.awt.headless=true'
+</script></code></pre>
+<p><strong>线程池配置</strong><br>默认情况下，每个 Connector 连接器都有自己的线程池，这样不太方便管理，可以设置一个共享的线程池，所谓的共享就是说所有连接器都使用此线程池，共享线程池的好处是方便管理，易于配置。共享线程池使用 <code>&lt;Executor&gt;</code> 元素指定，<code>&lt;Executor&gt;</code> 元素需要放在 <code>&lt;Service&gt;</code> 元素开头，即位于 Connector 前面。Executor 的常用属性有：</p>
+<ul>
+<li><code>name</code>，字符串：指定 Executor 的名称，必须是唯一的。</li>
+<li><code>minSpareThreads</code>，整数：池中最小空闲线程数量，默认为 25。</li>
+<li><code>maxThreads</code>，整数：线程池中允许的最大线程数量，默认为 200。</li>
+<li><code>maxIdleTime</code>，整数：多于 minSpareThreads 的线程的最大空闲时间，单位毫秒，默认 1 分钟。</li>
+<li><code>maxQueueSize</code>，整数：暂存于任务队列中的最大请求数量，超过队列大小将直接拒绝服务，默认 Integer.MAX_VALUE。</li>
+<li><code>prestartminSpareThreads</code>，布尔值：启动 Executor 时是否预先启动 minSpareThreads 个空闲线程，默认为 false。</li>
+</ul>
+<p>配置 Executor 后，只需要在 Connector 中加入 <code>executor</code> 属性，将它的值设为 Executor 的 name，引用共享线程池。</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <Service name="Catalina">
+    <Executor name="executor"
+              minSpareThreads="20"
+              maxThreads="200"
+              maxIdleTime="30000"
+              prestartminSpareThreads="true" />
+
+    <Connector port="80"
+               executor="executor"
+               protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="443"
+               URIEncoding="UTF-8" />
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost" appBase="apps" unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+      </Host>
+    </Engine>
+  </Service>
+</Server>
+</script></code></pre>
+<p><strong>连接器配置</strong><br>Connector 的配置属性有很多，具体请参考 <a href="https://tomcat.apache.org/tomcat-8.5-doc/config/http.html" rel="external nofollow noopener noreferrer" target="_blank">官方文档</a>，这里提几个常用的：</p>
+<ul>
+<li><code>address</code>：监听地址，默认为 <code>0.0.0.0</code>，监听所有地址的请求。</li>
+<li><code>port</code>：监听端口，没有默认值，如果设为 0，则表示随机空闲端口。</li>
+<li><code>server</code>：设置 Tomcat 的 HTTP 响应头的 Server 字段，生产环境中建议修改，如 <code>WebServer</code>。</li>
+<li><code>executor</code>：使用 <code>&lt;Executor&gt;</code> 元素指定的共享线程池，默认每个连接器都有自己的私有线程池。</li>
+<li><code>protocol</code>：连接器使用的协议，如 HTTP、AJP。默认自动选择，可手动指定为 BIO、NIO、NIO2、APR。</li>
+<li><code>URIEncoding</code>：URL 的字符编码，默认为 ISO-8859-1，为避免出现乱码问题，强烈建议使用 UTF-8 编码。</li>
+<li><code>redirectPort</code>：启用 HTTPS 时，如果接收到 HTTP 请求，则将其重定向到指定的 HTTPS 监听端口。</li>
+<li><code>acceptCount</code>：监听套接字的等待队列长度，默认为 100，超过此值 Tomcat 将拒绝连接。</li>
+<li><code>maxConnections</code>：同一时间允许处理的最大连接数，NIO 默认值为 10000，APR 默认值为 8192。</li>
+<li><code>enableLookups</code>：是否在获取客户端 IP 地址时进行 DNS 反向查询，默认为 false，不建议启用，没有意义。</li>
+<li><code>tcpNoDelay</code>：是否设置套接字的 <code>TCP_NO_DELAY</code> 选项，即禁用 Nagle 算法，开启可提高性能，默认为 true。</li>
+<li><code>maxPostSize</code>：application/x-www-form-urlencoded 的 POST 请求体最大大小（字节），默认 2M，-1 无限制。</li>
+<li><code>maxHttpHeaderSize</code>：请求和响应的 HTTP 头部大小（字节为单位），如果没有指定，则使用默认值 8192 字节。</li>
+<li><code>connectionTimeout</code>：建立 TCP 连接后，等待客户端发送 HTTP 请求的超时时间，单位毫秒，默认 20s。</li>
+<li><code>keepAliveTimeout</code>：等待下一个 HTTP 请求的超时时间，即长连接超时时间，默认同 connectionTimeout。</li>
+<li><code>disableUploadTimeout</code>：关闭客户端上传的超时时间，如果要上传大文件，建议设为 true。未指定时该值为 true。</li>
+<li><code>connectionUploadTimeout</code>：客户端上传的超时时间（单位毫秒），仅在 disableUploadTimeout 为 false 时有效。</li>
+</ul>
+<blockquote>
+<p>不建议在 Tomcat 的连接器中启用 gzip 压缩，一般都是在 Apache/Nginx 中启用，以免增加 Tomcat 的负担。</p>
+</blockquote>
+<p>最主要的属性就是 protocol 了，如果设置为 <code>HTTP/1.1</code>，表示让 Tomcat 自动选择，也可以手动指定以下值：</p>
+<ul>
+<li><code>org.apache.coyote.http11.Http11NioProtocol</code>：NIO，同步非阻塞 IO，性能较好。</li>
+<li><code>org.apache.coyote.http11.Http11Nio2Protocol</code>：NIO2，异步阻塞 IO，性能较好。</li>
+<li><code>org.apache.coyote.http11.Http11AprProtocol</code>：APR/native，原生 IO，性能最好。</li>
+</ul>
+<p>Tomcat 建议在生产环境中使用 APR（Apache Portable Runtime，Apache 可移植运行时），APR 是 Apache HTTP 服务器的支持库，提供了一组映射到下层操作系统的 API。如果操作系统不支持某个特定的功能，APR 将提供一个模拟的实现，这样程序员就可以使用 APR 编写不同平台上移植的程序。启用 APR 需要先安装几个依赖，具体的：</p>
+<ul>
+<li><code>openssl</code>：直接使用软件管理器安装，如 <code>pacman -S openssl</code></li>
+<li><code>apr</code>：直接使用软件管理器安装，如 <code>pacman -S apr</code></li>
+<li><code>apr-util</code>：直接使用软件管理器安装，如 <code>pacman -S apr-util</code></li>
+<li><code>tomcat-native</code>：Tomcat 的 bin 目录下自带源码包，需要编译安装</li>
+</ul>
+<p>编译安装 tomcat-native 的步骤：</p>
+<pre><code class="language-bash"><script type="text/plain">
+cd /usr/local/tomcat/bin
+tar xf tomcat-native.tar.gz
+cd tomcat-native-1.2.16-src/native
+./configure --prefix=/usr --with-apr=/usr --with-ssl=/usr --with-java-home=/usr/local/jdk/jdk1.8
+make && make install
+sudo ldconfig
+</script></code></pre>
+<p>修改 server.xml，将 protocol 改为 <code>org.apache.coyote.http11.Http11AprProtocol</code>，重启，查看日志（注意 apr 字样）：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat-logs [21:23:26]
+$ tomcat restart
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+
+# root @ arch in ~/tomcat-logs [21:23:34]
+$ cat catalina.out
+12-Jun-2018 21:23:34.915 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version:        WebServer
+12-Jun-2018 21:23:34.919 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:
+12-Jun-2018 21:23:34.920 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server number:
+12-Jun-2018 21:23:34.920 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+12-Jun-2018 21:23:34.920 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            4.16.13-1-ARCH
+12-Jun-2018 21:23:34.920 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+12-Jun-2018 21:23:34.920 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /usr/local/jdk/jdk1.8.0_151/jre
+12-Jun-2018 21:23:34.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           1.8.0_151-b12
+12-Jun-2018 21:23:34.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Oracle Corporation
+12-Jun-2018 21:23:34.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+12-Jun-2018 21:23:34.921 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+12-Jun-2018 21:23:34.922 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+12-Jun-2018 21:23:34.922 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+12-Jun-2018 21:23:34.922 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xss1024k
+12-Jun-2018 21:23:34.922 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms256m
+12-Jun-2018 21:23:34.922 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx256m
+12-Jun-2018 21:23:34.923 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmn96m
+12-Jun-2018 21:23:34.923 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -XX:+UseConcMarkSweepGC
+12-Jun-2018 21:23:34.923 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -XX:+DisableExplicitGC
+12-Jun-2018 21:23:34.923 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.awt.headless=true
+12-Jun-2018 21:23:34.923 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+12-Jun-2018 21:23:34.924 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+12-Jun-2018 21:23:34.924 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+12-Jun-2018 21:23:34.924 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+12-Jun-2018 21:23:34.924 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+12-Jun-2018 21:23:34.924 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+12-Jun-2018 21:23:34.925 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded APR based Apache Tomcat Native library [1.2.16] using APR version [1.6.3].
+12-Jun-2018 21:23:34.925 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+12-Jun-2018 21:23:34.925 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+12-Jun-2018 21:23:34.930 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 1.1.0h  27 Mar 2018]
+12-Jun-2018 21:23:35.101 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-apr-80"]
+12-Jun-2018 21:23:35.114 INFO [main] org.apache.catalina.startup.Catalina.load Initialization processed in 780 ms
+12-Jun-2018 21:23:35.132 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+12-Jun-2018 21:23:35.133 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet Engine: WebServer
+12-Jun-2018 21:23:35.154 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/apps/ROOT]
+12-Jun-2018 21:23:35.654 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/apps/ROOT] has finished in [500] ms
+12-Jun-2018 21:23:35.684 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-apr-80"]
+12-Jun-2018 21:23:35.690 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in 575 ms
+</script></code></pre>
+<h2 id="Tomcat-多实例"><a href="#Tomcat-多实例" class="headerlink" title="Tomcat 多实例"></a>Tomcat 多实例</h2><p>所谓多实例就是在同一个主机上运行多个 Tomcat，每个 Tomcat 进程其实就是一个 JVM 进程（<code>ps -ef | grep java</code>）。通常，我们在同一台服务器上对 Tomcat 部署需求可以分为以下几种：单实例单应用，单实例多应用，多实例单应用，多实例多应用。</p>
+<ul>
+<li><strong>单实例单应用</strong>：比较常用的一种方式，只需要把打包好的 war 包丢在 webapps 目录下，启动 Tomcat 就行了。</li>
+<li><strong>单实例多应用</strong>：有两个不同的 Web 项目的 war 包，还是只需要丢在 webapps 目录下，启动 Tomcat，访问不同项目加上不同的项目名前缀。这种方式要慎用在生产环境，因为 Tomcat 重启或挂掉后会影响另外一个应用的访问。</li>
+<li><strong>多实例单应用</strong>：多个 Tomcat 部署同一个项目，端口号不同，可以利用 Nginx 来做负载均衡，当然意义不大。</li>
+<li><strong>多实例多应用</strong>：多个 Tomcat 部署多个不同的项目（一个 Tomcat 对应一个项目）。生产环境中建议使用这种方式，可以实现资源最大化利用。并且某个应用挂掉后，不会影响其他应用，比较安全。</li>
+</ul>
+<p>这节说的就是最后一种方式：多实例多应用。那要如何运行多个 Tomcat 实例呢？既然会单独拿出一节来讲多实例，肯定不是复制一下 Tomcat 目录，改一下端口号这么简单的。这样虽然是可行的，但是以后升级 Tomcat 时你就会头疼了，特别是有几十个实例时，要一个个复制、修改，多麻烦啊。</p>
+<p>其实 Tomcat 早就替我们想好了，设计了两个环境变量，<code>CATALINA_HOME</code>、<code>CATALINA_BASE</code>。CATALINA_HOME 在文章开头介绍 Tomcat 时已经提到，当时设置的值是 Tomcat 的安装目录，在这里是 <code>/usr/local/tomcat</code>，而 CATALINA_BASE 默认情况下与 CATALINA_HOME 相同。那它们有什么区别呢？CATALINA_HOME 指定的是 Tomcat <strong>程序目录</strong>，CATALINA_BASE 指定的是 Tomcat <strong>实例目录</strong>。如果没有指定 CATALINA_BASE 那么默认同 CATALINA_HOME。它们的目录结构如图：<br><img src="/images/tomcat-home-base.png" alt="程序目录、实例目录"></p>
+<ul>
+<li><strong>程序目录</strong>中必要的文件夹为：bin、lib</li>
+<li><strong>实例目录</strong>中必要的文件夹为：conf、webapps、logs、temp、work</li>
+</ul>
+<p>这样的好处是，升级 Tomcat 很方便，只需替换 CATALINA_HOME 目录下的 bin、lib。理清思路后，我们开始撸起袖子加油干了，假设我们要创建两个 Tomcat 实例，为了方便管理，建议在 CATALINA_HOME 目录下创建 Tomcat 实例目录，创建两个文件夹 server-1、server-2，分别代表实例 1、实例 2。然后将 CATALINA_HOME 目录下的 conf、webapps、logs、temp、work 移动到 server-1 中，接着复制到 server-2 中。整个目录结构如下（我将 webapps 目录改为了 apps）：</p>
+<pre><code class="language-bash"><script type="text/plain">
+$ tree -d -L 2
+.
+├── bin
+├── lib
+├── server-1
+│   ├── apps
+│   ├── conf
+│   ├── logs
+│   ├── temp
+│   └── work
+└── server-2
+    ├── apps
+    ├── conf
+    ├── logs
+    ├── temp
+    └── work
+</script></code></pre>
+<p>分别进入 server-1/conf、server-2/conf，修改 server.xml，将端口号改一下，避免冲突：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- server-1 -->
+<Server port="8005" shutdown="SHUTDOWN">
+<Connector port="80" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="443"
+           URIEncoding="UTF-8" />
+
+<!-- server-2 -->
+<Server port="8006" shutdown="SHUTDOWN">
+<Connector port="8080" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443"
+           URIEncoding="UTF-8" />
+</script></code></pre>
+<p>最好改一下每个实例中的 apps 内容，以便区分。为了方便管理多个实例，建议在 CATALINA_HOME/bin 目录下创建一个 tomcat 文件，设置可执行权限（bash 脚本），内容如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+#!/bin/bash
+
+# 帮助信息
+function usage() {
+cat << EOF
+Usage: $(basename $0) <COMMAND> <INSTANCE>
+COMMAND := {
+    start       start tomcat
+    stop        stop tomcat
+    status      tomcat status
+    restart     restart tomcat
+    conftest    test configuration
+    version     show version and exit
+    help        show this help and exit
+}
+INSTANCE := instance path (relative to '$CATALINA_HOME')
+EOF
+}
+
+if [ "$1" = 'help' ]; then
+    usage
+    exit
+fi
+
+if [ "$1" = 'version' ]; then
+    $CATALINA_HOME/bin/catalina.sh version
+    exit
+fi
+
+if [ $# -lt 2 ]; then
+    echo "Missing running parameter!" 1>&2
+    usage
+    exit 1
+fi
+
+# 设置 CATALINA_BASE 环境变量
+export CATALINA_BASE=$CATALINA_HOME/$2
+if [ ! -d "$CATALINA_BASE" ]; then
+    echo "$(basename $0): cannot access '$CATALINA_BASE': No such file or directory" 1>&2
+    exit 1
+fi
+
+case $1 in
+    start) # 启动 Tomcat
+        $CATALINA_HOME/bin/catalina.sh start;;
+    stop) # 停止 Tomcat
+        $CATALINA_HOME/bin/catalina.sh stop;;
+    restart) # 重启 Tomcat
+        $CATALINA_HOME/bin/catalina.sh stop; $CATALINA_HOME/bin/catalina.sh start;;
+    conftest) # 测试 Tomcat
+        $CATALINA_HOME/bin/catalina.sh configtest;;
+    status) # Tomcat 状态
+        if [ $(ps -ef | grep -E "java.+$CATALINA_BASE" | grep -v 'grep' -c) -ge 1 ]; then
+            echo "tomcat instance '$2' is running ..."
+        else
+            echo "tomcat instance '$2' is stopped ..."
+        fi
+        ;;
+    help) usage;;
+    *)
+        echo "Unknown command '$1'" 1>&2
+        usage
+        exit 1
+        ;;
+esac
+</script></code></pre>
+<p>我们先把两个实例（server-1、server-2）都启动，看看是否工作正常：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat [10:23:16]
+$ tomcat help
+Usage: tomcat <COMMAND> <INSTANCE>
+COMMAND := {
+    start       start tomcat
+    stop        stop tomcat
+    status      tomcat status
+    restart     restart tomcat
+    conftest    test configuration
+    version     show version and exit
+    help        show this help and exit
+}
+INSTANCE := instance path (relative to '/usr/local/tomcat')
+
+# root @ arch in ~/tomcat [10:23:31]
+$ tomcat start server-1
+Using CATALINA_BASE:   /usr/local/tomcat/server-1
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/server-1/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+
+# root @ arch in ~/tomcat [10:23:52]
+$ tomcat start server-2
+Using CATALINA_BASE:   /usr/local/tomcat/server-2
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/server-2/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+
+# root @ arch in ~/tomcat [10:23:53]
+$ curl 127.0.0.1
+hello, world! [server-1]
+
+# root @ arch in ~/tomcat [10:24:00]
+$ curl 127.0.0.1:8080
+hello, world! [server-2]
+
+# root @ arch in ~/tomcat [10:24:04]
+$ ps | grep java
+root       6932      1   6932   33 pts/0    16.5  4.6 Sl   /usr/local/jdk/jdk1.8/bin/java -Djava.util.logging.config.file=/usr/local/tomcat/server-1/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dignore.endorsed.dirs= -classpath /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar-Dcatalina.base=/usr/local/tomcat/server-1 -Dcatalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/server-1/temp org.apache.catalina.startup.Bootstrap start
+root       6967      1   6967   33 pts/0    16.9  4.6 Sl   /usr/local/jdk/jdk1.8/bin/java -Djava.util.logging.config.file=/usr/local/tomcat/server-2/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dignore.endorsed.dirs= -classpath /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar-Dcatalina.base=/usr/local/tomcat/server-2 -Dcatalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/server-2/temp org.apache.catalina.startup.Bootstrap start
+root       7047    467   7047    1 pts/0     0.0  0.1 S+   grep -P --color java
+
+# root @ arch in ~/tomcat [10:24:16]
+$ ss -ltu | grep java
+tcp   LISTEN  0       100                         *:8080                *:*      users:(("java",pid=6967,fd=48)) ino:24410 sk:2 v6only:0 <->
+tcp   LISTEN  0       100                         *:80                  *:*      users:(("java",pid=6932,fd=48)) ino:25398 sk:3 v6only:0 <->
+tcp   LISTEN  0       1          [::ffff:127.0.0.1]:8005                *:*      users:(("java",pid=6932,fd=63)) ino:26270 sk:5 v6only:0 <->
+tcp   LISTEN  0       1          [::ffff:127.0.0.1]:8006                *:*      users:(("java",pid=6967,fd=63)) ino:24421 sk:6 v6only:0 <->
+</script></code></pre>
+<p>看起来 OK，最后提一下，如何为每个实例配置不同的环境变量（如 JVM 启动参数），也很简单，只需在实例目录下创建 bin 目录，在 bin 目录下创建 <code>setenv.sh</code> 或 <code>setenv.bat</code> 文件即可。比如将 server-1 的堆大小设为 128M、将 server-2 的堆大小设为 256M：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/tomcat [10:46:47]
+$ cat server-1/bin/setenv.sh
+export JAVA_OPTS='-Xms128m -Xmx128m'
+
+# root @ arch in ~/tomcat [10:46:59]
+$ cat server-2/bin/setenv.sh
+export JAVA_OPTS='-Xms256m -Xmx256m'
+
+# root @ arch in ~/tomcat [10:47:03]
+$ tomcat start server-1
+Using CATALINA_BASE:   /usr/local/tomcat/server-1
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/server-1/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+
+# root @ arch in ~/tomcat [10:47:12]
+$ tomcat start server-2
+Using CATALINA_BASE:   /usr/local/tomcat/server-2
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/server-2/temp
+Using JRE_HOME:        /usr/local/jdk/jdk1.8
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+
+# root @ arch in ~/tomcat [10:47:13]
+$ ps | grep java
+root       8433      1   8433   35 pts/0    92.2  5.0 Sl   /usr/local/jdk/jdk1.8/bin/java -Djava.util.logging.config.file=/usr/local/tomcat/server-1/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Xms128m -Xmx128m -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dignore.endorsed.dirs= -classpath /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar -Dcatalina.base=/usr/local/tomcat/server-1 -Dcatalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/server-1/temp org.apache.catalina.startup.Bootstrap start
+root       8465      1   8465   35 pts/0     125  5.2 Sl   /usr/local/jdk/jdk1.8/bin/java -Djava.util.logging.config.file=/usr/local/tomcat/server-2/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Xms256m -Xmx256m -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dignore.endorsed.dirs= -classpath /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar -Dcatalina.base=/usr/local/tomcat/server-2 -Dcatalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/server-2/temp org.apache.catalina.startup.Bootstrap start
+root       8528    467   8528    1 pts/0     0.0  0.1 S+   grep -P --color java
+</script></code></pre>
+<p>如果 CATALINA_HOME 目录和 CATALINA_BASE 目录下都存在 <code>bin/setenv.sh</code>，谁的优先级更高呢？肯定是 CATALINA_BASE 啦（实例目录），分析 catalina.sh 启动脚本就知道了：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+if [ -r "$CATALINA_BASE/bin/setenv.sh" ]; then
+  . "$CATALINA_BASE/bin/setenv.sh"
+elif [ -r "$CATALINA_HOME/bin/setenv.sh" ]; then
+  . "$CATALINA_HOME/bin/setenv.sh"
+fi
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-commons-cli.html" rel="next" title="Java Commons-CLI 命令行参数解析">
+                <i class="fa fa-chevron-left"></i> Java Commons-CLI 命令行参数解析
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-mail.html" rel="prev" title="Java Mail 电子邮件">
+                Java Mail 电子邮件 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-相关简介"><span class="nav-number">1.</span> <span class="nav-text">Servlet 相关简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-环境配置"><span class="nav-number">2.</span> <span class="nav-text">Servlet 环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-使用简介"><span class="nav-number">3.</span> <span class="nav-text">Tomcat 使用简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-生命周期"><span class="nav-number">4.</span> <span class="nav-text">Servlet 生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-HelloWorld"><span class="nav-number">5.</span> <span class="nav-text">Servlet HelloWorld</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-字符编码"><span class="nav-number">6.</span> <span class="nav-text">Servlet 字符编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-请求数据"><span class="nav-number">7.</span> <span class="nav-text">Servlet 请求数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-过滤器"><span class="nav-number">8.</span> <span class="nav-text">Servlet 过滤器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-重定向"><span class="nav-number">9.</span> <span class="nav-text">Servlet 重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-异常处理"><span class="nav-number">10.</span> <span class="nav-text">Servlet 异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-Cookie"><span class="nav-number">11.</span> <span class="nav-text">Servlet Cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-Session"><span class="nav-number">12.</span> <span class="nav-text">Servlet Session</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-监听器"><span class="nav-number">13.</span> <span class="nav-text">Servlet 监听器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-相关配置"><span class="nav-number">14.</span> <span class="nav-text">Tomcat 相关配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-配置优化"><span class="nav-number">15.</span> <span class="nav-text">Tomcat 配置优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-多实例"><span class="nav-number">16.</span> <span class="nav-text">Tomcat 多实例</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-servlet.html';
+          this.page.identifier = 'java-servlet.html';
+          this.page.title = 'Java Servlet 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

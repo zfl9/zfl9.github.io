@@ -1,0 +1,1144 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 进程间通信 共享内存">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 进程间通信 共享内存">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 进程间通信 共享内存">
+<meta property="og:url" content="https://www.zfl9.com/c-ipc-shm.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 进程间通信 共享内存">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 进程间通信 共享内存">
+<meta name="twitter:description" content="c语言 - 进程间通信 共享内存">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-ipc-shm.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 进程间通信 共享内存 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-ipc-shm.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 进程间通信 共享内存
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-16T09:03:33+08:00">
+                2017-08-16
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-ipc-shm.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-ipc-shm.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-ipc-shm.html" class="leancloud_visitors" data-flag-title="c语言 - 进程间通信 共享内存">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 进程间通信 共享内存</p>
+<a id="more"></a>
+<h2 id="共享内存-System-V"><a href="#共享内存-System-V" class="headerlink" title="共享内存 System V"></a>共享内存 System V</h2><p><strong>什么是共享内存</strong><br>顾名思义，共享内存就是允许两个不相关的进程访问同一个逻辑内存；共享内存是在两个正在运行的进程之间共享和传递数据的一种非常有效的方式；<br>不同进程之间共享的内存通常安排为同一段物理内存，进程可以将同一段共享内存连接到它们自己的地址空间中，所有进程都可以访问共享内存中的地址；<br>而如果某个进程向共享内存写入数据，所做的改动将立即影响到可以访问同一段共享内存的任何其他进程；</p>
+<p>特别提醒：共享内存并未提供同步机制，也就是说，在第一个进程结束对共享内存的写操作之前，并无自动机制可以阻止第二个进程开始对它进行读取；所以我们通常需要用其他的机制来同步对共享内存的访问，例如<code>信号量</code>、<code>互斥锁</code>；</p>
+<p><strong>共享内存的函数接口</strong><br>头文件：<code>sys/types.h</code>、<code>sys/ipc.h</code>、<code>sys/shm.h</code></p>
+<p><code>int shmget(key_t shm_key, size_t shm_size, int shm_flg);</code>：创建共享内存</p>
+<ul>
+<li><code>shm_key</code>：输入参数，shm_key用来标识一块共享内存：<br>shm_key通常通过函数<code>ftok()</code>来获取，或者自己指定一个固定值；<br>shm_key为<code>0</code>或<code>IPC_PRIVATE</code>，则会建立新的共享内存；</li>
+<li><code>shm_size</code>：输入参数，共享内存的大小（单位：byte）：<br>注意内存分配的单位是页（一般为4kb，可通过<code>getpagesize()</code>获取）；<br>也就是说如果shm_size为1，那么也会分配4096字节的内存；<br>只获取共享内存时，shm_size可指定为0；</li>
+<li><code>shm_flg</code>：输入参数，一组标志位flgs，通常还会指定权限（同文件的权限，如<code>0644</code>），通常为<code>0644 | IPC_CREAT</code>：<br><code>0</code>：取共享内存标识符，若不存在则函数会报错；<br><code>IPC_CREAT</code>：如果内核中不存在键值与shm_key相等的共享内存，则新建一个共享内存；如果存在这样的共享内存，返回此共享内存的标识符；<br><code>IPC_CREAT | IPC_EXCL</code>：如果内核中不存在键值与shm_key相等的共享内存，则新建一个共享内存；如果存在这样的共享内存则报错；</li>
+<li>返回值：成功返回<code>shm_id</code>，失败返回-1，并设置errno</li>
+</ul>
+<p><code>key_t ftok(const char *filename, int id);</code>：获取一个IPC键值</p>
+<ul>
+<li>系统建立IPC通讯（消息队列、信号量和共享内存）时必须指定一个ID值；通常情况下，该id值通过ftok函数得到；<br>当删除重建文件后，索引节点号由操作系统根据当时文件系统的使用情况分配，因此与原来不同，所以得到的索引节点号也不同；<br>如果要确保key_t值不变，要么确保ftok的文件不被删除，要么不用ftok，指定一个固定的key_t值；</li>
+<li><code>filename</code>：输入参数，一个必须真实存在的文件名（含路径），一般设置为一个固定的文件，如<code>/dev/null</code>；</li>
+<li><code>id</code>：输入参数，子序号，一个8bit的整型（0-255）；</li>
+<li>返回值：成功返回获取的key，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>void *shmat(int shm_id, const void *shm_addr, int shm_flg);</code>：挂接共享内存</p>
+<ul>
+<li><code>shm_id</code>：输入参数，<code>shmget()</code>的返回值；</li>
+<li><code>shm_addr</code>：输入参数，指定挂接位置：若为NULL，则让系统自动选择合适的位置；</li>
+<li><code>shm_flg</code>：输入参数，一组标志位flgs，通常为0，<code>SHM_RDONLY</code>表示只读模式，其他为读写模式；</li>
+<li>返回值：成功返回首地址，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int shmdt(const void *shm_addr);</code>：分离共享内存</p>
+<ul>
+<li><code>shm_addr</code>：输入参数，挂接的地址；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int shmctl(int shm_id, int shm_cmd, struct shmid_ds *buf);</code>：控制共享内存</p>
+<ul>
+<li><code>shm_id</code>：输入参数，<code>shmget()</code>的返回值；</li>
+<li><code>shm_cmd</code>：输入参数，操作的命令：<br><code>IPC_STAT</code>：获取共享内存的状态，并保存至buf中；<br><code>IPC_SET</code>：设置共享内存的状态，把buf所指的shmid_ds结构中的uid、gid、mode复制到共享内存的shmid_ds结构内；<br><code>IPC_RMID</code>：删除共享内存；</li>
+<li><code>buf</code>：<code>struct shmid_ds *</code>类型的指针，可以为NULL；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><strong>shm共享内存简单实例</strong><br><code>write.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define FILENAME "/dev/null"
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s string\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    key_t shm_key = ftok(FILENAME, 0);
+    int shm_size = getpagesize();
+    int shm_id = shmget(shm_key, shm_size, 0644 | IPC_CREAT);
+
+    if(shm_id == -1){
+        perror("shmget");
+        exit(EXIT_FAILURE);
+    }
+
+    char *data = (char *)shmat(shm_id, NULL, 0);
+    if(data == (void *)-1){
+        perror("shmat");
+        exit(EXIT_FAILURE);
+    }
+
+    strcpy(data, argv[1]);
+
+    if(shmdt(data) == -1){
+        perror("shmdt");
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<p><code>read.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define FILENAME "/dev/null"
+
+int main(void){
+    key_t shm_key = ftok(FILENAME, 0);
+    int shm_size = getpagesize();
+    int shm_id = shmget(shm_key, shm_size, 0644 | IPC_CREAT);
+
+    if(shm_id == -1){
+        perror("shmget");
+        exit(EXIT_FAILURE);
+    }
+
+    char *data = (char *)shmat(shm_id, NULL, 0);
+    if(data == (void *)-1){
+        perror("shmat");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("data: %s\n", data);
+
+    if(shmdt(data) == -1){
+        perror("shmdt");
+        exit(EXIT_FAILURE);
+    }
+
+    if(shmctl(shm_id, IPC_RMID, NULL) == -1){
+        perror("shmctl");
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:39:48]
+$ gcc -o write write.c
+
+# root @ arch in ~/work on git:master x [10:40:22]
+$ gcc -o read read.c
+
+# root @ arch in ~/work on git:master x [10:40:27]
+$ ./write
+usage: ./write string
+
+# root @ arch in ~/work on git:master x [10:40:29] C:1
+$ ./write www.zfl9.com
+
+# root @ arch in ~/work on git:master x [10:40:34]
+$ ./read
+data: www.zfl9.com
+</script></code></pre>
+<h2 id="信号量-System-V"><a href="#信号量-System-V" class="headerlink" title="信号量 System V"></a>信号量 System V</h2><p><strong>什么是信号量</strong><br>为了防止出现因多个程序同时使用一个共享资源而引发的一系列问题，我们需要一种方法，它可以通过生成并使用令牌来授权，在任一时刻只能有一个执行线程访问代码的临界区域；临界区域是指执行数据更新的代码需要独占式地执行；<br>而信号量就可以提供这样的一种访问机制，让一个临界区同一时间只有一个线程在访问它，也就是说信号量是用来调协进程对共享资源的访问的；</p>
+<p>信号量是一个特殊的变量，程序对其访问都是<code>原子操作</code>，且只允许对它进行等待（即<code>P(sem_val)</code>）和发送（即<code>V(sem_val)</code>）操作；<br>最简单的信号量是只能取0和1的变量，这也是信号量最常见的一种形式，叫做二进制信号量；而可以取多个正整数的信号量被称为通用信号量；这里主要讨论二进制信号量；</p>
+<p><strong>信号量的工作原理</strong><br>由于信号量只能进行两种操作：等待和发送信号，即<code>P(sv)</code>和<code>V(sv)</code>：</p>
+<ul>
+<li><code>P(sv)</code>：如果sv的值大于零，就给它减1；如果它的值为零，就挂起该进程的执行；</li>
+<li><code>V(sv)</code>：如果有其他进程因等待sv而被挂起，就让它恢复运行，如果没有进程因等待sv而挂起，就给它加1；</li>
+</ul>
+<p>举个例子，就是两个进程共享信号量sv，一旦其中一个进程执行了P(sv)操作，它将得到信号量，并可以进入临界区，使sv减1；<br>而第二个进程将被阻止进入临界区，因为当它试图执行P(sv)时，sv为0，它会被挂起以等待第一个进程离开临界区域并执行V(sv)释放信号量，这时第二个进程就可以恢复执行；</p>
+<p><strong>Linux的信号量机制</strong><br>Linux提供了一组精心设计的信号量接口来对信号进行操作，它们不只是针对二进制信号量，下面将会对这些函数进行介绍，但请注意，这些函数都是用来对成组的信号量值进行操作的；它们声明在头文件<code>sys/sem.h</code>中：</p>
+<p><code>int semget(key_t sem_key, int sem_nums, int sem_flg);</code>：创建信号量</p>
+<ul>
+<li><code>sem_key</code>：输入参数，IPC键值，一个key确定一组信号量；同shmget()中的key；</li>
+<li><code>sem_nums</code>：输入参数，要创建的信号量数目；通常我们只需要一个，即为1；</li>
+<li><code>sem_flg</code>：输入参数，一组标志位flgs，同shmget()中的flgs；</li>
+<li>返回值：成功返回一个sem_id，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int semop(int sem_id, struct sembuf *sem_opa, size_t sem_opa_len);</code>：操作信号量的值</p>
+<ul>
+<li><code>sem_id</code>：输入参数，semget()的返回值；</li>
+<li><code>sem_opa</code>：输入参数，<code>struct sembuf []</code>类型的数组，通常只有一个元素；</li>
+<li><code>sem_opa_len</code>：输入参数，数组的长度；通常只有一个元素，即为1；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>struct sembuf</code>结构体：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">struct sembuf
+{
+  unsigned short int sem_num;   /* semaphore number */
+  short int sem_op;             /* semaphore operation */
+  short int sem_flg;            /* operation flag */
+  // 有两种状态: SEM_UNDO、SEM_NOWAIT；
+  // SEM_NOWAIT  对信号的操作不能满足时，semop()函数就会阻塞，并立即返回，同时设置错误信息;
+  // SEM_UNDO    程序结束时(无论是否正常结束)，保证信号值会被重新设为semop()调用前的值;
+  //             这样做的目的在于避免在异常情况下结束时未将锁定资源解锁，造成该资源永远锁定;
+};
+</script></code></pre>
+<p><code>int semctl(int sem_id, int sem_num, int command, ...);</code>：控制信号量的属性</p>
+<ul>
+<li><code>sem_id</code>：输入参数，semget()的返回值；</li>
+<li><code>sem_num</code>：输入参数，信号量的下标值；</li>
+<li><code>command</code>：输入参数，操作方式：<br><code>IPC_STAT</code>：读取一个信号量集的数据结构semid_ds，并将其存储在semun中的buf参数中；<br><code>IPC_SET</code>：设置信号量集的数据结构semid_ds中的元素ipc_perm，其值取自semun中的buf参数；<br><code>IPC_RMID</code>：将信号量集从内存中删除；<br><code>GETALL</code>：用于读取信号量集中的所有信号量的值；<br><code>GETNCNT</code>：返回正在等待资源的进程数目；<br><code>GETPID</code>：返回最后一个执行semop操作的进程的PID；<br><code>GETVAL</code>：返回信号量集中的一个单个的信号量的值；<br><code>GETZCNT</code>：返回这在等待完全空闲的资源的进程数目；<br><code>SETALL</code>：设置信号量集中的所有的信号量的值；<br><code>SETVAL</code>：设置信号量集中的一个单独的信号量的值；</li>
+<li>返回值：成功返回值大于等于0，失败返回-1，并设置errno</li>
+</ul>
+<p><strong>共享内存和信号量的简单示例</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/sem.h>
+#include <sys/wait.h>
+
+#define FILENAME "/dev/null"
+
+union semun{
+    int val;
+    struct semid_ds *buf;
+    unsigned short *array;
+};
+
+int sem_set(int sem_id);
+int sem_p(int sem_id);
+int sem_v(int sem_id);
+int sem_del(int sem_id);
+
+int main(void){
+    key_t shm_key = ftok(FILENAME, 0);
+    if(shm_key == -1){
+        perror("ftok");
+        exit(EXIT_FAILURE);
+    }
+
+    int shm_size = getpagesize();
+    int shm_id = shmget(shm_key, shm_size, 0644 | IPC_CREAT);
+    if(shm_id == -1){
+        perror("shmget");
+        exit(EXIT_FAILURE);
+    }
+
+    char *data = (char *)shmat(shm_id, NULL, 0);
+    if(data == (char *)-1){
+        perror("shmat");
+        exit(EXIT_FAILURE);
+    }
+    memset(data, 0, shm_size);
+
+    key_t sem_key = shm_key;
+    int sem_id = semget(sem_key, 1, 0644 | IPC_CREAT);
+    if(sem_id == -1){
+        perror("semget");
+        exit(EXIT_FAILURE);
+    }
+
+    if(sem_set(sem_id) == -1){
+        perror("sem_set");
+        exit(EXIT_FAILURE);
+    }
+
+    pid_t pid = fork();
+    if(pid < 0){
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }else if(pid > 0){
+        if(sem_p(sem_id) == -1){
+            perror("sem_p");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("parent_proc(%d) writing now ... \n", getpid());
+        for(int i=0; i<3; i++){
+            sprintf(data + 5*i, "www%d ", i);
+            sleep(1);
+        }
+        printf("parent_proc(%d) writing complete\n", getpid());
+
+        if(sem_v(sem_id) == -1){
+            perror("sem_v");
+            exit(EXIT_FAILURE);
+        }
+
+        if(shmdt(data) == -1){
+            perror("shmdt");
+            exit(EXIT_FAILURE);
+        }
+
+        wait(NULL);
+        if(sem_del(sem_id) == -1){
+            perror("sem_del");
+            exit(EXIT_FAILURE);
+        }
+        if(shmctl(shm_id, IPC_RMID, NULL) == -1){
+            perror("shmctl");
+            exit(EXIT_FAILURE);
+        }
+    }else if(pid == 0){
+        usleep(3);
+
+        printf("child_proc(%d) waiting to read ... \n", getpid());
+        if(sem_p(sem_id) == -1){
+            perror("sem_p");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("child_proc(%d) read_data: %s\n", getpid(), data);
+
+        if(sem_v(sem_id) == -1){
+            perror("sem_v");
+            exit(EXIT_FAILURE);
+        }
+
+        if(shmdt(data) == -1){
+            perror("shmdt");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    return 0;
+}
+
+int sem_set(int sem_id){
+    union semun sem_u;
+    sem_u.val = 1;
+
+    if(semctl(sem_id, 0, SETVAL, sem_u) == -1){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+int sem_p(int sem_id){
+    struct sembuf sem_b[1];
+    sem_b[0].sem_num = 0;
+    sem_b[0].sem_op = -1;
+    sem_b[0].sem_flg = SEM_UNDO;
+
+    if(semop(sem_id, sem_b, 1) == -1){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+int sem_v(int sem_id){
+    struct sembuf sem_b[1];
+    sem_b[0].sem_num = 0;
+    sem_b[0].sem_op = 1;
+    sem_b[0].sem_flg = SEM_UNDO;
+
+    if(semop(sem_id, sem_b, 1) == -1){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+int sem_del(int sem_id){
+    if(semctl(sem_id, 0, IPC_RMID) == -1){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [17:17:59]
+$ gcc -o shm_sem shm_sem.c
+
+# root @ arch in ~/work on git:master x [17:18:08]
+$ ./shm_sem
+parent_proc(1360) writing now ...
+child_proc(1361) waiting to read ...
+parent_proc(1360) writing complete
+child_proc(1361) read_data: www0 www1 www2
+</script></code></pre>
+<h2 id="共享内存-Posix"><a href="#共享内存-Posix" class="headerlink" title="共享内存 Posix"></a>共享内存 Posix</h2><p><strong>概念</strong><br>共享内存区，按标准可分为Posix共享内存区和System V共享内存区，两者在概念上类似；</p>
+<p>Posix表示可移植操作系统接口（Portable Operating System Interface，缩写为POSIX），POSIX标准定义了操作系统应该为应用程序提供的接口标准，是IEEE为要在各种UNIX操作系统上运行的软件而定义的一系列API标准的总称，其正式称呼为IEEE 1003，而国际标准名称为ISO/IEC 9945；</p>
+<p>System V，曾经也被称为AT&amp;T System V，是Unix操作系统众多版本中的一支；它最初由AT&amp;T开发，在1983年第一次发布；一共发行了4个System V的主要版本：版本1、2、3和4；</p>
+<p>创建的System V共享内存和信号量，可在shell中使用命令<code>ipcs</code>查看；<br>创建的Posix共享内存和信号量，可在<code>/dev/shm/</code>中查看到相应文件；</p>
+<p>Posix.1提供了两种在无亲缘关系进程间共享内存区的方法</p>
+<ul>
+<li><code>内存映射文件</code>(memory-mapped file)：由open函数打开，由mmap函数把所得到的描述符映射到当前进程空间地址中的一个文件；</li>
+<li><code>共享内存区对象</code>(shared-memory object)：由shm_open函数打开一个Posix.1 IPC名字，所返回的描述符由mmap函数映射到当前进程的地址空间；</li>
+</ul>
+<p>这两种共享内存区的区别在于共享的数据的载体(底层支撑对象)不一样：</p>
+<ul>
+<li><code>内存映射文件</code>：数据载体是<code>物理文件</code>；</li>
+<li><code>共享内存区对象</code>：数据载体是<code>物理内存</code>；</li>
+</ul>
+<p><strong>我们经常说的共享内存，一般是指<code>共享内存区对象</code>，也就是共享物理内存</strong></p>
+<p>Posix共享内存区涉及以下两个步骤要求：<br>（1）指定一个名字参数调用shm_open，以创建一个新的共享内存区对象或打开一个已存在的共享内存区对象；<br>（2）调用mmap把这个共享内存区映射到调用进程的地址空间；</p>
+<p>调用<code>shm_open</code>创建或打开的对象其实都是存在于<code>/dev/shm/</code>目录下的一个文件，该挂载点的文件系统是<code>tmpfs</code>，即内存中的文件系统；</p>
+<p><code>int shm_open(const char *name, int oflag, mode_t mode);</code>：创建共享内存</p>
+<ul>
+<li>头文件：<code>sys/mman.h</code>、<code>sys/stat.h</code>、<code>fcntl.h</code>，须链接库<code>-lrt</code>；</li>
+<li><code>name</code>：输入参数，实质为一个文件名，存在于<code>/dev/shm/</code>，创建成功后可查看到该文件；</li>
+<li><code>oflag</code>：输入参数，一组flags，多个flag可用按位或<code>|</code>连接：<br><code>O_RDONLY</code>：只读方式打开；<br><code>O_RDWR</code>：读写模式打开；<br><code>O_CREAT</code>：如果文件不存在则新建，存在则打开；<br><code>O_CREAT | O_EXCL</code>：如果文件不存在则新建，存在则返回错误信息；<br><code>O_TRUNC</code>：清空文件的原有内容；</li>
+<li><code>mode</code>：输入参数，文件的权限，如<code>0644</code>，如果打开已有文件，则权限应为<code>0</code>；</li>
+<li>返回值：成功返回文件描述符fd，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>int shm_unlink(const char *name);</code>：删除一个共享内存区对象的名字，删除一个名字不会影响对于其底层支撑对象的现有引用，直到对于该对象的引用全部关闭为止</p>
+<ul>
+<li>头文件：<code>sys/mman.h</code>、<code>sys/stat.h</code>、<code>fcntl.h</code>，须链接库<code>-lrt</code>；</li>
+<li><code>name</code>：输入参数，文件名；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>int ftruncate(int fd, off_t length);</code>：修改共享内存对象的大小</p>
+<ul>
+<li>头文件：<code>sys/types.h</code>、<code>unistd.h</code>；</li>
+<li><code>fd</code>：输入参数，文件描述符；</li>
+<li><code>length</code>：输入参数，修改后的大小（单位：byte）；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);</code>：挂载共享内存</p>
+<ul>
+<li>头文件：<code>sys/mman.h</code>；</li>
+<li><code>addr</code>：输入参数，挂载的地址，若设置为NULL，则让系统自动选择合适的地址；</li>
+<li><code>length</code>：输入参数，共享内存的长度；</li>
+<li><code>prot</code>：输入参数，一组flags，读写权限，多个可用按位或<code>|</code>连接，通常设置为<code>PROT_READ | PROT_WRITE</code>：<br><code>PROT_READ</code>：可读；<br><code>PROT_WRITE</code>：可写；<br><code>PROT_EXEC</code>：可执行；<br><code>PROT_NONE</code>：无权限；</li>
+<li><code>flags</code>：输入参数，一组flags，是否共享：<br><code>MAP_SHARED</code>：共享的；<br><code>MAP_PRIVATE</code>：私有的；</li>
+<li><code>fd</code>：输入参数，文件描述符；</li>
+<li><code>offset</code>：输入参数，文件指针偏移量，一般为0；</li>
+<li>返回值：成功返回挂载的首地址，失败返回<code>MAP_FAILED</code>（<code>(void *)-1</code>），并设置errno；</li>
+</ul>
+<p><strong>mmap成功返回后，fd参数可以关闭；该操作对由于mmap建立的映射关系没有影响</strong></p>
+<p><code>int munmap(void *addr, size_t length);</code>：分离共享内存</p>
+<ul>
+<li>头文件：<code>sys/mman.h</code>；</li>
+<li><code>addr</code>：输入参数，要分离的共享内存首地址；</li>
+<li><code>length</code>：输入参数，共享内存的长度；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><strong>shm实例</strong><br><code>write.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
+#define FILENAME "shm"
+#define MAXSIZE 1024*4
+
+int main(void){
+    int fd = shm_open(FILENAME, O_CREAT | O_EXCL | O_RDWR, 0644);
+    if(fd == -1){
+        perror("shm_open");
+        exit(EXIT_FAILURE);
+    }
+
+    if(ftruncate(fd, MAXSIZE) == -1){
+        perror("ftruncate");
+        exit(EXIT_FAILURE);
+    }
+
+    char *data = (char *)mmap(NULL, MAXSIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    if(data == MAP_FAILED){
+        perror("mmap");
+        exit(EXIT_FAILURE);
+    }
+    close(fd);
+
+    strcpy(data, "www.zfl9.com");
+
+    if(munmap(data, MAXSIZE) == -1){
+        perror("munmap");
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<p><code>read.c</code></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
+#define FILENAME "shm"
+#define MAXSIZE 1024*4
+
+int main(void){
+    int fd = shm_open(FILENAME, O_RDWR, 0);
+    if(fd == -1){
+        perror("shm_open");
+        exit(EXIT_FAILURE);
+    }
+
+    if(ftruncate(fd, MAXSIZE) == -1){
+        perror("ftruncate");
+        exit(EXIT_FAILURE);
+    }
+
+    char *data = (char *)mmap(NULL, MAXSIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    if(data == MAP_FAILED){
+        perror("mmap");
+        exit(EXIT_FAILURE);
+    }
+    close(fd);
+
+    printf("data: %s\n", data);
+
+    if(munmap(data, MAXSIZE) == -1){
+        perror("munmap");
+        exit(EXIT_FAILURE);
+    }
+
+    if(shm_unlink(FILENAME) == -1){
+        perror("shm_unlink");
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [18:37:38]
+$ gcc -o write -lrt write.c
+
+# root @ arch in ~/work on git:master x [18:37:57]
+$ gcc -o read -lrt read.c
+
+# root @ arch in ~/work on git:master x [18:38:02]
+$ ./write
+
+# root @ arch in ~/work on git:master x [18:38:03]
+$ ./read
+data: www.zfl9.com
+</script></code></pre>
+<h2 id="信号量-Posix"><a href="#信号量-Posix" class="headerlink" title="信号量 Posix"></a>信号量 Posix</h2><p><strong>基本概念</strong><br><code>信号量（semaphore）</code>是一种用于提供不同进程间或一个给定进程的不用线程间<code>同步手段的原语</code>；</p>
+<p>共有三种类型的信号量：<br>1）<code>Posix有名信号量</code>：使用Posix IPC名字标识，可用于进程或线程间的同步；<br>2）<code>Posix基于内存的信号量</code>：存放在共享内存区中，可用于进程或线程间的同步；<br>3）<code>System V信号量</code>：在内核中维护，可用于进程或者线程间同步；</p>
+<p>一个进程可以在某个信号量上执行三种操作：<br>1）<code>创建（create）一个信号量</code>：这还要求调用者指定初始值；<br>2）<code>等待（wait）一个信号量</code>：该操作会测试这个信号量的值，如果其值小于或等于0，那就等待（阻塞），一旦值变为大于0就将它减1，这两个步骤是一个原子操作；<br>3）<code>挂出（post）一个信号量</code>：该操作将信号量的值加1，挂出操作同样是原子的；</p>
+<p>有了互斥锁和条件变量还提供信号量的原因是：<br>“本标准提供信号量的主要目的是提供一种进程间同步方式；这些进程可能共享也可能不共享内存区；互斥锁和条件变量是作为线程间的同步机制说明的，这些线程总是共享（某个）内存区；这两者都是已广泛使用了多年的同步范式；每组原语都特别适合于特定的问题”；</p>
+<p>尽管信号量的意图在于进程间同步，互斥锁和条件变量的意图则在于线程间同步，但是信号量也可用于线程间，互斥锁和条件变量也可用于进程间；我们应该使用适合具体应用的那组原语；</p>
+<p>上面提到Posix提供两类信号量：<code>有名（named）信号量</code>和<code>基于内存的（memory-based）信号量</code>，后者也称为<code>无名（unnamed）信号量</code>；</p>
+<p>有名信号量的创建：<code>sem_open()</code><br>无名信号量的创建：<code>sem_init()</code><br>有名/无名信号量的操作：<code>sem_wait()</code>、<code>sem_trywait()</code>、<code>sem_post()</code>、<code>sem_getvalue()</code><br>有名信号量的销毁：<code>sem_close()</code>、<code>sem_unlink()</code><br>无名信号量的销毁：<code>sem_destroy()</code></p>
+<p><strong>多线程编程通常使用互斥锁、读写锁、条件变量、自旋锁，所以下面不再对基于内存的信号量展开</strong></p>
+<p><strong>有名信号量</strong><br>若信号量名为<code>somename</code>，则创建的信号量在<code>/dev/shm/</code>中，被命名为<code>sem.somename</code>；</p>
+<p><code>sem_t *sem_open(const char *name, int oflag);</code>：打开一个已存在的信号量<br><code>sem_t *sem_open(const char *name, int oflag, mode_t mode, unsigned int value);</code>：创建一个信号量</p>
+<ul>
+<li>头文件：<code>sys/stat.h</code>、<code>fcntl.h</code>、<code>semaphore.h</code>，须链接库<code>-lpthread</code>；</li>
+<li><code>name</code>：输入参数，名称；</li>
+<li><code>oflag</code>：输入参数，一组打开标志位，可用按位或<code>|</code>连接，同shm_open的参数；</li>
+<li><code>mode</code>：输入参数，文件权限，同shm_open的参数；</li>
+<li><code>value</code>：输入参数，信号量的初始值；通常为1；</li>
+<li>返回值：成功返回信号量指针，失败返回<code>SEM_FAILED</code>（<code>(void *)-1</code>），并设置errno；</li>
+</ul>
+<p><code>int sem_close(sem_t *sem);</code>：关闭信号量</p>
+<ul>
+<li>头文件：<code>semaphore.h</code>，须链接库<code>-lpthread</code>；</li>
+<li><code>sem</code>：输入参数，信号量指针；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>int sem_unlink(const char *name);</code>：删除信号量</p>
+<ul>
+<li>头文件：<code>semaphore.h</code>，须链接库<code>-lpthread</code>；</li>
+<li><code>name</code>：输入参数，信号量文件名；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>int sem_wait(sem_t *sem);</code>：等待，阻塞<br><code>int sem_trywait(sem_t *sem);</code>：等待，不阻塞<br><code>int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);</code>：等待，超时<br>头文件：<code>semaphore.h</code>，须链接库<code>-lpthread</code>；<br>成功返回0，失败返回-1，并设置errno；</p>
+<p><code>int sem_post(sem_t *sem);</code>：挂出</p>
+<ul>
+<li>头文件：<code>semaphore.h</code>，须链接库<code>-lpthread</code>；</li>
+<li><code>sem</code>：输入参数，信号量指针；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><code>int sem_getvalue(sem_t *sem, int *sval);</code>：测试</p>
+<ul>
+<li>头文件：<code>semaphore.h</code>，须链接库<code>-lpthread</code>；</li>
+<li><code>sem</code>：输入参数，信号量指针；</li>
+<li><code>sval</code>：输出参数，获取的值；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno；</li>
+</ul>
+<p><strong>共享内存和信号量的简单示例</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <semaphore.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+
+#define SHM_NAME "shm.test"
+#define SEM_NAME "test"
+#define SHM_SIZE 1024*4
+
+int main(void){
+    int fd = shm_open(SHM_NAME, O_CREAT | O_EXCL | O_RDWR, 0644);
+    if(fd == -1){
+        perror("shm_open");
+        exit(EXIT_FAILURE);
+    }
+
+    if(ftruncate(fd, SHM_SIZE) == -1){
+        perror("ftruncate");
+        exit(EXIT_FAILURE);
+    }
+
+    char *data = (char *)mmap(NULL, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    if(data == MAP_FAILED){
+        perror("mmap");
+        exit(EXIT_FAILURE);
+    }
+    close(fd);
+
+    sem_t *sem = sem_open(SEM_NAME, O_CREAT | O_EXCL | O_RDWR, 0644, 1);
+    if(sem == SEM_FAILED){
+        perror("sem_open");
+        exit(EXIT_FAILURE);
+    }
+
+    pid_t pid = fork();
+    if(pid < 0){
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }else if(pid > 0){
+        if(sem_wait(sem) == -1){
+            perror("sem_wait");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("parent_proc(%d) writing now ... \n", getpid());
+        for(int i=0; i<3; i++){
+            sprintf(data + 5*i, "www%d ", i);
+            sleep(1);
+        }
+        printf("parent_proc(%d) writing complete\n", getpid());
+
+        if(sem_post(sem) == -1){
+            perror("sem_post");
+            exit(EXIT_FAILURE);
+        }
+
+        if(sem_close(sem) == -1){
+            perror("sem_close");
+            exit(EXIT_FAILURE);
+        }
+
+        if(munmap(data, SHM_SIZE) == -1){
+            perror("munmap");
+            exit(EXIT_FAILURE);
+        }
+
+        wait(NULL);
+        if(sem_unlink(SEM_NAME) == -1){
+            perror("sem_unlink");
+            exit(EXIT_FAILURE);
+        }
+        if(shm_unlink(SHM_NAME) == -1){
+            perror("shm_unlink");
+            exit(EXIT_FAILURE);
+        }
+    }else if(pid == 0){
+        usleep(3);
+
+        printf("child_proc(%d) waiting to read ... \n", getpid());
+        if(sem_wait(sem) == -1){
+            perror("sem_wait");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("child_proc(%d) read_data: %s\n", getpid(), data);
+
+        if(sem_post(sem) == -1){
+            perror("sem_post");
+            exit(EXIT_FAILURE);
+        }
+
+        if(sem_close(sem) == -1){
+            perror("sem_close");
+            exit(EXIT_FAILURE);
+        }
+
+        if(munmap(data, SHM_SIZE) == -1){
+            perror("munmap");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [19:17:58]
+$ gcc -o sem sem.c -lrt -lpthread
+
+# root @ arch in ~/work on git:master x [19:18:20]
+$ ./sem
+parent_proc(9484) writing now ...
+child_proc(9485) waiting to read ...
+parent_proc(9484) writing complete
+child_proc(9485) read_data: www0 www1 www2
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-ipc-unix-sock.html" rel="next" title="c语言 - 进程间通信 Unix Domain Socket">
+                <i class="fa fa-chevron-left"></i> c语言 - 进程间通信 Unix Domain Socket
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-ipc-pipe.html" rel="prev" title="c语言 - 进程间通信 管道">
+                c语言 - 进程间通信 管道 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#共享内存-System-V"><span class="nav-number">1.</span> <span class="nav-text">共享内存 System V</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信号量-System-V"><span class="nav-number">2.</span> <span class="nav-text">信号量 System V</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#共享内存-Posix"><span class="nav-number">3.</span> <span class="nav-text">共享内存 Posix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信号量-Posix"><span class="nav-number">4.</span> <span class="nav-text">信号量 Posix</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-ipc-shm.html';
+          this.page.identifier = 'c-ipc-shm.html';
+          this.page.title = 'c语言 - 进程间通信 共享内存';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

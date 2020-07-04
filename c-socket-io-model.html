@@ -1,0 +1,1769 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 socket编程 Linux 5种IO模型">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - socket编程(四)，Linux中的五种网络IO模型：阻塞IO、非阻塞IO、多路复用IO、信号驱动式IO、异步IO">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - socket编程(四)">
+<meta property="og:url" content="https://www.zfl9.com/c-socket-io-model.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - socket编程(四)，Linux中的五种网络IO模型：阻塞IO、非阻塞IO、多路复用IO、信号驱动式IO、异步IO">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - socket编程(四)">
+<meta name="twitter:description" content="c语言 - socket编程(四)，Linux中的五种网络IO模型：阻塞IO、非阻塞IO、多路复用IO、信号驱动式IO、异步IO">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-socket-io-model.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - socket编程(四) | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-socket-io-model.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - socket编程(四)
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-10T11:21:00+08:00">
+                2017-08-10
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-socket-io-model.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-socket-io-model.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-socket-io-model.html" class="leancloud_visitors" data-flag-title="c语言 - socket编程(四)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - socket编程(四)，Linux中的五种网络IO模型：<code>阻塞IO</code>、<code>非阻塞IO</code>、<code>多路复用IO</code>、<code>信号驱动式IO</code>、<code>异步IO</code></p>
+<a id="more"></a>
+<h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><p>网络IO的本质是socket的操作，我们以recv为例：</p>
+<p>每次调用recv，<code>数据会先拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间</code>；</p>
+<p>所以说，当一个recv操作发生时，它会经历两个阶段：</p>
+<ul>
+<li>第一阶段：等待数据准备</li>
+<li>第二阶段：将数据从内核拷贝到进程中</li>
+</ul>
+<p>对于socket流而言：</p>
+<ul>
+<li>第一阶段：通常涉及等待网络上的数据分组到达，然后被复制到内核的某个缓冲区</li>
+<li>第二阶段：把数据从内核缓冲区复制到应用进程的缓冲区</li>
+</ul>
+<p><strong>网络IO模型</strong></p>
+<ul>
+<li>同步IO(synchronous IO)<ul>
+<li>阻塞IO(bloking IO)</li>
+<li>非阻塞IO(non-blocking IO)</li>
+<li>多路复用IO(multiplexing IO)</li>
+<li>信号驱动式IO(signal-driven IO)</li>
+</ul>
+</li>
+<li>异步IO(asynchronous IO)</li>
+</ul>
+<blockquote>
+<p>由于<code>信号驱动式IO</code>实际中并不常用，所以接下来只介绍其他四种IO模型</p>
+</blockquote>
+<p><strong>阻塞IO</strong><br>应用程序调用一个IO函数，如recv：<br>当socket接收缓冲区中没有数据时，当前进程会被recv阻塞，一直会等待数据的到来；<br>当socket接收缓冲区中有数据时，recv将数据拷贝到进程空间的这个过程，也是阻塞的；</p>
+<blockquote>
+<p>所以，对于阻塞IO，在这两个阶段都被阻塞了</p>
+</blockquote>
+<p><strong>非阻塞IO</strong><br>将一个套接字设置为非阻塞时，就是告诉内核，当一个请求的IO操作无法立即完成时，不要让我等待，应立即给我返回一个错误，如recv：<br>当socket接收缓冲区中没有数据时，recv会立即返回一个错误，errno为<code>EAGAIN</code>，表示现在没有数据，等下再来吧；<br>当socket接收缓冲区中有数据时，recv将数据拷贝到进程空间的这个过程，也是阻塞的；</p>
+<p>所以对于非阻塞IO，通常采取轮询polling的方式，循环往复的主动询问内核，当前是否有数据了</p>
+<blockquote>
+<p>对于非阻塞IO，第一个阶段不会阻塞，但是第二个阶段依旧是阻塞的</p>
+</blockquote>
+<p><strong>IO多路复用</strong><br>其实这种方式和第二种的非阻塞IO很相似，只不过优点是可以借助这几个特殊的系统调用(<code>select</code>、<code>poll</code>、<code>epoll</code>)，来同时轮询多个socket连接：<br>当调用select、poll、epoll函数时，如果所监控的socket中有部分socket可读、可写或其他事件发生时，就会返回，将其交给用户进程来处理，这个过程是阻塞的，只不过是因为select、poll、epoll系统调用而阻塞的；<br>当调用返回后，用户进程再调用recv，将数据从内核拷贝到进程空间中，这个过程也是阻塞的，因recv拷贝数据而阻塞；</p>
+<p>实际上这种方式相比第二种还差一些，因为这里面包含了两个系统调用(select/poll/epoll、recv)，而第二种只有一个系统调用recv；<br>不过IO多路复用的优点是可以处理更多的连接，当连接数大的时候，缺点就被优点给掩盖了</p>
+<p>IO多路复用相比<code>多进程/多线程 + 阻塞IO</code>的系统开销小，因为系统不需要创建新的进程或线程，也不需要维护多个进程、线程的执行</p>
+<blockquote>
+<p>对于多路复用IO，第一个阶段是因为select、poll、epoll而阻塞的，第二个阶段(实际IO操作)依旧是阻塞的</p>
+</blockquote>
+<p><strong>信号驱动式IO</strong><br>首先我们允许socket进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞；<br>当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用IO操作函数处理数据；</p>
+<p><strong>异步IO</strong><br>对于前面四种IO模型，都是同步的，因为所有的实际IO操作(将数据从内核拷贝到进程空间的这个过程)都是阻塞的；<br>所谓同步IO，就是必须等待当前的IO操作完成之后，才能执行后面的指令，这个等待的过程中是不能进行其他操作的，也就是说，指令序列都是线性执行的；<br>而异步IO，当遇到IO操作时，直接把这个IO操作交给别人(内核、新的线程/进程等等)来做，而当前进程并不会因为这个IO操作而阻塞，可以立即执行别的操作，当IO操作完成后，进程会收到完成的通知(回调函数、信号等等)</p>
+<p>linux2.6之后的内核提供了AIO库，提供异步IO操作，但是实际上用的比较少，目前有很多流行的开源异步IO库：libevent、libev、libuv等</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="迭代模式-阻塞IO"><a href="#迭代模式-阻塞IO" class="headerlink" title="迭代模式 + 阻塞IO"></a>迭代模式 + 阻塞IO</h3><p>所谓的迭代模式，就是用while、for循环来不断接受新连接</p>
+<p>server.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define LISTEN_PORT 8080
+#define MAX_CONN 1024
+#define BUF_SIZE 512
+
+static int listenfd;
+
+void handle_signal(int sig);
+void do_service(int connfd);
+
+int main(void){
+    signal(SIGHUP, handle_signal);
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
+
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int reuseaddr = 1;
+    if(setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr)) < 0){
+        perror("setsockopt_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if(listen(listenfd, MAX_CONN) < 0){
+        perror("listen_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    int connfd;
+
+    for(;;){
+        if((connfd = accept(listenfd, (struct sockaddr *)&peeraddr, &peerlen)) < 0){
+            perror("accept_listenfd error");
+            continue;
+        }
+
+        printf("new conn(%s:%d)\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
+
+        do_service(connfd);
+    }
+
+    return 0;
+}
+
+void handle_signal(int sig){
+    if(sig == SIGHUP){
+        fprintf(stderr, "signal: SIGHUP(%d)", sig);
+    }else if(sig == SIGINT){
+        fprintf(stderr, "signal: SIGINT(%d)", sig);
+    }else if(sig == SIGTERM){
+        fprintf(stderr, "signal: SIGTERM(%d)", sig);
+    }
+
+    fprintf(stderr, "   close server ... ");
+    close(listenfd);
+    fprintf(stderr, "done\n");
+
+    exit(EXIT_SUCCESS);
+}
+
+void do_service(int connfd){
+    char buf[BUF_SIZE];
+    int nbuf;
+
+    nbuf = recv(connfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+
+    printf("recv_msg: %s\n", buf);
+
+    send(connfd, buf, nbuf, 0);
+
+    shutdown(connfd, SHUT_WR);
+    close(connfd);
+}
+</script></code></pre>
+<p>client.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define BUF_SIZE 512
+#define SERV_ADDR "127.0.0.1"
+#define SERV_PORT 8080
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <MSG>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    int ret = inet_pton(AF_INET, SERV_ADDR, &servaddr.sin_addr);
+    if(ret < 0){
+        perror("inet_pton_servaddr error");
+        exit(EXIT_FAILURE);
+    }else if(ret == 0){
+        fprintf(stderr, "inet_pton_servaddr error: The address format is wrong\n");
+        exit(EXIT_FAILURE);
+    }
+    servaddr.sin_port = htons(SERV_PORT);
+
+    if(connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("connect_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    char buf[BUF_SIZE];
+    int nbuf = strlen(argv[1]);
+
+    send(sockfd, argv[1], nbuf, 0);
+
+    nbuf = recv(sockfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+
+    printf("echo_msg: %s\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [14:24:56]
+$ gcc -o server server.c
+
+# root @ localhost in ~/tmp [14:25:00]
+$ gcc -o client client.c
+
+# root @ localhost in ~/tmp [14:25:01]
+$ ./server
+
+# root @ localhost in ~/tmp [14:22:58]
+$ for ((i=0; i<10; i++)); do ./client 'www.zfl9.com'; done
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+
+# root @ localhost in ~/tmp [14:25:01]
+$ ./server
+new conn(127.0.0.1:58278)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58280)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58282)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58284)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58286)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58288)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58290)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58292)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58294)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:58296)
+recv_msg: www.zfl9.com
+^Csignal: SIGINT(2)   close server ... done
+</script></code></pre>
+<h3 id="多进程-阻塞IO"><a href="#多进程-阻塞IO" class="headerlink" title="多进程 + 阻塞IO"></a>多进程 + 阻塞IO</h3><p>主进程调用accept()不断接收新连接，然后调用fork()创建一个子进程来处理新连接，即：来一个新连接就启动一个新进程</p>
+<p>server.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define LISTEN_PORT 8080
+#define MAX_CONN 1024
+#define BUF_SIZE 512
+
+static int listenfd;
+
+void handle_signal(int sig);
+void do_service(int connfd);
+
+int main(void){
+    signal(SIGHUP, handle_signal);
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
+    signal(SIGCHLD, SIG_IGN);
+
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int reuseaddr = 1;
+    if(setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr)) < 0){
+        perror("setsockopt_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if(listen(listenfd, MAX_CONN) < 0){
+        perror("listen_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    int connfd;
+    pid_t pid;
+
+    for(;;){
+        if((connfd = accept(listenfd, (struct sockaddr *)&peeraddr, &peerlen)) < 0){
+            perror("accept_listenfd error");
+            continue;
+        }
+
+        printf("new conn(%s:%d)\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
+
+        pid = fork();
+        if(pid < 0){
+            perror("fork error");
+            close(connfd);
+            continue;
+        }else if(pid == 0){
+            close(listenfd);
+            do_service(connfd);
+            exit(EXIT_SUCCESS);
+        }else{
+            close(connfd);
+        }
+    }
+
+    return 0;
+}
+
+void handle_signal(int sig){
+    if(sig == SIGHUP){
+        fprintf(stderr, "signal: SIGHUP(%d)", sig);
+    }else if(sig == SIGINT){
+        fprintf(stderr, "signal: SIGINT(%d)", sig);
+    }else if(sig == SIGTERM){
+        fprintf(stderr, "signal: SIGTERM(%d)", sig);
+    }
+
+    fprintf(stderr, "   close server ... ");
+    close(listenfd);
+    fprintf(stderr, "done\n");
+
+    exit(EXIT_SUCCESS);
+}
+
+void do_service(int connfd){
+    char buf[BUF_SIZE];
+    int nbuf;
+
+    nbuf = recv(connfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+
+    printf("recv_msg: %s\n", buf);
+
+    send(connfd, buf, nbuf, 0);
+
+    shutdown(connfd, SHUT_WR);
+    close(connfd);
+}
+</script></code></pre>
+<p>client.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define BUF_SIZE 512
+#define SERV_ADDR "127.0.0.1"
+#define SERV_PORT 8080
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <MSG>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    int ret = inet_pton(AF_INET, SERV_ADDR, &servaddr.sin_addr);
+    if(ret < 0){
+        perror("inet_pton_servaddr error");
+        exit(EXIT_FAILURE);
+    }else if(ret == 0){
+        fprintf(stderr, "inet_pton_servaddr error: The address format is wrong\n");
+        exit(EXIT_FAILURE);
+    }
+    servaddr.sin_port = htons(SERV_PORT);
+
+    if(connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("connect_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    char buf[BUF_SIZE];
+    int nbuf = strlen(argv[1]);
+
+    send(sockfd, argv[1], nbuf, 0);
+
+    nbuf = recv(sockfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+
+    printf("echo_msg: %s\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [14:46:20]
+$ gcc -o server server.c
+
+# root @ localhost in ~/tmp [14:46:41]
+$ gcc -o client client.c
+
+# root @ localhost in ~/tmp [14:46:45]
+$ ./server
+
+# root @ localhost in ~/tmp [14:44:22]
+$ for ((i=0; i<10; i++)); do ./client 'www.zfl9.com'; done
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+echo_msg: www.zfl9.com
+
+# root @ localhost in ~/tmp [14:46:45]
+$ ./server
+new conn(127.0.0.1:50474)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50476)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50478)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50480)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50482)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50484)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50486)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50488)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50490)
+recv_msg: www.zfl9.com
+new conn(127.0.0.1:50492)
+recv_msg: www.zfl9.com
+^Csignal: SIGINT(2)   close server ... done
+</script></code></pre>
+<h3 id="epoll多路复用IO"><a href="#epoll多路复用IO" class="headerlink" title="epoll多路复用IO"></a>epoll多路复用IO</h3><p><strong>基本知识</strong><br>epoll是在Linux 2.6内核中提出的，是之前的select和poll的增强版本；<br>相对于select和poll来说，epoll更加灵活，没有描述符限制；<br>epoll使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中；</p>
+<p><strong>epoll接口</strong><br>epoll操作过程需要三个接口，这三个函数都在头文件<code>sys/epoll.h</code>中：</p>
+<p><code>int epoll_create(int size);</code>：创建一个epoll文件描述符</p>
+<ul>
+<li><code>size</code>：输入参数，在内核版本 2.6.8 之后，这个参数被弃用了，不过传入的值必须大于0</li>
+<li>返回值：成功返回epoll实例的文件描述符fd，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int epoll_create1(int flags);</code>：创建一个epoll文件描述符(新)</p>
+<ul>
+<li><code>flags</code>：输入参数，如果flags为0，则等价于epoll_create()；</li>
+<li>返回值：成功返回epoll实例的文件描述符fd，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);</code>：epoll事件注册、修改、删除</p>
+<ul>
+<li><code>epfd</code>：输入参数，epoll文件描述符</li>
+<li><code>op</code>：输入参数，动作：<code>EPOLL_CTL_ADD</code>添加、<code>EPOLL_CTL_MOD</code>修改、<code>EPOLL_CTL_DEL</code>移除</li>
+<li><code>fd</code>：输入参数，被监听的文件描述符</li>
+<li><code>event</code>：输入参数，监听的epoll事件，events可以是以下几个宏的集合：<br><code>EPOLLIN</code>：表示对应的文件描述符可以读(包括对端SOCKET正常关闭)；<br><code>EPOLLOUT</code>：表示对应的文件描述符可以写；<br><code>EPOLLPRI</code>：表示对应的文件描述符有紧急的数据可读(这里应该表示有带外数据到来)；<br><code>EPOLLERR</code>：表示对应的文件描述符发生错误；<br><code>EPOLLHUP</code>：表示对应的文件描述符被挂断；<br><code>EPOLLET</code>：将EPOLL设为<code>边缘触发(Edge Triggered)</code>模式，这是相对于<code>水平触发(Level Triggered)</code>来说的；<br><code>EPOLLONESHOT</code>：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里；</li>
+<li>返回值：成功返回0，失败返回-1，并设置errno</li>
+</ul>
+<p><code>int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);</code>：等待epoll事件的发生</p>
+<ul>
+<li><code>epfd</code>：输入参数，epoll文件描述符</li>
+<li><code>events</code>：输出参数，一个数组，用来保存发生的事件的集合</li>
+<li><code>maxevents</code>：输入参数，events数组的长度</li>
+<li><code>timeout</code>：输入参数，超时时间(单位:毫秒)，-1永久阻塞，0立即返回</li>
+<li>返回值：成功返回实际发生的事件的数量，返回0表示超时，失败返回-1，并设置errno</li>
+</ul>
+<p><strong>工作模式</strong><br>epoll有两种工作模式：<code>LT(level trigger)</code>水平触发、<code>ET(edge trigger)</code>边缘触发；</p>
+<p>默认工作在LT模式，LT模式与ET模式的区别：</p>
+<ul>
+<li>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件；下次调用epoll_wait时，会再次响应应用程序并通知此事件；<br>LT模式同时支持阻塞、非阻塞的socket套接字；</li>
+<li>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件；如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件；只能等待该描述符的下次事件发生(也就是状态改变的时候)才会通知应用程序；<br>ET模式只支持非阻塞的socket套接字；</li>
+</ul>
+<p>ET模式在很大程度上减少了epoll事件被重复触发的次数，因此效率要比LT模式高；<br>epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/写操作把处理多个文件描述符的任务饿死；</p>
+<p>所以，对于ET模式的epoll，必须在事件触发后，一次性把当前socket缓冲区的数据全部读完，把要发送的数据全部发完才能继续处理下一个事件，同时，对于connect和accept也要进行相应的处理</p>
+<p><strong>LT模式 - 实例</strong><br>server.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define LISTEN_PORT 8080
+#define MAX_CONN 1024
+#define MAX_EVENT 1024
+#define BUF_SIZE 512
+
+static int listenfd;
+static int epollfd;
+
+void handle_signal(int sig);
+
+int main(void){
+    signal(SIGHUP, handle_signal);
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
+
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int reuseaddr = 1;
+    if(setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr)) < 0){
+        perror("setsockopt_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if((epollfd = epoll_create1(0)) < 0){
+        perror("create_epollfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct epoll_event event, events[MAX_EVENT];
+    event.data.fd = listenfd;
+    event.events = EPOLLIN;
+    if(epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &event) < 0){
+        perror("addevent_epollfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if(listen(listenfd, MAX_CONN) < 0){
+        perror("listen_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    char buf[BUF_SIZE];
+    int nfds, fd, connfd, nbuf;
+    uint32_t ev;
+
+    for(;;){
+        nfds = epoll_wait(epollfd, events, MAX_EVENT, -1);
+        if(nfds < 0){
+            perror("wait_epollfd error");
+            continue;
+        }
+
+        for(int i=0; i<nfds; i++){
+            fd = events[i].data.fd;
+            ev = events[i].events;
+
+            if(ev & EPOLLERR || ev & EPOLLHUP || !(ev & EPOLLIN)){
+                continue;
+            }else if(fd == listenfd && (ev & EPOLLIN)){
+                connfd = accept(fd, (struct sockaddr *)&peeraddr, &peerlen);
+                if(connfd < 0){
+                    perror("accept_listenfd error");
+                    continue;
+                }
+
+                printf("new conn %s:%d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
+
+                struct epoll_event ev;
+                ev.data.fd = connfd;
+                ev.events = EPOLLIN;
+                if(epoll_ctl(epollfd, EPOLL_CTL_ADD, connfd, &ev) < 0){
+                    perror("addevent_epollfd error");
+                    close(connfd);
+                    continue;
+                }
+            }else if(ev & EPOLLIN){
+                nbuf = recv(fd, buf, BUF_SIZE, 0);
+                buf[nbuf] = 0;
+                printf("recv_msg: %s\n", buf);
+                send(fd, buf, nbuf, 0);
+                shutdown(fd, SHUT_WR);
+                close(fd);
+            }
+        }
+    }
+
+    return 0;
+}
+
+void handle_signal(int sig){
+    if(sig == SIGHUP){
+        fprintf(stderr, "signal: SIGHUP(%d)", sig);
+    }else if(sig == SIGINT){
+        fprintf(stderr, "signal: SIGINT(%d)", sig);
+    }else if(sig == SIGTERM){
+        fprintf(stderr, "signal: SIGTERM(%d)", sig);
+    }
+
+    fprintf(stderr, "   close server ... ");
+    close(listenfd);
+    close(epollfd);
+    fprintf(stderr, "done\n");
+
+    exit(EXIT_SUCCESS);
+}
+</script></code></pre>
+<p>client.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define BUF_SIZE 512
+#define SERV_ADDR "127.0.0.1"
+#define SERV_PORT 8080
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <MSG>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    int ret = inet_pton(AF_INET, SERV_ADDR, &servaddr.sin_addr);
+    if(ret < 0){
+        perror("inet_pton_servaddr error");
+        exit(EXIT_FAILURE);
+    }else if(ret == 0){
+        fprintf(stderr, "inet_pton_servaddr error: The address format is wrong\n");
+        exit(EXIT_FAILURE);
+    }
+    servaddr.sin_port = htons(SERV_PORT);
+
+    if(connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("connect_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    char buf[BUF_SIZE];
+    int nbuf = strlen(argv[1]);
+
+    send(sockfd, argv[1], nbuf, 0);
+
+    nbuf = recv(sockfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+
+    printf("echo_msg: %s\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [17:29:39]
+$ gcc -o server server.c
+
+# root @ localhost in ~/tmp [17:29:59]
+$ gcc -o client client.c
+
+# root @ localhost in ~/tmp [17:30:02]
+$ ./server
+
+# root @ localhost in ~/tmp [17:28:26]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.05s user 1.10s system 103% cpu 1.105 total
+
+# root @ localhost in ~/tmp [17:30:32]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.07s user 1.08s system 103% cpu 1.107 total
+
+# root @ localhost in ~/tmp [17:30:34]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.05s user 1.10s system 104% cpu 1.105 total
+
+# root @ localhost in ~/tmp [17:30:36]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.31s user 5.67s system 105% cpu 5.640 total
+
+# root @ localhost in ~/tmp [17:30:47]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.28s user 5.73s system 104% cpu 5.756 total
+
+# root @ localhost in ~/tmp [17:30:54]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.31s user 5.80s system 105% cpu 5.783 total
+
+# root @ localhost in ~/tmp [17:30:02]
+$ ./server
+new conn 127.0.0.1:49288
+recv_msg: www.zfl9.com
+new conn 127.0.0.1:49290
+recv_msg: www.zfl9.com
+new conn 127.0.0.1:49292
+recv_msg: www.zfl9.com
+new conn 127.0.0.1:49294
+recv_msg: www.zfl9.com
+new conn 127.0.0.1:49296
+recv_msg: www.zfl9.com
+new conn 127.0.0.1:49298
+recv_msg: www.zfl9.com
+new conn 127.0.0.1:49300
+recv_msg: www.zfl9.com
+......
+</script></code></pre>
+<p><strong>ET模式 - 实例</strong><br>server.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define LISTEN_PORT 8080
+#define MAX_CONN 1024
+#define MAX_EVENT 1024
+
+static int listenfd;
+static int epollfd;
+
+void handle_signal(int sig);
+
+int main(void){
+    signal(SIGHUP, handle_signal);
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
+
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int reuseaddr = 1;
+    if(setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr)) < 0){
+        perror("setsockopt_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int flgs = fcntl(listenfd, F_GETFL, 0);
+    if(fcntl(listenfd, F_SETFL, flgs|O_NONBLOCK) < 0){
+        perror("setnonblock_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int buf_size;
+    socklen_t optlen = sizeof(buf_size);
+    if(getsockopt(listenfd, SOL_SOCKET, SO_RCVBUF, &buf_size, &optlen) < 0){
+        perror("getsockopt_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+    const int BUF_SIZE = buf_size;
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if((epollfd = epoll_create1(0)) < 0){
+        perror("create_epollfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct epoll_event event, events[MAX_EVENT];
+    event.data.fd = listenfd;
+    event.events = EPOLLIN | EPOLLET;
+    if(epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &event) < 0){
+        perror("addevent_epollfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if(listen(listenfd, MAX_CONN) < 0){
+        perror("listen_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    char buf[BUF_SIZE];
+    int nfds, fd, connfd, nbuf, nbytes;
+    uint32_t ev;
+
+    for(;;){
+        nfds = epoll_wait(epollfd, events, MAX_EVENT, -1);
+        if(nfds < 0){
+            perror("wait_epollfd error");
+            continue;
+        }
+
+        for(int i=0; i<nfds; i++){
+            fd = events[i].data.fd;
+            ev = events[i].events;
+
+            if(ev & EPOLLERR || ev & EPOLLHUP || !(ev & EPOLLIN)){
+                continue;
+            }else if(fd == listenfd && (ev & EPOLLIN)){
+                for(;;){
+                    connfd = accept(fd, (struct sockaddr *)&peeraddr, &peerlen);
+                    if(connfd < 0 && errno == EAGAIN){
+                        break;
+                    }else if(connfd < 0 && (errno == EINTR || errno == ECONNABORTED || errno == EPROTO)){
+                        continue;
+                    }else if(connfd < 0){
+                        perror("accept_listenfd error");
+                        continue;
+                    }
+
+                    printf("new conn %s:%d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
+
+                    flgs = fcntl(connfd, F_GETFL, 0);
+                    if(fcntl(connfd, F_SETFL, flgs|O_NONBLOCK) < 0){
+                        perror("setnonblock_connfd error");
+                        close(connfd);
+                        continue;
+                    }
+
+                    struct epoll_event ev;
+                    ev.data.fd = connfd;
+                    ev.events = EPOLLIN | EPOLLET;
+                    if(epoll_ctl(epollfd, EPOLL_CTL_ADD, connfd, &ev) < 0){
+                        perror("addevent_epollfd error");
+                        close(connfd);
+                        continue;
+                    }
+                }
+                continue;
+            }else if(ev & EPOLLIN){
+                nbuf = 0;
+                bool can_send = true;
+
+                for(; nbuf < BUF_SIZE;){
+                    nbytes = recv(fd, buf+nbuf, BUF_SIZE-nbuf, MSG_DONTWAIT);
+                    if(nbytes < 0 && errno == EAGAIN){
+                        break;
+                    }else if(nbytes < 0 && errno == EINTR){
+                        continue;
+                    }else if(nbytes < 0){
+                        perror("recv_connfd error");
+                        shutdown(fd, SHUT_WR);
+                        close(fd);
+                        can_send = false;
+                        break;
+                    }else if(nbytes == 0){
+                        fprintf(stderr, "peer close conn...\n");
+                        shutdown(fd, SHUT_WR);
+                        close(fd);
+                        can_send = false;
+                        break;
+                    }else{
+                        nbuf += nbytes;
+                    }
+                }
+
+                if(can_send){
+                    int nsent = 0;
+                    for(; nsent < nbuf;){
+                        nbytes = send(fd, buf+nsent, nbuf-nsent, MSG_DONTWAIT);
+                        if(nbytes < 0 && (errno == EAGAIN || errno == EINTR)){
+                            continue;
+                        }else if(nbytes < 0){
+                            perror("send_connfd error");
+                            close(fd);
+                            break;
+                        }else{
+                            nsent += nbytes;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+void handle_signal(int sig){
+    if(sig == SIGHUP){
+        fprintf(stderr, "signal: SIGHUP(%d)", sig);
+    }else if(sig == SIGINT){
+        fprintf(stderr, "signal: SIGINT(%d)", sig);
+    }else if(sig == SIGTERM){
+        fprintf(stderr, "signal: SIGTERM(%d)", sig);
+    }
+
+    fprintf(stderr, "   close server ... ");
+    close(listenfd);
+    close(epollfd);
+    fprintf(stderr, "done\n");
+
+    exit(EXIT_SUCCESS);
+}
+</script></code></pre>
+<p>client.c</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define BUF_SIZE 512
+#define SERV_ADDR "127.0.0.1"
+#define SERV_PORT 8080
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <MSG>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int sockfd;
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    int ret = inet_pton(AF_INET, SERV_ADDR, &servaddr.sin_addr);
+    if(ret < 0){
+        perror("inet_pton_servaddr error");
+        exit(EXIT_FAILURE);
+    }else if(ret == 0){
+        fprintf(stderr, "inet_pton_servaddr error: The address format is wrong\n");
+        exit(EXIT_FAILURE);
+    }
+    servaddr.sin_port = htons(SERV_PORT);
+
+    if(connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("connect_sockfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    char buf[BUF_SIZE];
+    int nbuf = strlen(argv[1]);
+
+    send(sockfd, argv[1], nbuf, 0);
+
+    nbuf = recv(sockfd, buf, BUF_SIZE, 0);
+    buf[nbuf] = 0;
+
+    printf("echo_msg: %s\n", buf);
+
+    close(sockfd);
+    return 0;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [19:50:45]
+$ gcc -o server server.c
+
+# root @ localhost in ~/tmp [19:51:06]
+$ gcc -o client client.c
+
+# root @ localhost in ~/tmp [19:51:09]
+$ ./server
+
+# root @ localhost in ~/tmp [19:50:23]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.06s user 1.21s system 101% cpu 1.249 total
+
+# root @ localhost in ~/tmp [19:51:22]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.09s user 1.20s system 101% cpu 1.275 total
+
+# root @ localhost in ~/tmp [19:51:24]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.09s user 1.19s system 102% cpu 1.248 total
+
+# root @ localhost in ~/tmp [19:51:26]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.48s user 6.04s system 102% cpu 6.335 total
+
+# root @ localhost in ~/tmp [19:51:37]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.47s user 6.16s system 102% cpu 6.502 total
+
+# root @ localhost in ~/tmp [19:51:44]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.47s user 6.39s system 102% cpu 6.727 total
+
+# root @ localhost in ~/tmp [19:51:09]
+$ ./server
+new conn 127.0.0.1:50354
+peer close conn...
+new conn 127.0.0.1:50356
+peer close conn...
+new conn 127.0.0.1:50358
+peer close conn...
+new conn 127.0.0.1:50360
+peer close conn...
+new conn 127.0.0.1:50362
+peer close conn...
+new conn 127.0.0.1:50364
+peer close conn...
+new conn 127.0.0.1:50366
+peer close conn...
+</script></code></pre>
+<blockquote>
+<p>可以发现，ET模式所耗的时间比LT模式更长一些，不过这是因为echo回声程序的特性导致的；<br>因为ET模式中的recv/send结果判断、循环，无疑加重了cpu的负担，适得其反；<br>不过也可能是我的程序逻辑太辣鸡了(这是肯定的了(눈_눈))；<br>所以说选对模型很重要，并不是所有的情况都适合用ET模式；</p>
+</blockquote>
+<p>不过我们可以只将listenfd设置为ET模式，其他的新连接使用默认的LT模式，我们来看一下：</p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
+#define LISTEN_PORT 8080
+#define MAX_CONN 1024
+#define MAX_EVENT 1024
+#define BUF_SIZE 512
+
+static int listenfd;
+static int epollfd;
+
+void handle_signal(int sig);
+
+int main(void){
+    signal(SIGHUP, handle_signal);
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
+
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("create_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int reuseaddr = 1;
+    if(setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr)) < 0){
+        perror("setsockopt_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    int flgs = fcntl(listenfd, F_GETFL, 0);
+    if(fcntl(listenfd, F_SETFL, flgs|O_NONBLOCK) < 0){
+        perror("setnonblock_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(LISTEN_PORT);
+
+    if(bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
+        perror("bind_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if((epollfd = epoll_create1(0)) < 0){
+        perror("create_epollfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct epoll_event event, events[MAX_EVENT];
+    event.data.fd = listenfd;
+    event.events = EPOLLIN | EPOLLET;
+    if(epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &event) < 0){
+        perror("addevent_epollfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    if(listen(listenfd, MAX_CONN) < 0){
+        perror("listen_listenfd error");
+        exit(EXIT_FAILURE);
+    }
+
+    struct sockaddr_in peeraddr;
+    socklen_t peerlen = sizeof(peeraddr);
+    char buf[BUF_SIZE];
+    int nfds, fd, connfd, nbuf;
+    uint32_t ev;
+
+    for(;;){
+        nfds = epoll_wait(epollfd, events, MAX_EVENT, -1);
+        if(nfds < 0){
+            perror("wait_epollfd error");
+            continue;
+        }
+
+        for(int i=0; i<nfds; i++){
+            fd = events[i].data.fd;
+            ev = events[i].events;
+
+            if(ev & EPOLLERR || ev & EPOLLHUP || !(ev & EPOLLIN)){
+                continue;
+            }else if(fd == listenfd && (ev & EPOLLIN)){
+                for(;;){
+                    connfd = accept(fd, (struct sockaddr *)&peeraddr, &peerlen);
+                    if(connfd < 0 && errno == EAGAIN){
+                        break;
+                    }else if(connfd < 0 && (errno == EINTR || errno == ECONNABORTED || errno == EPROTO)){
+                        continue;
+                    }else if(connfd < 0){
+                        perror("accept_listenfd error");
+                        continue;
+                    }
+
+                    printf("new conn %s:%d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
+
+                    struct epoll_event ev;
+                    ev.data.fd = connfd;
+                    ev.events = EPOLLIN;
+                    if(epoll_ctl(epollfd, EPOLL_CTL_ADD, connfd, &ev) < 0){
+                        perror("addevent_epollfd error");
+                        close(connfd);
+                        continue;
+                    }
+                }
+                continue;
+            }else if(ev & EPOLLIN){
+                nbuf = recv(fd, buf, BUF_SIZE, 0);
+                buf[nbuf] = 0;
+                printf("recv_msg: %s\n", buf);
+                send(fd, buf, nbuf, 0);
+                shutdown(fd, SHUT_WR);
+                close(fd);
+            }
+        }
+    }
+
+    return 0;
+}
+
+void handle_signal(int sig){
+    if(sig == SIGHUP){
+        fprintf(stderr, "signal: SIGHUP(%d)", sig);
+    }else if(sig == SIGINT){
+        fprintf(stderr, "signal: SIGINT(%d)", sig);
+    }else if(sig == SIGTERM){
+        fprintf(stderr, "signal: SIGTERM(%d)", sig);
+    }
+
+    fprintf(stderr, "   close server ... ");
+    close(listenfd);
+    close(epollfd);
+    fprintf(stderr, "done\n");
+
+    exit(EXIT_SUCCESS);
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ localhost in ~/tmp [20:30:11] C:130
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.04s user 1.14s system 102% cpu 1.144 total
+
+# root @ localhost in ~/tmp [20:30:43]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.05s user 1.13s system 104% cpu 1.137 total
+
+# root @ localhost in ~/tmp [20:30:45]
+$ time bash -c 'for((i=0; i<1000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.07s user 1.21s system 104% cpu 1.229 total
+
+# root @ localhost in ~/tmp [20:30:47]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.37s user 5.90s system 104% cpu 6.019 total
+
+# root @ localhost in ~/tmp [20:31:00]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.36s user 5.99s system 104% cpu 6.077 total
+
+# root @ localhost in ~/tmp [20:31:07]
+$ time bash -c 'for((i=0; i<5000; i++)); do ./client 'www.zfl9.com' > /dev/null ; done'
+bash -c   0.40s user 6.01s system 104% cpu 6.170 total
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/c-multi-proc.html" rel="next" title="c语言 - 多进程编程">
+                <i class="fa fa-chevron-left"></i> c语言 - 多进程编程
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-socket-sockopt.html" rel="prev" title="c语言 - socket编程(三)">
+                c语言 - socket编程(三) <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IO模型"><span class="nav-number">1.</span> <span class="nav-text">IO模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">2.</span> <span class="nav-text">实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代模式-阻塞IO"><span class="nav-number">2.1.</span> <span class="nav-text">迭代模式 + 阻塞IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多进程-阻塞IO"><span class="nav-number">2.2.</span> <span class="nav-text">多进程 + 阻塞IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll多路复用IO"><span class="nav-number">2.3.</span> <span class="nav-text">epoll多路复用IO</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-socket-io-model.html';
+          this.page.identifier = 'c-socket-io-model.html';
+          this.page.title = 'c语言 - socket编程(四)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

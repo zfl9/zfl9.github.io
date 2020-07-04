@@ -1,0 +1,818 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java Commons-CLI 命令行参数解析">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="随着科学计算可视化及多媒体技术的飞速发展，人机交互技术不断更新，但是最传统的命令行模式依然被广泛的应用于多个领域，因为命令行界面要较图形用户界面节约更多的计算机系统资源。在熟记命令的前提下，使用命令行界面往往要较使用图形用户界面的操作速度要快。同时，命令行模式也更加有利于客户进行二次开发，方便应用程序的整合。Apache Commons CLI 提供了很多实用的工具和类实现，进一步方便了我们对命令">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Commons-CLI 命令行参数解析">
+<meta property="og:url" content="https://www.zfl9.com/java-commons-cli.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="随着科学计算可视化及多媒体技术的飞速发展，人机交互技术不断更新，但是最传统的命令行模式依然被广泛的应用于多个领域，因为命令行界面要较图形用户界面节约更多的计算机系统资源。在熟记命令的前提下，使用命令行界面往往要较使用图形用户界面的操作速度要快。同时，命令行模式也更加有利于客户进行二次开发，方便应用程序的整合。Apache Commons CLI 提供了很多实用的工具和类实现，进一步方便了我们对命令">
+<meta property="og:updated_time" content="2019-02-18T12:44:12.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Commons-CLI 命令行参数解析">
+<meta name="twitter:description" content="随着科学计算可视化及多媒体技术的飞速发展，人机交互技术不断更新，但是最传统的命令行模式依然被广泛的应用于多个领域，因为命令行界面要较图形用户界面节约更多的计算机系统资源。在熟记命令的前提下，使用命令行界面往往要较使用图形用户界面的操作速度要快。同时，命令行模式也更加有利于客户进行二次开发，方便应用程序的整合。Apache Commons CLI 提供了很多实用的工具和类实现，进一步方便了我们对命令">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-commons-cli.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java Commons-CLI 命令行参数解析 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-commons-cli.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java Commons-CLI 命令行参数解析
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T20:09:00+08:00">
+                2018-05-29
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-commons-cli.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-commons-cli.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-commons-cli.html" class="leancloud_visitors" data-flag-title="Java Commons-CLI 命令行参数解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>随着科学计算可视化及多媒体技术的飞速发展，人机交互技术不断更新，但是最传统的命令行模式依然被广泛的应用于多个领域，因为命令行界面要较图形用户界面节约更多的计算机系统资源。在熟记命令的前提下，使用命令行界面往往要较使用图形用户界面的操作速度要快。同时，命令行模式也更加有利于客户进行二次开发，方便应用程序的整合。Apache Commons CLI 提供了很多实用的工具和类实现，进一步方便了我们对命令行工具的开发。</p>
+<a id="more"></a>
+<h2 id="Commons-CLI-介绍"><a href="#Commons-CLI-介绍" class="headerlink" title="Commons-CLI 介绍"></a>Commons-CLI 介绍</h2><p>Apache Commons 是 Apache 软件基金会的项目，曾隶属于 Jakarta 项目。Commons 的目的是提供可重用的、开源的 Java 代码。Commons 由三部分组成：Proper（是一些已发布的项目）、Sandbox（是一些正在开发的项目）和 Dormant（是一些刚启动或者已经停止维护的项目）。</p>
+<p>这里介绍的 Commons-CLI 就是其中一个开源项目，可能是 Java 很少被拿来当命令行工具使用，大部分情况下，都是使用 Shell、Python 脚本来完成的，导致 Java 的命令行参数解析库比较少，按道理来说，Java SE 应该自带了相关的命令行参数解析 API，然而并没有（Shell 可以使用自带的 getopts，Python 则有更好用的 argparse）。</p>
+<p>然而，除了 Shell，Python 我基本都忘光了，现在也没有精力去捡起来了，只能靠 Java 才能维持得了生活这样子（但实际上，我 Java 也是刚入门不久，但是愈发觉得这是一门很有风格的编程语言，写起来特别舒服，虽然有时候觉得又臭又长）。一般的需求 Shell 都还能应付，但是如果想进行网络编程，就不行了，只能借助 Java 了（其实本来想用 C/C++ 的，然而也是忘得差不多了，写起来也没有 Java 舒服），于是就 Google 找到了几个命令行参数解析库。</p>
+<ul>
+<li><a href="https://commons.apache.org/proper/commons-cli/" rel="external nofollow noopener noreferrer" target="_blank"><code>Commons-CLI</code></a>：API 中的类很少，使用也很简单，对我来说够用了。</li>
+<li><a href="https://github.com/argparse4j/argparse4j" rel="external nofollow noopener noreferrer" target="_blank"><code>argparse4j</code></a>：Python 中著名的 argparse 库的 Java 移植版，好是好，就是感觉有点小复杂。</li>
+</ul>
+<p>我大概看了一下 argparse4j 的文档，发现配置项太多了，虽然功能很多也很强大，但是却有点令人望而生畏。懒癌发作的我机智的选择了明显更易使用和理解的 Commons-CLI 开源解析库。</p>
+<h2 id="Commons-CLI-安装"><a href="#Commons-CLI-安装" class="headerlink" title="Commons-CLI 安装"></a>Commons-CLI 安装</h2><p><a href="http://mirror.cc.columbia.edu/pub/software/apache//commons/cli/binaries/commons-cli-1.4-bin.tar.gz" rel="external nofollow noopener noreferrer" target="_blank">Commons-CLI v1.4 版本下载</a>，解压后的文件列表：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ll
+total 480K
+drwxr-xr-x 3 501 utmp 4.0K Mar  9  2017 apidocs
+-rw-r--r-- 1 501 utmp  53K Mar  9  2017 commons-cli-1.4.jar
+-rw-r--r-- 1 501 utmp 175K Mar  9  2017 commons-cli-1.4-javadoc.jar
+-rw-r--r-- 1 501 utmp  62K Mar  9  2017 commons-cli-1.4-sources.jar
+-rw-r--r-- 1 501 utmp  79K Mar  9  2017 commons-cli-1.4-tests.jar
+-rw-r--r-- 1 501 utmp  56K Mar  9  2017 commons-cli-1.4-test-sources.jar
+-rw-r--r-- 1 501 utmp 5.4K Mar  9  2017 CONTRIBUTING.md
+-rw-r--r-- 1 501 utmp  12K Mar  9  2017 LICENSE.txt
+-rw-r--r-- 1 501 utmp  172 Mar  9  2017 NOTICE.txt
+-rw-r--r-- 1 501 utmp 4.8K Mar  9  2017 README.md
+-rw-r--r-- 1 501 utmp 9.7K Mar  9  2017 RELEASE-NOTES.txt
+</script></code></pre>
+<p>我们只需要其中的两个 jar 文件：<br><code>commons-cli-1.4.jar</code>：类文件，将它加入到 CLASSPATH 后就能使用了。<br><code>commons-cli-1.4-javadoc.jar</code>：API 文档（JavaDoc），用浏览器访问。</p>
+<h2 id="Commons-CLI-使用"><a href="#Commons-CLI-使用" class="headerlink" title="Commons-CLI 使用"></a>Commons-CLI 使用</h2><p>Commons-CLI 中的类位于 <code>org.apache.commons.cli</code> 包，相关的类有：</p>
+<ul>
+<li>CommandLineParser：接口，命令行参数解析器，根据 Options、String[] 解析出 CommandLine 结果对象。</li>
+<li>DefaultParser：CommandLineParser 的实现类，CLI v1.3 版本后，这是唯一的命令行参数解析器实现类。</li>
+<li>CommandLine：由 CommandLineParser 解析产生的结果对象，我们需要从该对象中获取当前的命令行参数。</li>
+<li>HelpFormatter：命令行帮助信息格式化工具，使用其 printHelp() 方法可以打印出格式良好的帮助信息。</li>
+<li>Option：代表一个命令行选项，是一个命令行选项的抽象表示，如选项名称，长名称，是否需要选项参数。</li>
+<li>Option.Builder：Option 类的构建器，静态内部类，推荐使用构建器构建 Option 对象，而非构造函数。</li>
+<li>Options：存储 Option 对象的容器，表示一组选项，是 CommandLineParser 解析器所需参数之一。</li>
+<li>ParseException：发生任何解析异常时，此异常被抛出，它是下面几个异常类的基类。</li>
+<li>MissingOptionException：如果某个必需的选项未提供，则此异常被抛出。</li>
+<li>MissingArgumentException：如果某个选项缺少参数，则此异常被抛出。</li>
+<li>UnrecognizedOptionException：如果遇到未知选项，则此异常被抛出。</li>
+</ul>
+<p>命令行参数解析分为 3 个阶段，分别是 <strong>定义</strong>、<strong>解析</strong>、<strong>询问</strong> 阶段。</p>
+<p><strong>定义阶段</strong><br>为当前命令定义对应的命令行选项，CLI 使用 Options 类作为 Option 的容器。定义阶段的结果是一个 <code>Options</code> 实例。</p>
+<p><strong>解析阶段</strong><br>参数解析器的 parse() 方法需要一个 Options 对象和一个 String[] 对象。解析阶段的结果是一个 <code>CommandLine</code> 实例。</p>
+<p><strong>询问阶段</strong><br>应用程序通过 CommandLine 对象的相关查询方法，获取当前的命令行选项，如是否设置了某选项，某选项的参数等。</p>
+<p>先通过一个简单的例子，感性的认识一下整个命令行参数解析的流程：<br>程序很简单，就是用来产生随机字符串的，-l 参数指定随机级别，-n 参数指定长度。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+import java.security.SecureRandom;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.ParseException;
+
+public class RandomGenerator {
+    public static void main(String[] args) {
+        // 创建选项集
+        Options options = new Options();
+        // 添加选项 -l --level
+        options.addOption(Option.builder("l") // 选项名称
+                                    .longOpt("level") // 长选项名
+                                    .hasArg() // 需要参数
+                                    .argName("level") // 参数显示名称
+                                    // 选项的描述、帮助信息
+                                    .desc("randomization level (range: 1,2,3; default: 2)" +
+                                        "\nlevel=1 => digit [0-9]" +
+                                        "\nlevel=2 => alpha [a-zA-Z]" +
+                                        "\nlevel=3 => alnum [0-9a-zA-Z]")
+                                .build());
+        // 添加选项 -n --length
+        options.addOption(Option.builder("n") // 选项名称
+                                    .longOpt("length") // 长选项名
+                                    .hasArg() // 需要参数
+                                    .argName("length") // 参数显示名称
+                                    // 选项的描述、帮助信息
+                                    .desc("random string length (range: >=0; default: 20)")
+                                .build());
+        // 添加选项 -h --help
+        options.addOption(Option.builder("h") // 选项名称
+                                    .longOpt("help") // 长选项名
+                                    // 选项的描述、帮助信息
+                                    .desc("show this help message and exit program")
+                                .build());
+
+        // 解析器
+        CommandLineParser parser = new DefaultParser();
+        // 格式器
+        HelpFormatter formatter = new HelpFormatter();
+        // 解析结果
+        CommandLine result = null;
+
+        try {
+            // 尝试解析命令行参数
+            result = parser.parse(options, args);
+        } catch (ParseException e) {
+            // 打印解析异常
+            System.err.println(e.getMessage());
+            // 打印帮助信息
+            formatter.printHelp("RandomGenerator", options, true);
+            // 退出程序，退出码为 1
+            System.exit(1);
+        }
+
+        // 如果存在 -h --help 参数
+        if (result.hasOption("h")) {
+            formatter.printHelp("RandomGenerator", options, true);
+            System.exit(0);
+        }
+
+        int level = 2; // default level
+        int length = 20; // default length
+
+        // 如果存在 -l --level 参数
+        if (result.hasOption("l")) {
+            try {
+                level = Integer.parseInt(result.getOptionValue("l"));
+            } catch (Exception e) {
+                System.err.println(e.toString());
+                formatter.printHelp("RandomGenerator", options, true);
+                System.exit(1);
+            }
+        }
+        // 如果存在 -n --length 参数
+        if (result.hasOption("n")) {
+            try {
+                length = Integer.parseInt(result.getOptionValue("n"));
+            } catch (Exception e) {
+                System.err.println(e.toString());
+                formatter.printHelp("RandomGenerator", options, true);
+                System.exit(1);
+            }
+        }
+        // 最后根据参数，执行 random() 方法
+        System.out.println(random(level, length));
+    }
+
+    // 数字
+    private static final String digit = "0123456789";
+    // 字母
+    private static final String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    // 字母 + 数字
+    private static final String alnum = digit + alpha;
+    // 随机数发生器
+    private static final SecureRandom rnd = new SecureRandom();
+
+    // 随机字符串生成器
+    public static String random(int level, int length) {
+        StringBuilder buf = new StringBuilder(length);
+        if (level == 1)
+            for (int i = 0; i < length; i++)
+                buf.append(digit.charAt(rnd.nextInt(digit.length())));
+        else if (level == 2)
+            for (int i = 0; i < length; i++)
+                buf.append(alpha.charAt(rnd.nextInt(alpha.length())));
+        else if (level == 3)
+            for (int i = 0; i < length; i++)
+                buf.append(alnum.charAt(rnd.nextInt(alnum.length())));
+        return buf.toString();
+    }
+}
+</script></code></pre>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+# root @ arch in ~/java8-learn/com/zfl9/argparse on git:master x [20:42:57]
+$ java RandomGenerator
+kDShdrXkvXPMHqlknlgC
+
+# root @ arch in ~/java8-learn/com/zfl9/argparse on git:master x [20:43:03]
+$ java RandomGenerator -h
+usage: RandomGenerator [-h] [-l <level>] [-n <length>]
+ -h,--help              show this help message and exit program
+ -l,--level <level>     randomization level (range: 1,2,3; default: 2)
+                        level=1 => digit [0-9]
+                        level=2 => alpha [a-zA-Z]
+                        level=3 => alnum [0-9a-zA-Z]
+ -n,--length <length>   random string length (range: >=0; default: 20)
+
+# root @ arch in ~/java8-learn/com/zfl9/argparse on git:master x [20:43:06]
+$ java RandomGenerator -l1 -n30
+504756680534778900633409490727
+
+# root @ arch in ~/java8-learn/com/zfl9/argparse on git:master x [20:43:32]
+$ java RandomGenerator -l2 -n30
+DXOVwfRZtcXNYyMQtrrRtjADNivgIP
+
+# root @ arch in ~/java8-learn/com/zfl9/argparse on git:master x [20:43:36]
+$ java RandomGenerator -l3 -n30
+DCJCUd9otD41hAFhpMHGnzVhJi3emO
+</script></code></pre>
+<p><strong>CommandLineParser</strong> 接口</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+/**
+ * 根据 options 解析 arguments.
+ * @param options   选项定义
+ * @param arguments 实际选项
+ * @return CommandLine      返回解析到的结果
+ * @throws ParseException   如果遇到解析异常
+ */
+CommandLine parse(Options options, String[] arguments) throws ParseException; // stopAtNonOption = false
+
+/**
+ * 根据 options 解析 arguments.
+ * @param options           选项定义
+ * @param arguments         实际选项
+ * @param stopAtNonOption   true: 遇到未知选项时停止解析，将剩余的选项添加至 CommandLine 的 argList 中
+ *                          false: 遇到未知选项触发 org.apache.commons.cli.UnrecognizedOptionException
+ * @return CommandLine      返回解析到的结果
+ * @throws ParseException   如果遇到解析异常
+ */
+CommandLine parse(Options options, String[] arguments, boolean stopAtNonOption) throws ParseException;
+</script></code></pre>
+<p><strong>CommandLine</strong> 类</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public boolean hasOption(String opt); // 是否存在指定选项
+public boolean hasOption(char opt); // 是否存在指定选项
+
+public String getOptionValue(String opt); // 获取选项参数或 null
+public String getOptionValue(char opt); // 获取选项参数或 null
+
+public String getOptionValue(String opt, String defaultValue); // 获取选项参数或 defaultValue
+public String getOptionValue(char opt, String defaultValue); // 获取选项参数或 defaultValue
+
+public String[] getOptionValues(String opt); // 获取选项所有参数或 null
+public String[] getOptionValues(char opt); // 获取选项所有参数或 null
+public Properties getOptionProperties(String opt); // 获取选项所有参数(类似 -Dparam=value)或 null
+
+public String[] getArgs(); // 获取遗留的、未识别的选项&参数
+public List<String> getArgList(); // 获取遗留的、未识别的选项&参数
+
+public Option[] getOptions(); // 获取已处理的选项数组
+public Iterator<Option> iterator(); // 获取已处理的选项迭代器
+</script></code></pre>
+<p><strong>HelpFormatter</strong> 类</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public HelpFormatter(); // 构造函数
+
+public void setWidth(int width); // 每行的字符宽度
+public int getWidth(); // 默认 74 个字符
+
+public void setLeftPadding(int padding); // 每行左侧的填充长度
+public int getLeftPadding(); // 默认 1 个空格字符
+
+public void setDescPadding(int padding); // 选项描述左侧的填充长度
+public int getDescPadding(); // 默认 3 个空格字符
+
+public void setSyntaxPrefix(String prefix); // 命令语法的前缀
+public String getSyntaxPrefix(); // 默认为 'usage: '
+
+public void setNewLine(String newline); // 行结束符
+public String getNewLine(); // 默认为 '\n'
+
+public void setOptPrefix(String prefix); // 短选项的前缀
+public String getOptPrefix(); // 默认为 '-'
+
+public void setLongOptPrefix(String prefix); // 长选项的前缀
+public String getLongOptPrefix(); // 默认为 '--'
+
+public void setLongOptSeparator(String longOptSeparator); // 长选项与选项值之间的分隔符
+public String getLongOptSeparator(); // 默认为 ' '
+
+public void setArgName(String name); // 选项参数的显示名称
+public String getArgName(); // 默认为 'arg'
+
+public void setOptionComparator(Comparator<Option> comparator); // 选项之间排序的比较器
+public Comparator<Option> getOptionComparator(); // 默认以不区分大小写的选项名进行排序
+
+/**
+ * 打印命令行帮助至 System.out.
+ * @param cmdLineSyntax     命令行语法
+ * @param options           选项的定义
+ */
+public void printHelp(String cmdLineSyntax, Options options); // autoUsage = false
+/**
+ * 打印命令行帮助至 System.out.
+ * @param cmdLineSyntax     命令行语法
+ * @param options           选项的定义
+ * @param autoUsage         是否自动生成 Usage 行，如果是，则 cmdLineSyntax 为命令名称
+ */
+public void printHelp(String cmdLineSyntax, Options options, boolean autoUsage);
+/**
+ * 打印命令行帮助至 System.out.
+ * @param cmdLineSyntax     命令行语法
+ * @param header            帮助信息头
+ * @param options           帮助信息体
+ * @param footer            帮助信息尾
+ */
+public void printHelp(String cmdLineSyntax, String header, Options options, String footer); // autoUsage = false
+/**
+ * 打印命令行帮助至 System.out.
+ * @param cmdLineSyntax     命令行语法
+ * @param header            帮助信息头
+ * @param options           帮助信息体
+ * @param footer            帮助信息尾
+ * @param autoUsage         是否自动生成 Usage 行，如果是，则 cmdLineSyntax 为命令名称
+ */
+public void printHelp(String cmdLineSyntax, String header, Options options, String footer, boolean autoUsage);
+
+// 指定每行的字符宽度
+public void printHelp(int width, String cmdLineSyntax, String header, Options options, String footer);
+public void printHelp(int width, String cmdLineSyntax, String header, Options options, String footer, boolean autoUsage);
+
+// 指定帮助信息输出流
+public void printHelp(PrintWriter pw,
+                      int width,
+                      String cmdLineSyntax,
+                      String header,
+                      Options options,
+                      int leftPad,
+                      int descPad,
+                      String footer);
+public void printHelp(PrintWriter pw,
+                      int width,
+                      String cmdLineSyntax,
+                      String header,
+                      Options options,
+                      int leftPad,
+                      int descPad,
+                      String footer,
+                      boolean autoUsage);
+</script></code></pre>
+<p><strong>Options</strong> 类</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public Options(); // 构造函数
+
+// 添加给定的选项
+public Options addOption(Option opt); // 推荐
+
+// 添加可选的选项
+public Options addOption(String opt, String description);
+public Options addOption(String opt, boolean hasArg, String description);
+public Options addOption(String opt, String longOpt, boolean hasArg, String description);
+
+// 添加必选的选项
+public Options addRequiredOption(String opt, String longOpt, boolean hasArg, String description);
+</script></code></pre>
+<p><strong>Option</strong> 类</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+public static Option.Builder builder(String opt); // 获取指定选项的构建器
+
+// Option.Builder 选项构建器
+public static final class Option.Builder {
+    public Option.Builder longOpt(String longOpt); // 对应长选项
+    public Option.Builder desc(String description); // 选项的描述
+    public Option.Builder required(); // 该选项是必选选项
+
+    public Option.Builder hasArg(); // 选项需要参数
+    public Option.Builder optionalArg(boolean isOptional); // 参数是否可选
+    public Option.Builder argName(String argName); // 参数显示的名称
+
+    public Option.Builder numberOfArgs(int numberOfArgs); // 允许的参数数量
+    public Option.Builder hasArgs(); // 选项可以有无限个参数
+
+    public Option.Builder valueSeparator(); // 参数之间分隔符为 '='
+    public Option.Builder valueSeparator(char sep); // 参数之间的分隔符
+
+    public Option build(); // 构建完成，返回 Option 对象
+}
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-jsp.html" rel="next" title="Java JSP 笔记">
+                <i class="fa fa-chevron-left"></i> Java JSP 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-servlet.html" rel="prev" title="Java Servlet 笔记">
+                Java Servlet 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Commons-CLI-介绍"><span class="nav-number">1.</span> <span class="nav-text">Commons-CLI 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commons-CLI-安装"><span class="nav-number">2.</span> <span class="nav-text">Commons-CLI 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commons-CLI-使用"><span class="nav-number">3.</span> <span class="nav-text">Commons-CLI 使用</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-commons-cli.html';
+          this.page.identifier = 'java-commons-cli.html';
+          this.page.title = 'Java Commons-CLI 命令行参数解析';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

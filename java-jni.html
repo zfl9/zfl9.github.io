@@ -1,0 +1,1059 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java JNI开发 入门">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java JNI入门">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JNI入门">
+<meta property="og:url" content="https://www.zfl9.com/java-jni.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java JNI入门">
+<meta property="og:updated_time" content="2019-02-18T12:46:17.508Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JNI入门">
+<meta name="twitter:description" content="Java JNI入门">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-jni.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java JNI入门 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-jni.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java JNI入门
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T15:58:00+08:00">
+                2017-10-17
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-jni.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-jni.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-jni.html" class="leancloud_visitors" data-flag-title="Java JNI入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java JNI入门</p>
+<a id="more"></a>
+<h2 id="JNI-是什么"><a href="#JNI-是什么" class="headerlink" title="JNI 是什么"></a>JNI 是什么</h2><p>JNI 是<code>Java Native Interface</code>的缩写，中文：<code>Java本地接口</code>；通过 JNI，我们可以在 Java 代码中调用 C/C++ 函数（动态链接库）。因此，对于 Windows 来说，需要提供 .dll 动态链接文件；对于 Linux 来说，需要提供 .so 动态链接文件。</p>
+<h2 id="JNI-开发步骤"><a href="#JNI-开发步骤" class="headerlink" title="JNI 开发步骤"></a>JNI 开发步骤</h2><ol>
+<li>编写 .java 源文件，源文件中含有 native 的成员方法、静态方法</li>
+<li>编译 .java 源文件 -&gt; .class 类文件</li>
+<li>使用 javah 命令<code>javah ClassName</code>，生成 .h 头文件</li>
+<li>编写 .c/.cpp 实现文件</li>
+<li>编译并生成 .dll/.so 动态链接库</li>
+<li>运行，<code>java -Djava.library.path=&quot;/path/to/library&quot; ClassName</code></li>
+</ol>
+<p><code>java.library.path</code>系统属性是 JVM 查找 JNI 动态链接库的路径列表（多个使用<code>;</code>分隔）；如果链接失败，则抛出<code>UnsatisfiedLinkError</code>错误。在 Linux 中，我们可以使用<code>LD_LIBRARY_PATH</code>环境变量指定动态链接库的搜索路径，因为 JVM 启动时会使用该环境变量进行初始化<code>java.library.path</code>属性。</p>
+<p><code>LD_LIBRARY_PATH</code>、<code>-Djava.library.path</code>方式的区别：<br>1) <code>LD_LIBRARY_PATH</code>方式，<strong>追加</strong>至<code>java.library.path</code>列表中；<br>2) <code>-Djava.library.path=&quot;/path/to/jni&quot;</code>方式，<strong>覆盖</strong><code>java.library.path</code>的默认值。</p>
+<h2 id="JNI-命名规则"><a href="#JNI-命名规则" class="headerlink" title="JNI 命名规则"></a>JNI 命名规则</h2><p>每个部分之间使用<code>_</code>下划线连接：<br>1) 前缀<code>Java</code><br>2) 全限定类名<code>包名_类名</code>，无名包则为<code>类名</code><br>3) 方法名<code>MethodName</code></p>
+<p>例如：<br>1) <code>com.zfl9.jni.Test</code>类的 native 方法 func：<code>Java_com_zfl9_jni_Test_func</code><br>2) 无名包的类 Test 的 native 方法 func：<code>Java_Test_func</code></p>
+<h2 id="JNI-HelloWorld"><a href="#JNI-HelloWorld" class="headerlink" title="JNI HelloWorld"></a>JNI HelloWorld</h2><p>1) 编写 Java 源文件，JNIDemo.java：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">public class JNIDemo {
+    static {
+        System.loadLibrary("jnitest"); // 加载动态链接库
+    }
+
+    private native void instanceHello();
+    private static native void staticHello();
+
+    public static void main(String[] args) {
+        staticHello();
+        new JNIDemo().instanceHello();
+    }
+}
+</script></code></pre>
+<p>2) 使用 javah 命令生成 .h 头文件：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:23:23]
+$ javac *.java
+
+# root @ arch in ~/work on git:master x [16:23:26]
+$ ls
+JNIDemo.class  JNIDemo.java
+
+# root @ arch in ~/work on git:master x [16:23:27]
+$ javah -d jni JNIDemo
+
+# root @ arch in ~/work on git:master x [16:23:34]
+$ tree
+.
+├── jni
+│   └── JNIDemo.h
+├── JNIDemo.class
+└── JNIDemo.java
+
+1 directory, 3 files
+
+# root @ arch in ~/work on git:master x [16:23:37]
+$ cd jni
+
+# root @ arch in ~/work/jni on git:master x [16:23:41]
+$ ls
+JNIDemo.h
+</script></code></pre>
+<p>3) 我们来看一下生成的头文件内容：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">/* DO NOT EDIT THIS FILE - it is machine generated */
+#include <jni.h>
+/* Header for class JNIDemo */
+
+#ifndef _Included_JNIDemo
+#define _Included_JNIDemo
+#ifdef __cplusplus
+extern "C" {
+#endif
+/*
+ * Class:     JNIDemo
+ * Method:    instanceHello
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_JNIDemo_instanceHello
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     JNIDemo
+ * Method:    staticHello
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_JNIDemo_staticHello
+  (JNIEnv *, jclass);
+
+#ifdef __cplusplus
+}
+#endif
+#endif
+</script></code></pre>
+<p>简单的分析一下头文件的内容：<br>1) <code>#include &lt;jni.h&gt;</code>，引入 JNI 头文件<br>2) <code>extern &quot;C&quot; { ... }</code>，以 C 方式编译<br>3) <code>JNIEXPORT void JNICALL Java_JNIDemo_instanceHello(JNIEnv *, jobject)</code><br>4) <code>JNIEXPORT void JNICALL Java_JNIDemo_staticHello(JNIEnv *, jclass)</code></p>
+<p><code>JNIEXPORT</code>、<code>JNICALL</code>两个宏是什么？ </p>
+<blockquote>
+<p>跨平台相关的两个宏，不需要我们关心。</p>
+</blockquote>
+<p><code>JNIEnv *</code>参数：<br>我们先看一下 JNIEnv 是什么：<br>1) 在 C 语言中，JNIEnv 是一个指针、指向一个结构体<br>2) 在 C++ 中，JNIEnv 是一个结构体(类)<br>这个结构体中定义了许多 JNI 方法，方便我们在 C/C++ 中操作 Java 中的数据类型。</p>
+<p>因此，如果我们需要在函数中调用该结构体的 JNI 方法：<br>1) 在 C 中，因为<code>JNIEnv *env</code>的 env 是一个二级指针，因此需要先解一级引用，再调用该结构体中的函数（函数指针），类似<code>(*env) -&gt; func(env, param...)</code><br>2) 在 C++ 中，env 只是一个结构体指针，因此只需通过<code>-&gt;</code>访问成员函数即可，并且不需要显示传递 this 指针，类似<code>env -&gt; func(param...)</code></p>
+<blockquote>
+<p>很显然，使用 C++ 编写 JNI 程序更优美一些。</p>
+</blockquote>
+<p><code>jclass</code>、<code>jobject</code>参数：<br>如果是成员方法，那么第二个参数的类型就是 jobject<br>如果是静态方法，那么第二个参数的类型就是 jclass</p>
+<p>4) 好了，了解这些基本知识之后，我们开始编写 C++ 实现文件：</p>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include "JNIDemo.h"
+#include <iostream>
+
+JNIEXPORT void JNICALL Java_JNIDemo_staticHello(JNIEnv *, jclass) {
+    std::cout << "[C++] staticHello()" << std::endl;
+}
+
+JNIEXPORT void JNICALL Java_JNIDemo_instanceHello(JNIEnv *, jobject) {
+    std::cout << "[C++] instanceHello()" << std::endl;
+}
+</script></code></pre>
+<p>5) 编译并生成 .so 动态链接库，libjnitest.so：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work/jni on git:master x [16:34:30]
+$ g++ -o libjnitest.so -fPIC -shared JNIDemo.cpp
+
+# root @ arch in ~/work/jni on git:master x [16:34:38]
+$ ls
+JNIDemo.cpp  JNIDemo.h  libjnitest.so
+</script></code></pre>
+<p>6) 设置<code>LD_LIBRARY_PATH</code>环境变量，运行 Java 程序：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [16:34:41]
+$ ls
+jni  JNIDemo.class  JNIDemo.java
+
+# root @ arch in ~/work on git:master x [16:34:42]
+$ export LD_LIBRARY_PATH=/root/work/jni
+
+# root @ arch in ~/work on git:master x [16:35:10]
+$ java JNIDemo
+[C++] staticHello()
+[C++] instanceHello()
+</script></code></pre>
+<p>好了，现在我们已经基本熟悉了 JNI 开发的基本步骤。<br>请大家思考一个问题，main() 函数可以是 native 的吗？答案是可以。有兴趣的可以自己试一试。</p>
+<h2 id="JNI-头文件"><a href="#JNI-头文件" class="headerlink" title="JNI 头文件"></a>JNI 头文件</h2><blockquote>
+<p>下面的头文件是经过简单整理的，并且是使用 g++ 环境（64-bit/Linux）编译的，适用于 C++</p>
+</blockquote>
+<pre><code class="language-cpp line-numbers"><script type="text/plain">#include <stdarg.h>
+
+/* 八大基本类型 + jsize */
+typedef unsigned char jboolean;
+typedef signed char jbyte;
+typedef unsigned short jchar;
+typedef short jshort;
+typedef int jint;
+typedef long jlong;
+typedef float jfloat;
+typedef double jdouble;
+typedef jint jsize;
+
+/* 引用类型 */
+// Object 基类
+class _jobject {};
+// Class、Throwable、String、Array(基类)
+class _jclass : public _jobject {};
+class _jthrowable : public _jobject {};
+class _jstring : public _jobject {};
+class _jarray : public _jobject {};
+// Array built-in数组
+class _jbooleanArray : public _jarray {};
+class _jbyteArray : public _jarray {};
+class _jcharArray : public _jarray {};
+class _jshortArray : public _jarray {};
+class _jintArray : public _jarray {};
+class _jlongArray : public _jarray {};
+class _jfloatArray : public _jarray {};
+class _jdoubleArray : public _jarray {};
+class _jobjectArray : public _jarray {};
+
+/* typedef: 均为类指针 */
+// Object 基类
+typedef _jobject *jweak;
+typedef _jobject *jobject;
+// Class、Throwable、String、Array(基类)
+typedef _jclass *jclass;
+typedef _jthrowable *jthrowable;
+typedef _jstring *jstring;
+typedef _jarray *jarray;
+// Array built-in数组
+typedef _jbooleanArray *jbooleanArray;
+typedef _jbyteArray *jbyteArray;
+typedef _jcharArray *jcharArray;
+typedef _jshortArray *jshortArray;
+typedef _jintArray *jintArray;
+typedef _jlongArray *jlongArray;
+typedef _jfloatArray *jfloatArray;
+typedef _jdoubleArray *jdoubleArray;
+typedef _jobjectArray *jobjectArray;
+
+/* jvalue 共用体 */
+typedef union jvalue {
+    // 基本类型
+    jboolean z;
+    jbyte b;
+    jchar c;
+    jshort s;
+    jint i;
+    jlong j;
+    jfloat f;
+    jdouble d;
+    // 引用类型
+    jobject l;
+} jvalue;
+
+/* jfieldID */
+typedef struct _jfieldID *jfieldID;
+/* jmethodID */
+typedef struct _jmethodID *jmethodID;
+
+/* ref-type 引用类型 */
+typedef enum _jobjectType {
+     JNIInvalidRefType = 0,
+     JNILocalRefType = 1,
+     JNIGlobalRefType = 2,
+     JNIWeakGlobalRefType = 3
+} jobjectRefType;
+
+/* native-method 结构体 */
+typedef struct {
+    char *name;
+    char *signature;
+    void *fnPtr;
+} JNINativeMethod;
+
+/* 主体方法(类) */
+struct JNIEnv_ {
+    jint GetVersion();
+    jclass DefineClass(const char *name, jobject loader, const jbyte *buf, jsize len);
+    jclass FindClass(const char *name);
+    jmethodID FromReflectedMethod(jobject method);
+    jfieldID FromReflectedField(jobject field);
+    jobject ToReflectedMethod(jclass cls, jmethodID methodID, jboolean isStatic);
+    jclass GetSuperclass(jclass sub);
+    jboolean IsAssignableFrom(jclass sub, jclass sup);
+    jobject ToReflectedField(jclass cls, jfieldID fieldID, jboolean isStatic);
+    jint Throw(jthrowable obj);
+    jint ThrowNew(jclass clazz, const char *msg);
+    jthrowable ExceptionOccurred();
+    void ExceptionDescribe();
+    void ExceptionClear();
+    void FatalError(const char *msg);
+    jint PushLocalFrame(jint capacity);
+    jobject PopLocalFrame(jobject result);
+    jobject NewGlobalRef(jobject lobj);
+    void DeleteGlobalRef(jobject gref);
+    void DeleteLocalRef(jobject obj);
+    jboolean IsSameObject(jobject obj1, jobject obj2);
+    jobject NewLocalRef(jobject ref);
+    jint EnsureLocalCapacity(jint capacity);
+    jobject AllocObject(jclass clazz);
+    jobject NewObject(jclass clazz, jmethodID methodID, ...);
+    jobject NewObjectV(jclass clazz, jmethodID methodID,
+                       va_list args);
+    jobject NewObjectA(jclass clazz, jmethodID methodID,
+                       const jvalue *args);
+    jclass GetObjectClass(jobject obj);
+    jboolean IsInstanceOf(jobject obj, jclass clazz);
+    jmethodID GetMethodID(jclass clazz, const char *name,
+                          const char *sig);
+    jobject CallObjectMethod(jobject obj, jmethodID methodID, ...);
+    jobject CallObjectMethodV(jobject obj, jmethodID methodID,
+                        va_list args);
+    jobject CallObjectMethodA(jobject obj, jmethodID methodID,
+                        const jvalue * args);
+    jboolean CallBooleanMethod(jobject obj,
+                               jmethodID methodID, ...);
+    jboolean CallBooleanMethodV(jobject obj, jmethodID methodID,
+                                va_list args);
+    jboolean CallBooleanMethodA(jobject obj, jmethodID methodID,
+                                const jvalue * args);
+    jbyte CallByteMethod(jobject obj, jmethodID methodID, ...);
+    jbyte CallByteMethodV(jobject obj, jmethodID methodID,
+                          va_list args);
+    jbyte CallByteMethodA(jobject obj, jmethodID methodID,
+                          const jvalue * args);
+    jchar CallCharMethod(jobject obj, jmethodID methodID, ...);
+    jchar CallCharMethodV(jobject obj, jmethodID methodID,
+                          va_list args);
+    jchar CallCharMethodA(jobject obj, jmethodID methodID,
+                          const jvalue * args);
+    jshort CallShortMethod(jobject obj, jmethodID methodID, ...);
+    jshort CallShortMethodV(jobject obj, jmethodID methodID,
+                            va_list args);
+    jshort CallShortMethodA(jobject obj, jmethodID methodID,
+                            const jvalue * args);
+    jint CallIntMethod(jobject obj, jmethodID methodID, ...);
+    jint CallIntMethodV(jobject obj, jmethodID methodID,
+                        va_list args);
+    jint CallIntMethodA(jobject obj, jmethodID methodID,
+                        const jvalue * args);
+    jlong CallLongMethod(jobject obj, jmethodID methodID, ...);
+    jlong CallLongMethodV(jobject obj, jmethodID methodID,
+                          va_list args);
+    jlong CallLongMethodA(jobject obj, jmethodID methodID,
+                          const jvalue * args);
+    jfloat CallFloatMethod(jobject obj, jmethodID methodID, ...);
+    jfloat CallFloatMethodV(jobject obj, jmethodID methodID,
+                            va_list args);
+    jfloat CallFloatMethodA(jobject obj, jmethodID methodID,
+                            const jvalue * args);
+    jdouble CallDoubleMethod(jobject obj, jmethodID methodID, ...);
+    jdouble CallDoubleMethodV(jobject obj, jmethodID methodID,
+                        va_list args);
+    jdouble CallDoubleMethodA(jobject obj, jmethodID methodID,
+                        const jvalue * args);
+    void CallVoidMethod(jobject obj, jmethodID methodID, ...);
+    void CallVoidMethodV(jobject obj, jmethodID methodID,
+                         va_list args);
+    void CallVoidMethodA(jobject obj, jmethodID methodID,
+                         const jvalue * args);
+    jobject CallNonvirtualObjectMethod(jobject obj, jclass clazz,
+                                       jmethodID methodID, ...);
+    jobject CallNonvirtualObjectMethodV(jobject obj, jclass clazz,
+                                        jmethodID methodID, va_list args);
+    jobject CallNonvirtualObjectMethodA(jobject obj, jclass clazz,
+                                        jmethodID methodID, const jvalue * args);
+    jboolean CallNonvirtualBooleanMethod(jobject obj, jclass clazz,
+                                         jmethodID methodID, ...);
+    jboolean CallNonvirtualBooleanMethodV(jobject obj, jclass clazz,
+                                          jmethodID methodID, va_list args);
+    jboolean CallNonvirtualBooleanMethodA(jobject obj, jclass clazz,
+                                          jmethodID methodID, const jvalue * args);
+    jbyte CallNonvirtualByteMethod(jobject obj, jclass clazz,
+                                   jmethodID methodID, ...);
+    jbyte CallNonvirtualByteMethodV(jobject obj, jclass clazz,
+                                    jmethodID methodID, va_list args);
+    jbyte CallNonvirtualByteMethodA(jobject obj, jclass clazz,
+                                    jmethodID methodID, const jvalue * args);
+    jchar CallNonvirtualCharMethod(jobject obj, jclass clazz,
+                                   jmethodID methodID, ...);
+    jchar CallNonvirtualCharMethodV(jobject obj, jclass clazz,
+                                    jmethodID methodID, va_list args);
+    jchar CallNonvirtualCharMethodA(jobject obj, jclass clazz,
+                                    jmethodID methodID, const jvalue * args);
+    jshort CallNonvirtualShortMethod(jobject obj, jclass clazz,
+                                     jmethodID methodID, ...);
+    jshort CallNonvirtualShortMethodV(jobject obj, jclass clazz,
+                                      jmethodID methodID, va_list args);
+    jshort CallNonvirtualShortMethodA(jobject obj, jclass clazz,
+                                      jmethodID methodID, const jvalue * args);
+    jint CallNonvirtualIntMethod(jobject obj, jclass clazz,
+                                 jmethodID methodID, ...);
+    jint CallNonvirtualIntMethodV(jobject obj, jclass clazz,
+                                  jmethodID methodID, va_list args);
+    jint CallNonvirtualIntMethodA(jobject obj, jclass clazz,
+                                  jmethodID methodID, const jvalue * args);
+    jlong CallNonvirtualLongMethod(jobject obj, jclass clazz,
+                                   jmethodID methodID, ...);
+    jlong CallNonvirtualLongMethodV(jobject obj, jclass clazz,
+                                    jmethodID methodID, va_list args);
+    jlong CallNonvirtualLongMethodA(jobject obj, jclass clazz,
+                                    jmethodID methodID, const jvalue * args);
+    jfloat CallNonvirtualFloatMethod(jobject obj, jclass clazz,
+                                     jmethodID methodID, ...);
+    jfloat CallNonvirtualFloatMethodV(jobject obj, jclass clazz,
+                                      jmethodID methodID,
+                                      va_list args);
+    jfloat CallNonvirtualFloatMethodA(jobject obj, jclass clazz,
+                                      jmethodID methodID,
+                                      const jvalue * args);
+    jdouble CallNonvirtualDoubleMethod(jobject obj, jclass clazz,
+                                       jmethodID methodID, ...);
+    jdouble CallNonvirtualDoubleMethodV(jobject obj, jclass clazz,
+                                        jmethodID methodID,
+                                        va_list args);
+    jdouble CallNonvirtualDoubleMethodA(jobject obj, jclass clazz,
+                                        jmethodID methodID,
+                                        const jvalue * args);
+    void CallNonvirtualVoidMethod(jobject obj, jclass clazz,
+                                  jmethodID methodID, ...);
+    void CallNonvirtualVoidMethodV(jobject obj, jclass clazz,
+                                   jmethodID methodID,
+                                   va_list args);
+    void CallNonvirtualVoidMethodA(jobject obj, jclass clazz,
+                                   jmethodID methodID,
+                                   const jvalue * args);
+    jfieldID GetFieldID(jclass clazz, const char *name,
+                        const char *sig);
+    jobject GetObjectField(jobject obj, jfieldID fieldID);
+    jboolean GetBooleanField(jobject obj, jfieldID fieldID);
+    jbyte GetByteField(jobject obj, jfieldID fieldID);
+    jchar GetCharField(jobject obj, jfieldID fieldID);
+    jshort GetShortField(jobject obj, jfieldID fieldID);
+    jint GetIntField(jobject obj, jfieldID fieldID);
+    jlong GetLongField(jobject obj, jfieldID fieldID);
+    jfloat GetFloatField(jobject obj, jfieldID fieldID);
+    jdouble GetDoubleField(jobject obj, jfieldID fieldID);
+    void SetObjectField(jobject obj, jfieldID fieldID, jobject val);
+    void SetBooleanField(jobject obj, jfieldID fieldID,
+                         jboolean val);
+    void SetByteField(jobject obj, jfieldID fieldID,
+                      jbyte val);
+    void SetCharField(jobject obj, jfieldID fieldID,
+                      jchar val);
+    void SetShortField(jobject obj, jfieldID fieldID,
+                       jshort val);
+    void SetIntField(jobject obj, jfieldID fieldID,
+                     jint val);
+    void SetLongField(jobject obj, jfieldID fieldID,
+                      jlong val);
+    void SetFloatField(jobject obj, jfieldID fieldID,
+                       jfloat val);
+    void SetDoubleField(jobject obj, jfieldID fieldID,
+                        jdouble val);
+    jmethodID GetStaticMethodID(jclass clazz, const char *name,
+                                const char *sig);
+    jobject CallStaticObjectMethod(jclass clazz, jmethodID methodID,
+                             ...);
+    jobject CallStaticObjectMethodV(jclass clazz, jmethodID methodID,
+                              va_list args);
+    jobject CallStaticObjectMethodA(jclass clazz, jmethodID methodID,
+                              const jvalue *args);
+    jboolean CallStaticBooleanMethod(jclass clazz,
+                                     jmethodID methodID, ...);
+    jboolean CallStaticBooleanMethodV(jclass clazz,
+                                      jmethodID methodID, va_list args);
+    jboolean CallStaticBooleanMethodA(jclass clazz,
+                                      jmethodID methodID, const jvalue *args);
+    jbyte CallStaticByteMethod(jclass clazz,
+                               jmethodID methodID, ...);
+    jbyte CallStaticByteMethodV(jclass clazz,
+                                jmethodID methodID, va_list args);
+    jbyte CallStaticByteMethodA(jclass clazz,
+                                jmethodID methodID, const jvalue *args);
+    jchar CallStaticCharMethod(jclass clazz,
+                               jmethodID methodID, ...);
+    jchar CallStaticCharMethodV(jclass clazz,
+                                jmethodID methodID, va_list args);
+    jchar CallStaticCharMethodA(jclass clazz,
+                                jmethodID methodID, const jvalue *args);
+    jshort CallStaticShortMethod(jclass clazz,
+                                 jmethodID methodID, ...);
+    jshort CallStaticShortMethodV(jclass clazz,
+                                  jmethodID methodID, va_list args);
+    jshort CallStaticShortMethodA(jclass clazz,
+                                  jmethodID methodID, const jvalue *args);
+    jint CallStaticIntMethod(jclass clazz,
+                             jmethodID methodID, ...);
+    jint CallStaticIntMethodV(jclass clazz,
+                              jmethodID methodID, va_list args);
+    jint CallStaticIntMethodA(jclass clazz,
+                              jmethodID methodID, const jvalue *args);
+    jlong CallStaticLongMethod(jclass clazz,
+                               jmethodID methodID, ...);
+    jlong CallStaticLongMethodV(jclass clazz,
+                                jmethodID methodID, va_list args);
+    jlong CallStaticLongMethodA(jclass clazz,
+                                jmethodID methodID, const jvalue *args);
+    jfloat CallStaticFloatMethod(jclass clazz,
+                                 jmethodID methodID, ...);
+    jfloat CallStaticFloatMethodV(jclass clazz,
+                                  jmethodID methodID, va_list args);
+    jfloat CallStaticFloatMethodA(jclass clazz,
+                                  jmethodID methodID, const jvalue *args);
+    jdouble CallStaticDoubleMethod(jclass clazz,
+                                   jmethodID methodID, ...);
+    jdouble CallStaticDoubleMethodV(jclass clazz,
+                                    jmethodID methodID, va_list args);
+    jdouble CallStaticDoubleMethodA(jclass clazz,
+                                    jmethodID methodID, const jvalue *args);
+    void CallStaticVoidMethod(jclass cls, jmethodID methodID, ...);
+    void CallStaticVoidMethodV(jclass cls, jmethodID methodID,
+                               va_list args);
+    void CallStaticVoidMethodA(jclass cls, jmethodID methodID,
+                               const jvalue * args);
+    jfieldID GetStaticFieldID(jclass clazz, const char *name,
+                              const char *sig);
+    jobject GetStaticObjectField(jclass clazz, jfieldID fieldID);
+    jboolean GetStaticBooleanField(jclass clazz, jfieldID fieldID);
+    jbyte GetStaticByteField(jclass clazz, jfieldID fieldID);
+    jchar GetStaticCharField(jclass clazz, jfieldID fieldID);
+    jshort GetStaticShortField(jclass clazz, jfieldID fieldID);
+    jint GetStaticIntField(jclass clazz, jfieldID fieldID);
+    jlong GetStaticLongField(jclass clazz, jfieldID fieldID);
+    jfloat GetStaticFloatField(jclass clazz, jfieldID fieldID);
+    jdouble GetStaticDoubleField(jclass clazz, jfieldID fieldID);
+    void SetStaticObjectField(jclass clazz, jfieldID fieldID,
+                        jobject value);
+    void SetStaticBooleanField(jclass clazz, jfieldID fieldID,
+                        jboolean value);
+    void SetStaticByteField(jclass clazz, jfieldID fieldID,
+                        jbyte value);
+    void SetStaticCharField(jclass clazz, jfieldID fieldID,
+                        jchar value);
+    void SetStaticShortField(jclass clazz, jfieldID fieldID,
+                        jshort value);
+    void SetStaticIntField(jclass clazz, jfieldID fieldID,
+                        jint value);
+    void SetStaticLongField(jclass clazz, jfieldID fieldID,
+                        jlong value);
+    void SetStaticFloatField(jclass clazz, jfieldID fieldID,
+                        jfloat value);
+    void SetStaticDoubleField(jclass clazz, jfieldID fieldID,
+                        jdouble value);
+    jstring NewString(const jchar *unicode, jsize len);
+    jsize GetStringLength(jstring str);
+    const jchar *GetStringChars(jstring str, jboolean *isCopy);
+    void ReleaseStringChars(jstring str, const jchar *chars);
+    jstring NewStringUTF(const char *utf);
+    jsize GetStringUTFLength(jstring str);
+    const char* GetStringUTFChars(jstring str, jboolean *isCopy);
+    void ReleaseStringUTFChars(jstring str, const char* chars);
+    jsize GetArrayLength(jarray array);
+    jobjectArray NewObjectArray(jsize len, jclass clazz,
+                                jobject init);
+    jobject GetObjectArrayElement(jobjectArray array, jsize index);
+    void SetObjectArrayElement(jobjectArray array, jsize index,
+                               jobject val);
+    jbooleanArray NewBooleanArray(jsize len);
+    jbyteArray NewByteArray(jsize len);
+    jcharArray NewCharArray(jsize len);
+    jshortArray NewShortArray(jsize len);
+    jintArray NewIntArray(jsize len);
+    jlongArray NewLongArray(jsize len);
+    jfloatArray NewFloatArray(jsize len);
+    jdoubleArray NewDoubleArray(jsize len);
+    jboolean * GetBooleanArrayElements(jbooleanArray array, jboolean *isCopy);
+    jbyte * GetByteArrayElements(jbyteArray array, jboolean *isCopy);
+    jchar * GetCharArrayElements(jcharArray array, jboolean *isCopy);
+    jshort * GetShortArrayElements(jshortArray array, jboolean *isCopy);
+    jint * GetIntArrayElements(jintArray array, jboolean *isCopy);
+    jlong * GetLongArrayElements(jlongArray array, jboolean *isCopy);
+    jfloat * GetFloatArrayElements(jfloatArray array, jboolean *isCopy);
+    jdouble * GetDoubleArrayElements(jdoubleArray array, jboolean *isCopy);
+    void ReleaseBooleanArrayElements(jbooleanArray array,
+                                     jboolean *elems,
+                                     jint mode);
+    void ReleaseByteArrayElements(jbyteArray array,
+                                  jbyte *elems,
+                                  jint mode);
+    void ReleaseCharArrayElements(jcharArray array,
+                                  jchar *elems,
+                                  jint mode);
+    void ReleaseShortArrayElements(jshortArray array,
+                                   jshort *elems,
+                                   jint mode);
+    void ReleaseIntArrayElements(jintArray array,
+                                 jint *elems,
+                                 jint mode);
+    void ReleaseLongArrayElements(jlongArray array,
+                                  jlong *elems,
+                                  jint mode);
+    void ReleaseFloatArrayElements(jfloatArray array,
+                                   jfloat *elems,
+                                   jint mode);
+    void ReleaseDoubleArrayElements(jdoubleArray array,
+                                    jdouble *elems,
+                                    jint mode);
+    void GetBooleanArrayRegion(jbooleanArray array,
+                               jsize start, jsize len, jboolean *buf);
+    void GetByteArrayRegion(jbyteArray array,
+                            jsize start, jsize len, jbyte *buf);
+    void GetCharArrayRegion(jcharArray array,
+                            jsize start, jsize len, jchar *buf);
+    void GetShortArrayRegion(jshortArray array,
+                             jsize start, jsize len, jshort *buf);
+    void GetIntArrayRegion(jintArray array,
+                           jsize start, jsize len, jint *buf);
+    void GetLongArrayRegion(jlongArray array,
+                            jsize start, jsize len, jlong *buf);
+    void GetFloatArrayRegion(jfloatArray array,
+                             jsize start, jsize len, jfloat *buf);
+    void GetDoubleArrayRegion(jdoubleArray array,
+                              jsize start, jsize len, jdouble *buf);
+    void SetBooleanArrayRegion(jbooleanArray array, jsize start, jsize len,
+                               const jboolean *buf);
+    void SetByteArrayRegion(jbyteArray array, jsize start, jsize len,
+                            const jbyte *buf);
+    void SetCharArrayRegion(jcharArray array, jsize start, jsize len,
+                            const jchar *buf);
+    void SetShortArrayRegion(jshortArray array, jsize start, jsize len,
+                             const jshort *buf);
+    void SetIntArrayRegion(jintArray array, jsize start, jsize len,
+                           const jint *buf);
+    void SetLongArrayRegion(jlongArray array, jsize start, jsize len,
+                            const jlong *buf);
+    void SetFloatArrayRegion(jfloatArray array, jsize start, jsize len,
+                             const jfloat *buf);
+    void SetDoubleArrayRegion(jdoubleArray array, jsize start, jsize len,
+                              const jdouble *buf);
+    jint RegisterNatives(jclass clazz, const JNINativeMethod *methods,
+                         jint nMethods);
+    jint UnregisterNatives(jclass clazz);
+    jint MonitorEnter(jobject obj);
+    jint MonitorExit(jobject obj);
+    void GetStringRegion(jstring str, jsize start, jsize len, jchar *buf);
+    void GetStringUTFRegion(jstring str, jsize start, jsize len, char *buf);
+    void * GetPrimitiveArrayCritical(jarray array, jboolean *isCopy);
+    void ReleasePrimitiveArrayCritical(jarray array, void *carray, jint mode);
+    const jchar * GetStringCritical(jstring string, jboolean *isCopy);
+    void ReleaseStringCritical(jstring string, const jchar *cstring);
+    jweak NewWeakGlobalRef(jobject obj);
+    void DeleteWeakGlobalRef(jweak ref);
+    jboolean ExceptionCheck();
+    jobject NewDirectByteBuffer(void* address, jlong capacity);
+    void* GetDirectBufferAddress(jobject buf);
+    jlong GetDirectBufferCapacity(jobject buf);
+    jobjectRefType GetObjectRefType(jobject obj);
+};
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-zip.html" rel="next" title="Java Zip压缩">
+                <i class="fa fa-chevron-left"></i> Java Zip压缩
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-system-runtime.html" rel="prev" title="Java System类、Runtime类">
+                Java System类、Runtime类 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JNI-是什么"><span class="nav-number">1.</span> <span class="nav-text">JNI 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNI-开发步骤"><span class="nav-number">2.</span> <span class="nav-text">JNI 开发步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNI-命名规则"><span class="nav-number">3.</span> <span class="nav-text">JNI 命名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNI-HelloWorld"><span class="nav-number">4.</span> <span class="nav-text">JNI HelloWorld</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNI-头文件"><span class="nav-number">5.</span> <span class="nav-text">JNI 头文件</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-jni.html';
+          this.page.identifier = 'java-jni.html';
+          this.page.title = 'Java JNI入门';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="c语言 多线程编程 pthread多线程">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="c语言 - 多线程编程">
+<meta name="keywords" content="c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言 - 多线程编程">
+<meta property="og:url" content="https://www.zfl9.com/c-pthread.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="c语言 - 多线程编程">
+<meta property="og:image" content="https://www.zfl9.com/images/pthread_cond_wait.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言 - 多线程编程">
+<meta name="twitter:description" content="c语言 - 多线程编程">
+<meta name="twitter:image" content="https://www.zfl9.com/images/pthread_cond_wait.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/c-pthread.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>c语言 - 多线程编程 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/c-pthread.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                c语言 - 多线程编程
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-19T09:15:00+08:00">
+                2017-08-19
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index">
+                    <span itemprop="name">c</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/c-pthread.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="c-pthread.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/c-pthread.html" class="leancloud_visitors" data-flag-title="c语言 - 多线程编程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>c语言 - 多线程编程</p>
+<a id="more"></a>
+<h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><p><code>进程是程序执行时的一个实例，即它是程序已经执行到何种程度的数据结构的汇集</code>；从内核的观点看，进程的目的就是担当分配系统资源（CPU时间、内存等）的基本单位；</p>
+<p><code>线程是进程的一个执行流，是CPU调度和分派的基本单位，它是比进程更小的能独立运行的基本单位</code>；一个进程由几个线程组成（拥有很多相对独立的执行流的用户程序共享应用程序的大部分数据结构），线程与同属一个进程的其他的线程共享进程所拥有的全部资源；</p>
+<p><code>&quot;进程——资源分配的最小单位，线程——程序执行的最小单位&quot;</code></p>
+<p>进程有独立的地址空间，一个进程崩溃后，在保护模式下不会对其它进程产生影响；<br>而线程只是一个进程中的不同执行路径线程有自己的堆栈和局部变量，但线程没有单独的地址空间，一个线程死掉就等于整个进程死掉；<br>所以多进程的程序要比多线程的程序健壮，但在进程切换时，耗费资源较大，效率要差一些，但对于一些要求同时进行并且又要共享某些变量的并发操作，只能用线程，不能用进程；</p>
+<h2 id="pthread线程库"><a href="#pthread线程库" class="headerlink" title="pthread线程库"></a>pthread线程库</h2><p>头文件：<code>pthread.h</code>，gcc链接时参数：<code>-lpthread</code>；</p>
+<p><strong>线程基本函数</strong><br><code>int pthread_create(pthread_t *tid, const pthread_attr_t *attr, void *(*func)(void *), void *arg);</code>：创建线程</p>
+<ul>
+<li><code>tid</code>：输出参数，保存返回的线程ID（与linux系统中的线程ID不一样，这个ID应该理解为一个地址），用无符号长整型表示；</li>
+<li><code>attr</code>：输入参数，线程的相关属性，如线程优先级、初始栈大小、是否为守护进程等，一般置为NULL，表示使用默认属性；</li>
+<li><code>func</code>：输入参数，一个函数指针（<code>void *job(void *arg);</code>），线程执行的函数；</li>
+<li><code>arg</code>：输入参数，函数的参数，如果有多个参数须将其封装为一个结构体；</li>
+<li>返回值：成功返回0，失败返回errno值（正数）；</li>
+</ul>
+<p><code>void pthread_exit(void *status);</code>：退出线程</p>
+<ul>
+<li><code>status</code>：输入参数，退出状态；</li>
+</ul>
+<p><code>int pthread_join(pthread_t tid, void **status);</code>：等待线程退出</p>
+<ul>
+<li><code>tid</code>：输入参数，指定等待的线程ID；</li>
+<li><code>status</code>：输出参数，一个二级指针，保存退出值，可为NULL；</li>
+<li>返回值：成功返回0，失败返回errno值；</li>
+</ul>
+<p><code>pthread_t pthread_self(void);</code>：获取当前线程ID</p>
+<p><code>int pthread_detach(pthread_t tid);</code>：分离线程</p>
+<ul>
+<li>变为分离状态的线程，如果线程退出，它的所有资源将全部释放；<br>而如果不是分离状态，线程必须保留它的线程ID，退出状态直到其它线程对它调用了pthread_join；</li>
+<li><code>tid</code>：输入参数，指定的线程ID；</li>
+<li>返回值：成功返回0，失败返回errno值；</li>
+</ul>
+<p><strong>线程ID</strong><br>主线程：每个进程至少有一个线程，即main()函数的执行线程，称之为主线程；<br>子线程：由主线程调用<code>pthread_create()</code>创建的线程；</p>
+<p>线程不像进程，一个进程中的线程之间是没有父子之分的，都是<code>平级关系</code>；即线程都是一样的, 退出了一个不会影响另外一个；</p>
+<p>但是所谓的<code>主线程main</code>，其入口代码是类似这样的方式调用main的：<code>exit(main(...))</code>；<br>main执行完之后, 会调用exit()，exit()会让整个进程终止，那所有线程自然都会退出；</p>
+<p>主线程先退出，子线程继续运行的方法：<br>在主线程main中调用pthread_exit()，只会使主线程退出；而如果是return，编译器将使其调用进程退出的代码（如_exit()），从而导致进程及其所有线程结束运行；</p>
+<p>按照POSIX标准定义，当主线程在子线程终止之前调用pthread_exit()时，子线程是不会退出的；</p>
+<p>系统中的线程ID：</p>
+<ul>
+<li><code>ls /proc/[PID]/task/[TID]/</code>：可查看一个进程下的所有线程ID、及相关信息；</li>
+<li><code>ps -eo user,pid,ppid,lwp,nlwp,%cpu,%mem,stat,cmd</code>：lwp即线程ID，nlwp为进程中的线程数量；</li>
+</ul>
+<p>主线程的线程ID与它所属进程的进程ID相同；</p>
+<p>注意：这里的线程ID与<code>pthread_self</code>中的线程ID不是一个概念：<br><code>gettid</code>获取的是<code>内核中线程ID</code>，而<code>pthread_self</code>获取的是<code>posix描述的线程ID</code>；</p>
+<p>在c语言中，可以用<code>syscall(__NR_gettid);</code>（头文件<code>sys/syscall.h</code>）来获取内核中的线程ID；</p>
+<p><strong>互斥锁</strong><br>就像共享内存中的信号量一样，为了防止多个线程同时使用一个共享的对象（如全局变量），pthread提供了互斥锁这种机制；</p>
+<p><strong>初始化</strong><br>静态初始化：<code>static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;</code><br>动态初始化：<code>int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);</code></p>
+<ul>
+<li><code>mutex</code>：输出参数，互斥变量；</li>
+<li><code>attr</code>：输入参数，锁属性，NULL值为默认属性；</li>
+<li>返回值：成功返回0，失败返回errno值；</li>
+</ul>
+<p><strong>加锁、释放锁</strong><br><code>int pthread_mutex_lock(pthread_mutex_t *mutex);</code>：加锁（阻塞）</p>
+<ul>
+<li><code>mutex</code>：输入参数，互斥变量；</li>
+<li>返回值：成功返回0，失败返回errno值；</li>
+</ul>
+<p><code>int pthread_mutex_trylock(pthread_mutex_t *mutex);</code>：尝试加锁（非阻塞）</p>
+<ul>
+<li><code>mutex</code>：输入参数，互斥变量；</li>
+<li>返回值：成功返回0，锁繁忙返回<code>EBUSY</code>，失败返回errno值；</li>
+</ul>
+<p><code>int pthread_mutex_unlock(pthread_mutex_t *mutex);</code>：释放锁</p>
+<ul>
+<li><code>mutex</code>：输入参数，互斥变量；</li>
+<li>返回值：成功返回0，失败返回errno值；</li>
+</ul>
+<p><strong>销毁</strong><br><code>int pthread_mutex_destroy(pthread_mutex_t *mutex);</code></p>
+<ul>
+<li><code>mutex</code>：输入参数，互斥变量；</li>
+<li>返回值：成功返回0，失败返回errno值；</li>
+</ul>
+<p><strong>条件变量</strong><br>与互斥锁不同，<strong>条件变量是用来等待而不是用来上锁的，条件变量用来自动阻塞一个线程，直到某特殊情况发生为止；通常条件变量和互斥锁同时使用</strong></p>
+<p>条件变量使我们可以睡眠等待某种条件出现；条件变量是利用线程间共享的全局变量进行同步的一种机制，主要包括两个动作：一个线程等待”条件变量的条件成立”而挂起；另一个线程使”条件成立”（给出条件成立信号）；</p>
+<p>条件的检测是在互斥锁的保护下进行的；如果一个条件为假，一个线程自动阻塞，并释放等待状态改变的互斥锁；<br>如果另一个线程改变了条件，它发信号给关联的条件变量，唤醒一个或多个等待它的线程，重新获得互斥锁，重新评价条件；<br>如果两进程共享可读写的内存，条件变量可以被用来实现这两进程间的线程同步；</p>
+<p><strong>相关函数</strong><br><code>int pthread_cond_init(pthread_cond_t *cond, pthread_condattr_t *cond_attr);</code>：动态初始化<br><code>int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);</code>：等待条件，阻塞<br><code>int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex *mutex, const timespec *abstime);</code>：等待条件，超时<br><code>int pthread_cond_signal(pthread_cond_t *cond);</code>：通知条件，只唤醒单个等待线程<br><code>int pthread_cond_broadcast(pthread_cond_t *cond);</code>：通知条件，唤醒所有等待线程<br><code>int pthread_cond_destroy(pthread_cond_t *cond);</code>：销毁<br>返回值：成功返回0，失败返回errno值；</p>
+<p>静态初始化、动态初始化（和互斥锁相似）：<br><code>static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;</code>：静态初始化<br><code>int pthread_cond_init(pthread_cond_t *cond, pthread_condattr_t *cond_attr);</code>：动态初始化</p>
+<p><strong>pthread_cond_wait执行流程</strong><br><img src="/images/pthread_cond_wait.jpg" alt="pthread_cond_wait执行流程"></p>
+<p>传入给<code>pthread_cond_wait</code>的mutex应为一把已经获取的互斥锁；<br>pthread_cond_wait调用相当复杂，它是如下执行序列的一个组合：<br>1）<code>释放互斥锁</code> 并且 <code>将线程挂起</code>（这两个操作是一个<code>原子操作</code>）；<br>2）线程<code>获得信号</code>，<code>尝试获得互斥锁后被唤醒</code>；</p>
+<h2 id="多线程实例"><a href="#多线程实例" class="headerlink" title="多线程实例"></a>多线程实例</h2><p><strong>题目</strong><br>1）有一int型全局变量flag初始值为0；<br>2）在主线程中启动线程1，将flag设置为1；<br>3）在主线程中启动线程2，将flag设置为2；<br>4）主线程main一直阻塞，直到1变为2，或2变为1时才会继续运行；</p>
+<p><strong>解决</strong></p>
+<pre><code class="language-c line-numbers"><script type="text/plain">#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/syscall.h>
+#include <pthread.h>
+
+#define gettid() syscall(__NR_gettid)
+
+static volatile int flag = 0;
+
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
+void *job1(void *arg);
+void *job2(void *arg);
+
+int main(void){
+    printf("++++++++++ entry thread_main (pid: %d, tid: %ld) ++++++++++\n", getpid(), gettid());
+
+    pthread_t tid1, tid2;
+    errno = pthread_create(&tid1, NULL, job1, NULL);
+    if(errno){
+        perror("pthread_create");
+        exit(EXIT_FAILURE);
+    }
+    errno = pthread_create(&tid2, NULL, job2, NULL);
+    if(errno){
+        perror("pthread_create");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("<thread_main> waiting for 1->2 or 2->1\n");
+    errno = pthread_mutex_lock(&mutex);
+    if(errno){
+        perror("pthread_mutex_lock");
+        exit(EXIT_FAILURE);
+    }
+    errno = pthread_cond_wait(&cond, &mutex);
+    if(errno){
+        perror("pthread_cond_wait");
+        exit(EXIT_FAILURE);
+    }
+    errno = pthread_mutex_unlock(&mutex);
+    if(errno){
+        perror("pthread_mutex_unlock");
+        exit(EXIT_FAILURE);
+    }
+    printf("<thread_main> wait finish\n");
+
+    errno = pthread_join(tid1, NULL);
+    if(errno){
+        perror("pthread_join");
+        exit(EXIT_FAILURE);
+    }
+    errno = pthread_join(tid2, NULL);
+    if(errno){
+        perror("pthread_join");
+        exit(EXIT_FAILURE);
+    }
+
+    errno = pthread_cond_destroy(&cond);
+    if(errno){
+        perror("pthread_cond_destroy");
+        exit(EXIT_FAILURE);
+    }
+    errno = pthread_mutex_destroy(&mutex);
+    if(errno){
+        perror("pthread_mutex_destroy");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("---------- leave thread_main (pid: %d, tid: %ld) ----------\n", getpid(), gettid());
+    return 0;
+}
+
+void *job1(void *arg){
+    printf("++++++++++ entry thread_1 (pid: %d, tid: %ld) ++++++++++\n", getpid(), gettid());
+
+    usleep(500);
+
+    errno = pthread_mutex_lock(&mutex);
+    if(errno){
+        perror("pthread_mutex_lock");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("<thread_1> before: %d\n", flag);
+    if(flag == 2){
+        errno = pthread_cond_signal(&cond);
+        if(errno){
+            perror("pthread_cond_signal");
+            exit(EXIT_FAILURE);
+        }
+    }
+    flag = 1;
+    printf("<thread_1> after: %d\n", flag);
+
+    errno = pthread_mutex_unlock(&mutex);
+    if(errno){
+        perror("pthread_mutex_unlock");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("---------- leave thread_1 (pid: %d, tid: %ld) ----------\n", getpid(), gettid());
+    return NULL;
+}
+
+void *job2(void *arg){
+    printf("++++++++++ entry thread_2 (pid: %d, tid: %ld) ++++++++++\n", getpid(), gettid());
+
+    usleep(500);
+
+    errno = pthread_mutex_lock(&mutex);
+    if(errno){
+        perror("pthread_mutex_lock");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("<thread_2> before: %d\n", flag);
+    if(flag == 1){
+        errno = pthread_cond_signal(&cond);
+        if(errno){
+            perror("pthread_cond_signal");
+            exit(EXIT_FAILURE);
+        }
+    }
+    flag = 2;
+    printf("<thread_2> after: %d\n", flag);
+
+    errno = pthread_mutex_unlock(&mutex);
+    if(errno){
+        perror("pthread_mutex_unlock");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("---------- leave thread_2 (pid: %d, tid: %ld) ----------\n", getpid(), gettid());
+    return NULL;
+}
+</script></code></pre>
+<pre><code class="language-c line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:25:47]
+$ gcc a.c -lpthread
+a.c: In function ‘job1’:
+a.c:79:18: warning: unused parameter ‘arg’ [-Wunused-parameter]
+ void *job1(void *arg){
+                  ^~~
+a.c: In function ‘job2’:
+a.c:111:18: warning: unused parameter ‘arg’ [-Wunused-parameter]
+ void *job2(void *arg){
+                  ^~~
+
+# root @ arch in ~/work on git:master x [13:25:53]
+$ ./a.out
+++++++++++ entry thread_main (pid: 88631, tid: 88631) ++++++++++
+++++++++++ entry thread_1 (pid: 88631, tid: 88632) ++++++++++
+<thread_main> waiting for 1->2 or 2->1
+++++++++++ entry thread_2 (pid: 88631, tid: 88633) ++++++++++
+<thread_2> before: 0
+<thread_2> after: 2
+---------- leave thread_2 (pid: 88631, tid: 88633) ----------
+<thread_1> before: 2
+<thread_1> after: 1
+---------- leave thread_1 (pid: 88631, tid: 88632) ----------
+<thread_main> wait finish
+---------- leave thread_main (pid: 88631, tid: 88631) ----------
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/c/" rel="tag"># c</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/cpp-c-and-cpp.html" rel="next" title="C++ 入门初步">
+                <i class="fa fa-chevron-left"></i> C++ 入门初步
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/c-ipc-unix-sock.html" rel="prev" title="c语言 - 进程间通信 Unix Domain Socket">
+                c语言 - 进程间通信 Unix Domain Socket <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程与线程"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pthread线程库"><span class="nav-number">2.</span> <span class="nav-text">pthread线程库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多线程实例"><span class="nav-number">3.</span> <span class="nav-text">多线程实例</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/c-pthread.html';
+          this.page.identifier = 'c-pthread.html';
+          this.page.title = 'c语言 - 多线程编程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

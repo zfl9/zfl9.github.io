@@ -1,0 +1,652 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="awk, 文本工具">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="awk 是一个强大的文本分析工具，相对于 grep 的查找，sed 的编辑，awk 在其对数据分析并生成报告时，显得尤为强大；简单来说 awk 就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。awk 其名称得自于它的创始人 Alfred Aho 、Peter Weinberger 和 Brian Kernighan 姓氏的首个字母；awk 有 3 个不同版本：aw">
+<meta name="keywords" content="linux,文本处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="awk 详解">
+<meta property="og:url" content="https://www.zfl9.com/awk.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="awk 是一个强大的文本分析工具，相对于 grep 的查找，sed 的编辑，awk 在其对数据分析并生成报告时，显得尤为强大；简单来说 awk 就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。awk 其名称得自于它的创始人 Alfred Aho 、Peter Weinberger 和 Brian Kernighan 姓氏的首个字母；awk 有 3 个不同版本：aw">
+<meta property="og:image" content="https://www.zfl9.com/images/awk-workflow.jpg">
+<meta property="og:updated_time" content="2019-02-18T12:42:42.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="awk 详解">
+<meta name="twitter:description" content="awk 是一个强大的文本分析工具，相对于 grep 的查找，sed 的编辑，awk 在其对数据分析并生成报告时，显得尤为强大；简单来说 awk 就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。awk 其名称得自于它的创始人 Alfred Aho 、Peter Weinberger 和 Brian Kernighan 姓氏的首个字母；awk 有 3 个不同版本：aw">
+<meta name="twitter:image" content="https://www.zfl9.com/images/awk-workflow.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/awk.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>awk 详解 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/awk.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                awk 详解
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-03T12:54:33+08:00">
+                2016-11-03
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+                  ， 
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/文本处理/" itemprop="url" rel="index">
+                    <span itemprop="name">文本处理</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/awk.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="awk.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/awk.html" class="leancloud_visitors" data-flag-title="awk 详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>awk 是一个强大的文本分析工具，相对于 grep 的查找，sed 的编辑，awk 在其对数据分析并生成报告时，显得尤为强大；简单来说 awk 就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。<br>awk 其名称得自于它的创始人 Alfred Aho 、Peter Weinberger 和 Brian Kernighan 姓氏的首个字母；awk 有 3 个不同版本：awk、nawk 和 gawk，未作特别说明，一般指 gawk，gawk 是 awk 的 GNU 版本。<br>实际上 awk 的确拥有自己的语言：awk 程序设计语言，三位创建者已将它正式定义为“样式扫描和处理语言”；它允许您创建简短的程序，这些程序读取输入文件、为数据排序、处理数据、对输入执行计算以及生成报表，还有无数其他功能。</p>
+<a id="more"></a>
+<h2 id="sed、awk"><a href="#sed、awk" class="headerlink" title="sed、awk"></a>sed、awk</h2><p>awk 和 sed 一样，都是以行为处理单位，每次只读取一行，然后将这行字符串从命令序列中过一遍，最后输出，直到文件末尾；<br>sed 支持基本正则 BREs、扩展正则 EREs；awk 支持扩展正则 EREs；sed 专注于文本处理顺便支持脚本编程；awk 专注于脚本编程顺便支持文本处理。</p>
+<p>我们不能说 sed 和 awk 哪个更好，它们都是互补的，各有各的长处，各有各的短处，往往需要结合使用；<br>我个人认为，如果是单纯的文本编辑、文本替换，则选择 sed；如果需要将文本按列处理，则选择 awk。</p>
+<p>在 <a href="/sed.html">sed - 详解</a> 一文中，我们说到，sed 其实很像一门编程语言，甚至还有 goto 语句，那么现在，我们可以肯定的说：awk 就是一门编程语言，它支持变量、数组、函数、循环、条件分支、输出重定向、语句块等，同时还内置了非常多且实用的 built-in 函数。</p>
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p><img src="/images/awk-workflow.jpg" alt="awk 工作流程"></p>
+<p>如上图所示，awk 遵循简单的工作流程：读取，执行和重复，这和 sed 是一样的；<br>启动程序之后，awk 首先会执行 BEGIN 语句块；在退出进程之前会执行 END 语句块；这是与 sed 不同的地方；<br>但是，BEGIN 初始化块和 END 结束语句块都不是必须的，它们可以都没有，也可以都有；<br>除了 BEGIN 块和 END 块，awk 最主要的就是主循环块了（定义如何处理一条记录）；</p>
+<ul>
+<li><code>BEGIN { awk-commands }</code>，非必须，通常用于初始化变量；</li>
+<li><code>{ awk-commands }</code>，每行记录都会执行 awk-commands；</li>
+<li><code>pattern { awk-commands }</code>，与 pattern 匹配的行执行 awk-commands；pattern 如下：<ul>
+<li><code>/regex/</code>，所有与 regex 匹配的行；</li>
+<li><code>expression</code>，测试 expression 条件为真的行（数字非零、字符串非空）；</li>
+</ul>
+</li>
+<li><code>pattern1, pattern2 { awk-commands }</code>，在 pattern1 和 pattern2 中的行执行 awk-commands；</li>
+<li><code>END { awk-commands }</code>，非必须，通常用于统计某些信息。</li>
+</ul>
+<p>同时，在 awk 中有两个概念要搞清楚：</p>
+<ul>
+<li><strong>记录（record）</strong>，每个输入行被称作是一个记录；使用<code>$0</code>特殊变量可引用；</li>
+<li><strong>域（field）</strong>，每个记录会被分隔符（默认为空格和制表符，且多个连续空格或制表符会当作一个进行处理）分割；使用<code>$N</code>（N 为正整数）特殊变量可引用。</li>
+</ul>
+<h2 id="命令行选项"><a href="#命令行选项" class="headerlink" title="命令行选项"></a>命令行选项</h2><p>从命令行中读取 script：<code>awk [OPTIONS...] &#39;script&#39; [FILES...]</code>；<br>从脚本文件中读取 script：<code>awk [OPTIONS...] -f &#39;script-file&#39; [FILES...]</code>；<br>和 sed 一样，如果省略 FILES，则默认从标准输入文件中读取数据并进行处理。</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain"># POSIX options:        GNU long options: (standard)
+# -f progfile           --file=progfile             指定 script-file
+# -F fs                 --field-separator=fs        指定域分隔符
+# -v var=val            --assign=var=val            定义变量并初始化
+# Short options:        GNU long options: (extensions)
+# -b                    --characters-as-bytes       将输入数据看作单字节字符
+# -c                    --traditional               兼容模式，关闭 GNU 扩展
+# -C                    --copyright                 打印 GNU 版权信息后退出
+# -d[file]              --dump-variables[=file]     dump 所有全局变量，默认输出文件为 "awkvars.out"
+# -D[file]              --debug[=file]              debug 模式，默认从键盘读取命令，可指定文件
+# -e 'program-text'     --source='program-text'     指定 script，可与 -f 混合运行
+# -L[fatal|invalid]     --lint[=fatal|invalid]      检查 script 并找出与其他 awk 不兼容的语句
+# -M                    --bignum                    强制 gawk 对数字进行任意精度的运算
+# -N                    --use-lc-numeric            强制 gawk 在解析数据时使用语言环境相关的小数点字符
+# -n                    --non-decimal-data          识别输入数据的八进制和十六进制数字（谨慎使用）
+# -o[file]              --pretty-print[=file]       格式化 script 并输出，默认文件名为 "awkprof.out"
+# -O                    --optimize                  对 script 开启优化，如尾递归优化等
+# -P                    --posix                     启用 POSIX 兼容模式
+# -r                    --re-interval               启用 regex 区间表达式（默认开启）
+# -t                    --lint-old                  提供有关无法移植到 Unix awk 的构造警告
+</script></code></pre>
+<h2 id="简单例子"><a href="#简单例子" class="headerlink" title="简单例子"></a>简单例子</h2><pre><code class="language-bash line-numbers"><script type="text/plain">## 考试成绩文件
+$ cat marks.txt
+1) Amit     Physics    80
+2) Rahul    Maths      90
+3) Shyam    Biology    87
+4) Kedar    English    85
+5) Hari     History    89
+
+## 演示 BEGIN、BODY、END 块
+$ awk 'BEGIN { print("start ...") } { print($0) } END { print("end...") }' marks.txt
+start ...
+1) Amit     Physics    80
+2) Rahul    Maths      90
+3) Shyam    Biology    87
+4) Kedar    English    85
+5) Hari     History    89
+end...
+
+## 使用 regex 过滤
+$ awk '/a/ {print $0}' marks.txt
+2) Rahul    Maths      90
+3) Shyam    Biology    87
+4) Kedar    English    85
+5) Hari     History    89
+
+## 指定分隔符，-F
+$ echo 'www.zfl9.com|www.google.com|www.baidu.com' | awk -F'|' '{printf("%s   %s   %s\n",$1,$2,$3)}'
+www.zfl9.com   www.google.com   www.baidu.com
+
+## 统计考试成绩
+$ awk 'BEGIN{total=0} {total+=$4} END{printf("total = %d\n",total)}' marks.txt
+total = 431
+
+## 计算平均分
+$ awk 'BEGIN{total=0} {total+=$4} END{printf("total = %d, average = %.3f\n",total,total/NR)}' marks.txt
+total = 431, average = 86.200
+
+## 打印指定字段
+$ awk '{printf("%s\t\t%s\n",$3,$4)}' marks.txt
+Physics        80
+Maths        90
+Biology        87
+English        85
+History        89
+
+## 打印所有 85 分以上的记录 - expression
+$ awk '$4 >= 85 { print $0 }' marks.txt
+2) Rahul    Maths      90
+3) Shyam    Biology    87
+4) Kedar    English    85
+5) Hari     History    89
+
+## 打印所有 85 分以上的记录 - if
+$ awk '{ if ($4 >= 85) print $0 }' marks.txt
+2) Rahul    Maths      90
+3) Shyam    Biology    87
+4) Kedar    English    85
+5) Hari     History    89
+
+## 打印长度超过 5 的记录 - expression
+$ echo '123456\n12345\n12345678' | awk 'length($0) > 5 { print $0 }'
+123456
+12345678
+
+## 打印长度超过 5 的记录 - if
+$ echo '123456\n12345\n12345678' | awk '{ if (length($0) > 5) print $0 }'
+123456
+12345678
+</script></code></pre>
+<h2 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h2><ul>
+<li><code>ARGC</code>：参数个数，其值总是大于等于 1；</li>
+<li><code>ARGV</code>：参数列表，<code>ARGV[0]</code>是可执行文件名；</li>
+<li><code>ARGIND</code>：当前命令行参数索引（GNU）；</li>
+<li><code>ENVIRON</code>：当前环境变量数组，如，<code>{ print ENVIRON[&quot;USER&quot;] }</code>获取当前用户名；</li>
+<li><code>SUBSEP</code>：数组下标分隔符，默认为<code>\034</code>；</li>
+<li><code>CONVFMT</code>：定义数字转换格式，默认值为<code>%.6g</code>；</li>
+<li><code>OFMT</code>：输出格式化字符串，默认值为<code>%.6g</code>；</li>
+<li><code>FILENAME</code>：当前操作的文件名，注意，在 BEGIN 块中此变量还未定义；</li>
+<li><code>$0</code>：当前输入记录；</li>
+<li><code>$N</code>：当前输入记录中的第 N 个字段；</li>
+<li><code>RS</code>：输入记录分隔符，默认为换行符；</li>
+<li><code>FS</code>：输入字段分隔符，默认为空格/制表；</li>
+<li><code>NR</code>：当前记录编号，多个文件时会累加；</li>
+<li><code>NF</code>：当前记录中的字段数量；</li>
+<li><code>FNR</code>：当前文件记录编号，多个文件时不进行累加；</li>
+<li><code>ORS</code>：输出记录分隔符，默认为换行符；</li>
+<li><code>OFS</code>：输出字段分隔符，默认为空格；</li>
+<li><code>RSTART</code>：match() 函数设置的变量，表示匹配子串的起始索引（从 1 开始）；</li>
+<li><code>RLENGTH</code>：match() 函数设置的变量，表示匹配子串的长度，如<code>if(match(&quot;google&quot;,&quot;goo&quot;)) print RLENGTH</code>输出 3；</li>
+<li><code>IGNORECASE</code>：默认为 0，设为 1 后将忽略大小写（如 pattern 匹配时将忽略大小写）；</li>
+<li><code>PROCINFO</code>：当前 awk 进程信息数组，如 PID、有效 UID 号等，<code>BEGIN { print PROCINFO[&quot;pid&quot;] }</code>；</li>
+<li><code>ERRNO</code>：getline() 函数操作失败时设置的错误，可使用 print 打印错误原因；</li>
+</ul>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><p>支持的运算符和 C/C++、Java 的非常相似，仅有细微差别：<br><strong>算术运算符</strong>：<code>+</code>加、<code>-</code>减、<code>*</code>乘、<code>/</code>除、<code>%</code>取余、<code>**</code>或<code>^</code>乘方；<br><strong>自增自减符</strong>：<code>++a</code>前自增、<code>--a</code>前自减、<code>a++</code>后自增、<code>a--</code>后自减；<br><strong>赋值运算符</strong>：<code>=</code>、<code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>、<code>%=</code>、<code>**=</code>或<code>^=</code>；<br><strong>关系运算符</strong>：<code>==</code>、<code>!=</code>、<code>&gt;</code>、<code>&gt;=</code>、<code>&lt;</code>、<code>&lt;=</code>；<br><strong>逻辑运算符</strong>：<code>&amp;&amp;</code>、<code>||</code>、<code>!</code>；<br><strong>三元操作符</strong>：<code>cond ? statement1 : statement2</code>；<br><strong>一元操作符</strong>：<code>+</code>乘以 +1、<code>-</code>乘以 -1；如<code>BEGIN{ a=10; printf(&quot;%d %d\n&quot;, +a, -a) }</code>输出 10、-10；<br><strong>字符串拼接</strong>：空格，如<code>print &quot;a = &quot; &quot;100&quot;</code>；<br><strong>数组运算符</strong>：即下标，如<code>arr[0]</code>、<code>arr[&quot;start&quot;]</code>，数组实际是一个 Hash 表；<br><strong>正则运算符</strong>：<code>~</code>正则匹配、<code>!~</code>正则匹配（取反），如<code>&quot;www.zfl9.com&quot; ~ &quot;w+&quot;</code>为真；</p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>语法：<code>array_name[index] = value</code>；<br>数组不需要提前声明，数组下标可以不连续，并且数组下标可以为字符串；如<code>arr[&quot;index&quot;]</code>、<code>arr[4]</code>；<br>在 awk 中，声明变量不需要指明数据类型，因为它们都是字符串；而数组其实是一个类似 hash 表的东西；<br>并且，如果 index 中存在逗号，则会忽略逗号间的空格，如：<code>arr[1,&quot;www&quot;]</code>和<code>arr[1, &quot;www&quot;]</code>是一样的；</p>
+<p>删除元素：<code>delete array_name[index]</code>；</p>
+<p>遍历元素，使用 for 循环，有两种方式：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">$ cat script.awk
+BEGIN {
+    for (i = 0; i < ARGC; i++) {
+        printf("ARGV[%d] = %s\n", i, ARGV[i]);
+    }
+
+    print
+
+    for (i in ARGV) {
+        printf("ARGV[%d] = %s\n", i, ARGV[i]);
+    }
+}
+
+$ awk -fscript.awk  1 2 3
+ARGV[0] = awk
+ARGV[1] = 1
+ARGV[2] = 2
+ARGV[3] = 3
+
+ARGV[0] = awk
+ARGV[1] = 1
+ARGV[2] = 2
+ARGV[3] = 3
+</script></code></pre>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><p><strong>条件分支</strong><br><code>if (cond) { statement }</code>，如果 statement 只有一条语句，可以省略花括号，这和 C/C++、Java 是一样的；<br><code>if (cond) { statement } else { statement }</code>；<br><code>if (cond) { statement } else if (cond) { statement } else if (cond) { statement } else { statement }</code>；</p>
+<p><strong>循环</strong><br><code>for (init; cond; increment/decrement) { statement }</code>，如果 statement 只有一条语句，可以省略花括号；<br><code>for (index in array) { statement }</code>，专用于数组（哈希表）的遍历；<br><code>while (cond) { statement }</code>，while 循环；<br><code>do { statement } while (cond)</code>，do…while 循环；</p>
+<p><strong>跳出循环</strong><br><code>continue</code>，直接开始下轮循环；<br><code>break</code>，结束循环体，执行后面的语句；</p>
+<p><strong>退出进程</strong><br><code>exit(exit_code)</code>函数，其中 exit_code 在区间<code>[0, 255]</code>；</p>
+<h2 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h2><p><code>print(string)</code>，打印传入的参数（数字、字符串等），自动在末尾添加换行符；<br><code>printf(fmt-str, args...)</code>，格式化打印函数，基本同 C 语言的 printf() 函数；<br><code>sub(regex, replace [, target])</code>，单次 regex 替换，第三个参数可选，默认为<code>$0</code>；<br><code>gsub(regex, replace [, target])</code>，全局 regex 替换，第三个参数可选，默认为<code>$0</code>；<br><code>gensub(regex, replace, how [, target])</code>，通用 regex 替换（可引用子串），how 为<code>&quot;g&quot;</code>或<code>&quot;G&quot;</code>表示全局，第四个参数可选，默认为<code>$0</code>，不修改原串，而是返回新串；<br><code>index(str, sub)</code>，查找子串索引（从 1 开始），成功返回索引值，失败返回 0；<br><code>length(str)</code>，计算字符串长度并返回；<br><code>match(str, regex)</code>，匹配子串，并返回索引（从 1 开始），成功返回索引值，失败返回 0；<br><code>split(str, arr, regex)</code>，使用 regex 分割 str 字符串，然后保存至数组 arr，如果省略 regex，则使用 FS 变量值；<br><code>substr(str, start, len)</code>，提取子串，start 从 1 开始，len 为提取的长度，如果省略则提取至字符串末尾；<br><code>tolower(str)</code>，返回传入字符串的小写副本；<br><code>toupper(str)</code>，返回传入字符串的大写副本；<br><code>strtonum(str)</code>，从字符串中解析数值，支持八进制、十进制、十六进制，使用不同的前缀即可；<br><code>getline(var)</code>，读取当前文件（使用重定向符可读取其他文件）的一行保存至 var 变量中，如果省略 var 则默认为 $0；<br><code>system(command)</code>，调用 shell 执行命令，然后返回命令退出状态码；<br><code>next</code>，结束当前行的处理，直接开始处理下一行；<br><code>nextfile</code>，结束当前文件的处理，直接开始处理下一文件；<br><code>return</code>，在自定义函数中用于返回值；</p>
+<h2 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h2><p>除了使用内置函数之外，awk 还允许我们定义自己的函数（在 3 个语句块的外面），语法如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">function function_name(argument1, argument2, ...) {
+   command1;
+   command2;
+   ...
+   commandN;
+   return result;
+}
+</script></code></pre>
+<p>函数名和变量名的命名规则一样，只能以字母或下划线开头，然后可接字母、数字、下划线；参数 和 return 语句是可选的；</p>
+<h2 id="输出重定向"><a href="#输出重定向" class="headerlink" title="输出重定向"></a>输出重定向</h2><p>awk 输出重定向的语法和 shell 是一样的，如：<br><code>print &quot;string&quot; &gt; filename</code>覆盖，即在打开文件时会清空原文件内容；<br><code>print &quot;string&quot; &gt;&gt; filename</code>追加，即在打开文件时不清空原文件内容；</p>
+<p><strong>管道</strong><br><code>print &quot;string&quot; | &quot;command&quot;</code>，启动 shell 执行 command，并将输出传递给 command，作为它的输入；</p>
+<h2 id="awk-参考"><a href="#awk-参考" class="headerlink" title="awk 参考"></a>awk 参考</h2><p><a href="https://www.tutorialspoint.com/awk/index.htm" rel="external nofollow noopener noreferrer" target="_blank">Awk Tutorial - TutorialsPoint</a><br><a href="http://www.grymoire.com/Unix/Awk.html" rel="external nofollow noopener noreferrer" target="_blank">Awk - A Tutorial and Introduction</a></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/文本处理/" rel="tag"># 文本处理</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/iptables.html" rel="next" title="iptables 详解">
+                <i class="fa fa-chevron-left"></i> iptables 详解
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/sed.html" rel="prev" title="sed 详解">
+                sed 详解 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sed、awk"><span class="nav-number">1.</span> <span class="nav-text">sed、awk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作流程"><span class="nav-number">2.</span> <span class="nav-text">工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行选项"><span class="nav-number">3.</span> <span class="nav-text">命令行选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单例子"><span class="nav-number">4.</span> <span class="nav-text">简单例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内置变量"><span class="nav-number">5.</span> <span class="nav-text">内置变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">6.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">7.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程控制"><span class="nav-number">8.</span> <span class="nav-text">流程控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内置函数"><span class="nav-number">9.</span> <span class="nav-text">内置函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义函数"><span class="nav-number">10.</span> <span class="nav-text">自定义函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出重定向"><span class="nav-number">11.</span> <span class="nav-text">输出重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk-参考"><span class="nav-number">12.</span> <span class="nav-text">awk 参考</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/awk.html';
+          this.page.identifier = 'awk.html';
+          this.page.title = 'awk 详解';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

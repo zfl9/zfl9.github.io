@@ -1,0 +1,931 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="linux,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="本文主要记录 Linux 中与无线网络相关的一些知识，如无线网卡驱动、无线网络协议、hostapd 的使用、2.4G/5G WiFi 的区别等。">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WLAN 笔记">
+<meta property="og:url" content="https://www.zfl9.com/wlan.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="本文主要记录 Linux 中与无线网络相关的一些知识，如无线网卡驱动、无线网络协议、hostapd 的使用、2.4G/5G WiFi 的区别等。">
+<meta property="og:image" content="https://www.zfl9.com/images/wifi-xindao.jpg">
+<meta property="og:image" content="https://static.squarespace.com/static/54860cc3e4b020d690f237ba/548f5703e4b00e8ec160e2fb/548f5708e4b00e8ec160e4b3/1418680072251/1000w/">
+<meta property="og:updated_time" content="2020-07-04T13:12:05.159Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WLAN 笔记">
+<meta name="twitter:description" content="本文主要记录 Linux 中与无线网络相关的一些知识，如无线网卡驱动、无线网络协议、hostapd 的使用、2.4G/5G WiFi 的区别等。">
+<meta name="twitter:image" content="https://www.zfl9.com/images/wifi-xindao.jpg">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/wlan.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>WLAN 笔记 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/wlan.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                WLAN 笔记
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-26T08:00:00+08:00">
+                2018-11-26
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/wlan.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="wlan.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/wlan.html" class="leancloud_visitors" data-flag-title="WLAN 笔记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要记录 Linux 中与无线网络相关的一些知识，如无线网卡驱动、无线网络协议、hostapd 的使用、2.4G/5G WiFi 的区别等。</p>
+<a id="more"></a>
+<h2 id="网卡驱动"><a href="#网卡驱动" class="headerlink" title="网卡驱动"></a>网卡驱动</h2><p>在 Linux 中，驱动一般都是通过内核模块的形式提供的，而内核模块又分为 <em>内置模块</em>、<em>可加载模块</em>，本质上没有区别，前者被静态编译进内核，无需通过 <code>modprobe</code>、<code>insmod</code>、<code>rmmod</code> 来加载、卸载。核心模块一般会内置到内核中，而一般的驱动，基本都是可加载模块，即 <code>*.ko</code> kernel object 内核对象文件。</p>
+<p>kernel object 和 object 都是对象文件，但是 kernel object 不能被链接或者直接运行，需要使用 <code>insmod</code> 或 <code>modprobe</code> 来加载它，让它成为内核的一部分，扩展内核的功能。不需要时，可以使用 <code>rmmod</code> 或 <code>modprobe</code> 来卸载它，回收内存以及相应的资源。</p>
+<p>默认情况下，Linux 发行版已经自带了大部分硬件的驱动模块，一般放在 <code>/usr/lib/modules/$(uname -r)/kernel</code> 目录下，以 <code>*.ko</code>、<code>*.ko.gz</code> 等形式存放，因此可以通过 find 命令，查看当前系统是否已自带指定模块。</p>
+<p>当我们插入一张无线网卡时（假设为 USB 无线网卡），如果系统已自带驱动，那么使用 <code>ip addr</code> 就可以看到对应的接口，否则说明系统没有自带相应驱动，需自行编译。</p>
+<p>我们先使用 <code>lsusb</code> 命令查看网卡的型号，这是 RPi3B 的输出：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+$ lsusb
+Bus 001 Device 004: ID 0b95:1790 ASIX Electronics Corp. AX88179 Gigabit Ethernet
+Bus 001 Device 003: ID 0424:ec00 Standard Microsystems Corp. SMSC9512/9514 Fast Ethernet Adapter
+Bus 001 Device 002: ID 0424:9514 Standard Microsystems Corp. SMC9514 Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+</script></code></pre>
+<p>其中第一个就是我插入的 USB 转 RJ45 千兆网卡，其中可以看到对应的网卡型号 <code>AX88179</code>，然后我们可以 Google 找到对应的网卡驱动（一般官网都会提供的，不过实际上，这块网卡的驱动 ArchLinux 已经自带了，所以一插上去我就能看到对应的 eth1 接口）。</p>
+<p>假设没有自带，那么下载对应的驱动源码包，解压，一般都有 makefile 文件，熟悉编译安装的同学应该很容易知道，其实就是使用 make 编译就可以了，但是还有些依赖要解决，假设你已经安装了 make、gcc 等工具，那么还需要 linux 内核头文件，在 ArchLinux 中，安装与内核版本对应的 <code>linux-headers</code> 包就可以了，注意必须是与 <code>linux</code> 包相同版本的哦，不然是无法使用的，建议更新系统，再安装，就不会出现问题了。</p>
+<p>接下来，查看一下 readme.txt 或者其他说明文件，一般情况下，直接使用 <code>make</code> 命令就能够编译了，如果没有报错，那么可以看到当前目录下的 <code>modname.ko</code>  内核模块，使用 <code>modinfo modname.ko</code> 可以查看这个模块的信息，然后我们就可以加载它了，使用 <code>insmod modname.ko</code>，如果编译没有报错且驱动源码是正常的话，应该不会报错，此时再使用 <code>ip addr</code> 就可以看到新插入的网卡了。不需要时，可以使用 <code>rmmod modname</code> 卸载。</p>
+<p>注意，如果 insmod 时出错，提示符号找不到，请先插入 mac80211 模块，即 <code>modprobe mac80211</code>，因为无线网卡的驱动依赖这个模块，而 insmod 不会处理依赖。</p>
+<p>但是有没有觉得这样有点麻烦，每次都需要使用 <code>insmod</code> 来插入模块才能使用，能不能像其它模块一样在网卡插入时自动加载呢？肯定是可以的，具体步骤如下：</p>
+<ul>
+<li>将 <code>modname.ko</code> 文件放到 <code>/usr/lib/modules/$(uname -r)/kernel/drivers</code> 的相应子目录下（自行分类），当然实际上放在哪并没有要求，但是分类总是好的，别人一看就知道这是什么驱动（<code>/usr/lib/modules/$(uname -r)/extra</code> 目录也可以）；</li>
+<li>使用 <code>depmod -a</code> 重新建立所有内核模块之间的依赖关系，运行完后，它会更新 <code>/usr/lib/modules/$(uname -r)/modules.*</code> 相应的文件；</li>
+<li>最后，使用 <code>modprobe modname</code> 加载模块，<code>modprobe -r modname</code> 卸载模块。当然实际上这是多余的，当我们插入网卡时，udev 守护进程会自动根据 VendorID:DeviceID 来加载对应的模块（这个知识稍后会详细介绍），当然拔掉网卡时 udev 并不会自动卸载模块，这需要手动卸载，但实际上这也没什么必要。</li>
+</ul>
+<p><strong>问题：如果使用 lsusb 或 lspci 没有对应的设备型号怎么办？</strong><br>这问题还是挺常见的，比如恶心的 360wifi3，只有一个 MediaTek，连什么型号都没有提供。那要如何知道网卡的具体型号呢？你看到 <code>lsusb</code> 输出行的 <code>ID 0bda:8153</code> 字段没？如果是 lspci，那么要加参数 <code>-nn</code> 才会显示这个 ID。你只要打开 Google，搜索这个 ID 一般就能够找到对应的网卡型号的。</p>
+<p>那么这个 ID 到底是什么意思呢？它分为两个部分，<code>0bda</code>、<code>8153</code>，前者是厂商 ID（Vendor ID），后者是设备 ID（Device ID）或产品 ID（Product ID）。其实每个硬件都是由对应的 VID、PID 的，VID 需要向相关机构申请，是全球唯一的，每个厂商的 VID 都是不同的，而 PID 则由厂商自己决定，可以利用 VID、PID 查找对应的设备型号，注意，VID 和 PID 并不是 Linux 独有的概念，它是硬件的概念，在 Windows 上同样存在，使用设备管理器可以看到对应的 VID、PID。</p>
+<p>这两个 ID 都是 2 个字节长，即最大值均为 0xFFFF，也就意味着，厂商 ID 最多只有 65535 个，设备 ID 最多只有 65535 个，现在看来这可能有些小，怎么也得 4 个字节长，不过它们组合起来也是不少的，6 万乘以 6 万也是 36 亿个，还是比较足够的。</p>
+<p><strong>疑问：系统是如何知道对应的设备要使用哪个驱动模块的呢？</strong><br>问得好，其实就是根据上面的 VID/PID 来识别的，怎么说呢，每个驱动模块其实都有对应的 alias 别名，使用 <code>modinfo modname | grep alias</code> 可以看到，其中就可以看到对应的 VID、PID，表示这个驱动可以用在哪些设备上，因为可以通过 VID/PID 唯一识别一个设备嘛。因此当一个新设备插入系统时，udev 会先获取设备的 VID/PID，然后查找系统中的 alias 文件（<code>/usr/lib/modules/$(uname -r)/modules.alias</code> 文件），就知道该使用哪个驱动模块了，然后加载对应的模块就能够使用它了！</p>
+<p><strong>问题：如何将一个驱动用在未注册的 alias 的设备上？</strong><br>在 <code>/sys/module/&lt;modname&gt;/drivers/&lt;bus:modname&gt;/new_id</code> 文件中添加对应设备的 VID、PID 就可以了，如 <code>echo &lt;VID&gt; &lt;PID&gt; &gt; new_id</code> 即可，当然，这通常没有什么用处，除非真的是 VID、PID 错了，否则就算强加进去也是没用的（内核可能会崩溃）。</p>
+<p><strong>问题：更新内核后，如何让手动添加的驱动能够正常使用？</strong><br>因为内核模块和对应的内核版本是息息相关的，一个内核模块只能在对应的内核版本中运行，如果版本不对，是不能运行的，要解决这个问题需要重新在新内核中编译这个内核模块，才能正常使用。这在经常需要升级内核版本的发行版中是非常麻烦的，比如 ArchLinux，基本 3 天就会有一个新的内核更新，我可不想每次更新系统后都要重新编译内核模块，怎么办呢？答案是 DKMS（Dynamic Kernel Module Support，动态内核模块支持），它的办法很简单，就是将模块源码交给 dkms 管理，然后每次更新内核后，都会自动运行 dkms，dkms 就会自动编译适用于新版本的内核模块，然后下次重启后，就能正常使用了，而无需自己编译。</p>
+<p>具体怎么操作呢？首先得安装 dkms，使用 <code>pacman -S dkms</code> 安装，然后运行 <code>dkms</code> 可以查看帮助，dkms 用法很简单，具体的帮助信息如下：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+$ dkms
+Usage: /usr/bin/dkms [action] [options]
+  [action]  = { add | remove | build | install | uninstall | match | autoinstall
+               | mkdriverdisk | mktarball | ldtarball | mkrpm | mkkmp | mkdeb | status }
+  [options] = [-m module] [-v module-version] [-k kernel-version] [-a arch]
+              [-d distro] [-c dkms.conf-location] [-q] [--force] [--all]
+              [--templatekernel=kernel] [--directive='cli-directive=cli-value']
+              [--config=kernel-.config-location] [--archive=tarball-location]
+              [--kernelsourcedir=source-location] [--no-prepare-kernel] [--no-initrd]
+              [--binaries-only] [--source-only] [-r release (SuSE)] [--verbose]
+              [--size] [--spec=specfile] [--media=floppy|iso|tar] [--legacy-postinst=0|1]
+              [--no-depmod] [-j number] [--version]
+Error! No action was specified.
+</script></code></pre>
+<p>常用的 action 有：</p>
+<ul>
+<li><code>add</code>：添加内核模块</li>
+<li><code>remove</code>：移除内核模块</li>
+<li><code>status</code>：查看 dkms 状态</li>
+<li><code>build</code>：编译内核模块</li>
+<li><code>install</code>：安装内核模块</li>
+<li><code>uninstall</code>：卸载内核模块</li>
+<li><code>autoinstall</code>：自动安装内核模块</li>
+</ul>
+<p>常用的 options 有：</p>
+<ul>
+<li><code>-m module</code>：指定模块名称</li>
+<li><code>-v module-version</code>：指定模块版本</li>
+<li><code>-k kernel-version</code>：指定内核版本</li>
+<li><code>-c dkms.conf-location</code>：指定 dkms.conf 文件</li>
+<li><code>--all</code>：全部内核模块</li>
+<li><code>--verbose</code>：输出详细信息</li>
+</ul>
+<p>这里以 rtl8812au 无线网卡驱动为例，README.md 说明如下：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+DRV_NAME=rtl8812au
+DRV_VERSION=4.3.20
+mkdir /usr/src/${DRV_NAME}-${DRV_VERSION}
+cp -af rtl8812au-src /usr/src/${DRV_NAME}-${DRV_VERSION}
+dkms add -m ${DRV_NAME} -v ${DRV_VERSION}
+dkms build -m ${DRV_NAME} -v ${DRV_VERSION}
+dkms install -m ${DRV_NAME} -v ${DRV_VERSION}
+dkms status -m ${DRV_NAME} -v ${DRV_VERSION}
+</script></code></pre>
+<p>首先，将想要被 dkms 管理的内核模块源码复制到 <code>/usr/src</code> 目录下，源码目录的命名是有规定的，即 <code>$name-$version</code>，前面是模块名，后面是模块版本。后面的 <code>-m</code>、<code>-v</code> 参数指定的就是这两个东西。当然要被 dkms 管理还没这么简单，你需要在 <code>/usr/src/$name-$version/</code> 目录下创建 <code>dkms.conf</code> 配置文件，告诉 dkms 一些必要的信息，这是 rtl8812au 的 dkms.conf 文件内容：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+PACKAGE_NAME="rtl8812au"
+PACKAGE_VERSION="4.3.14"
+CLEAN="make clean"
+MAKE[0]="make KVER=$kernelver"
+BUILT_MODULE_NAME[0]="rtl8812au"
+DEST_MODULE_LOCATION[0]="/kernel/drivers/net"
+AUTOINSTALL="yes"
+</script></code></pre>
+<ul>
+<li><code>PACKAGE_NAME</code>：模板名称</li>
+<li><code>PACKAGE_VERSION</code>：模块版本</li>
+<li><code>CLEAN</code>：<code>MAKE[#]</code> 前执行的清理命令</li>
+<li><code>MAKE[0]</code>：编译模块的命令，即 make</li>
+<li><code>BUILT_MODULE_NAME[0]</code>：生成的内核模块名</li>
+<li><code>DEST_MODULE_LOCATION[0]</code>：安装路径，相对于 <code>/usr/lib/modules/$(uname -r)</code></li>
+<li><code>AUTOINSTALL</code>：是否自动安装该模块，当不适用于当前内核时 dkms 会自动安装。</li>
+</ul>
+<p>在 dkms.conf 中，可以引用一些预定义的变量，比如上面的 <code>$kernelver</code>：</p>
+<ul>
+<li><code>$kernelver</code>：当前内核版本；</li>
+<li>等等，其它几个变量比较少用。</li>
+</ul>
+<p>貌似 dkms.conf 是一个 shell 脚本（我也不确定，但很有可能是），比如你看这个 dkms.conf 配置文件，其中引用了不少的 shell 语法，但却能正常运行：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+PACKAGE_NAME="@PKGBASE@"
+PACKAGE_VERSION="@PKGVER@"
+PROCS_NUM=`nproc`
+[ $PROCS_NUM -gt 16 ] && PROCS_NUM=16
+MAKE="'make' -j$PROCS_NUM KVER=${kernelver}"
+CLEAN="'make' clean"
+BUILT_MODULE_NAME[0]="rtl8192eu"
+DEST_MODULE_LOCATION[0]="/extra"
+AUTOINSTALL="yes"
+REMAKE_INITRD="yes"
+</script></code></pre>
+<p>我现在还没搞懂 dkms 如何取消对指定模块的管理，目前有效且简单的方法就是去 <code>/var/lib/dkms</code> 目录，将对应的模块目录删除，使用 <code>dkms status</code> 查看就干净了。</p>
+<p>还有，dkms.conf 里面的模块名不能乱取，建议不要改，要和 make 编译出来的保持一致，否则 dkms build 是很有可能报错（我就是这样，搞得我编译了好多次）。</p>
+<h2 id="安全相关"><a href="#安全相关" class="headerlink" title="安全相关"></a>安全相关</h2><p><strong>安全协议</strong></p>
+<ul>
+<li><code>WEP</code>：Wired Equivalent Privacy（有线等效加密），不安全，不建议使用。</li>
+<li><code>WPA</code>：Wi-Fi Protected Access（WiFi 保护访问）第一版，有漏洞，不是很建议。</li>
+<li><code>WPA2</code>：Wi-Fi Protected Access（WiFi 保护访问）第二版，目前来说，建议使用。</li>
+</ul>
+<p><strong>加密方式</strong></p>
+<ul>
+<li><code>TKIP</code>：WPA 中的加密方式，使用 RC4 加密算法，不安全。</li>
+<li><code>CCMP</code>：WPA2 中的加密方式，使用 AES 加密算法，更安全。</li>
+</ul>
+<p>在 WPA 中，TKIP 为默认方式，CCMP 为可选方式；<br>在 WPA2 中，CCMP 为默认方式，TKIP 为可选方式。</p>
+<p>WiFi 联盟要求 IEEE 802.11n 使用 WPA2 和 CCMP。TKIP 不可用于 802.11n 的传输，它仅支持传统的 802.11a、802.11b、802.11g 传输，最高速率为 54Mbps。</p>
+<p>WPA/WPA2 中分为个人版、企业版，它们分别表示：</p>
+<ul>
+<li>WPA/WPA2 个人版：使用 pre-shared key（PSK，预共享密钥），较简单</li>
+<li>WPA/WPA2 企业版：需要一台额外的认证服务器，大型企业使用，比较复杂</li>
+</ul>
+<h2 id="协议标准"><a href="#协议标准" class="headerlink" title="协议标准"></a>协议标准</h2><p>主要有三个：802.11a、802.11b/g/n、802.11ac</p>
+<ul>
+<li><strong>802.11a</strong>：标准吞吐量为 54Mbps，工作在 5GHz 频段。</li>
+<li><strong>802.11b</strong>：标准吞吐量为 11Mbps，工作在 2.4GHz 频段。</li>
+<li><strong>802.11g</strong>：标准吞吐量为 54Mbps，工作在 2.4GHz 频段，兼容 802.11b。</li>
+<li><strong>802.11n</strong>：标准吞吐量为 300Mbps，工作在 2.4GHz/5GHz 频段，兼容 802.11a/b/g。</li>
+<li><strong>802.11ac</strong>：标准吞吐量为 1Gbps，工作在 5GHz，兼容 802.11a/b/g/n（需降为 2.4GHz）。</li>
+</ul>
+<p>主要讨论 802.11n、802.11ac，一般来说，802.11n 工作在 2.4GHz 频段，802.11ac 工作在 5GHz 频段。部分 802.11ac 无线网卡支持“双频”工作模式，所谓双频是指同时支持 802.11n、802.11ac 两种标准，即这种网卡可以发射/接收 2.4G 的 WiFi，也可以发射/接收 5.8G 的 WiFi，但是同时只能工作在一种模式下，不可同时开启（没有 5G 网卡前我还一直懵里懵懂呢，搞得我以为驱动有问题）。因此所谓的 dual-band 双频 AP，只是有两张物理网卡而已啦。</p>
+<p>本质上，802.11n 是在 802.11g 上改良而来的，802.11ac 则是在 802.11a 上改良而来的。因此，在 hostapd.conf 中，802.11n 为 <code>hw_mode=g</code> 和 <code>ieee80211n=1</code>、802.11ac 为 <code>hw_mode=a</code> 和 <code>ieee80211ac=1</code>。这个应该特别注意，别懵里懵懂的。</p>
+<p><strong>802.11n 20MHz vs 40MHz 频宽选择</strong><br>大家知道，2.4G 频段一共有 1-13 号频道可用，每个频道的宽度只有 5MHz。因此，在 20MHz 带宽时，每个 Wi-Fi 信道实际上已经占用了 4 个频道。而如果继续使用 40MHz 的信道，那么将会有 8 个信道被占据。不可避免的存在大量干扰，有可能 40MHz 甚至不如 20MHz 稳定。因此，如果你周围的 WiFi 很多，请使用 20MHz 频宽，如果周围没有什么 WiFi，则可以选择 40MHz 频宽，速度快一些。</p>
+<p>除此之外，40MHz 频宽不是所有设备都支持的，如果路由器支持，但客户端不支持，则会自动将为 20MHz，只有两者都支持才起作用。一般称为 20MHz/40MHz 模式。</p>
+<p>hostapd 在开启 40MHz 支持时（启动时扫描），会扫描周围是否已经有使用 40MHz 的 WiFi，如果有则会自动降为 20MHz，在 ArchLinux 的 hostapd 中，打了 noscan 的补丁，因此可以在 hostapd.conf 中加入 <code>noscan=1</code> 告诉 hostapd 不要扫描附近的 WiFi 频宽，具体的配置如下：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+# 启用 802.11n 支持
+ieee80211n=1
+# 启用 20MHz/40MHz 支持
+ht_capab=[HT40+][SHORT-GI-40]
+# patch，不扫描周围的 WiFi
+noscan=1
+</script></code></pre>
+<p><strong>802.11n 2.4GHz 下的信道选择为什么是 1、6、11？</strong><br>WIFI 信号的信道有两部分，其中 2.4G 频段有 13 个左右交叠的信道，其中只能找出 3 个相互不重合的信道（具体请参考文末的链接），最常用的就是 1、6、11 这三个，当然也可以使用其他没有重叠的组合，但是由于一些国家法律不允许使用 12 或 13 信道，所以这个组合是兼容性最好的。如下图所示：<br><img src="/images/wifi-xindao.jpg" alt="WiFi 信道选择图解"></p>
+<blockquote>
+<p>如果你选 1、6、11 信道，那就只会被同信道的设备干扰；<br>如果你选择 3 信道，那等于同时被 1、6 信道的设备干扰。</p>
+</blockquote>
+<p><strong>hostapd 中的国家/地区代码有什么用？</strong></p>
+<blockquote>
+<p>维基百科：IEEE 802.11d，根据各国无线电规定做的调整。<br>维基百科：IEEE 802.11h，根据各国无线覆盖半径的调整。</p>
+</blockquote>
+<p>因为每个国家的 WiFi 允许的频段和信道可能不同，因此需要设置国家/地区代码。</p>
+<h2 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h2><ul>
+<li>AP 模式：Access Point 无线接入点，发送 WiFi 信号的模式，如无线路由。</li>
+<li>STA 模式：Station 无线终端，接收 WiFi 信号的模式，如笔记本，手机等。</li>
+</ul>
+<p>AP 模式需要的软件包：hostapd<br>STA 模式需要的软件包：wpa_supplicant</p>
+<p>查看/管理 无线网卡 的工具，<code>iw</code>，软件包 <code>iw</code>。</p>
+<h2 id="hostapd"><a href="#hostapd" class="headerlink" title="hostapd"></a>hostapd</h2><p><strong>802.11b/g/n with WPA2-PSK and CCMP</strong></p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+interface=wlan0       # the interface used by the AP
+driver=nl80211        # use nl80211 driver (default: hostap)
+hw_mode=g             # g simply means 2.4GHz band
+channel=10            # the channel to use
+country_code=FR       # the country code
+ieee80211d=1          # limit the frequencies used to those allowed in the country
+ieee80211h=1          # same to "ieee80211d=1"
+ieee80211n=1          # 802.11n support
+wmm_enabled=1         # QoS support
+
+ssid=somename         # the name of the AP
+auth_algs=1           # 1=wpa, 2=wep, 3=both
+wpa=2                 # WPA2 only
+wpa_key_mgmt=WPA-PSK  
+rsn_pairwise=CCMP
+wpa_passphrase=somepassword
+</script></code></pre>
+<p><strong>802.11a/n/ac with WPA2-PSK and CCMP</strong></p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+interface=wlan0       # the interface used by the AP
+driver=nl80211        # use nl80211 driver (default: hostap)
+hw_mode=a             # a simply means 5GHz
+channel=0             # the channel to use, 0 means the AP will search for the channel with the least interferences 
+country_code=FR       # the country code
+ieee80211d=1          # limit the frequencies used to those allowed in the country
+ieee80211h=1          # same to "ieee80211d=1"
+ieee80211n=1          # 802.11n support
+ieee80211ac=1         # 802.11ac support
+wmm_enabled=1         # QoS support
+
+ssid=somename         # the name of the AP
+auth_algs=1           # 1=wpa, 2=wep, 3=both
+wpa=2                 # WPA2 only
+wpa_key_mgmt=WPA-PSK 
+rsn_pairwise=CCMP
+wpa_passphrase=somepassword
+</script></code></pre>
+<p><strong>802.11b/g/n triple AP</strong>（单网卡，多 SSID/AP，须驱动支持）</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+interface=wlan0       # the interface used by the AP
+driver=nl80211        # use nl80211 driver (default: hostap)
+hw_mode=g             # g simply means 2.4GHz
+channel=10            # the channel to use
+country_code=FR       # the country code
+ieee80211d=1          # limit the frequencies used to those allowed in the country
+ieee80211h=1          # same to "ieee80211d=1"
+ieee80211n=1          # 802.11n support
+wmm_enabled=1         # QoS support
+
+# First AP
+ssid=test1            # the name of the AP
+auth_algs=1           # 1=wpa, 2=wep, 3=both
+wpa=2                 # WPA2 only
+wpa_key_mgmt=WPA-PSK 
+rsn_pairwise=CCMP
+wpa_passphrase=somepassword
+
+# Seconf AP
+bss=wlan1             # the name of the new interface hostapd will create to handle this AP 
+ssid=test2            # the name of the AP
+auth_algs=1           # 1=wpa, 2=wep, 3=both
+wpa=1                 # WPA1 only
+wpa_key_mgmt=WPA-PSK 
+wpa_passphrase=someotherpassword
+
+# Third AP
+bss=wlan2             # the name of the new interface hostapd will create to handle this AP 
+ssid=test3
+# since there is no encryption defined, none will be used
+</script></code></pre>
+<p>其它配置：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+# 加入桥接网络
+bridge=br0
+
+# 不广播/隐藏 SSID
+ignore_broadcast_ssid=1
+
+# 20MHz/40MHz 频宽 (2.4G)
+ht_capab=[HT40-][HT40+][SHORT-GI-20][SHORT-GI-40]
+noscan=1
+</script></code></pre>
+<p><strong>RPI3B 板载 WiFi</strong></p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+interface=wlan0
+driver=nl80211
+bridge=br0
+
+hw_mode=g
+channel=11
+ieee80211d=1
+ieee80211h=1
+country_code=CN
+ieee80211n=1
+wmm_enabled=1
+
+ssid=RPi3B
+ignore_broadcast_ssid=0
+auth_algs=1
+wpa=2
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+wpa_passphrase=somepassword
+</script></code></pre>
+<p><strong>Tenda U12 2.4GHz 配置</strong></p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+interface=wlan1
+driver=nl80211
+bridge=br0
+
+hw_mode=g
+channel=1
+ieee80211d=1
+ieee80211h=1
+country_code=CN
+ieee80211n=1
+ht_capab=[HT40-][HT40+][SHORT-GI-20][SHORT-GI-40][RX-STBC1][DSSS_CCK-40]
+noscan=1
+wmm_enabled=1
+
+ssid=U12-2.4G
+ignore_broadcast_ssid=0
+auth_algs=1
+wpa=2
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+wpa_passphrase=somepassword
+</script></code></pre>
+<p><strong>Tenda U12 5.8GHz 配置</strong></p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+interface=wlan1
+driver=nl80211
+bridge=br0
+
+hw_mode=a
+channel=149
+ieee80211d=1
+ieee80211h=1
+country_code=CN
+ieee80211n=1
+ieee80211ac=1
+vht_capab=[SHORT-GI-80][MAX-MPDU-11454][TX-STBC-2BY1][RX-STBC-1][MAX-A-MPDU-LEN-EXP7]
+noscan=1
+wmm_enabled=1
+
+ssid=U12-5.8G
+ignore_broadcast_ssid=0
+auth_algs=1
+wpa=2
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+wpa_passphrase=somepassword
+</script></code></pre>
+<h2 id="STA-配置"><a href="#STA-配置" class="headerlink" title="STA 配置"></a>STA 配置</h2><p>其实只需要 <code>wpa_supplicant</code> 就行了，它和 <code>hostapd</code> 软件包是对等的，前者用于连接 WiFi，后者用于创建 WiFi。它们都要运行一个守护进程，守护进程名同对应的包名。</p>
+<p><code>wpa_supplicant</code> 软件包的 3 个主要命令：</p>
+<ul>
+<li><code>wpa_cli</code>：wpa_supplicant 的命令行接口，交互配置工具，调试时常用。</li>
+<li><code>wpa_passphrase</code>：生成 network 配置段的工具，默认使用密文保存密码。</li>
+<li><code>wpa_supplicant</code>：核心守护进程，配置文件目录 <code>/etc/wpa_supplicant/</code>。</li>
+</ul>
+<p>连接 WiFi 前，一般先 scan 一下附近的可用 WiFi，可以使用 <code>iw</code>、<code>wpa_cli</code>。</p>
+<p><strong>使用 iw 扫描</strong><br>iw 扫描前，先使用 <code>ip link set wlan0 up</code> 启用接口，然后 <code>iw dev wlan0 scan</code>。</p>
+<p><strong>使用 wpa_cli 扫描</strong><br>wpa_cli 扫描前，先运行 <code>wpa_supplicant</code> 守护进程，还得先创建 <code>/etc/wpa_supplicant/wpa_supplicant.conf</code> 配置文件，最简配置如下：</p>
+<pre><code class="language-dosini line-numbers"><script type="text/plain">
+ctrl_interface=/run/wpa_supplicant
+update_config=1
+country=CN
+</script></code></pre>
+<p>运行 <code>wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf</code>。<br>运行 <code>wpa_cli</code>，键入 <code>scan</code>，<code>scan_results</code> 查看扫描结果（可能需要等待一小会）。</p>
+<p><strong>配置 wpa_supplicant.conf</strong><br>使用 <code>wpa_passphrase &lt;SSID&gt; &lt;Password&gt; &gt;&gt; wpa_supplicant.conf</code> 生成 network 段。<br>具体的配置文件如下，也可以手动配置，wpa_pssphrase 默认使用加密存储的密码：</p>
+<pre><code class="language-conf line-numbers"><script type="text/plain">
+ctrl_interface=/run/wpa_supplicant
+update_config=1
+country=CN
+
+network={
+    # hidden ssid
+    scan_ssid=1
+    ssid="TL"
+    # psk="somepassword"
+    psk=794086310d3cb629fb9b2217658a3a3fd685cce88ce51984b57111fb463b8ac6
+}
+</script></code></pre>
+<p>运行 <code>wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf</code>。<br>如果没有报错，就可以使用 <code>dhcpcd wlan0</code> 来获取 IP 等地址信息了，或静态指定 IP。</p>
+<p>在 ArchLinux 中，建议使用 netctl 来管理网络，具体的配置也很简单，比如：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+Description='A simple WPA encrypted wireless connection'
+Interface=wlan0
+Connection=wireless
+
+Security=wpa
+IP=dhcp
+
+ESSID='MyNetwork'
+# Prepend hexadecimal keys with \"
+# If your key starts with ", write it as '""<key>"'
+# See also: the section on special quoting rules in netctl.profile(5)
+Key='WirelessKey'
+# Uncomment this if your ssid is hidden
+#Hidden=yes
+# Set a priority for automatic profile selection
+#Priority=10
+</script></code></pre>
+<p><strong>iw 命令用法</strong><br><code>iw dev</code>：查看接口信息（简短）<br><code>iw dev wlan0 info</code>：查看指定接口信息（简短）</p>
+<p><code>iw list</code>：查看设备信息（详细）<br><code>iw phy</code>：查看设备信息（详细）<br><code>iw phy phy0 info</code>：查看指定设备信息（详细）<br><code>iw phy phy0 channels</code>：查看指定设备的信道信息</p>
+<p><code>iw dev wlan0 scan</code>：查看附近的 WiFi 信息<br><code>iw dev wlan0 connect param...</code>：连接到指定 WiFi（仅支持 WEP）<br><code>iw dev wlan0 disconnect</code>：断开当前连接的 WiFi</p>
+<p><code>iw dev wlan0 link</code>：查看当前连接的 WiFi 信息<br><code>iw dev wlan0 station dump [-v]</code>：查看指定接口连接的 WiFi 信息</p>
+<p>因为 <code>iw dev wlan0 scan</code> 的信息非常多，因此这里提供一个实用的解析脚本：</p>
+<pre><code class="language-properties line-numbers"><script type="text/plain">
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <NIC>"
+    exit 1
+fi
+
+awk_script=$(cat << 'EOF'
+$1 == "BSS" {
+    split($2, arr, "(");
+    MAC = arr["1"];
+    results[MAC]["enc"] = "Open";
+}
+
+$1 == "freq:" {
+    results[MAC]["freq"] = $2;
+}
+
+$1 == "signal:" {
+    results[MAC]["signal"] = $2 " " $3;
+}
+
+$1 == "SSID:" {
+    if (length($2) == 0)
+        SSID = "<HIDDEN>";
+    else
+        SSID = $2;
+    results[MAC]["ssid"] = SSID;
+}
+
+/^\s*HT[0-9]{2}/ {
+    results[MAC]["bandwidth"] = $1;
+}
+
+/^\s*\* primary channel: [0-9]+/ {
+    results[MAC]["channel"] = $4;
+}
+
+$1 == "WEP:" {
+    enc = results[MAC]["enc"];
+    if (enc == "Open")
+        results[MAC]["enc"] = "WEP";
+}
+
+$1 == "WPA:" {
+    enc = results[MAC]["enc"];
+    if (enc == "Open" || enc == "WEP")
+        results[MAC]["enc"] = "WPA";
+}
+
+$1 == "RSN:" {
+    enc = results[MAC]["enc"];
+    if (enc == "Open" || enc == "WEP" || enc == "WPA")
+        results[MAC]["enc"] = "WPA2";
+}
+
+END {
+    print("       MAC                     SSID   Frequency     Signal     BandWidth   Channel   Security");
+    for (mac in results)
+        printf("%17s   %15s   %4s MHz   %11s   %9s   %5s   %8s\n",
+               mac, results[mac]["ssid"], results[mac]["freq"],
+               results[mac]["signal"], results[mac]["bandwidth"],
+               results[mac]["channel"], results[mac]["enc"]);
+}
+EOF
+)
+
+if [ "$(ip link set dev $1 up &> /dev/null; echo $?)" -ne 0 ]; then
+    echo "Cannot find device '$1'"
+    exit 1
+fi
+
+echo -e "\e[1m$(awk "$awk_script" < /dev/null)\e[0m"
+iw dev $1 scan 2> /dev/null | awk "$awk_script" | tail +2 | sort -nrk5
+</script></code></pre>
+<p>用法很简单，将 wifi-scan 放在 PATH 路径中，然后 <code>wifi-scan wlan0</code> 就可以了。</p>
+<h2 id="无线知识"><a href="#无线知识" class="headerlink" title="无线知识"></a>无线知识</h2><p>有线网络：全双工，可以同时发送和接收数据，互不影响，相当于有两条道路。<br>无线网络：半双工，同一时间只能发送或接收，两个状态之间需要不断的切换。</p>
+<p>一条网线同一时间只能与两个设备相连，这很容易理解。而一条无线同一时间也只能与两个设备相连，即 AP 和 Sta 之间是一对一连接的。那为什么多个 Sta 连接到 AP 却可以同时上网呢？其实是 AP 与多个 Sta 之间不断切换造成的假象啦，比如第一个 Sta 通信 10ms，然后立即切换到第二个 Sta，与之通信 10ms，以此类推。这其实和单核心计算机上运行多个程序是一样的，都是不断切换来实现的。</p>
+<p>基于这个特点，将无线 AP 当作无线的交换机是不太可取的，特别是设备多，网络负载比较重时，尤其明显。当然家用和设备不多的情况下，无线交换机还是挺有用的。</p>
+<p>在无线传输领域，存在 MIMO 这样一个技术，MIMO 即 multiple-input and multiple-output，多输入多输出。MIMO 在 WLAN、3G、4G 中被广泛使用。</p>
+<p>802.11n 在速率上的提升很大程度上都归功于 MIMO 技术，那 MIMO 究竟是什么东西呢？其实就是多天线，MIMO 不要求 AP 和 Sta 都有多天线，但是如果 AP 和 Sta 的天线数量相同（当然 AP 端更多也可以），效率和效果是最好的。所谓的 MIMO 就是每条天线都可以同时发送或接收数据，即原本的一条传输流变成了多条传输流，这样的直接效果就是传输速率翻倍，假设一条天线的速率是 150Mbps，那么两条天线的速率就是 150<em>2=300Mbps，三条天线的速率就是 150</em>3=450Mbps，四条天线的速率就是 150*4=600Mbps（802.11n 最多允许 4 条天线同时传输，即最大 600Mbps）</p>
+<p>注意，两个设备之间的传输速率取决于天线少的一方，比如 AP 有 4 条天线（假设频宽为 40MHz，那么单天线的速率就是 150Mbps），如果 Sta 也有 4 条天线，那么协商速率就是 600Mbps，如果只有两条，那么就是 300Mbps，一条的话就只有 150Mbps 了。</p>
+<p>上一段中我提到了 40MHz 的频宽单天线才有 150Mbps（这里仅针对 802.11n 讨论），那么正常情况下的频宽其实是 20MHz 的，因此单天线速率就是 72.2 Mbps。20MHz 的双天线速率就是 144Mbps了，这也是为什么高通手机连接 802.11n 的速率大多是 72Mbps，144Mbps（双天线）。因为高通手机默认关闭了 40MHz 的频宽，需要修改 <code>/system/etc/wifi/WCNSS_qcom_cfg.ini</code> 配置文件（当然需要 root 权限），即 <code>gChannelBondingMode24GHz=1</code>，修改为 1（默认是 0），启用 40MHz 频宽支持。</p>
+<p>注意，802.11n 时代的 MIMO 属于 SU-MIMO（Single User MIMO，单用户 MIMO），所谓单用户是指即使你有多个天线，同一时间也只能进行一对一的数据传输。这本质和开头说的一条网线同时只能与两个设备连接是一样的，没有改变，只不过这根网线里面的分线多了几根而已，速度增加了。既然有 SU-MIMO，就有 MU-MIMO（多用户 MIMO），这是 802.11ac wave2 中提出的，意思是：同一个 AP 同一时间内可以与多个支持 MU-MIMO 的 Sta 进行通信（目前仅支持下行链路，即 AP -&gt; Sta 方向）。多用户 MIMO 听起来挺美好的，但是因为不支持上行链路，而且可能会在多条天线之间造成干扰，导致速率反而比单用户 MIMO 低，因此我个人对 MU-MIMO 不是很感冒，还是 SU-MIMO 用的爽一些（主要还是没钱~）。</p>
+<p>802.11n 支持的频宽（band-width）有 20MHz、40MHz，而 802.11ac 支持的频宽有 20MHz、40MHz、80MHz、160MHz。频宽越大速率就越大，但是因为“传输的道路”变大了，所以可能被邻边的信道干扰，在 WiFi 多的环境中，一味的提高频宽反而没有效果，还会降低原本的速率。</p>
+<p>802.11n 最多可以有 4 条天线<br>单天线的 802.11n 的 20MHz 频宽的速率为：72.2Mbps<br>单天线的 802.11n 的 40MHz 频宽的速率为：150Mbps</p>
+<p>802.11ac 最多可以有 8 条天线<br>单天线的 802.11ac 的 20MHz 频宽的速率为：87.6Mbps<br>单天线的 802.11ac 的 40MHz 频宽的速率为：200Mbps<br>单天线的 802.11ac 的 80MHz 频宽的速率为：433.3Mbps<br>单天线的 802.11ac 的 160MHz 频宽的速率为：866.7Mbps（wave2）</p>
+<p>目前中国允许使用的 802.11n 的信道有：1-13（但 12、13 可能兼容性不好，因为部分无线网卡不支持 12、13 信道，搜不到信号）。因此实际上常用的为 1-11，而 20MHz 频宽下，建议使用的信道为 1、6、11（因为一条信道实际上会占用前后 2 条信道，即 2 + 2 = 4 条信道），如果是 40MHz，那么实际上会占用 8 条信道，因此如果是 80MHz，建议使用 1、11 信道。</p>
+<p>对于 802.11ac，建议使用 80MHz 频宽的信道，才能充分发挥 802.11ac 的速度优势，下表是每个频宽对应的信道列表。很可惜，中国允许使用的信道都是只支持 20MHz 频宽的（CN 地区建议使用 149 信道，网上说的，说这个信道干扰较少，速度比较快，比较稳定），因此建议 802.11ac 网络不要选择 CN 地区，用 US 比较好。<br><img src="https://static.squarespace.com/static/54860cc3e4b020d690f237ba/548f5703e4b00e8ec160e2fb/548f5708e4b00e8ec160e4b3/1418680072251/1000w/" alt="802.11ac 相关信道对应的频宽"></p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/inode.html" rel="next" title="理解 inode">
+                <i class="fa fa-chevron-left"></i> 理解 inode
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/linux.html" rel="prev" title="Linux 笔记">
+                Linux 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网卡驱动"><span class="nav-number">1.</span> <span class="nav-text">网卡驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全相关"><span class="nav-number">2.</span> <span class="nav-text">安全相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议标准"><span class="nav-number">3.</span> <span class="nav-text">协议标准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作模式"><span class="nav-number">4.</span> <span class="nav-text">工作模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hostapd"><span class="nav-number">5.</span> <span class="nav-text">hostapd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#STA-配置"><span class="nav-number">6.</span> <span class="nav-text">STA 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无线知识"><span class="nav-number">7.</span> <span class="nav-text">无线知识</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/wlan.html';
+          this.page.identifier = 'wlan.html';
+          this.page.title = 'WLAN 笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

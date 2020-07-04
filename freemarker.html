@@ -1,0 +1,1889 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="java,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Apache FreeMarker 是一个使用 Java 语言编写的模板引擎，用于根据 template（模板）和 java objects（数据）来生成文本输出（HTML 网页，电子邮件，配置文件，源代码等）。模板是用 FreeMarker 模板语言（FreeMarker Template Language，FTL）编写的，这是一种简单的专用语言（不像 PHP 这样的完整编程语言）。通常，使用通">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FreeMarker 模板引擎">
+<meta property="og:url" content="https://www.zfl9.com/freemarker.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Apache FreeMarker 是一个使用 Java 语言编写的模板引擎，用于根据 template（模板）和 java objects（数据）来生成文本输出（HTML 网页，电子邮件，配置文件，源代码等）。模板是用 FreeMarker 模板语言（FreeMarker Template Language，FTL）编写的，这是一种简单的专用语言（不像 PHP 这样的完整编程语言）。通常，使用通">
+<meta property="og:image" content="https://www.zfl9.com/images/freemarker.png">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.175Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FreeMarker 模板引擎">
+<meta name="twitter:description" content="Apache FreeMarker 是一个使用 Java 语言编写的模板引擎，用于根据 template（模板）和 java objects（数据）来生成文本输出（HTML 网页，电子邮件，配置文件，源代码等）。模板是用 FreeMarker 模板语言（FreeMarker Template Language，FTL）编写的，这是一种简单的专用语言（不像 PHP 这样的完整编程语言）。通常，使用通">
+<meta name="twitter:image" content="https://www.zfl9.com/images/freemarker.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/freemarker.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>FreeMarker 模板引擎 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/freemarker.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                FreeMarker 模板引擎
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-11T08:00:00+08:00">
+                2019-02-11
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/freemarker.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="freemarker.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/freemarker.html" class="leancloud_visitors" data-flag-title="FreeMarker 模板引擎">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Apache FreeMarker 是一个使用 Java 语言编写的模板引擎，用于根据 template（模板）和 java objects（数据）来生成文本输出（HTML 网页，电子邮件，配置文件，源代码等）。模板是用 FreeMarker 模板语言（FreeMarker Template Language，FTL）编写的，这是一种简单的专用语言（不像 PHP 这样的完整编程语言）。通常，使用通用编程语言（如 Java）来准备数据（发起数据库查询，进行业务计算等）。然后，Apache FreeMarker 使用模板显示准备好的数据。在模板中，您将专注于如何呈现数据，而在模板之外，您将关注于要呈现的数据。</p>
+<a id="more"></a>
+<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>FreeMarker 原理简介<br><img src="/images/freemarker.png" alt="FreeMarker 原理简介"></p>
+<p>这种方法通常被称为 MVC（模型 + 视图 + 控制器）模式，并且特别受动态网页的欢迎。它有助于将网页设计者（前端）与 Java 开发人员（后端）分开。前端人员不会在模板中面对复杂的逻辑，并且可以在程序员不必更改或重新编译代码的情况下更改页面的外观。虽然 FreeMarker 最初是为在 MVC Web 应用程序框架中生成 HTML 页面而创建的，但它并不局限于 Servlet 或 HTML 或与 Web 相关的任何内容，它也用于非 Web 应用程序环境，因为 FreeMarker 实际上就是一个普通的 Java 类库，就类似 <code>Apache Commons CLI</code> 一样，是一个非常简单的 Java 类库。所以我们完全在普通 java 程序中使用 freemarker，来动态的生成文本文件，并不局限于 html 文件的生成，因为本质上，freemarker 就是一个文本处理引擎，替换文本中的特殊模式占位符（FTL 语言），仅此而已，其它什么东西 freemarker 根本不关心。</p>
+<p><strong>FreeMarker 的一些亮点</strong></p>
+<ul>
+<li>强大的模板语言：条件块、迭代、赋值、字符串运算、算术运算，自定义宏和内置函数等等</li>
+<li>多用途和轻量级：零依赖性，任何输出格式，可以从任何地方（可插入）加载模板，许多配置项</li>
+<li>国际化/本地化感知：区域设置敏感数字和日期/时间格式，本地化模板变体</li>
+<li>XML处理功能：将 XML DOM 放入数据模型并遍历它们，甚至以声明方式处理它们</li>
+<li>多功能数据模型：Java 对象通过可插拔适配器作为变量树暴露给模板，该适配器决定模板如何看待它们</li>
+</ul>
+<h2 id="HelloWorld"><a href="#HelloWorld" class="headerlink" title="HelloWorld"></a>HelloWorld</h2><h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="language-none line-numbers"><script type="text/plain">
+$ tree src
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           └── JdbcProperty.java
+│   └── resources
+│       └── jdbcproperty.ftl
+└── test
+    └── java
+        └── com
+            └── zfl9
+                └── JdbcPropertyTest.java
+</script></code></pre>
+<p>freemarker 模版文件的后缀名一般为：<code>*.ftl</code>、<code>*.ftlh</code>(html)、<code>*.ftlx</code>(xml)；通常将它放到 classpath 下，在 maven 中就是 resources 目录下。</p>
+<h3 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.zfl9.learn</groupId>
+  <artifactId>learn-freemarker</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>2.3.28</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<h3 id="jdbcproperty-ftl"><a href="#jdbcproperty-ftl" class="headerlink" title="jdbcproperty.ftl"></a>jdbcproperty.ftl</h3><pre><code class="language-markup line-numbers"><script type="text/plain">
+<#-- @ftlvariable name="" type="com.zfl9.JdbcProperty" -->
+jdbc.url = ${url}
+jdbc.driver = ${driver}
+jdbc.username = ${username}
+jdbc.password = ${password}
+</script></code></pre>
+<p>freemarker 的注释语法为 <code>&lt;#-- comments --&gt;</code>，第一行注释的作用是告诉 idea 后面的 <code>${property}</code> 来源哪个 java 对象，当然也可以没有这行。</p>
+<h3 id="JdbcProperty-java"><a href="#JdbcProperty-java" class="headerlink" title="JdbcProperty.java"></a>JdbcProperty.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+public class JdbcProperty {
+    private String url;
+    private String driver;
+    private String username;
+    private String password;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("JdbcProperty{url='%s', driver='%s', username='%s', password='%s'}", url, driver, username, password);
+    }
+}
+</script></code></pre>
+<h3 id="JdbcPropertyTest-java"><a href="#JdbcPropertyTest-java" class="headerlink" title="JdbcPropertyTest.java"></a>JdbcPropertyTest.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import org.junit.Test;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+
+public class JdbcPropertyTest {
+    @Test
+    public void test() throws IOException, TemplateException {
+        /* 创建 freemarker 配置对象，单例模式，不需要多次创建 */
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_28); // 创建 Configuration 配置对象
+        cfg.setClassLoaderForTemplateLoading(JdbcPropertyTest.class.getClassLoader(), ""); // 模版文件的目录
+        cfg.setDefaultEncoding("UTF-8"); // 设置模版文件的默认字符编码为 UTF-8
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER); // 设置模板异常处理器
+        cfg.setLogTemplateExceptions(false); // 不要在 freemarker 中记录它会抛出的异常
+        cfg.setWrapUncheckedExceptions(true); // 将未检查异常包装为 TemplateException 异常
+
+        /* 获取 template 模版对象，可多次调用 getTemplate() 方法，cfg 对象内部有缓存 */
+        Template template = cfg.getTemplate("jdbcproperty.ftl"); // "classpath:jdbcproperty.ftl"
+
+        /* 创建 java 数据对象，"template + objects = output"，用于填充模板 */
+        JdbcProperty jdbcProperty = new JdbcProperty();
+        jdbcProperty.setUrl("jdbc:mysql://localhost/test");
+        jdbcProperty.setDriver("com.mysql.jdbc.Driver");
+        jdbcProperty.setUsername("root");
+        jdbcProperty.setPassword("123456");
+
+        /* 创建 output 输出对象，这里直接就输出到 System.out */
+        OutputStreamWriter writer = new OutputStreamWriter(System.out);
+
+        /* 填充数据到模板中，然后输出到 output */
+        long begin = System.currentTimeMillis();
+        template.process(jdbcProperty, writer);
+        long end = System.currentTimeMillis();
+        System.out.println();
+        System.out.println("render time: " + (end - begin) + " ms");
+        System.out.println();
+
+        /* 第二次的解析时间为 0ms，说明有缓存 */
+        begin = System.currentTimeMillis();
+        template.process(jdbcProperty, writer);
+        end = System.currentTimeMillis();
+        System.out.println();
+        System.out.println("render time: " + (end - begin) + " ms");
+    }
+}
+</script></code></pre>
+<h3 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h3><pre><code class="language-none line-numbers"><script type="text/plain">
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.driver = com.mysql.jdbc.Driver
+jdbc.username = root
+jdbc.password = 123456
+render time: 16 ms
+
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.driver = com.mysql.jdbc.Driver
+jdbc.username = root
+jdbc.password = 123456
+render time: 0 ms
+</script></code></pre>
+<h3 id="简要解析"><a href="#简要解析" class="headerlink" title="简要解析"></a>简要解析</h3><p>可以感觉到，freemarker 和 jsp 其实非常相似，但两者又有不同，freemarker 只是一个文本处理引擎，而 jsp 只能用于 servlet 容器环境中，脱离这个环境就一无是处了，jsp 本质就是 servlet 的高级抽象，底层依旧会被转换为 servlet，并编译为 class 文件，装载到 jvm 永久代中；但是 freemarker 只会缓存模版文件，并不会生成新的 class 类文件，也不会占用永久代的内存空间。</p>
+<p>freemarker 和 jsp 获取数据的语法都是相似的：<code>${property}</code>，在上面这个例子中，我们是使用 jdbcProperty bean/pojo 对象作为数据载体的，其中 <code>${url}</code> 就是调用该对象的 <code>getUrl()</code> 方法获取的，<code>${driver}</code> 调用 <code>getDriver()</code> 获取，<code>${username}</code> 调用 <code>getUsername()</code> 获取，<code>${password}</code> 调用 <code>getPassword()</code> 获取，与 jsp 没什么两样。除了直接使用 bean/pojo 对象作为数据来源之外，也可以使用 java.util.Map 来作为数据来源，本质上它们两者都可以抽象为 object（可以与 javascript 中的 object 类比起来）。</p>
+<p><strong>template + dataModel = output</strong></p>
+<ul>
+<li>template 就是我们所说的模板文件，模板文件中有一些 FTL 语法占位符（比如上面的 <code>${username}</code>），待解析。</li>
+<li>dataModel 通常是 <code>java.util.Map&lt;String, Object&gt;</code> 或 bean/pojo 对象（getter、setter 方法），用来填充模板。</li>
+<li>当我们调用 template 对象的 process(dataModel, writer) 方法时，freemarker 会自动使用 dataModel 来填充 template。</li>
+</ul>
+<p>上面的例子中，我们使用的是 bean/pojo 对象作为 dataModel，我们也可以使用 Map 来替代它：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+@Test
+public void test() throws IOException, TemplateException {
+    Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+    cfg.setClassLoaderForTemplateLoading(JdbcPropertyTest.class.getClassLoader(), "");
+    cfg.setDefaultEncoding("UTF-8");
+    cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+    cfg.setLogTemplateExceptions(false);
+    cfg.setWrapUncheckedExceptions(true);
+
+    Template template = cfg.getTemplate("jdbcproperty.ftl");
+
+    // JdbcProperty jdbcProperty = new JdbcProperty();
+    // jdbcProperty.setUrl("jdbc:mysql://localhost/test");
+    // jdbcProperty.setDriver("com.mysql.jdbc.Driver");
+    // jdbcProperty.setUsername("root");
+    // jdbcProperty.setPassword("123456");
+
+    Map<String, Object> jdbcProperty = new HashMap<>();
+    jdbcProperty.put("url", "jdbc:mysql://localhost/test");
+    jdbcProperty.put("driver", "com.mysql.jdbc.Driver");
+    jdbcProperty.put("username", "root");
+    jdbcProperty.put("password", "123456");
+
+    OutputStreamWriter writer = new OutputStreamWriter(System.out);
+
+    long begin = System.currentTimeMillis();
+    template.process(jdbcProperty, writer);
+    long end = System.currentTimeMillis();
+    System.out.println();
+    System.out.println("render time: " + (end - begin) + " ms");
+    System.out.println();
+
+    begin = System.currentTimeMillis();
+    template.process(jdbcProperty, writer);
+    end = System.currentTimeMillis();
+    System.out.println();
+    System.out.println("render time: " + (end - begin) + " ms");
+}
+</script></code></pre>
+<p>执行结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.driver = com.mysql.jdbc.Driver
+jdbc.username = root
+jdbc.password = 123456
+render time: 16 ms
+
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.driver = com.mysql.jdbc.Driver
+jdbc.username = root
+jdbc.password = 123456
+render time: 0 ms
+</script></code></pre>
+<p><strong>dataModel 相关解析</strong><br>freemarker 的 dataModel 其实就是一个 key-value 键值对结构，在 java 中，bean/pojo 和 <code>Map&lt;String, Object&gt;</code> 均符合这个要求，Map 比较好理解，key 就是属性名，比如 key 为 <code>&quot;url&quot;</code>，那么就可以通过 <code>${url}</code> 来获取它的值；而 bean/pojo 其实也差不多，getter 方法就是对应的属性名（去除 get，首字母小写），而 getter 方法的返回值就是属性的值，假设 bean/pojo 存在一个 <code>getUrl()</code> 方法，那么就可以通过 <code>${url}</code> 来获取它的值（调用 getUrl() 来获取）。</p>
+<p>所以本质上，这两种类型都可以概括为 <code>Map&lt;String, Object&gt;</code> 类型；key 是字符串类型，作为 freemarker 中的变量名；value 是 Object 类型（任意对象），作为对应变量名的值（调用对象的 toString() 方法来获取对象的字符串表示）。一些比较常用的数据类型：</p>
+<ul>
+<li>String：字符串</li>
+<li>Number：数值</li>
+<li>Boolean：布尔值</li>
+<li>Date/Time：日期、时间</li>
+<li>List/Array：列表、built-in 数组</li>
+<li><code>Map&lt;String, Object&gt;</code>：关联数组</li>
+<li>Java Bean/POJO 对象，getter 方法就是属性名</li>
+</ul>
+<p>和 jsp 一样，有两种访问对象/Map 属性的方式：<code>object[&#39;property&#39;]</code>、<code>object[&quot;property&quot;]</code>、<code>object.property</code>。字符串可以使用单引号、双引号来表示，可以使用 <code>+</code> 操作符连接字符串。数值不支持科学记数法，支持 +、- 正负数，整数、小数都属于数值类型，如 <code>10</code>、<code>3.14</code>、<code>-100</code>。布尔值的字面量也有两个：<code>true</code>、<code>false</code>。List、Array 可以通过索引来获取元素的值，如 <code>list[0]</code>、<code>array[1]</code>，注意索引值也是从 0 开始。</p>
+<h2 id="FTL-语法简介"><a href="#FTL-语法简介" class="headerlink" title="FTL 语法简介"></a>FTL 语法简介</h2><h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h3><p>Template：</p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<html>
+<head>
+  <title>Welcome!</title>
+</head>
+<body>
+  <h1>Welcome ${user}!</h1>
+  <p>Our latest product:
+  <a href="${latestProduct.url}">${latestProduct.name}</a>!
+</body>
+</html>
+</script></code></pre>
+<p>DataModel：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+(root)
+  |
+  +- user = "Big Joe"
+  |
+  +- latestProduct
+      |
+      +- url = "products/greenmouse.html"
+      |
+      +- name = "green mouse"
+</script></code></pre>
+<p>Output：</p>
+<pre><code class="language-html line-numbers"><script type="text/plain">
+<html>
+<head>
+  <title>Welcome!</title>
+</head>
+<body>
+  <h1>Welcome John Doe!</h1>
+  <p>Our latest product:
+  <a href="products/greenmouse.html">green mouse</a>!
+</body>
+</html>
+</script></code></pre>
+<p>DataModel 是一个倒立的树状结构，root 就是所谓的根节点，但其实在 freemarker 中这个节点没什么意义，通常将它看作为一个容器，我们主要是使用容器中的元素，比如第一级元素为：<code>user</code>、<code>latestProduct</code>。注意 latestProduct 元素下面还有两个子元素，user 元素是 String 类型，latestProduct 元素可能是 <code>Map&lt;String, Object&gt;</code> 类型，有两个 key：<code>&quot;url&quot;</code>、<code>&quot;name&quot;</code>，这两个 key 分别对应两个字符串类型；也可能是 java bean/pojo 类型，存在两个方法：<code>String getUrl()</code>、<code>String getName()</code>。访问第一级元素就是直接通过元素名来访问，比如访问 user 元素就是使用 <code>${user}</code>，访问 latestProduct 元素就是使用 <code>${latestProduct}</code>，访问 latestProduct 元素的 url 子元素就是使用 <code>${latestProduct.url}</code>，访问 latestProduct 元素的 name 子元素就是使用 <code>${latestProduct.name}</code>。</p>
+<p>hash 哈希类型（<code>animals.mouse.price</code>）：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+(root)
+  |
+  +- animals
+  |   |
+  |   +- mouse
+  |   |   |
+  |   |   +- size = "small"
+  |   |   |
+  |   |   +- price = 50
+  |   |
+  |   +- elephant
+  |   |   |
+  |   |   +- size = "large"
+  |   |   |
+  |   |   +- price = 5000
+  |   |
+  |   +- python
+  |       |
+  |       +- size = "medium"
+  |       |
+  |       +- price = 4999
+  |
+  +- message = "It is a test"
+  |
+  +- misc
+      |
+      +- foo = "Something"
+</script></code></pre>
+<p>list 列表类型（<code>animals[0].name</code>、<code>misc.fruits[1]</code>）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">
+(root)
+  |
+  +- animals
+  |   |
+  |   +- (1st)
+  |   |   |
+  |   |   +- name = "mouse"
+  |   |   |
+  |   |   +- size = "small"
+  |   |   |
+  |   |   +- price = 50
+  |   |
+  |   +- (2nd)
+  |   |   |
+  |   |   +- name = "elephant"
+  |   |   |
+  |   |   +- size = "large"
+  |   |   |
+  |   |   +- price = 5000
+  |   |
+  |   +- (3rd)
+  |       |
+  |       +- name = "python"
+  |       |
+  |       +- size = "medium"
+  |       |
+  |       +- price = 4999
+  |
+  +- misc
+      |
+      +- fruits
+          |
+          +- (1st) = "orange"
+          |
+          +- (2nd) = "banana"
+</script></code></pre>
+<ul>
+<li>data-model：数据模型可以可视化为树。</li>
+<li>scalars：标量存储单个值。值可以是字符串、数字、布尔值，日期、时间。</li>
+<li>hashes：哈希是存储其他变量并将其与唯一查找名称相关联的容器（关联数组、Map/Bean）。</li>
+<li>sequences：序列是以有序序列存储其他变量的容器。存储的变量可以通过它们的数字索引从 0 开始检索。</li>
+</ul>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><ul>
+<li>插值 <code>${...}</code>：FreeMarker 将在输出中将其替换为大括号内表达式的实际值。</li>
+<li>内置标签 <code>&lt;#tag statement&gt; ... &lt;/#tag&gt;</code>：FTL 标签类似于 HTML 标签，但它们是 FreeMarker 的指令，不会打印到输出。</li>
+<li>自定义标签 <code>&lt;@tag statement&gt; ... &lt;/@tag&gt;</code>：FreeMarker 允许我们创建自定义标签，与内置标签的区别是使用 <code>@</code> 而不是 <code>#</code>。</li>
+<li>注释标签 <code>&lt;#-- comments --&gt;</code>：FTL 注释与 HTML 注释有一点不同，那就是 FTL 注释不会进入输出，但 HTML 注释会，注释会被忽略。</li>
+</ul>
+<blockquote>
+<p>任何不是 FTL 标签、FTL 插值、FTL 注释的东西都被认为是静态文本，FreeMarker 不会解释它们，这些文本只会被按原样打印到输出。</p>
+</blockquote>
+<h3 id="基本指令"><a href="#基本指令" class="headerlink" title="基本指令"></a>基本指令</h3><p>这里指的指令就是 FTL 标签（内置标签），如 <code>if</code>、<code>list</code>、<code>include</code>。</p>
+<p><strong><code>&lt;#if condition&gt; ... &lt;/#if&gt;</code></strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<#if condition>
+    statement
+<#elseif condition>
+    statement
+<#elseif condition>
+    statement
+<#else>
+    statement
+</#if>
+</script></code></pre>
+<p><strong><code>&lt;#list items as item&gt; ... &lt;/#list&gt;</code></strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<#list animals as animal>
+  name = ${animal.name}
+  price = ${animal.price}
+</#list>
+
+<!-- 语法 1 -->
+<#list sequence as item>
+    Part repeated for each item
+</#list>
+
+<!-- 语法 2 -->
+<#list hash as key, value>
+    Part repeated for each key-value pair
+</#list>
+
+<!-- 语法 3 -->
+<#list sequence as item>
+    Part repeated for each item
+<#else>
+    Part executed when there are 0 items
+</#list>
+
+<!-- 语法 4 -->
+<#list sequence>
+    Part executed once if we have more than 0 items
+    <#items as item>
+        Part repeated for each item
+    </#items>
+    Part executed once if we have more than 0 items
+<#else>
+    Part executed when there are 0 items
+</#list>
+</script></code></pre>
+<p><strong><code>&lt;#switch value&gt; ... &lt;/#switch&gt;</code></strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<#switch value>
+  <#case refValue1>
+    ...
+    <#break>
+  <#case refValue2>
+    ...
+    <#break>
+  ...
+  <#case refValueN>
+    ...
+    <#break>
+  <#default>
+    ...
+</#switch>
+</script></code></pre>
+<p><strong><code>&lt;#include &quot;/path/to/included.file&quot;&gt;</code></strong></p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+<!-- /path/to/included.file -->
+<hr>
+<i>
+Copyright (c) 2000 <a href="http://www.acmee.com">Acmee Inc</a>,
+<br>
+All Rights Reserved.
+</i>
+<!-- /path/to/included.file -->
+
+<!-- template.ftl -->
+<html>
+<head>
+  <title>Test page</title>
+</head>
+<body>
+  <h1>Test page</h1>
+  <p>Blah blah...
+  <#include "/copyright_footer.html">
+</body>
+</html>
+<!-- template.ftl -->
+
+<!-- output -->
+<html>
+<head>
+  <title>Test page</title>
+</head>
+<body>
+  <h1>Test page</h1>
+  <p>Blah blah...
+<hr>
+<i>
+Copyright (c) 2000 <a href="http://www.acmee.com">Acmee Inc</a>,
+<br>
+All Rights Reserved.
+</i>
+</body>
+</html>
+<!-- output -->
+</script></code></pre>
+<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><p>一些最常用的内置插件的示例：</p>
+<ul>
+<li><code>user?length</code> 获取 user 字符串的长度</li>
+<li><code>animals?size</code> 获取 animals 集合的大小</li>
+<li><code>user?upper_case</code> 将 user 转换为大写字母形式</li>
+<li><code>animal.name?cap_first</code> 将 animal.name 首字母转换为大写</li>
+<li>在 <code>&lt;#list animals as animal&gt;</code> 标签中，还可以使用这些方法：<ul>
+<li><code>animal?index</code> 当前元素的基于 0 的索引值</li>
+<li><code>animal?counter</code> 当前元素的基于 1 的索引值</li>
+<li><code>animal?item_parity</code> 当前元素的奇偶字符串，<code>&quot;odd&quot;</code> 或 <code>&quot;even&quot;</code></li>
+<li><code>animal?item_cycle(&#39;lightRow&#39;, &#39;darkRow&#39;)</code> item_parity 的通用变体</li>
+</ul>
+</li>
+<li><code>animal.protected?string(&quot;Y&quot;, &quot;N&quot;)</code> 返回字符串“Y”（true）或“N”（false）</li>
+<li><code>fruits?join(&quot;, &quot;)</code> 使用指定的分隔符连接列表的所有元素，如 <code>&quot;orange, banana&quot;</code></li>
+<li><code>user?starts_with(&quot;J&quot;)</code> 如果 user 字符串以字符 J 开头，则返回 true，否则返回 false</li>
+<li><code>fruits?join(&quot;, &quot;)?upper_case</code> 链式调用，先将列表 fruits 转换为字符串，然后将其转换为大写</li>
+</ul>
+<h3 id="缺失变量"><a href="#缺失变量" class="headerlink" title="缺失变量"></a>缺失变量</h3><p>默认情况下，访问不存在的变量或者访问值为 null 的变量，FreeMarker 将会抛出异常。FreeMarker 对于缺失变量（不存在的变量或值为 null 的变量统称为“缺失变量”）是不能容忍的，这与 JSP 不相同。之所以不能容忍缺失变量，是因为缺失变量没实际意义，正常且健壮的程序不应该出现 null 值，更不应该访问不存在的变量。FreeMarker 提供两种常用的解决方式来处理“变量缺失问题”：</p>
+<ul>
+<li>使用 <code>variable!default</code> 语法来提供默认值，如 <code>${user!&quot;visitor&quot;}</code>；注意，对于链式访问的表达式，需要加上圆括号，否则 <code>!</code> 操作符实际上只会对最后一个属性起到保护作用，即 <code>(animals.python.price)!0</code> 而不是 <code>animals.python.price!0</code>，对于后者，如果 animals 或 python 不存在或为 null 值，也会导致异常的抛出。</li>
+<li>使用 <code>&lt;#if user??&gt;Welcome ${user}!&lt;/#if&gt;</code> 语法来判断变量是否缺失，实际上就是调用 <code>?</code> 内置方法来判断变量是否缺失，如果<strong>变量未缺失</strong>，则正常执行内部的条件语句。同样的，对于链式访问的表达式，也是要加上圆括号的，如 <code>(animals.python.price)??</code>。实际上我们也可以使用 <code>user?exists</code> 来替代 <code>user??</code>，它们是等价的；其它一些处理方法：<ul>
+<li><code>${user.name}</code>，抛出异常 </li>
+<li><code>${user.name!}</code>，显示空字符串</li>
+<li><code>${user.name!&#39;vakin&#39;}</code>，显示 <code>&#39;vakin&#39;</code></li>
+<li><code>${user.name?default(&#39;vakin&#39;)}</code>，同上，显示 <code>&#39;vakin&#39;</code></li>
+<li><code>${user.name???string(user.name,&#39;vakin&#39;)}</code>，同上，显示 <code>&#39;vakin&#39;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="字符转义"><a href="#字符转义" class="headerlink" title="字符转义"></a>字符转义</h3><p>对于 HTML 和 XML 文档，因为存在一些特殊字符，所以如果要在正常文本中输出这些特殊字符（如 <code>&lt;</code>、<code>&gt;</code>），我们必须进行转义，否则会破坏文档的语法结构。FreeMarker 支持 HTML 文档和 XML 文档的自动转义功能，我们知道，FTL 模板文件的通用后缀名为 <code>.ftl</code>，如果使用通用后缀名则不会自动进行 HTML 或 XML 转义，如果模板文件后缀名为 <code>.ftlh</code> 则会自动激活 HTML 的转义功能，如果模板文件的后缀名为 <code>.ftlx</code> 则会自动激活 XML 的转义功能；当然，除了通过设置模板文件的后缀名来自动激活转义功能之外，我们也可以在模板文件中通过 ftl 指令的 <code>output_format</code> 配置来告诉 FreeMarker 当前模板文件的格式为 HTML 还是 XML，如 <code>&lt;#ftl output_format=&quot;HTML&quot;&gt;</code> 为 HTML 转义形式，注意需要添加到模板文件的首行。如果当前模板文件为 HTML 语法或 XML 语法，那么 FTL 指令、插值的输出就会被自动进行转义，但如果你确实需要输出原字符串，也就是不进行转义，也可以通过调用 FTL 的 <code>?no_esc</code> 内置函数来取消自动转义，而输出原字符串值。</p>
+<h3 id="FTL-标签"><a href="#FTL-标签" class="headerlink" title="FTL 标签"></a>FTL 标签</h3><p>FTL 标签的 start-tag 和 end-tag 语法：</p>
+<ul>
+<li>Start-tag：<code>&lt;#directivename parameters&gt;</code></li>
+<li>End-tag：<code>&lt;/#directivename&gt;</code></li>
+</ul>
+<p>当然，有些标签没有关闭标签，如 <code>&lt;#ftl output_format=&quot;HTML&quot;&gt;</code>。FTL 标签之间不可以进行嵌套，FreeMarker 会自动忽略标签内部的空白符（标签内部的内容允许换行），内置标签使用 <code>&lt;#tag param&gt; ... &lt;/#tag&gt;</code> 表示，用户自定义标签使用 <code>&lt;@tag param&gt; ... &lt;/@tag&gt;</code> 表示。对于自关闭 FTL 标签，有两种形式 <code>&lt;#tag param&gt;</code>、<code>&lt;#tag param/&gt;</code>，FreeMarker 对此没有什么要求，一般为了方便，大家都不会去写 <code>/</code> 正斜杠。</p>
+<h3 id="创建变量"><a href="#创建变量" class="headerlink" title="创建变量"></a>创建变量</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<#assign x = 1> <!-- create  variable x -->
+${x}
+<#assign x = 2> <!-- replace variable x -->
+${x}
+<#assign x++>   <!-- replace variable x -->
+${x}
+</script></code></pre>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+1
+2
+3
+</script></code></pre>
+<h3 id="常用运算符"><a href="#常用运算符" class="headerlink" title="常用运算符"></a>常用运算符</h3><ul>
+<li><code>+</code>、<code>-</code>、<code>*</code>、<code>/</code>、<code>%</code>：加、减、乘、除、取余</li>
+<li><code>&amp;&amp;</code>、<code>||</code>、<code>!</code>、<code>()</code>：逻辑与、逻辑或、逻辑非、括号（分组、改变优先级等）</li>
+<li><code>==</code>、<code>!=</code>、<code>&lt;</code>(<code>lt</code>)、<code>&lt;=</code>(<code>lte</code>)、<code>&gt;=</code>(<code>gte</code>)、<code>&gt;</code>(<code>gt</code>)：等于、不等于、小于、小于等于、大于等于、大于</li>
+<li><code>=</code>、<code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>、<code>%=</code>、<code>++</code>、<code>--</code>：赋值、加赋值、减赋值、乘赋值、除赋值、取余赋值、自增、自减</li>
+<li><code>[&quot;foo&quot;, &quot;bar&quot;, 123.45]</code> 定义列表、<code>{&quot;name&quot;:&quot;green mouse&quot;, &quot;price&quot;:150}</code> 定义关联数组、<code>0..9</code> 范围序列</li>
+</ul>
+<h2 id="FTL-语法示例"><a href="#FTL-语法示例" class="headerlink" title="FTL 语法示例"></a>FTL 语法示例</h2><p><code>stringFreeMarker.ftl</code>：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+字符串输出:
+${"Hello ${name} !"} / ${"Hello " + name + " !"}
+<#assign cname=r"特殊字符完成输出(http:\www.baidu.com)">
+${cname}
+
+字符串截取 ： 
+通过下标直接获取下标对应的字母： ${name[2]}
+起点下标..结尾下标截取字符串：${name[0..5]}
+
+算数运算：
+<#-- 支持"+"、"－"、"*"、"/"、"%"运算符 -->
+<#assign number1 = 10>
+<#assign number2 = 5>
+"+" : ${number1 + number2}
+"－" : ${number1 - number2}
+"*" : ${number1 * number2}
+"/" : ${number1 / number2}
+"%" : ${number1 % number2}
+
+比较运算符：
+<#if number1 + number2 gte 12 || number1 - number2 lt 6>
+"*" : ${number1 * number2}
+<#else>
+"/" : ${number1 / number2}
+</#if>
+
+内建函数：
+<#assign data = "abcd1234">
+第一个字母大写：${data?cap_first}
+所有字母小写：${data?lower_case}
+所有字母大写：${data?upper_case}
+<#assign floatData = 12.34>
+数值取整数：${floatData?int}
+获取集合的长度：${users?size}
+时间格式化：${dateTime?string("yyyy-MM-dd")}
+
+空判断和对象集合：
+<#if users??>
+<#list users as user >
+${user.id} - ${user.name}
+</#list>
+<#else>
+${user!"变量为空则给一个默认值"}
+</#if>
+
+Map集合：
+<#assign mapData={"name":"程序员", "salary":15000}>
+直接通过Key获取 Value值：${mapData["name"]}
+通过Key遍历Map：
+<#list mapData?keys as key>
+Key: ${key} - Value: ${mapData[key]}
+</#list>
+通过Value遍历Map：
+<#list mapData?values as value>
+Value: ${value}
+</#list>
+
+List集合：
+<#assign listData=["ITDragon", "blog", "is", "cool"]>
+<#list listData as value>${value} </#list>
+
+include指令：
+引入其他文件：<#include "otherFreeMarker.ftl" />
+
+macro宏指令：
+<#macro mo>
+定义无参数的宏macro--${name}
+</#macro>
+使用宏macro: <@mo />
+<#macro moArgs a b c>
+定义带参数的宏macro-- ${a+b+c}
+</#macro>
+使用带参数的宏macro: <@moArgs a=1 b=2 c=3 />
+
+命名空间：
+<#import "otherFreeMarker.ftl" as otherFtl>
+${otherFtl.otherName}
+<@otherFtl.addMethod a=10 b=20 />
+<#assign otherName="修改otherFreeMarker.ftl中的otherName变量值"/>
+${otherFtl.otherName}
+<#assign otherName="修改otherFreeMarker.ftl中的otherName变量值" in otherFtl />
+${otherFtl.otherName}
+</script></code></pre>
+<p><code>otherFreeMarker.ftl</code>：</p>
+<pre><code class="language-xml line-numbers"><script type="text/plain">
+其他FreeMarker文件
+<#macro addMethod a b >
+result : ${a + b}
+</#macro>
+<#assign otherName="另外一个FreeMarker的变量">
+</script></code></pre>
+<p>输出结果：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+字符串输出:
+Hello itdragon博客 ! / Hello itdragon博客 !
+特殊字符完成输出(http:\www.baidu.com)
+
+字符串截取 ： 
+通过下标直接获取下标对应的字母： d
+起点下标..结尾下标截取字符串：itdrag
+
+算数运算：
+"+" : 15
+"－" : 5
+"*" : 50
+"/" : 2
+"%" : 0
+
+比较运算符：
+"*" : 50
+
+内建函数：
+第一个字母大写：Abcd1234
+所有字母小写：abcd1234
+所有字母大写：ABCD1234
+数值取整数：12
+获取集合的长度：3
+时间格式化：2017-10-29
+
+空判断和对象集合：
+1 - ITDragon 博客
+2 - 欢迎
+3 - You！
+
+Map集合：
+直接通过Key获取 Value值：程序员
+通过Key遍历Map：
+Key: name - Value: 程序员
+Key: salary - Value: 15,000
+通过Value遍历Map：
+Value: 程序员
+Value: 15,000
+
+List集合：
+ITDragon blog is cool 
+
+include指令：
+其他FreeMarker文件
+
+macro宏指令：
+使用宏macro: 定义无参数的宏macro--itdragon博客
+使用带参数的宏macro: 定义带参数的宏macro-- 6
+
+命名空间：
+另外一个FreeMarker的变量
+result : 30
+另外一个FreeMarker的变量
+修改otherFreeMarker.ftl中的otherName变量值
+</script></code></pre>
+<h2 id="整合-SpringMVC"><a href="#整合-SpringMVC" class="headerlink" title="整合 SpringMVC"></a>整合 SpringMVC</h2><h3 id="项目结构-1"><a href="#项目结构-1" class="headerlink" title="项目结构"></a>项目结构</h3><p>这里依旧以“员工管理系统”为例，<code>SpringMVC + MyBatis + FreeMarker</code>：</p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+$ tree src
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── zfl9
+│   │           ├── controller
+│   │           │   └── EmployeeController.java
+│   │           ├── domain
+│   │           │   └── Employee.java
+│   │           ├── mapper
+│   │           │   └── EmployeeMapper.java
+│   │           ├── MvcConfig.java
+│   │           ├── service
+│   │           │   ├── EmployeeService.java
+│   │           │   └── EmployeeServiceImpl.java
+│   │           └── WebConfig.java
+│   ├── resources
+│   │   ├── com
+│   │   │   └── zfl9
+│   │   │       └── mapper
+│   │   │           └── EmployeeMapper.xml
+│   │   ├── jdbc.properties
+│   │   └── logback.xml
+│   └── webapp
+│       ├── index.jsp
+│       └── WEB-INF
+│           └── views
+│               ├── employee-edit.ftl
+│               └── employee-list.ftl
+└── test
+    └── java
+
+17 directories, 13 files
+</script></code></pre>
+<h3 id="pom-xml-1"><a href="#pom-xml-1" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.zfl9.springmvc</groupId>
+  <artifactId>springmvc-mybatis-freemarker</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <junit.version>4.12</junit.version>
+    <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
+    <logback.version>1.2.3</logback.version>
+    <spring.version>4.3.20.RELEASE</spring.version>
+    <freemarker.version>2.3.28</freemarker.version>
+    <mybatis.version>3.4.6</mybatis.version>
+    <mybatis-spring.version>1.3.2</mybatis-spring.version>
+    <hikaricp.version>3.3.0</hikaricp.version>
+    <mysql.version>8.0.13</mysql.version>
+    <servlet.version>3.1.0</servlet.version>
+    <jstl.version>1.2</jstl.version>
+    <jackson.version>2.9.7</jackson.version>
+    <fileupload.version>1.3.3</fileupload.version>
+    <validatorapi.version>2.0.1.Final</validatorapi.version>
+    <validatorimpl.version>6.0.13.Final</validatorimpl.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${jcl-over-slf4j.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>${freemarker.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>${mybatis-spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>${hikaricp.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${jstl.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>${fileupload.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${validatorapi.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${validatorimpl.version}</version>
+    </dependency>
+  </dependencies>
+</project>
+</script></code></pre>
+<h3 id="logback-xml"><a href="#logback-xml" class="headerlink" title="logback.xml"></a>logback.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%white(%d{HH:mm:ss.SSS} [%8.8thread] %-5level %45.45logger{36}) - %highlight(%msg%n)</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <logger name="com.zfl9" level="trace"/>
+  <logger name="org.mybatis.spring" level="trace"/>
+</configuration>
+</script></code></pre>
+<h3 id="jdbc-properties"><a href="#jdbc-properties" class="headerlink" title="jdbc.properties"></a>jdbc.properties</h3><pre><code class="language-properties line-numbers"><script type="text/plain">
+jdbc.driver = com.mysql.cj.jdbc.Driver
+jdbc.url = jdbc:mysql://localhost/test
+jdbc.username = root
+jdbc.password = 123456
+jdbc.connectionTimeout = 10000
+jdbc.maxLifetime = 7200000
+jdbc.maximumPoolSize = 30
+</script></code></pre>
+<h3 id="WebConfig-java"><a href="#WebConfig-java" class="headerlink" title="WebConfig.java"></a>WebConfig.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import javax.servlet.Filter;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return null;
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{MvcConfig.class};
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[]{characterEncodingFilter};
+    }
+}
+</script></code></pre>
+<h3 id="MvcConfig-java"><a href="#MvcConfig-java" class="headerlink" title="MvcConfig.java"></a>MvcConfig.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9;
+
+import java.util.Properties;
+import javax.sql.DataSource;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import com.zaxxer.hikari.HikariDataSource;
+
+@Configuration
+@ComponentScan
+@EnableWebMvc
+@EnableTransactionManagement
+@MapperScan("com.zfl9.mapper")
+@PropertySource("classpath:jdbc.properties")
+public class MvcConfig extends WebMvcConfigurerAdapter {
+    @Autowired
+    private Environment environment;
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Bean
+    public ViewResolver viewResolver() {
+        FreeMarkerViewResolver viewResolver = new FreeMarkerViewResolver();
+        viewResolver.setViewClass(FreeMarkerView.class);
+        viewResolver.setPrefix("");
+        viewResolver.setSuffix(".ftl");
+        viewResolver.setCache(true);
+        viewResolver.setContentType("text/html; charset=UTF-8");
+        viewResolver.setExposeRequestAttributes(true);
+        viewResolver.setExposeSessionAttributes(true);
+        viewResolver.setExposeSpringMacroHelpers(true);
+        return viewResolver;
+    }
+
+    @Bean
+    public FreeMarkerConfigurer freeMarkerConfigurer() {
+        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
+        configurer.setTemplateLoaderPath("/WEB-INF/views/");
+        configurer.setDefaultEncoding("UTF-8");
+        Properties properties = new Properties();
+        properties.setProperty("locale", "zh_CN");
+        properties.setProperty("time_zone", "Asia/Shanghai");
+        properties.setProperty("output_encoding", "UTF-8");
+        properties.setProperty("url_escaping_charset", "UTF-8");
+        properties.setProperty("number_format", "0.###");
+        properties.setProperty("boolean_format", "true,false");
+        properties.setProperty("date_format", "yyyy-MM-dd");
+        properties.setProperty("time_format", "HH:mm:ss");
+        properties.setProperty("datetime_format", "yyyy-MM-dd HH:mm:ss");
+        configurer.setFreemarkerSettings(properties);
+        return configurer;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
+        dataSource.setJdbcUrl(environment.getProperty("jdbc.url"));
+        dataSource.setUsername(environment.getProperty("jdbc.username"));
+        dataSource.setPassword(environment.getProperty("jdbc.password"));
+        dataSource.setConnectionTimeout(Long.parseLong(environment.getProperty("jdbc.connectionTimeout")));
+        dataSource.setMaxLifetime(Long.parseLong(environment.getProperty("jdbc.maxLifetime")));
+        dataSource.setMaximumPoolSize(Integer.parseInt(environment.getProperty("jdbc.maximumPoolSize")));
+        return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Bean
+    public SqlSessionFactoryBean sqlSessionFactory() {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource());
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.zfl9.domain");
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
+        sqlSessionFactoryBean.setConfiguration(configuration);
+        return sqlSessionFactoryBean;
+    }
+}
+</script></code></pre>
+<h3 id="Employee-java"><a href="#Employee-java" class="headerlink" title="Employee.java"></a>Employee.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.domain;
+
+public class Employee implements java.io.Serializable {
+    private static final long serialVersionUID = -8369197914775006439L;
+
+    private Integer id;
+    private String name;
+    private String email;
+    private String address;
+    private String telephone;
+
+    public Employee() {
+    }
+
+    public Employee(String name, String email, String address, String telephone) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Employee(Integer id, String name, String email, String address, String telephone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.telephone = telephone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Employee[id=%s, name=%s, email=%s, address=%s, telephone=%s]", id, name, email, address, telephone);
+    }
+}
+</script></code></pre>
+<h3 id="EmployeeMapper-java"><a href="#EmployeeMapper-java" class="headerlink" title="EmployeeMapper.java"></a>EmployeeMapper.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.mapper;
+
+import java.util.List;
+import org.springframework.stereotype.Repository;
+import com.zfl9.domain.Employee;
+
+@Repository
+public interface EmployeeMapper {
+    Employee getEmployeeById(int id);
+
+    List<Employee> getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</script></code></pre>
+<h3 id="EmployeeMapper-xml"><a href="#EmployeeMapper-xml" class="headerlink" title="EmployeeMapper.xml"></a>EmployeeMapper.xml</h3><pre><code class="language-xml line-numbers"><script type="text/plain">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zfl9.mapper.EmployeeMapper">
+  <select id="getEmployeeById" resultType="Employee">
+    select id,name,email,address,telephone from employee where id=#{id}
+  </select>
+
+  <select id="getAllEmployees" resultType="Employee">
+    select id,name,email,address,telephone from employee
+  </select>
+
+  <insert id="addEmployee" useGeneratedKeys="true" keyProperty="id">
+    insert into employee(name, email, address, telephone) values(#{name}, #{email}, #{address}, #{telephone})
+  </insert>
+
+  <update id="updateEmployee">
+    update employee set name=#{name}, email=#{email}, address=#{address}, telephone=#{telephone} where id=#{id}
+  </update>
+
+  <delete id="deleteEmployeeById">
+    delete from employee where id=#{id}
+  </delete>
+
+  <delete id="deleteAllEmployees">
+    delete from employee
+  </delete>
+
+  <delete id="truncateEmployeeTable">
+    truncate table employee
+  </delete>
+</mapper>
+</script></code></pre>
+<h3 id="EmployeeService-java"><a href="#EmployeeService-java" class="headerlink" title="EmployeeService.java"></a>EmployeeService.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.service;
+
+import java.util.List;
+import com.zfl9.domain.Employee;
+
+public interface EmployeeService {
+    Employee getEmployeeById(int id);
+
+    List<Employee> getAllEmployees();
+
+    int addEmployee(Employee employee);
+
+    int updateEmployee(Employee employee);
+
+    int deleteEmployeeById(int id);
+
+    int deleteAllEmployees();
+
+    void truncateEmployeeTable();
+}
+</script></code></pre>
+<h3 id="EmployeeServiceImpl-java"><a href="#EmployeeServiceImpl-java" class="headerlink" title="EmployeeServiceImpl.java"></a>EmployeeServiceImpl.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.service;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.zfl9.domain.Employee;
+import com.zfl9.mapper.EmployeeMapper;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
+    @Override
+    public Employee getEmployeeById(int id) {
+        return employeeMapper.getEmployeeById(id);
+    }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        return employeeMapper.getAllEmployees();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int addEmployee(Employee employee) {
+        return employeeMapper.addEmployee(employee);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateEmployee(Employee employee) {
+        return employeeMapper.updateEmployee(employee);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteEmployeeById(int id) {
+        return employeeMapper.deleteEmployeeById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteAllEmployees() {
+        return employeeMapper.deleteAllEmployees();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void truncateEmployeeTable() {
+        employeeMapper.truncateEmployeeTable();
+    }
+}
+</script></code></pre>
+<h3 id="EmployeeController-java"><a href="#EmployeeController-java" class="headerlink" title="EmployeeController.java"></a>EmployeeController.java</h3><pre><code class="language-java line-numbers"><script type="text/plain">
+package com.zfl9.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.zfl9.domain.Employee;
+import com.zfl9.service.EmployeeService;
+
+@Controller
+@RequestMapping("/employees")
+public class EmployeeController {
+    @Autowired
+    private EmployeeService employeeService;
+
+    @GetMapping
+    public String listEmployee(Model model) {
+        model.addAttribute("employees", employeeService.getAllEmployees());
+        return "employee-list";
+    }
+
+    @GetMapping("/new")
+    public String newEmployee(Model model) {
+        model.addAttribute("title", "Create Employee");
+        model.addAttribute("employee", new Employee());
+        return "employee-edit";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editEmployee(Model model, @PathVariable int id) {
+        model.addAttribute("title", "Update Employee");
+        model.addAttribute("employee", employeeService.getEmployeeById(id));
+        return "employee-edit";
+    }
+
+    @PostMapping("/save")
+    public String saveEmployee(@ModelAttribute Employee employee) {
+        if (employee.getId() == null) {
+            employeeService.addEmployee(employee);
+        } else {
+            employeeService.updateEmployee(employee);
+        }
+        return "redirect:/employees";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteEmployee(@PathVariable String id) {
+        if ("all".equals(id)) {
+            employeeService.deleteAllEmployees();
+        } else {
+            employeeService.deleteEmployeeById(Integer.valueOf(id));
+        }
+        return "redirect:/employees";
+    }
+}
+</script></code></pre>
+<h3 id="index-jsp"><a href="#index-jsp" class="headerlink" title="index.jsp"></a>index.jsp</h3><pre><code class="language-html line-numbers"><script type="text/plain">
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
+<core:set var="ctx" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>index.jsp</title>
+  </head>
+  <body>
+    <div align="center">
+      <h2><a href="${ctx}/employees">员工管理系统 [by mybatis(freemarker)]</a></h2>
+    </div>
+  </body>
+</html>
+</script></code></pre>
+<h3 id="employee-list-ftl"><a href="#employee-list-ftl" class="headerlink" title="employee-list.ftl"></a>employee-list.ftl</h3><pre><code class="language-html line-numbers"><script type="text/plain">
+<#assign ctx = springMacroRequestContext.contextPath>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>List Employee</title>
+  </head>
+  <body>
+    <div align="center">
+      <h1>List Employee</h1>
+      <table border="1">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Telephone</th>
+          <th>Action</th>
+        </tr>
+        <#list employees as employee>
+          <tr>
+            <td>${employee.id}</td>
+            <td>${employee.name!}</td>
+            <td>${employee.email!}</td>
+            <td>${employee.address!}</td>
+            <td>${employee.telephone!}</td>
+            <td>
+              <a href="${ctx}/employees/edit/${employee.id}">Edit</a>
+              <a href="${ctx}/employees/delete/${employee.id}">Delete</a>
+            </td>
+          </tr>
+        </#list>
+      </table>
+      <h3><a href="${ctx}/employees/new">Create Employee</a></h3>
+      <h3><a href="${ctx}/employees/delete/all">Delete All Employee</a></h3>
+    </div>
+  </body>
+</html>
+</script></code></pre>
+<h3 id="employee-edit-ftl"><a href="#employee-edit-ftl" class="headerlink" title="employee-edit.ftl"></a>employee-edit.ftl</h3><pre><code class="language-html line-numbers"><script type="text/plain">
+<#assign ctx = springMacroRequestContext.contextPath>
+<#import "spring.ftl" as spring>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Edit Employee</title>
+  </head>
+  <body>
+    <div align="center">
+      <h1>${title}</h1>
+      <form action="${ctx}/employees/save" method="post">
+        <@spring.formHiddenInput "employee.id"/>
+        <table>
+          <tr>
+            <td>Name:</td>
+            <td>
+              <@spring.formInput "employee.name"/>
+            </td>
+          </tr>
+          <tr>
+            <td>Email:</td>
+            <td>
+              <@spring.formInput "employee.email"/>
+            </td>
+          </tr>
+          <tr>
+            <td>Address:</td>
+            <td>
+              <@spring.formInput "employee.address"/>
+            </td>
+          </tr>
+          <tr>
+            <td>Telephone:</td>
+            <td>
+              <@spring.formInput "employee.telephone"/>
+            </td>
+          </tr>
+        </table>
+        <input type="submit" value="Save">
+      </form>
+    </div>
+  </body>
+</html>
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/spring-cloud.html" rel="next" title="SpringCloud 入门">
+                <i class="fa fa-chevron-left"></i> SpringCloud 入门
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/spring-javaconfig.html" rel="prev" title="Spring JavaConfig 例子">
+                Spring JavaConfig 例子 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单介绍"><span class="nav-number">1.</span> <span class="nav-text">简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HelloWorld"><span class="nav-number">2.</span> <span class="nav-text">HelloWorld</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构"><span class="nav-number">2.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml"><span class="nav-number">2.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdbcproperty-ftl"><span class="nav-number">2.3.</span> <span class="nav-text">jdbcproperty.ftl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JdbcProperty-java"><span class="nav-number">2.4.</span> <span class="nav-text">JdbcProperty.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JdbcPropertyTest-java"><span class="nav-number">2.5.</span> <span class="nav-text">JdbcPropertyTest.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行结果"><span class="nav-number">2.6.</span> <span class="nav-text">执行结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简要解析"><span class="nav-number">2.7.</span> <span class="nav-text">简要解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FTL-语法简介"><span class="nav-number">3.</span> <span class="nav-text">FTL 语法简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本结构"><span class="nav-number">3.1.</span> <span class="nav-text">基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本语法"><span class="nav-number">3.2.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本指令"><span class="nav-number">3.3.</span> <span class="nav-text">基本指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置函数"><span class="nav-number">3.4.</span> <span class="nav-text">内置函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺失变量"><span class="nav-number">3.5.</span> <span class="nav-text">缺失变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符转义"><span class="nav-number">3.6.</span> <span class="nav-text">字符转义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FTL-标签"><span class="nav-number">3.7.</span> <span class="nav-text">FTL 标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建变量"><span class="nav-number">3.8.</span> <span class="nav-text">创建变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用运算符"><span class="nav-number">3.9.</span> <span class="nav-text">常用运算符</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FTL-语法示例"><span class="nav-number">4.</span> <span class="nav-text">FTL 语法示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整合-SpringMVC"><span class="nav-number">5.</span> <span class="nav-text">整合 SpringMVC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构-1"><span class="nav-number">5.1.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pom-xml-1"><span class="nav-number">5.2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logback-xml"><span class="nav-number">5.3.</span> <span class="nav-text">logback.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdbc-properties"><span class="nav-number">5.4.</span> <span class="nav-text">jdbc.properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebConfig-java"><span class="nav-number">5.5.</span> <span class="nav-text">WebConfig.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MvcConfig-java"><span class="nav-number">5.6.</span> <span class="nav-text">MvcConfig.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Employee-java"><span class="nav-number">5.7.</span> <span class="nav-text">Employee.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-java"><span class="nav-number">5.8.</span> <span class="nav-text">EmployeeMapper.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeMapper-xml"><span class="nav-number">5.9.</span> <span class="nav-text">EmployeeMapper.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeService-java"><span class="nav-number">5.10.</span> <span class="nav-text">EmployeeService.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeServiceImpl-java"><span class="nav-number">5.11.</span> <span class="nav-text">EmployeeServiceImpl.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EmployeeController-java"><span class="nav-number">5.12.</span> <span class="nav-text">EmployeeController.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-jsp"><span class="nav-number">5.13.</span> <span class="nav-text">index.jsp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#employee-list-ftl"><span class="nav-number">5.14.</span> <span class="nav-text">employee-list.ftl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#employee-edit-ftl"><span class="nav-number">5.15.</span> <span class="nav-text">employee-edit.ftl</span></a></li></ol></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/freemarker.html';
+          this.page.identifier = 'freemarker.html';
+          this.page.title = 'FreeMarker 模板引擎';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1178 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="Java 抽象类和接口">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="Java 抽象类和接口">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 抽象类和接口">
+<meta property="og:url" content="https://www.zfl9.com/java-abstract-interface.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="Java 抽象类和接口">
+<meta property="og:updated_time" content="2019-02-18T12:44:16.310Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 抽象类和接口">
+<meta name="twitter:description" content="Java 抽象类和接口">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/java-abstract-interface.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>Java 抽象类和接口 | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/java-abstract-interface.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                Java 抽象类和接口
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-09T18:29:00+08:00">
+                2017-09-09
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java-abstract-interface.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="java-abstract-interface.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/java-abstract-interface.html" class="leancloud_visitors" data-flag-title="Java 抽象类和接口">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Java 抽象类和接口</p>
+<a id="more"></a>
+<h2 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h2><h3 id="定义及简单示例"><a href="#定义及简单示例" class="headerlink" title="定义及简单示例"></a>定义及简单示例</h3><p>在 Java 中，允许在一个<code>类</code>、<code>方法</code>、<code>语句块</code>的内部定义另一个类，称为<code>内部类(Inner Class)</code>或<code>嵌套类(Nested Class)</code>。</p>
+<p>内部类和外层封装它的类之间存在逻辑上的所属关系，一般只用在定义它的类或语句块之内，实现一些没有通用意义的功能逻辑，在外部引用它时必须给出完整的名称；</p>
+<p>使用内部类的主要原因有：</p>
+<ul>
+<li>内部类可以访问外部类中的数据，包括私有的数据；</li>
+<li>内部类可以对同一个包中的其它类隐藏起来；</li>
+<li>当想要定义一个回调函数时，使用<code>匿名内部类</code>比较便捷；</li>
+<li>内部类的使用可以减少类的命名冲突（命名真的很头疼）；</li>
+</ul>
+<blockquote>
+<p>内部类只是一颗语法糖，只是编译器的一种行为，内部类在编译后一样会生成常规的 .class 类文件，内部类与 JVM 无关。</p>
+</blockquote>
+<p>使用内部类的例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class Outer {
+    private static String outerStaticField = "外部类 Outer 的静态字段";
+    private String outerInstanceField = "外部类 Outer 的实例字段";
+
+    private static void outerStaticMethod() {
+        System.out.println("外部类 Outer 的静态方法");
+    }
+    private void outerInstanceMethod() {
+        System.out.println("外部类 Outer 的实例方法");
+    }
+
+    // 实例成员类
+    private class InstanceInner {
+        // private static String innerStaticField = "非静态成员类不能定义静态字段";
+        private String innerInstanceField = "实例成员类 InstanceInner 的实例字段";
+
+        /*
+         * private static void innerStaticMethod() {
+         *     System.out.println("非静态成员类不能定义静态方法");
+         * }
+         */
+        private void innerInstanceMethod() {
+            System.out.println("实例成员类 InstanceInner 的实例方法");
+        }
+
+        private void main() {
+            System.out.println(innerInstanceField);             // 内部类实例属性
+            System.out.println(this.innerInstanceField);        // 内部类实例属性
+
+            innerInstanceMethod();                              // 内部类实例方法
+            this.innerInstanceMethod();                         // 内部类实例方法
+
+            System.out.println(outerInstanceField);             // 外部类实例属性
+            System.out.println(Outer.this.outerInstanceField);  // 外部类实例属性
+            System.out.println(outerStaticField);               // 外部类静态属性
+            System.out.println(Outer.outerStaticField);         // 外部类静态属性
+
+            outerInstanceMethod();                              // 外部类实例方法
+            Outer.this.outerInstanceMethod();                   // 外部类实例方法
+            outerStaticMethod();                                // 外部类静态方法
+            Outer.outerStaticMethod();                          // 外部类静态方法
+        }
+    }
+
+    // 静态成员类
+    private static class StaticInner {
+        private static String innerStaticField = "静态成员类 StaticInner 的静态字段";
+        private String innerInstanceField = "静态成员类 StaticInner 的实例字段";
+
+        private static void innerStaticMethod() {
+            System.out.println("静态成员类 StaticInner 的静态方法");
+        }
+        private void innerInstanceMethod() {
+            System.out.println("静态成员类 StaticInner 的实例方法");
+        }
+
+        private void main() {
+            System.out.println(innerInstanceField);             // 内部类实例属性
+            System.out.println(this.innerInstanceField);        // 内部类实例属性
+            System.out.println(innerStaticField);               // 内部类静态属性
+            System.out.println(StaticInner.innerStaticField);   // 内部类静态属性
+
+            innerInstanceMethod();                              // 内部类实例方法
+            this.innerInstanceMethod();                         // 内部类实例方法
+            innerStaticMethod();                                // 内部类静态方法
+            StaticInner.innerStaticMethod();                    // 内部类静态方法
+
+            /* 无法直接调用，需要外部类的实例 */
+            // System.out.println(outerInstanceField);             // 外部类实例属性
+            // System.out.println(Outer.this.outerInstanceField);  // 外部类实例属性
+            System.out.println(outerStaticField);               // 外部类静态属性
+            System.out.println(Outer.outerStaticField);         // 外部类静态属性
+
+            /* 无法直接调用，需要外部类的实例 */
+            // outerInstanceMethod();                              // 外部类实例方法
+            // Outer.this.outerInstanceMethod();                   // 外部类实例方法
+            outerStaticMethod();                                // 外部类静态方法
+            Outer.outerStaticMethod();                          // 外部类静态方法
+        }
+    }
+
+    // 入口函数 main()
+    public static void main(String[] args) {
+        /* 实例成员类 */
+        Outer outer = new Outer(); // 外部类实例
+        InstanceInner innerA = outer.new InstanceInner(); // 内部类实例
+        // Outer.InstanceInner innerB = outer.new Outer.InstanceInner(); // 内部类实例(非法)
+        Outer.InstanceInner innerB = outer.new InstanceInner(); // 内部类实例
+        InstanceInner innerX = new Outer().new InstanceInner(); // 内部类实例
+        Outer.InstanceInner innerY = new Outer().new InstanceInner(); // 内部类实例
+
+        /* 静态成员类 */
+        StaticInner innerC = new StaticInner(); // 内部类实例
+        Outer.StaticInner innerD = new Outer.StaticInner(); // 内部类实例
+
+        System.out.println("++++++++++ 实例成员类 ++++++++++");
+        innerA.main();
+
+        System.out.println("++++++++++ 静态成员类 ++++++++++");
+        innerC.main();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master o [11:51:51]
+$ ll
+total 8.0K
+-rw-r--r-- 1 root root 5.1K Dec  5 11:51 Outer.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master o [11:52:11]
+$ javac Outer.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master o [11:52:16]
+$ ll
+total 24K
+-rw-r--r-- 1 root root  181 Dec  5 11:52 'Outer$1.class'
+-rw-r--r-- 1 root root 1.9K Dec  5 11:52  Outer.class
+-rw-r--r-- 1 root root 1.3K Dec  5 11:52 'Outer$InstanceInner.class'
+-rw-r--r-- 1 root root 5.1K Dec  5 11:51  Outer.java
+-rw-r--r-- 1 root root 1.4K Dec  5 11:52 'Outer$StaticInner.class'
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master o [11:52:18]
+$ java com.zfl9.Outer
+++++++++++ 实例成员类 ++++++++++
+实例成员类 InstanceInner 的实例字段
+实例成员类 InstanceInner 的实例字段
+实例成员类 InstanceInner 的实例方法
+实例成员类 InstanceInner 的实例方法
+外部类 Outer 的实例字段
+外部类 Outer 的实例字段
+外部类 Outer 的静态字段
+外部类 Outer 的静态字段
+外部类 Outer 的实例方法
+外部类 Outer 的实例方法
+外部类 Outer 的静态方法
+外部类 Outer 的静态方法
+++++++++++ 静态成员类 ++++++++++
+静态成员类 StaticInner 的实例字段
+静态成员类 StaticInner 的实例字段
+静态成员类 StaticInner 的静态字段
+静态成员类 StaticInner 的静态字段
+静态成员类 StaticInner 的实例方法
+静态成员类 StaticInner 的实例方法
+静态成员类 StaticInner 的静态方法
+静态成员类 StaticInner 的静态方法
+外部类 Outer 的静态字段
+外部类 Outer 的静态字段
+外部类 Outer 的静态方法
+外部类 Outer 的静态方法
+</script></code></pre>
+<blockquote>
+<p>对于<strong>实例成员类</strong>，必须<strong>先有外部类的对象才能生成内部类的对象</strong>，因为内部类需要访问外部类中的成员变量，成员变量必须实例化才有意义。</p>
+</blockquote>
+<h3 id="内部类的分类"><a href="#内部类的分类" class="headerlink" title="内部类的分类"></a>内部类的分类</h3><p>内部类分为：<strong>实例成员类</strong>、<strong>静态成员类</strong>、<strong>具名局部类</strong>、<strong>匿名局部类</strong>；</p>
+<blockquote>
+<p><code>实例成员类</code>、<code>静态成员类</code>就像一个类中的普通成员（属性、方法），因此可以使用 public/protected/private/[default]、static、final、abstract 等修饰符；它们之间仅仅就是普通成员和静态成员的区别；<br><code>具名局部类</code>、<code>匿名局部类</code>就像一个普通的局部变量（方法、语句块中），因此它们和普通的局部变量一样，不能被 static、public/protected/private 修饰符修饰；但匿名局部类必须继承一个类或实现一个接口。</p>
+</blockquote>
+<p><strong>无论哪种内部类，实质都是一个独立 .class 字节码文件，本质就是一个拥有特殊类名（<code>$</code>美元符）的普通类</strong>。</p>
+<h3 id="实例成员类、静态成员类"><a href="#实例成员类、静态成员类" class="headerlink" title="实例成员类、静态成员类"></a>实例成员类、静态成员类</h3><p>在类内部（不在方法、语句块）直接定义的类就是<strong>成员类</strong>，和类的普通成员一样，有着静态成员与实例成员之分：</p>
+<ul>
+<li><strong>实例成员类</strong>：可以在内部类中直接引用外部类的所有成员（静态、非静态），因此必须先有外部类对象才能构造内部类对象；</li>
+<li><strong>静态成员类</strong>：可以在内部类中直接引用外部类的静态成员，静态内部类其实就是一个普通的全局类，只不过名字特殊点而已。</li>
+</ul>
+<p>成员式内部类和普通成员一样，支持 public、protected、private、[default] 访问修饰符；支持 static、final、abstract 属性修饰符。</p>
+<p>若有 static 修饰符，就为类级（即<code>静态成员类</code>），否则为对象级（即<code>实例成员类</code>）；类级可以通过外部类直接访问，对象级需要先生成外部类对象后才能访问；</p>
+<p>对于<strong>实例成员类</strong>，类内不能声明任何 static 成员；同一个外部类的不同的内部类之间可以互相调用，就如同类中的不同方法之间可以互相调用一样。</p>
+<p>并且，外部类可以访问内部类的所有成员，包括被 private 修饰的成员，在上面的例子中已经进行演示。</p>
+<p><strong>创建实例成员类的对象</strong><br>因为需要访问外部类的实例变量、实例方法，因此必须在外部类对象的基础上构造内部类对象。<br>语法：<code>outObj.new Inner(param ...)</code>（具名对象）、<code>new Outer(param ...).new Inner(param ...)</code>（匿名对象）。</p>
+<p><strong>创建静态成员类的对象</strong><br>静态成员类就是特殊点的全局类，当然作为成员类还是有点特权的（可以访问外部类的所有静态成员，包括私有的）。<br>语法：<code>new Inner(param ...)</code>（类内引用）、<code>new Outer.Inner(param ...)</code>（类外引用，类的权限不能为 private）。</p>
+<p><strong>在内部类中访问外部类</strong><br>具体的调用细节我已经在开头的例子中详细说明了，因为编译器搜索一个变量名时总是从近到远的搜索，因此内部类与外部类的成员存在同名时就需要显式的调用，否则默认使用内部类中的同名成员。</p>
+<p><strong>允许定义成员接口</strong><br>因为接口是从抽象类（抽象类属于类）演变过来的，因此除非特别规定，接口和类享受着同样的待遇（接口的详细介绍在后面）；<br>因此，Java 完全允许我们在一个外部类中定义内部接口（静态成员，不管写不写 static），不存在什么实例内部接口，没有意义；<br>也可以在外部接口中定义内部接口（公开静态成员，不管写不写 static），这个应该是应用最广泛的，Java 类库中有很多的例子。</p>
+<h3 id="具名局部类、匿名局部类"><a href="#具名局部类、匿名局部类" class="headerlink" title="具名局部类、匿名局部类"></a>具名局部类、匿名局部类</h3><p>局部类就是定义在方法、语句块中的类，我先把局部类的相关特点说明一下：</p>
+<ul>
+<li>局部类只在定义了它们的方法、语句块中可见；</li>
+<li>外部作用域可以访问局部类的所有成员，包括私有的；</li>
+<li>局部类不可以是 static 的，也不存在 static 成员；</li>
+<li>局部类不可以被 public、protected、private 修饰；</li>
+<li>具名局部类可以被 abstract 修饰，但不存在所谓局部接口；</li>
+<li>匿名局部类必须继承一个类或实现一个接口，但只能二选一；</li>
+<li>局部类会捕获外部作用域中的变量（值传递），在类内部使用<code>final</code>修饰。</li>
+</ul>
+<p>前几点没什么好讲的，主要是最后两个。我们先来分析最后一条，解释一下”类内部使用<code>final</code>修饰”。</p>
+<p>先定义一个具名局部类 Student，暂时不涉及外部变量捕获：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class NamedLocalClassTest {
+    public static void main(String[] args) {
+        class Student {
+            String name;
+            int age;
+            float score;
+
+            Student(String name, int age, float score) {
+                this.name = name;
+                this.age = age;
+                this.score = score;
+            }
+
+            @Override
+            public String toString() {
+                return String.format("name: %s, age: %d, score: %.1f", name, age, score);
+            }
+        }
+
+        Student stu = new Student("zhang3", 15, 87.0F);
+        System.out.println(stu);
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:30:59]
+$ javac NamedLocalClassTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:31:15]
+$ java com.zfl9.NamedLocalClassTest
+name: zhang3, age: 15, score: 87.0
+</script></code></pre>
+<p>和使用普通的 Student 类一样，都是通过函数传参来进行数据传递，没问题。</p>
+<p>但是这样的话就发挥不了局部类的最大作用了啊，我们来让它自动捕获外部的变量：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class NamedLocalClassTest {
+    public static void main(String[] args) {
+        String name = "zhang3";
+        int age = 18;
+        float score = 87.0F;
+
+        class Student {
+            void print() {
+                System.out.printf("name: %s, age: %d, score: %.1f\n", name, age, score);
+            }
+        }
+
+        new Student().print();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:37:23]
+$ javac NamedLocalClassTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:37:37]
+$ java com.zfl9.NamedLocalClassTest
+name: zhang3, age: 18, score: 87.0
+</script></code></pre>
+<p>是不是发现很好用，这就是局部类的便利之处，可以自动捕获外部作用域的变量，但是如果我要修改捕获的变量呢？</p>
+<blockquote>
+<p>这里有几点要说明：如果被捕获的变量（意思就是在局部类中被使用的，未使用的不需要）是函数、代码块中的，那么这些变量必须被 final 修饰；如果被捕获的变量是在类中定义（静态、非静态）的，则无此要求。并且，在 JDK1.8 之后，函数、代码块中的被捕获变量不需要显式使用 final 修饰，会自动变为 final 变量。</p>
+</blockquote>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class NamedLocalClassTest {
+    public static void main(String[] args) {
+        String name = "zhang3";
+        int age = 15;
+        float score = 87.0F;
+
+        class Student {
+            void print() {
+                name = "li4"; // 报错
+                age = 14; // 报错
+                score = 90.0F; // 报错
+                System.out.printf("name: %s, age: %d, score: %.1f\n", name, age, score);
+            }
+        }
+
+        new Student().print();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [15:44:19]
+$ javac NamedLocalClassTest.java
+NamedLocalClassTest.java:11: error: local variables referenced from an inner class must be final or effectively final
+                name = "li4"; // 报错
+                ^
+NamedLocalClassTest.java:12: error: local variables referenced from an inner class must be final or effectively final
+                age = 14; // 报错
+                ^
+NamedLocalClassTest.java:13: error: local variables referenced from an inner class must be final or effectively final
+                score = 90.0F; // 报错
+                ^
+3 errors
+</script></code></pre>
+<p>报错了，意思是说”从内部类引用的局部变量必须是 final 的”。这就是局部类的猥琐之处；因为局部类捕获外部变量时采取的是<strong>值传递</strong>（C++ 的 lambda 表达式支持引用传递），因此无法修改变量值（对于引用类型就是无法改变指针的指向）。</p>
+<p>Java 为什么要这么做呢，因为 Java 中只存在值传递。这就是抛弃指针运算的恶果（来自 C/C++ 程序猿的嘲笑）。换个角度理解就是前面一开始说的”在类内部使用<code>final</code>修饰”。</p>
+<p>编译器在编译之前做了手脚，上面的程序大概会变成这样（当然我不敢保证是这样，猜测而已）：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class NamedLocalClassTest {
+    public static void main(String[] args) {
+        final String name = "zhang3";
+        final int age = 15;
+        final float score = 87.0F;
+
+        class Student {
+            final String name;
+            final int age;
+            final float score;
+
+            Student(String name, int age, float score) {
+                this.name = name;
+                this.age = age;
+                this.score = score;
+            }
+
+            void print() {
+                System.out.printf("name: %s, age: %d, score: %.1f\n", name, age, score);
+            }
+        }
+
+        new Student(name, age, score).print();
+    }
+}
+</script></code></pre>
+<p>这就很容易理解了，final 成员自然是不可以被改变了，因此在编译时会报错（虽然那个报错信息很诡异）。<br>但是被 final 修饰的引用类型变量，只是意味着不可以改变指针的指向，并没有说不让我们更改指向的内容。</p>
+<p>我说这话是什么意思呢？别着急，我们看例子就知道了：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class NamedLocalClassTest {
+    public static void main(String[] args) {
+        StringBuilder name = new StringBuilder("zhang3");
+        int age = 15;
+        float score = 87.0F;
+
+        class Student {
+            void print() {
+                name.replace(0, name.length(), "wang5");
+                // age = 14;        报错
+                // score = 90.0F;   报错
+                System.out.printf("name: %s, age: %d, score: %.1f\n", name, age, score);
+            }
+        }
+
+        new Student().print();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [16:47:33]
+$ javac NamedLocalClassTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [16:48:01]
+$ java com.zfl9.NamedLocalClassTest
+name: wang5, age: 15, score: 87.0
+</script></code></pre>
+<p>好了，具名局部类就说到这里，我们来简单的看一下匿名局部类，上面讨论的东西一样适合匿名局部类，后面不再重复演示。</p>
+<p>匿名局部类，即没有名字的局部类，但实际上是有名字的，这个后面会进行讨论。匿名局部类不可单独存在，它必须是一个类的子类或者是实现了一个接口的类。</p>
+<p><strong>匿名局部类的特点</strong><br>1、匿名局部类<strong>必须继承一个类或者实现一个接口</strong>，但两者不可兼得，同时也只能继承一个类或者实现一个接口；<br>2、匿名局部类没有构造函数，因为没有类名因此无法实现构造函数；可以使用初始化代码块替代构造函数；<br>3、匿名局部类是具名局部类的一种特殊形式，因此具名局部类的所有限制同样对匿名局部类有效；<br>4、匿名局部类不能是 abstract 的，它必须要实现继承的类或者实现的接口的所有抽象方法。</p>
+<p>匿名内部类实际还是一个独立的类，它有着自己的唯一类名，如果将一个使用 new 创建的匿名类对象赋值给其基类/实现的接口的引用变量，那么此过程中将发生向上转型，因为匿名类就是 new 后面的类/接口的一个子类，它们之间的关系就如同普通的基类、派生类。</p>
+<p>我们先来看一下第一种，一个类的子类：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class AnonymousLocalClassTest {
+    /* 构造函数 */
+    AnonymousLocalClassTest() {
+        System.out.println("AnonymousLocalClassTest()");
+    }
+    AnonymousLocalClassTest(int arg) {
+        System.out.println("AnonymousLocalClassTest(int)");
+    }
+    AnonymousLocalClassTest(float arg) {
+        System.out.println("AnonymousLocalClassTest(float)");
+    }
+
+    void overrideMethod() {
+        throw new UnsupportedOperationException("该方法必须在子类中实现");
+    }
+
+    public static void main(String[] args) {
+        /* 最简形式 */
+        new AnonymousLocalClassTest() {};
+        new AnonymousLocalClassTest(123) {};
+        new AnonymousLocalClassTest(3.14F) {};
+
+        /* 增加成员 */
+        new AnonymousLocalClassTest() {
+            void func() {
+                System.out.println("func()");
+            }
+        }.func();
+
+        /* 保存对象，发生向上转型 */
+        AnonymousLocalClassTest obj = new AnonymousLocalClassTest() {
+            @Override
+            void overrideMethod() {
+                System.out.println("在子类中已经重写了父类定义的方法");
+            }
+        };
+
+        obj.overrideMethod();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [17:30:45]
+$ javac AnonymousLocalClassTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [17:31:32]
+$ java com.zfl9.AnonymousLocalClassTest
+AnonymousLocalClassTest()
+AnonymousLocalClassTest(int)
+AnonymousLocalClassTest(float)
+AnonymousLocalClassTest()
+func()
+AnonymousLocalClassTest()
+在子类中已经重写了父类定义的方法
+</script></code></pre>
+<p>再来看一下第二种，实现一个接口：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+
+public class AnonymousLocalClassTest {
+    interface TestIF {
+        void func1();
+        void func2();
+    }
+
+    public static void main(String[] args) {
+        TestIF obj = new TestIF() {
+            @Override
+            public void func1() {
+                System.out.println("func1()");
+            }
+            @Override
+            public void func2() {
+                System.out.println("func2()");
+            }
+        };
+
+        obj.func1();
+        obj.func2();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [17:39:55]
+$ javac AnonymousLocalClassTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [17:40:09]
+$ java com.zfl9.AnonymousLocalClassTest
+func1()
+func2()
+</script></code></pre>
+<p>最后我们来说一下，如何利用反射创建匿名局部类的对象，反射的具体知识请参考 - <a href="/java-reflect.html">Java 反射</a>。</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">package com.zfl9;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class AnonymousLocalClassTest {
+    public AnonymousLocalClassTest() {
+        System.out.println("AnonymousLocalClassTest()");
+    }
+    public AnonymousLocalClassTest(int arg) {
+        System.out.println("AnonymousLocalClassTest(int)");
+    }
+
+    public void func() {}
+
+    public static void main(String[] args)
+        throws InstantiationException, IllegalAccessException,
+               NoSuchMethodException, InvocationTargetException
+    {
+        AnonymousLocalClassTest objWithoutParam = new AnonymousLocalClassTest() {
+            @Override
+            public void func() {
+                System.out.println("使用默认的无参构造函数");
+            }
+        };
+        AnonymousLocalClassTest objWithoutParamCopy = objWithoutParam.getClass().newInstance();
+
+        objWithoutParam.func();
+        objWithoutParamCopy.func();
+
+        AnonymousLocalClassTest objWithParam = new AnonymousLocalClassTest(100) {
+            @Override
+            public void func() {
+                System.out.println("使用带 int 参数的构造函数");
+            }
+        };
+        AnonymousLocalClassTest objWithParamCopy =
+            objWithParam.getClass().getDeclaredConstructor(int.class).newInstance(100);
+
+        objWithParam.func();
+        objWithParamCopy.func();
+    }
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:35:24]
+$ javac AnonymousLocalClassTest.java
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:35:46]
+$ java com.zfl9.AnonymousLocalClassTest
+AnonymousLocalClassTest()
+AnonymousLocalClassTest()
+使用默认的无参构造函数
+使用默认的无参构造函数
+AnonymousLocalClassTest(int)
+AnonymousLocalClassTest(int)
+使用带 int 参数的构造函数
+使用带 int 参数的构造函数
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:35:48]
+$ javap -c -p AnonymousLocalClassTest\$1
+Warning: Binary file AnonymousLocalClassTest$1 contains com.zfl9.AnonymousLocalClassTest$1
+Compiled from "AnonymousLocalClassTest.java"
+final class com.zfl9.AnonymousLocalClassTest$1 extends com.zfl9.AnonymousLocalClassTest {
+  com.zfl9.AnonymousLocalClassTest$1();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method com/zfl9/AnonymousLocalClassTest."<init>":()V
+       4: return
+
+  public void func();
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: ldc           #3                  // String 使用默认的无参构造函数
+       5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       8: return
+}
+
+# root @ arch in ~/java8-learn/com/zfl9 on git:master x [19:36:25]
+$ javap -c -p AnonymousLocalClassTest\$2
+Warning: Binary file AnonymousLocalClassTest$2 contains com.zfl9.AnonymousLocalClassTest$2
+Compiled from "AnonymousLocalClassTest.java"
+final class com.zfl9.AnonymousLocalClassTest$2 extends com.zfl9.AnonymousLocalClassTest {
+  com.zfl9.AnonymousLocalClassTest$2(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokespecial #1                  // Method com/zfl9/AnonymousLocalClassTest."<init>":(I)V
+       5: return
+
+  public void func();
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: ldc           #3                  // String 使用带 int 参数的构造函数
+       5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       8: return
+}
+</script></code></pre>
+<h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><p>在自上而下的继承层次结构中，位于上层的类更具有通用性，甚至可能更加抽象；<br>从某种角度看，祖先类更加通用，它只包含一些最基本的成员，人们只将它作为派生其他类的基类，而不会用来创建对象；<br>甚至，你可以只给出方法的定义而不实现，由子类根据具体需求来具体实现；</p>
+<p>这种<strong>只给出方法定义而不具体实现的方法</strong>被称为<code>抽象方法</code>，抽象方法是没有方法体的，在代码的表达上就是没有“{}”；<br>如果一个类包含一个或多个抽象方法就必须被声明为<code>抽象类</code>；抽象类不能被实例化，抽象方法必须在子类中被实现；</p>
+<p>使用<code>abstract</code>修饰符来表示<code>抽象方法</code>和<code>抽象类</code>；抽象类除了包含抽象方法外，还可以包含具体的变量和具体的方法；</p>
+<blockquote>
+<p>一个类即使没有任何抽象方法，也可以被声明为抽象类，防止被实例化；</p>
+</blockquote>
+<p>抽象类不能直接使用，必须用子类去实现抽象类，然后使用其子类的实例；<br>可以创建一个变量，其类型是一个抽象类，并让它指向具体子类的一个实例，即多态的使用；<br>特别注意，<code>abstract</code>不能和<code>static</code>一起使用，即不能有抽象静态方法，也不能有抽象构造函数；</p>
+<p>如果一个抽象基类拥有多个抽象方法，那么继承他的派生类也必须实现所有抽象方法，否则不能创建对象；<br>当然如果没有实现所有的抽象方法，也可以将派生类声明为抽象类，让它的派生类去实现剩下的抽象方法；</p>
+<p>典型的错误：抽象类一定包含抽象方法；但是反过来说“包含抽象方法的类一定是抽象类”就是正确的；<br>事实上，抽象类可以是一个完全正常实现的类；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public final class Main {
+    public static void main(String[] args) {
+        People stu = new Student("Otokaze", 18, 111.5f);
+        stu.work();
+    }
+}
+
+abstract class People {
+    public People(String name, int age) {
+        m_name = name;
+        m_age = age;
+    }
+
+    public String getName() {
+        return m_name;
+    }
+    public int getAge() {
+        return m_age;
+    }
+    public void setName(String name) {
+        m_name = name;
+    }
+    public void setAge(int age) {
+        m_age = age;
+    }
+
+    public abstract void work();
+
+    protected String m_name;
+    protected int m_age;
+}
+
+class Student extends People {
+    public Student(String name, int age, float score) {
+        super(name, age);
+        m_score = score;
+    }
+
+    public float getScore() {
+        return m_score;
+    }
+    public void setScore(float score) {
+        m_score = score;
+    }
+
+    @Override
+    public void work() {
+        out.printf("name: %s, age: %d, score: %.1f\n", m_name, m_age, m_score);
+    }
+
+    private float m_score;
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [10:51:10]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [10:51:16]
+$ java Main
+name: Otokaze, age: 18, score: 111.5
+</script></code></pre>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>在抽象类中，可以包含一个或多个抽象方法；但在<code>接口(interface)</code>中，所有的方法必须都是抽象的，不能有方法体，它比抽象类更加“抽象”；</p>
+<p>接口使用<code>interface</code>关键字来声明，接口可以看做是一种特殊的抽象类，它可以指定一个类必须做什么，而不是规定它如何去做；</p>
+<p>现实中也有很多接口的实例，比如说串口电脑硬盘，Serial ATA 委员会指定了 Serial ATA 2.0 规范，这种规范就是接口；<br>Serial ATA 委员会不负责生产硬盘，只是指定通用的规范；<br>希捷、日立、三星等生产厂家会按照规范生产符合接口的硬盘，这些硬盘就可以实现通用化；<br>如果正在用一块 160G 日立的串口硬盘，现在要升级了，可以购买一块 320G 的希捷串口硬盘，安装上去就可以继续使用了；</p>
+<p><strong>接口是若干<code>常量</code>和<code>抽象方法</code>的集合</strong><br>接口中声明的<code>成员变量</code>默认都是<code>public static final</code>的，必须显示的初始化；因而在常量声明时可以省略这些修饰符；<br>接口中声明的<code>成员函数</code>默认都是<code>public abstract</code>的，不能提供任何方法体，需要让实现接口的子类去具体定义；</p>
+<p><strong>为什么使用接口</strong><br>接口是<code>可插入性</code>的保证；在一个继承链中的任何一个类都可以实现一个接口，这个接口会影响到此类的所有子类，但不会影响到此类的任何父类；此类将不得不实现这个接口所规定的方法，而子类可以从此类自动继承这些方法，这时候，这些子类具有了可插入性；</p>
+<p>我们关心的不是哪一个具体的类，而是这个类是否实现了我们需要的接口；</p>
+<p>接口提供了关联以及方法调用上的可插入性，软件系统的规模越大，生命周期越长，接口使得软件系统的灵活性和可扩展性，可插入性方面得到保证；</p>
+<p>接口在面向对象的 Java 程序设计中占有举足轻重的地位；事实上在设计阶段最重要的任务之一就是设计出各部分的接口，然后通过接口的组合，形成程序的基本框架结构；</p>
+<p><strong>接口的使用</strong><br>接口的使用与类的使用有些不同；在需要使用类的地方，会直接使用 new 关键字来构建一个类的实例，但接口不可以这样使用，因为接口不能直接使用 new 关键字来构建实例；</p>
+<p>接口必须通过类来<code>实现(implements)</code>它的抽象方法，然后再实例化类；类实现接口的关键字为<code>implements</code>；<br>如果一个类不能实现该接口的所有抽象方法，那么这个类必须被定义为<code>抽象类</code>；</p>
+<p>不允许创建接口的实例，但允许定义接口类型的引用变量，该变量指向了实现接口的类的实例；</p>
+<p><strong>接口和抽象类、普通类的共同点</strong><br>目前看来和抽象类差不多；确实如此，接口本就是从抽象类中演化而来的，因而除特别规定，接口享有和类同样的“待遇”；<br>比如一个文件中可以定义多个类或接口，但最多只能有一个 public 的类或接口，如果有则源文件必须取和 public 的类或接口相同的名字；</p>
+<p>但是接口并不是类，编写接口的方式和类很相似，但是它们属于不同的概念；类描述对象的属性和方法；接口则包含类要实现的方法；</p>
+<p>除非实现接口的类是抽象类，否则该类要定义接口中的所有方法；<br>接口无法被实例化，但是可以被实现；一个实现接口的类，必须实现接口内所描述的所有方法，否则就必须声明为抽象类；</p>
+<p><strong>接口的特性</strong><br>但是接口有自己的一些特性，归纳如下：<br>1) 接口中每一个方法也是隐式抽象的，接口中的方法会被隐式的指定为<code>public abstract</code>，并且只能是<code>public abstract</code>；<br>2) 接口中可以含有变量，但是接口中的变量会被隐式的指定为<code>public static final</code>静态常量，并且只能是<code>public static final</code>；<br>3) 接口中没有构造方法，不能被实例化；<br>4) 一个接口不实现另一个接口，但可以继承多个其他接口；<code>接口</code>的<code>多继承</code>特点弥补了<code>类</code>的<code>单继承</code>；<br>5) <strong>一个类只能继承一个父类，但却可以实现多个接口</strong>；实现接口使用关键字<code>implements</code>；</p>
+<p><strong>接口和抽象类的区别</strong><br>1) 抽象类本质还是一个类，但是接口不是类；<br>2) 抽象类可以有构造函数，但是接口没有构造函数；<br>3) 抽象类可以有具体的方法，但是接口中只能有抽象方法；<br>4) 抽象类中的成员变量可以是各种修饰符的，但是接口中的成员变量只能是 public static final 的；<br>5) 抽象类中可以有 static 代码块和 static 方法，但是接口中不能有 static 代码块和 static 方法；<br>6) 一个类只能继承一个抽象类，而一个类却可以实现多个接口；</p>
+<p><strong>接口的声明格式</strong><br><code>public/[default] interface 接口名称 [extends 接口1[, 接口2, ...]] { 声明变量、抽象方法 }</code></p>
+<p><strong>类实现接口的格式</strong><br><code>[修饰符] class 类名 [extends 父类] implements 接口1[, 接口2, ...] { 实现抽象方法 }</code></p>
+<p><strong>重写接口中声明的方法</strong>时，需要注意以下规则：<br>1) 类在实现接口的方法时，不能抛出<code>强制性异常</code>，只能在<code>接口</code>中，或者<code>继承接口的抽象类</code>中抛出该强制性异常；<br>2) 类在重写方法时要保持一致的方法名，并且应该保持相同或者相兼容的返回值类型；即应遵循<code>方法重写</code>的规则；</p>
+<p><strong>标记接口</strong><br>标识接口是没有任何方法和属性的接口，它仅仅表明它的类属于一个特定的类型，供其他代码来测试允许做一些事情；<br>标识接口作用：简单形象的说就是给某个对象打个标（盖个戳），使对象拥有某个或某些特权；</p>
+<p><strong>没有任何方法的接口被称为标记接口</strong>；标记接口主要用于以下两种目的：<br>1) 建立一个公共的父接口；<br>2) 向一个类添加数据类型；<br>这种情况是标记接口最初的目的，实现标记接口的类不需要定义任何接口方法(因为标记接口根本就没有方法)，但是该类通过多态性变成一个接口类型；</p>
+<p><strong>如何选择抽象类和接口</strong><br>接口和抽象类各有优缺点，在接口和抽象类的选择上，必须遵守这样一个原则：<br>1) 行为模型应该总是通过接口而不是抽象类定义，所以通常是优先选用接口，尽量少用抽象类；<br>2) 选择抽象类的时候通常是如下情况：需要定义子类的行为，又要为子类提供通用的功能；</p>
+<p>例子：</p>
+<pre><code class="language-java line-numbers"><script type="text/plain">import static java.lang.System.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Pupil s = new Pupil("小明", 7, 50);
+        s.say();
+        s.exam();
+    }
+}
+
+interface People {
+    public abstract String getName();
+    public abstract int getAge();
+    public abstract void setName(String name);
+    public abstract void setAge(int age);
+
+    public abstract void say();
+}
+
+interface Student {
+    public abstract float getScore();
+    public abstract void setScore(float score);
+
+    public abstract void exam();
+}
+
+class Pupil implements People, Student {
+    public Pupil() {
+        m_name = "Unnamed";
+        m_age = 0;
+        m_score = 0.0f;
+    }
+    public Pupil(String name, int age, float score) {
+        m_name = name;
+        m_age = age;
+        m_score = score;
+    }
+
+    @Override
+    public String getName() { return m_name; }
+    @Override
+    public int getAge() { return m_age; }
+    @Override
+    public float getScore() { return m_score; }
+    @Override
+    public void setName(String name) { m_name = name; }
+    @Override
+    public void setAge(int age) { m_age = age; }
+    @Override
+    public void setScore(float score) { m_score = score; }
+
+    @Override
+    public void say() {
+        out.printf("大家好，我叫%s，今年 %d 岁，是一名一年级的小学生。\n", m_name, m_age);
+    }
+
+    @Override
+    public void exam() {
+        out.printf("我正在考试，请保持安静 ... \n");
+    }
+
+    private String m_name;
+    private int m_age;
+    private float m_score;
+}
+</script></code></pre>
+<pre><code class="language-java line-numbers"><script type="text/plain"># root @ arch in ~/work on git:master x [13:28:32]
+$ javac Main.java
+
+# root @ arch in ~/work on git:master x [13:28:47]
+$ java Main
+大家好，我叫小明，今年 7 岁，是一名一年级的小学生。
+我正在考试，请保持安静 ...
+</script></code></pre>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/java/" rel="tag"># java</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-generic.html" rel="next" title="Java 泛型编程">
+                <i class="fa fa-chevron-left"></i> Java 泛型编程
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/java-inheritance-polymorphism.html" rel="prev" title="Java 继承与多态">
+                Java 继承与多态 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类"><span class="nav-number">1.</span> <span class="nav-text">内部类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义及简单示例"><span class="nav-number">1.1.</span> <span class="nav-text">定义及简单示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内部类的分类"><span class="nav-number">1.2.</span> <span class="nav-text">内部类的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例成员类、静态成员类"><span class="nav-number">1.3.</span> <span class="nav-text">实例成员类、静态成员类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具名局部类、匿名局部类"><span class="nav-number">1.4.</span> <span class="nav-text">具名局部类、匿名局部类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抽象类"><span class="nav-number">2.</span> <span class="nav-text">抽象类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口"><span class="nav-number">3.</span> <span class="nav-text">接口</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/java-abstract-interface.html';
+          this.page.identifier = 'java-abstract-interface.html';
+          this.page.title = 'Java 抽象类和接口';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

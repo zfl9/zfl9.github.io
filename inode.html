@@ -1,0 +1,643 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="linux,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="文件系统创建（格式化）时，就把存储区域分为两大连续的存储区域。一个用来保存文件系统对象的元信息数据，这是由 inode 组成的表，每个 inode 默认是 256 字节或者 128 字节。另一个用来保存“文件系统对象”的内容数据，划分为 512 字节的扇区，以及由 8 个扇区组成的 4K 字节的块。块是读写时的基本单位。一个文件系统的 inode 的总数是固定的。这限制了该文件系统所能存储的文件系">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解 inode">
+<meta property="og:url" content="https://www.zfl9.com/inode.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="文件系统创建（格式化）时，就把存储区域分为两大连续的存储区域。一个用来保存文件系统对象的元信息数据，这是由 inode 组成的表，每个 inode 默认是 256 字节或者 128 字节。另一个用来保存“文件系统对象”的内容数据，划分为 512 字节的扇区，以及由 8 个扇区组成的 4K 字节的块。块是读写时的基本单位。一个文件系统的 inode 的总数是固定的。这限制了该文件系统所能存储的文件系">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.188Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解 inode">
+<meta name="twitter:description" content="文件系统创建（格式化）时，就把存储区域分为两大连续的存储区域。一个用来保存文件系统对象的元信息数据，这是由 inode 组成的表，每个 inode 默认是 256 字节或者 128 字节。另一个用来保存“文件系统对象”的内容数据，划分为 512 字节的扇区，以及由 8 个扇区组成的 4K 字节的块。块是读写时的基本单位。一个文件系统的 inode 的总数是固定的。这限制了该文件系统所能存储的文件系">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/inode.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>理解 inode | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/inode.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                理解 inode
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-27T08:00:00+08:00">
+                2018-11-27
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/inode.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="inode.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/inode.html" class="leancloud_visitors" data-flag-title="理解 inode">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>文件系统创建（格式化）时，就把存储区域分为两大连续的存储区域。一个用来保存文件系统对象的元信息数据，这是由 inode 组成的表，每个 inode 默认是 256 字节或者 128 字节。另一个用来保存“文件系统对象”的内容数据，划分为 512 字节的扇区，以及由 8 个扇区组成的 4K 字节的块。块是读写时的基本单位。一个文件系统的 inode 的总数是固定的。这限制了该文件系统所能存储的文件系统对象的总数目。典型的实现下，所有 inode 占用了文件系统 1% 左右的存储容量。</p>
+<a id="more"></a>
+<h2 id="inode-是什么"><a href="#inode-是什么" class="headerlink" title="inode 是什么"></a>inode 是什么</h2><p>先从硬盘说起，硬盘的最小存储单位称为 <strong>扇区</strong>（Sector），扇区是物理概念，是看得到摸得着的东西，扇区的大小一般为 512 字节（某些新磁盘的扇区有 4096 字节）。</p>
+<p>系统在读取磁盘时，并不会一个一个扇区的读取，这样效率太低，而是一次读取多个连续的扇区，即一次性读取一个 <strong>块</strong>（Block），块是逻辑概念，是文件系统中的概念，一个块通常为 4096 字节或者为 8192 字节，即对应 8 个扇区或者 16 个扇区。</p>
+<p>块是文件存储的最小单位，也就是说，一个文件即使只有 1 字节大小，也要占用一个块，即 4096 字节。因此，小文件过多（小于块大小的文件）很容易浪费磁盘空间。</p>
+<p>一个文件其实包含两种数据，分别是 <strong>元数据</strong>（metadata）、<strong>数据</strong>（data）。</p>
+<ul>
+<li><strong>元数据</strong> 包括 <em>硬连接数</em>、<em>文件大小</em>、<em>文件类型</em>、<em>文件权限</em>、<em>文件所有者</em>、<em>文件所有组</em>、<em>文件创建日期</em>、<em>文件元数据修改日期</em>、<em>文件数据修改日期</em>、<em>文件访问日期</em>、<em>文件数据块的起始位置和结束位置</em> 等。</li>
+<li><strong>数据</strong> 其实就是我们普通意义上的文件数据、文件内容。</li>
+</ul>
+<p>注意，元数据中并没有包含文件名，那么文件名存储在哪呢？存储在它所属的目录文件的 <strong>文件数据</strong> 中（目录项），即存储在其它文件的 <strong>数据</strong> 区域。这个后面会详细说明。</p>
+<p>文件系统创建时，会把存储区域划分为两个，一个用于存储文件元数据，一个用于存储文件数据。也就是说一个文件的元数据和数据其实是分开存储的。一般元数据区域会占用整个存储空间的 1% 左右的大小。</p>
+<p>元数据区域的结构类似于数组，每个元素（一个元素只存储一个文件的元数据）的长度为 128 字节或 256 字节，每个元素都有一个下标（或者称为索引号），而这个索引号就是我们常说的 inode 号。因此我们只要得到了一个文件的 inode 号，就可以根据元素的长度（128 字节或 256 字节，可通过文件系统属性查看）来直接定位到该元素，然后读取文件的元数据，进而读取到文件的数据。</p>
+<p>一般来说，元数据区域的大小在文件系统被创建时已经被确定了（一些新的文件系统支持动态扩展元数据区域的大小），因此，如果文件过多（特别是小文件过多），会出现 inode 不够用，而数据区却还有空间的情况。</p>
+<p>总结：每个文件都有一个唯一的 inode 号，inode 号其实就是该文件的元数据“元素”在元数据“数组”中的下标/索引。只要知道了这个下标，就能够计算出元数据的位置，读取了元数据，就能够访问文件内容了。</p>
+<h2 id="相关-linux-命令"><a href="#相关-linux-命令" class="headerlink" title="相关 linux 命令"></a>相关 linux 命令</h2><p><strong>查看文件元数据</strong><br><code>stat</code> 命令，查看文件、文件系统的状态。常用参数：</p>
+<ul>
+<li><code>-L</code>：始终跟随符号链接</li>
+<li><code>-f</code>：显示文件系统状态</li>
+<li><code>-t</code>：显示简略状态信息</li>
+</ul>
+<p>如 <code>stat /</code> 的执行结果：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ stat /
+  File: /
+  Size: 4096          Blocks: 8          IO Block: 4096   directory
+Device: 802h/2050d    Inode: 2           Links: 17
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2018-05-29 20:02:53.753116940 +0800
+Modify: 2018-05-29 18:06:26.736882901 +0800
+Change: 2018-05-29 18:06:26.736882901 +0800
+ Birth: -
+</script></code></pre>
+<p><strong>查看 inode 使用情况</strong><br><code>df -i</code>，查看 inode 节点数量，已使用数量，未使用数量：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ df -i
+Filesystem           Inodes  IUsed   IFree IUse% Mounted on
+dev                  251106    350  250756    1% /dev
+run                  252545    491  252054    1% /run
+/dev/sda2           3245872 204841 3041031    7% /
+tmpfs                252545      1  252544    1% /dev/shm
+tmpfs                252545     18  252527    1% /sys/fs/cgroup
+tmpfs                252545      9  252536    1% /tmp
+/dev/sda1            128016    370  127646    1% /boot
+//192.168.255.253/D       0      0       0     - /root/windows.cifs.d
+//192.168.255.253/C       0      0       0     - /root/windows.cifs.c
+tmpfs                252545     11  252534    1% /run/user/0
+</script></code></pre>
+<p><strong>查看 inode 节点大小</strong></p>
+<pre><code class="language-none line-numbers"><script type="text/plain">
+$ fdisk -l /dev/sda
+Disk /dev/sda: 50 GiB, 53687091200 bytes, 104857600 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x56f54ba7
+
+Device     Boot   Start       End   Sectors  Size Id Type
+/dev/sda1          2048   1026047   1024000  500M 83 Linux
+/dev/sda2       1026048 104857599 103831552 49.5G 83 Linux
+
+$ dumpe2fs -h /dev/sda1 | grep "Inode size"
+dumpe2fs 1.44.2 (14-May-2018)
+Inode size:              128
+
+$ dumpe2fs -h /dev/sda2 | grep "Inode size"
+dumpe2fs 1.44.2 (14-May-2018)
+Inode size:              256
+</script></code></pre>
+<p><strong>查看文件的 inode 号</strong><br><code>ls</code>、<code>stat</code> 都可以查看，一般使用 ls，使用 -i 参数：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ll -i /
+total 49K
+      2 drwxr-xr-x   4 root root 1.0K May 27 12:26 boot
+      3 drwxr-xr-x  18 root root 3.0K May 29 13:48 dev
+ 915713 drwxr-xr-x  55 root root 4.0K May 29 09:35 etc
+2877953 drwxr-xr-x   3 root root 4.0K May 21 18:18 home
+     11 drwx------   2 root root  16K Aug 13  2017 lost+found
+ 392449 drwxr-xr-x   2 root root 4.0K Apr 22 11:46 mnt
+2485505 drwxr-xr-x   4 root root 4.0K May 17 07:40 opt
+      1 dr-xr-xr-x 119 root root    0 May 29 13:47 proc
+ 523265 drwxr-x---  24 root root 4.0K May 30 13:03 root
+  12299 drwxr-xr-x  20 root root  560 May 30 13:00 run
+2354689 drwxr-xr-x   4 root root 4.0K Aug 13  2017 srv
+      1 dr-xr-xr-x  13 root root    0 May 29 13:47 sys
+  11933 drwxrwxrwt   9 root root  180 May 30 12:37 tmp
+2223873 drwxr-xr-x   9 root root 4.0K May 28 17:15 usr
+1046529 drwxr-xr-x  12 root root 4.0K May 28 17:16 var
+     12 lrwxrwxrwx   1 root root    7 Jan  6 03:17 bin -> usr/bin
+     13 lrwxrwxrwx   1 root root    7 Jan  6 03:17 lib -> usr/lib
+     14 lrwxrwxrwx   1 root root    7 Jan  6 03:17 lib64 -> usr/lib
+     15 lrwxrwxrwx   1 root root    7 Jan  6 03:17 sbin -> usr/bin
+</script></code></pre>
+<p><strong>创建文件链接</strong><br><code>ln -f source.file target.file</code>：创建硬链接<br><code>ln -sf source.file target.file</code>：创建软链接</p>
+<h2 id="特殊的目录文件"><a href="#特殊的目录文件" class="headerlink" title="特殊的目录文件"></a>特殊的目录文件</h2><p>在 Linux 中，目录其实也是一个文件，它和普通文件没什么两样，也分为 <strong>元数据</strong>、<strong>数据</strong> 两个部分。</p>
+<p>一个空目录的 <strong>元数据</strong> 信息：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ stat test
+  File: test
+  Size: 4096          Blocks: 8          IO Block: 4096   directory
+Device: 802h/2050d    Inode: 532820      Links: 2
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2018-05-30 13:59:15.551735233 +0800
+Modify: 2018-05-30 13:59:15.551735233 +0800
+Change: 2018-05-30 13:59:15.551735233 +0800
+ Birth: -
+</script></code></pre>
+<p>有几个比较重要的信息，<code>Size: 4096</code>、<code>Inode: 532820</code>、<code>Links: 2</code>。</p>
+<ul>
+<li><code>Size: 4096</code>：这个目录文件的大小为 4096 字节</li>
+<li><code>Inode: 532820</code>：这个目录文件的 inode 号为 532820</li>
+<li><code>Links: 2</code>：这个目录文件的硬连接数为 2</li>
+</ul>
+<p>前两个都没什么疑问，关键是硬链接数为什么是 2 呢？其实很好理解，第 1 个硬链接，是该目录的父目录所指向而产生的，第 2 个硬链接是该目录下的 <code>.</code> 目录文件所指向而产生的。如果在该目录下新建一个文件夹的话，硬链接数就会变成 3，因为新建的目录下有一个 <code>..</code> 目录文件，指向它的父目录，即这里所说的 test 目录。</p>
+<p>再来看一下根目录 <code>/</code> 的硬连接数，如下：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ ls /
+boot  dev  etc  home  lost+found  mnt  opt  proc  root  run  srv  sys  tmp  usr  var  bin  lib  lib64  sbin
+
+$ ls -ld /
+drwxr-xr-x 17 root root 4096 May 29 18:06 /
+
+$ ll / | grep '^d' | wc -l
+15
+</script></code></pre>
+<p>根目录下有 15 个文件夹，每个文件夹下都有一个 <code>..</code> 文件指向根目录，因此这里就有 15 个硬链接指向根目录，然后根目录下还有两个特殊目录：<code>.</code> 和 <code>..</code>，<code>.</code> 其实就是根目录自己了，因此硬链接数变为 16，<code>..</code> 是哪个目录呢？其实也是根目录自己（不信可以自己试一下，目录文件中，只有根目录文件的父目录指向自己），因此最终的硬链接数为 17，符合上面的 <code>ls -ld /</code> 的输出。</p>
+<p>那么目录文件的数据区存储的是什么东西呢？为什么空目录的数据区大小不是 0 字节而是 4096 字节？我们知道，每个目录下都有两个特殊的目录文件，它们就是 <code>.</code> 和 <code>..</code>，前者是当前目录的硬链接，后者是其父目录的硬链接。</p>
+<p>目录文件中存储的内容其实很简单，就是该目录下的文件名以及对应的 inode 号码。可以理解为一张表，每个表项有两个值，一个是文件名，一个是对应的 inode 号码。还有，这里有必要强调一点，在 Linux 中，不喜欢将目录称为文件夹，应称为”目录”。</p>
+<p>所以目录文件的大小是由该目录下的文件数目决定的，文件数目如果很多，那么目录文件的大小就会比较大，对比一下 <code>/home</code>、<code>/usr/bin</code> 目录，后者文件数量非常多：</p>
+<pre><code class="language-bash line-numbers"><script type="text/plain">
+$ stat /home
+  File: /home
+  Size: 4096          Blocks: 8          IO Block: 4096   directory
+Device: 802h/2050d    Inode: 2877953     Links: 3
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2018-05-28 17:17:00.847801687 +0800
+Modify: 2018-05-21 18:18:21.943952138 +0800
+Change: 2018-05-21 18:18:21.943952138 +0800
+ Birth: -
+
+$ stat /usr/bin
+  File: /usr/bin
+  Size: 40960         Blocks: 88         IO Block: 4096   directory
+Device: 802h/2050d    Inode: 2225933     Links: 5
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2018-05-29 18:05:58.909799306 +0800
+Modify: 2018-05-28 17:15:26.016223810 +0800
+Change: 2018-05-28 17:15:26.016223810 +0800
+ Birth: -
+
+$ ll /home | wc -l
+2
+
+$ ll /usr/bin | wc -l
+1577
+</script></code></pre>
+<p><code>/home</code> 目录的大小是 4096 字节，而 <code>/usr/bin</code> 目录则是 40960 字节，相差十倍。</p>
+<p>说到这里，不由得联想到 Unix 中的哲学思想：<strong>一切皆为文件</strong>。目录也是文件。</p>
+<p>然后，我们再来理解一下目录的权限，对于普通文件，<code>rwx</code> 的意义非常清楚明白，但是对于目录文件，这有点让人摸不着头脑，比如，目录文件只有 <code>r</code> 权限只能 <code>ls</code> 浏览这个目录，<code>ls -l</code> 却不能提供任何有用的信息，会提示没有权限，而且你不能 <code>cd</code> 进一个没有 <code>x</code> 权限的目录，等等等等，让人有点犯晕。</p>
+<p>但实际上，你回归到本质，就会发现，原来之前让我犯晕的目录权限问题这么简单。我们说了，目录也是文件，目录文件中保存的是一张表，每个条目都有两个字段，文件名称和对应的 inode 号。</p>
+<p>我们常说，一个软件或者说工具，不能一味的求全，必须先求精，一个短小精悍的命令，往往比一个功能很多但每个功能都不精的命令受欢迎的多（至少我是这样的）。</p>
+<p>在这里也一样，目录文件中的每个目录项都包含两个信息，文件名、inode 值。如果仅需要 r 权限就能读取这两个信息，那就太不安全了，因此大佬们想到一个好方法，读取目录项的文件名需要 r 权限，读取目录项的 inode 值需要 x 权限。</p>
+<p>这样理解就很好解释了，假如一个目录只有 r 权限，那么你只能读取里面的文件名列表，即使用 <code>ls</code> 可以正常显示，但是 <code>ls -l</code>、<code>ls -i</code>、<code>ls --color</code> 等都不能使用，为什么呢，因为它们都会尝试读取目录项中的 inode 值，但是读取 inode 值需要 x 权限，所以会提示权限不足。同时，你也不能 <code>cd</code> 进这个目录（这个我还没彻底理解，按道理来说，cd 应该不需要读取 inode 信息，当然也可能需要，具体不深究了）。</p>
+<p>如果一个目录只有 x 权限， 那么你只能 <code>cd</code> 进去，你无法通过 <code>ls</code> 获取任何信息。</p>
+<p>因此，目录文件几乎总是同时拥有 <code>r</code> 权限和 <code>x</code> 权限的。最后来说说 <code>w</code> 权限。</p>
+<p>如果一个目录只有 w 权限，那么你也不能在目录下创建新文件，你必须还拥有 x 权限，才能往这个目录中写入新文件，这个我也还没搞懂（Linux 真是博大精深）。</p>
+<h2 id="关于文件名的疑问"><a href="#关于文件名的疑问" class="headerlink" title="关于文件名的疑问"></a>关于文件名的疑问</h2><p>回到开头那一节，一个文件的 inode 元素（元数据）中并不存在该文件的文件名，既然文件名不存储在元数据区，也不可能存储在数据区，那么一个文件的文件名究竟存放在哪个地方呢？</p>
+<p>智障，上一节不是说了吗，文件名存储在目录文件的数据区中，即存储为一个目录项。</p>
+<p>比如文件 <code>/root/work/test.txt</code>，我们来一步一步分析：</p>
+<ul>
+<li><code>test.txt</code> 存储在 work 目录文件的数据区</li>
+<li><code>work</code> 存储在 root 目录文件的数据区</li>
+<li><code>root</code> 存储在 / 根目录文件的数据区</li>
+<li><code>/</code> 个人猜测，应该是存储在每个进程的某块内存区域中（chroot 启发）</li>
+</ul>
+<p>这时，再理解为什么每个目录文件下都有两个特殊的目录文件/硬链接 <code>.</code> 和 <code>..</code>。其实主要还是为了方便，<code>.</code> 文件使得位于当前目录下的程序可以不依靠根目录，而直接访问该目录下的其它文件。<code>..</code> 文件使得位于当前目录下的程序可以不依靠根目录，而直接访问上一级目录，以及上一级的上一级目录，等等。</p>
+<h2 id="目录为什么不能硬链接"><a href="#目录为什么不能硬链接" class="headerlink" title="目录为什么不能硬链接"></a>目录为什么不能硬链接</h2><p>软链接和硬链接之间其实区别还是很大的，首先，软链接可以跨分区，硬链接不行，软链接可以指向一个不存在的文件，但是硬链接不可以。如果软链接到的目标文件被删除了，那么根据软链接文件时无法读取其内容的，但是硬链接文件却不同，他们完全没影响，而且硬链接文件和源文件是完全等价的，因为源文件其实也是一个硬链接，只不过它是自动创建的。</p>
+<p>从本质来讲，软链接是一个实实在在的文件，它的内容就是所指向的文件的路径，仔细观察软链接文件的大小就知道了，就是等于所指向的文件的路径的长度大小。软链接文件和被指向文件是完全不同的两个文件，它们有这不同的 inode 值。</p>
+<p>而硬链接并不是一个实实在在的文件，创建一个硬链接并不会占用磁盘中的一个 inode 资源，该操作只会在对应的目录文件中添加一个目录项，更新 links 数量，仅此而已。</p>
+<p>那么 links 数有什么用呢？起到一个“引用计数”的作用，对于普通文件，在创建之处，只有一个 links 数量，当创建一个硬链接时，links 数会自动加一，即引用计数加一，当这个硬链接被删除时，Links 自动减一，当最早创建的硬链接也被删除时，links 变为了 0，系统就会回收这个 inode 号，删除对应的文件内容。</p>
+<p>那么为什么目录不能创建硬连接呢？<br><a href="https://askubuntu.com/questions/210741/why-are-hard-links-not-allowed-for-directories" rel="external nofollow noopener noreferrer" target="_blank">Why are hard links not allowed for directories?</a></p>
+<p>其中，<code>Directory hardlinks break the filesystem in multiple ways</code> 回答的最好。</p>
+<p>简单的一句话就是，<code>find</code>、<code>locate</code> 等工具在遍历寻找文件时，会陷入无限的循环中，除非你指定了 -maxdepth，限制 find 搜索的最大深度，不然是停不下来的。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/linux/" rel="tag"># linux</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/mysql.html" rel="next" title="MySQL 笔记">
+                <i class="fa fa-chevron-left"></i> MySQL 笔记
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/wlan.html" rel="prev" title="WLAN 笔记">
+                WLAN 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#inode-是什么"><span class="nav-number">1.</span> <span class="nav-text">inode 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关-linux-命令"><span class="nav-number">2.</span> <span class="nav-text">相关 linux 命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊的目录文件"><span class="nav-number">3.</span> <span class="nav-text">特殊的目录文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于文件名的疑问"><span class="nav-number">4.</span> <span class="nav-text">关于文件名的疑问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录为什么不能硬链接"><span class="nav-number">5.</span> <span class="nav-text">目录为什么不能硬链接</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/inode.html';
+          this.page.identifier = 'inode.html';
+          this.page.title = '理解 inode';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

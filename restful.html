@@ -1,0 +1,535 @@
+<!doctype html>
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+  <meta name="keywords" content="前端,">
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+<meta name="description" content="表现层状态转换（英语：Representational State Transfer，缩写：REST）是 Roy Thomas Fielding 博士于 2000 年在他的博士论文中提出来的一种万维网软件架构风格，目的是便于不同软件/程序在网络（例如互联网）中互相传递信息。表现层状态转换是根基于超文本传输协议（HTTP）之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RESTful API">
+<meta property="og:url" content="https://www.zfl9.com/restful.html">
+<meta property="og:site_name" content="Otokaze's Blog">
+<meta property="og:description" content="表现层状态转换（英语：Representational State Transfer，缩写：REST）是 Roy Thomas Fielding 博士于 2000 年在他的博士论文中提出来的一种万维网软件架构风格，目的是便于不同软件/程序在网络（例如互联网）中互相传递信息。表现层状态转换是根基于超文本传输协议（HTTP）之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼">
+<meta property="og:updated_time" content="2020-07-04T13:10:25.315Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RESTful API">
+<meta name="twitter:description" content="表现层状态转换（英语：Representational State Transfer，缩写：REST）是 Roy Thomas Fielding 博士于 2000 年在他的博士论文中提出来的一种万维网软件架构风格，目的是便于不同软件/程序在网络（例如互联网）中互相传递信息。表现层状态转换是根基于超文本传输协议（HTTP）之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.zfl9.com/restful.html">
+<link href="/js/prism/prism.css" rel="stylesheet">
+  <title>RESTful API | Otokaze's Blog</title>
+</head>
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97872912-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3d58f51dbb2496a0e6d17b85065a5ae5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Otokaze's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">拼一年春夏秋冬，搏一生无怨无悔</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            归档
+          </a>
+        </li>
+    </ul>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.zfl9.com/restful.html">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Otokaze">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Otokaze's Blog">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">
+                RESTful API
+          </h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-08T08:00:00+08:00">
+                2018-12-08
+              </time>
+          </span>
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/restful.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="restful.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+             <span id="/restful.html" class="leancloud_visitors" data-flag-title="RESTful API">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+                 <span class="post-meta-item-text">阅读次数 </span>
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>表现层状态转换（英语：Representational State Transfer，缩写：REST）是 Roy Thomas Fielding 博士于 2000 年在他的博士论文中提出来的一种万维网软件架构风格，目的是便于不同软件/程序在网络（例如互联网）中互相传递信息。表现层状态转换是根基于超文本传输协议（HTTP）之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼容于这种架构风格（简称为 REST 或 RESTful）的网络服务，允许客户端发出以统一资源标识符访问和操作网络资源的请求，而与预先定义好的无状态操作集一致化。因此表现层状态转换提供了在互联网络的计算系统之间，彼此资源可交互使用的协作性质（interoperability）。相对于其它种类的网络服务，例如 SOAP 服务则是以本身所定义的操作集，来访问网络上的资源。</p>
+<a id="more"></a>
+<h2 id="RESTful-是什么意思？"><a href="#RESTful-是什么意思？" class="headerlink" title="RESTful 是什么意思？"></a>RESTful 是什么意思？</h2><p><strong>用 URL 定位资源，用 HTTP Method 描述操作（CRUD） – RESTful</strong></p>
+<pre><code class="language-http line-numbers"><script type="text/plain">
+POST /employees         # 创建一个员工
+GET /employees          # 获取所有员工
+GET /employees/${id}    # 获取指定员工
+PUT /employees/${id}    # 更新员工信息（完整更新）
+PATCH /employees/${id}  # 更新员工信息（部分更新）
+DELETE /employees/${id} # 删除指定员工
+DELETE /employees       # 删除所有员工
+</script></code></pre>
+<p>PUT 是替换资源，需要提供完整的资源信息。而 PATCH 是更新资源，可以局部更新。</p>
+<ul>
+<li>建议使用 json 作为数据传输格式。</li>
+<li>建议使用复数名词，严禁混用单复数。</li>
+<li>对可选/复杂的参数，使用查询字符串。</li>
+<li>2xx 操作成功，4xx 客户端错误，5xx 服务端错误。</li>
+<li>使用驼峰命名法，如 <code>yearOfBirth</code>，不要使用下划线。</li>
+<li>在 URL 中加入版本号，如 <code>/v1/employees</code>，不要使用小数。</li>
+<li>提供分页信息，如 <code>/employees?offset=30&amp;limit=15</code>，30~45。</li>
+</ul>
+<p><strong>RESTful 只是一个规范，并不是强制要求，具体怎么做还是取决于开发者自己！！！</strong></p>
+<h2 id="RESTful-用在什么地方？"><a href="#RESTful-用在什么地方？" class="headerlink" title="RESTful 用在什么地方？"></a>RESTful 用在什么地方？</h2><p>当然是 API 了，RESTful API 啊！所谓 RESTful API 就是 HTTP 接口。允许使用不同的客户端进行访问，比如手机、电脑、终端、网页等，都使用统一的接口，github api 已经成为 RESTful API 的设计典范。</p>
+<h2 id="HTML-表单-vs-AJAX-对比"><a href="#HTML-表单-vs-AJAX-对比" class="headerlink" title="HTML 表单 vs AJAX 对比"></a>HTML 表单 vs AJAX 对比</h2><p>HTML 表单是 HTML 网页与 WEB 服务器进行数据交互的重要方式，HTML 表单是同步的，页面通常会改变。<br>XmlHttpRequest 是 JavaScript 与 WEB 服务器进行数据交互的主要方式，默认是异步的，不重载页面。</p>
+<p>HTML 表单我们已经很熟悉了，就是在页面中填写一些信息，然后点击提交按钮，发送一个 HTTP 请求到服务器，这个请求中附带了我们需要一些信息，服务器处理之后，会返回一个新页面给浏览器，HTML 表单只支持 GET 和 POST 两种请求，GET 请求不太安全，因为信息会暴露在 URL 地址栏，而 POST 是比较安全的（当然要 HTTPS 加密，如果是 HTTP 协议，无论什么方法都不安全），另外 GET 请求不能附带太多数据，因为 WEB 服务器通常会限制 URL 的长度，而 POST 请求一般可以负担更多的数据。</p>
+<p>因为 HTML 表单只能支持 GET 和 POST 两种 HTTP 请求方法，所以我们一般不能单纯通过 form 表单来实现 RESTful 风格的 WEB 服务。不过，我们还有 JavaScript 啊，JS 中有一个大名鼎鼎的 XmlHttpRequest 对象，XmlHttpRequest 简称 XHR，所谓 XHR 就是 JS 中的一套 API，可以用来发送 HTTP 请求，支持 GET、HEAD、POST、PUT、PATCH、DELETE 等请求方法，并且默认是异步的，可以实现 RESTful 风格的 WEB 服务。</p>
+<p>AJAX 其实就是使用 XHR 来异步更新网页的技术（大致流程就是发送 XHR 请求，然后异步获取请求结果，最后使用 DOM API 来修改 HTML 元素的内容，这样就达到了异步更新网页的技术，而不需要重新加载新页面）。</p>
+<p>XHR 有一个限制，即“同源策略”，所谓同源就是指<strong>协议</strong>、<strong>域名</strong>、<strong>端口</strong>三者相同，只要有一个不同，就不是同源。所谓同源策略就是说 XHR 只能向与当前源相同的服务器发送 HTTP 请求，搞这个策略的一个重要原因是安全。</p>
+<p>RESTful 一般用于设计 WEB API，但是，在很多 WEB 网站中，也有很多 RESTful 的身影，HTML 表单虽然只支持 GET 和 POST 请求，但是对于 URL 的设计，我们还是可以参考 RESTful 规范的，建议大家都这么做。</p>
+<h2 id="从-RESTful-API-AJAX-到前后端分离"><a href="#从-RESTful-API-AJAX-到前后端分离" class="headerlink" title="从 RESTful API + AJAX 到前后端分离"></a>从 RESTful API + AJAX 到前后端分离</h2><p>我们知道，浏览器的 form 表单是无法支持 PUT、PATCH、DELETE 方法的，所以如果要使用 RESTful API，必须通过 AJAX 来实现。PS：Spring MVC 其实是可以直接使用 form 表单来实现 RESTful API 调用的，那么这个是什么原理呢？其实很简单，通过一个隐藏表单元素 <code>_method</code>，value 为 <code>put/patch/delete</code>，注意表单的 method 要填 post，然后我们在 web.xml 中配置一个过滤器，这个过滤器会使用一个 request wrapper（包装器）替换原来的 request 对象（类似动态代理），request 和 request wrapper 实现同样的接口（我觉得 request wrapper 其实就是 request 的子类），这个 filter 会在 wrapper 中重写 getMethod() 方法，将 POST 替换为对应的 PUT、PATCH、DELETE 方法，然后在 Controller 中处理时获取到的 Method 就是替换后的了，这样就间接地实现了 RESTful API 在 form 表单中的调用。</p>
+<p>虽然 Spring MVC 可以实现纯 form 形式的 RESTful API 请求，但绝大多数项目都是 AJAX 来完成的，毕竟更优雅。在这种情况下，服务器和客户端是如何布局的，它们之间又是如何工作的呢？我们来简要的分析一下：</p>
+<p>首先我们需要两个服务器，一个是 Nginx（Web 服务器），一个是 Tomcat（应用服务器）。Nginx 上存放 HTML/CSS/JS 等静态资源，开放给外网；Tomcat 则运行 Spring MVC 应用，提供 RESTful API 接口，Tomcat 可以选择开放给外网（比如需要将 API 开放给其它客户端，如手机 APP），也可以运行在内网（如果只是单纯网站的话，建议放到内网，更安全）。</p>
+<p>首先，浏览器向 Nginx 发送 HTTP 请求，获取 HTML 页面以及其他资源，HTML 页面一般就是一个骨架，里面有很多 AJAX 请求，调用 Tomcat 提供的 RESTful API，最终完成页面渲染，呈现给用户。分为两种情况：</p>
+<p>第一种，Tomcat 运行在内网，那么我们的 AJAX 请求的 URL 就要改一下，改为当前域名的某个 url 下，比如 <code>/api</code>，即实际的 API url 为 <code>/employees/id</code>，那么在 AJAX 中就要改为 <code>/api/employees/id</code>，然后在 Nginx 中配置 <code>/api</code> 路径的反代，将这个 url 下的请求反打到内网中的 Tomcat 中。避开同源策略。</p>
+<p>第二种，Tomcat 运行在外网，这种情况下，我们不需要改变 AJAX 里面的 url，假设网站的域名为 <code>www.zfl9.com</code>（Nginx），API 的域名为 <code>api.zfl9.com</code>（Tomcat），那么 AJAX 里面请求的 url 就是 <code>api.zfl9.com/xxx</code>，不过因为浏览器对 JS 脚本发起的 HTTP 请求有同源策略的限制，所以我们不能直接这样做，要解决这个问题也很简单，即使用 CORS，别以为是什么很高大上的东西，其实就是几个 HTTP 头部。首先浏览器的同源限制是这样的，当 www.zfl9.com 域下的 AJAX 向 api.zfl9.com 发出 RESTful 请求后，浏览器并不会直接丢掉这个请求，而是先让它正常发出去，然后检查 api.zfl9.com 返回的响应头部，如果包含 <code>Access-Control-Allow-Origin: *</code> 或 <code>Access-Control-Allow-Origin: www.zfl9.com</code> 头部，则表名 api.zfl9.com 这台服务器做了 CORS 跨域请求支持，浏览器会正常接收响应，所以没有问题；如果不包含这个头部，那么浏览器就会对响应结果进行拦截，然后提示不支持跨域。所以我们只需要在 Tomcat 中配置一个 filter，对 response 添加几个 CORS 头部就行了（浏览器发出的跨域请求会包含一个 <code>Origin</code> 头部，表示请求的来源域，如 <code>Origin: https://www.zfl9.com</code>，可以在 filter 中做些判断，只对指定域名开放）。</p>
+<p>这样其实就是所谓的 <strong>前后端分离</strong>，前端服务器为 Nginx，暴露给浏览器，后端服务器为 Tomcat，只提供 RESTful API，前后端之间使用 AJAX 进行交互，数据格式一般为 JSON。好处是前后端开发人员可以分开，前端做前端的事，后端做后端的事，互不干扰，只需要沟通好 RESTful API 接口就行了。在这之前，大多数公司的 Web 开发模式是这样的：前端负责编写 HTML 页面，然后交给后端人员，后端人员再将这个 HTML 改为动态页面（如 JSP，或者是其它 View 模板），这也就是所谓的“套模版”，有时候容易出错，调试周期长。</p>
+<p>因为使用了 AJAX 进行动态页面更新，所以一般我们也将这种网站称为 <strong>SPA（single page application，单页面应用）</strong>，所谓单页面应用就是在 Web 设计上使用单一页面（页面骨架），利用 JavaScript 操作 Dom 来进行动态渲染和动态更新。与 SPA 相对的是 <strong>MPA（multiple page application，多页面应用）</strong>，这是传统的 Web 应用设计模型，通过不同页面的跳转来进行内容的更新（基本上就是 form 表单）。</p>
+<p>通常 SPA 就是指代运用 AJAX + RESTful API 技术开发的网站，即应用了前后端分离的网站，虽然 SPA 有很多优点，比如更利于前后端开发者的分工合作，并且很好的做到了前后端的解耦，但是 SPA 仍然有两大缺点：</p>
+<ul>
+<li><strong>不利于 SEO</strong>：这个很好理解，搜索引擎爬虫抓取的只是 HTML 和 AJAX 脚本代码，大多数爬虫都不会去执行 JS 脚本，所以爬虫无法获取到网站的数据，对于依靠搜素引擎导流的网站来说，这个缺点是致命的，这意味着用户的流失，所有的 SEO 技巧都无从施展。不过对于不依赖搜索引擎的网站来说，SPA 依旧是极好的。</li>
+<li><strong>首次访问缓慢</strong>：这个还是和 AJAX 有关系，浏览器获取到的 HTML 代码往往只是一个骨架，有的甚至什么都没，需要浏览器发出的 AJAX 请求全部完成后，页面才能完整的呈现给用户，在此之前，用户看到的是长时间的白屏，这样的用户体验是非常糟糕的，并且现在很多 SPA 网站都使用了各种 JS 框架，首次访问还需要获取完整的 JS 框架代码，就更慢了，很多用户会因为网站打开太慢而直接关闭，导致用户的流失。</li>
+</ul>
+<p>基于 SPA 的这些缺点，又有人提出了 <strong>SSR（Server-Side Render，服务端渲染）</strong>，与 SSR 相对的是 <strong>CSR（Client-Side Render，客户端渲染）</strong>。什么是 SSR 呢？举个例子，传统的 JSP 就是 SSR，浏览器访问 jsp 页面，服务器会先将 JSP 转换为 HTML 代码，再返回给浏览器，浏览器获取到的是一个完整的 HTML 页面，所以首次打开很快，没有所谓的白屏时间。而我们上面提到的 SPA 模型就是 CSR 的一个例子，即浏览器获取 HTML 骨架，JS 代码，然后在浏览器环境中执行 JS 脚本，通过 AJAX 来获取 RESTful 接口的数据，才能完成页面渲染，所以首次访问很慢，用户在此期间很容易看到长时间的白屏。</p>
+<p>那么我们说的 SSR 和 SPA 有什么关系呢？SPA 不是 CSR 的吗？难道我们可以将它改为 SSR？是的，因为 Node.JS 的出现，使得我们可以在服务端执行 JS 脚本，而又因为 SPA 有 SEO 问题和首屏性能问题，所以有大神就提出了利用 Node.js 作为中间层来实现 SPA 应用的 SSR 服务端渲染，从而完美避免 SEO 问题和首屏性能问题。那么 SPA 的服务端渲染是如何实现的呢？</p>
+<p>最简单的改造方式就是使用 Node.js 替换 Nginx，作为 Web 服务器，即从 Nginx + Tomcat 变为 Node.js + Tomcat，当然 Nginx 仍然可以保留，这个是后话，我们就暂且改为 Node.js + Tomcat 架构吧。浏览器第一次访问网站时，请求首先到达 Node.js，Node.js 会先获取到对应的 HTML 代码，然后解析 AJAX 代码，向 API 服务器发起请求，然后在 Node.js 容器中完成渲染，最后将完整的 HTML 页面发送回浏览器，浏览器依旧能够使用 HTML 里面的 AJAX 脚本来进行页面的动态更新，也就是说，第一次访问时是先由 Node.js 代理浏览器来进行渲染的，而后面的的 AJAX 请求可以直接发送给 API 服务器。因为第一次访问获取到的是带有内容的 HTML 页面，所以搜索引擎爬虫可以对里面的内容进行抓取，提取关键字，不影响 SEO 优化，同时因为服务端直接访问 API 服务器很快，所以也解决了首次访问白屏时间长的问题。可谓是两全其美，但是 SSR 的实现往往更加复杂，而且引入了 Node.js 中间层，前端的工作量大大增加，所以除非是非常依赖搜索引擎来吸引流量的网站，或者是对首次加载时间很敏感的，才建议使用 SSR，其他网站使用 SPA 就够了。</p>
+<p>注意，因为 SPA + SSR 的方式不同于传统的 SSR 服务端渲染，而是 CSR 和 SSR 混合，所以又有一个新名词来形容这种模式，即 <strong>同构渲染</strong>，即第一次访问时先由服务端进行渲染，直出 HTML 代码，后面的数据更新依旧使用浏览器解析 AJAX 形式来渲染。同购的意思就是同一份 JS 代码能够同时在客户端运行和服务端运行，在 SPA + SSR 场景中就是指代浏览器和 Node.js 咯。</p>
+<blockquote>
+<p>Angular、React、Vue 三大主流框架都支持所谓的“同构渲染、服务端渲染”。</p>
+</blockquote>
+<h2 id="关于前后端分离的讨论-知乎"><a href="#关于前后端分离的讨论-知乎" class="headerlink" title="关于前后端分离的讨论 - 知乎"></a>关于前后端分离的讨论 - 知乎</h2><p>一开始，html 就是后端渲染的。不过后端发现页面中的 js 好麻烦（虽然简单，但是坑多），于是让公司招聘专门写 js 的人，也就是前端。</p>
+<p>前端名义上是程序员，实际上就是在切图（CSS）和做特效(JS)，所以所有程序员中前端工资最低，职位也最低。所以前后端的鄙视链就出现了。</p>
+<p>node.js 和前端 mvc 的兴起让前端变得复杂起来，前端发现翻身的机会，于是全力支持这两种技术，造成本不该做成 spa 的网站也成了 spa。慢慢地前后端分离运动从大公司开始兴起，目的就是前端脱离后端的指指点点，独立发展。（表面上是为了「代码分离」，实际上是为了「人员分离」，也就是「前后端分家」，前端不再附属于后端团队）</p>
+<p>spa 之后发现 seo 问题很大，而且首屏渲染速度贼慢，但是自己选的路再难走也要走下去，于是用 nodejs 在服务端渲染这一条路被看成是一条出路</p>
+<p>其实这是第二个翻身的机会，如果 nodejs 服务器渲染成为主流，其实就相当于前端把后端的大部分工作给抢了，工资压过普通后端指日可待</p>
+<p>然而结果是 nodejs 服务端渲染始终是小众，因为后端也没那么脆弱，java php rails 十多年沉淀的技术岂是你说推翻就推翻的，已经运行多年的项目又岂是容你随便用 nodejs 重写的，另一方面 golang 等技术的兴起也给 nodejs 不少压力。最终只有少部分前端特别强势的团队成功用上了 Node.js 做渲染（比如阿里的一些团队），大部分公司依然是用 PHP 渲染 HTML。</p>
+<p>于是 nodejs 退一步说好好好我不抢你们的工作，我只做中间层（大部分工作就是渲染页面和调用后台接口），绝不越雷池。后端说算你识相。现在 nodejs 主要搞什么微服务，也是为了抢后端还没注意的市场。</p>
+<p>你要看一门技术的发展主要应该看背后的人是谁，应用场景是哪些，最后才是技术细节。nodejs 的火在中国早就烧过了，以后估计不会大火了，作为前端了解一下还是不错的，但是如果你是后端的话，看不看都无所谓，nodejs 跟其他后端开发框架差异并不大，单线程异步既是优点也是缺点，你就把它当做一种范式研究就好。</p>
+<p>我是一个坚定的『前后端分家』反对者，前后代码可以分离，但是人员绝对不应该分离。前后端撕逼的事情在大公司天天都在发生，全都是因为前后是两个团队，利益不同。实际上前端推 nodejs 渲染就是在试图重新让前后端合成一体。</p>
+<p>但是前端不能明说这件事，因为如果要把前后端部门合并，拆掉的肯定是前端部门。</p>
+<p>合，则相当于自断前程。<br>不合，则永远没法解决seo和首屏加载慢的问题。<br>所以前端真的挺矛盾的。</p>
+<p>JS 也有一个矛盾的地方，凡是浏览器上的框架（Vue React）都说自己能适应「复杂」场景，凡是 Node.js 上的框架（express fastify koa）都说自己是「轻量级」框架。</p>
+<p>为啥？因为浏览器是 JS 的主战场，而且无敌手。而服务器上，JS 的经验积累还是太少了，搞企业级服务，Node.js 是敌不过 Java、PHP 的，没办法，发展得太晚了。所以目前只能搞「轻量级」咯。egg.js 号称是企业级 Node.js 框架，用过的人来评我就不评了。</p>
+<p>有些大佬提出「大前端」的概念，意思是前端也要会后端，但是我们心还是前端的。</p>
+<p>这不就是把以前的『前后端一个人做』换了个说法嘛。</p>
+<p>反正你现在让后端去学前端，后端肯定是不愿意躺这浑水的。只能前端自己想办法咯。</p>
+<p>想来想去就只有 Node.js 中间层做 HTML 渲染了。</p>
+<p>当初是你要分开，分开就分开。<br>现在又要用kpi，把我唤回来。<br>但是后端kpi跟你前端kpi是不同的呀，所以没戏。</p>
+<p>这些话也就我这种脱离了大厂约束的人敢说，在大厂的人根本不敢说，毕竟跟后端低头不见抬头见的。</p>
+<p>最后告诉你一个小秘密。由于阿里 nodejs 用得还算多，却招不到人，所以从功利的角度出发，也许你学 nodejs 比学 java 更容易进阿里，毕竟阿里的 java 大神多如云，nodejs 大神却不多。</p>
+<p>但是从另外一个角度考虑，SEO 不友好的页面我是支持的。</p>
+<p>如果你的页面是对 SEO 不友好的，那么百度的重要性就会被削弱。现在是移动互联网时代，大家在手机上几乎不用百度，都是直接点 App 点微信公众号的，SEO 不友好问题不大。首屏速度随着 5G 网络的普及也不会是问题了。</p>
+<p>只要能让百度利益受损，我觉得 SPA 这事还是值得做的。服务端渲染还是直接免了吧，大家都不做 SEO 让百度倒闭就最好咯~（只是我的幻想而已，不要当真，我是百度的脑残黑，黑百度从来不需要理由）</p>
+<p>感谢你看我说了这么多，不过说到最后，我也没给出啥结论，只是把我观察到的告诉你了。</p>
+<p>你要不要学、要不要用服务器渲染HTML，都是需要你自己思考的事情。</p>
+<p>还是那句话，我不喜欢说中庸的观点，我喜欢跟你说一个极端的观点，然后会有人用另一个极端的观点反驳我，他说服不了我，我也说服不了他，但是最终，你会得出自己的观点。</p>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <div>
+    </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/java-rmdir.html" rel="next" title="Java 删除目录">
+                <i class="fa fa-chevron-left"></i> Java 删除目录
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/xml.html" rel="prev" title="XML 笔记">
+                XML 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+  <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" rel="external nofollow noopener noreferrer" target="_blank">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+  </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Otokaze">
+          <p class="site-author-name" itemprop="name">Otokaze</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+        </nav>
+        <div class="links-of-author motion-element">
+              <span class="links-of-author-item">
+                <a href="https://github.com/zfl9" target="_blank" title="GitHub rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-github"></i>
+                  GitHub
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="mailto:zfl9.com@gmail.com" target="_blank" title="Email rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-envelope"></i>
+                  Email
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://gitlab.com/zfl9" target="_blank" title="GitLab rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-gitlab"></i>
+                  GitLab
+                </a>
+              </span>
+              <span class="links-of-author-item">
+                <a href="https://t.me/Otokaze" target="_blank" title="Telegram rel=" external="" nofollow""="" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-fw fa-telegram"></i>
+                  Telegram
+                </a>
+              </span>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RESTful-是什么意思？"><span class="nav-number">1.</span> <span class="nav-text">RESTful 是什么意思？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESTful-用在什么地方？"><span class="nav-number">2.</span> <span class="nav-text">RESTful 用在什么地方？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML-表单-vs-AJAX-对比"><span class="nav-number">3.</span> <span class="nav-text">HTML 表单 vs AJAX 对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-RESTful-API-AJAX-到前后端分离"><span class="nav-number">4.</span> <span class="nav-text">从 RESTful API + AJAX 到前后端分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于前后端分离的讨论-知乎"><span class="nav-number">5.</span> <span class="nav-text">关于前后端分离的讨论 - 知乎</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Otokaze</span>
+</div>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/prism/prism.js" async></script>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+      <script id="dsq-count-scr" src="https://otokaze.disqus.com/count.js" async></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.zfl9.com/restful.html';
+          this.page.identifier = 'restful.html';
+          this.page.title = 'RESTful API';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://otokaze.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3hhdw6gOg9wavsharVwVjqI3-gzGzoHsz", "O5WfDffqFsgmAVPwNY9of3QU");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>
